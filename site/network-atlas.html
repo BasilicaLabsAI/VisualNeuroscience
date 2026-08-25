@@ -214,8 +214,14 @@ svg{ display:block; }
     display:grid; gap:var(--gap); align-items:stretch;
     grid-template-columns:minmax(0,1fr) minmax(380px,0.92fr);
   }
+  /* The square must be sized by the column, never by the row. Stretched to
+     the row's height, aspect-ratio derives the width from that height, and
+     the box grows wider than the column it sits in — which it did once the
+     scans loaded and the other column got taller. Sizing from the start
+     edge keeps width the input and height the result. */
   .ring-stage{
     order:-1; margin-top:0; aspect-ratio:1;
+    align-self:start; max-width:100%; min-width:0;
     display:flex; align-items:center; justify-content:center;
   }
   #ring{ max-width:100%; }

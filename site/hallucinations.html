@@ -185,16 +185,29 @@ svg{ display:block; }
 /* ── the model, drawn as a circuit ──────────────────────────────────────
    The scan says where; this says what flows where, which is the part of
    Allen's model a map of places cannot carry on its own. */
-/* the two circuits, set beside each other so the difference is the reading */
-.mech-pair{ display:grid; gap:var(--gap); grid-template-columns:1fr; }
-@media (min-width:1100px){ .mech-pair{ grid-template-columns:1fr 1fr; } }
-.mech-one{ min-width:0; }
-.mech-one figcaption{
+/* one state at a time, chosen by tab. Hearing is drawn once because it does
+   not change; only the inner-speech circuit answers to the tab. */
+.mech-tabs{ display:flex; gap:0; margin-bottom:var(--gap); }
+.mech-tab{
+  border:1px solid var(--hair); border-left-width:0;
+  background:var(--paper); color:var(--ink);
   font-family:var(--font-brand); font-weight:500; font-size:.62rem;
-  letter-spacing:.28em; text-transform:uppercase; color:var(--ink-60);
-  padding:0 0 .5rem;
+  letter-spacing:.2em; text-transform:uppercase; cursor:pointer;
+  padding:.6rem 1.1rem .5rem; line-height:1;
 }
-.mech-one.is-halluc figcaption{ color:var(--ink); }
+.mech-tab:first-child{ border-left-width:1px; }
+.mech-tab:hover{ background:color-mix(in srgb, var(--ink) 12%, transparent); }
+.mech-tab.active{ background:var(--ink); color:var(--paper); }
+.mech-block{ margin-bottom:calc(var(--gap) * 1.6); }
+.mech-h{
+  font-family:var(--font-brand); font-weight:500; font-size:.62rem;
+  letter-spacing:.26em; text-transform:uppercase; color:var(--ink);
+  padding:0 0 .5rem; display:flex; flex-wrap:wrap; gap:.2rem .7rem; align-items:baseline;
+}
+.mech-h small{
+  font-family:var(--font-serif); font-style:italic; font-size:.82rem;
+  letter-spacing:0; text-transform:none; color:var(--ink-60);
+}
 .mech-svg{ width:100%; height:auto; }
 .mech-stage{ border:1px solid var(--hair); background:var(--paper); padding:.9rem .7rem; }
 .mech-node rect, .mech-chip rect{
@@ -365,66 +378,80 @@ td.hl{ color:var(--over); }
 
 <section class="blk">
   <h2>The model, as a circuit</h2>
-  <p class="sub">Allen's model is a claim about signal flow, not just about places. Three things have to go wrong together: the auditory cortices are overactive, their connection to the frontal language areas is altered, and the control regions that normally tag a self-generated signal as one's own lose their grip. Both circuits are drawn here, side by side — the difference between them is the model.</p>
+  <p class="sub">Allen's model is a claim about signal flow. Hearing is not what breaks — someone who hallucinates hears the world exactly as anyone else does. What breaks is the handling of the brain's own inner speech: the control regions normally send a copy of the command with it, marking it as self-generated, and when that copy fails to arrive the same inner speech is heard as a voice from somewhere else.</p>
 
-  <div class="mech-pair" id="mechPair">
-    <figure class="mech-one">
-      <figcaption>Normal audition</figcaption>
-      <div class="mech-stage" data-state="healthy">
-    <svg class="mech-svg" viewBox="0 0 980 430" role="img" aria-label="Signal-flow diagram of the auditory hallucination model">
+  <div class="mech-tabs" role="tablist" aria-label="Brain state">
+    <button class="mech-tab active" id="tab-healthy" type="button" role="tab" aria-selected="true" data-mstate="healthy">Healthy</button>
+    <button class="mech-tab" id="tab-halluc" type="button" role="tab" aria-selected="false" data-mstate="halluc">Hallucinating</button>
+  </div>
 
-      <!-- control bracket -->
-      <g class="mech-group mx-control">
-        <rect class="mech-bracket" x="256" y="30" width="520" height="86" rx="2"/>
-        <text class="mech-brackettag" x="516" y="24" text-anchor="middle">Control &middot; self-monitoring</text>
-        <g class="mech-chip" data-region="dlpfc"      tabindex="0" role="button"><rect x="276" y="52" width="112" height="42"/><text x="332" y="78" text-anchor="middle">DLPFC</text></g>
-        <g class="mech-chip" data-region="acc"        tabindex="0" role="button"><rect x="404" y="52" width="112" height="42"/><text x="460" y="78" text-anchor="middle">Cingulate</text></g>
-        <g class="mech-chip" data-region="premotor"   tabindex="0" role="button"><rect x="532" y="52" width="112" height="42"/><text x="588" y="78" text-anchor="middle">Premotor</text></g>
-        <g class="mech-chip" data-region="cerebellum" tabindex="0" role="button"><rect x="660" y="52" width="112" height="42"/><text x="716" y="78" text-anchor="middle">Cerebellum</text></g>
-      </g>
+  <div class="mech-block">
+    <h3 class="mech-h">Hearing the world <small>unchanged in both</small></h3>
+    <div class="mech-stage">
+      <svg class="mech-svg" viewBox="0 0 1140 150" role="img" aria-label="Sound from the world travels to the auditory cortex and is heard">
+        <g class="mech-node" data-region="thalamus" tabindex="0" role="button"><rect x="196" y="46" width="150" height="48"/><text x="271" y="76" text-anchor="middle">Thalamus</text></g>
+        <g class="mech-node" data-region="primary" tabindex="0" role="button"><rect x="380" y="46" width="150" height="48"/><text x="455" y="68" text-anchor="middle">Primary aud.</text><text x="455" y="85" text-anchor="middle" class="mech-sub">Heschl</text></g>
+        <g class="mech-node" data-region="secondary" tabindex="0" role="button"><rect x="564" y="46" width="150" height="48"/><text x="639" y="68" text-anchor="middle">Secondary aud.</text><text x="639" y="85" text-anchor="middle" class="mech-sub">STG</text></g>
+        <g class="mech-node" data-region="mtg" tabindex="0" role="button"><rect x="748" y="46" width="150" height="48"/><text x="823" y="76" text-anchor="middle">Middle temporal</text></g>
+        <g class="mech-node mech-source"><rect x="12" y="46" width="150" height="48"/><text x="87" y="76" text-anchor="middle">Sound in the world</text></g>
+        <g class="mech-out"><rect x="932" y="40" width="196" height="60" rx="2"/><text x="1030" y="66" text-anchor="middle">Heard as a sound</text><text x="1030" y="86" text-anchor="middle">in the world</text></g>
+        <path class="mech-arrow" d="M162 70 L190 70" marker-end="url(#mh-head)"/>
+        <path class="mech-arrow" d="M346 70 L374 70" marker-end="url(#mh-head)"/>
+        <path class="mech-arrow" d="M530 70 L558 70" marker-end="url(#mh-head)"/>
+        <path class="mech-arrow" d="M714 70 L742 70" marker-end="url(#mh-head)"/>
+        <path class="mech-arrow" d="M898 70 L926 70" marker-end="url(#mh-head)"/>
+        <defs>
+          <marker id="mh-head" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+    <p class="mech-read">Sound arrives from the world, is relayed by the thalamus and is worked up through the auditory cortices until it is heard. This pathway is the same either way: hallucination is not a failure of hearing, and someone who hallucinates hears the world as anyone else does.</p>
+  </div>
 
-      <!-- corollary discharge, the arrow the hallucinating state breaks -->
-      <path class="mech-arrow mech-ctrl mx-tag" d="M516 116 L516 196" marker-end="url(#mx-head)"/>
-      <text class="mech-edge mx-tag-label" x="556" y="152">tags the signal as self-generated</text>
-      <g class="mx-break" style="display:none">
-        <line class="mech-break" x1="494" y1="146" x2="538" y2="132"/>
-        <line class="mech-break" x1="494" y1="162" x2="538" y2="148"/>
-      </g>
+  <div class="mech-block">
+    <h3 class="mech-h">The brain's own inner speech <small id="mechWhich">tagged as one's own</small></h3>
+    <div class="mech-stage" id="mechInner">
+      <svg class="mech-svg" viewBox="0 0 1140 330" role="img" aria-label="Inner speech reaching the auditory cortex, and the control signal that marks it as self-generated">
+        <g class="mech-group">
+          <rect class="mech-bracket" x="380" y="12" width="518" height="86" rx="2"/>
+          <text class="mech-brackettag" x="639" y="6" text-anchor="middle">Control &middot; self-monitoring</text>
+          <g class="mech-chip" data-region="dlpfc" tabindex="0" role="button"><rect x="396" y="34" width="112" height="42"/><text x="452" y="60" text-anchor="middle">DLPFC</text></g>
+          <g class="mech-chip" data-region="acc" tabindex="0" role="button"><rect x="520" y="34" width="112" height="42"/><text x="576" y="60" text-anchor="middle">Cingulate</text></g>
+          <g class="mech-chip" data-region="premotor" tabindex="0" role="button"><rect x="644" y="34" width="112" height="42"/><text x="700" y="60" text-anchor="middle">Premotor</text></g>
+          <g class="mech-chip" data-region="cerebellum" tabindex="0" role="button"><rect x="768" y="34" width="112" height="42"/><text x="824" y="60" text-anchor="middle">Cerebellum</text></g>
+        </g>
 
-      <!-- the perception stream -->
-      <g class="mech-node mech-source mx-source"><rect x="26" y="204" width="128" height="46"/><text x="90" y="232" text-anchor="middle" class="mx-source-label">Sound in the world</text></g>
-      <path class="mech-arrow mx-in" d="M154 227 L196 227" marker-end="url(#mx-head)"/>
+        <path class="mech-arrow mech-ctrl mx-tag" d="M639 98 L639 168" marker-end="url(#mi-head)"/>
+        <text class="mech-edge mx-tag-label" x="672" y="136">tags the signal as self-generated</text>
+        <g class="mx-break" style="display:none">
+          <line class="mech-break" x1="617" y1="140" x2="661" y2="126"/>
+          <line class="mech-break" x1="617" y1="156" x2="661" y2="142"/>
+        </g>
 
-      <g class="mech-node" data-region="thalamus" tabindex="0" role="button"><rect x="196" y="204" width="128" height="46"/><text x="260" y="232" text-anchor="middle">Thalamus</text></g>
-      <path class="mech-arrow mx-thal" d="M324 227 L378 227" marker-end="url(#mx-head)"/>
+        <g class="mech-node" data-region="broca" tabindex="0" role="button"><rect x="12" y="250" width="150" height="48"/><text x="87" y="272" text-anchor="middle">Broca</text><text x="87" y="289" text-anchor="middle" class="mech-sub">inner speech</text></g>
+        <path class="mech-arrow" d="M162 274 L190 274" marker-end="url(#mi-head)"/>
+        <g class="mech-node" data-region="wernicke" tabindex="0" role="button"><rect x="196" y="250" width="150" height="48"/><text x="271" y="280" text-anchor="middle">Wernicke</text></g>
+        <path class="mech-arrow mx-lang2" d="M346 268 C420 250 470 236 470 216" marker-end="url(#mi-head)"/>
 
-      <g class="mech-node" data-region="primary" tabindex="0" role="button"><rect x="378" y="204" width="128" height="46"/><text x="442" y="226" text-anchor="middle">Primary aud.</text><text x="442" y="242" text-anchor="middle" class="mech-sub">Heschl</text></g>
-      <path class="mech-arrow" d="M506 227 L560 227" marker-end="url(#mx-head)"/>
+        <g class="mech-node" data-region="primary" tabindex="0" role="button"><rect x="396" y="168" width="150" height="48"/><text x="471" y="190" text-anchor="middle">Primary aud.</text><text x="471" y="207" text-anchor="middle" class="mech-sub">Heschl</text></g>
+        <path class="mech-arrow" d="M546 192 L574 192" marker-end="url(#mi-head)"/>
+        <g class="mech-node" data-region="secondary" tabindex="0" role="button"><rect x="580" y="168" width="150" height="48"/><text x="655" y="190" text-anchor="middle">Secondary aud.</text><text x="655" y="207" text-anchor="middle" class="mech-sub">STG</text></g>
+        <path class="mech-arrow" d="M730 192 L758 192" marker-end="url(#mi-head)"/>
+        <g class="mech-node" data-region="mtg" tabindex="0" role="button"><rect x="764" y="168" width="150" height="48"/><text x="839" y="198" text-anchor="middle">Middle temporal</text></g>
 
-      <g class="mech-node" data-region="secondary" tabindex="0" role="button"><rect x="560" y="204" width="128" height="46"/><text x="624" y="226" text-anchor="middle">Secondary aud.</text><text x="624" y="242" text-anchor="middle" class="mech-sub">STG</text></g>
-      <path class="mech-arrow" d="M688 227 L742 227" marker-end="url(#mx-head)"/>
+        <path class="mech-arrow" d="M914 192 L942 192" marker-end="url(#mi-head)"/>
+        <g class="mech-out"><rect x="948" y="162" width="180" height="60" rx="2"/><text x="1038" y="188" text-anchor="middle" class="mx-out-1">Recognised as</text><text x="1038" y="208" text-anchor="middle" class="mx-out-2">one's own</text></g>
 
-      <g class="mech-node" data-region="mtg" tabindex="0" role="button"><rect x="742" y="204" width="128" height="46"/><text x="806" y="232" text-anchor="middle">Middle temporal</text></g>
-
-      <!-- the outcome, which is the whole point -->
-      <path class="mech-arrow" d="M806 250 L806 300" marker-end="url(#mx-head)"/>
-      <g class="mech-out mx-out"><rect x="686" y="300" width="268" height="62" rx="2"/><text x="820" y="326" text-anchor="middle" class="mx-out-1">Recognised as one's own</text><text x="820" y="346" text-anchor="middle" class="mx-out-2">inner speech</text></g>
-
-      <!-- language production, feeding the same cortex -->
-      <g class="mech-node" data-region="broca" tabindex="0" role="button"><rect x="276" y="330" width="128" height="46"/><text x="340" y="352" text-anchor="middle">Broca</text><text x="340" y="368" text-anchor="middle" class="mech-sub">inner speech</text></g>
-      <path class="mech-arrow mech-lang mx-lang1" d="M404 353 L458 353" marker-end="url(#mx-head)"/>
-      <g class="mech-node" data-region="wernicke" tabindex="0" role="button"><rect x="458" y="330" width="128" height="46"/><text x="522" y="358" text-anchor="middle">Wernicke</text></g>
-      <path class="mech-arrow mech-lang mx-lang2" d="M586 344 C630 330 600 280 624 254" marker-end="url(#mx-head)"/>
-
-      <defs>
-        <marker id="mx-head" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse">
-          <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/>
-        </marker>
-      </defs>
-    </svg>
-      </div>
-      <p class="mech-read"></p>
-    </figure>
+        <defs>
+          <marker id="mi-head" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+    <p class="mech-read" id="mechRead"></p>
   </div>
 </section>
 
@@ -756,66 +783,49 @@ function renderPanel(){
 
 
 /* ── the model as a circuit ─────────────────────────────────────────────
-   Same regions, same colours as the scan, but drawn as signal flow. Both
-   states are drawn at once and set side by side, because the model is the
-   difference between them: with the corollary discharge intact the signal
-   arrives tagged as self-generated, and without it the same signal is heard
-   as a voice from outside. */
+   Two pathways, drawn separately because only one of them changes.
+
+   Hearing the world is drawn once: it is the same in both states, and saying
+   otherwise would be the wrong claim — hallucination is not deafness, and the
+   earlier drawing implied it by putting "no external sound" on the
+   hallucinating side.
+
+   What the tab switches is the inner-speech circuit. In both states the same
+   inner speech reaches the same auditory cortex; the difference is whether
+   the control regions' copy arrives to mark it as self-generated. */
 const MECH_READ = {
   healthy:
-    "Sound arrives from the world, is relayed by the thalamus and is worked up through the auditory cortices. " +
-    "Inner speech from the frontal language areas reaches the same cortex — but the control regions send a " +
-    "copy of the command with it, so the signal arrives already tagged as self-generated, and is recognised as one's own.",
+    "The brain's own inner speech reaches the auditory cortex over the frontal language route — and the " +
+    "control regions send a copy of the command with it. That copy is what marks the signal as self-generated, " +
+    "so what arrives is recognised as one's own thought rather than as something heard.",
   halluc:
-    "No sound arrives, yet the auditory cortices are active anyway, driven from within and no longer held in check " +
-    "by the thalamus. Inner speech still reaches them from the frontal language areas over an altered connection — " +
-    "but the control regions have lost their grip, so nothing tags the signal as self-generated. What arrives untagged " +
-    "is heard as a voice from outside."
+    "The same inner speech reaches the same cortex over an altered connection, and the auditory cortices are " +
+    "overactive while it does. What is missing is the copy: the control regions have lost their grip, nothing " +
+    "marks the signal as self-generated, and inner speech that arrives untagged is experienced as a voice from " +
+    "outside. Hearing itself is untouched — the pathway above runs exactly as it always did."
 };
 
-/* one copy of the drawing per state, painted once and left alone */
-function buildMechanism(){
-  const pair = $("mechPair");
-  const first = pair.querySelector(".mech-one");
-  const second = first.cloneNode(true);
-  second.querySelector("figcaption").textContent = "Hallucinating";
-  second.querySelector(".mech-stage").dataset.state = "halluc";
-  second.classList.add("is-halluc");
-  /* two copies of the same drawing would share one arrowhead id, so the
-     second gets its own */
-  const marker = second.querySelector("marker");
-  if (marker){
-    marker.id = "mx-head-2";
-    second.querySelectorAll("[marker-end]").forEach(p => p.setAttribute("marker-end", "url(#mx-head-2)"));
-  }
-  pair.appendChild(second);
-  pair.querySelectorAll(".mech-one").forEach(paintMechanism);
-  bindMechanism();
-}
+let mechState = "healthy";
 
-function paintMechanism(fig){
-  const state = fig.querySelector(".mech-stage").dataset.state;
-  const halluc = state === "halluc";
-  const q = sel => fig.querySelector(sel);
+function paintMechanism(){
+  const halluc = mechState === "halluc";
+  const inner = $("mechInner");
+  const q = sel => inner.querySelector(sel);
 
-  fig.querySelectorAll(".mech-node[data-region], .mech-chip[data-region]").forEach(g => {
+  /* every region carries its scan colour; in the hallucinating state the
+     overactive ones come forward and the control regions fall back */
+  document.querySelectorAll(".mech-block [data-region]").forEach(g => {
     const id = g.dataset.region, colour = REGION_COLOUR[id];
     const rect = g.querySelector("rect");
-    const over = OVER.indexOf(id) >= 0, weak = WEAKENED.indexOf(id) >= 0;
     /* inline, because the stylesheet's stroke would win over an attribute */
     rect.style.stroke = colour;
     g.querySelectorAll("text:not(.mech-sub)").forEach(t => { t.style.fill = colour; });
-    g.classList.toggle("lit", halluc && over);
-    g.classList.toggle("faded", halluc && weak);
+    const inInner = inner.contains(g);
+    g.classList.toggle("lit", halluc && inInner && OVER.indexOf(id) >= 0);
+    g.classList.toggle("faded", halluc && inInner && WEAKENED.indexOf(id) >= 0);
   });
 
-  /* the external input, and the thalamic gate that no longer constrains it */
-  q(".mx-in").classList.toggle("weak", halluc);
-  q(".mx-source-label").textContent = halluc ? "No external sound" : "Sound in the world";
-  q(".mx-source").classList.toggle("faded", halluc);
-  q(".mx-thal").classList.toggle("heavy", halluc);
-
-  /* the arrow the state cuts */
+  /* the copy that marks inner speech as one's own, and the state that cuts it */
   q(".mx-tag").classList.toggle("weak", halluc);
   /* SVG does not honour the hidden attribute, so this is set outright */
   q(".mx-break").style.display = halluc ? "" : "none";
@@ -826,14 +836,26 @@ function paintMechanism(fig){
   /* the altered frontotemporal connection */
   q(".mx-lang2").classList.toggle("weak", halluc);
 
-  q(".mx-out-1").textContent = halluc ? "Experienced as a voice" : "Recognised as one's own";
-  q(".mx-out-2").textContent = halluc ? "from outside" : "inner speech";
-  fig.querySelector(".mech-read").textContent = MECH_READ[halluc ? "halluc" : "healthy"];
+  q(".mx-out-1").textContent = halluc ? "Experienced as a voice" : "Recognised as";
+  q(".mx-out-2").textContent = halluc ? "from outside" : "one's own";
+
+  $("mechWhich").textContent = halluc ? "arriving untagged" : "tagged as one's own";
+  $("mechRead").textContent = MECH_READ[mechState];
+
+  document.querySelectorAll(".mech-tab").forEach(t => {
+    const on = t.dataset.mstate === mechState;
+    t.classList.toggle("active", on);
+    t.setAttribute("aria-selected", String(on));
+  });
+  markMechanismSelection();
 }
 
-/* a region in either circuit picks the same region the rail's list would */
 function bindMechanism(){
-  document.querySelectorAll(".mech-pair [data-region]").forEach(g => {
+  document.querySelectorAll(".mech-tab").forEach(t => {
+    t.addEventListener("click", () => { mechState = t.dataset.mstate; paintMechanism(); });
+  });
+  /* a region in either circuit picks the same region the rail's list would */
+  document.querySelectorAll(".mech-block [data-region]").forEach(g => {
     const pick = () => {
       const id = g.dataset.region;
       selected = (selected === id) ? null : id;
@@ -849,10 +871,9 @@ function bindMechanism(){
 
 /* which region is picked marks it in both circuits at once */
 function markMechanismSelection(){
-  document.querySelectorAll(".mech-pair [data-region]").forEach(g => {
+  document.querySelectorAll(".mech-block [data-region]").forEach(g => {
     const on = selected === g.dataset.region;
-    const rect = g.querySelector("rect");
-    rect.style.fill = on ? REGION_COLOUR[g.dataset.region] + "33" : "none";
+    g.querySelector("rect").style.fill = on ? REGION_COLOUR[g.dataset.region] + "33" : "none";
     g.classList.toggle("sel", on);
   });
 }
@@ -991,7 +1012,8 @@ themeBtn.addEventListener("click", () => {
 
 $("coverage").textContent = REGIONS.length + " regions, drawn on the atlas parcels each one occupies.";
 buildList();
-buildMechanism();
+bindMechanism();
+paintMechanism();
 renderAll();
 ensureScan();
 </script>
