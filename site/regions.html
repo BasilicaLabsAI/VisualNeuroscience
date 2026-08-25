@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Region Atlas — VisualNeuroscience.AI</title>
+<meta name="description" content="Explore the brain in the browser: highlight any AAL-116 region on the MNI152 template across axial, coronal, sagittal and 3D views. Free, fast, nothing to install.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- link previews. The card is built by site/share.html and rendered to
+     assets/social-card.jpg; og:image has to be absolute, so this origin is
+     the one thing to change if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="Region Atlas — VisualNeuroscience.AI">
+<meta property="og:description" content="Explore the brain in the browser: highlight any AAL-116 region on the MNI152 template across axial, coronal, sagittal and 3D views. Free, fast, nothing to install.">
+<meta property="og:url" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/regions.html">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The flow-state network ring over orange-tinted MNI152 brain slices, with the VisualNeuroscience.AI wordmark at its centre.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/viewer.css">
+<link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Prata&display=swap" rel="stylesheet">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+/* ════════════════════════════════════════════════════════════
+   OTTOMANLABS.AI — boxed-mosaic design system, black on white
+   Brand & caps: Flux → Afacad Flux · Serif & italics: Newsreader
+   Display words: Prata
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Embedded fonts (in assets/fonts/) ── */
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;   /* near full-bleed on desktop, capped for very wide monitors */
+  --gap:14px;
+}
+
+/* dark mode — exact inverse of the default palette, site-wide */
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+img{ max-width:100%; display:block; }
+svg{ display:block; }
+
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+.theme-toggle:hover{ background:var(--ink); color:var(--paper); }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+a{ color:var(--ink); text-decoration:none; }
+a:hover{ text-decoration:underline; text-underline-offset:3px; }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+
+.skip{
+  position:absolute; left:-999px; top:8px; z-index:99;
+  background:var(--ink); color:var(--paper); padding:.5rem 1rem;
+  font-family:var(--font-brand); font-size:.8rem; letter-spacing:.1em;
+}
+.skip:focus{ left:8px; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto; padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* ── voices ── */
+.caps{
+  font-family:var(--font-brand); font-weight:500;
+  letter-spacing:.32em; text-transform:uppercase;
+  font-size:.72rem; line-height:1.9;
+}
+.caps-tight{ letter-spacing:.2em; }
+.ital{
+  font-family:var(--font-serif); font-style:italic; font-weight:400;
+  font-size:1.35rem; line-height:1.2;
+}
+.display{
+  font-family:var(--font-display); font-weight:400;
+  letter-spacing:.02em; line-height:1.05;
+}
+.muted{ color:var(--ink-60); }
+.num{ font-family:var(--font-brand); font-variant-numeric:tabular-nums; }
+
+/* ── masthead ── */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  font-size:clamp(2.3rem,6vw,3.7rem); line-height:1; letter-spacing:.01em;
+}
+.brand:hover{ text-decoration:none; }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:.65em; height:.65em; flex:none; }
+
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase;
+}
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+
+/* ── boxes ── */
+.box{
+  border:1px solid var(--hair); background:var(--paper);
+  padding:clamp(18px,2.4vw,26px); text-align:center;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:.55rem; min-width:0; position:relative;
+}
+.box.left{ text-align:left; align-items:flex-start; }
+a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; }
+
+.box .art{ color:var(--ink); }
+
+/* ornament row · ● ◆ ● · */
+.orn{ display:flex; align-items:center; gap:.5rem; color:var(--ink); }
+.orn i{ font-style:normal; font-size:.55rem; line-height:1; }
+
+/* menu-style underlined list */
+.list-lines{ width:100%; max-width:230px; }
+.list-lines a, .list-lines .row{
+  display:flex; justify-content:space-between; align-items:baseline; gap:1rem;
+  font-family:var(--font-serif); font-size:1.02rem;
+  border-bottom:1px solid var(--hair); padding:.5rem .15rem .45rem;
+}
+.list-lines a:hover{ text-decoration:none; background:var(--ink); color:var(--paper); }
+.list-lines .v{ font-family:var(--font-brand); font-size:.86rem; font-variant-numeric:tabular-nums; }
+
+/* buttons */
+.btn{
+  display:inline-block; font-family:var(--font-brand); font-weight:500;
+  font-size:.72rem; letter-spacing:.28em; text-transform:uppercase;
+  border:1px solid var(--ink); background:var(--paper); color:var(--ink);
+  padding:.7rem 1.3rem .62rem; cursor:pointer;
+}
+.btn:hover{ background:var(--ink); color:var(--paper); text-decoration:none; }
+.btn-solid{ background:var(--ink); color:var(--paper); }
+.btn-solid:hover{ background:var(--paper); color:var(--ink); }
+
+/* inline news form */
+.newsform{ display:flex; width:100%; max-width:250px; border-bottom:1px solid var(--ink); }
+.newsform input{
+  flex:1; min-width:0; border:0; background:transparent; padding:.45rem .2rem;
+  font-family:var(--font-brand); font-size:.92rem; color:var(--ink);
+}
+.newsform input::placeholder{ color:var(--ink-35); }
+.newsform input:focus{ outline:0; }
+.newsform button{
+  border:0; background:transparent; cursor:pointer; font-size:1.05rem;
+  padding:0 .3rem; color:var(--ink);
+}
+.newsform button:hover{ transform:translateX(2px); }
+.ok-msg{ display:none; font-family:var(--font-brand); font-size:.78rem; letter-spacing:.12em; }
+
+/* chips */
+.chip{
+  display:inline-block; font-family:var(--font-brand); font-weight:500;
+  font-size:.6rem; letter-spacing:.22em; text-transform:uppercase;
+  border:1px solid var(--ink); padding:.16rem .55rem .1rem;
+}
+.chip.watch{ background:var(--ink); color:var(--paper); }
+.chip.info{ border-color:var(--ink-35); color:var(--ink-60); }
+
+/* ── footer band ── */
+.band{
+  border:1px solid var(--hair);
+  display:grid; grid-template-columns:repeat(5,minmax(0,1fr));
+}
+.band > div{
+  padding:1.3rem 1rem 1.4rem; text-align:center;
+  border-left:1px solid var(--hair);
+  display:flex; flex-direction:column; gap:.35rem; align-items:center; justify-content:center;
+}
+.band > div:first-child{ border-left:0; }
+.band .caps{ letter-spacing:.26em; }
+.band small{ font-family:var(--font-serif); font-style:italic; font-size:.92rem; color:var(--ink-60); }
+
+/* ── what the highlighted regions do, stacked by layer ─────────────────
+   Fixed order, always: cerebrum on top, limbic midbrain in the middle, the
+   reptilian core at the bottom, so the stack reads the same way every time
+   whichever regions happen to be lit. */
+.notes{ margin-top:var(--gap); }
+.notes-empty, .notes-caveat{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.86rem; color:var(--ink-60);
+}
+.notes-caveat{
+  border-top:1px solid var(--ink-35); padding-top:.9rem; margin-top:1.1rem;
+  font-size:.8rem; color:var(--ink-35);
+}
+.tier{ border:1px solid var(--hair); margin-bottom:var(--gap); }
+.tier-head{
+  display:flex; flex-wrap:wrap; align-items:baseline; gap:.4rem .9rem;
+  padding:.6rem .9rem .5rem; border-bottom:1px solid var(--hair);
+}
+.tier-head b{
+  font-family:var(--font-brand); font-weight:500; font-size:.68rem;
+  letter-spacing:.28em; text-transform:uppercase;
+}
+.tier-head span{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.82rem; color:var(--ink-60);
+}
+.tier-head .n{
+  margin-left:auto; font-family:var(--font-brand); font-size:.6rem;
+  letter-spacing:.2em; color:var(--ink-60); font-style:normal;
+}
+.tier-body{ display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); }
+.rnote{
+  padding:.75rem .9rem .85rem; border-right:1px solid var(--ink-35);
+  border-bottom:1px solid var(--ink-35);
+}
+.rnote h3{
+  display:flex; align-items:center; gap:.5rem;
+  font-family:var(--font-brand); font-weight:500; font-size:.78rem;
+  letter-spacing:.08em; margin-bottom:.3rem;
+}
+.rnote h3 .dot{ width:.62rem; height:.62rem; flex:none; border:1px solid var(--ink); }
+.rnote h3 .side{
+  font-size:.55rem; letter-spacing:.18em; color:var(--ink-60); margin-left:auto;
+}
+.rnote p{ font-family:var(--font-serif); font-size:.9rem; line-height:1.5; color:var(--ink-60); }
+/* the last cell's right edge would otherwise dangle into a part-filled row */
+.rnote:last-child{ border-right:0; }
+
+.estab{
+  text-align:center; padding:1.4rem 0 .4rem;
+  font-family:var(--font-brand); font-size:.66rem; font-weight:500;
+  letter-spacing:.26em; text-transform:uppercase; color:var(--ink-60);
+}
+.estab a{ color:var(--ink); }
+.credits{
+  text-align:center; font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60); padding:.3rem 0 2.4rem;
+}
+
+/* ════════ dashboard chrome ════════ */
+.tabs{ display:flex; flex-wrap:wrap; justify-content:center; gap:.4rem 1.8rem; padding:.2rem 0 1rem; }
+.tab{
+  background:none; border:0; cursor:pointer; padding:.3rem .1rem;
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink-60);
+  border-bottom:2px solid transparent;
+}
+.tab:hover{ color:var(--ink); }
+.tab.active{ color:var(--ink); border-bottom-color:var(--ink); }
+
+.row{ display:flex; align-items:center; gap:.6rem; margin:.5rem 0; }
+.row[hidden]{ display:none; }   /* display:flex would otherwise defeat the hidden attribute */
+.row label{
+  flex:0 0 64px; font-family:var(--font-brand); font-size:.72rem;
+  letter-spacing:.08em; color:var(--ink-60);
+}
+.row .val{
+  min-width:44px; text-align:right; font-family:var(--font-brand);
+  font-size:.8rem; font-variant-numeric:tabular-nums;
+}
+input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); height:3px; }
+.toggles{ display:grid; grid-template-columns:1fr 1fr; gap:.35rem .8rem; margin:.5rem 0 .1rem; }
+.toggle{
+  display:flex; align-items:center; gap:.45rem; cursor:pointer; user-select:none;
+  font-family:var(--font-brand); font-size:.76rem; letter-spacing:.05em; color:var(--ink-60);
+}
+.toggle input{ width:14px; height:14px; accent-color:var(--ink); }
+.btns{ display:flex; gap:.6rem; margin-top:.6rem; }
+.btns .btn{ flex:1; padding:.55rem .4rem .48rem; letter-spacing:.18em; font-size:.66rem; }
+
+.stats{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+.stat{ border:1px solid var(--hair); padding:.5rem .6rem .55rem; text-align:left; }
+.stat .k{
+  font-family:var(--font-brand); font-size:.58rem; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60);
+}
+.stat .v{
+  font-family:var(--font-brand); font-size:1.06rem; margin-top:.1rem;
+  font-variant-numeric:tabular-nums;
+}
+.stat .v small{ font-size:.62rem; color:var(--ink-60); margin-left:.15rem; }
+
+.plot-wrap{ flex:1; min-height:0; padding:.55rem; display:flex; align-items:center; justify-content:center; }
+.plot-wrap canvas{ display:block; }
+
+table.dtable{ border-collapse:collapse; width:100%; font-size:.92rem; }
+table.dtable th{
+  font-family:var(--font-brand); font-weight:500; font-size:.62rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60);
+  text-align:left; padding:.5rem .55rem; border-bottom:1px solid var(--hair);
+}
+table.dtable td{
+  padding:.5rem .55rem; border-bottom:1px solid #E3E3E3; vertical-align:baseline;
+}
+table.dtable td.num{ font-size:.84rem; }
+
+@media (max-width:900px){
+  .band{ grid-template-columns:1fr 1fr; }
+  .band > div{ border-left:0; border-top:1px solid var(--hair); }
+  .band > div:nth-child(-n+2){ border-top:0; }
+  .band > div:nth-child(2n){ border-left:1px solid var(--hair); }
+  .views{ grid-template-columns:1fr; }
+}
+@media (max-width:560px){
+  .band{ grid-template-columns:1fr; }
+  .band > div{ border-left:0 !important; }
+}
+
+/* ── site footer ── */
+.site-footer{ border-top:1px solid var(--hair); margin-top:3rem; background:var(--paper); }
+.foot-grid{ display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:2rem; padding-top:2.4rem; padding-bottom:1.8rem; }
+.foot-brand .brand{ font-size:1.15rem; }
+.foot-tag{ font-family:var(--font-serif); font-style:italic; color:var(--ink-60);
+  font-size:.92rem; line-height:1.55; margin:.7rem 0 0; max-width:26rem; }
+.foot-col h3{ font-family:var(--font-brand); font-weight:600; font-size:.62rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60); margin:0 0 .7rem; }
+.foot-col a{ display:block; font-family:var(--font-brand); font-size:.8rem; letter-spacing:.05em;
+  color:var(--ink); text-decoration:none; padding:.22rem 0; }
+.foot-col a:hover{ color:var(--ink-60); }
+.foot-legal{ display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap;
+  border-top:1px solid var(--hair); padding-top:1rem; padding-bottom:1.6rem;
+  font-family:var(--font-brand); font-size:.64rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-60); }
+@media (max-width:760px){
+  .foot-grid{ grid-template-columns:1fr 1fr; }
+  .foot-brand{ grid-column:1 / -1; }
+}
+
+/* ── newsletter popup ── */
+.nl-pop{ position:fixed; inset:0; z-index:1000; display:flex; align-items:center;
+  justify-content:center; background:rgba(0,0,0,.45); padding:1rem; }
+.nl-pop[hidden]{ display:none; }
+.nl-card{ position:relative; background:var(--paper); color:var(--ink); border:1px solid var(--ink);
+  max-width:26rem; width:100%; padding:2.2rem 2rem 2rem; text-align:center; }
+.nl-x{ position:absolute; top:.4rem; right:.55rem; background:none; border:0; color:var(--ink);
+  font-size:1.5rem; cursor:pointer; line-height:1; padding:.3rem; }
+.nl-card .ital{ font-family:var(--font-serif); font-style:italic; }
+.nl-title{ font-family:var(--font-display); font-size:1.7rem; letter-spacing:.06em; margin:.2rem 0 .6rem; }
+.nl-card p{ font-family:var(--font-serif); color:var(--ink-60); font-size:.95rem; line-height:1.55; margin:0 0 1.1rem; }
+.nl-form{ display:flex; gap:.5rem; }
+.nl-form input{ flex:1; min-width:0; font-family:var(--font-serif); font-size:.95rem;
+  padding:.65rem .7rem; border:1px solid var(--hair); background:var(--paper); color:var(--ink); border-radius:0; }
+.nl-form input:focus{ outline:none; border-color:var(--ink); box-shadow:inset 0 0 0 1px var(--ink); }
+.nl-form button{ font-family:var(--font-brand); font-weight:600; font-size:.68rem; letter-spacing:.16em;
+  text-transform:uppercase; background:var(--ink); color:var(--paper); border:1px solid var(--ink);
+  padding:.65rem 1rem; cursor:pointer; }
+.nl-form button:hover{ background:var(--paper); color:var(--ink); }
+.nl-note{ display:none; font-family:var(--font-brand); font-size:.7rem; letter-spacing:.16em;
+  text-transform:uppercase; margin:.9rem 0 0; }
+.nl-note.show{ display:block; }
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+}
+
+</style>
+<style>
+/* ════════ Region Atlas — page chrome in the boxed-mosaic voice ════════ */
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.sec-h small{ font-family:var(--font-serif); font-style:italic; font-weight:400;
+  font-size:.72rem; letter-spacing:0; text-transform:none; color:var(--ink-60); }
+
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{ font-family:var(--font-display); font-size:1.35rem; }
+.title-strip .anno{ font-family:var(--font-serif); font-style:italic; font-size:.88rem; color:var(--ink-60); }
+.title-strip .ts-views{ margin-left:auto; display:flex; gap:.4rem; flex-wrap:wrap; }
+
+/* select in the house voice */
+select:hover{ box-shadow:0 0 0 1px var(--ink) inset; }
+select option, select optgroup{ background:var(--paper); color:var(--ink); }
+select optgroup{ font-family:var(--font-brand); font-style:normal;
+  font-size:.68rem; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-60); }
+
+/* highlighted-region rows */
+.rchips{ display:flex; flex-direction:column; gap:.4rem; }
+.rchip{
+  display:flex; align-items:center; gap:.55rem;
+  border:1px solid var(--hair); padding:.42rem .5rem .38rem;
+}
+.rchip .dot{ width:.62rem; height:.62rem; flex:none; border:1px solid var(--ink); }
+.rchip .name{ flex:1; font-family:var(--font-serif); font-size:.95rem; line-height:1.25;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.rchip .side{ flex:none; font-family:var(--font-brand); font-weight:500; font-size:.56rem;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); }
+.rchip .x{
+  flex:none; border:0; background:none; color:var(--ink); cursor:pointer;
+  font-size:1rem; line-height:1; padding:.05rem .3rem;
+}
+.rchip .x:hover{ background:var(--ink); color:var(--paper); }
+.empty-note{ font-family:var(--font-serif); font-style:italic; font-size:.9rem; color:var(--ink-60); }
+
+/* the viewports — each plane a framed radiograph: canvases stay ink-black in both themes */
+.views-wrap{ position:relative; }
+.views .view{ min-width:0; }
+.view[hidden]{ display:none; }
+.views.solo{ grid-template-columns:1fr; }
+.views.solo .mri-stage{ height:clamp(420px,70vh,900px); }
+
+.status{
+  position:absolute; inset:0; z-index:10; background:#111111;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.9rem;
+  color:#A9A9A9; font-family:var(--font-brand); font-weight:500;
+  font-size:.66rem; letter-spacing:.3em; text-transform:uppercase;
+}
+.status .bar{ width:130px; height:2px; background:#2B2B2B; overflow:hidden; }
+.status .bar i{ display:block; height:100%; width:40%; background:#FFFFFF; }
+.status.error{ color:#FFFFFF; text-transform:none; letter-spacing:.02em;
+  font-family:var(--font-serif); font-style:italic; font-size:1rem; padding:0 2.5rem; text-align:center; line-height:1.7; }
+@media (prefers-reduced-motion: no-preference){
+  .status .bar i{ animation:scan 1.1s linear infinite; }
+  @keyframes scan{ from{transform:translateX(-100%)} to{transform:translateX(300%)} }
+}
+.hidden{ display:none !important; }
+
+.stats{ margin-top:var(--gap); }
+.probe-v{ font-size:.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.probe-v small{ display:block; margin-left:0; margin-top:.12rem; font-variant-numeric:tabular-nums; }
+.card .btn{ width:100%; text-align:center; }
+.card + .card{ margin-top:var(--gap); }
+
+@media (max-width:1100px){
+  /* the shared stylesheet reshapes the studio; this is the atlas's own bit */
+  .views.solo .mri-stage{ height:clamp(360px,58vh,700px); }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="Site">
+    <a href="regions.html" aria-current="page">Region Atlas</a>
+    <a href="receptors.html">Receptor Density</a>
+    <a href="tracts.html">Tractography</a>
+    <a href="network-atlas.html">Network Atlas</a>
+    <a href="studies.html">Visualizing Studies</a>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button>
+  </nav>
+</header>
+
+<main id="main" class="wrap">
+
+  <div class="title-strip">
+    <span class="name">Region Atlas</span>
+    <span class="anno">MNI152 T1 · 0.74&thinsp;mm iso · AAL-116 parcellation</span>
+    <div class="ts-views" role="group" aria-label="Layout">
+      <button class="ts-btn active" data-view="grid" type="button">Grid</button>
+      <button class="ts-btn" data-view="axial" type="button">Axial</button>
+      <button class="ts-btn" data-view="coronal" type="button">Coronal</button>
+      <button class="ts-btn" data-view="sagittal" type="button">Sagittal</button>
+      <button class="ts-btn" data-view="render" type="button">3D</button>
+    </div>
+  </div>
+
+  <div class="studio">
+
+    <aside class="rail" aria-label="Region controls">
+      <h2 class="sec-h">Atlas <small>region picker</small></h2>
+
+      <div class="card">
+        <h2>Regions</h2>
+        <div class="selwrap">
+          <select id="regionSelect" aria-label="Add a region to highlight">
+            <option value="">Add a region…</option>
+          </select>
+        </div>
+        <div class="toggles" style="grid-template-columns:1fr">
+          <label class="toggle"><input type="checkbox" id="mirrorToggle" checked> Mirror left / right pairs</label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Highlighted</h2>
+        <div class="rchips" id="chips">
+          <div class="empty-note" id="emptyMsg">Nothing highlighted yet — pick a region above.</div>
+        </div>
+        <div class="btns"><button class="btn" id="clearBtn" type="button">Clear all</button></div>
+      </div>
+
+      <div class="card">
+        <h2>Overlay</h2>
+        <div class="row">
+          <label for="opacity">Opacity</label>
+          <input type="range" id="opacity" min="10" max="100" value="90">
+          <span class="val" id="opacityVal">90%</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Export</h2>
+        <button class="btn" id="shotBtn" type="button">Save PNG snapshot</button>
+      </div>
+    </aside>
+
+    <section class="centre" aria-label="MRI viewports">
+      <div class="views-wrap">
+        <div class="views" id="viewsGrid">
+          <div class="view" data-box="axial">
+            <div class="view-cap"><b>Axial</b><span>transverse plane</span></div>
+            <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="axial" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="axial" type="button">Centre planes</button></div>
+            <div class="mri-stage"><canvas id="glAx"></canvas></div>
+          </div>
+          <div class="view" data-box="coronal">
+            <div class="view-cap"><b>Coronal</b><span>frontal plane</span></div>
+            <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="coronal" role="group" aria-label="Coronal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="coronal" type="button">Centre planes</button></div>
+            <div class="mri-stage"><canvas id="glCor"></canvas></div>
+          </div>
+          <div class="view" data-box="sagittal">
+            <div class="view-cap"><b>Sagittal</b><span>median plane</span></div>
+            <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="sagittal" role="group" aria-label="Sagittal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="sagittal" type="button">Centre planes</button></div>
+            <div class="mri-stage"><canvas id="glSag"></canvas></div>
+          </div>
+          <div class="view" data-box="render">
+            <div class="view-cap"><b>3D</b><span>volume render</span></div>
+            <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="render" role="group" aria-label="3D rotation lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free rotation" aria-label="Free rotation">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Spin left&ndash;right only" aria-label="Spin left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Tilt up&ndash;down only" aria-label="Tilt up and down only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="render" type="button">Centre planes</button></div>
+            <div class="mri-stage"><canvas id="glRen"></canvas></div>
+          </div>
+        </div>
+        <div class="status" id="status">
+          <div class="bar"><i></i></div>
+          <div>Loading volumes</div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="k">Template</div><div class="v">MNI152 <small>0.74&thinsp;mm</small></div></div>
+        <div class="stat"><div class="k">Atlas</div><div class="v">AAL <small>116 regions</small></div></div>
+        <div class="stat"><div class="k">Highlighted</div><div class="v" id="statCount">0 <small>regions</small></div></div>
+        <div class="stat"><div class="k">Probe</div><div class="v probe-v"><span id="cursorRegion">—</span><small id="cursorCoords">hover a view · drag = crosshair</small></div></div>
+      </div>
+    </section>
+
+  </div>
+
+  <section class="notes" id="notesSec" aria-label="Highlighted regions">
+    <h2 class="sec-h">Highlighted regions <small id="notesCount"></small></h2>
+    <p class="notes-empty" id="notesEmpty">Add a region above and what it does appears here, stacked by layer: cerebrum at the top, the limbic midbrain beneath it, the reptilian core at the bottom.</p>
+    <div id="notesTiers"></div>
+    <p class="notes-caveat">The three layers are MacLean's triune scheme. It stacks a brain map tidily and it is poor evolutionary history — the &ldquo;reptilian&rdquo; structures are not reptilian, and every layer here is present in every vertebrate with a brain. The grouping is a way of reading the map, not a claim about how it was built.</p>
+  </section>
+
+  <p class="estab">Runs fully offline · single file · no server</p>
+  <p class="credits">© 2026 VisualNeuroscience.AI · rendered with <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a> (Rorden lab) · MNI152 template · AAL atlas · set in Flux, Newsreader &amp; Prata</p>
+
+</main>
+
+<script src="assets/niivue.js"></script>
+<script src="assets/atlas-data.js"></script>
+<script src="assets/region-notes.js"></script>
+<script src="assets/slice-tool.js"></script>
+<script src="assets/wheel-zoom.js"></script>
+<script>
+"use strict";
+(function(){
+  var TPL_B64 = MN_ATLAS.TPL_B64, ATLAS_B64 = MN_ATLAS.ATLAS_B64;
+  var REGIONS = MN_ATLAS.REGIONS, RAW_LABELS = MN_ATLAS.RAW_LABELS;
+  var N_LABELS = RAW_LABELS.length;
+
+  var PALETTE = ["#915AD8","#D85AC9","#FE4B83","#FF7847","#E6C14C","#AFF05B","#52F667","#4AE8B7","#4FBEE3","#5575DD"];
+
+  var statusEl = document.getElementById("status");
+  function fail(msg){
+    statusEl.classList.remove("hidden");
+    statusEl.classList.add("error");
+    statusEl.innerHTML = "";
+    var d = document.createElement("div"); d.textContent = msg; statusEl.appendChild(d);
+  }
+
+  /* theme toggle — exact palette inverse, site-wide convention */
+  var themeBtn = document.getElementById("themeBtn");
+  var themeLbl = document.getElementById("themeLbl");
+  if (document.documentElement.getAttribute("data-theme") === "dark"){
+    themeLbl.textContent = "Light"; themeBtn.setAttribute("aria-pressed","true");
+  }
+  themeBtn.addEventListener("click", function(){
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark";
+    if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+    else { root.setAttribute("data-theme","dark"); themeLbl.textContent = "Light"; }
+    themeBtn.setAttribute("aria-pressed", String(!dark));
+    try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+  });
+
+  if (typeof niivue === "undefined"){ fail("NiiVue failed to load — the embedded script did not run."); return; }
+
+  var PRETTY = new Array(N_LABELS).fill("");
+  REGIONS.forEach(function(r){
+    if (r.L != null) PRETTY[r.L] = r.pretty + " (L)";
+    if (r.R != null) PRETTY[r.R] = r.pretty + " (R)";
+    if (r.S != null) PRETTY[r.S] = r.pretty;
+  });
+
+  function b64ToUrl(b64){
+    var bin = atob(b64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return URL.createObjectURL(new Blob([bytes], {type: "application/gzip"}));
+  }
+  function hexToRgb(h){
+    return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
+  }
+
+  /* ── four synced instances: one boxed viewport per plane ── */
+  var PLANES = [
+    {key:"axial",    canvasId:"glAx",  st: niivue.SLICE_TYPE.AXIAL},
+    {key:"coronal",  canvasId:"glCor", st: niivue.SLICE_TYPE.CORONAL},
+    {key:"sagittal", canvasId:"glSag", st: niivue.SLICE_TYPE.SAGITTAL},
+    {key:"render",   canvasId:"glRen", st: niivue.SLICE_TYPE.RENDER}
+  ];
+  var INSTANCES = {};
+  function makeNV(sliceType){
+    return new niivue.Niivue({
+      backColor: [0, 0, 0, 1],   /* pure black, matching the scan's own background so the two blend */
+      crosshairColor: [1, 1, 1, 1],
+      show3Dcrosshair: true,
+      sliceType: sliceType,
+      invertScrollDirection: true,
+      dragAndDropEnabled: false,
+      textHeight: 0.04
+    });
+  }
+  function allNV(){ return PLANES.map(function(p){ return INSTANCES[p.key]; }).filter(Boolean); }
+
+  /* ── direction locks ────────────────────────────────────────────────
+     Each viewport can confine a drag to one direction. The stored value is
+     the axis left FREE to move: "x" left–right, "y" anterior–posterior,
+     "z" superior–inferior — which is also the index into a crosshair
+     position, NiiVue holding those as fractions of the volume. In the 3D
+     box the same switch confines the camera to azimuth or elevation. */
+  var LOCK_AXIS = {x:0, y:1, z:2};
+  var locks = {axial:"free", coronal:"free", sagittal:"free", render:"free"};
+  var anchor = null;        /* crosshair position when the drag began */
+  var camAnchor = null;     /* camera angles when the 3D drag began */
+  var dragBox = null;       /* which viewport the drag started in */
+  var correcting = false;   /* guards the re-entry from our own redraw */
+
+  document.querySelectorAll(".seg[data-lock-for]").forEach(function(seg){
+    var key = seg.getAttribute("data-lock-for");
+    seg.querySelectorAll("[data-lock]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        seg.querySelectorAll("[data-lock]").forEach(function(b){
+          b.classList.toggle("active", b === btn);
+        });
+        locks[key] = btn.getAttribute("data-lock");
+      });
+    });
+  });
+
+  /* A drag starts from wherever the crosshair — or the camera — sits now. */
+  document.querySelectorAll(".view[data-box]").forEach(function(box){
+    var key = box.getAttribute("data-box");
+    var stage = box.querySelector(".mri-stage");
+    if (!stage) return;
+    stage.addEventListener("pointerdown", function(){
+      var nv = INSTANCES[key];
+      if (!nv) return;
+      dragBox = key;
+      anchor = nv.scene.crosshairPos.slice();
+      camAnchor = {az: nv.scene.renderAzimuth, el: nv.scene.renderElevation};
+    });
+  });
+
+  /* Over a viewport the wheel zooms it, and the page stays where it is:
+       cancelling the scroll is what keeps the two from fighting. */
+  document.querySelectorAll(".mri-stage").forEach(function(stage){
+    stage.addEventListener("wheel", function(e){ e.preventDefault(); },
+      {capture: true, passive: false});
+  });
+
+  ["pointerup", "pointercancel"].forEach(function(evt){
+    window.addEventListener(evt, function(){ anchor = null; camAnchor = null; dragBox = null; });
+  });
+
+  /* Put the frozen axes back after NiiVue has moved the crosshair, then let
+     it recompute the readout so the probe reports where the crosshair
+     actually landed rather than where the pointer went. */
+  function applyLock(key, loc){
+    /* The boxes broadcast crosshair moves to one another, so only the box the
+       drag started in may impose its lock — otherwise one view's setting
+       would quietly constrain dragging in all the others. */
+    var free = locks[key];
+    var nv = INSTANCES[key];
+    if (correcting || key !== dragBox || free === "free" || !nv || !anchor){ onLoc(loc); return; }
+    var freeIdx = LOCK_AXIS[free];
+    var pos = nv.scene.crosshairPos;
+    var held = [anchor[0], anchor[1], anchor[2]];
+    held[freeIdx] = pos[freeIdx];
+    if (held[0] === pos[0] && held[1] === pos[1] && held[2] === pos[2]){ onLoc(loc); return; }
+    correcting = true;
+    try{
+      allNV().forEach(function(inst){
+        inst.scene.crosshairPos = held.slice();
+        inst.drawScene();
+      });
+      nv.createOnLocationChange();
+    } catch(e){ onLoc(loc); }
+    finally{ correcting = false; }
+  }
+
+  /* Put the crosshair back at the middle of the volume, so every plane shows
+     its central slice again, and undo any panning or zooming with it. */
+  function centrePlanes(){
+    var nvs = allNV();
+    if (!nvs.length) return;
+    correcting = true;
+    try{
+      nvs.forEach(function(inst){
+        inst.scene.crosshairPos = [0.5, 0.5, 0.5];
+        inst.scene.pan2Dxyzmm = [0, 0, 0, 1];
+        inst.drawScene();
+      });
+      nvs[0].createOnLocationChange();
+    } catch(e){}
+    finally{ correcting = false; }
+  }
+  document.querySelectorAll("[data-centre]").forEach(function(btn){
+    btn.addEventListener("click", centrePlanes);
+  });
+
+  /* The 3D box rotates rather than points, so its lock holds one angle. */
+  function lockCamera(){
+    var free = locks.render;
+    var nv = INSTANCES.render;
+    if (correcting || dragBox !== "render" || free === "free" || !nv || !camAnchor) return;
+    correcting = true;
+    try{
+      if (free === "x") nv.scene.renderElevation = camAnchor.el;
+      else nv.scene.renderAzimuth = camAnchor.az;
+      nv.drawScene();
+    } catch(e){}
+    finally{ correcting = false; }
+  }
+
+  var selections = new Map();
+
+  var chipsEl = document.getElementById("chips");
+  var emptyMsg = document.getElementById("emptyMsg");
+  var selectEl = document.getElementById("regionSelect");
+  var mirrorEl = document.getElementById("mirrorToggle");
+  var regionOut = document.getElementById("cursorRegion");
+  var coordsOut = document.getElementById("cursorCoords");
+  var statCount = document.getElementById("statCount");
+
+  function nextColor(){
+    var used = new Set();
+    selections.forEach(function(s){ used.add(s.color); });
+    for (var i = 0; i < PALETTE.length; i++) if (!used.has(PALETTE[i])) return PALETTE[i];
+    return PALETTE[selections.size % PALETTE.length];
+  }
+
+  function applyColormap(){
+    var R = new Array(N_LABELS).fill(0),
+        G = new Array(N_LABELS).fill(0),
+        B = new Array(N_LABELS).fill(0),
+        A = new Array(N_LABELS).fill(0),
+        I = [];
+    for (var i = 0; i < N_LABELS; i++) I.push(i);
+    selections.forEach(function(s){
+      var rgb = hexToRgb(s.color);
+      s.indices.forEach(function(idx){
+        R[idx] = rgb[0]; G[idx] = rgb[1]; B[idx] = rgb[2]; A[idx] = 255;
+      });
+    });
+    var cm = {R:R, G:G, B:B, A:A, I:I, labels: RAW_LABELS};
+    allNV().forEach(function(nv){
+      if (nv.volumes && nv.volumes.length > 1){
+        nv.volumes[1].setColormapLabel(cm);
+        nv.updateGLVolume();
+      }
+    });
+  }
+
+
+  /* ── what the highlighted regions do ──────────────────────────────────
+     Stacked by layer in a fixed order — cerebrum, limbic midbrain,
+     reptilian core — so the stack reads the same way whichever regions are
+     lit. A layer with nothing selected in it is left out rather than shown
+     empty. */
+  var notesSec = document.getElementById("notesTiers");
+  var notesEmpty = document.getElementById("notesEmpty");
+  var notesCount = document.getElementById("notesCount");
+
+  function renderNotes(){
+    notesSec.innerHTML = "";
+    notesEmpty.classList.toggle("hidden", selections.size > 0);
+    notesCount.textContent = selections.size
+      ? selections.size + (selections.size === 1 ? " region" : " regions")
+      : "";
+    if (!selections.size || typeof MN_NOTES === "undefined") return;
+
+    var bucket = {};
+    selections.forEach(function(sel){
+      var note = MN_NOTES.NOTES[sel.base];
+      if (!note) return;
+      (bucket[note.tier] = bucket[note.tier] || []).push({sel: sel, note: note});
+    });
+
+    MN_NOTES.TIERS.forEach(function(tier){
+      var rows = bucket[tier.id];
+      if (!rows || !rows.length) return;
+
+      var box = document.createElement("div"); box.className = "tier";
+      var head = document.createElement("div"); head.className = "tier-head";
+      head.innerHTML = "<b>" + tier.label + "</b><span>" + tier.sub + "</span>" +
+        '<span class="n">' + rows.length + "</span>";
+      box.appendChild(head);
+
+      var body = document.createElement("div"); body.className = "tier-body";
+      rows.forEach(function(row){
+        var cell = document.createElement("div"); cell.className = "rnote";
+        var h = document.createElement("h3");
+        var dot = document.createElement("span");
+        dot.className = "dot"; dot.style.background = row.sel.color;
+        h.appendChild(dot);
+        h.appendChild(document.createTextNode(row.sel.name));
+        if (row.sel.sideTag){
+          var side = document.createElement("span");
+          side.className = "side"; side.textContent = row.sel.sideTag;
+          h.appendChild(side);
+        }
+        var p = document.createElement("p");
+        p.textContent = row.note.fn;
+        cell.appendChild(h); cell.appendChild(p);
+        body.appendChild(cell);
+      });
+      box.appendChild(body);
+      notesSec.appendChild(box);
+    });
+  }
+
+  function renderChips(){
+    chipsEl.querySelectorAll(".rchip").forEach(function(c){ c.remove(); });
+    emptyMsg.classList.toggle("hidden", selections.size > 0);
+    statCount.innerHTML = selections.size + " <small>region" + (selections.size === 1 ? "" : "s") + "</small>";
+    selections.forEach(function(s, key){
+      var chip = document.createElement("div"); chip.className = "rchip";
+      var dot = document.createElement("span"); dot.className = "dot"; dot.style.background = s.color;
+      var name = document.createElement("span"); name.className = "name"; name.textContent = s.name;
+      name.title = s.name;
+      var side = document.createElement("span"); side.className = "side"; side.textContent = s.sideTag;
+      var x = document.createElement("button"); x.className = "x"; x.type = "button"; x.textContent = "\u00D7";
+      x.setAttribute("aria-label", "Remove " + s.name);
+      x.addEventListener("click", function(){
+        selections.delete(key); renderChips(); applyColormap();
+      });
+      chip.appendChild(dot); chip.appendChild(name); chip.appendChild(side); chip.appendChild(x);
+      chipsEl.appendChild(chip);
+    });
+    renderNotes();
+  }
+
+  function renderDropdown(){
+    var mirror = mirrorEl.checked;
+    while (selectEl.options.length) selectEl.remove(0);
+    var ph = document.createElement("option"); ph.value = ""; ph.textContent = "Add a region\u2026";
+    selectEl.appendChild(ph);
+    var groups = {};
+    REGIONS.forEach(function(r){
+      if (!groups[r.group]){
+        groups[r.group] = document.createElement("optgroup");
+        groups[r.group].label = r.group;
+        selectEl.appendChild(groups[r.group]);
+      }
+      var og = groups[r.group];
+      if (r.S != null){
+        var o = document.createElement("option");
+        o.value = "S:" + r.base; o.textContent = r.pretty;
+        og.appendChild(o);
+      } else if (mirror){
+        var o2 = document.createElement("option");
+        o2.value = "P:" + r.base; o2.textContent = r.pretty;
+        og.appendChild(o2);
+      } else {
+        var oL = document.createElement("option");
+        oL.value = "L:" + r.base; oL.textContent = r.pretty + " (L)";
+        og.appendChild(oL);
+        var oR = document.createElement("option");
+        oR.value = "R:" + r.base; oR.textContent = r.pretty + " (R)";
+        og.appendChild(oR);
+      }
+    });
+  }
+
+  var byBase = {};
+  REGIONS.forEach(function(r){ byBase[r.base] = r; });
+
+  selectEl.addEventListener("change", function(){
+    var v = selectEl.value;
+    if (!v) return;
+    var mode = v.slice(0,1), base = v.slice(2);
+    var r = byBase[base];
+    if (r){
+      var key = mode + ":" + base;
+      if (!selections.has(key)){
+        var entry = null;
+        if (mode === "P") entry = {name: r.pretty, base: r.base, sideTag: "L+R", indices: [r.L, r.R], color: nextColor()};
+        else if (mode === "L") entry = {name: r.pretty, base: r.base, sideTag: "L", indices: [r.L], color: nextColor()};
+        else if (mode === "R") entry = {name: r.pretty, base: r.base, sideTag: "R", indices: [r.R], color: nextColor()};
+        else if (mode === "S") entry = {name: r.pretty, base: r.base, sideTag: "", indices: [r.S], color: nextColor()};
+        if (entry){ selections.set(key, entry); renderChips(); applyColormap(); }
+      }
+    }
+    selectEl.value = "";
+  });
+
+  mirrorEl.addEventListener("change", renderDropdown);
+
+  document.getElementById("clearBtn").addEventListener("click", function(){
+    selections.clear(); renderChips(); applyColormap();
+  });
+
+  var opacityEl = document.getElementById("opacity");
+  var opacityVal = document.getElementById("opacityVal");
+  opacityEl.addEventListener("input", function(){
+    opacityVal.textContent = opacityEl.value + "%";
+    allNV().forEach(function(nv){
+      if (nv.volumes && nv.volumes.length > 1) nv.setOpacity(1, opacityEl.value / 100);
+    });
+  });
+
+  /* layout modes: grid = all four boxes · plane buttons = that box solo */
+  var viewsGrid = document.getElementById("viewsGrid");
+  var viewBtns = document.querySelectorAll("[data-view]");
+  function setMode(mode){
+    var solo = mode !== "grid";
+    viewsGrid.classList.toggle("solo", solo);
+    viewsGrid.querySelectorAll(".view[data-box]").forEach(function(el){
+      el.hidden = solo && el.dataset.box !== mode;
+    });
+  }
+  viewBtns.forEach(function(b){
+    b.addEventListener("click", function(){
+      viewBtns.forEach(function(o){ o.classList.remove("active"); });
+      b.classList.add("active");
+      setMode(b.dataset.view);
+    });
+  });
+
+  /* export: solo box → native snapshot · grid → composite mosaic */
+  document.getElementById("shotBtn").addEventListener("click", function(){
+    var visible = PLANES.filter(function(p){
+      var box = viewsGrid.querySelector('.view[data-box="' + p.key + '"]');
+      return box && !box.hidden && INSTANCES[p.key];
+    });
+    if (visible.length === 0) return;
+    if (visible.length === 1){
+      try { INSTANCES[visible[0].key].saveScene("brain-" + visible[0].key + ".png"); } catch(e){ console.error(e); }
+      return;
+    }
+    try{
+      var canvases = visible.map(function(p){ return document.getElementById(p.canvasId); });
+      visible.forEach(function(p){ try{ INSTANCES[p.key].drawScene(); }catch(e){} });
+      var w = 0, h = 0;
+      canvases.forEach(function(c){ w = Math.max(w, c.width); h = Math.max(h, c.height); });
+      var cols = 2, rows = Math.ceil(visible.length / cols);
+      var gap = Math.max(8, Math.round(w * 0.015)), bd = 2;
+      var out = document.createElement("canvas");
+      out.width = cols * w + (cols + 1) * gap;
+      out.height = rows * h + (rows + 1) * gap;
+      var ctx = out.getContext("2d");
+      var dark = document.documentElement.getAttribute("data-theme") === "dark";
+      ctx.fillStyle = dark ? "#111111" : "#FFFFFF";
+      ctx.fillRect(0, 0, out.width, out.height);
+      canvases.forEach(function(c, i){
+        var x = gap + (i % cols) * (w + gap);
+        var y = gap + Math.floor(i / cols) * (h + gap);
+        ctx.drawImage(c, x, y, w, h);
+        ctx.strokeStyle = dark ? "#FFFFFF" : "#111111";
+        ctx.lineWidth = bd;
+        ctx.strokeRect(x - bd/2, y - bd/2, w + bd, h + bd);
+      });
+      var probe = ctx.getImageData(gap + 10, gap + 10, 1, 1).data;
+      if (probe[3] === 0) throw new Error("blank capture");
+      out.toBlob(function(blob){
+        if (!blob) return;
+        var u = URL.createObjectURL(blob);
+        var a = document.createElement("a"); a.href = u; a.download = "brain-regions.png";
+        document.body.appendChild(a); a.click();
+        setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(u); }, 0);
+      });
+    } catch(e){
+      console.error(e);
+      visible.forEach(function(p, i){
+        setTimeout(function(){ try{ INSTANCES[p.key].saveScene("brain-" + p.key + ".png"); }catch(_){} }, i * 300);
+      });
+    }
+  });
+
+  function onLoc(loc){
+    try{
+      if (loc && loc.mm){
+        coordsOut.textContent = "MNI " + loc.mm[0].toFixed(0) + " " + loc.mm[1].toFixed(0) + " " + loc.mm[2].toFixed(0) + " mm";
+      }
+      var idx = 0;
+      if (loc && loc.values && loc.values.length > 1 && loc.values[1]) idx = Math.round(loc.values[1].value || 0);
+      regionOut.textContent = (idx > 0 && PRETTY[idx]) ? PRETTY[idx] : "\u2014";
+    } catch(e){}
+  }
+
+  renderDropdown();
+  renderChips();
+
+  async function boot(){
+    try{
+      var tplUrl = b64ToUrl(TPL_B64);
+      var atlasUrl = b64ToUrl(ATLAS_B64);
+      for (var i = 0; i < PLANES.length; i++){
+        var p = PLANES[i];
+        var nv = makeNV(p.st);
+        await nv.attachToCanvas(document.getElementById(p.canvasId));
+        nv.onLocationChange = (function(key){
+          return function(loc){ applyLock(key, loc); };
+        })(p.key);
+        if (p.key === "render") nv.onAzimuthElevationChange = lockCamera;
+        INSTANCES[p.key] = nv;
+      }
+      await Promise.all(PLANES.map(function(p){
+        return INSTANCES[p.key].loadVolumes([
+          {url: tplUrl, name: "mni152.nii.gz", colormap: "gray", opacity: 1},
+          {url: atlasUrl, name: "aal.nii.gz", opacity: 0.9}
+        ]);
+      }));
+      PLANES.forEach(function(p){ INSTANCES[p.key].setSliceType(p.st); });
+      /* bidirectional crosshair + camera sync between all boxes */
+      PLANES.forEach(function(p){
+        var others = PLANES.filter(function(q){ return q.key !== p.key; })
+                           .map(function(q){ return INSTANCES[q.key]; });
+        INSTANCES[p.key].broadcastTo(others, {"2d": true, "3d": true});
+      });
+
+      /* The slice tool goes on the 3D box only: a clip plane cuts the volume,
+         which is what the render draws. The 2D planes already are slices. */
+      if (window.MN_SLICE){
+        var renBox = document.querySelector('.view[data-box="render"]');
+        if (renBox) MN_SLICE.attach({
+          stage: renBox.querySelector(".mri-stage"),
+          tools: renBox.querySelector(".view-tools"),
+          nv: INSTANCES.render
+        });
+      }
+
+      /* the wheel zooms the 3D model rather than the 2D pan behind it */
+      if (window.MN_WHEEL){
+        var wheelBox = document.querySelector('.view[data-box="render"]');
+        if (wheelBox) MN_WHEEL.attach({
+          stage: wheelBox.querySelector(".mri-stage"),
+          nv: INSTANCES.render
+        });
+      }
+      applyColormap();
+      statusEl.classList.add("hidden");
+    } catch(err){
+      console.error(err);
+      fail("Could not start the viewer: " + (err && err.message ? err.message : err) +
+           " \u2014 this page needs WebGL2 (any modern desktop or mobile browser).");
+    }
+  }
+  boot();
+})();
+</script>
+</body>
+</html>

@@ -33,72 +33,54 @@ body{
   border:1px solid rgba(255,160,80,.28);
 }
 
-/* the scans, laid across the whole card and burnt back so the ring reads */
-.scans{ position:absolute; inset:0; display:flex; align-items:center; }
+/* the scans: the side section on the left and the plan view on the right,
+   each held clear of the card's edge so the whole brain is in frame rather
+   than running off it */
+.scans{ position:absolute; inset:0; }
 .scans img{
-  height:100%; width:auto; object-fit:cover; display:block;
-  opacity:.92; filter:saturate(1.2) contrast(1.06);
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:auto; display:block;
+  opacity:.95; filter:saturate(1.2) contrast(1.06);
 }
-.scans .sag{
-  margin-left:-90px;
-  -webkit-mask-image:linear-gradient(90deg, #000 62%, transparent);
-  mask-image:linear-gradient(90deg, #000 62%, transparent);
-}
-.scans .ax{
-  margin-left:auto; margin-right:-70px;
-  -webkit-mask-image:linear-gradient(270deg, #000 62%, transparent);
-  mask-image:linear-gradient(270deg, #000 62%, transparent);
-}
-.scans .cor{
-  position:absolute; left:50%; transform:translateX(-50%); height:112%; opacity:.42;
-  -webkit-mask-image:linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
-  mask-image:linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
-}
+.scans .sag{ left:26px; height:436px; }
+.scans .ax{ right:34px; height:452px; }
 
 /* a warm wash and a vignette, so the middle stays legible */
 .wash{
   position:absolute; inset:0;
   background:
-    radial-gradient(56% 76% at 50% 50%, rgba(10,7,5,.72) 0%, rgba(10,7,5,.42) 44%, rgba(10,7,5,0) 80%),
-    linear-gradient(90deg, rgba(10,7,5,.88) 0%, rgba(10,7,5,0) 24%, rgba(10,7,5,0) 76%, rgba(10,7,5,.88) 100%),
-    linear-gradient(0deg, rgba(10,7,5,.9) 0%, rgba(10,7,5,0) 34%, rgba(10,7,5,0) 70%, rgba(10,7,5,.85) 100%);
+    linear-gradient(90deg, rgba(10,7,5,.55) 0%, rgba(10,7,5,0) 18%, rgba(10,7,5,0) 82%, rgba(10,7,5,.55) 100%),
+    linear-gradient(0deg, rgba(10,7,5,.88) 0%, rgba(10,7,5,0) 26%, rgba(10,7,5,0) 74%, rgba(10,7,5,.82) 100%);
 }
 
-/* a soft ground behind the wordmark only — enough for the type to read,
-   small enough that the scans still show through the ring around it */
-.plinth{
+/* the plate the name sits on: soft-edged, so it reads as a wash over the
+   scans rather than a panel laid on top of them */
+.plate{
   position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  width:820px; height:430px; pointer-events:none;
+  width:790px; height:520px; pointer-events:none;
   background:radial-gradient(50% 50% at 50% 50%,
-    rgba(8,5,3,.97) 0%, rgba(8,5,3,.93) 38%, rgba(8,5,3,.7) 62%, rgba(8,5,3,0) 100%);
+    rgba(8,5,3,.95) 0%, rgba(8,5,3,.9) 46%, rgba(8,5,3,.62) 70%, rgba(8,5,3,0) 100%);
 }
 
-/* the flow-state ring, centred and sat over the scans */
-.ring{
-  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  width:520px; height:520px; opacity:.96;
-}
-.ring svg{ width:100%; height:100%; display:block; }
-
-/* the wordmark, in Flux, at the centre of the ring */
+/* the name, the mark beneath it, and the line under both */
 .mark{
   position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  text-align:center; width:100%;
+  text-align:center; width:820px;
 }
 .mark .word{
   font-family:'Flux','Afacad Flux',sans-serif; font-weight:500;
-  font-size:58px; line-height:1; letter-spacing:.012em; color:#FFFFFF;
-  text-shadow:0 0 34px rgba(10,7,5,.95), 0 0 12px rgba(10,7,5,.95);
+  font-size:76px; line-height:1; letter-spacing:.01em; color:#FFFFFF;
+  text-shadow:0 0 40px rgba(8,5,3,.98), 0 0 16px rgba(8,5,3,.95);
 }
-.mark .rule{
-  width:196px; height:1px; margin:16px auto 14px;
-  background:linear-gradient(90deg, transparent, rgba(255,168,92,.85), transparent);
+.mark .ring{
+  width:132px; height:132px; margin:26px auto 22px; opacity:.98;
 }
+.mark .ring svg{ width:100%; height:100%; display:block; }
 .mark .strap{
   font-family:'Flux','Afacad Flux',sans-serif; font-weight:500;
-  font-size:15px; letter-spacing:.34em; text-transform:uppercase;
+  font-size:19px; letter-spacing:.34em; text-transform:uppercase;
   color:#FFB26B;
-  text-shadow:0 0 20px rgba(10,7,5,.95);
+  text-shadow:0 0 22px rgba(8,5,3,.98);
 }
 
 /* corner marks, so the card reads as a plate rather than a screenshot */
@@ -125,13 +107,15 @@ body{
 <div class="card" id="card">
   <div class="scans">
     <img class="sag" src="assets/social/sagittal.png" alt="" width="256" height="215">
-    <img class="cor" src="assets/social/coronal.png" alt="" width="207" height="215">
     <img class="ax" src="assets/social/axial.png" alt="" width="207" height="256">
   </div>
   <div class="wash"></div>
 
-  <div class="plinth"></div>
-  <div class="ring"><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 110 501 501" role="img" aria-label="VisualNeuroscience">
+  <div class="plate"></div>
+
+  <div class="mark">
+    <div class="word">VisualNeuroscience.AI</div>
+    <div class="ring"><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 110 501 501" role="img" aria-label="VisualNeuroscience">
 <title>VisualNeuroscience</title>
 <defs>
 <linearGradient id="lg0" gradientUnits="userSpaceOnUse" x1="602.27" y1="370.58" x2="586.06" y2="447.76"><stop offset="0%" stop-color="#FF507A"/><stop offset="100%" stop-color="#FF704E"/></linearGradient>
@@ -183,10 +167,6 @@ body{
 <path d="M189.79,196.53 A236.0,236.0 0 0 1 249.26,151.60" stroke="#4E95E4" stroke-width="13.0"/>
 <path d="M266.11,143.48 A236.0,236.0 0 0 1 338.32,125.00" stroke="#5A61D8" stroke-width="13.0"/>
 </g></svg></div>
-
-  <div class="mark">
-    <div class="word">VisualNeuroscience.AI</div>
-    <div class="rule"></div>
     <div class="strap">Mapping the brain in the browser</div>
   </div>
 
