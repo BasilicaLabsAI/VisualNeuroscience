@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Share Card — VisualNeuroscience.AI</title>
-<meta name="description" content="The sharing card: the flow-state ring over orange-tinted MNI152 slices, with the wordmark at its centre.">
+<meta name="description" content="The sharing card: the flow-state ring over greyscale MNI152 slices, with the wordmark at its centre.">
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
 <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@ body{
 .scans img{
   position:absolute; top:50%; transform:translateY(-50%);
   width:auto; display:block;
-  opacity:.95; filter:saturate(1.2) contrast(1.06);
+  opacity:.95; filter:contrast(1.06);
 }
 .scans .sag{ left:26px; height:436px; }
 .scans .ax{ right:34px; height:452px; }
@@ -174,7 +174,7 @@ body{
   <div class="corner br">MNI152 &middot; AAL-116</div>
 </div>
 
-<p class="note">The sharing card, at its true size of <b>1200&thinsp;&times;&thinsp;630</b> — the ratio link previews crop to. The scans are real slices of the MNI152 template the site ships, cut by <b>scripts/make_social.py</b> and put under an orange ramp; the ring is the flow state as the Network Atlas draws it. Rendered to <b>assets/social-card.jpg</b>, which every page points at for <b>og:image</b>.</p>
+<p class="note">The sharing card, at its true size of <b>1200&thinsp;&times;&thinsp;630</b> — the ratio link previews crop to. The scans are real slices of the MNI152 template the site ships, cut by <b>scripts/make_social.py</b> and put under the standard greyscale; the ring is the flow state as the Network Atlas draws it. Rendered to <b>assets/social-card.jpg</b>, which every page points at for <b>og:image</b>.</p>
 
 </body>
 </html>

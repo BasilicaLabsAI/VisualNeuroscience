@@ -9,6 +9,10 @@ and re-run this to keep the mark in step.
 
     python3 scripts/make_logo.py > site/assets/logo.svg
 
+The mark has no background of its own. It is the ring and nothing else, so it
+reads on a white page and a black one alike, and the browser tab picks up
+whichever chrome the reader is running.
+
 The site uses this one mark everywhere — masthead and browser tab alike — so
 the tab shows what the page shows. A --favicon variant is kept for the case
 where that stops working: it drops the threads and thickens the arcs to the
@@ -115,9 +119,8 @@ for j, l in enumerate(LINKS):
         f'<stop offset="100%" stop-color="{colour[l[1]]}"/></linearGradient>')
 out.append("</defs>")
 
-# a filled circle rather than the square the box would otherwise be
-out.append(f'<circle cx="{CX:.0f}" cy="{CY:.0f}" r="{BOX:.0f}" fill="#111111"/>')
-
+# No plate behind the ring: the mark is drawn on whatever it is placed on, so
+# it sits on the light page and the dark one without carrying its own square.
 out.append('<g fill="none" stroke-linecap="butt">')
 for j, l in enumerate(LINKS if not FAVICON else []):
     w = (1.9 + l[2]*3.8)*1.18              # heavier than the page, for small sizes

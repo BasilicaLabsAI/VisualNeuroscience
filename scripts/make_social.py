@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Cut orange-tinted MRI slices for the sharing card.
+"""Cut greyscale MRI slices for the sharing card.
 
 Reads the same MNI152 volume the site ships — no download, no second copy of
 the data — takes one slice down each anatomical axis and writes it out under
-an orange ramp, so the card's scans are the real thing rather than stock art.
+the greyscale a scanner writes, so the card's scans read as scans rather than
+as stock art with a filter on them.
 
     python3 scripts/make_social.py
 
@@ -25,15 +26,14 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ATLAS_JS = os.path.join(ROOT, "site", "assets", "atlas-data.js")
 OUT_DIR = os.path.join(ROOT, "site", "assets", "social")
 
-# black through burnt orange to a warm highlight — the scan reads as a scan,
-# but in the site's own warm key rather than clinical grey
+# The standard radiological greyscale: black through to white, with the mid
+# tones lifted a little so grey and white matter stay apart on a small card.
 RAMP = [
     (0.00, (0, 0, 0)),
-    (0.18, (34, 12, 2)),
-    (0.40, (120, 44, 4)),
-    (0.62, (214, 96, 18)),
-    (0.82, (255, 158, 66)),
-    (1.00, (255, 226, 184)),
+    (0.25, (58, 58, 58)),
+    (0.50, (124, 124, 124)),
+    (0.75, (196, 196, 196)),
+    (1.00, (255, 255, 255)),
 ]
 
 

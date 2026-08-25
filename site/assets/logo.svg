@@ -14,7 +14,6 @@
 <linearGradient id="lg10" gradientUnits="userSpaceOnUse" x1="287.66" y1="591.46" x2="224.13" y2="560.86"><stop offset="0%" stop-color="#AFF05B"/><stop offset="100%" stop-color="#6BF75C"/></linearGradient>
 <linearGradient id="lg11" gradientUnits="userSpaceOnUse" x1="600.94" y1="387.45" x2="416.02" y2="595.94"><stop offset="0%" stop-color="#FF507A"/><stop offset="100%" stop-color="#DAD358"/></linearGradient>
 </defs>
-<circle cx="360" cy="360" r="250" fill="#111111"/>
 <g fill="none" stroke-linecap="butt">
 <path d="M602.27,370.58 C413.30,362.33 409.73,379.31 586.06,447.76" stroke="url(#lg0)" stroke-width="4.71" opacity="1.00"/>
 <path d="M598.44,404.18 C412.46,369.72 349.49,412.30 312.23,597.75" stroke="url(#lg1)" stroke-width="4.48" opacity="0.98"/>

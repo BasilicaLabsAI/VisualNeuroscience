@@ -186,18 +186,24 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
   display:inline-flex; align-items:center; gap:.45rem;
 }
 
-/* the figure: line art in the running colour, so it flips with the theme */
+/* the figure. Each box shows a capture of what its own page actually draws,
+   taken from the live page rather than drawn by hand, so the front page can
+   only ever promise what the site delivers. They are renders on black, so
+   they sit on a plate of their own rather than on the paper. */
 .fig{
   margin:1rem 0 .2rem; display:flex; align-items:center; justify-content:center;
   flex:1 1 auto; min-height:0;
 }
-.fig svg{ width:100%; height:auto; max-height:100%; color:var(--ink); }
+.shot{
+  display:block; width:100%; overflow:hidden;
+  border:1px solid var(--ink-35); background:#000000;
+}
+.shot img{ width:100%; height:auto; display:block; }
 .m-atlas .fig{ margin-top:1.4rem; }
-.m-atlas .fig svg{ max-width:min(100%,520px); }
-.m-network .fig svg, .m-tracts .fig svg, .m-recept .fig svg{ max-width:min(100%,340px); }
 
-/* the ring, which is the mark itself, keeps its own colours */
-.m-network .fig img{ width:min(100%,290px); height:auto; }
+
+/* the ring is the mark itself, drawn on nothing, so it needs no plate */
+.m-network .fig img{ width:min(100%,520px); height:auto; }
 
 /* the wide box lays its figure beside the text rather than above it */
 .box-h{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(16px,1.7vw,26px); align-items:stretch; }
@@ -291,67 +297,7 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
       <h2>Region Atlas</h2>
       <p>Pick any of the 116 AAL regions and watch it light up on the MNI152 template at once in axial, coronal, sagittal and 3D. Cut the volume open along any axis to see the scan inside the slice, probe a voxel to learn which parcel it belongs to, and read what each highlighted region does beneath the views — stacked cerebrum, midbrain, reptilian core.</p>
       <div class="fig" aria-hidden="true">
-        <svg viewBox="0 0 420 428" fill="none" stroke="currentColor">
-          <g font-family="Flux, 'Afacad Flux', sans-serif" font-size="9" letter-spacing="2.2"
-             fill="currentColor" stroke="none" opacity=".55">
-            <text x="8" y="10">AXIAL</text><text x="228" y="10">CORONAL</text>
-            <text x="8" y="230">SAGITTAL</text><text x="228" y="230">3D</text>
-          </g>
-          <g stroke-width="1" opacity=".45">
-            <rect x="0" y="18" width="200" height="182"/><rect x="220" y="18" width="200" height="182"/>
-            <rect x="0" y="238" width="200" height="182"/><rect x="220" y="238" width="200" height="182"/>
-          </g>
-
-          <!-- axial: parcels inked in, and the probe crosshair -->
-          <g transform="translate(0,18)">
-            <ellipse cx="76" cy="62" rx="21" ry="27" transform="rotate(-18 76 62)" fill="currentColor" stroke="none" opacity=".62"/>
-            <ellipse cx="128" cy="70" rx="18" ry="24" transform="rotate(17 128 70)" fill="currentColor" stroke="none" opacity=".24"/>
-            <ellipse cx="70" cy="128" rx="16" ry="23" transform="rotate(13 70 128)" fill="currentColor" stroke="none" opacity=".4"/>
-            <ellipse cx="130" cy="134" rx="19" ry="21" transform="rotate(-11 130 134)" fill="currentColor" stroke="none" opacity=".15"/>
-            <path d="M100,14 C138,14 166,44 166,92 C166,148 138,170 100,170 C62,170 34,148 34,92 C34,44 62,14 100,14 Z" stroke-width="1.5"/>
-            <path d="M100,17 V167" stroke-width="1" opacity=".5"/>
-            <path d="M90,84 C83,96 83,114 91,126" stroke-width="1.2" opacity=".7"/>
-            <path d="M110,84 C117,96 117,114 109,126" stroke-width="1.2" opacity=".7"/>
-            <path d="M4,104 H62 M90,104 H196" stroke-width="1" opacity=".5" stroke-dasharray="4 4"/>
-            <path d="M76,26 V90 M76,118 V174" stroke-width="1" opacity=".5" stroke-dasharray="4 4"/>
-            <circle cx="76" cy="104" r="5" stroke-width="1.2"/>
-          </g>
-
-          <!-- coronal: square shoulders, temporal lobes hanging under them -->
-          <g transform="translate(220,18)">
-            <path d="M62,52 C62,34 84,26 100,32 C116,26 138,34 138,52 C138,64 130,72 118,74 L82,74 C70,72 62,64 62,52 Z" fill="currentColor" stroke="none" opacity=".5"/>
-            <path d="M100,16 C142,16 168,44 168,84 C168,110 162,126 150,134 C148,150 138,158 126,156 C120,164 108,166 100,160 C92,166 80,164 74,156 C62,158 52,150 50,134 C38,126 32,110 32,84 C32,44 58,16 100,16 Z" stroke-width="1.5"/>
-            <path d="M100,20 V150" stroke-width="1" opacity=".5"/>
-            <path d="M84,96 C78,106 78,118 84,126 M116,96 C122,106 122,118 116,126" stroke-width="1.2" opacity=".7"/>
-            <path d="M46,120 C58,128 72,130 84,126 M154,120 C142,128 128,130 116,126" stroke-width="1" opacity=".4"/>
-          </g>
-
-          <!-- sagittal: cerebrum, corpus callosum, cerebellum, brainstem -->
-          <g transform="translate(0,238)">
-            <path d="M30,88 C30,46 62,20 102,20 C144,20 174,48 174,86 C174,108 162,124 142,130 L62,130 C42,124 30,110 30,88 Z" fill="currentColor" stroke="none" opacity=".16"/>
-            <path d="M62,88 C68,66 96,58 124,62 C142,65 152,74 152,84 C144,76 128,70 110,71 C88,72 72,80 66,94 Z" fill="currentColor" stroke="none" opacity=".55"/>
-            <path d="M30,88 C30,46 62,20 102,20 C144,20 174,48 174,86 C174,108 162,124 142,130 L62,130 C42,124 30,110 30,88 Z" stroke-width="1.5"/>
-            <ellipse cx="144" cy="143" rx="27" ry="20" stroke-width="1.4"/>
-            <path d="M122,135 H166 M119,143 H169 M122,151 H166" stroke-width=".9" opacity=".5"/>
-            <path d="M118,127 C118,144 114,160 112,174 L96,174 C98,158 100,143 100,127 Z" fill="var(--paper)" stroke="none"/>
-            <path d="M118,127 C118,144 114,160 112,174 L96,174 C98,158 100,143 100,127" stroke-width="1.4" fill="currentColor" fill-opacity=".26"/>
-            <path d="M46,62 C70,74 104,76 132,68" stroke-width="1" opacity=".38"/>
-            <path d="M40,44 C64,58 106,60 140,50" stroke-width="1" opacity=".38"/>
-            <path d="M50,110 C74,120 108,120 136,112" stroke-width="1" opacity=".38"/>
-          </g>
-
-          <!-- 3D: the same head, turned, with parcels laid on the surface -->
-          <g transform="translate(220,238)">
-            <path d="M26,86 C26,44 62,16 104,20 C154,25 184,54 182,90 C180,120 158,142 126,150 C116,158 100,160 90,154 C70,155 52,146 42,131 C30,118 26,102 26,86 Z" fill="currentColor" stroke="none" opacity=".14"/>
-            <path d="M64,56 C84,42 112,44 124,60 C132,72 124,86 106,90 C86,94 66,84 62,72 C60,64 60,60 64,56 Z" fill="currentColor" stroke="none" opacity=".6"/>
-            <path d="M132,92 C150,90 162,100 160,112 C158,124 142,132 128,126 C116,120 114,102 132,92 Z" fill="currentColor" stroke="none" opacity=".34"/>
-            <path d="M26,86 C26,44 62,16 104,20 C154,25 184,54 182,90 C180,120 158,142 126,150 C116,158 100,160 90,154 C70,155 52,146 42,131 C30,118 26,102 26,86 Z" stroke-width="1.5"/>
-            <path d="M42,56 C72,72 118,74 156,58" stroke-width="1" opacity=".36"/>
-            <path d="M30,92 C70,110 126,112 178,94" stroke-width="1" opacity=".36"/>
-            <path d="M42,126 C74,142 114,146 150,134" stroke-width="1" opacity=".36"/>
-            <path d="M88,22 C82,60 82,112 90,154" stroke-width="1" opacity=".28"/>
-          </g>
-        </svg>
+        <span class="shot"><img src="assets/home/atlas.jpg" alt="" decoding="async" width="900" height="1013"></span>
       </div>
       <div class="meta">116 parcels &middot; four viewports &middot; slice tool &middot; PNG export</div>
       <div class="go">Open the atlas &rarr;</div>
@@ -369,59 +315,25 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
       <div class="go">Open the ring &rarr;</div>
     </a>
 
-    <!-- ── the wiring ─────────────────────────────────────────────── -->
+    <!-- ── the tractogram ─────────────────────────────────────────── -->
     <a class="box m-tracts" href="tracts.html">
       <div class="kicker">White matter</div>
       <h2>Tractography</h2>
       <p>The HCP1065 population-average tractogram: a million estimated fibre paths through the white matter, coloured by the direction each one runs and turned freely in 3D.</p>
       <div class="fig" aria-hidden="true">
-        <svg viewBox="0 0 240 165" fill="none" stroke="currentColor" stroke-linecap="round">
-          <path d="M24,140 C54,38 186,38 216,140" stroke-width="1.7" opacity=".9"/>
-          <path d="M37,145 C63,53 177,53 203,145" stroke-width="1.7" opacity=".78"/>
-          <path d="M50,150 C72,68 168,68 190,150" stroke-width="1.7" opacity=".66"/>
-          <path d="M63,154 C81,84 159,84 177,154" stroke-width="1.7" opacity=".54"/>
-          <path d="M76,158 C90,100 150,100 164,158" stroke-width="1.7" opacity=".42"/>
-          <path d="M113,96 C110,122 107,142 104,162" stroke-width="1.5" opacity=".8"/>
-          <path d="M120,94 C120,120 120,142 120,163" stroke-width="1.5" opacity=".9"/>
-          <path d="M127,96 C130,122 133,142 136,162" stroke-width="1.5" opacity=".8"/>
-          <path d="M89,161 C97,110 143,110 151,161" stroke-width="1.7" opacity=".32"/>
-          <path d="M18,120 C40,96 70,90 96,96" stroke-width="1.3" opacity=".5"/>
-          <path d="M222,120 C200,96 170,90 144,96" stroke-width="1.3" opacity=".5"/>
-          <path d="M14,134 C38,112 68,104 94,110" stroke-width="1.3" opacity=".36"/>
-          <path d="M226,134 C202,112 172,104 146,110" stroke-width="1.3" opacity=".36"/>
-          <path d="M100,90 C90,70 74,58 54,54" stroke-width="1.2" opacity=".45"/>
-          <path d="M140,90 C150,70 166,58 186,54" stroke-width="1.2" opacity=".45"/>
-        </svg>
+        <span class="shot"><img src="assets/home/tracts.jpg" alt="" loading="lazy" decoding="async" width="1200" height="700"></span>
       </div>
       <div class="meta">Direction-coloured streamlines &middot; free rotation</div>
       <div class="go">Open the tractogram &rarr;</div>
     </a>
 
-    <!-- ── the chemistry ──────────────────────────────────────────── -->
+    <!-- ── the receptors ─────────────────────────────────────────── -->
     <a class="box m-recept" href="receptors.html">
-      <div class="kicker">Chemistry</div>
+      <div class="kicker">Wiring</div>
       <h2>Receptor Density</h2>
       <p>How thickly each receptor family sits in each structure, in fmol per mg of tissue — read by receptor or by region, as a chart, a table, or a primer on what the receptor types do.</p>
       <div class="fig" aria-hidden="true">
-        <svg viewBox="0 0 240 165" fill="none" stroke="currentColor">
-          <!-- nested density contours -->
-          <path d="M120,16 C176,16 214,52 214,80 C214,114 174,132 120,132 C66,132 26,114 26,80 C26,52 64,16 120,16 Z" fill="currentColor" stroke="none" opacity=".10"/>
-          <path d="M120,32 C162,32 192,58 192,80 C192,104 162,118 120,118 C78,118 48,104 48,80 C48,58 78,32 120,32 Z" fill="currentColor" stroke="none" opacity=".16"/>
-          <path d="M120,48 C148,48 170,62 170,80 C170,98 148,106 120,106 C92,106 70,98 70,80 C70,62 92,48 120,48 Z" fill="currentColor" stroke="none" opacity=".26"/>
-          <path d="M120,62 C136,62 148,70 148,80 C148,92 136,96 120,96 C104,96 92,92 92,80 C92,70 104,62 120,62 Z" fill="currentColor" stroke="none" opacity=".6"/>
-          <!-- the scale it is read against -->
-          <g stroke="none" fill="currentColor">
-            <rect x="26" y="146" width="23.5" height="13" opacity=".08"/>
-            <rect x="49.5" y="146" width="23.5" height="13" opacity=".18"/>
-            <rect x="73" y="146" width="23.5" height="13" opacity=".3"/>
-            <rect x="96.5" y="146" width="23.5" height="13" opacity=".44"/>
-            <rect x="120" y="146" width="23.5" height="13" opacity=".58"/>
-            <rect x="143.5" y="146" width="23.5" height="13" opacity=".72"/>
-            <rect x="167" y="146" width="23.5" height="13" opacity=".86"/>
-            <rect x="190.5" y="146" width="23.5" height="13" opacity="1"/>
-          </g>
-          <rect x="26" y="146" width="188" height="13" stroke-width="1"/>
-        </svg>
+        <span class="shot"><img src="assets/home/receptors.jpg" alt="" loading="lazy" decoding="async" width="1040" height="610"></span>
       </div>
       <div class="meta">fmol / mg tissue &middot; chart, table &amp; primer</div>
       <div class="go">Open the densities &rarr;</div>
