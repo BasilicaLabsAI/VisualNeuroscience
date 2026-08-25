@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Share Card — VisualNeuroscience.AI</title>
+<meta name="description" content="The sharing card: the flow-state ring over orange-tinted MNI152 slices, with the wordmark at its centre.">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
+<meta name="color-scheme" content="dark">
+<style>
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:block;
+}
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:#0A0705; color:#FFFFFF;
+  font-family:'Newsreader',Georgia,serif;
+  display:flex; flex-direction:column; align-items:center; gap:22px;
+  padding:28px 16px 64px;
+}
+
+/* ── the card ───────────────────────────────────────────────────────────
+   Fixed at 1200x630, the size link previews are cut to. Everything is laid
+   out in absolute pixels rather than viewport units so the rendered PNG and
+   the page agree exactly. */
+.card{
+  position:relative; width:1200px; height:630px; flex:none;
+  background:#0A0705; overflow:hidden;
+  border:1px solid rgba(255,160,80,.28);
+}
+
+/* the scans, laid across the whole card and burnt back so the ring reads */
+.scans{ position:absolute; inset:0; display:flex; align-items:center; }
+.scans img{
+  height:100%; width:auto; object-fit:cover; display:block;
+  opacity:.92; filter:saturate(1.2) contrast(1.06);
+}
+.scans .sag{
+  margin-left:-90px;
+  -webkit-mask-image:linear-gradient(90deg, #000 62%, transparent);
+  mask-image:linear-gradient(90deg, #000 62%, transparent);
+}
+.scans .ax{
+  margin-left:auto; margin-right:-70px;
+  -webkit-mask-image:linear-gradient(270deg, #000 62%, transparent);
+  mask-image:linear-gradient(270deg, #000 62%, transparent);
+}
+.scans .cor{
+  position:absolute; left:50%; transform:translateX(-50%); height:112%; opacity:.42;
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
+  mask-image:linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
+}
+
+/* a warm wash and a vignette, so the middle stays legible */
+.wash{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(56% 76% at 50% 50%, rgba(10,7,5,.72) 0%, rgba(10,7,5,.42) 44%, rgba(10,7,5,0) 80%),
+    linear-gradient(90deg, rgba(10,7,5,.88) 0%, rgba(10,7,5,0) 24%, rgba(10,7,5,0) 76%, rgba(10,7,5,.88) 100%),
+    linear-gradient(0deg, rgba(10,7,5,.9) 0%, rgba(10,7,5,0) 34%, rgba(10,7,5,0) 70%, rgba(10,7,5,.85) 100%);
+}
+
+/* a soft ground behind the wordmark only — enough for the type to read,
+   small enough that the scans still show through the ring around it */
+.plinth{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:820px; height:430px; pointer-events:none;
+  background:radial-gradient(50% 50% at 50% 50%,
+    rgba(8,5,3,.97) 0%, rgba(8,5,3,.93) 38%, rgba(8,5,3,.7) 62%, rgba(8,5,3,0) 100%);
+}
+
+/* the flow-state ring, centred and sat over the scans */
+.ring{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:520px; height:520px; opacity:.96;
+}
+.ring svg{ width:100%; height:100%; display:block; }
+
+/* the wordmark, in Flux, at the centre of the ring */
+.mark{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  text-align:center; width:100%;
+}
+.mark .word{
+  font-family:'Flux','Afacad Flux',sans-serif; font-weight:500;
+  font-size:58px; line-height:1; letter-spacing:.012em; color:#FFFFFF;
+  text-shadow:0 0 34px rgba(10,7,5,.95), 0 0 12px rgba(10,7,5,.95);
+}
+.mark .rule{
+  width:196px; height:1px; margin:16px auto 14px;
+  background:linear-gradient(90deg, transparent, rgba(255,168,92,.85), transparent);
+}
+.mark .strap{
+  font-family:'Flux','Afacad Flux',sans-serif; font-weight:500;
+  font-size:15px; letter-spacing:.34em; text-transform:uppercase;
+  color:#FFB26B;
+  text-shadow:0 0 20px rgba(10,7,5,.95);
+}
+
+/* corner marks, so the card reads as a plate rather than a screenshot */
+.corner{
+  position:absolute; font-family:'Flux','Afacad Flux',sans-serif; font-weight:500;
+  font-size:13px; letter-spacing:.28em; text-transform:uppercase; color:#C98A56;
+}
+.corner.tl{ left:40px; top:36px; }
+.corner.br{ right:40px; bottom:36px; color:#8A6547; }
+
+.note{
+  font-family:'Newsreader',Georgia,serif; font-style:italic;
+  font-size:.92rem; color:#B79B87; max-width:1200px; padding:0 4px;
+}
+.note b{ font-style:normal; font-weight:400; color:#FFB26B; }
+@media (max-width:1280px){
+  /* the card keeps its true pixel size; the page just lets it scroll */
+  body{ align-items:flex-start; overflow-x:auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <div class="scans">
+    <img class="sag" src="assets/social/sagittal.png" alt="" width="256" height="215">
+    <img class="cor" src="assets/social/coronal.png" alt="" width="207" height="215">
+    <img class="ax" src="assets/social/axial.png" alt="" width="207" height="256">
+  </div>
+  <div class="wash"></div>
+
+  <div class="plinth"></div>
+  <div class="ring"><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 110 501 501" role="img" aria-label="VisualNeuroscience">
+<title>VisualNeuroscience</title>
+<defs>
+<linearGradient id="lg0" gradientUnits="userSpaceOnUse" x1="602.27" y1="370.58" x2="586.06" y2="447.76"><stop offset="0%" stop-color="#FF507A"/><stop offset="100%" stop-color="#FF704E"/></linearGradient>
+<linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="598.44" y1="404.18" x2="312.23" y2="597.75"><stop offset="0%" stop-color="#FF507A"/><stop offset="100%" stop-color="#AFF05B"/></linearGradient>
+<linearGradient id="lg2" gradientUnits="userSpaceOnUse" x1="575.66" y1="470.90" x2="516.10" y2="545.58"><stop offset="0%" stop-color="#FF704E"/><stop offset="100%" stop-color="#F89F3A"/></linearGradient>
+<linearGradient id="lg3" gradientUnits="userSpaceOnUse" x1="474.13" y1="573.97" x2="399.43" y2="599.27"><stop offset="0%" stop-color="#F89F3A"/><stop offset="100%" stop-color="#DAD358"/></linearGradient>
+<linearGradient id="lg4" gradientUnits="userSpaceOnUse" x1="382.66" y1="601.44" x2="194.41" y2="182.84"><stop offset="0%" stop-color="#DAD358"/><stop offset="100%" stop-color="#4E95E4"/></linearGradient>
+<linearGradient id="lg5" gradientUnits="userSpaceOnUse" x1="220.66" y1="161.53" x2="299.87" y2="125.07"><stop offset="0%" stop-color="#4E95E4"/><stop offset="100%" stop-color="#5A61D8"/></linearGradient>
+<linearGradient id="lg6" gradientUnits="userSpaceOnUse" x1="185.36" y1="528.25" x2="207.16" y2="171.73"><stop offset="0%" stop-color="#6BF75C"/><stop offset="100%" stop-color="#4E95E4"/></linearGradient>
+<linearGradient id="lg7" gradientUnits="userSpaceOnUse" x1="157.11" y1="492.82" x2="263.87" y2="582.63"><stop offset="0%" stop-color="#41F186"/><stop offset="100%" stop-color="#AFF05B"/></linearGradient>
+<linearGradient id="lg8" gradientUnits="userSpaceOnUse" x1="133.94" y1="447.76" x2="203.89" y2="545.57"><stop offset="0%" stop-color="#41F186"/><stop offset="100%" stop-color="#6BF75C"/></linearGradient>
+<linearGradient id="lg9" gradientUnits="userSpaceOnUse" x1="118.25" y1="379.01" x2="562.89" y2="492.82"><stop offset="0%" stop-color="#4AE8C3"/><stop offset="100%" stop-color="#FF704E"/></linearGradient>
+<linearGradient id="lg10" gradientUnits="userSpaceOnUse" x1="287.66" y1="591.46" x2="224.13" y2="560.86"><stop offset="0%" stop-color="#AFF05B"/><stop offset="100%" stop-color="#6BF75C"/></linearGradient>
+<linearGradient id="lg11" gradientUnits="userSpaceOnUse" x1="600.94" y1="387.45" x2="416.02" y2="595.94"><stop offset="0%" stop-color="#FF507A"/><stop offset="100%" stop-color="#DAD358"/></linearGradient>
+</defs>
+
+<g fill="none" stroke-linecap="butt">
+<path d="M602.27,370.58 C413.30,362.33 409.73,379.31 586.06,447.76" stroke="url(#lg0)" stroke-width="4.71" opacity="1.00"/>
+<path d="M598.44,404.18 C412.46,369.72 349.49,412.30 312.23,597.75" stroke="url(#lg1)" stroke-width="4.48" opacity="0.98"/>
+<path d="M575.66,470.90 C407.44,384.40 394.34,400.83 516.10,545.58" stroke="url(#lg2)" stroke-width="4.26" opacity="0.94"/>
+<path d="M474.13,573.97 C385.11,407.07 368.68,412.64 399.43,599.27" stroke="url(#lg3)" stroke-width="4.71" opacity="1.00"/>
+<path d="M382.66,601.44 C364.98,413.12 323.57,321.03 194.41,182.84" stroke="url(#lg4)" stroke-width="4.04" opacity="0.90"/>
+<path d="M220.66,161.53 C329.34,316.34 346.77,308.32 299.87,125.07" stroke="url(#lg5)" stroke-width="4.48" opacity="0.98"/>
+<path d="M185.36,528.25 C321.58,397.01 326.37,318.58 207.16,171.73" stroke="url(#lg6)" stroke-width="4.48" opacity="0.98"/>
+<path d="M157.11,492.82 C315.36,389.22 338.85,408.98 263.87,582.63" stroke="url(#lg7)" stroke-width="4.71" opacity="1.00"/>
+<path d="M133.94,447.76 C310.27,379.31 325.66,400.83 203.89,545.57" stroke="url(#lg8)" stroke-width="4.04" opacity="0.90"/>
+<path d="M118.25,379.01 C306.81,364.18 404.64,389.22 562.89,492.82" stroke="url(#lg9)" stroke-width="4.04" opacity="0.90"/>
+<path d="M287.66,591.46 C344.08,410.92 330.11,404.19 224.13,560.86" stroke="url(#lg10)" stroke-width="3.81" opacity="0.86"/>
+<path d="M600.94,387.45 C413.01,366.04 372.32,411.91 416.02,595.94" stroke="url(#lg11)" stroke-width="3.81" opacity="0.86"/>
+<path d="M411.90,123.12 C371.42,307.89 387.54,314.31 485.17,152.30" stroke="#8A8A8A" stroke-width="4.71" stroke-dasharray="7.06 7.06" opacity="1.00"/>
+<path d="M602.42,353.67 C413.33,358.61 378.56,309.98 444.35,132.64" stroke="#8A8A8A" stroke-width="4.26" stroke-dasharray="6.39 6.39" opacity="0.94"/>
+<path d="M395.26,120.08 C367.76,307.22 313.90,333.16 150.44,237.98" stroke="#8A8A8A" stroke-width="4.26" stroke-dasharray="6.39 6.39" opacity="0.94"/>
+<path d="M129.66,284.19 C309.32,343.32 307.11,353.04 119.57,328.36" stroke="#8A8A8A" stroke-width="3.81" stroke-dasharray="5.72 5.72" opacity="0.86"/>
+<path d="M569.56,237.98 C406.10,333.16 332.46,314.31 234.83,152.30" stroke="#8A8A8A" stroke-width="4.04" stroke-dasharray="6.05 6.05" opacity="0.90"/>
+<path d="M590.34,284.19 C410.68,343.32 375.02,308.81 428.29,127.31" stroke="#8A8A8A" stroke-width="3.81" stroke-dasharray="5.72 5.72" opacity="0.86"/>
+<path d="M525.59,182.84 C396.43,321.03 375.91,410.92 432.33,591.46" stroke="#8A8A8A" stroke-width="3.59" stroke-dasharray="5.38 5.38" opacity="0.82"/>
+<path d="M381.68,125.00 A236.0,236.0 0 0 1 453.89,143.48" stroke="#915AD8" stroke-width="13.0"/>
+<path d="M470.74,151.60 A236.0,236.0 0 0 1 530.21,196.53" stroke="#CD5AD8" stroke-width="13.0"/>
+<path d="M557.25,230.43 A236.0,236.0 0 0 1 587.82,298.41" stroke="#E250A9" stroke-width="13.0"/>
+<path d="M595.24,341.13 A236.0,236.0 0 0 1 589.40,415.44" stroke="#FF507A" stroke-width="13.0"/>
+<path d="M584.29,433.43 A236.0,236.0 0 0 1 550.20,499.72" stroke="#FF704E" stroke-width="13.0"/>
+<path d="M521.42,532.16 A236.0,236.0 0 0 1 459.68,573.91" stroke="#F89F3A" stroke-width="13.0"/>
+<path d="M442.43,581.14 A236.0,236.0 0 0 1 369.35,595.81" stroke="#DAD358" stroke-width="13.0"/>
+<path d="M326.05,593.55 A236.0,236.0 0 0 1 254.91,571.31" stroke="#AFF05B" stroke-width="13.0"/>
+<path d="M238.50,562.32 A236.0,236.0 0 0 1 181.46,514.34" stroke="#6BF75C" stroke-width="13.0"/>
+<path d="M169.80,499.72 A236.0,236.0 0 0 1 135.71,433.43" stroke="#41F186" stroke-width="13.0"/>
+<path d="M126.07,391.15 A236.0,236.0 0 0 1 128.02,316.65" stroke="#4AE8C3" stroke-width="13.0"/>
+<path d="M132.18,298.41 A236.0,236.0 0 0 1 162.75,230.43" stroke="#4DCAE5" stroke-width="13.0"/>
+<path d="M189.79,196.53 A236.0,236.0 0 0 1 249.26,151.60" stroke="#4E95E4" stroke-width="13.0"/>
+<path d="M266.11,143.48 A236.0,236.0 0 0 1 338.32,125.00" stroke="#5A61D8" stroke-width="13.0"/>
+</g></svg></div>
+
+  <div class="mark">
+    <div class="word">VisualNeuroscience.AI</div>
+    <div class="rule"></div>
+    <div class="strap">Mapping the brain in the browser</div>
+  </div>
+
+  <div class="corner tl">The Flow State</div>
+  <div class="corner br">MNI152 &middot; AAL-116</div>
+</div>
+
+<p class="note">The sharing card, at its true size of <b>1200&thinsp;&times;&thinsp;630</b> — the ratio link previews crop to. The scans are real slices of the MNI152 template the site ships, cut by <b>scripts/make_social.py</b> and put under an orange ramp; the ring is the flow state as the Network Atlas draws it. Rendered to <b>assets/social-card.jpg</b>, which every page points at for <b>og:image</b>.</p>
+
+</body>
+</html>
