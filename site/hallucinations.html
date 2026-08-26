@@ -221,6 +221,63 @@ svg{ display:block; }
 }
 .panel .empty{ font-style:italic; color:var(--ink-60); font-size:.94rem; }
 
+/* ── the reading card holds its size ────────────────────────────────────
+   It used to carry the whole reading, so its height followed whatever
+   region was picked and everything below it moved down the page each time
+   the selection changed. Now it shows only the name and where the region
+   sits, in a box tall enough for the longest of those, and the reading
+   itself opens on top. Titles and anatomy lines are clamped rather than
+   allowed to wrap indefinitely, because one long name should not be able
+   to shift the layout either. */
+.panel-head{
+  min-height:5.2rem;      /* two lines of title over two of anatomy */
+  display:flex; flex-direction:column;
+}
+.panel-title{
+  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;
+  overflow:hidden;
+}
+.panel-latin{
+  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;
+  overflow:hidden;
+}
+.panel .empty{ margin-top:auto; }
+#p-open{ margin-top:.2rem; }
+
+/* ── the reading, on top ────────────────────────────────────────────── */
+.modal{ position:fixed; inset:0; z-index:60; display:flex;
+        align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); }
+.modal[hidden]{ display:none; }
+.modal-scrim{ position:absolute; inset:0; background:rgba(0,0,0,.72); }
+.modal-box{
+  position:relative; z-index:1;
+  width:min(560px,100%); max-height:min(80vh,720px); overflow-y:auto;
+  background:var(--paper); color:var(--ink);
+  border:1px solid var(--hair); padding:clamp(18px,3vw,30px);
+  box-shadow:0 24px 70px rgba(0,0,0,.5);
+}
+.modal-x{
+  position:absolute; top:.5rem; right:.7rem;
+  background:none; border:0; cursor:pointer; color:var(--ink);
+  font-size:1.5rem; line-height:1; padding:.1rem .3rem;
+}
+.modal-x:hover{ opacity:.6; }
+.modal-h{
+  font-family:var(--font-display); font-weight:400;
+  font-size:1.5rem; line-height:1.12; margin:.25rem 2rem .1rem 0;
+}
+.modal-box h3{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60);
+  margin:1rem 0 .25rem;
+}
+.modal-box p{ font-size:.98rem; line-height:1.6; }
+.modal-box .src{
+  font-family:var(--font-brand); font-size:.58rem; letter-spacing:.1em;
+  color:var(--ink-60); margin-top:1rem; padding-top:.6rem;
+  border-top:1px solid var(--ink-35);
+}
+
 /* prose below the brain */
 /* ── the model, drawn as a circuit ──────────────────────────────────────
    The scan says where; this says what flows where, which is the part of
@@ -386,17 +443,13 @@ td.hl{ color:var(--over); }
 
     <div class="card panel" id="panel" aria-live="polite">
       <h2>Reading</h2>
-      <div class="panel-kicker" id="p-kicker">Normal audition</div>
-      <div class="panel-title" id="p-title">Select a region</div>
-      <div class="panel-latin" id="p-latin"></div>
-      <p class="empty" id="p-empty">Boksa's starting expectation is that auditory hallucinations should be found in the regions serving normal audition, language perception and language production. Pick a region to see what the imaging found there, and switch states to see which ones go quiet.</p>
-      <div id="p-body" hidden>
-        <h3>What it does</h3>
-        <p id="p-role"></p>
-        <h3 id="p-stateh">In hallucination</h3>
-        <p id="p-state"></p>
-        <div class="src" id="p-src"></div>
+      <div class="panel-head">
+        <div class="panel-kicker" id="p-kicker">Normal audition</div>
+        <div class="panel-title" id="p-title">Select a region</div>
+        <div class="panel-latin" id="p-latin"></div>
+        <p class="empty" id="p-empty">Pick a region to see what the imaging found there.</p>
       </div>
+      <button class="btn btn-wide" id="p-open" type="button" hidden>What it does &rarr;</button>
     </div>
   </aside>
 
@@ -575,6 +628,24 @@ td.hl{ color:var(--over); }
 
 </section>
 </main>
+
+<!-- The reading, on top rather than in the rail. It used to sit in the card
+     and grow with whatever region was picked, which moved everything beneath
+     it down the page each time. -->
+<div class="modal" id="rdModal" hidden>
+  <div class="modal-scrim" data-close></div>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <button class="modal-x" type="button" data-close aria-label="Close">&times;</button>
+    <div class="panel-kicker" id="m-kicker"></div>
+    <h2 class="modal-h" id="m-title"></h2>
+    <div class="panel-latin" id="m-latin"></div>
+    <h3>What it does</h3>
+    <p id="m-role"></p>
+    <h3 id="m-stateh">In hallucination</h3>
+    <p id="m-state"></p>
+    <div class="src" id="m-src"></div>
+  </div>
+</div>
 
 <script src="assets/native.js"></script>
 <script src="assets/slice-tool.js"></script>
@@ -811,25 +882,68 @@ function buildList(){
 
 function renderPanel(){
   const d = selected ? DATA[selected] : null;
-  $("p-kicker").textContent = state === "halluc" ? "Hallucinating state" : "Normal audition";
+  const kicker = state === "halluc" ? "Hallucinating state" : "Normal audition";
+  $("p-kicker").textContent = kicker;
   if (!d){
     $("p-title").textContent = "Select a region";
     $("p-latin").textContent = "";
     $("p-empty").hidden = false;
-    $("p-body").hidden = true;
+    $("p-open").hidden = true;
+    closeReading();
     return;
   }
-  const region = REGIONS.find(r => r.id === selected);
   $("p-empty").hidden = true;
-  $("p-body").hidden = false;
+  $("p-open").hidden = false;
   $("p-title").textContent = d.t;
-  $("p-latin").textContent = d.l + (region.note ? " · " + region.note : "");
-  $("p-role").textContent = d.role;
-  $("p-stateh").textContent = state === "halluc" ? "What changes" : "When perception is intact";
-  $("p-state").textContent = state === "halluc" ? d.halluc : d.healthy;
-  $("p-src").textContent = "Boksa reports: " + d.src +
+  $("p-latin").textContent = d.l + (REGIONS.find(r => r.id === selected).note
+    ? " · " + REGIONS.find(r => r.id === selected).note : "");
+  /* if the reading is open, it follows the selection and the state rather
+     than going stale behind the dialog */
+  if (!$("rdModal").hidden) fillReading();
+}
+
+/* ── the reading dialog ───────────────────────────────────────────────── */
+function fillReading(){
+  const d = selected ? DATA[selected] : null;
+  if (!d) return;
+  const region = REGIONS.find(r => r.id === selected);
+  $("m-kicker").textContent = state === "halluc" ? "Hallucinating state" : "Normal audition";
+  $("m-title").textContent = d.t;
+  $("m-latin").textContent = d.l + (region.note ? " · " + region.note : "");
+  $("m-role").textContent = d.role;
+  $("m-stateh").textContent = state === "halluc" ? "What changes" : "When perception is intact";
+  $("m-state").textContent = state === "halluc" ? d.halluc : d.healthy;
+  $("m-src").textContent = "Boksa reports: " + d.src +
     (region.approx ? " · drawn on the nearest atlas parcels" : "");
 }
+
+let readingOpener = null;
+
+function openReading(){
+  if (!selected) return;
+  fillReading();
+  readingOpener = document.activeElement;
+  $("rdModal").hidden = false;
+  document.body.style.overflow = "hidden";
+  const x = $("rdModal").querySelector(".modal-x");
+  if (x) x.focus();
+}
+
+function closeReading(){
+  if ($("rdModal").hidden) return;
+  $("rdModal").hidden = true;
+  document.body.style.overflow = "";
+  if (readingOpener && readingOpener.focus) readingOpener.focus();
+  readingOpener = null;
+}
+
+$("p-open").addEventListener("click", openReading);
+$("rdModal").addEventListener("click", (e) => {
+  if (e.target.hasAttribute("data-close")) closeReading();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeReading();
+});
 
 
 /* ── the model as a circuit ─────────────────────────────────────────────
