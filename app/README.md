@@ -58,6 +58,10 @@ cd ../.. && npm run ios       # sync, then open App.xcworkspace
 In Xcode: set the team on the App target, confirm the bundle identifier is
 `ai.visualneuroscience.app`, then Product → Archive → Distribute App.
 
+`store/APP-STORE.md` has the full submission route — identifiers, the listing,
+the privacy answers, the age rating, and what is most likely to be rejected.
+`store/screenshots/` holds the two sizes Apple asks for, already rendered.
+
 ## Icons and splash
 
 `npm run icons` redraws every size from `../site/assets/logo.svg`, then
