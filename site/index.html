@@ -152,9 +152,8 @@ img{ max-width:100%; display:block; }
 .m-atlas  { grid-column:span 7; grid-row:span 2; }
 .m-network{ grid-column:span 5; }
 .m-tracts { grid-column:span 5; }
-.m-brodmann{ grid-column:span 4; }
-.m-recept { grid-column:span 4; }
-.m-studies{ grid-column:span 4; }
+.m-brodmann{ grid-column:span 6; }
+.m-studies{ grid-column:span 6; }
 .m-ledger { grid-column:span 12; }
 
 /* ── a box ──────────────────────────────────────────────────────────────
@@ -253,15 +252,14 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
   .m-network{ grid-column:span 3; }
   .m-tracts { grid-column:span 3; }
   .m-brodmann{ grid-column:span 3; }
-  .m-recept { grid-column:span 3; }
-  .m-studies{ grid-column:span 6; }
+  .m-studies{ grid-column:span 3; }
   .m-ledger { grid-column:span 6; }
 }
 
 /* ── phone: one box on each line, and the wide box stacks ── */
 @media (max-width:760px){
   .mosaic{ grid-template-columns:minmax(0,1fr); }
-  .m-atlas, .m-network, .m-tracts, .m-brodmann, .m-recept, .m-studies, .m-ledger{
+  .m-atlas, .m-network, .m-tracts, .m-brodmann, .m-studies, .m-ledger{
     grid-column:1 / -1; grid-row:auto;
   }
   .box-h{ grid-template-columns:minmax(0,1fr); }
@@ -281,7 +279,6 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
   <nav class="nav-row" aria-label="Site">
     <a href="regions.html">Region Atlas</a>
     <a href="brodmann.html">Brodmann Areas</a>
-    <a href="receptors.html">Receptor Density</a>
     <a href="tracts.html">Tractography</a>
     <a href="network-atlas.html">Network Atlas</a>
     <a href="studies.html">Visualizing Studies</a>
@@ -303,11 +300,11 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
     <a class="box m-atlas" href="regions.html">
       <div class="kicker">The Atlas</div>
       <h2>Region Atlas</h2>
-      <p>Pick any of the 116 AAL regions and watch it light up on the MNI152 template at once in axial, coronal, sagittal and 3D. Cut the volume open along any axis to see the scan inside the slice, probe a voxel to learn which parcel it belongs to, and read what each highlighted region does beneath the views — stacked cerebrum, midbrain, reptilian core.</p>
+      <p>Pick any of the 116 AAL regions and watch it light up on the MNI152 template at once in axial, coronal, sagittal and 3D. Cut the volume open along any axis to see the scan inside the slice, probe a voxel to learn which parcel it belongs to, and read what each highlighted region does beneath the views — stacked cerebrum, midbrain, reptilian core. The receptor densities live here too: click a structure on the chart and it lights up in the same viewports.</p>
       <div class="fig" aria-hidden="true">
         <span class="shot"><img src="assets/home/atlas.jpg" alt="" decoding="async" width="900" height="1013"></span>
       </div>
-      <div class="meta">116 parcels &middot; four viewports &middot; slice tool &middot; PNG export</div>
+      <div class="meta">116 parcels &middot; four viewports &middot; receptor densities &middot; slice tool &middot; PNG export</div>
       <div class="go">Open the atlas &rarr;</div>
     </a>
 
@@ -346,18 +343,6 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
       </div>
       <div class="meta">41 areas &middot; searchable by function</div>
       <div class="go">Open the areas &rarr;</div>
-    </a>
-
-    <!-- ── the receptors ─────────────────────────────────────────── -->
-    <a class="box m-recept" href="receptors.html">
-      <div class="kicker">Wiring</div>
-      <h2>Receptor Density</h2>
-      <p>How thickly each receptor family sits in each structure, in fmol per mg of tissue — read by receptor or by region, as a chart, a table, or a primer on what the receptor types do.</p>
-      <div class="fig" aria-hidden="true">
-        <span class="shot"><img src="assets/home/receptors.jpg" alt="" loading="lazy" decoding="async" width="1040" height="610"></span>
-      </div>
-      <div class="meta">fmol / mg tissue &middot; chart, table &amp; primer</div>
-      <div class="go">Open the densities &rarr;</div>
     </a>
 
     <!-- ── the papers ─────────────────────────────────────────────── -->

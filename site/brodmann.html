@@ -462,31 +462,69 @@ table.dtable td.num{ font-size:.84rem; }
 mark{ background:var(--ink); color:var(--paper); }
 .barow[aria-pressed="true"] mark{ background:var(--paper); color:var(--ink); }
 
-/* the reading panel under the viewports */
-.reading{ margin-top:var(--gap); }
-.ba-card{ border:1px solid var(--hair); padding:clamp(14px,1.8vw,22px); }
-.ba-card .kick{
+/* ── the selection bar ──────────────────────────────────────────────────
+   One fixed-height line under the tabs: the area's full name, and the way
+   into its function. It holds its size whatever is picked, so choosing
+   between areas never shifts the map underneath the cursor. */
+.sel-bar{
+  display:flex; align-items:center; gap:.7rem 1rem;
+  border:1px solid var(--hair); padding:.55rem .8rem;
+  margin-bottom:var(--gap); min-height:3.1rem;
+}
+.sel-kick{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+  flex:none; border-left:3px solid transparent; padding-left:.6rem;
+}
+.sel-name{
+  font-family:var(--font-display); font-size:1.05rem; line-height:1.2;
+  min-width:0; display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; overflow:hidden;
+}
+.sel-fn{ margin-left:auto; flex:none; }
+
+/* ── the function, on top ──────────────────────────────────────────── */
+.modal{ position:fixed; inset:0; z-index:60; display:flex;
+        align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); }
+.modal[hidden]{ display:none; }
+.modal-scrim{ position:absolute; inset:0; background:rgba(0,0,0,.72); }
+.modal-box{
+  position:relative; z-index:1;
+  width:min(560px,100%); max-height:min(80vh,720px); overflow-y:auto;
+  background:var(--paper); color:var(--ink);
+  border:1px solid var(--hair); padding:clamp(18px,3vw,30px);
+  box-shadow:0 24px 70px rgba(0,0,0,.5);
+}
+.modal-x{
+  position:absolute; top:.5rem; right:.7rem;
+  background:none; border:0; cursor:pointer; color:var(--ink);
+  font-size:1.5rem; line-height:1; padding:.1rem .3rem;
+}
+.modal-x:hover{ opacity:.6; }
+.modal-h{
+  font-family:var(--font-display); font-weight:400;
+  font-size:1.5rem; line-height:1.12; margin:.25rem 2rem .1rem 0;
+}
+.ba-kick{
   font-family:var(--font-brand); font-weight:500; font-size:.55rem;
   letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
 }
-.ba-card h2{
-  font-family:var(--font-display); font-weight:400; letter-spacing:.01em;
-  font-size:clamp(1.3rem,2.4vw,1.9rem); line-height:1.12; margin:.35rem 0 .1rem;
-}
-.ba-card .where{
+.ba-where{
   font-family:var(--font-serif); font-style:italic; font-size:.92rem;
-  color:var(--ink-60); margin-bottom:.7rem;
+  color:var(--ink-60); margin-bottom:.4rem;
 }
-.ba-card p.fn{ font-size:1rem; line-height:1.62; max-width:68ch; }
-.ba-card .caveat{
+.modal-box h3{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60);
+  margin:1rem 0 .25rem;
+}
+.modal-box p{ font-size:.98rem; line-height:1.6; }
+.ba-caveat{
   font-family:var(--font-serif); font-style:italic; font-size:.88rem;
   color:var(--ink-60); border-left:2px solid var(--ink-35);
-  padding-left:.7rem; margin-top:.8rem; max-width:64ch;
+  padding-left:.7rem; margin-top:.9rem;
 }
-.ba-empty{
-  font-family:var(--font-serif); font-style:italic;
-  color:var(--ink-60); padding:clamp(14px,1.8vw,22px); border:1px solid var(--ink-35);
-}
+
 .ba-foot{
   font-family:var(--font-serif); font-style:italic; font-size:.85rem;
   color:var(--ink-60); border-top:1px solid var(--ink-35);
@@ -582,7 +620,6 @@ mark{ background:var(--ink); color:var(--paper); }
   <nav class="nav-row" aria-label="Site">
     <a href="regions.html">Region Atlas</a>
     <a href="brodmann.html" aria-current="page">Brodmann Areas</a>
-    <a href="receptors.html">Receptor Density</a>
     <a href="tracts.html">Tractography</a>
     <a href="network-atlas.html">Network Atlas</a>
     <a href="studies.html">Visualizing Studies</a>
@@ -638,6 +675,12 @@ mark{ background:var(--ink); color:var(--paper); }
     </aside>
 
     <section class="centre" aria-label="The map">
+      <div class="sel-bar" id="selBar" aria-live="polite">
+        <span class="sel-kick" id="selKick">Nothing picked</span>
+        <span class="sel-name" id="selName">Pick an area &mdash; from the map, the list, the graph, or the scan.</span>
+        <button class="ts-btn sel-fn" id="selFn" type="button" hidden>What it does &rarr;</button>
+      </div>
+
 
       <!-- ── the cartoon: both faces of the hemisphere at once ────────
            Most of the cortex is either folded into a sulcus or facing the
@@ -655,6 +698,20 @@ mark{ background:var(--ink); color:var(--paper); }
           </figure>
         </div>
         <p class="cart-miss" id="cartMiss"></p>
+
+  <section class="graphsec" aria-label="How the areas border one another">
+    <h2 class="sec-h">The same areas in 3D <small>at their true positions &middot; joined where they border</small></h2>
+    <p class="graph-lede">Every area drawn at its own centre of mass in the scan, joined to the areas it actually shares a border with &mdash; measured off the volume, not asserted. Thicker lines are longer borders. Drag to turn it; the shape you are turning is the brain's own, because the nodes sit where the areas sit.</p>
+    <div class="graph-wrap">
+      <div class="graph-stage" id="graphStage"></div>
+      <div class="graph-tools">
+        <button class="ts-btn" id="gSpin" type="button" aria-pressed="true">Pause</button>
+        <button class="ts-btn" id="gReset" type="button">Reset view</button>
+        <span class="graph-count" id="gCount"></span>
+      </div>
+    </div>
+  </section>
+
         <p class="cart-note">Both views are projections of the atlas itself, not drawings: the external view takes the first labelled voxel walking in from the side, the internal view the first walking out from the midline. So an area appears here only if it actually reaches that surface &mdash; 41 and 42 sit inside the Sylvian fissure and show on neither &mdash; and the boundaries are the atlas&rsquo;s own. Anterior is on the left in both.</p>
       </div>
 
@@ -699,29 +756,31 @@ mark{ background:var(--ink); color:var(--paper); }
 
   </div>
 
-  <section class="reading" aria-label="What the selected area does" aria-live="polite">
-    <div id="readingSlot">
-      <p class="ba-empty">Pick an area on the left, or click straight onto the scan, and what it is for appears here.</p>
-    </div>
-  </section>
 
-  <section class="graphsec" aria-label="How the areas border one another">
-    <h2 class="sec-h">The map as a graph <small>who borders whom</small></h2>
-    <p class="graph-lede">Every area drawn at its own centre of mass in the scan, joined to the areas it actually shares a border with &mdash; measured off the volume, not asserted. Thicker lines are longer borders. Drag to turn it; the shape you are turning is the brain's own, because the nodes sit where the areas sit.</p>
-    <div class="graph-wrap">
-      <div class="graph-stage" id="graphStage"></div>
-      <div class="graph-tools">
-        <button class="ts-btn" id="gSpin" type="button" aria-pressed="true">Pause</button>
-        <button class="ts-btn" id="gReset" type="button">Reset view</button>
-        <span class="graph-count" id="gCount"></span>
-      </div>
-    </div>
-  </section>
+
+
 
   <p class="ba-foot">Brodmann numbered the cortex in 1909 by how its cells are layered, not by what it does &mdash; which is why the numbers wander about the brain and why several of his 52 have no agreed human counterpart. The 41 drawn here are those the shipped atlas labels; 12&ndash;16, 31, 33 and 49&ndash;52 are absent. Each area is bilateral: Brodmann described cortical types, not hemispheres, so where a function is strongly one-sided the note says so rather than the atlas splitting the area. The boundaries are an approximation to begin with &mdash; they were drawn from a handful of post-mortem brains, and no two people's cortex is folded the same way. This particular volume descends from the Talairach Daemon, whose labels were grown outwards to fill the brain: 14% of what it marks lies in white matter that the AAL atlas does not count as cortex at all, and label 48 has become a catch-all for the peri-Sylvian region rather than the small area Brodmann gave that number to. Read a boundary as a neighbourhood, not a border. Educational, not diagnostic.</p>
   <p class="credits">&copy; 2026 VisualNeuroscience.AI &middot; rendered with <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a> (Rorden lab) &middot; MNI152 template &middot; Brodmann atlas from <a href="https://github.com/neurolabusc/MRIcron" target="_blank" rel="noopener">MRIcron</a> (BSD) &middot; set in Flux, Newsreader &amp; Prata &middot; <a href="privacy.html">Privacy</a></p>
 
 </main>
+
+<!-- The function, on top rather than on the page. The bar below the tabs
+     holds its height whatever is picked; the reading opens over the map the
+     way the hallucinations page does it. -->
+<div class="modal" id="fnModal" hidden>
+  <div class="modal-scrim" data-close></div>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="fn-title">
+    <button class="modal-x" type="button" data-close aria-label="Close">&times;</button>
+    <div class="ba-kick" id="fn-kick"></div>
+    <h2 class="modal-h" id="fn-title"></h2>
+    <div class="ba-where" id="fn-where"></div>
+    <h3>What it is for</h3>
+    <p id="fn-body"></p>
+    <p class="ba-caveat" id="fn-note" hidden></p>
+  </div>
+</div>
+
 
 <script src="assets/native.js"></script>
 <script src="assets/niivue.js"></script>
@@ -797,53 +856,78 @@ mark{ background:var(--ink); color:var(--paper); }
     });
   }
 
-  /* ── the reading panel ────────────────────────────────────────────── */
-  var slot = document.getElementById("readingSlot");
+  /* ── the selection bar, and the function behind it ──────────────────
+     The bar names what is picked and holds its height; the function opens
+     on top, and follows the selection while it is open rather than going
+     stale behind the scrim. */
   var statSel = document.getElementById("statSel");
+  var selKick = document.getElementById("selKick");
+  var selName = document.getElementById("selName");
+  var selFn = document.getElementById("selFn");
 
   function read(){
     if (selected == null){
-      slot.innerHTML = '<p class="ba-empty">Pick an area on the left, or click straight onto the scan, and what it is for appears here.</p>';
+      selKick.textContent = "Nothing picked";
+      selKick.style.borderLeftColor = "transparent";
+      selName.textContent = "Pick an area — from the map, the list, the graph, or the scan.";
+      selFn.hidden = true;
       statSel.innerHTML = "&mdash;";
-      return;
+      closeFn();
+    } else {
+      var a = B.BY_BA[selected];
+      var lobe = B.LOBES.filter(function(l){ return l.id === a.lobe; })[0];
+      selKick.textContent = "BA" + a.ba + " · " + (lobe ? lobe.label : "");
+      selKick.style.borderLeftColor = LOBE_COLOUR[a.lobe] || "transparent";
+      selName.textContent = a.name;
+      selFn.hidden = false;
+      statSel.textContent = "BA" + a.ba;
+      if (!document.getElementById("fnModal").hidden) fillFn();
     }
-    var a = B.BY_BA[selected];
+  }
+
+  function fillFn(){
+    var a = selected != null && B.BY_BA[selected];
+    if (!a) return;
     var lobe = B.LOBES.filter(function(l){ return l.id === a.lobe; })[0];
-    var card = document.createElement("div");
-    card.className = "ba-card";
-    card.style.borderLeft = "3px solid " + (LOBE_COLOUR[a.lobe] || "currentColor");
-
-    var kick = document.createElement("div");
-    kick.className = "kick";
-    kick.textContent = "Brodmann area " + a.ba + " · " + (lobe ? lobe.label : "");
-    var h = document.createElement("h2"); h.textContent = a.name;
-    var w = document.createElement("div"); w.className = "where";
-    w.textContent = a.region + " · MNI " + a.at[0] + " " + a.at[1] + " " + a.at[2] +
-                    " mm · " + a.vox.toLocaleString() + " voxels";
-    var f = document.createElement("p"); f.className = "fn"; f.textContent = a.fn;
-    card.appendChild(kick); card.appendChild(h); card.appendChild(w); card.appendChild(f);
-    if (a.note){
-      var c = document.createElement("p"); c.className = "caveat"; c.textContent = a.note;
-      card.appendChild(c);
-    }
-    slot.innerHTML = ""; slot.appendChild(card);
-    statSel.textContent = "BA" + a.ba;
+    document.getElementById("fn-kick").textContent =
+      "Brodmann area " + a.ba + " · " + (lobe ? lobe.label : "");
+    document.getElementById("fn-title").textContent = a.name;
+    document.getElementById("fn-where").textContent =
+      a.region + " · MNI " + a.at[0] + " " + a.at[1] + " " + a.at[2] +
+      " mm · " + a.vox.toLocaleString() + " voxels";
+    document.getElementById("fn-body").textContent = a.fn;
+    var note = document.getElementById("fn-note");
+    note.hidden = !a.note;
+    note.textContent = a.note || "";
+    document.querySelector("#fnModal .modal-box").style.borderTop =
+      "3px solid " + (LOBE_COLOUR[a.lobe] || "transparent");
   }
 
-  /* Selecting an area takes the crosshair to it. Without this the 3D render
-     shows the highlight and the three slice views carry on displaying
-     whatever plane they were already on, which for most areas is nowhere
-     near it. The target is the labelled voxel closest to the area's centre
-     of mass, computed from the volume itself, so it always lands inside. */
-  function goTo(mm){
-    allNV().forEach(function(nv){
-      try{
-        nv.scene.crosshairPos = nv.mm2frac(mm);
-        nv.updateGLVolume();
-        nv.drawScene();
-      }catch(e){}
-    });
+  var fnOpener = null;
+  function openFn(){
+    if (selected == null) return;
+    fillFn();
+    fnOpener = document.activeElement;
+    document.getElementById("fnModal").hidden = false;
+    document.body.style.overflow = "hidden";
+    var x = document.querySelector("#fnModal .modal-x");
+    if (x) x.focus();
   }
+  function closeFn(){
+    var m = document.getElementById("fnModal");
+    if (m.hidden) return;
+    m.hidden = true;
+    document.body.style.overflow = "";
+    if (fnOpener && fnOpener.focus) fnOpener.focus();
+    fnOpener = null;
+  }
+  selFn.addEventListener("click", openFn);
+  document.getElementById("fnModal").addEventListener("click", function(e){
+    if (e.target.hasAttribute("data-close")) closeFn();
+  });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape") closeFn();
+  });
 
   function select(ba, fromList){
     selected = (selected === ba) ? null : ba;

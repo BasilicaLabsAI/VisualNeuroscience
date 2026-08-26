@@ -1,2 +1,4 @@
 # The Region Atlas has its own page again; keep the old links working.
 /regionatlas /regions.html 301
+/receptors /regions.html 301
+/receptors.html /regions.html 301
