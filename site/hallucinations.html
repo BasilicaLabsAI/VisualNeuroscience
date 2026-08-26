@@ -520,7 +520,11 @@ td.hl{ color:var(--over); }
   <div class="mech-block">
     <h3 class="mech-h">The brain's own inner speech <small id="mechWhich">tagged as one's own</small></h3>
     <div class="mech-stage" id="mechInner">
-      <svg class="mech-svg" viewBox="0 0 1140 330" role="img" aria-label="Inner speech reaching the auditory cortex, and the control signal that marks it as self-generated">
+      <!-- the box starts above zero: the bracket's label sits on a baseline
+           at y=6, so its capitals rise above the origin and were being cut
+           off at the top edge — visibly so at the larger size narrow screens
+           switch this type to -->
+      <svg class="mech-svg" viewBox="0 -16 1140 346" role="img" aria-label="Inner speech reaching the auditory cortex, and the control signal that marks it as self-generated">
         <g class="mech-group">
           <rect class="mech-bracket" x="380" y="12" width="518" height="86" rx="2"/>
           <text class="mech-brackettag" x="639" y="6" text-anchor="middle">Control &middot; self-monitoring</text>
