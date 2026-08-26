@@ -22,17 +22,18 @@
    request the site makes, and a failed font is a fallback face, not a
    broken page. */
 
-var VERSION = "vn-4";
+var VERSION = "vn-5";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
 /* the pages and the small files they need to draw at all */
 var PRECACHE = [
-  "/", "/index.html", "/regions.html", "/receptors.html", "/tracts.html",
-  "/network-atlas.html", "/studies.html", "/hallucinations.html",
+  "/", "/index.html", "/regions.html", "/brodmann.html", "/receptors.html",
+  "/tracts.html", "/network-atlas.html", "/studies.html", "/hallucinations.html",
   "/assets/viewer.css", "/assets/native.js", "/assets/zoom.js",
   "/assets/slice-tool.js", "/assets/region-notes.js", "/assets/network-ring.js",
   "/assets/network-states.js", "/assets/atlas-data.js",
+  "/assets/brodmann-areas.js",
   "/assets/logo.svg", "/manifest.webmanifest",
   "/fonts/Flux-Regular.woff2"
 ];

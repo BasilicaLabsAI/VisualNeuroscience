@@ -67,3 +67,20 @@ NiiVue reads `.trx` too, and it compresses better. `nibabel` cannot write it
 without the extra `trx-python` package, so the pipeline stays on `.trk` to keep
 the dependency list to two. If the atlas ever outgrows 20 MB as `.trk`, adding
 `trx-python` and writing `.trx` is the next move.
+
+## Brodmann atlas
+
+`site/assets/brodmann.nii.gz` is the Brodmann parcellation the Brodmann Areas
+page draws: 181 × 217 × 181 at 1 mm, uint8, 41 labelled areas, 175 KB.
+
+Provenance: the `brodmann.nii.gz` shipped with MRIcron
+(github.com/neurolabusc/MRIcron, `Resources/templates/`), Chris Rorden,
+**BSD licence** — permissive, commercial use permitted, the copyright notice
+must be retained. That is a materially different position from the tractogram,
+which is CC BY-SA 4.0.
+
+It shares its affine exactly with `aal.nii.gz` — same dims, same 1 mm pixdim,
+same srow — so it drops into the existing overlay with no resampling.
+
+The 41 areas are those the volume actually labels. Brodmann described 52;
+12–16, 31, 33 and 49–52 have no agreed human counterpart and are absent.

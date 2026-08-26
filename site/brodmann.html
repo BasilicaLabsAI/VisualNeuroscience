@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brodmann Areas — VisualNeuroscience.AI</title>
+<meta name="description" content="The 41 Brodmann areas the atlas draws, on the MNI152 template. Pick an area to see what it does, or search by number, by anatomical name, or by what a region is for.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- link previews. The card is built by site/share.html and rendered to
+     assets/social-card.jpg; og:image has to be absolute, so this origin is
+     the one thing to change if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="Brodmann Areas — VisualNeuroscience.AI">
+<meta property="og:description" content="The 41 Brodmann areas the atlas draws, on the MNI152 template. Pick an area to see what it does, or search by number, by anatomical name, or by what a region is for.">
+<meta property="og:url" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/brodmann.html">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The flow-state network ring over orange-tinted MNI152 brain slices, with the VisualNeuroscience.AI wordmark at its centre.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/viewer.css">
+<link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Prata&display=swap" rel="stylesheet">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+/* ════════════════════════════════════════════════════════════
+   OTTOMANLABS.AI — boxed-mosaic design system, black on white
+   Brand & caps: Flux → Afacad Flux · Serif & italics: Newsreader
+   Display words: Prata
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Embedded fonts (in assets/fonts/) ── */
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;   /* near full-bleed on desktop, capped for very wide monitors */
+  --gap:14px;
+}
+
+/* dark mode — exact inverse of the default palette, site-wide */
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+img{ max-width:100%; display:block; }
+svg{ display:block; }
+
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+.theme-toggle:hover{ background:var(--ink); color:var(--paper); }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+a{ color:var(--ink); text-decoration:none; }
+a:hover{ text-decoration:underline; text-underline-offset:3px; }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+
+.skip{
+  position:absolute; left:-999px; top:8px; z-index:99;
+  background:var(--ink); color:var(--paper); padding:.5rem 1rem;
+  font-family:var(--font-brand); font-size:.8rem; letter-spacing:.1em;
+}
+.skip:focus{ left:8px; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto; padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* ── voices ── */
+.caps{
+  font-family:var(--font-brand); font-weight:500;
+  letter-spacing:.32em; text-transform:uppercase;
+  font-size:.72rem; line-height:1.9;
+}
+.caps-tight{ letter-spacing:.2em; }
+.ital{
+  font-family:var(--font-serif); font-style:italic; font-weight:400;
+  font-size:1.35rem; line-height:1.2;
+}
+.display{
+  font-family:var(--font-display); font-weight:400;
+  letter-spacing:.02em; line-height:1.05;
+}
+.muted{ color:var(--ink-60); }
+.num{ font-family:var(--font-brand); font-variant-numeric:tabular-nums; }
+
+/* ── masthead ── */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  font-size:clamp(2.3rem,6vw,3.7rem); line-height:1; letter-spacing:.01em;
+}
+.brand:hover{ text-decoration:none; }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:.65em; height:.65em; flex:none; }
+
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase;
+}
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+
+/* ── boxes ── */
+.box{
+  border:1px solid var(--hair); background:var(--paper);
+  padding:clamp(18px,2.4vw,26px); text-align:center;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:.55rem; min-width:0; position:relative;
+}
+.box.left{ text-align:left; align-items:flex-start; }
+a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; }
+
+.box .art{ color:var(--ink); }
+
+/* ornament row · ● ◆ ● · */
+.orn{ display:flex; align-items:center; gap:.5rem; color:var(--ink); }
+.orn i{ font-style:normal; font-size:.55rem; line-height:1; }
+
+/* menu-style underlined list */
+.list-lines{ width:100%; max-width:230px; }
+.list-lines a, .list-lines .row{
+  display:flex; justify-content:space-between; align-items:baseline; gap:1rem;
+  font-family:var(--font-serif); font-size:1.02rem;
+  border-bottom:1px solid var(--hair); padding:.5rem .15rem .45rem;
+}
+.list-lines a:hover{ text-decoration:none; background:var(--ink); color:var(--paper); }
+.list-lines .v{ font-family:var(--font-brand); font-size:.86rem; font-variant-numeric:tabular-nums; }
+
+/* buttons */
+.btn{
+  display:inline-block; font-family:var(--font-brand); font-weight:500;
+  font-size:.72rem; letter-spacing:.28em; text-transform:uppercase;
+  border:1px solid var(--ink); background:var(--paper); color:var(--ink);
+  padding:.7rem 1.3rem .62rem; cursor:pointer;
+}
+.btn:hover{ background:var(--ink); color:var(--paper); text-decoration:none; }
+.btn-solid{ background:var(--ink); color:var(--paper); }
+.btn-solid:hover{ background:var(--paper); color:var(--ink); }
+
+/* inline news form */
+.newsform{ display:flex; width:100%; max-width:250px; border-bottom:1px solid var(--ink); }
+.newsform input{
+  flex:1; min-width:0; border:0; background:transparent; padding:.45rem .2rem;
+  font-family:var(--font-brand); font-size:.92rem; color:var(--ink);
+}
+.newsform input::placeholder{ color:var(--ink-35); }
+.newsform input:focus{ outline:0; }
+.newsform button{
+  border:0; background:transparent; cursor:pointer; font-size:1.05rem;
+  padding:0 .3rem; color:var(--ink);
+}
+.newsform button:hover{ transform:translateX(2px); }
+.ok-msg{ display:none; font-family:var(--font-brand); font-size:.78rem; letter-spacing:.12em; }
+
+/* chips */
+.chip{
+  display:inline-block; font-family:var(--font-brand); font-weight:500;
+  font-size:.6rem; letter-spacing:.22em; text-transform:uppercase;
+  border:1px solid var(--ink); padding:.16rem .55rem .1rem;
+}
+.chip.watch{ background:var(--ink); color:var(--paper); }
+.chip.info{ border-color:var(--ink-35); color:var(--ink-60); }
+
+/* ── footer band ── */
+.band{
+  border:1px solid var(--hair);
+  display:grid; grid-template-columns:repeat(5,minmax(0,1fr));
+}
+.band > div{
+  padding:1.3rem 1rem 1.4rem; text-align:center;
+  border-left:1px solid var(--hair);
+  display:flex; flex-direction:column; gap:.35rem; align-items:center; justify-content:center;
+}
+.band > div:first-child{ border-left:0; }
+.band .caps{ letter-spacing:.26em; }
+.band small{ font-family:var(--font-serif); font-style:italic; font-size:.92rem; color:var(--ink-60); }
+
+/* ── what the highlighted regions do, stacked by layer ─────────────────
+   Fixed order, always: cerebrum on top, limbic midbrain in the middle, the
+   reptilian core at the bottom, so the stack reads the same way every time
+   whichever regions happen to be lit. */
+.notes{ margin-top:var(--gap); }
+.notes-empty, .notes-caveat{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.86rem; color:var(--ink-60);
+}
+.notes-caveat{
+  border-top:1px solid var(--ink-35); padding-top:.9rem; margin-top:1.1rem;
+  font-size:.8rem; color:var(--ink-35);
+}
+.tier{ border:1px solid var(--hair); margin-bottom:var(--gap); }
+.tier-head{
+  display:flex; flex-wrap:wrap; align-items:baseline; gap:.4rem .9rem;
+  padding:.6rem .9rem .5rem; border-bottom:1px solid var(--hair);
+}
+.tier-head b{
+  font-family:var(--font-brand); font-weight:500; font-size:.68rem;
+  letter-spacing:.28em; text-transform:uppercase;
+}
+.tier-head span{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.82rem; color:var(--ink-60);
+}
+.tier-head .n{
+  margin-left:auto; font-family:var(--font-brand); font-size:.6rem;
+  letter-spacing:.2em; color:var(--ink-60); font-style:normal;
+}
+.tier-body{ display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); }
+.rnote{
+  padding:.75rem .9rem .85rem; border-right:1px solid var(--ink-35);
+  border-bottom:1px solid var(--ink-35);
+}
+.rnote h3{
+  display:flex; align-items:center; gap:.5rem;
+  font-family:var(--font-brand); font-weight:500; font-size:.78rem;
+  letter-spacing:.08em; margin-bottom:.3rem;
+}
+.rnote h3 .dot{ width:.62rem; height:.62rem; flex:none; border:1px solid var(--ink); }
+.rnote h3 .side{
+  font-size:.55rem; letter-spacing:.18em; color:var(--ink-60); margin-left:auto;
+}
+.rnote p{ font-family:var(--font-serif); font-size:.9rem; line-height:1.5; color:var(--ink-60); }
+/* the last cell's right edge would otherwise dangle into a part-filled row */
+.rnote:last-child{ border-right:0; }
+
+.estab{
+  text-align:center; padding:1.4rem 0 .4rem;
+  font-family:var(--font-brand); font-size:.66rem; font-weight:500;
+  letter-spacing:.26em; text-transform:uppercase; color:var(--ink-60);
+}
+.estab a{ color:var(--ink); }
+.credits{
+  text-align:center; font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60); padding:.3rem 0 2.4rem;
+}
+
+/* ════════ dashboard chrome ════════ */
+.tabs{ display:flex; flex-wrap:wrap; justify-content:center; gap:.4rem 1.8rem; padding:.2rem 0 1rem; }
+.tab{
+  background:none; border:0; cursor:pointer; padding:.3rem .1rem;
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink-60);
+  border-bottom:2px solid transparent;
+}
+.tab:hover{ color:var(--ink); }
+.tab.active{ color:var(--ink); border-bottom-color:var(--ink); }
+
+.row{ display:flex; align-items:center; gap:.6rem; margin:.5rem 0; }
+.row[hidden]{ display:none; }   /* display:flex would otherwise defeat the hidden attribute */
+.row label{
+  flex:0 0 64px; font-family:var(--font-brand); font-size:.72rem;
+  letter-spacing:.08em; color:var(--ink-60);
+}
+.row .val{
+  min-width:44px; text-align:right; font-family:var(--font-brand);
+  font-size:.8rem; font-variant-numeric:tabular-nums;
+}
+input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); height:3px; }
+.toggles{ display:grid; grid-template-columns:1fr 1fr; gap:.35rem .8rem; margin:.5rem 0 .1rem; }
+.toggle{
+  display:flex; align-items:center; gap:.45rem; cursor:pointer; user-select:none;
+  font-family:var(--font-brand); font-size:.76rem; letter-spacing:.05em; color:var(--ink-60);
+}
+.toggle input{ width:14px; height:14px; accent-color:var(--ink); }
+.btns{ display:flex; gap:.6rem; margin-top:.6rem; }
+.btns .btn{ flex:1; padding:.55rem .4rem .48rem; letter-spacing:.18em; font-size:.66rem; }
+
+.stats{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+.stat{ border:1px solid var(--hair); padding:.5rem .6rem .55rem; text-align:left; }
+.stat .k{
+  font-family:var(--font-brand); font-size:.58rem; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60);
+}
+.stat .v{
+  font-family:var(--font-brand); font-size:1.06rem; margin-top:.1rem;
+  font-variant-numeric:tabular-nums;
+}
+.stat .v small{ font-size:.62rem; color:var(--ink-60); margin-left:.15rem; }
+
+.plot-wrap{ flex:1; min-height:0; padding:.55rem; display:flex; align-items:center; justify-content:center; }
+.plot-wrap canvas{ display:block; }
+
+table.dtable{ border-collapse:collapse; width:100%; font-size:.92rem; }
+table.dtable th{
+  font-family:var(--font-brand); font-weight:500; font-size:.62rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60);
+  text-align:left; padding:.5rem .55rem; border-bottom:1px solid var(--hair);
+}
+table.dtable td{
+  padding:.5rem .55rem; border-bottom:1px solid #E3E3E3; vertical-align:baseline;
+}
+table.dtable td.num{ font-size:.84rem; }
+
+@media (max-width:900px){
+  .band{ grid-template-columns:1fr 1fr; }
+  .band > div{ border-left:0; border-top:1px solid var(--hair); }
+  .band > div:nth-child(-n+2){ border-top:0; }
+  .band > div:nth-child(2n){ border-left:1px solid var(--hair); }
+  .views{ grid-template-columns:1fr; }
+}
+@media (max-width:560px){
+  .band{ grid-template-columns:1fr; }
+  .band > div{ border-left:0 !important; }
+}
+
+/* ── site footer ── */
+.site-footer{ border-top:1px solid var(--hair); margin-top:3rem; background:var(--paper); }
+.foot-grid{ display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:2rem; padding-top:2.4rem; padding-bottom:1.8rem; }
+.foot-brand .brand{ font-size:1.15rem; }
+.foot-tag{ font-family:var(--font-serif); font-style:italic; color:var(--ink-60);
+  font-size:.92rem; line-height:1.55; margin:.7rem 0 0; max-width:26rem; }
+.foot-col h3{ font-family:var(--font-brand); font-weight:600; font-size:.62rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60); margin:0 0 .7rem; }
+.foot-col a{ display:block; font-family:var(--font-brand); font-size:.8rem; letter-spacing:.05em;
+  color:var(--ink); text-decoration:none; padding:.22rem 0; }
+.foot-col a:hover{ color:var(--ink-60); }
+.foot-legal{ display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap;
+  border-top:1px solid var(--hair); padding-top:1rem; padding-bottom:1.6rem;
+  font-family:var(--font-brand); font-size:.64rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-60); }
+@media (max-width:760px){
+  .foot-grid{ grid-template-columns:1fr 1fr; }
+  .foot-brand{ grid-column:1 / -1; }
+}
+
+/* ── newsletter popup ── */
+.nl-pop{ position:fixed; inset:0; z-index:1000; display:flex; align-items:center;
+  justify-content:center; background:rgba(0,0,0,.45); padding:1rem; }
+.nl-pop[hidden]{ display:none; }
+.nl-card{ position:relative; background:var(--paper); color:var(--ink); border:1px solid var(--ink);
+  max-width:26rem; width:100%; padding:2.2rem 2rem 2rem; text-align:center; }
+.nl-x{ position:absolute; top:.4rem; right:.55rem; background:none; border:0; color:var(--ink);
+  font-size:1.5rem; cursor:pointer; line-height:1; padding:.3rem; }
+.nl-card .ital{ font-family:var(--font-serif); font-style:italic; }
+.nl-title{ font-family:var(--font-display); font-size:1.7rem; letter-spacing:.06em; margin:.2rem 0 .6rem; }
+.nl-card p{ font-family:var(--font-serif); color:var(--ink-60); font-size:.95rem; line-height:1.55; margin:0 0 1.1rem; }
+.nl-form{ display:flex; gap:.5rem; }
+.nl-form input{ flex:1; min-width:0; font-family:var(--font-serif); font-size:.95rem;
+  padding:.65rem .7rem; border:1px solid var(--hair); background:var(--paper); color:var(--ink); border-radius:0; }
+.nl-form input:focus{ outline:none; border-color:var(--ink); box-shadow:inset 0 0 0 1px var(--ink); }
+.nl-form button{ font-family:var(--font-brand); font-weight:600; font-size:.68rem; letter-spacing:.16em;
+  text-transform:uppercase; background:var(--ink); color:var(--paper); border:1px solid var(--ink);
+  padding:.65rem 1rem; cursor:pointer; }
+.nl-form button:hover{ background:var(--paper); color:var(--ink); }
+.nl-note{ display:none; font-family:var(--font-brand); font-size:.7rem; letter-spacing:.16em;
+  text-transform:uppercase; margin:.9rem 0 0; }
+.nl-note.show{ display:block; }
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+}
+
+
+
+/* ── the Brodmann page's own bits ───────────────────────────────────────
+
+   A search box, a list of areas grouped by lobe, and a reading panel. The
+   list is the navigation: there is no dropdown, because forty-one entries
+   with names and functions are worth seeing at once and worth searching. */
+
+.searchwrap{ position:relative; margin-bottom:.55rem; }
+.searchwrap input{
+  width:100%; padding:.55rem 2rem .5rem .6rem;
+  font-family:var(--font-serif); font-size:.95rem;
+  color:var(--ink); background:var(--paper);
+  border:1px solid var(--hair); border-radius:0;
+}
+.searchwrap input::placeholder{ color:var(--ink-35); font-style:italic; }
+.searchwrap input:focus{ outline:2px solid var(--ink); outline-offset:1px; }
+.searchwrap .clear{
+  position:absolute; right:.3rem; top:50%; transform:translateY(-50%);
+  border:0; background:none; color:var(--ink-60); cursor:pointer;
+  font-size:1.1rem; line-height:1; padding:.2rem .3rem;
+}
+.searchwrap .clear:hover{ color:var(--ink); }
+.search-count{
+  font-family:var(--font-serif); font-style:italic; font-size:.78rem;
+  color:var(--ink-60); margin:0 0 .5rem;
+}
+
+.balist{ max-height:min(58vh,560px); overflow-y:auto; margin:0 -.2rem; padding:0 .2rem; }
+.balobe{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+  border-bottom:1px solid var(--ink-35); padding:.5rem .1rem .3rem; margin-top:.5rem;
+}
+.balobe:first-child{ margin-top:0; }
+.barow{
+  display:flex; align-items:baseline; gap:.5rem; width:100%;
+  border:0; border-bottom:1px solid var(--hair); background:none;
+  color:var(--ink); text-align:left; cursor:pointer;
+  padding:.42rem .25rem .38rem; font-family:var(--font-serif); font-size:.9rem;
+}
+.barow:hover{ background:color-mix(in srgb, var(--ink) 9%, transparent); }
+.barow[aria-pressed="true"]{ background:var(--ink); color:var(--paper); }
+.barow .num{
+  font-family:var(--font-brand); font-weight:500; font-size:.72rem;
+  letter-spacing:.06em; min-width:2.6rem; flex:none; font-variant-numeric:tabular-nums;
+}
+.barow .nm{ min-width:0; line-height:1.3; }
+.barow .swatch{
+  width:.6rem; height:.6rem; flex:none; border:1px solid currentColor;
+  align-self:center; margin-left:auto;
+}
+.balist-empty{
+  font-family:var(--font-serif); font-style:italic; font-size:.85rem;
+  color:var(--ink-60); padding:.8rem .2rem;
+}
+mark{ background:var(--ink); color:var(--paper); }
+.barow[aria-pressed="true"] mark{ background:var(--paper); color:var(--ink); }
+
+/* the reading panel under the viewports */
+.reading{ margin-top:var(--gap); }
+.ba-card{ border:1px solid var(--hair); padding:clamp(14px,1.8vw,22px); }
+.ba-card .kick{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+}
+.ba-card h2{
+  font-family:var(--font-display); font-weight:400; letter-spacing:.01em;
+  font-size:clamp(1.3rem,2.4vw,1.9rem); line-height:1.12; margin:.35rem 0 .1rem;
+}
+.ba-card .where{
+  font-family:var(--font-serif); font-style:italic; font-size:.92rem;
+  color:var(--ink-60); margin-bottom:.7rem;
+}
+.ba-card p.fn{ font-size:1rem; line-height:1.62; max-width:68ch; }
+.ba-card .caveat{
+  font-family:var(--font-serif); font-style:italic; font-size:.88rem;
+  color:var(--ink-60); border-left:2px solid var(--ink-35);
+  padding-left:.7rem; margin-top:.8rem; max-width:64ch;
+}
+.ba-empty{
+  font-family:var(--font-serif); font-style:italic;
+  color:var(--ink-60); padding:clamp(14px,1.8vw,22px); border:1px solid var(--ink-35);
+}
+.ba-foot{
+  font-family:var(--font-serif); font-style:italic; font-size:.85rem;
+  color:var(--ink-60); border-top:1px solid var(--ink-35);
+  padding-top:1rem; margin-top:2rem;
+}
+
+@media (max-width:1100px){
+  .balist{ max-height:none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="Site">
+    <a href="regions.html">Region Atlas</a>
+    <a href="brodmann.html" aria-current="page">Brodmann Areas</a>
+    <a href="receptors.html">Receptor Density</a>
+    <a href="tracts.html">Tractography</a>
+    <a href="network-atlas.html">Network Atlas</a>
+    <a href="studies.html">Visualizing Studies</a>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button>
+  </nav>
+</header>
+
+<main id="main" class="wrap">
+
+  <div class="title-strip">
+    <h1 class="name">Brodmann Areas</h1>
+    <span class="anno">41 cytoarchitectural areas &middot; Brodmann 1909 &middot; on MNI152</span>
+    <div class="ts-views" role="group" aria-label="Layout">
+      <button class="ts-btn active" data-view="grid" type="button">Grid</button>
+      <button class="ts-btn" data-view="axial" type="button">Axial</button>
+      <button class="ts-btn" data-view="coronal" type="button">Coronal</button>
+      <button class="ts-btn" data-view="sagittal" type="button">Sagittal</button>
+      <button class="ts-btn" data-view="render" type="button">3D</button>
+    </div>
+  </div>
+
+  <div class="studio">
+
+    <aside class="rail" aria-label="Brodmann areas">
+      <h2 class="sec-h">Areas <small>pick one, or search</small></h2>
+
+      <div class="card">
+        <h2>Search</h2>
+        <div class="searchwrap">
+          <input type="search" id="q" autocomplete="off" spellcheck="false"
+                 placeholder="number, name, or what it does&hellip;"
+                 aria-label="Search Brodmann areas by number, anatomical name, or function"
+                 aria-describedby="qcount">
+          <button class="clear hidden" id="qclear" type="button" aria-label="Clear search">&times;</button>
+        </div>
+        <p class="search-count" id="qcount">All 41 areas.</p>
+        <div class="balist" id="balist" role="group" aria-label="Brodmann areas"></div>
+      </div>
+
+      <div class="card">
+        <h2>Overlay</h2>
+        <div class="row">
+          <label for="opacity">Opacity</label>
+          <input type="range" id="opacity" min="10" max="100" value="90">
+          <span class="val" id="opacityVal">90%</span>
+        </div>
+        <div class="btns"><button class="btn" id="clearBtn" type="button">Clear selection</button></div>
+      </div>
+    </aside>
+
+    <section class="centre" aria-label="MRI viewports">
+      <div class="views-wrap">
+        <div class="views" id="viewsGrid">
+          <div class="view" data-box="render">
+            <div class="view-cap"><b>3D</b><span>volume render</span></div>
+            <div class="view-tools"><span class="tool-label">Drag to turn</span></div>
+            <div class="mri-stage"><canvas id="glRen"></canvas></div>
+          </div>
+          <div class="view" data-box="axial">
+            <div class="view-cap"><b>Axial</b><span>transverse plane</span></div>
+            <div class="view-tools"><span class="tool-label">Drag to move</span></div>
+            <div class="mri-stage"><canvas id="glAx"></canvas></div>
+          </div>
+          <div class="view" data-box="coronal">
+            <div class="view-cap"><b>Coronal</b><span>frontal plane</span></div>
+            <div class="view-tools"><span class="tool-label">Drag to move</span></div>
+            <div class="mri-stage"><canvas id="glCor"></canvas></div>
+          </div>
+          <div class="view" data-box="sagittal">
+            <div class="view-cap"><b>Sagittal</b><span>median plane</span></div>
+            <div class="view-tools"><span class="tool-label">Drag to move</span></div>
+            <div class="mri-stage"><canvas id="glSag"></canvas></div>
+          </div>
+        </div>
+        <div class="status" id="status">
+          <div class="bar"><i></i></div>
+          <div>Loading volumes</div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="k">Template</div><div class="v">MNI152 <small>0.74&thinsp;mm</small></div></div>
+        <div class="stat"><div class="k">Atlas</div><div class="v">Brodmann <small>41 areas</small></div></div>
+        <div class="stat"><div class="k">Selected</div><div class="v" id="statSel">&mdash;</div></div>
+        <div class="stat"><div class="k">Probe</div><div class="v probe-v"><span id="cursorRegion">&mdash;</span><small id="cursorCoords">hover a view &middot; drag = crosshair</small></div></div>
+      </div>
+    </section>
+
+  </div>
+
+  <section class="reading" aria-label="What the selected area does" aria-live="polite">
+    <div id="readingSlot">
+      <p class="ba-empty">Pick an area on the left, or click straight onto the scan, and what it is for appears here.</p>
+    </div>
+  </section>
+
+  <p class="ba-foot">Brodmann numbered the cortex in 1909 by how its cells are layered, not by what it does &mdash; which is why the numbers wander about the brain and why several of his 52 have no agreed human counterpart. The 41 drawn here are those the shipped atlas labels; 12&ndash;16, 31, 33 and 49&ndash;52 are absent. Each area is bilateral: Brodmann described cortical types, not hemispheres, so where a function is strongly one-sided the note says so rather than the atlas splitting the area. The boundaries are an approximation to begin with &mdash; they were drawn from a handful of post-mortem brains, and no two people's cortex is folded the same way. This particular volume descends from the Talairach Daemon, whose labels were grown outwards to fill the brain: 14% of what it marks lies in white matter that the AAL atlas does not count as cortex at all, and label 48 has become a catch-all for the peri-Sylvian region rather than the small area Brodmann gave that number to. Read a boundary as a neighbourhood, not a border. Educational, not diagnostic.</p>
+  <p class="credits">&copy; 2026 VisualNeuroscience.AI &middot; rendered with <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a> (Rorden lab) &middot; MNI152 template &middot; Brodmann atlas from <a href="https://github.com/neurolabusc/MRIcron" target="_blank" rel="noopener">MRIcron</a> (BSD) &middot; set in Flux, Newsreader &amp; Prata</p>
+
+</main>
+
+<script src="assets/native.js"></script>
+<script src="assets/niivue.js"></script>
+<script src="assets/atlas-data.js"></script>
+<script src="assets/brodmann-areas.js"></script>
+<script src="assets/slice-tool.js"></script>
+<script src="assets/zoom.js"></script>
+<script>
+"use strict";
+(function(){
+  var B = window.MN_BRODMANN;
+  var TPL_URL = MN_ATLAS.TPL_URL;
+  var BA_URL  = "assets/brodmann.nii.gz";
+  var N = B.MAX + 1;
+
+  /* one colour per lobe, so a highlighted area reads as belonging somewhere
+     before its name is read */
+  var LOBE_COLOUR = {
+    frontal:"#5A61D8", parietal:"#4AE8C3", temporal:"#FF704E",
+    occipital:"#DAD358", cingulate:"#E250A9"
+  };
+
+  var statusEl = document.getElementById("status");
+  function fail(msg){
+    statusEl.classList.remove("hidden");
+    statusEl.classList.add("error");
+    statusEl.innerHTML = "";
+    var d = document.createElement("div"); d.textContent = msg; statusEl.appendChild(d);
+  }
+
+  var PLANES = [
+    {key:"render",   canvasId:"glRen", st:4},
+    {key:"axial",    canvasId:"glAx",  st:0},
+    {key:"coronal",  canvasId:"glCor", st:1},
+    {key:"sagittal", canvasId:"glSag", st:2}
+  ];
+  var INSTANCES = {};
+  function allNV(){ return PLANES.map(function(p){ return INSTANCES[p.key]; }).filter(Boolean); }
+
+  function makeNV(sliceType){
+    return new niivue.Niivue({
+      backColor:[0,0,0,1], crosshairColor:[1,1,1,1], show3Dcrosshair:true,
+      sliceType:sliceType, invertScrollDirection:true,
+      dragAndDropEnabled:false, textHeight:0.04
+    });
+  }
+  function hexToRgb(h){
+    var n = parseInt(h.slice(1), 16);
+    return [(n>>16)&255, (n>>8)&255, n&255];
+  }
+
+  /* ── selection ────────────────────────────────────────────────────────
+     One area at a time. The page answers "what does this do", and two
+     answers at once is a different question. */
+  var selected = null;
+
+  function paint(){
+    var R = new Array(N).fill(0), G = new Array(N).fill(0),
+        Bl = new Array(N).fill(0), A = new Array(N).fill(0), I = [];
+    for (var i = 0; i < N; i++) I.push(i);
+    if (selected != null){
+      var a = B.BY_BA[selected];
+      var rgb = hexToRgb(LOBE_COLOUR[a.lobe] || "#FFFFFF");
+      R[selected] = rgb[0]; G[selected] = rgb[1]; Bl[selected] = rgb[2]; A[selected] = 255;
+    }
+    var cm = {R:R, G:G, B:Bl, A:A, I:I, labels:B.LABELS};
+    allNV().forEach(function(nv){
+      if (nv.volumes && nv.volumes.length > 1){
+        nv.volumes[1].setColormapLabel(cm);
+        nv.updateGLVolume();
+      }
+    });
+  }
+
+  /* ── the reading panel ────────────────────────────────────────────── */
+  var slot = document.getElementById("readingSlot");
+  var statSel = document.getElementById("statSel");
+
+  function read(){
+    if (selected == null){
+      slot.innerHTML = '<p class="ba-empty">Pick an area on the left, or click straight onto the scan, and what it is for appears here.</p>';
+      statSel.innerHTML = "&mdash;";
+      return;
+    }
+    var a = B.BY_BA[selected];
+    var lobe = B.LOBES.filter(function(l){ return l.id === a.lobe; })[0];
+    var card = document.createElement("div");
+    card.className = "ba-card";
+    card.style.borderLeft = "3px solid " + (LOBE_COLOUR[a.lobe] || "currentColor");
+
+    var kick = document.createElement("div");
+    kick.className = "kick";
+    kick.textContent = "Brodmann area " + a.ba + " · " + (lobe ? lobe.label : "");
+    var h = document.createElement("h2"); h.textContent = a.name;
+    var w = document.createElement("div"); w.className = "where";
+    w.textContent = a.region + " · MNI " + a.at[0] + " " + a.at[1] + " " + a.at[2] +
+                    " mm · " + a.vox.toLocaleString() + " voxels";
+    var f = document.createElement("p"); f.className = "fn"; f.textContent = a.fn;
+    card.appendChild(kick); card.appendChild(h); card.appendChild(w); card.appendChild(f);
+    if (a.note){
+      var c = document.createElement("p"); c.className = "caveat"; c.textContent = a.note;
+      card.appendChild(c);
+    }
+    slot.innerHTML = ""; slot.appendChild(card);
+    statSel.textContent = "BA" + a.ba;
+  }
+
+  /* Selecting an area takes the crosshair to it. Without this the 3D render
+     shows the highlight and the three slice views carry on displaying
+     whatever plane they were already on, which for most areas is nowhere
+     near it. The target is the labelled voxel closest to the area's centre
+     of mass, computed from the volume itself, so it always lands inside. */
+  function goTo(mm){
+    allNV().forEach(function(nv){
+      try{
+        nv.scene.crosshairPos = nv.mm2frac(mm);
+        nv.updateGLVolume();
+        nv.drawScene();
+      }catch(e){}
+    });
+  }
+
+  function select(ba, fromList){
+    selected = (selected === ba) ? null : ba;
+    paint(); read(); markList();
+    if (selected != null){
+      var a = B.BY_BA[selected];
+      if (a && a.at) goTo(a.at);
+      if (window.MN) MN.tap("light");
+      if (!fromList) scrollListTo(selected);
+    }
+  }
+
+  /* ── the list, and the search that filters it ─────────────────────────
+     Three fields are searched at once: the number, the anatomical name and
+     the function text. Someone who knows they want BA17 types 17; someone
+     who knows they want the fusiform types fusiform; someone who only knows
+     they want the bit that recognises faces types faces, and gets there. */
+  var listEl = document.getElementById("balist");
+  var qEl = document.getElementById("q");
+  var qClear = document.getElementById("qclear");
+  var qCount = document.getElementById("qcount");
+  var rows = {};
+
+  function norm(s){ return String(s).toLowerCase(); }
+
+  function hayFor(a){
+    return norm("ba" + a.ba + " " + a.ba + " " + a.name + " " + a.region + " " +
+                a.fn + " " + a.note + " " + a.lobe + " " + (a.tags || ""));
+  }
+
+  /* Two passes, because loose matching on several words is too generous:
+     "working memory" matched area 30 on "working with area 29" plus the word
+     memory elsewhere in the sentence. So a multi-word query is tried as a
+     phrase first, and only if nothing carries the phrase does it fall back
+     to every-word-somewhere. A single word behaves the same either way. */
+  function matches(a, terms, phrase){
+    if (!terms.length) return true;
+    var hay = hayFor(a);
+    if (phrase) return hay.indexOf(phrase) !== -1;
+    return terms.every(function(t){ return hay.indexOf(t) !== -1; });
+  }
+
+  function phraseFor(terms, raw){
+    if (terms.length < 2) return null;
+    var whole = norm(raw).trim().replace(/\s+/g, " ");
+    return B.AREAS.some(function(a){ return hayFor(a).indexOf(whole) !== -1; }) ? whole : null;
+  }
+
+  function highlight(text, terms){
+    if (!terms.length) return document.createTextNode(text);
+    var frag = document.createDocumentFragment();
+    var low = norm(text), i = 0;
+    /* mark the first hit of any term, walking left to right */
+    while (i < text.length){
+      var best = -1, bestLen = 0;
+      terms.forEach(function(t){
+        var at = low.indexOf(t, i);
+        if (at !== -1 && (best === -1 || at < best)){ best = at; bestLen = t.length; }
+      });
+      if (best === -1){ frag.appendChild(document.createTextNode(text.slice(i))); break; }
+      if (best > i) frag.appendChild(document.createTextNode(text.slice(i, best)));
+      var m = document.createElement("mark");
+      m.textContent = text.slice(best, best + bestLen);
+      frag.appendChild(m);
+      i = best + bestLen;
+    }
+    return frag;
+  }
+
+  function buildList(){
+    var terms = norm(qEl.value).split(/\s+/).filter(Boolean);
+    var phrase = phraseFor(terms, qEl.value);
+    listEl.innerHTML = "";
+    rows = {};
+    var shown = 0;
+
+    B.LOBES.forEach(function(lobe){
+      var mine = B.AREAS.filter(function(a){ return a.lobe === lobe.id && matches(a, terms, phrase); });
+      if (!mine.length) return;
+      var h = document.createElement("div");
+      h.className = "balobe";
+      h.textContent = lobe.label + " · " + lobe.sub;
+      listEl.appendChild(h);
+
+      mine.forEach(function(a){
+        shown++;
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "barow";
+        b.setAttribute("aria-pressed", String(selected === a.ba));
+        b.dataset.ba = a.ba;
+
+        var num = document.createElement("span");
+        num.className = "num";
+        num.appendChild(highlight("BA" + a.ba, phrase ? [phrase] : terms));
+
+        var nm = document.createElement("span");
+        nm.className = "nm";
+        nm.appendChild(highlight(a.name, phrase ? [phrase] : terms));
+
+        var sw = document.createElement("span");
+        sw.className = "swatch";
+        sw.style.background = LOBE_COLOUR[a.lobe] || "transparent";
+
+        b.appendChild(num); b.appendChild(nm); b.appendChild(sw);
+        b.addEventListener("click", function(){ select(a.ba, true); });
+        listEl.appendChild(b);
+        rows[a.ba] = b;
+      });
+    });
+
+    if (!shown){
+      var e = document.createElement("p");
+      e.className = "balist-empty";
+      e.textContent = "Nothing matches “" + qEl.value.trim() + "”. Try a number, a gyrus, or what you want the area to do.";
+      listEl.appendChild(e);
+    }
+    qCount.textContent = terms.length
+      ? shown + (shown === 1 ? " area matches" : " areas match")
+      : "All " + B.AREAS.length + " areas.";
+    qClear.classList.toggle("hidden", !qEl.value);
+  }
+
+  function markList(){
+    Object.keys(rows).forEach(function(ba){
+      rows[ba].setAttribute("aria-pressed", String(Number(ba) === selected));
+    });
+  }
+  function scrollListTo(ba){
+    var r = rows[ba];
+    if (r && r.scrollIntoView) r.scrollIntoView({block:"nearest"});
+  }
+
+  qEl.addEventListener("input", function(){ buildList(); markList(); });
+  qEl.addEventListener("keydown", function(e){
+    if (e.key === "Escape"){ qEl.value = ""; buildList(); markList(); }
+    /* Enter picks the only match, which is what typing "17" means */
+    if (e.key === "Enter"){
+      var only = Object.keys(rows);
+      if (only.length === 1) select(Number(only[0]), true);
+    }
+  });
+  qClear.addEventListener("click", function(){ qEl.value = ""; buildList(); markList(); qEl.focus(); });
+  document.getElementById("clearBtn").addEventListener("click", function(){
+    selected = null; paint(); read(); markList();
+  });
+
+  /* ── probing the scan ─────────────────────────────────────────────────
+     The atlas is a label volume, so the value under the crosshair is the
+     area number. Reading it back makes the scan an index into the list. */
+  var regionOut = document.getElementById("cursorRegion");
+  var coordsOut = document.getElementById("cursorCoords");
+
+  function onLoc(loc){
+    try{
+      if (loc && loc.mm){
+        coordsOut.textContent = "MNI " + loc.mm[0].toFixed(0) + " " +
+          loc.mm[1].toFixed(0) + " " + loc.mm[2].toFixed(0) + " mm";
+      }
+      var idx = 0;
+      if (loc && loc.values && loc.values.length > 1 && loc.values[1]){
+        idx = Math.round(loc.values[1].value || 0);
+      }
+      var a = B.BY_BA[idx];
+      regionOut.textContent = a ? ("BA" + a.ba + " · " + a.name) : "—";
+      regionOut.dataset.ba = a ? a.ba : "";
+    }catch(e){}
+  }
+  /* clicking the probe read-out selects what it names */
+  regionOut.addEventListener("click", function(){
+    var ba = Number(regionOut.dataset.ba || 0);
+    if (ba) select(ba, false);
+  });
+  regionOut.style.cursor = "pointer";
+
+  /* ── opacity ── */
+  var opEl = document.getElementById("opacity"), opVal = document.getElementById("opacityVal");
+  opEl.addEventListener("input", function(){
+    var v = Number(opEl.value) / 100;
+    opVal.textContent = opEl.value + "%";
+    allNV().forEach(function(nv){
+      if (nv.volumes && nv.volumes.length > 1){
+        nv.setOpacity(1, v); nv.updateGLVolume();
+      }
+    });
+  });
+
+  /* ── layout switch ── */
+  var viewsGrid = document.getElementById("viewsGrid");
+  document.querySelectorAll(".ts-btn[data-view]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll(".ts-btn[data-view]").forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+      var want = btn.dataset.view;
+      viewsGrid.classList.toggle("solo", want !== "grid");
+      PLANES.forEach(function(p){
+        var box = viewsGrid.querySelector('.view[data-box="' + p.key + '"]');
+        if (!box) return;
+        box.classList.toggle("solo-on", want !== "grid" && p.key === want);
+      });
+      setTimeout(function(){ allNV().forEach(function(nv){ try{ nv.resizeListener(); nv.drawScene(); }catch(e){} }); }, 40);
+    });
+  });
+
+  /* ── boot ── */
+  (async function boot(){
+    try{
+      for (var i = 0; i < PLANES.length; i++){
+        var p = PLANES[i];
+        var nv = makeNV(p.st);
+        await nv.attachToCanvas(document.getElementById(p.canvasId));
+        nv.onLocationChange = onLoc;
+        INSTANCES[p.key] = nv;
+      }
+      await Promise.all(PLANES.map(function(p){
+        return INSTANCES[p.key].loadVolumes([
+          {url: TPL_URL, name: "mni152.nii.gz", colormap: "gray", opacity: 1},
+          {url: BA_URL,  name: "brodmann.nii.gz", opacity: 0.9}
+        ]);
+      }));
+      PLANES.forEach(function(p){ INSTANCES[p.key].setSliceType(p.st); });
+      PLANES.forEach(function(p){
+        var others = PLANES.filter(function(q){ return q.key !== p.key; })
+                           .map(function(q){ return INSTANCES[q.key]; });
+        INSTANCES[p.key].broadcastTo(others, {"2d":true, "3d":true});
+      });
+      if (window.MN_SLICE){
+        var renBox = document.querySelector('.view[data-box="render"]');
+        if (renBox) MN_SLICE.attach({
+          stage: renBox.querySelector(".mri-stage"),
+          tools: renBox.querySelector(".view-tools"),
+          nv: INSTANCES.render
+        });
+      }
+      if (window.MN_ZOOM){
+        var zBox = document.querySelector('.view[data-box="render"]');
+        if (zBox) MN_ZOOM.attach({ stage: zBox.querySelector(".mri-stage"), nv: INSTANCES.render });
+      }
+      paint();
+      statusEl.classList.add("hidden");
+    }catch(err){
+      console.error(err);
+      fail("Could not start the viewer: " + (err && err.message ? err.message : err) +
+           " — this page needs WebGL2 (any modern desktop or mobile browser).");
+    }
+  })();
+
+  buildList();
+  read();
+
+  /* deep link: brodmann.html#ba17 opens on that area */
+  var m = /^#ba(\d+)$/i.exec(location.hash || "");
+  if (m && B.BY_BA[Number(m[1])]) select(Number(m[1]), false);
+})();
+
+/* theme, shared with the rest of the site */
+(function(){
+  var themeBtn = document.getElementById("themeBtn");
+  var themeLbl = document.getElementById("themeLbl");
+  if (document.documentElement.getAttribute("data-theme") === "dark"){
+    themeLbl.textContent = "Light"; themeBtn.setAttribute("aria-pressed", "true");
+  }
+  themeBtn.addEventListener("click", function(){
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark";
+    if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+    else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+    themeBtn.setAttribute("aria-pressed", String(!dark));
+    try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -152,8 +152,9 @@ img{ max-width:100%; display:block; }
 .m-atlas  { grid-column:span 7; grid-row:span 2; }
 .m-network{ grid-column:span 5; }
 .m-tracts { grid-column:span 5; }
+.m-brodmann{ grid-column:span 4; }
 .m-recept { grid-column:span 4; }
-.m-studies{ grid-column:span 8; }
+.m-studies{ grid-column:span 4; }
 .m-ledger { grid-column:span 12; }
 
 /* ── a box ──────────────────────────────────────────────────────────────
@@ -222,7 +223,7 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
 /* ── the ledger ─────────────────────────────────────────────────────────
    The strip of figures across the foot of the mosaic. */
 .ledger{
-  display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+  display:grid; grid-template-columns:repeat(5,minmax(0,1fr));
   border:1px solid var(--hair);
 }
 .ledger div{
@@ -251,7 +252,8 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
   .m-atlas  { grid-column:span 6; grid-row:auto; }
   .m-network{ grid-column:span 3; }
   .m-tracts { grid-column:span 3; }
-  .m-recept { grid-column:span 6; }
+  .m-brodmann{ grid-column:span 3; }
+  .m-recept { grid-column:span 3; }
   .m-studies{ grid-column:span 6; }
   .m-ledger { grid-column:span 6; }
 }
@@ -259,7 +261,7 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
 /* ── phone: one box on each line, and the wide box stacks ── */
 @media (max-width:760px){
   .mosaic{ grid-template-columns:minmax(0,1fr); }
-  .m-atlas, .m-network, .m-tracts, .m-recept, .m-studies, .m-ledger{
+  .m-atlas, .m-network, .m-tracts, .m-brodmann, .m-recept, .m-studies, .m-ledger{
     grid-column:1 / -1; grid-row:auto;
   }
   .box-h{ grid-template-columns:minmax(0,1fr); }
@@ -278,6 +280,7 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
   <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
   <nav class="nav-row" aria-label="Site">
     <a href="regions.html">Region Atlas</a>
+    <a href="brodmann.html">Brodmann Areas</a>
     <a href="receptors.html">Receptor Density</a>
     <a href="tracts.html">Tractography</a>
     <a href="network-atlas.html">Network Atlas</a>
@@ -332,6 +335,19 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
       <div class="go">Open the tractogram &rarr;</div>
     </a>
 
+
+    <!-- ── the cytoarchitecture ───────────────────────────────────── -->
+    <a class="box m-brodmann" href="brodmann.html">
+      <div class="kicker">Cytoarchitecture</div>
+      <h2>Brodmann Areas</h2>
+      <p>The 41 areas Brodmann's 1909 map still has a human counterpart for, drawn on the scan. Pick one and read what it is for, or search by number, by the gyrus it sits on, or by what you want an area to do — type <em>faces</em>, or <em>working memory</em>, and it finds them.</p>
+      <div class="fig" aria-hidden="true">
+        <span class="shot"><img src="assets/home/brodmann.jpg" alt="" loading="lazy" decoding="async" width="1040" height="610"></span>
+      </div>
+      <div class="meta">41 areas &middot; searchable by function</div>
+      <div class="go">Open the areas &rarr;</div>
+    </a>
+
     <!-- ── the receptors ─────────────────────────────────────────── -->
     <a class="box m-recept" href="receptors.html">
       <div class="kicker">Wiring</div>
@@ -345,7 +361,7 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
     </a>
 
     <!-- ── the papers ─────────────────────────────────────────────── -->
-    <a class="box m-studies box-h" href="studies.html">
+    <a class="box m-studies" href="studies.html">
       <div class="side">
         <div class="kicker">The Papers</div>
         <h2>Visualizing Studies</h2>
@@ -360,6 +376,7 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
     <!-- ── the figures ────────────────────────────────────────────── -->
     <div class="m-ledger ledger">
       <div><div class="n">116</div><div class="k">AAL parcels</div></div>
+      <div><div class="n">41</div><div class="k">Brodmann areas</div></div>
       <div><div class="n">0.74<span style="font-size:.5em"> mm</span></div><div class="k">MNI152 voxel</div></div>
       <div><div class="n">6</div><div class="k">brain states</div></div>
       <div><div class="n">0</div><div class="k">things to install</div></div>
