@@ -1,5 +1,8 @@
 # Publishing to the App Store — iPhone and iPad
 
+> The Mac build ships from this same target and record.
+> See **[MAC-APP-STORE.md](MAC-APP-STORE.md)** for what differs there.
+
 The project is already a universal app: `TARGETED_DEVICE_FAMILY = "1,2"`, both
 idioms carry their orientations, and the layout was checked at 375, 393, 430,
 834 and 1366 points wide with no horizontal overflow at any of them. There is
@@ -47,13 +50,13 @@ On the Mac, from the repository:
 ```
 cd app
 npm install
-npm run sync                    # copies ../site into the iOS bundle
-cd ios/App && pod install       # first time, and after any plugin change
-cd ../.. && npm run ios         # opens App.xcworkspace
+npm run ios                     # copies ../site in, then opens App.xcodeproj
 ```
 
-Open **App.xcworkspace**, never `App.xcodeproj` — CocoaPods lives in the
-workspace.
+There is no CocoaPods step. Capacitor 8 wires its plugins with Swift Package
+Manager — `cap sync` resolves the local package at `ios/App/CapApp-SPM` and
+Xcode opens the project directly. If a plugin is ever added, `npm run sync`
+is the whole of it.
 
 In Xcode:
 

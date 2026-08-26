@@ -20,7 +20,8 @@ serving `./site` as the plain static assets it is.
 |---|---|---|---|
 | Website | Cloudflare Workers | service worker (`site/sw.js`) | — |
 | Android | the app bundle | everything is local already | Play |
-| iOS | the app bundle | everything is local already | App Store |
+| iPhone, iPad | the app bundle | everything is local already | App Store |
+| Mac | the app bundle | everything is local already | Mac App Store |
 
 `site/assets/native.js` is the seam. It asks Capacitor for a share sheet, a
 haptic tick or a write to Photos when Capacitor is there, asks the browser for
@@ -48,19 +49,21 @@ Signing for release: create a keystore, then put `storeFile`, `storePassword`,
 reference it from `android/app/build.gradle`. Play's own App Signing then takes
 over from the upload key.
 
-**iOS** — needs macOS, Xcode and CocoaPods.
+**iOS and macOS** — needs macOS and Xcode. Capacitor 8 wires its plugins with
+Swift Package Manager, so there is no CocoaPods step and no workspace: `cap
+sync` resolves `ios/App/CapApp-SPM` and Xcode opens the project directly.
 
 ```
-cd ios/App && pod install     # first time, and after adding a plugin
-cd ../.. && npm run ios       # sync, then open App.xcworkspace
+npm run ios            # sync, then open App.xcodeproj
 ```
 
 In Xcode: set the team on the App target, confirm the bundle identifier is
 `ai.visualneuroscience.app`, then Product → Archive → Distribute App.
 
-`store/APP-STORE.md` has the full submission route — identifiers, the listing,
-the privacy answers, the age rating, and what is most likely to be rejected.
-`store/screenshots/` holds the two sizes Apple asks for, already rendered.
+The Mac build is the same target: Mac Catalyst is enabled on both
+configurations, so one project produces the iPhone, iPad and Mac apps from the
+same code. `store/APP-STORE.md` has the submission route for all three,
+including what differs on the Mac.
 
 ## Icons and splash
 
