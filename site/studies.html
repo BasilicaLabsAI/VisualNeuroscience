@@ -189,6 +189,39 @@ svg{ display:block; }
   font-size:.85rem; color:var(--ink-60);
   border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2rem;
 }
+
+/* ── what is planned but not built ──────────────────────────────────────
+   Small tiles rather than the full study card: thirteen empty cards at
+   that size would be a wall of dashed boxes pretending to be content.
+   Each says what the drug acts on, which is enough to show the section
+   has a shape without claiming any of it is written yet. */
+.drugs-sec{ margin-top:calc(var(--gap) * 3); }
+.drug-grid{
+  display:grid; gap:var(--gap); list-style:none; margin:0; padding:0;
+  grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));
+}
+.drug{
+  border:1px dashed var(--ink-35); padding:.85rem .9rem 1rem;
+  display:flex; flex-direction:column; min-width:0;
+}
+.drug-name{
+  font-family:var(--font-display); font-weight:400;
+  font-size:1.12rem; line-height:1.15; color:var(--ink);
+}
+.drug-sub{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.8rem; color:var(--ink-35); margin-top:.15rem; overflow-wrap:anywhere;
+}
+.drug-target{
+  font-family:var(--font-serif); font-size:.88rem; line-height:1.45;
+  color:var(--ink-60); margin-top:.5rem;
+}
+.drug-target sub{ font-size:.72em; }
+.drug-soon{
+  font-family:var(--font-brand); font-weight:500; font-size:.52rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-35);
+  margin-top:auto; padding-top:.85rem;
+}
 </style>
 </head>
 <body>
@@ -215,6 +248,8 @@ svg{ display:block; }
 
 <p class="lede">Papers read through the brain map. Each study takes the regions its authors name, draws them on the MNI152 scan where they actually sit, and sets out what the imaging found alongside what it does not settle. The reservations travel with the findings.</p>
 
+<h2 class="sec-h">Papers <small>drawn on the brain</small></h2>
+
 <div class="shelf">
 
   <a class="study" href="hallucinations.html">
@@ -240,6 +275,80 @@ svg{ display:block; }
 </div>
 
 <p class="attrib">These pages summarise published work for study; they are not the papers themselves, and each links to its source. Regions are drawn on the AAL-116 parcels they sit inside, which is an approximation wherever the functional region a paper names and the anatomical parcel an atlas draws are not the same object. Each study page says which of its regions are exact and which are approximate.</p>
+
+<section class="drugs-sec" aria-labelledby="drugs-h">
+  <h2 class="sec-h" id="drugs-h">Drug interactions <small>coming soon</small></h2>
+  <p class="lede">The same treatment turned on pharmacology: where a drug binds, which receptors carry it, and which regions of the brain those receptors are thickest in &mdash; drawn on the scan rather than described. The receptor densities the site already ships are the ground this will be built on.</p>
+  <ul class="drug-grid">
+      <li class="drug">
+        <div class="drug-name">LSD</div>
+        <div class="drug-sub">Lysergic acid diethylamide</div><div class="drug-target">5-HT<sub>2A</sub> agonist</div>
+        <div class="drug-soon">Coming soon</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">Psilocybin</div>
+        <div class="drug-sub">via psilocin</div><div class="drug-target">5-HT<sub>2A</sub> agonist</div>
+        <div class="drug-soon">Coming soon</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">DMT</div>
+        <div class="drug-sub">N,N-dimethyltryptamine</div><div class="drug-target">5-HT<sub>2A</sub> agonist</div>
+        <div class="drug-soon">Coming soon</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">MDMA</div>
+        <div class="drug-sub">3,4-methylenedioxy&shy;methamphetamine</div><div class="drug-target">Serotonin releaser</div>
+        <div class="drug-soon">Coming soon</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">Ketamine</div>
+        <div class="drug-target">NMDA receptor antagonist</div>
+        <div class="drug-soon">Coming soon</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">Ketanserin</div>
+        <div class="drug-target">5-HT<sub>2A</sub> antagonist</div>
+        <div class="drug-soon">Coming soon</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">Paracetamol</div>
+        <div class="drug-sub">Acetaminophen</div><div class="drug-target">Mechanism still unsettled</div>
+        <div class="drug-soon">Coming soon</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">Cocaine</div>
+        <div class="drug-target">Dopamine transporter blocker</div>
+        <div class="drug-soon">Coming soon</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">Nicotine</div>
+        <div class="drug-target">Nicotinic acetylcholine agonist</div>
+        <div class="drug-soon">Coming soon</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">Cannabis</div>
+        <div class="drug-sub">via THC</div><div class="drug-target">CB<sub>1</sub> partial agonist</div>
+        <div class="drug-soon">Coming soon</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">Betel nut</div>
+        <div class="drug-sub">via arecoline</div><div class="drug-target">Muscarinic acetylcholine agonist</div>
+        <div class="drug-soon">Coming soon</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">Fentanyl</div>
+        <div class="drug-target">&mu;-opioid receptor agonist</div>
+        <div class="drug-soon">Coming soon</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">Caffeine</div>
+        <div class="drug-target">Adenosine A<sub>1</sub>/A<sub>2A</sub> antagonist</div>
+        <div class="drug-soon">Coming soon</div>
+      </li>
+  </ul>
+  <p class="attrib">Nothing here yet. These are the drugs the section will cover, listed so it is clear what is planned rather than implied. Each will describe what is known about a mechanism and where the evidence stops, as the study pages do &mdash; educational, and not advice about taking anything.</p>
+</section>
+
 
 </main>
 
