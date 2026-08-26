@@ -496,6 +496,82 @@ mark{ background:var(--ink); color:var(--paper); }
 @media (max-width:1100px){
   .balist{ max-height:none; }
 }
+
+/* ── the two panes ──────────────────────────────────────────────────── */
+.pane.hidden{ display:none; }
+.hidden{ display:none !important; }
+
+/* ── the cartoon ────────────────────────────────────────────────────── */
+.cartoons{ display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); }
+.cart{ border:1px solid var(--hair); min-width:0; margin:0; }
+.cart figcaption{
+  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline;
+  gap:.35rem .8rem; padding:.6rem .8rem .5rem; border-bottom:1px solid var(--hair);
+}
+.cart figcaption b{
+  font-family:var(--font-brand); font-weight:500; font-size:.68rem;
+  letter-spacing:.28em; text-transform:uppercase;
+}
+.cart figcaption span{
+  font-family:var(--font-serif); font-style:italic; font-size:.82rem; color:var(--ink-60);
+}
+.cart-stage{ padding:.5rem; }
+.cart-stage svg{ width:100%; height:auto; display:block; }
+
+/* an area on the map: a filled tile with a hairline edge and its number */
+.ba-tile{ cursor:pointer; transition:opacity .12s ease; }
+.ba-tile .fill{ stroke:var(--paper); stroke-width:1.1; }
+.ba-tile .num{
+  font-family:var(--font-brand); font-weight:500; font-size:11px;
+  fill:var(--ink); paint-order:stroke; stroke:var(--paper); stroke-width:2.4px;
+  pointer-events:none; text-anchor:middle; dominant-baseline:central;
+}
+.ba-tile:hover .fill{ stroke:var(--ink); stroke-width:1.8; }
+.ba-tile.buried .fill{ stroke-dasharray:4 3; }
+.cartoons.picked .ba-tile{ opacity:.28; }
+.cartoons.picked .ba-tile.on{ opacity:1; }
+.cartoons.picked .ba-tile.on .fill{ stroke:var(--ink); stroke-width:2.2; }
+.cart-outline{ fill:none; stroke:var(--ink); stroke-width:2; }
+.cart-note{
+  font-family:var(--font-serif); font-style:italic; font-size:.85rem;
+  color:var(--ink-60); margin-top:.7rem;
+}
+.cart-miss{
+  font-family:var(--font-serif); font-style:italic; font-size:.9rem;
+  color:var(--ink); margin-top:.7rem;
+}
+.cart-miss:empty{ display:none; }
+
+/* ── the graph ──────────────────────────────────────────────────────── */
+.graphsec{ margin-top:calc(var(--gap) * 2); }
+.graph-lede{ font-size:.98rem; line-height:1.6; max-width:70ch; margin-bottom:var(--gap); }
+.graph-wrap{ border:1px solid var(--hair); }
+.graph-stage{ touch-action:none; cursor:grab; }
+.graph-stage:active{ cursor:grabbing; }
+.graph-stage svg{ width:100%; height:auto; display:block; background:transparent; }
+.graph-tools{
+  display:flex; flex-wrap:wrap; align-items:center; gap:.4rem .8rem;
+  padding:.5rem .8rem; border-top:1px solid var(--hair);
+}
+.graph-count{
+  font-family:var(--font-brand); font-size:.55rem; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--ink-60); margin-left:auto;
+}
+.g-edge{ stroke:var(--ink-35); fill:none; }
+.g-node{ cursor:pointer; }
+.g-node text{
+  font-family:var(--font-brand); font-weight:500; font-size:9px;
+  fill:var(--paper); text-anchor:middle; dominant-baseline:central; pointer-events:none;
+}
+.graph-stage.picked .g-node{ opacity:.25; }
+.graph-stage.picked .g-node.on,
+.graph-stage.picked .g-node.near{ opacity:1; }
+.graph-stage.picked .g-edge{ stroke:var(--ink-35); opacity:.12; }
+.graph-stage.picked .g-edge.on{ opacity:1; stroke:var(--ink); }
+
+@media (max-width:760px){
+  .cartoons{ grid-template-columns:1fr; }
+}
 </style>
 </head>
 <body>
@@ -519,7 +595,11 @@ mark{ background:var(--ink); color:var(--paper); }
   <div class="title-strip">
     <h1 class="name">Brodmann Areas</h1>
     <span class="anno">41 cytoarchitectural areas &middot; Brodmann 1909 &middot; on MNI152</span>
-    <div class="ts-views" role="group" aria-label="Layout">
+    <div class="ts-views" role="group" aria-label="How to show it">
+      <button class="ts-btn active" data-pane="cartoon" type="button">Cartoon</button>
+      <button class="ts-btn" data-pane="scan" type="button">On the scan</button>
+    </div>
+    <div class="ts-views scan-only hidden" role="group" aria-label="Layout">
       <button class="ts-btn active" data-view="grid" type="button">Grid</button>
       <button class="ts-btn" data-view="axial" type="button">Axial</button>
       <button class="ts-btn" data-view="coronal" type="button">Coronal</button>
@@ -557,7 +637,28 @@ mark{ background:var(--ink); color:var(--paper); }
       </div>
     </aside>
 
-    <section class="centre" aria-label="MRI viewports">
+    <section class="centre" aria-label="The map">
+
+      <!-- ── the cartoon: both faces of the hemisphere at once ────────
+           Most of the cortex is either folded into a sulcus or facing the
+           other way, so a scan can never show the whole scheme. The flat
+           map can, which is what it has always been for. -->
+      <div class="pane" id="paneCartoon">
+        <div class="cartoons">
+          <figure class="cart">
+            <figcaption><b>External</b><span>lateral surface</span></figcaption>
+            <div class="cart-stage" id="cartLateral"></div>
+          </figure>
+          <figure class="cart">
+            <figcaption><b>Internal</b><span>medial surface</span></figcaption>
+            <div class="cart-stage" id="cartMedial"></div>
+          </figure>
+        </div>
+        <p class="cart-miss" id="cartMiss"></p>
+        <p class="cart-note">Both views are projections of the atlas itself, not drawings: the external view takes the first labelled voxel walking in from the side, the internal view the first walking out from the midline. So an area appears here only if it actually reaches that surface &mdash; 41 and 42 sit inside the Sylvian fissure and show on neither &mdash; and the boundaries are the atlas&rsquo;s own. Anterior is on the left in both.</p>
+      </div>
+
+      <div class="pane hidden" id="paneScan">
       <div class="views-wrap">
         <div class="views" id="viewsGrid">
           <div class="view" data-box="render">
@@ -586,6 +687,7 @@ mark{ background:var(--ink); color:var(--paper); }
           <div>Loading volumes</div>
         </div>
       </div>
+      </div>
 
       <div class="stats">
         <div class="stat"><div class="k">Template</div><div class="v">MNI152 <small>0.74&thinsp;mm</small></div></div>
@@ -603,6 +705,19 @@ mark{ background:var(--ink); color:var(--paper); }
     </div>
   </section>
 
+  <section class="graphsec" aria-label="How the areas border one another">
+    <h2 class="sec-h">The map as a graph <small>who borders whom</small></h2>
+    <p class="graph-lede">Every area drawn at its own centre of mass in the scan, joined to the areas it actually shares a border with &mdash; measured off the volume, not asserted. Thicker lines are longer borders. Drag to turn it; the shape you are turning is the brain's own, because the nodes sit where the areas sit.</p>
+    <div class="graph-wrap">
+      <div class="graph-stage" id="graphStage"></div>
+      <div class="graph-tools">
+        <button class="ts-btn" id="gSpin" type="button" aria-pressed="true">Pause</button>
+        <button class="ts-btn" id="gReset" type="button">Reset view</button>
+        <span class="graph-count" id="gCount"></span>
+      </div>
+    </div>
+  </section>
+
   <p class="ba-foot">Brodmann numbered the cortex in 1909 by how its cells are layered, not by what it does &mdash; which is why the numbers wander about the brain and why several of his 52 have no agreed human counterpart. The 41 drawn here are those the shipped atlas labels; 12&ndash;16, 31, 33 and 49&ndash;52 are absent. Each area is bilateral: Brodmann described cortical types, not hemispheres, so where a function is strongly one-sided the note says so rather than the atlas splitting the area. The boundaries are an approximation to begin with &mdash; they were drawn from a handful of post-mortem brains, and no two people's cortex is folded the same way. This particular volume descends from the Talairach Daemon, whose labels were grown outwards to fill the brain: 14% of what it marks lies in white matter that the AAL atlas does not count as cortex at all, and label 48 has become a catch-all for the peri-Sylvian region rather than the small area Brodmann gave that number to. Read a boundary as a neighbourhood, not a border. Educational, not diagnostic.</p>
   <p class="credits">&copy; 2026 VisualNeuroscience.AI &middot; rendered with <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a> (Rorden lab) &middot; MNI152 template &middot; Brodmann atlas from <a href="https://github.com/neurolabusc/MRIcron" target="_blank" rel="noopener">MRIcron</a> (BSD) &middot; set in Flux, Newsreader &amp; Prata</p>
 
@@ -612,6 +727,7 @@ mark{ background:var(--ink); color:var(--paper); }
 <script src="assets/niivue.js"></script>
 <script src="assets/atlas-data.js"></script>
 <script src="assets/brodmann-areas.js"></script>
+<script src="assets/brodmann-map.js"></script>
 <script src="assets/slice-tool.js"></script>
 <script src="assets/zoom.js"></script>
 <script>
@@ -734,10 +850,11 @@ mark{ background:var(--ink); color:var(--paper); }
     paint(); read(); markList();
     if (selected != null){
       var a = B.BY_BA[selected];
-      if (a && a.at) goTo(a.at);
+      if (a && a.at && pane === "scan") goTo(a.at);
       if (window.MN) MN.tap("light");
       if (!fromList) scrollListTo(selected);
     }
+    markCartoon(); markGraph();
   }
 
   /* ── the list, and the search that filters it ─────────────────────────
@@ -931,6 +1048,271 @@ mark{ background:var(--ink); color:var(--paper); }
     });
   });
 
+  /* ── the cartoon ──────────────────────────────────────────────────────
+     Both faces of the hemisphere, traced out of the volume itself rather
+     than drawn by hand: the external view is what the first labelled voxel
+     is walking in from the left, the internal view what it is walking out
+     from the midline. Which is why area 41 is missing from the external
+     view — it really is buried in the Sylvian fissure — and why the two
+     views between them do not show all 41 areas. */
+  var MAP = window.MN_BA_MAP || {lateral:{}, medial:{}};
+  var tiles = {lateral:{}, medial:{}};
+
+  function drawCartoon(host, which){
+    var table = MAP[which] || {};
+    var NS = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", MAP.viewBox || "0 0 651 543");
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", which === "lateral"
+      ? "Brodmann areas on the external surface of the hemisphere"
+      : "Brodmann areas on the internal surface of the hemisphere");
+
+    Object.keys(table).forEach(function(k){
+      var ba = +k, spec = table[k], a = B.BY_BA[ba];
+      if (!a) return;
+      var g = document.createElementNS(NS, "g");
+      g.setAttribute("class", "ba-tile");
+      g.dataset.ba = ba;
+      var path = document.createElementNS(NS, "path");
+      path.setAttribute("class", "fill");
+      path.setAttribute("d", spec.d);
+      path.setAttribute("fill", LOBE_COLOUR[a.lobe] || "#888");
+      path.setAttribute("fill-opacity", ".82");
+      path.setAttribute("fill-rule", "evenodd");
+      var t = document.createElementNS(NS, "text");
+      t.setAttribute("class", "num");
+      t.setAttribute("x", spec.at[0]); t.setAttribute("y", spec.at[1]);
+      t.textContent = ba;
+      var ti = document.createElementNS(NS, "title");
+      ti.textContent = "BA" + ba + " — " + a.name;
+      g.appendChild(path); g.appendChild(t); g.appendChild(ti);
+      g.addEventListener("click", function(){ select(ba, false); });
+      svg.appendChild(g);
+      tiles[which][ba] = g;
+    });
+    host.innerHTML = "";
+    host.appendChild(svg);
+  }
+
+  function markCartoon(){
+    var wrap = document.querySelector(".cartoons");
+    if (wrap) wrap.classList.toggle("picked", selected != null);
+    ["lateral","medial"].forEach(function(w){
+      Object.keys(tiles[w]).forEach(function(ba){
+        tiles[w][ba].classList.toggle("on", Number(ba) === selected);
+      });
+    });
+    /* an area can be real and simply not face this way */
+    var note = document.getElementById("cartMiss");
+    if (note){
+      if (selected == null){ note.textContent = ""; return; }
+      var inL = !!tiles.lateral[selected], inM = !!tiles.medial[selected];
+      note.textContent = (inL || inM) ? ""
+        : "BA" + selected + " does not reach either surface — it is buried, and only the scan shows it.";
+    }
+  }
+
+  /* ── the graph ────────────────────────────────────────────────────────
+     Not an abstract layout: each node sits at its area's own centre of mass
+     in MNI millimetres, so turning the graph turns the brain. Edges are the
+     borders measured off the volume, weighted by how much border there is. */
+  var GS = 660, GH = 400;                    /* the drawing box */
+  var gSvg, gNodes = {}, gEdges = [], gAngle = 0.6, gTilt = -0.25, gSpin = true, gRaf = null;
+
+  /* The cloud is centred on its own middle and scaled by its widest radius,
+     computed once. Fitting the bounding box every frame instead would make
+     the whole graph swell and shrink as it turned. */
+  var gMid = [0,0,0], gK = 1.9;
+  function fitGraph(){
+    var n = B.AREAS.length;
+    gMid = [0,0,0];
+    B.AREAS.forEach(function(a){ for (var i=0;i<3;i++) gMid[i] += a.at[i]/n; });
+
+    /* A brain is half again as long as it is tall, so scaling by the radius
+       of the bounding sphere leaves most of the width empty. Instead the
+       widest and tallest the cloud ever actually gets is measured over the
+       rotations it can be turned to, and the scale is fixed from that: it
+       fills the box, and it is one scale, so turning it does not make the
+       whole graph swell and shrink. */
+    var maxX = 1, maxZ = 1;
+    for (var ai = 0; ai < 24; ai++){
+      var A = ai * Math.PI / 12, ca = Math.cos(A), sa = Math.sin(A);
+      for (var ti = -5; ti <= 5; ti++){
+        var T = ti * 0.12, ct = Math.cos(T), st = Math.sin(T);
+        for (var k = 0; k < n; k++){
+          var p = B.AREAS[k].at;
+          var x = p[0]-gMid[0], y = p[1]-gMid[1], z = p[2]-gMid[2];
+          var X = x*ca - y*sa, Y = x*sa + y*ca;
+          var Z = Y*st + z*ct;
+          if (Math.abs(X) > maxX) maxX = Math.abs(X);
+          if (Math.abs(Z) > maxZ) maxZ = Math.abs(Z);
+        }
+      }
+    }
+    /* Scale to the width and then make the box exactly as tall as the
+       result needs. Fitting a long, low cloud into a fixed frame the other
+       way round leaves half the width empty, which is what it did. */
+    gK = (GS/2 - 30) / maxX;
+    GH = Math.round(2 * maxZ * gK) + 44;
+    if (gSvg) gSvg.setAttribute("viewBox", "0 0 " + GS + " " + GH);
+  }
+
+  function project(mm){
+    /* MNI x is left-right, y front-back, z up. Turn about z, tilt about x. */
+    var x = mm[0]-gMid[0], y = mm[1]-gMid[1], z = mm[2]-gMid[2];
+    var ca = Math.cos(gAngle), sa = Math.sin(gAngle);
+    var X = x * ca - y * sa, Y = x * sa + y * ca;
+    var ct = Math.cos(gTilt), st = Math.sin(gTilt);
+    var Y2 = Y * ct - z * st, Z2 = Y * st + z * ct;
+    var persp = 520 / (520 + Y2 * gK);
+    return { x: GS/2 + X * gK * persp, y: GH/2 - Z2 * gK * persp, d: Y2, s: persp };
+  }
+
+  function buildGraph(){
+    var host = document.getElementById("graphStage");
+    gSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    host.innerHTML = ""; host.appendChild(gSvg);
+
+    var maxW = 0;
+    B.EDGES.forEach(function(e){ if (e[2] > maxW) maxW = e[2]; });
+
+    var eg = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    gSvg.appendChild(eg);
+    B.EDGES.forEach(function(e){
+      var ln = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      ln.setAttribute("class", "g-edge");
+      ln.setAttribute("stroke-width", (0.4 + 2.2 * Math.sqrt(e[2] / maxW)).toFixed(2));
+      eg.appendChild(ln);
+      gEdges.push({a: e[0], b: e[1], el: ln, w: e[2]});
+    });
+
+    var ng = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    gSvg.appendChild(ng);
+    B.AREAS.forEach(function(a){
+      var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      g.setAttribute("class", "g-node");
+      g.dataset.ba = a.ba;
+      var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      c.setAttribute("fill", LOBE_COLOUR[a.lobe] || "#888");
+      c.setAttribute("stroke", "var(--paper)");
+      c.setAttribute("stroke-width", "1.2");
+      var t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      t.textContent = a.ba;
+      var ti = document.createElementNS("http://www.w3.org/2000/svg", "title");
+      ti.textContent = "BA" + a.ba + " — " + a.name;
+      g.appendChild(c); g.appendChild(t); g.appendChild(ti);
+      g.addEventListener("click", function(){ select(a.ba, false); });
+      ng.appendChild(g);
+      gNodes[a.ba] = {g: g, c: c, t: t, area: a};
+    });
+
+    fitGraph();
+    document.getElementById("gCount").textContent =
+      B.AREAS.length + " areas · " + B.EDGES.length + " borders";
+    layoutGraph();
+  }
+
+  function layoutGraph(){
+    var pos = {};
+    B.AREAS.forEach(function(a){ pos[a.ba] = project(a.at); });
+
+    gEdges.forEach(function(e){
+      var p = pos[e.a], q = pos[e.b];
+      if (!p || !q) return;
+      e.el.setAttribute("x1", p.x.toFixed(1)); e.el.setAttribute("y1", p.y.toFixed(1));
+      e.el.setAttribute("x2", q.x.toFixed(1)); e.el.setAttribute("y2", q.y.toFixed(1));
+    });
+
+    /* draw the far side first, so the near side sits on top of it */
+    var order = B.AREAS.slice().sort(function(a, b){ return pos[b.ba].d - pos[a.ba].d; });
+    order.forEach(function(a){
+      var n = gNodes[a.ba], p = pos[a.ba];
+      var r = (6 + Math.min(8, Math.sqrt(a.vox) / 55)) * p.s;
+      n.c.setAttribute("cx", p.x.toFixed(1)); n.c.setAttribute("cy", p.y.toFixed(1));
+      n.c.setAttribute("r", r.toFixed(1));
+      n.t.setAttribute("x", p.x.toFixed(1)); n.t.setAttribute("y", p.y.toFixed(1));
+      n.t.setAttribute("font-size", Math.max(6, 9 * p.s).toFixed(1));
+      n.g.parentNode.appendChild(n.g);
+    });
+  }
+
+  function markGraph(){
+    var stage = document.getElementById("graphStage");
+    stage.classList.toggle("picked", selected != null);
+    var near = {};
+    if (selected != null){
+      B.EDGES.forEach(function(e){
+        if (e[0] === selected) near[e[1]] = true;
+        if (e[1] === selected) near[e[0]] = true;
+      });
+    }
+    Object.keys(gNodes).forEach(function(ba){
+      gNodes[ba].g.classList.toggle("on", Number(ba) === selected);
+      gNodes[ba].g.classList.toggle("near", !!near[ba]);
+    });
+    gEdges.forEach(function(e){
+      e.el.classList.toggle("on", selected != null && (e.a === selected || e.b === selected));
+    });
+  }
+
+  function spin(){
+    if (gSpin){ gAngle += 0.004; layoutGraph(); }
+    gRaf = requestAnimationFrame(spin);
+  }
+
+  function bindGraph(){
+    var stage = document.getElementById("graphStage");
+    var down = false, lx = 0, ly = 0;
+    stage.addEventListener("pointerdown", function(e){
+      if (e.target.closest(".g-node")) return;    /* a click on a node selects it */
+      down = true; lx = e.clientX; ly = e.clientY;
+      stage.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    stage.addEventListener("pointermove", function(e){
+      if (!down) return;
+      gAngle += (e.clientX - lx) * 0.008;
+      gTilt = Math.max(-0.6, Math.min(0.6, gTilt + (e.clientY - ly) * 0.005));
+      lx = e.clientX; ly = e.clientY;
+      layoutGraph();
+    });
+    ["pointerup","pointercancel"].forEach(function(ev){
+      stage.addEventListener(ev, function(){ down = false; });
+    });
+    var btn = document.getElementById("gSpin");
+    btn.addEventListener("click", function(){
+      gSpin = !gSpin;
+      btn.textContent = gSpin ? "Pause" : "Turn";
+      btn.setAttribute("aria-pressed", String(gSpin));
+    });
+    document.getElementById("gReset").addEventListener("click", function(){
+      gAngle = 0.6; gTilt = -0.25; layoutGraph();
+    });
+  }
+
+  /* ── the two panes ────────────────────────────────────────────────── */
+  var pane = "cartoon";
+  function setPane(which){
+    pane = which;
+    document.querySelectorAll(".ts-btn[data-pane]").forEach(function(b){
+      b.classList.toggle("active", b.dataset.pane === which);
+    });
+    document.getElementById("paneCartoon").classList.toggle("hidden", which !== "cartoon");
+    document.getElementById("paneScan").classList.toggle("hidden", which !== "scan");
+    document.querySelector(".scan-only").classList.toggle("hidden", which !== "scan");
+    if (which === "scan"){
+      /* the canvases were display:none, so they need their size back */
+      setTimeout(function(){
+        allNV().forEach(function(nv){ try{ nv.resizeListener(); nv.drawScene(); }catch(e){} });
+        if (selected != null && B.BY_BA[selected]) goTo(B.BY_BA[selected].at);
+      }, 40);
+    }
+  }
+  document.querySelectorAll(".ts-btn[data-pane]").forEach(function(b){
+    b.addEventListener("click", function(){ setPane(b.dataset.pane); });
+  });
+
   /* ── boot ── */
   (async function boot(){
     try{
@@ -976,6 +1358,12 @@ mark{ background:var(--ink); color:var(--paper); }
 
   buildList();
   read();
+  drawCartoon(document.getElementById("cartLateral"), "lateral");
+  drawCartoon(document.getElementById("cartMedial"), "medial");
+  buildGraph();
+  bindGraph();
+  spin();
+  markCartoon(); markGraph();
 
   /* deep link: brodmann.html#ba17 opens on that area */
   var m = /^#ba(\d+)$/i.exec(location.hash || "");

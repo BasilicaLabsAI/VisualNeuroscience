@@ -22,7 +22,7 @@
    request the site makes, and a failed font is a fallback face, not a
    broken page. */
 
-var VERSION = "vn-5";
+var VERSION = "vn-6";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
@@ -33,7 +33,7 @@ var PRECACHE = [
   "/assets/viewer.css", "/assets/native.js", "/assets/zoom.js",
   "/assets/slice-tool.js", "/assets/region-notes.js", "/assets/network-ring.js",
   "/assets/network-states.js", "/assets/atlas-data.js",
-  "/assets/brodmann-areas.js",
+  "/assets/brodmann-areas.js", "/assets/brodmann-map.js",
   "/assets/logo.svg", "/manifest.webmanifest",
   "/fonts/Flux-Regular.woff2"
 ];
