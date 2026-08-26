@@ -1,0 +1,23 @@
+{
+  "name": "VisualNeuroscience.AI",
+  "short_name": "VisualNeuro",
+  "description": "The brain in the browser: 116 AAL regions on the MNI152 template across axial, coronal, sagittal and 3D, a tractogram, receptor densities, a network ring and published studies drawn on the scan.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#111111",
+  "theme_color": "#111111",
+  "categories": ["education", "medical", "science"],
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Region Atlas",  "url": "/regions.html" },
+    { "name": "Network Atlas", "url": "/network-atlas.html" },
+    { "name": "Tractography",  "url": "/tracts.html" }
+  ]
+}

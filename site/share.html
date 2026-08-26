@@ -85,6 +85,11 @@ body{
   body{ align-items:flex-start; overflow-x:auto; }
 }
 </style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
 
@@ -158,5 +163,6 @@ body{
 
 <p class="note">The sharing card, at its true size of <b>1200&thinsp;&times;&thinsp;630</b> — the ratio link previews crop to. The scans are real slices of the MNI152 template the site ships, cut by <b>scripts/make_social.py</b> and put under the standard greyscale; the ring is the flow state as the Network Atlas draws it. Rendered to <b>assets/social-card.jpg</b>, which every page points at for <b>og:image</b>.</p>
 
+<script src="assets/native.js"></script>
 </body>
 </html>

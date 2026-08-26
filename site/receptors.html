@@ -24,6 +24,11 @@
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="assets/viewer.css">
 <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Prata&display=swap" rel="stylesheet">
 <meta name="color-scheme" content="dark light">
@@ -887,13 +892,6 @@ function loadScript(src) {
   });
 }
 
-function b64ToUrl(b64) {
-  const bin = atob(b64);
-  const bytes = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-  return URL.createObjectURL(new Blob([bytes], { type: 'application/gzip' }));
-}
-
 // The viewports are part of the page, so the scans load with it; the file is
 // several megabytes, so the panel says what it is doing meanwhile.
 async function ensureScan() {
@@ -910,8 +908,8 @@ async function ensureScan() {
       { id: 'rxSag', key: 'Sag', st: niivue.SLICE_TYPE.SAGITTAL },
       { id: 'rxRen', key: 'Ren', st: niivue.SLICE_TYPE.RENDER }
     ];
-    const tplUrl = b64ToUrl(MN_ATLAS.TPL_B64);
-    const atlasUrl = b64ToUrl(MN_ATLAS.ATLAS_B64);
+    const tplUrl = MN_ATLAS.TPL_URL;
+    const atlasUrl = MN_ATLAS.ATLAS_URL;
     scanInstances = [];
     for (const p of planes) {
       const nv = new niivue.Niivue({
@@ -1163,5 +1161,6 @@ themeBtn.addEventListener('click', () => {
 });
 </script>
 
+<script src="assets/native.js"></script>
 </body>
 </html>

@@ -24,6 +24,11 @@
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="assets/viewer.css">
 <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Prata&display=swap" rel="stylesheet">
 <meta name="color-scheme" content="dark light">
@@ -594,15 +599,16 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 
 </main>
 
+<script src="assets/native.js"></script>
 <script src="assets/niivue.js"></script>
 <script src="assets/atlas-data.js"></script>
 <script src="assets/region-notes.js"></script>
 <script src="assets/slice-tool.js"></script>
-<script src="assets/wheel-zoom.js"></script>
+<script src="assets/zoom.js"></script>
 <script>
 "use strict";
 (function(){
-  var TPL_B64 = MN_ATLAS.TPL_B64, ATLAS_B64 = MN_ATLAS.ATLAS_B64;
+  var TPL_URL = MN_ATLAS.TPL_URL, ATLAS_URL = MN_ATLAS.ATLAS_URL;
   var REGIONS = MN_ATLAS.REGIONS, RAW_LABELS = MN_ATLAS.RAW_LABELS;
   var N_LABELS = RAW_LABELS.length;
 
@@ -640,12 +646,6 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
     if (r.S != null) PRETTY[r.S] = r.pretty;
   });
 
-  function b64ToUrl(b64){
-    var bin = atob(b64);
-    var bytes = new Uint8Array(bin.length);
-    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-    return URL.createObjectURL(new Blob([bytes], {type: "application/gzip"}));
-  }
   function hexToRgb(h){
     return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
   }
@@ -1021,13 +1021,22 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
       });
       var probe = ctx.getImageData(gap + 10, gap + 10, 1, 1).data;
       if (probe[3] === 0) throw new Error("blank capture");
-      out.toBlob(function(blob){
-        if (!blob) return;
-        var u = URL.createObjectURL(blob);
-        var a = document.createElement("a"); a.href = u; a.download = "brain-regions.png";
-        document.body.appendChild(a); a.click();
-        setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(u); }, 0);
-      });
+      /* Handed to the platform rather than downloaded: a link with a
+         download attribute saves a file on a desktop and does nothing at
+         all on a phone, where the snapshot should reach Photos or the
+         share sheet instead. MN picks whichever of those exists. */
+      if (window.MN){
+        MN.tap("light");
+        MN.saveImage(out.toDataURL("image/png"), "brain-regions.png");
+      } else {
+        out.toBlob(function(blob){
+          if (!blob) return;
+          var u = URL.createObjectURL(blob);
+          var a = document.createElement("a"); a.href = u; a.download = "brain-regions.png";
+          document.body.appendChild(a); a.click();
+          setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(u); }, 0);
+        });
+      }
     } catch(e){
       console.error(e);
       visible.forEach(function(p, i){
@@ -1052,8 +1061,8 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 
   async function boot(){
     try{
-      var tplUrl = b64ToUrl(TPL_B64);
-      var atlasUrl = b64ToUrl(ATLAS_B64);
+      var tplUrl = TPL_URL;
+      var atlasUrl = ATLAS_URL;
       for (var i = 0; i < PLANES.length; i++){
         var p = PLANES[i];
         var nv = makeNV(p.st);

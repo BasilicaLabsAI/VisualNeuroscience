@@ -24,6 +24,11 @@
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="assets/viewer.css">
 <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Prata&display=swap" rel="stylesheet">
 <meta name="color-scheme" content="dark light">
@@ -313,7 +318,8 @@ svg{ display:block; }
 
 </main>
 
-<script src="assets/wheel-zoom.js"></script>
+<script src="assets/native.js"></script>
+<script src="assets/zoom.js"></script>
 <script>
 (function(){
   "use strict";
@@ -362,12 +368,6 @@ svg{ display:block; }
     });
   }
 
-  function b64ToUrl(b64){
-    var bin = atob(b64);
-    var bytes = new Uint8Array(bin.length);
-    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-    return URL.createObjectURL(new Blob([bytes], {type: "application/gzip"}));
-  }
 
   /* Fetch the streamlines ourselves so the wait can be reported: the viewer's
      own loader gives no progress, and this is a multi-megabyte file. */

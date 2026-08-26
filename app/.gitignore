@@ -1,0 +1,24 @@
+node_modules/
+
+# Android build output
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+android/app/release/
+*.keystore
+*.jks
+
+# iOS build output
+ios/App/Pods/
+ios/App/build/
+ios/App/Podfile.lock
+ios/App/output/
+ios/.build/
+*.xcuserdatad
+xcuserdata/
+
+# the site is copied in by `cap sync`; the original lives in ../site
+android/app/src/main/assets/public/
+ios/App/App/public/
