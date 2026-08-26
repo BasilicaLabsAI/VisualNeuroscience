@@ -131,6 +131,27 @@ svg{ display:block; }
 }
 .title-strip .ts-views{ margin-left:auto; display:flex; gap:.4rem; flex-wrap:wrap; }
 
+/* ── the source ─────────────────────────────────────────────────────────
+   The paper this page reads, and the two ways to go and read it yourself:
+   the record it is indexed under, and the editorial itself, which the
+   journal publishes open access and this site keeps a copy of. */
+.source{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  gap:.55rem 1.4rem; border:1px solid var(--hair);
+  padding:.7rem 1rem; margin-bottom:var(--gap);
+}
+.source .cite{
+  font-family:var(--font-serif); font-size:.94rem; line-height:1.5;
+  color:var(--ink-60); margin:0; min-width:0;
+}
+.source .cite b{ font-weight:400; font-style:normal; color:var(--ink); }
+.source .cite .pmid{
+  font-family:var(--font-brand); font-size:.76rem; letter-spacing:.12em;
+  color:var(--ink-35); white-space:nowrap;
+}
+.source-links{ display:flex; gap:.4rem; flex-wrap:wrap; flex:none; }
+.source-links a{ display:inline-block; }
+
 /* rail */
 .rail .mode-group{ display:flex; gap:.4rem; }
 .rail .mode-group .ts-btn{ flex:1; text-align:center; }
@@ -319,6 +340,19 @@ td.hl{ color:var(--over); }
   <div class="ts-views" role="group" aria-label="Brain state">
     <button class="ts-btn active" id="btn-healthy" type="button" aria-pressed="true">Normal audition</button>
     <button class="ts-btn" id="btn-halluc" type="button" aria-pressed="false">Hallucinating</button>
+  </div>
+</div>
+
+<div class="source">
+  <p class="cite">
+    Boksa P. <b>On the neurobiology of hallucinations.</b>
+    <em>Journal of Psychiatry &amp; Neuroscience</em> 2009;34(4):260&ndash;262.
+    <span class="pmid">PMID 19568476</span>
+  </p>
+  <div class="source-links">
+    <a class="ts-btn" href="https://pubmed.ncbi.nlm.nih.gov/19568476/" target="_blank" rel="noopener">PubMed</a>
+    <a class="ts-btn" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2702442/" target="_blank" rel="noopener">PMC</a>
+    <a class="ts-btn" href="assets/studies/boksa-2009-neurobiology-of-hallucinations.pdf" download>Download PDF &middot; 3&thinsp;pp</a>
   </div>
 </div>
 
