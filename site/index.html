@@ -76,7 +76,7 @@ body{
 :focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
 a{ color:var(--ink); }
 svg{ display:block; }
-img{ max-width:100%; display:block; }
+img{ max-width:100%; height:auto; display:block; }
 
 .skip{
   position:absolute; left:-999px; top:8px; z-index:99;
@@ -245,6 +245,12 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
 }
 .colophon a{ font-style:normal; }
 
+/* ── the wide box stacks as soon as its columns would cramp ── */
+@media (max-width:1180px){
+  .box-h{ grid-template-columns:minmax(0,1fr); }
+  .box-h .plate{ order:-1; }
+}
+
 /* ── tablet: six columns, so the boxes still pair up ── */
 @media (max-width:1180px){
   .mosaic{ grid-template-columns:repeat(6,minmax(0,1fr)); }
@@ -262,8 +268,6 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
   .m-atlas, .m-network, .m-tracts, .m-brodmann, .m-studies, .m-ledger{
     grid-column:1 / -1; grid-row:auto;
   }
-  .box-h{ grid-template-columns:minmax(0,1fr); }
-  .box-h .plate{ order:-1; }
   .ledger{ grid-template-columns:repeat(2,minmax(0,1fr)); }
   .ledger div:nth-child(3){ border-left:0; }
   .ledger div:nth-child(n+3){ border-top:1px solid var(--hair); }
@@ -346,7 +350,7 @@ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
     </a>
 
     <!-- ── the papers ─────────────────────────────────────────────── -->
-    <a class="box m-studies" href="studies.html">
+    <a class="box m-studies box-h" href="studies.html">
       <div class="side">
         <div class="kicker">The Papers</div>
         <h2>Visualizing Studies</h2>
