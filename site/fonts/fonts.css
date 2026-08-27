@@ -1,0 +1,37 @@
+/* The three retail faces, served from here rather than from Google.
+
+   This was the site's one third-party request — the single line in the
+   privacy policy that kept the website from claiming what the apps could.
+   All three are SIL Open Font License; the licences sit beside the files,
+   as the OFL asks. Latin subsets only, which is exact parity: none of the
+   three families carries Greek, so the α and µ in the receptor names fell
+   back to system faces under Google's serving too. */
+
+@font-face{
+  font-family:'Afacad Flux'; font-style:normal; font-weight:400; font-display:swap;
+  src:url('afacad-flux-latin-400-normal.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Afacad Flux'; font-style:normal; font-weight:500; font-display:swap;
+  src:url('afacad-flux-latin-500-normal.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Afacad Flux'; font-style:normal; font-weight:600; font-display:swap;
+  src:url('afacad-flux-latin-600-normal.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Newsreader'; font-style:normal; font-weight:400; font-display:swap;
+  src:url('newsreader-latin-400-normal.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Newsreader'; font-style:normal; font-weight:500; font-display:swap;
+  src:url('newsreader-latin-500-normal.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Newsreader'; font-style:italic; font-weight:400; font-display:swap;
+  src:url('newsreader-latin-400-italic.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Prata'; font-style:normal; font-weight:400; font-display:swap;
+  src:url('prata-latin-400-normal.woff2') format('woff2');
+}

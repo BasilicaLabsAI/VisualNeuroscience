@@ -18,11 +18,10 @@
    background, so a stale stylesheet corrects itself on the next load rather
    than blocking this one.
 
-   Nothing cross-origin is touched at all: the fonts are the only outside
-   request the site makes, and a failed font is a fallback face, not a
-   broken page. */
+   Nothing cross-origin is touched at all — since the typefaces moved
+   in-house there is no outside request left to think about. */
 
-var VERSION = "vn-9";
+var VERSION = "vn-10";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
@@ -36,7 +35,11 @@ var PRECACHE = [
   "/assets/network-states.js", "/assets/atlas-data.js",
   "/assets/brodmann-areas.js", "/assets/brodmann-map.js",
   "/assets/logo.svg", "/manifest.webmanifest",
-  "/fonts/Flux-Regular.woff2"
+  "/fonts/Flux-Regular.woff2", "/fonts/fonts.css",
+  "/fonts/afacad-flux-latin-400-normal.woff2", "/fonts/afacad-flux-latin-500-normal.woff2",
+  "/fonts/afacad-flux-latin-600-normal.woff2", "/fonts/newsreader-latin-400-normal.woff2",
+  "/fonts/newsreader-latin-500-normal.woff2", "/fonts/newsreader-latin-400-italic.woff2",
+  "/fonts/prata-latin-400-normal.woff2"
 ];
 
 /* the megabytes: fetched once, then read off disk forever */

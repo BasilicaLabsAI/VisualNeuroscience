@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Privacy &amp; Support — VisualNeuroscience.AI</title>
 <meta name="description" content="What VisualNeuroscience.AI collects, which is nothing, and how to get in touch.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- link previews. The card is built by site/share.html and rendered to
      assets/social-card.jpg; og:image has to be absolute, so this origin is
      the one thing to change if the site moves to its own domain. -->
@@ -30,7 +28,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="assets/viewer.css">
-<link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Prata&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fonts/fonts.css">
 <meta name="color-scheme" content="dark light">
 <script>/* Dark is the default; only an explicit choice of light overrides it.
    Set before first paint so no page flashes white on its way in. */
@@ -286,11 +284,11 @@ svg{ display:block; }
 <p>The Mac build is sandboxed and requests two entitlements: the sandbox itself, and permission to write a file where you put it. It does not request network access, because it has no use for it.</p>
 
 <h2>The website</h2>
-<p>The website is the same files, served from Cloudflare. Two things follow from being on the open web rather than in an app bundle, and both are worth stating plainly:</p>
+<p>The website is the same files, served from Cloudflare. One thing follows from being on the open web rather than in an app bundle, and it is worth stating plainly:</p>
 <ul>
   <li><b>Cloudflare sees requests.</b> Serving a page means the host receives your IP address and the usual request headers. This is how the web works and applies to every site you visit; nothing is added to it here, and none of it is used to build any profile.</li>
-  <li><b>Three typefaces are fetched from Google Fonts.</b> Newsreader, Prata and Afacad Flux are requested from <b>fonts.googleapis.com</b> and <b>fonts.gstatic.com</b>, which means Google receives your IP address when a page loads. This is the only third-party request the site makes, and it is the one reason the website cannot claim what the apps can. Self-hosting those three faces would remove it, and is intended.</li>
 </ul>
+<p>There are no third-party requests at all. The typefaces used to be the exception — they were fetched from Google Fonts, which meant Google saw an IP address on every page load — and as of 27 August 2026 they are served from this site alongside everything else. Every request a page makes now goes to the one host that serves the page.</p>
 <p>Your browser also stores, locally: the light-or-dark choice, and a cache of the site&rsquo;s files created by its service worker so that it works offline. Both live in your browser, are readable only by this site, and are cleared whenever you clear site data.</p>
 
 <h2>Children</h2>
@@ -300,7 +298,7 @@ svg{ display:block; }
 <p>Nothing here is a medical device, a diagnosis, or advice about treatment. The pages summarise published work and draw published atlases; each says where its data came from and where the evidence stops. Read them as a reference, not as a clinical tool.</p>
 
 <h2>Changes</h2>
-<p>If this policy changes, the date below changes with it. Since the substance of it is &ldquo;nothing is collected&rdquo;, the likeliest change is the Google Fonts line disappearing.</p>
+<p>If this policy changes, the date below changes with it. The Google Fonts disclosure that used to sit above is the kind of change to expect: something removed, with the date to show when.</p>
 
 <h2>Support &amp; contact</h2>
 <p>Questions, corrections and bug reports are welcome &mdash; particularly corrections. The pages make factual claims about neuroanatomy and cite their sources, and if one of them is wrong I would rather know.</p>
@@ -310,7 +308,7 @@ svg{ display:block; }
   Apple and Google both require a working support contact on the listing. Put an address or a form link here, and use the same one in the <em>Support URL</em> field in App Store Connect.
 </div>
 
-<p class="stamp">Last updated 26 August 2026 &middot; VisualNeuroscience.AI</p>
+<p class="stamp">Last updated 27 August 2026 &middot; VisualNeuroscience.AI</p>
 
 </div>
 
