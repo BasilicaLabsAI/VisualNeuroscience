@@ -733,6 +733,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 
 <div id="chart-tooltip" class="chart-tooltip" role="tooltip"></div>
 <script src="assets/native.js"></script>
+<script src="assets/stage-lifecycle.js"></script>
 <script src="assets/niivue.js"></script>
 <script src="assets/atlas-data.js"></script>
 <script src="assets/region-notes.js"></script>
@@ -1267,6 +1268,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
         })(p.key);
         if (p.key === "render") nv.onAzimuthElevationChange = lockCamera;
         INSTANCES[p.key] = nv;
+        if (window.MN_LIFE) MN_LIFE.register(nv);
       }
       await Promise.all(PLANES.map(function(p){
         return INSTANCES[p.key].loadVolumes([

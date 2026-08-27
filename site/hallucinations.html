@@ -651,6 +651,7 @@ td.hl{ color:var(--over); }
 </div>
 
 <script src="assets/native.js"></script>
+<script src="assets/stage-lifecycle.js"></script>
 <script src="assets/slice-tool.js"></script>
 <script src="assets/zoom.js"></script>
 <script>
@@ -1085,6 +1086,7 @@ async function ensureScan(){
       });
       await nv.attachToCanvas($(p.id));
       byKey[p.key] = nv;
+        if (window.MN_LIFE) MN_LIFE.register(nv);
       scanInstances.push(nv);
     }
     await Promise.all(scanInstances.map(nv => nv.loadVolumes([

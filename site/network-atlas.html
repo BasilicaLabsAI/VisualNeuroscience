@@ -228,7 +228,7 @@ svg{ display:block; }
    four boxes sit beside it, two up and two down, stretched to the same
    height. Seeing both at once is the whole point of the page, and on a
    desktop there is room to do it side by side rather than stacked. */
-@media (min-width:1240px){
+@media (min-width:1000px){
   .centre{
     display:grid; gap:var(--gap); align-items:stretch;
     grid-template-columns:minmax(0,1fr) minmax(380px,0.92fr);
@@ -266,6 +266,12 @@ svg{ display:block; }
 }
 @media (prefers-reduced-motion: reduce){
   .chord,.nodedot,.nodelabel,.regionarc{ transition:none !important; }
+}
+
+/* landscape: a square ring must never be taller than the screen it is on —
+   capping its width caps its height, since the two are the same number */
+@media (orientation: landscape) and (max-height: 1120px){
+  .ring-stage{ max-width:min(100%, calc(100vh - 170px)); margin-left:auto; margin-right:auto; }
 }
 </style>
 </head>
@@ -381,6 +387,7 @@ svg{ display:block; }
 </main>
 
 <script src="assets/native.js"></script>
+<script src="assets/stage-lifecycle.js"></script>
 <script src="assets/network-states.js"></script>
 <script src="assets/network-ring.js"></script>
 <script src="assets/slice-tool.js"></script>
@@ -576,6 +583,7 @@ async function ensureScan(){
       });
       await nv.attachToCanvas($(p.id));
       byKey[p.key] = nv;
+        if (window.MN_LIFE) MN_LIFE.register(nv);
       scanInstances.push(nv);
     }
     await Promise.all(scanInstances.map(nv => nv.loadVolumes([

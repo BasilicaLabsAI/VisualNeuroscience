@@ -321,6 +321,7 @@ svg{ display:block; }
 </main>
 
 <script src="assets/native.js"></script>
+<script src="assets/stage-lifecycle.js"></script>
 <script src="assets/zoom.js"></script>
 <script>
 (function(){
@@ -567,6 +568,7 @@ svg{ display:block; }
         });
         await nv.attachToCanvas(document.getElementById(plane.canvasId));
         byKey[plane.key] = nv;
+        if (window.MN_LIFE) MN_LIFE.register(nv);
         instances.push(nv);
       }
 

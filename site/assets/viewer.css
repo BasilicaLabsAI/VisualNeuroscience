@@ -91,7 +91,8 @@ select{
    A 300px rail beside the viewports needs a wide window. Below that the
    studio becomes one column with the viewports still on top, and the rail
    reads as a row of cards beneath them. */
-@media (max-width:1100px){
+@media (max-width:1100px) and (orientation:portrait),
+       (max-width:900px) and (orientation:landscape){
   .studio{ grid-template-columns:1fr; }
   .centre{ order:-1; }
   .title-strip .ts-views{ margin-left:0; width:100%; }
@@ -250,4 +251,51 @@ select{
    browser so a pinch zooms the brain rather than the page. */
 @media (pointer:coarse){
   .mri-stage{ touch-action:none; }
+}
+
+/* ── landscape on a short screen: the chrome gives the height back ──────
+   Landscape is the posture the app is designed in, and there the scarce
+   axis is height — yet the centred masthead, the nav and the title strip
+   spent some 200px of it before any content appeared. Under 940px of
+   height in landscape the brand shares its line with the nav, the strip
+   tightens, and the viewport grid is sized from the height that is
+   actually there rather than from fixed clamps. Phones in landscape pass
+   the min-width gate too, which is fine: the clamp floors keep the
+   stages usable and the page simply scrolls.
+   Classes are doubled where a page sheet declares the same single class,
+   so these win whichever order the sheets land in. */
+@media (orientation: landscape) and (max-height: 1120px) and (min-width: 761px){
+  .masthead.masthead{
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+    column-gap:2.2rem; row-gap:0; padding:.5rem 0 0; text-align:left;
+  }
+  .masthead .brand{ font-size:1.3rem; }
+  .nav-row.nav-row{ padding:.3rem 0 .4rem; gap:.25rem 1.05rem; }
+  .nav-row.nav-row a{ font-size:.66rem; }
+  .title-strip.title-strip{ padding:.45rem .9rem; margin-bottom:10px; }
+  .title-strip .name{ font-size:1.05rem; }
+  .masthead + * .title-strip{ margin-top:0; }
+
+  .studio{ grid-template-columns:260px minmax(0,1fr); }
+
+  /* the grid takes what the chrome gave back: two rows that fill the
+     screen, one row that fills it alone */
+  .views:not(.solo) .mri-stage{ height:clamp(200px, calc((100vh - 330px)/2), 560px); }
+  .views.solo .mri-stage{ height:clamp(300px, calc(100vh - 260px), 900px); }
+}
+/* the 768-tall iPads: the title strip wraps to two lines at this width, so
+   the stages surrender the difference rather than push past the fold */
+@media (orientation: landscape) and (max-height: 800px) and (min-width: 761px){
+  .views:not(.solo) .mri-stage{ height:clamp(185px, calc((100vh - 372px)/2), 560px); }
+}
+
+/* ── a stage whose GL context has been taken away ────────────────────────
+   iPadOS evicts background WebGL contexts; coming back then shows black.
+   stage-lifecycle.js drops this button on the stage when it happens. */
+.ctx-lost{
+  position:absolute; inset:0; z-index:5; width:100%;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(0,0,0,.82); color:#FFFFFF; border:0; cursor:pointer;
+  font-family:var(--font-brand); font-weight:500; font-size:.68rem;
+  letter-spacing:.22em; text-transform:uppercase;
 }

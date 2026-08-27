@@ -783,6 +783,7 @@ mark{ background:var(--ink); color:var(--paper); }
 
 
 <script src="assets/native.js"></script>
+<script src="assets/stage-lifecycle.js"></script>
 <script src="assets/niivue.js"></script>
 <script src="assets/atlas-data.js"></script>
 <script src="assets/brodmann-areas.js"></script>
@@ -1406,6 +1407,7 @@ mark{ background:var(--ink); color:var(--paper); }
         await nv.attachToCanvas(document.getElementById(p.canvasId));
         nv.onLocationChange = onLoc;
         INSTANCES[p.key] = nv;
+        if (window.MN_LIFE) MN_LIFE.register(nv);
       }
       await Promise.all(PLANES.map(function(p){
         return INSTANCES[p.key].loadVolumes([
