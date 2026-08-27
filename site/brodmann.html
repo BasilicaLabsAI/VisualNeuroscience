@@ -699,7 +699,7 @@ mark{ background:var(--ink); color:var(--paper); }
 
   <section class="graphsec" aria-label="How the areas border one another">
     <h2 class="sec-h">The same areas in 3D <small>at their true positions &middot; joined where they border</small></h2>
-    <p class="graph-lede">Every area drawn at its own centre of mass in the scan, joined to the areas it actually shares a border with &mdash; measured off the volume, not asserted. Thicker lines are longer borders. Drag to turn it; the shape you are turning is the brain's own, because the nodes sit where the areas sit.</p>
+    <p class="graph-lede">Every area drawn at its own centre of mass in the scan, joined to the areas it actually shares a border with &mdash; measured off the volume, not asserted. Thicker lines are longer borders. Drag to turn it, pinch to zoom, two fingers to pan; the shape you are turning is the brain's own, because the nodes sit where the areas sit.</p>
     <div class="graph-wrap">
       <div class="graph-stage" id="graphStage"></div>
       <div class="graph-tools">
@@ -718,22 +718,22 @@ mark{ background:var(--ink); color:var(--paper); }
         <div class="views" id="viewsGrid">
           <div class="view" data-box="render">
             <div class="view-cap"><b>3D</b><span>volume render</span></div>
-            <div class="view-tools"><span class="tool-label">Drag to turn</span></div>
+            <div class="view-tools"><span class="tool-label">Drag to turn · pinch to zoom · two fingers pan</span></div>
             <div class="mri-stage"><canvas id="glRen"></canvas></div>
           </div>
           <div class="view" data-box="axial">
             <div class="view-cap"><b>Axial</b><span>transverse plane</span></div>
-            <div class="view-tools"><span class="tool-label">Drag to move</span></div>
+            <div class="view-tools"><span class="tool-label">Drag to move · pinch to zoom · two fingers pan</span></div>
             <div class="mri-stage"><canvas id="glAx"></canvas></div>
           </div>
           <div class="view" data-box="coronal">
             <div class="view-cap"><b>Coronal</b><span>frontal plane</span></div>
-            <div class="view-tools"><span class="tool-label">Drag to move</span></div>
+            <div class="view-tools"><span class="tool-label">Drag to move · pinch to zoom · two fingers pan</span></div>
             <div class="mri-stage"><canvas id="glCor"></canvas></div>
           </div>
           <div class="view" data-box="sagittal">
             <div class="view-cap"><b>Sagittal</b><span>median plane</span></div>
-            <div class="view-tools"><span class="tool-label">Drag to move</span></div>
+            <div class="view-tools"><span class="tool-label">Drag to move · pinch to zoom · two fingers pan</span></div>
             <div class="mri-stage"><canvas id="glSag"></canvas></div>
           </div>
         </div>
@@ -788,6 +788,7 @@ mark{ background:var(--ink); color:var(--paper); }
 <script src="assets/brodmann-map.js"></script>
 <script src="assets/slice-tool.js"></script>
 <script src="assets/zoom.js"></script>
+<script src="assets/diagram-gestures.js"></script>
 <script>
 "use strict";
 (function(){
@@ -1202,6 +1203,7 @@ mark{ background:var(--ink); color:var(--paper); }
      borders measured off the volume, weighted by how much border there is. */
   var GS = 660, GH = 400;                    /* the drawing box */
   var gSvg, gNodes = {}, gEdges = [], gAngle = 0.6, gTilt = -0.25, gSpin = true, gRaf = null;
+  var gDiag = null;
 
   /* The cloud is centred on its own middle and scaled by its widest radius,
      computed once. Fitting the bounding box every frame instead would make
@@ -1238,7 +1240,10 @@ mark{ background:var(--ink); color:var(--paper); }
        way round leaves half the width empty, which is what it did. */
     gK = (GS/2 - 30) / maxX;
     GH = Math.round(2 * maxZ * gK) + 44;
-    if (gSvg) gSvg.setAttribute("viewBox", "0 0 " + GS + " " + GH);
+    if (gSvg){
+      if (gDiag) gDiag.setBase(0, 0, GS, GH);
+      else gSvg.setAttribute("viewBox", "0 0 " + GS + " " + GH);
+    }
   }
 
   function project(mm){
@@ -1370,22 +1375,27 @@ mark{ background:var(--ink); color:var(--paper); }
 
   function bindGraph(){
     var stage = document.getElementById("graphStage");
-    var down = false, lx = 0, ly = 0;
+    /* one finger turns it; the moment a second finger arrives the gesture
+       belongs to the pinch-and-pan handler, so the turn lets go and does
+       not snatch the graph when a finger lifts mid-pinch */
+    var down = false, held = new Set(), lx = 0, ly = 0;
     stage.addEventListener("pointerdown", function(e){
+      held.add(e.pointerId);
+      if (held.size > 1){ down = false; return; }
       if (e.target.closest(".g-node")) return;    /* a click on a node selects it */
       down = true; lx = e.clientX; ly = e.clientY;
       stage.setPointerCapture(e.pointerId);
       e.preventDefault();
     });
     stage.addEventListener("pointermove", function(e){
-      if (!down) return;
+      if (!down || held.size > 1) return;
       gAngle += (e.clientX - lx) * 0.008;
       gTilt = Math.max(-0.6, Math.min(0.6, gTilt + (e.clientY - ly) * 0.005));
       lx = e.clientX; ly = e.clientY;
       layoutGraph();
     });
     ["pointerup","pointercancel"].forEach(function(ev){
-      stage.addEventListener(ev, function(){ down = false; });
+      stage.addEventListener(ev, function(e){ held.delete(e.pointerId); down = false; });
     });
     var btn = document.getElementById("gSpin");
     btn.addEventListener("click", function(){
@@ -1396,6 +1406,7 @@ mark{ background:var(--ink); color:var(--paper); }
     });
     document.getElementById("gReset").addEventListener("click", function(){
       gAngle = 0.6; gTilt = -0.25; layoutGraph();
+      if (gDiag) gDiag.reset();
     });
   }
 
@@ -1455,6 +1466,12 @@ mark{ background:var(--ink); color:var(--paper); }
       if (window.MN_ZOOM){
         var zBox = document.querySelector('.view[data-box="render"]');
         if (zBox) MN_ZOOM.attach({ stage: zBox.querySelector(".mri-stage"), nv: INSTANCES.render });
+        ["axial","coronal","sagittal"].forEach(function(key){
+          var box = document.querySelector('.view[data-box="' + key + '"]');
+          if (box) MN_ZOOM.attach({
+            stage: box.querySelector(".mri-stage"), nv: INSTANCES[key], mode: "slice"
+          });
+        });
       }
       paint();
       statusEl.classList.add("hidden");
@@ -1471,6 +1488,11 @@ mark{ background:var(--ink); color:var(--paper); }
   drawCartoon(document.getElementById("cartMedial"), "medial");
   buildGraph();
   bindGraph();
+  if (window.MN_DIAG){
+    MN_DIAG.attach({ svg: document.querySelector("#cartLateral svg") });
+    MN_DIAG.attach({ svg: document.querySelector("#cartMedial svg") });
+    gDiag = MN_DIAG.attach({ svg: gSvg, stage: document.getElementById("graphStage"), rotates: true });
+  }
   spin();
   markCartoon(); markGraph();
 

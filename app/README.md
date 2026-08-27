@@ -85,8 +85,12 @@ here that a browser tab is not:
 
 - **It has no network.** Every scan, the atlas, the tractogram and the viewer
   are in the bundle. The app works in a basement.
-- **It is built for touch.** Pinch zooms the render and one finger turns it
-  (`site/assets/zoom.js`); the website's scroll wheel does not exist on a phone.
+- **It is built for touch.** One vocabulary on every diagram on every page:
+  pinch zooms, two fingers pan, one finger turns whatever turns — the 3D
+  renders and the 2D slices (`site/assets/zoom.js`), and the cartoons, ring,
+  graph, circuit diagrams and study figures (`site/assets/diagram-gestures.js`).
+  Double-tap puts a view back. The desktop speaks the same language through
+  ctrl+wheel, trackpad pinch and shift+drag.
 - **A snapshot goes where a phone puts pictures** — Photos, Files, or the share
   sheet — rather than into a downloads folder a phone does not really have.
 - **Haptics** on region selection.

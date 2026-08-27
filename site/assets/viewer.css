@@ -332,3 +332,7 @@ button, .ts-btn, .seg-btn, .barow{ touch-action:manipulation; }
 @media (pointer:coarse) and (orientation:landscape) and (max-height:800px){
   .views:not(.solo) .mri-stage{ height:clamp(155px, calc((100vh - 444px)/2), 560px); }
 }
+
+/* a zoomed diagram (diagram-gestures.js) can be dragged around by mouse,
+   and the cursor should say so */
+.diag-zoomed{ cursor:grab; }

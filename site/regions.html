@@ -1300,6 +1300,14 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
           stage: wheelBox.querySelector(".mri-stage"),
           nv: INSTANCES.render
         });
+        /* the slices speak the same gestures: pinch zooms, two fingers pan */
+        PLANES.forEach(function(p){
+          if (p.key === "render") return;
+          var box = document.querySelector('.view[data-box="' + p.key + '"]');
+          if (box) MN_WHEEL.attach({
+            stage: box.querySelector(".mri-stage"), nv: INSTANCES[p.key], mode: "slice"
+          });
+        });
       }
       applyColormap();
       statusEl.classList.add("hidden");

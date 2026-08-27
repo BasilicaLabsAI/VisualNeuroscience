@@ -351,22 +351,22 @@ svg{ display:block; }
     <div class="views" id="scan-views">
       <div class="view" data-box="Ren">
         <div class="view-cap"><b>3D</b><span>volume render</span></div>
-        <div class="view-tools"><span class="tool-label">Drag to turn</span><button class="ts-btn centre-btn" data-centre="Ren" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label">Drag to turn · pinch to zoom · two fingers pan</span><button class="ts-btn centre-btn" data-centre="Ren" type="button">Centre planes</button></div>
         <div class="mri-stage"><canvas id="naRen"></canvas></div>
       </div>
       <div class="view" data-box="Ax">
         <div class="view-cap"><b>Axial</b><span>transverse plane</span></div>
-        <div class="view-tools"><span class="tool-label">Drag to move</span><button class="ts-btn centre-btn" data-centre="Ax" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label">Drag to move · pinch to zoom · two fingers pan</span><button class="ts-btn centre-btn" data-centre="Ax" type="button">Centre planes</button></div>
         <div class="mri-stage"><canvas id="naAx"></canvas></div>
       </div>
       <div class="view" data-box="Cor">
         <div class="view-cap"><b>Coronal</b><span>frontal plane</span></div>
-        <div class="view-tools"><span class="tool-label">Drag to move</span><button class="ts-btn centre-btn" data-centre="Cor" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label">Drag to move · pinch to zoom · two fingers pan</span><button class="ts-btn centre-btn" data-centre="Cor" type="button">Centre planes</button></div>
         <div class="mri-stage"><canvas id="naCor"></canvas></div>
       </div>
       <div class="view" data-box="Sag">
         <div class="view-cap"><b>Sagittal</b><span>median plane</span></div>
-        <div class="view-tools"><span class="tool-label">Drag to move</span><button class="ts-btn centre-btn" data-centre="Sag" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label">Drag to move · pinch to zoom · two fingers pan</span><button class="ts-btn centre-btn" data-centre="Sag" type="button">Centre planes</button></div>
         <div class="mri-stage"><canvas id="naSag"></canvas></div>
       </div>
     </div>
@@ -390,6 +390,7 @@ svg{ display:block; }
 <script src="assets/network-ring.js"></script>
 <script src="assets/slice-tool.js"></script>
 <script src="assets/zoom.js"></script>
+<script src="assets/diagram-gestures.js"></script>
 <script>
 "use strict";
 
@@ -631,6 +632,13 @@ async function ensureScan(){
           stage: wheelBox.querySelector(".mri-stage"),
           nv: byKey.Ren
         });
+        /* the slices speak the same gestures: pinch zooms, two fingers pan */
+        ["Ax","Cor","Sag"].forEach(function(key){
+          var box = document.querySelector('.view[data-box="' + key + '"]');
+          if (box && byKey[key]) MN_WHEEL.attach({
+            stage: box.querySelector(".mri-stage"), nv: byKey[key], mode: "slice"
+          });
+        });
       }
     applyOpacity();
     repaint();
@@ -673,6 +681,9 @@ const ring = MN_RING.create({
   onGroupSelect: g => { if (selectedGroup === g.id) deselect(); else selectGroup(g); },
   onBackground: () => { if (pinned()) deselect(); }
 });
+
+/* the ring speaks the same gestures as every other diagram */
+if (window.MN_DIAG) MN_DIAG.attach({ svg: $("ring") });
 
 /* what the rail says about a region, in the state now showing */
 function read(n){

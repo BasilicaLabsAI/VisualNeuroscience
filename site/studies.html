@@ -369,5 +369,15 @@ themeBtn.addEventListener("click", () => {
 </script>
 
 <script src="assets/native.js"></script>
+<script src="assets/diagram-gestures.js"></script>
+<script>
+/* the study figures speak the same gestures as every diagram on the site:
+   pinch to zoom, two fingers to pan, ctrl+wheel and drag for a desktop */
+if (window.MN_DIAG){
+  document.querySelectorAll(".study-fig img").forEach(function(img){
+    MN_DIAG.attach({ img: img });
+  });
+}
+</script>
 </body>
 </html>
