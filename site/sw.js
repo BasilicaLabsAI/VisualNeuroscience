@@ -21,7 +21,7 @@
    Nothing cross-origin is touched at all — since the typefaces moved
    in-house there is no outside request left to think about. */
 
-var VERSION = "vn-11";
+var VERSION = "vn-12";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
@@ -31,6 +31,8 @@ var PRECACHE = [
   "/privacy.html",
   "/assets/viewer.css", "/assets/native.js", "/assets/zoom.js",
   "/assets/stage-lifecycle.js", "/assets/diagram-gestures.js",
+  "/assets/firebase-config.js", "/assets/auth.js", "/assets/auth-ui.js",
+  "/assets/userdata.js", "/vendor/firebase/firebase-bundle.js",
   "/assets/slice-tool.js", "/assets/region-notes.js", "/assets/network-ring.js",
   "/assets/network-states.js", "/assets/atlas-data.js",
   "/assets/brodmann-areas.js", "/assets/brodmann-map.js",

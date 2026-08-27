@@ -71,5 +71,19 @@
 	     Connect stops asking on every single upload. -->
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<!-- The deep link the LinkedIn sign-in round trip comes home on: the
+	     system browser finishes OAuth and opens visualneuroscience://auth/…
+	     Harmless while accounts are dormant — nothing sends the link. -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>ai.visualneuroscience.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>visualneuroscience</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

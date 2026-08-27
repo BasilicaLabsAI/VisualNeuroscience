@@ -1,0 +1,22 @@
+// The auth-worker: LinkedIn sign-in for VisualNeuroscience.AI, deployed
+// separately from the site so the static deployment never changes shape.
+//
+//   cd auth-worker
+//   npx wrangler secret put LINKEDIN_CLIENT_SECRET
+//   npx wrangler secret put SA_PRIVATE_KEY        # the PEM from the SA JSON
+//   npx wrangler deploy
+//
+// Fill in the vars below first — docs/AUTH-SETUP.md walks through where
+// each value comes from.
+{
+  "name": "visualneuroscience-auth",
+  "main": "worker.js",
+  "compatibility_date": "2026-08-01",
+  "vars": {
+    "FIREBASE_PROJECT_ID": "FILL-ME-IN",
+    "SA_EMAIL": "FILL-ME-IN@FILL-ME-IN.iam.gserviceaccount.com",
+    "LINKEDIN_CLIENT_ID": "FILL-ME-IN",
+    "ALLOWED_ORIGINS": "https://visualneuroscience.ai,https://midnightneuroscience.cloudflare-passport599.workers.dev",
+    "APP_SCHEME": "visualneuroscience"
+  }
+}
