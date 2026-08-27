@@ -90,7 +90,7 @@ svg{ display:block; }
   font-family:var(--font-brand); font-weight:500;
   line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
 }
-.brand:hover{ text-decoration:none; }
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
 /* the mark sits to the left of the wordmark. Flex baseline alignment
    puts an image's bottom edge on the text baseline, so a box one cap
    height tall lands squarely between baseline and cap line. The brand
@@ -105,7 +105,7 @@ svg{ display:block; }
   font-family:var(--font-brand); font-weight:500; font-size:.74rem;
   letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
 }
-.nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; }
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
 .nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
 .theme-toggle{
   font-family:var(--font-brand); font-weight:500; font-size:.66rem;
@@ -113,7 +113,7 @@ svg{ display:block; }
   background:none; border:1px solid var(--hair); cursor:pointer;
   padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
 }
-.theme-toggle:hover{ background:var(--ink); color:var(--paper); }
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
 .theme-toggle .th-dot{
   width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
   background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
@@ -203,7 +203,7 @@ svg{ display:block; }
   letter-spacing:.26em; text-transform:uppercase; fill:var(--ink-35);
   cursor:pointer; transition:fill .25s ease, opacity .25s ease;
 }
-.grouplabel:hover{ fill:var(--ink); }
+@media (hover: hover){ .grouplabel:hover{ fill:var(--ink); } }
 .grouplabel.lit-group{ fill:var(--ink); }
 .grouplabel.dim-group{ opacity:.4; }
 .chord{ fill:none; stroke-linecap:butt; transition:opacity .25s ease; }

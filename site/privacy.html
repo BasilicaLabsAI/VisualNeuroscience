@@ -90,7 +90,7 @@ svg{ display:block; }
   font-family:var(--font-brand); font-weight:500;
   line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
 }
-.brand:hover{ text-decoration:none; }
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
 /* the mark sits to the left of the wordmark. Flex baseline alignment
    puts an image's bottom edge on the text baseline, so a box one cap
    height tall lands squarely between baseline and cap line. The brand
@@ -105,7 +105,7 @@ svg{ display:block; }
   font-family:var(--font-brand); font-weight:500; font-size:.74rem;
   letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
 }
-.nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; }
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
 .nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
 .theme-toggle{
   font-family:var(--font-brand); font-weight:500; font-size:.66rem;
@@ -113,7 +113,7 @@ svg{ display:block; }
   background:none; border:1px solid var(--hair); cursor:pointer;
   padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
 }
-.theme-toggle:hover{ background:var(--ink); color:var(--paper); }
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
 .theme-toggle .th-dot{
   width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
   background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
@@ -150,8 +150,8 @@ svg{ display:block; }
   border:1px solid var(--hair); background:var(--paper);
   display:flex; flex-direction:column; text-decoration:none; color:var(--ink);
 }
-.study:hover{ text-decoration:none; }
-.study:hover .study-body{ background:color-mix(in srgb, var(--ink) 6%, transparent); }
+@media (hover: hover){ .study:hover{ text-decoration:none; } }
+@media (hover: hover){ .study:hover .study-body{ background:color-mix(in srgb, var(--ink) 6%, transparent); } }
 .study-fig{
   border-bottom:1px solid var(--hair); background:#000000;
   aspect-ratio:902 / 409; overflow:hidden; position:relative;
@@ -176,7 +176,7 @@ svg{ display:block; }
   letter-spacing:.24em; text-transform:uppercase; margin-top:.85rem;
   display:inline-flex; align-items:center; gap:.45rem;
 }
-.study:hover .go{ text-decoration:underline; text-underline-offset:3px; }
+@media (hover: hover){ .study:hover .go{ text-decoration:underline; text-underline-offset:3px; } }
 
 /* a slot for what is not built yet, so the shelf reads as a shelf */
 .study.soon{ border-style:dashed; cursor:default; }

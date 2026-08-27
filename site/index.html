@@ -96,7 +96,7 @@ img{ max-width:100%; height:auto; display:block; }
   font-family:var(--font-brand); font-weight:500;
   line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
 }
-.brand:hover{ text-decoration:none; }
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
 /* the mark sits to the left of the wordmark. Flex baseline alignment
    puts an image's bottom edge on the text baseline, so a box one cap
    height tall lands squarely between baseline and cap line. The brand
@@ -111,7 +111,7 @@ img{ max-width:100%; height:auto; display:block; }
   font-family:var(--font-brand); font-weight:500; font-size:.74rem;
   letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
 }
-.nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; }
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
 .nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
 .theme-toggle{
   font-family:var(--font-brand); font-weight:500; font-size:.66rem;
@@ -119,7 +119,7 @@ img{ max-width:100%; height:auto; display:block; }
   background:none; border:1px solid var(--hair); cursor:pointer;
   padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
 }
-.theme-toggle:hover{ background:var(--ink); color:var(--paper); }
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
 .theme-toggle .th-dot{
   width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
   background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
@@ -165,8 +165,8 @@ img{ max-width:100%; height:auto; display:block; }
   padding:clamp(16px,1.7vw,24px);
   transition:background .18s ease;
 }
-a.box:hover{ text-decoration:none; background:color-mix(in srgb, var(--ink) 7%, transparent); }
-a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
+@media (hover: hover){ a.box:hover{ text-decoration:none; background:color-mix(in srgb, var(--ink) 7%, transparent); } }
+@media (hover: hover){ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; } }
 
 .kicker{
   font-family:var(--font-brand); font-weight:500; font-size:.55rem;

@@ -92,7 +92,7 @@ svg{ display:block; }
   font-family:var(--font-brand); font-weight:500;
   line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
 }
-.brand:hover{ text-decoration:none; }
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
 /* the mark sits to the left of the wordmark. Flex baseline alignment
    puts an image's bottom edge on the text baseline, so a box one cap
    height tall lands squarely between baseline and cap line. The brand
@@ -107,7 +107,7 @@ svg{ display:block; }
   font-family:var(--font-brand); font-weight:500; font-size:.74rem;
   letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
 }
-.nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; }
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
 .nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
 .theme-toggle{
   font-family:var(--font-brand); font-weight:500; font-size:.66rem;
@@ -115,7 +115,7 @@ svg{ display:block; }
   background:none; border:1px solid var(--hair); cursor:pointer;
   padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
 }
-.theme-toggle:hover{ background:var(--ink); color:var(--paper); }
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
 .theme-toggle .th-dot{
   width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
   background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
@@ -184,7 +184,7 @@ svg{ display:block; }
   font-family:var(--font-serif); font-size:.92rem; line-height:1.25;
   padding:.42rem .5rem .38rem; cursor:pointer;
 }
-.rbtn:hover{ box-shadow:0 0 0 1px var(--ink) inset; }
+@media (hover: hover){ .rbtn:hover{ box-shadow:0 0 0 1px var(--ink) inset; } }
 .rbtn[aria-pressed="true"]{ background:var(--ink); color:var(--paper); }
 .rbtn .dot{ width:.62rem; height:.62rem; flex:none; border:1px solid currentColor; }
 .rbtn .side{
@@ -261,7 +261,7 @@ svg{ display:block; }
   background:none; border:0; cursor:pointer; color:var(--ink);
   font-size:1.5rem; line-height:1; padding:.1rem .3rem;
 }
-.modal-x:hover{ opacity:.6; }
+@media (hover: hover){ .modal-x:hover{ opacity:.6; } }
 .modal-h{
   font-family:var(--font-display); font-weight:400;
   font-size:1.5rem; line-height:1.12; margin:.25rem 2rem .1rem 0;
@@ -293,7 +293,7 @@ svg{ display:block; }
   padding:.6rem 1.1rem .5rem; line-height:1;
 }
 .mech-tab:first-child{ border-left-width:1px; }
-.mech-tab:hover{ background:color-mix(in srgb, var(--ink) 12%, transparent); }
+@media (hover: hover){ .mech-tab:hover{ background:color-mix(in srgb, var(--ink) 12%, transparent); } }
 .mech-tab.active{ background:var(--ink); color:var(--paper); }
 .mech-block{ margin-bottom:calc(var(--gap) * 1.6); }
 .mech-h{
@@ -319,7 +319,7 @@ svg{ display:block; }
   letter-spacing:0; fill:var(--ink-60);
 }
 .mech-node, .mech-chip{ cursor:pointer; }
-.mech-node:hover rect, .mech-chip:hover rect{ stroke-width:2.4; }
+@media (hover: hover){ .mech-node:hover rect, .mech-chip:hover rect{ stroke-width:2.4; } }
 
 /* a region carries its own colour here, the same one it has on the scan */
 .mech-node.lit rect, .mech-chip.lit rect{ stroke-width:3; }

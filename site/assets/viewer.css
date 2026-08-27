@@ -40,7 +40,7 @@
   display:inline-flex; align-items:center; justify-content:center;
 }
 .seg-btn:first-child{ border-left:0; }
-.seg-btn:hover{ background:var(--ink); color:var(--paper); }
+@media (hover: hover){ .seg-btn:hover{ background:var(--ink); color:var(--paper); } }
 .seg-btn.active{ background:var(--ink); color:var(--paper); }
 .seg-word{ font-size:.46rem; letter-spacing:.06em; }
 .seg-arrow{ font-size:.74rem; letter-spacing:-.04em; }
@@ -85,7 +85,8 @@ select{
   letter-spacing:.2em; text-transform:uppercase; cursor:pointer;
   padding:.5rem .7rem .42rem; text-decoration:none; line-height:1;
 }
-.ts-btn:hover, .ts-btn.active{ background:var(--ink); color:var(--paper); }
+.ts-btn.active{ background:var(--ink); color:var(--paper); }
+@media (hover: hover){ .ts-btn:hover{ background:var(--ink); color:var(--paper); } }
 
 /* ── narrow screens ──────────────────────────────────────────────────────
    A 300px rail beside the viewports needs a wide window. Below that the
@@ -298,4 +299,36 @@ select{
   background:rgba(0,0,0,.82); color:#FFFFFF; border:0; cursor:pointer;
   font-family:var(--font-brand); font-weight:500; font-size:.68rem;
   letter-spacing:.22em; text-transform:uppercase;
+}
+
+/* ── a screen worked by fingers ──────────────────────────────────────────
+   Apple's guidance is 44 points and nothing interactive here reached it:
+   segment cells were 26px, tab buttons 27, checkboxes 14. Under a coarse
+   pointer the controls grow to size; a mouse sees none of this. The
+   slice-tool's edge sliders are exempt — they are custom-drawn and sized
+   for touch already, and a blanket range rule would break their vertical
+   writing mode. */
+button, .ts-btn, .seg-btn, .barow{ touch-action:manipulation; }
+@media (pointer:coarse){
+  .ts-btn{ min-height:44px; }
+  .seg-btn{ width:44px; height:44px; }
+  .theme-toggle{ min-height:44px; }
+  .barow{ min-height:44px; }
+  .rchip button{ min-width:36px; min-height:36px; }
+  .toggle input[type="checkbox"]{ width:22px; height:22px; }
+  input[type="range"]:not(.slice-range){ height:34px; }
+}
+/* the grown controls thicken the chrome, so the stages give it back */
+@media (pointer:coarse) and (orientation:landscape) and (max-height:1120px){
+  .views:not(.solo) .mri-stage{ height:clamp(185px, calc((100vh - 412px)/2), 560px); }
+  /* grown to 44px, the full toolbars wrap to two rows in a 1024-wide grid;
+     the wordier parts go, as they already do on a phone */
+  .view-tools .tool-label{ display:none; }
+  .view-cap span{ display:none; }
+}
+/* the smallest landscape iPads with touch: the strip wraps twice at 44px,
+   so the four-up runs small — solo view is the working mode at this size,
+   and it gets the full height */
+@media (pointer:coarse) and (orientation:landscape) and (max-height:800px){
+  .views:not(.solo) .mri-stage{ height:clamp(155px, calc((100vh - 444px)/2), 560px); }
 }

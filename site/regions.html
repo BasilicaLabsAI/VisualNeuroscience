@@ -94,14 +94,14 @@ svg{ display:block; }
   background:none; border:1px solid var(--hair); cursor:pointer;
   padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
 }
-.theme-toggle:hover{ background:var(--ink); color:var(--paper); }
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
 .theme-toggle .th-dot{
   width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
   background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
 }
 
 a{ color:var(--ink); text-decoration:none; }
-a:hover{ text-decoration:underline; text-underline-offset:3px; }
+@media (hover: hover){ a:hover{ text-decoration:underline; text-underline-offset:3px; } }
 :focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
 
 .skip{
@@ -138,7 +138,7 @@ a:hover{ text-decoration:underline; text-underline-offset:3px; }
   font-family:var(--font-brand); font-weight:500;
   font-size:clamp(2.3rem,6vw,3.7rem); line-height:1; letter-spacing:.01em;
 }
-.brand:hover{ text-decoration:none; }
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
 /* the mark sits to the left of the wordmark. Flex baseline alignment
    puts an image's bottom edge on the text baseline, so a box one cap
    height tall lands squarely between baseline and cap line. The brand
@@ -164,7 +164,7 @@ a:hover{ text-decoration:underline; text-underline-offset:3px; }
   gap:.55rem; min-width:0; position:relative;
 }
 .box.left{ text-align:left; align-items:flex-start; }
-a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; }
+@media (hover: hover){ a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; } }
 
 .box .art{ color:var(--ink); }
 
@@ -179,7 +179,7 @@ a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; }
   font-family:var(--font-serif); font-size:1.02rem;
   border-bottom:1px solid var(--hair); padding:.5rem .15rem .45rem;
 }
-.list-lines a:hover{ text-decoration:none; background:var(--ink); color:var(--paper); }
+@media (hover: hover){ .list-lines a:hover{ text-decoration:none; background:var(--ink); color:var(--paper); } }
 .list-lines .v{ font-family:var(--font-brand); font-size:.86rem; font-variant-numeric:tabular-nums; }
 
 /* buttons */
@@ -189,9 +189,9 @@ a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; }
   border:1px solid var(--ink); background:var(--paper); color:var(--ink);
   padding:.7rem 1.3rem .62rem; cursor:pointer;
 }
-.btn:hover{ background:var(--ink); color:var(--paper); text-decoration:none; }
+@media (hover: hover){ .btn:hover{ background:var(--ink); color:var(--paper); text-decoration:none; } }
 .btn-solid{ background:var(--ink); color:var(--paper); }
-.btn-solid:hover{ background:var(--paper); color:var(--ink); }
+@media (hover: hover){ .btn-solid:hover{ background:var(--paper); color:var(--ink); } }
 
 /* inline news form */
 .newsform{ display:flex; width:100%; max-width:250px; border-bottom:1px solid var(--ink); }
@@ -205,7 +205,7 @@ a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; }
   border:0; background:transparent; cursor:pointer; font-size:1.05rem;
   padding:0 .3rem; color:var(--ink);
 }
-.newsform button:hover{ transform:translateX(2px); }
+@media (hover: hover){ .newsform button:hover{ transform:translateX(2px); } }
 .ok-msg{ display:none; font-family:var(--font-brand); font-size:.78rem; letter-spacing:.12em; }
 
 /* chips */
@@ -298,7 +298,7 @@ a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; }
   letter-spacing:.3em; text-transform:uppercase; color:var(--ink-60);
   border-bottom:2px solid transparent;
 }
-.tab:hover{ color:var(--ink); }
+@media (hover: hover){ .tab:hover{ color:var(--ink); } }
 .tab.active{ color:var(--ink); border-bottom-color:var(--ink); }
 
 .row{ display:flex; align-items:center; gap:.6rem; margin:.5rem 0; }
@@ -369,7 +369,7 @@ table.dtable td.num{ font-size:.84rem; }
   letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60); margin:0 0 .7rem; }
 .foot-col a{ display:block; font-family:var(--font-brand); font-size:.8rem; letter-spacing:.05em;
   color:var(--ink); text-decoration:none; padding:.22rem 0; }
-.foot-col a:hover{ color:var(--ink-60); }
+@media (hover: hover){ .foot-col a:hover{ color:var(--ink-60); } }
 .foot-legal{ display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap;
   border-top:1px solid var(--hair); padding-top:1rem; padding-bottom:1.6rem;
   font-family:var(--font-brand); font-size:.64rem; letter-spacing:.14em;
@@ -397,7 +397,7 @@ table.dtable td.num{ font-size:.84rem; }
 .nl-form button{ font-family:var(--font-brand); font-weight:600; font-size:.68rem; letter-spacing:.16em;
   text-transform:uppercase; background:var(--ink); color:var(--paper); border:1px solid var(--ink);
   padding:.65rem 1rem; cursor:pointer; }
-.nl-form button:hover{ background:var(--paper); color:var(--ink); }
+@media (hover: hover){ .nl-form button:hover{ background:var(--paper); color:var(--ink); } }
 .nl-note{ display:none; font-family:var(--font-brand); font-size:.7rem; letter-spacing:.16em;
   text-transform:uppercase; margin:.9rem 0 0; }
 .nl-note.show{ display:block; }
@@ -438,7 +438,7 @@ table.dtable td.num{ font-size:.84rem; }
     stroke-width: 1;
     shape-rendering: crispEdges;
   }
-#receptor-graph .bar:hover { stroke-width: 3; }
+@media (hover: hover){ #receptor-graph .bar:hover{ stroke-width: 3; } }
 #receptor-graph .bar-total { fill: var(--total-fill); }
 .legend {
     display: flex;
@@ -489,7 +489,7 @@ table.dtable td.num{ font-size:.84rem; }
   .below { margin-top: var(--gap); }
 /* a structure label that can be clicked through to the scan */
   #receptor-graph .x-label.pickable { cursor: pointer; }
-#receptor-graph .x-label.pickable:hover { fill: var(--ink); text-decoration: underline; }
+@media (hover: hover){ #receptor-graph .x-label.pickable:hover{ fill: var(--ink); text-decoration: underline; } }
 #receptor-graph .x-label.picked { fill: var(--ink); font-weight: 600; }
 /* keeps a control's space while it does not apply, so nothing shifts */
   .inapplicable { visibility: hidden; }

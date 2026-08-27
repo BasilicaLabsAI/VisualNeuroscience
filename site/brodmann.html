@@ -91,14 +91,14 @@ svg{ display:block; }
   background:none; border:1px solid var(--hair); cursor:pointer;
   padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
 }
-.theme-toggle:hover{ background:var(--ink); color:var(--paper); }
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
 .theme-toggle .th-dot{
   width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
   background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
 }
 
 a{ color:var(--ink); text-decoration:none; }
-a:hover{ text-decoration:underline; text-underline-offset:3px; }
+@media (hover: hover){ a:hover{ text-decoration:underline; text-underline-offset:3px; } }
 :focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
 
 .skip{
@@ -135,7 +135,7 @@ a:hover{ text-decoration:underline; text-underline-offset:3px; }
   font-family:var(--font-brand); font-weight:500;
   font-size:clamp(2.3rem,6vw,3.7rem); line-height:1; letter-spacing:.01em;
 }
-.brand:hover{ text-decoration:none; }
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
 /* the mark sits to the left of the wordmark. Flex baseline alignment
    puts an image's bottom edge on the text baseline, so a box one cap
    height tall lands squarely between baseline and cap line. The brand
@@ -161,7 +161,7 @@ a:hover{ text-decoration:underline; text-underline-offset:3px; }
   gap:.55rem; min-width:0; position:relative;
 }
 .box.left{ text-align:left; align-items:flex-start; }
-a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; }
+@media (hover: hover){ a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; } }
 
 .box .art{ color:var(--ink); }
 
@@ -176,7 +176,7 @@ a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; }
   font-family:var(--font-serif); font-size:1.02rem;
   border-bottom:1px solid var(--hair); padding:.5rem .15rem .45rem;
 }
-.list-lines a:hover{ text-decoration:none; background:var(--ink); color:var(--paper); }
+@media (hover: hover){ .list-lines a:hover{ text-decoration:none; background:var(--ink); color:var(--paper); } }
 .list-lines .v{ font-family:var(--font-brand); font-size:.86rem; font-variant-numeric:tabular-nums; }
 
 /* buttons */
@@ -186,9 +186,9 @@ a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; }
   border:1px solid var(--ink); background:var(--paper); color:var(--ink);
   padding:.7rem 1.3rem .62rem; cursor:pointer;
 }
-.btn:hover{ background:var(--ink); color:var(--paper); text-decoration:none; }
+@media (hover: hover){ .btn:hover{ background:var(--ink); color:var(--paper); text-decoration:none; } }
 .btn-solid{ background:var(--ink); color:var(--paper); }
-.btn-solid:hover{ background:var(--paper); color:var(--ink); }
+@media (hover: hover){ .btn-solid:hover{ background:var(--paper); color:var(--ink); } }
 
 /* inline news form */
 .newsform{ display:flex; width:100%; max-width:250px; border-bottom:1px solid var(--ink); }
@@ -202,7 +202,7 @@ a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; }
   border:0; background:transparent; cursor:pointer; font-size:1.05rem;
   padding:0 .3rem; color:var(--ink);
 }
-.newsform button:hover{ transform:translateX(2px); }
+@media (hover: hover){ .newsform button:hover{ transform:translateX(2px); } }
 .ok-msg{ display:none; font-family:var(--font-brand); font-size:.78rem; letter-spacing:.12em; }
 
 /* chips */
@@ -295,7 +295,7 @@ a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; }
   letter-spacing:.3em; text-transform:uppercase; color:var(--ink-60);
   border-bottom:2px solid transparent;
 }
-.tab:hover{ color:var(--ink); }
+@media (hover: hover){ .tab:hover{ color:var(--ink); } }
 .tab.active{ color:var(--ink); border-bottom-color:var(--ink); }
 
 .row{ display:flex; align-items:center; gap:.6rem; margin:.5rem 0; }
@@ -366,7 +366,7 @@ table.dtable td.num{ font-size:.84rem; }
   letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60); margin:0 0 .7rem; }
 .foot-col a{ display:block; font-family:var(--font-brand); font-size:.8rem; letter-spacing:.05em;
   color:var(--ink); text-decoration:none; padding:.22rem 0; }
-.foot-col a:hover{ color:var(--ink-60); }
+@media (hover: hover){ .foot-col a:hover{ color:var(--ink-60); } }
 .foot-legal{ display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap;
   border-top:1px solid var(--hair); padding-top:1rem; padding-bottom:1.6rem;
   font-family:var(--font-brand); font-size:.64rem; letter-spacing:.14em;
@@ -394,7 +394,7 @@ table.dtable td.num{ font-size:.84rem; }
 .nl-form button{ font-family:var(--font-brand); font-weight:600; font-size:.68rem; letter-spacing:.16em;
   text-transform:uppercase; background:var(--ink); color:var(--paper); border:1px solid var(--ink);
   padding:.65rem 1rem; cursor:pointer; }
-.nl-form button:hover{ background:var(--paper); color:var(--ink); }
+@media (hover: hover){ .nl-form button:hover{ background:var(--paper); color:var(--ink); } }
 .nl-note{ display:none; font-family:var(--font-brand); font-size:.7rem; letter-spacing:.16em;
   text-transform:uppercase; margin:.9rem 0 0; }
 .nl-note.show{ display:block; }
@@ -425,7 +425,7 @@ table.dtable td.num{ font-size:.84rem; }
   border:0; background:none; color:var(--ink-60); cursor:pointer;
   font-size:1.1rem; line-height:1; padding:.2rem .3rem;
 }
-.searchwrap .clear:hover{ color:var(--ink); }
+@media (hover: hover){ .searchwrap .clear:hover{ color:var(--ink); } }
 .search-count{
   font-family:var(--font-serif); font-style:italic; font-size:.78rem;
   color:var(--ink-60); margin:0 0 .5rem;
@@ -444,7 +444,7 @@ table.dtable td.num{ font-size:.84rem; }
   color:var(--ink); text-align:left; cursor:pointer;
   padding:.42rem .25rem .38rem; font-family:var(--font-serif); font-size:.9rem;
 }
-.barow:hover{ background:color-mix(in srgb, var(--ink) 9%, transparent); }
+@media (hover: hover){ .barow:hover{ background:color-mix(in srgb, var(--ink) 9%, transparent); } }
 .barow[aria-pressed="true"]{ background:var(--ink); color:var(--paper); }
 .barow .num{
   font-family:var(--font-brand); font-weight:500; font-size:.72rem;
@@ -500,7 +500,7 @@ mark{ background:var(--ink); color:var(--paper); }
   background:none; border:0; cursor:pointer; color:var(--ink);
   font-size:1.5rem; line-height:1; padding:.1rem .3rem;
 }
-.modal-x:hover{ opacity:.6; }
+@media (hover: hover){ .modal-x:hover{ opacity:.6; } }
 .modal-h{
   font-family:var(--font-display); font-weight:400;
   font-size:1.5rem; line-height:1.12; margin:.25rem 2rem .1rem 0;
@@ -564,7 +564,7 @@ mark{ background:var(--ink); color:var(--paper); }
   fill:var(--ink); paint-order:stroke; stroke:var(--paper); stroke-width:2.4px;
   pointer-events:none; text-anchor:middle; dominant-baseline:central;
 }
-.ba-tile:hover .fill{ stroke:var(--ink); stroke-width:1.8; }
+@media (hover: hover){ .ba-tile:hover .fill{ stroke:var(--ink); stroke-width:1.8; } }
 .ba-tile.buried .fill{ stroke-dasharray:4 3; }
 .cartoons.picked .ba-tile{ opacity:.28; }
 .cartoons.picked .ba-tile.on{ opacity:1; }
@@ -1341,9 +1341,33 @@ mark{ background:var(--ink); color:var(--paper); }
     });
   }
 
+  /* The turn runs only while it can be seen and is wanted: scrolled out of
+     view the frame loop stops outright rather than idling, and a reader who
+     asked the OS for reduced motion gets a still graph that still turns by
+     hand. */
+  var gVisible = true;
+  function tick(){
+    gRaf = null;
+    if (!gSpin || !gVisible) return;
+    gAngle += 0.004; layoutGraph();
+    gRaf = requestAnimationFrame(tick);
+  }
+  function drive(){
+    if (gSpin && gVisible && !gRaf) gRaf = requestAnimationFrame(tick);
+  }
   function spin(){
-    if (gSpin){ gAngle += 0.004; layoutGraph(); }
-    gRaf = requestAnimationFrame(spin);
+    if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches){
+      gSpin = false;
+      var b = document.getElementById("gSpin");
+      b.textContent = "Turn"; b.setAttribute("aria-pressed", "false");
+    }
+    if ("IntersectionObserver" in window){
+      new IntersectionObserver(function(entries){
+        gVisible = entries[0].isIntersecting;
+        drive();
+      }, {threshold: 0.05}).observe(document.getElementById("graphStage"));
+    }
+    drive();
   }
 
   function bindGraph(){
@@ -1370,6 +1394,7 @@ mark{ background:var(--ink); color:var(--paper); }
       gSpin = !gSpin;
       btn.textContent = gSpin ? "Pause" : "Turn";
       btn.setAttribute("aria-pressed", String(gSpin));
+      drive();
     });
     document.getElementById("gReset").addEventListener("click", function(){
       gAngle = 0.6; gTilt = -0.25; layoutGraph();

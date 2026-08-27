@@ -77,7 +77,7 @@ body{
 }
 ::selection{ background:var(--ink); color:var(--paper); }
 a{ color:var(--ink); text-decoration:none; }
-a:hover{ text-decoration:underline; text-underline-offset:3px; }
+@media (hover: hover){ a:hover{ text-decoration:underline; text-underline-offset:3px; } }
 :focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
 svg{ display:block; }
 
@@ -92,7 +92,7 @@ svg{ display:block; }
   font-family:var(--font-brand); font-weight:500;
   line-height:1; letter-spacing:.01em; color:var(--ink);
 }
-.brand:hover{ text-decoration:none; }
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
 /* the mark sits to the left of the wordmark. Flex baseline alignment
    puts an image's bottom edge on the text baseline, so a box one cap
    height tall lands squarely between baseline and cap line. The brand
@@ -114,7 +114,7 @@ svg{ display:block; }
   background:none; border:1px solid var(--hair); cursor:pointer;
   padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
 }
-.theme-toggle:hover{ background:var(--ink); color:var(--paper); }
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
 .theme-toggle .th-dot{
   width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
   background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
