@@ -267,9 +267,16 @@ svg{ display:block; }
 }
 
 /* landscape: a square ring must never be taller than the screen it is on —
-   capping its width caps its height, since the two are the same number */
+   capping its width caps its height, since the two are the same number.
+   This must be a definite width, not a max-width with auto margins: auto
+   inline margins switch a grid item from stretch to shrink-wrap, the svg's
+   width:100% then has nothing definite to resolve against, and the whole
+   ring collapses to the 300px replaced-element fallback — which is exactly
+   what it did on every landscape screen for one release. A set width keeps
+   the svg's percentage meaningful, and the auto margins then simply centre
+   a box whose size is already decided. */
 @media (orientation: landscape) and (max-height: 1120px){
-  .ring-stage{ max-width:min(100%, calc(100vh - 170px)); margin-left:auto; margin-right:auto; }
+  .ring-stage{ width:min(100%, calc(100vh - 170px)); margin-left:auto; margin-right:auto; }
 }
 </style>
 </head>
@@ -351,22 +358,22 @@ svg{ display:block; }
     <div class="views" id="scan-views">
       <div class="view" data-box="Ren">
         <div class="view-cap"><b>3D</b><span>volume render</span></div>
-        <div class="view-tools"><span class="tool-label">Drag to turn · pinch to zoom · two fingers pan</span><button class="ts-btn centre-btn" data-centre="Ren" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label"><span class="tl-mouse">Drag to turn · wheel to zoom · shift-drag to pan</span><span class="tl-touch">Drag to turn · pinch to zoom · two fingers pan</span></span><button class="ts-btn centre-btn" data-centre="Ren" type="button">Centre planes</button></div>
         <div class="mri-stage"><canvas id="naRen"></canvas></div>
       </div>
       <div class="view" data-box="Ax">
         <div class="view-cap"><b>Axial</b><span>transverse plane</span></div>
-        <div class="view-tools"><span class="tool-label">Drag to move · pinch to zoom · two fingers pan</span><button class="ts-btn centre-btn" data-centre="Ax" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label"><span class="tl-mouse">Drag to move · ctrl+wheel to zoom · shift-drag to pan</span><span class="tl-touch">Drag to move · pinch to zoom · two fingers pan</span></span><button class="ts-btn centre-btn" data-centre="Ax" type="button">Centre planes</button></div>
         <div class="mri-stage"><canvas id="naAx"></canvas></div>
       </div>
       <div class="view" data-box="Cor">
         <div class="view-cap"><b>Coronal</b><span>frontal plane</span></div>
-        <div class="view-tools"><span class="tool-label">Drag to move · pinch to zoom · two fingers pan</span><button class="ts-btn centre-btn" data-centre="Cor" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label"><span class="tl-mouse">Drag to move · ctrl+wheel to zoom · shift-drag to pan</span><span class="tl-touch">Drag to move · pinch to zoom · two fingers pan</span></span><button class="ts-btn centre-btn" data-centre="Cor" type="button">Centre planes</button></div>
         <div class="mri-stage"><canvas id="naCor"></canvas></div>
       </div>
       <div class="view" data-box="Sag">
         <div class="view-cap"><b>Sagittal</b><span>median plane</span></div>
-        <div class="view-tools"><span class="tool-label">Drag to move · pinch to zoom · two fingers pan</span><button class="ts-btn centre-btn" data-centre="Sag" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label"><span class="tl-mouse">Drag to move · ctrl+wheel to zoom · shift-drag to pan</span><span class="tl-touch">Drag to move · pinch to zoom · two fingers pan</span></span><button class="ts-btn centre-btn" data-centre="Sag" type="button">Centre planes</button></div>
         <div class="mri-stage"><canvas id="naSag"></canvas></div>
       </div>
     </div>

@@ -336,3 +336,11 @@ button, .ts-btn, .seg-btn, .barow{ touch-action:manipulation; }
 /* a zoomed diagram (diagram-gestures.js) can be dragged around by mouse,
    and the cursor should say so */
 .diag-zoomed{ cursor:grab; }
+
+/* the gesture hints speak the dialect of the pointer actually present:
+   fingers hear about pinching, a mouse hears about its wheel */
+.tl-touch{ display:none; }
+@media (pointer:coarse){
+  .tl-touch{ display:inline; }
+  .tl-mouse{ display:none; }
+}
