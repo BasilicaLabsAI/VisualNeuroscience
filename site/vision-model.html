@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Model — VisualNeuroscience.AI</title>
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="assets/vision.css">
+<style>
+.vmain{ padding-top:0; }
+.vstage{ flex:1; border-radius:22px; }
+</style>
+</head>
+<body>
+
+<div class="vbar">
+  <img class="mark" src="assets/logo.svg" alt="">
+  <span class="name">3D Model</span>
+  <span class="sub">one finger turns it · pinch zooms · two fingers pan</span>
+  <span class="spacer"></span>
+  <button class="vbtn" id="resetBtn" type="button">Reset view</button>
+</div>
+
+<div class="vmain">
+  <div class="vstage" id="stage">
+    <canvas id="gl"></canvas>
+    <div class="vstatus" id="status">Loading the model&hellip;</div>
+  </div>
+</div>
+
+<script src="assets/atlas-data.js"></script>
+<script src="assets/niivue.js"></script>
+<script src="assets/stage-lifecycle.js"></script>
+<script src="assets/zoom.js"></script>
+<script src="assets/vision-bus.js"></script>
+<script src="assets/vision-scan.js"></script>
+<script>
+var zoom = null;
+var ready = VS.makeView(document.getElementById("gl"), "render").then(function(nv){
+  document.getElementById("status").classList.add("hidden");
+  if (window.MN_ZOOM){
+    zoom = MN_ZOOM.attach({ stage: document.getElementById("stage"), nv: nv });
+  }
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    nv.position = [0, 0, 0];
+    nv.scene.volScaleMultiplier = 1;
+    nv.scene.renderAzimuth = 110; nv.scene.renderElevation = 10;
+    nv.drawScene();
+  });
+  return nv;
+}, function(err){
+  document.getElementById("status").textContent =
+    "The model could not load: " + (err && err.message || err);
+});
+VS.boot(ready);
+</script>
+</body>
+</html>

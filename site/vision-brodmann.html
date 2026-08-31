@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brodmann — VisualNeuroscience.AI</title>
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="assets/vision.css">
+<style>
+.vmain{ flex-direction:column; gap:.9rem; padding-top:0; }
+.faces{ flex:1; min-height:0; display:flex; gap:1rem; }
+.face{ flex:1; display:flex; flex-direction:column; min-width:0; }
+.face .vkicker{ margin:0 0 .4rem .3rem; }
+.face .art{ flex:1; min-height:0; background:var(--glass); border:1px solid var(--edge);
+  border-radius:20px; padding:.7rem; display:flex; align-items:center; justify-content:center; }
+.face svg{ width:100%; height:100%; }
+.ba-tile{ cursor:pointer; }
+.ba-tile.mute{ cursor:default; }
+.ba-tile .art-patch{ opacity:0; transition:opacity .12s ease; pointer-events:none; }
+.ba-tile.on .art-patch{ opacity:1; }
+@media (hover:hover){ .ba-tile:hover .art-patch{ opacity:1; } }
+.ba-tile .hit{ fill:#000; fill-opacity:0; stroke:none; }
+.ba-tile.on .hit{ stroke:#F4F2EE; stroke-width:1.1; stroke-opacity:.9; }
+.readout{ flex:none; }
+.readout .fn-name{ font-family:var(--font-display); font-size:1.2rem; }
+.readout .fn-sub{ font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60); margin:.15rem 0 .45rem; }
+.readout p{ font-size:.96rem; }
+@media (max-width:900px){ .faces{ flex-direction:column; } }
+</style>
+</head>
+<body>
+
+<div class="vbar">
+  <img class="mark" src="assets/logo.svg" alt="">
+  <span class="name">Brodmann Areas</span>
+  <span class="sub">tap an area on either face</span>
+</div>
+
+<div class="vmain">
+  <div class="faces">
+    <div class="face"><div class="vkicker">External &middot; lateral</div><div class="art" id="fLat"></div></div>
+    <div class="face"><div class="vkicker">Internal &middot; medial</div><div class="art" id="fMed"></div></div>
+  </div>
+  <div class="vcard readout" id="readout">
+    <p class="quiet" style="color:var(--ink-60);font-style:italic">Pick an area &mdash; its name and what it does appear here.</p>
+  </div>
+</div>
+
+<script src="assets/brodmann-areas.js"></script>
+<script src="assets/brodmann-art.js"></script>
+<script>
+(function(){
+  var B = window.MN_BRODMANN, ART = window.MN_BA_ART;
+  var NS = "http://www.w3.org/2000/svg";
+  var tiles = {lateral:{}, medial:{}};
+  var selected = null;
+
+  function draw(host, which){
+    var svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", ART.box[which]);
+    var vb = ART.box[which].split(" ");
+    var base = document.createElementNS(NS, "image");
+    base.setAttribute("href", ART.base[which]);
+    base.setAttribute("width", vb[2]); base.setAttribute("height", vb[3]);
+    svg.appendChild(base);
+    Object.keys(ART.areas).forEach(function(k){
+      var ba = +k;
+      var spec = (ART.areas[k] || []).filter(function(e){ return e.view === which; })[0];
+      if (!spec) return;
+      var a = B.BY_BA[ba];
+      var g = document.createElementNS(NS, "g");
+      g.setAttribute("class", "ba-tile" + (a ? "" : " mute"));
+      var patch = document.createElementNS(NS, "image");
+      patch.setAttribute("class", "art-patch");
+      patch.setAttribute("href", spec.href);
+      patch.setAttribute("x", spec.x); patch.setAttribute("y", spec.y);
+      patch.setAttribute("width", spec.w); patch.setAttribute("height", spec.h);
+      var hit = document.createElementNS(NS, "path");
+      hit.setAttribute("class", "hit");
+      hit.setAttribute("d", spec.d);
+      hit.setAttribute("fill-rule", "evenodd");
+      g.appendChild(patch); g.appendChild(hit);
+      if (a) g.addEventListener("click", function(){ select(ba); });
+      svg.appendChild(g);
+      tiles[which][ba] = g;
+    });
+    host.appendChild(svg);
+  }
+
+  function select(ba){
+    selected = (selected === ba) ? null : ba;
+    ["lateral","medial"].forEach(function(w){
+      Object.keys(tiles[w]).forEach(function(k){
+        tiles[w][k].classList.toggle("on", +k === selected);
+      });
+    });
+    var out = document.getElementById("readout");
+    if (selected == null){
+      out.innerHTML = '<p style="color:var(--ink-60);font-style:italic">Pick an area &mdash; its name and what it does appear here.</p>';
+      return;
+    }
+    var a = B.BY_BA[selected];
+    out.innerHTML =
+      '<div class="fn-name">BA' + selected + ' &middot; ' + a.name + '</div>' +
+      '<div class="fn-sub">' + a.lobe + ' lobe &middot; ' + a.region + '</div>' +
+      '<p>' + (a.fn || "") + (a.note ? " " + a.note : "") + '</p>';
+  }
+
+  draw(document.getElementById("fLat"), "lateral");
+  draw(document.getElementById("fMed"), "medial");
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2D Console — VisualNeuroscience.AI</title>
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="assets/vision.css">
+<style>
+.vmain{ gap:1rem; }
+.vplane{ flex:1; }
+@media (max-width:900px){ .vmain{ flex-direction:column; } }
+</style>
+</head>
+<body>
+
+<div class="vbar">
+  <img class="mark" src="assets/logo.svg" alt="">
+  <span class="name">2D Console</span>
+  <span class="sub">slide up&ndash;down at the right of each view, left&ndash;right beneath it</span>
+  <span class="spacer"></span>
+  <button class="vbtn" id="centreBtn" type="button">Centre</button>
+</div>
+
+<div class="vmain">
+  <div id="pAx"></div>
+  <div id="pCor"></div>
+  <div id="pSag"></div>
+</div>
+
+<script src="assets/atlas-data.js"></script>
+<script src="assets/niivue.js"></script>
+<script src="assets/stage-lifecycle.js"></script>
+<script src="assets/zoom.js"></script>
+<script src="assets/vision-bus.js"></script>
+<script src="assets/vision-scan.js"></script>
+<script>
+var ready = Promise.all([
+  VS.buildPlane(document.getElementById("pAx"), "axial"),
+  VS.buildPlane(document.getElementById("pCor"), "coronal"),
+  VS.buildPlane(document.getElementById("pSag"), "sagittal")
+]);
+VS.boot(ready);
+document.getElementById("centreBtn").addEventListener("click", function(){
+  VS.applyPos([0.5, 0.5, 0.5], null);
+  VB.send("pos", [0.5, 0.5, 0.5]);
+});
+</script>
+</body>
+</html>

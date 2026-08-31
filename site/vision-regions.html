@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regions — VisualNeuroscience.AI</title>
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="assets/vision.css">
+<style>
+.vmain{ padding-top:0; }
+.vcard{ flex:1; }
+</style>
+</head>
+<body>
+
+<div class="vbar">
+  <img class="mark" src="assets/logo.svg" alt="">
+  <span class="name">Regions &amp; Functions</span>
+  <span class="sub" id="count"></span>
+  <span class="spacer"></span>
+  <button class="vbtn" id="clearBtn" type="button">Clear all</button>
+</div>
+
+<div class="vmain">
+  <div class="vcard">
+    <input class="vsearch" id="q" type="search" placeholder="Search the 116 regions&hellip;" aria-label="Search regions">
+    <div class="vlist" id="list"></div>
+    <div class="vfn" id="fn">
+      <p class="quiet">Pick a region &mdash; it lights up in the model and on every scan, and what it does appears here.</p>
+    </div>
+  </div>
+</div>
+
+<script src="assets/atlas-data.js"></script>
+<script src="assets/region-notes.js"></script>
+<script src="assets/vision-bus.js"></script>
+<script>
+(function(){
+  var REGIONS = MN_ATLAS.REGIONS;
+  var PALETTE = ["#915AD8","#D85AC9","#FE4B83","#FF7847","#E6C14C",
+                 "#AFF05B","#52F667","#4AE8B7","#4FBEE3","#5575DD"];
+  var TIER_NAME = {};
+  (MN_NOTES.TIERS || []).forEach(function(t){ TIER_NAME[t.id] = t.label || t.id; });
+
+  /* selection state: [{base, pretty, color}] — the bus's own shape */
+  var sels = (VB.state().sel || []).slice();
+  var lastPicked = sels.length ? sels[sels.length - 1].base : null;
+
+  function nextColor(){
+    var used = sels.map(function(s){ return s.color; });
+    for (var i = 0; i < PALETTE.length; i++)
+      if (used.indexOf(PALETTE[i]) === -1) return PALETTE[i];
+    return PALETTE[sels.length % PALETTE.length];
+  }
+  function find(base){ return sels.filter(function(s){ return s.base === base; })[0]; }
+
+  var list = document.getElementById("list");
+  var rows = {};
+
+  function buildList(filter){
+    list.innerHTML = ""; rows = {};
+    var q = (filter || "").trim().toLowerCase();
+    var lastGroup = null;
+    REGIONS.forEach(function(r){
+      var note = MN_NOTES.NOTES[r.base];
+      var hay = (r.pretty + " " + r.base + " " + r.group + " " +
+                 (note ? note.fn : "")).toLowerCase();
+      if (q && hay.indexOf(q) === -1) return;
+      if (r.group !== lastGroup){
+        lastGroup = r.group;
+        var h = document.createElement("div");
+        h.className = "vgroup"; h.textContent = r.group;
+        list.appendChild(h);
+      }
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "vregion";
+      b.innerHTML = '<span class="dot"></span><span>' + r.pretty + '</span>';
+      b.addEventListener("click", function(){ toggle(r); });
+      list.appendChild(b);
+      rows[r.base] = b;
+    });
+    paintRows();
+  }
+
+  function paintRows(){
+    Object.keys(rows).forEach(function(base){
+      var s = find(base), b = rows[base];
+      b.classList.toggle("on", !!s);
+      b.querySelector(".dot").style.background = s ? s.color : "transparent";
+    });
+  }
+
+  function renderFn(){
+    var fn = document.getElementById("fn");
+    document.getElementById("count").textContent =
+      sels.length ? sels.length + (sels.length === 1 ? " region lit" : " regions lit") : "";
+    if (!sels.length){
+      fn.innerHTML = '<p class="quiet">Pick a region &mdash; it lights up in the model and on every scan, and what it does appears here.</p>';
+      return;
+    }
+    /* the most recently picked region leads; the rest follow beneath */
+    var order = sels.slice();
+    order.sort(function(a, b){
+      return (a.base === lastPicked ? -1 : 0) - (b.base === lastPicked ? -1 : 0);
+    });
+    fn.innerHTML = "";
+    order.forEach(function(s, i){
+      var note = MN_NOTES.NOTES[s.base];
+      var d = document.createElement("div");
+      if (i) d.style.marginTop = ".9rem";
+      d.innerHTML =
+        '<div class="fn-name" style="color:' + s.color + '">' + s.pretty + '</div>' +
+        (note && note.tier ? '<div class="fn-tier">' + (TIER_NAME[note.tier] || note.tier) + '</div>' : '') +
+        '<p>' + (note ? note.fn : "No note for this region yet.") + '</p>';
+      fn.appendChild(d);
+    });
+  }
+
+  function push(){
+    VB.send("sel", sels);
+    paintRows();
+    renderFn();
+  }
+
+  function toggle(r){
+    var s = find(r.base);
+    if (s) sels = sels.filter(function(x){ return x !== s; });
+    else {
+      sels.push({ base: r.base, pretty: r.pretty, color: nextColor() });
+      lastPicked = r.base;
+    }
+    push();
+  }
+
+  document.getElementById("q").addEventListener("input", function(e){
+    buildList(e.target.value);
+  });
+  document.getElementById("clearBtn").addEventListener("click", function(){
+    sels = []; lastPicked = null; push();
+  });
+  VB.on("sel", function(next){
+    sels = (next || []).slice();
+    if (!find(lastPicked)) lastPicked = sels.length ? sels[sels.length-1].base : null;
+    paintRows(); renderFn();
+  });
+
+  buildList("");
+  renderFn();
+})();
+</script>
+</body>
+</html>

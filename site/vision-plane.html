@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan — VisualNeuroscience.AI</title>
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="assets/vision.css">
+<style>
+.vmain{ padding-top:0; }
+.vplane{ flex:1; }
+</style>
+</head>
+<body>
+
+<div class="vbar">
+  <img class="mark" src="assets/logo.svg" alt="">
+  <span class="name" id="wname">Scan</span>
+  <span class="sub">up&ndash;down at the right · left&ndash;right beneath</span>
+</div>
+
+<div class="vmain">
+  <div id="plane"></div>
+</div>
+
+<script src="assets/atlas-data.js"></script>
+<script src="assets/niivue.js"></script>
+<script src="assets/stage-lifecycle.js"></script>
+<script src="assets/zoom.js"></script>
+<script src="assets/vision-bus.js"></script>
+<script src="assets/vision-scan.js"></script>
+<script>
+var key = new URLSearchParams(location.search).get("p") || "axial";
+if (!/^(axial|coronal|sagittal)$/.test(key)) key = "axial";
+document.getElementById("wname").textContent = key.charAt(0).toUpperCase() + key.slice(1);
+document.title = document.getElementById("wname").textContent + " — VisualNeuroscience.AI";
+VS.boot(VS.buildPlane(document.getElementById("plane"), key));
+</script>
+</body>
+</html>

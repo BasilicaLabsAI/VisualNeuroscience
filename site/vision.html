@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Console — VisualNeuroscience.AI</title>
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="assets/vision.css">
+<style>
+.vmain{ align-items:flex-start; justify-content:center; padding-top:1rem; flex-wrap:wrap; }
+.vcard{ width:min(30rem, 100%); }
+.note{ color:var(--ink-60); font-size:.85rem; font-style:italic; margin-top:1rem; }
+</style>
+</head>
+<body>
+
+<div class="vbar">
+  <img class="mark" src="assets/logo.svg" alt="">
+  <span class="name">VisualNeuroscience.AI</span>
+  <span class="sub">spatial console</span>
+  <span class="spacer"></span>
+  <button class="vbtn" id="clearBtn" type="button">Clear highlight</button>
+</div>
+
+<div class="vmain">
+
+  <div class="vcard">
+    <div class="vkicker">Mode</div>
+    <h2>Region Atlas</h2>
+    <p class="lede">The MNI152 head under the AAL-116 parcellation. Open each part as its own window and place it anywhere in the room; they stay in step.</p>
+    <div class="vlaunch">
+      <button class="vbtn primary" data-open="vision-model.html" data-name="vn-model" type="button">
+        3D model <small>the volume render, on its own</small></button>
+      <button class="vbtn" data-open="vision-planes.html" data-name="vn-planes" type="button">
+        2D console <small>axial · coronal · sagittal, with sliders</small></button>
+      <button class="vbtn" data-open="vision-regions.html" data-name="vn-regions" type="button">
+        Regions &amp; functions <small>pick what lights up, read what it does</small></button>
+    </div>
+    <div class="vkicker" style="margin-top:1.1rem">Separate the scans</div>
+    <div class="vrow">
+      <button class="vbtn" data-open="vision-plane.html?p=axial" data-name="vn-ax" type="button">Axial</button>
+      <button class="vbtn" data-open="vision-plane.html?p=coronal" data-name="vn-cor" type="button">Coronal</button>
+      <button class="vbtn" data-open="vision-plane.html?p=sagittal" data-name="vn-sag" type="button">Sagittal</button>
+    </div>
+    <p class="note">Each button opens one window, so the browser never has to guess which pop-ups you meant. Open them one by one and arrange the room.</p>
+  </div>
+
+  <div class="vcard">
+    <div class="vkicker">Mode</div>
+    <h2>Brodmann Areas</h2>
+    <p class="lede">The classic drawing, both faces, with every area answering a look and a tap — and what each area does.</p>
+    <div class="vlaunch">
+      <button class="vbtn primary" data-open="vision-brodmann.html" data-name="vn-ba" type="button">
+        Brodmann window <small>the drawing, selectable</small></button>
+    </div>
+    <p class="note">More of the site&rsquo;s rooms — tractography, the network ring, the studies — will join the console as they earn a spatial shape. The full site is always at <b>visualneuroscience.ai</b>.</p>
+  </div>
+
+</div>
+
+<script src="assets/vision-bus.js"></script>
+<script>
+document.querySelectorAll("[data-open]").forEach(function(b){
+  b.addEventListener("click", function(){
+    /* a named window: pressing the button again focuses it rather than
+       opening a twin */
+    window.open(b.dataset.open, b.dataset.name);
+  });
+});
+document.getElementById("clearBtn").addEventListener("click", function(){
+  VB.send("sel", []);
+});
+</script>
+</body>
+</html>

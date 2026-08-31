@@ -1,0 +1,170 @@
+/* The visionOS face of the site: every vision-*.html page is one spatial
+   window, so the chrome is a slim bar and the content is glass — dark,
+   translucent, rounded, with controls sized for eyes and fingertips. The
+   pages commit to the dark look regardless of the site theme: they float
+   in a room, not on paper. */
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+:root{
+  --glass:rgba(255,255,255,.07);
+  --glass-2:rgba(255,255,255,.12);
+  --edge:rgba(255,255,255,.16);
+  --ink:#F4F2EE;
+  --ink-60:#B9B5AE;
+  --accent:#4FBEE3;
+  --font-brand:'Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+}
+html,body{ height:100%; }
+body{
+  background:#0E0E10; color:var(--ink);
+  font-family:var(--font-serif); font-size:1.05rem; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column;
+}
+::selection{ background:var(--ink); color:#0E0E10; }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+button{ font:inherit; color:inherit; }
+
+/* the slim window bar */
+.vbar{
+  flex:none; display:flex; align-items:center; gap:.9rem;
+  padding:.7rem 1.2rem;
+}
+.vbar .mark{ width:1.15rem; height:1.15rem; flex:none; }
+.vbar .name{
+  font-family:var(--font-brand); font-weight:500; font-size:.72rem;
+  letter-spacing:.28em; text-transform:uppercase;
+}
+.vbar .sub{ font-style:italic; color:var(--ink-60); font-size:.85rem; }
+.vbar .spacer{ flex:1; }
+.vbtn{
+  font-family:var(--font-brand); font-weight:500; font-size:.68rem;
+  letter-spacing:.18em; text-transform:uppercase;
+  background:var(--glass); border:1px solid var(--edge); border-radius:999px;
+  padding:.55rem 1.1rem; cursor:pointer; min-height:44px;
+  transition:background .15s ease;
+}
+.vbtn:hover{ background:var(--glass-2); }
+.vbtn.primary{ background:var(--ink); color:#0E0E10; border-color:var(--ink); }
+
+.vmain{ flex:1; min-height:0; display:flex; padding:0 1.2rem 1.2rem; gap:1.2rem; }
+
+/* glass cards */
+.vcard{
+  background:var(--glass); border:1px solid var(--edge);
+  border-radius:26px; padding:1.2rem 1.3rem;
+  backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px);
+  display:flex; flex-direction:column; min-width:0; min-height:0;
+}
+.vcard h2{
+  font-family:var(--font-display); font-weight:400; font-size:1.35rem;
+  letter-spacing:.01em; margin-bottom:.35rem;
+}
+.vcard .lede{ color:var(--ink-60); font-size:.92rem; margin-bottom:1rem; }
+.vkicker{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.26em; text-transform:uppercase; color:var(--ink-60);
+  margin-bottom:.5rem;
+}
+
+/* a scan viewport in glass */
+.vstage{
+  position:relative; background:#000; border-radius:18px; overflow:hidden;
+  border:1px solid var(--edge); flex:1; min-height:0;
+}
+.vstage canvas{ position:absolute; inset:0; width:100%; height:100%; }
+
+/* the two sliders round a plane: up/down on the right, left/right below */
+.vplane{ display:grid; grid-template-columns:minmax(0,1fr) 52px;
+         grid-template-rows:minmax(0,1fr) 52px; gap:.55rem; min-width:0; min-height:0; }
+.vplane .vstage{ grid-area:1/1; }
+.vslider, .hslider{
+  appearance:none; -webkit-appearance:none; background:transparent;
+  cursor:pointer; touch-action:none;
+}
+.hslider{ grid-area:2/1; width:100%; height:44px; align-self:center; }
+.vslider{
+  grid-area:1/2; height:44px; width:100%;
+  align-self:center; justify-self:center;
+  transform:rotate(-90deg);
+}
+.vslider-wrap{ grid-area:1/2; display:flex; align-items:center; justify-content:center; min-height:0; }
+.vslider-wrap .vslider{ transform:rotate(-90deg); transform-origin:center; flex:none; }
+input[type=range].vs{ height:44px; }
+input[type=range].vs::-webkit-slider-runnable-track{
+  height:10px; border-radius:999px; background:var(--glass-2);
+  border:1px solid var(--edge);
+}
+input[type=range].vs::-webkit-slider-thumb{
+  -webkit-appearance:none; width:30px; height:30px; border-radius:50%;
+  background:var(--ink); border:none; margin-top:-11px;
+  box-shadow:0 2px 10px rgba(0,0,0,.5);
+}
+input[type=range].vs::-moz-range-track{
+  height:10px; border-radius:999px; background:var(--glass-2); border:1px solid var(--edge);
+}
+input[type=range].vs::-moz-range-thumb{
+  width:30px; height:30px; border-radius:50%; background:var(--ink); border:none;
+}
+.vcap{
+  position:absolute; top:.6rem; left:.8rem; z-index:3;
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+  pointer-events:none; text-shadow:0 1px 4px #000;
+}
+
+/* console launcher rows */
+.vlaunch{ display:flex; flex-direction:column; gap:.7rem; }
+.vlaunch .vbtn{ text-align:left; display:flex; align-items:center; gap:.8rem; }
+.vlaunch .vbtn small{
+  font-family:var(--font-serif); font-style:italic; text-transform:none;
+  letter-spacing:0; font-size:.82rem; color:var(--ink-60); font-weight:400;
+}
+.vrow{ display:flex; gap:.7rem; flex-wrap:wrap; }
+
+/* the region list */
+.vsearch{
+  font:inherit; font-size:1rem; color:var(--ink);
+  background:var(--glass); border:1px solid var(--edge); border-radius:14px;
+  padding:.7rem .9rem; width:100%; min-height:48px; margin-bottom:.8rem;
+}
+.vlist{ overflow:auto; min-height:0; flex:1; }
+.vgroup{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+  padding:.9rem .2rem .35rem; position:sticky; top:0; background:#131316;
+}
+.vregion{
+  display:flex; align-items:center; gap:.7rem; width:100%;
+  background:none; border:0; border-bottom:1px solid rgba(255,255,255,.07);
+  padding:.6rem .3rem; min-height:48px; cursor:pointer; text-align:left;
+  font-size:.98rem; border-radius:8px;
+}
+.vregion:hover{ background:var(--glass); }
+.vregion .dot{
+  width:14px; height:14px; border-radius:50%; flex:none;
+  border:1.6px solid var(--ink-60); background:transparent;
+}
+.vregion.on .dot{ border-color:transparent; }
+.vfn{
+  border-top:1px solid var(--edge); margin-top:.8rem; padding-top:.8rem;
+  overflow:auto; max-height:38%;
+}
+.vfn .fn-name{ font-family:var(--font-display); font-size:1.1rem; margin-bottom:.2rem; }
+.vfn .fn-tier{
+  font-family:var(--font-brand); font-weight:500; font-size:.58rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60);
+  margin-bottom:.4rem;
+}
+.vfn p{ font-size:.95rem; color:var(--ink); }
+.vfn .quiet{ color:var(--ink-60); font-style:italic; }
+
+.vstatus{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  z-index:4; color:var(--ink-60); font-style:italic; background:rgba(0,0,0,.4);
+  transition:opacity .3s ease;
+}
+.vstatus.hidden{ opacity:0; pointer-events:none; }
+.hidden{ display:none !important; }
