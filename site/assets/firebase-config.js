@@ -34,4 +34,20 @@
 
    Remember to bump VERSION in sw.js after editing this file, or installed
    copies of the app will keep serving the cached previous version. */
-window.VN_FIREBASE = null;
+window.VN_FIREBASE = {
+  apiKey: "AIzaSyBWhQXs2C9RhKfOxMNo0gvSv-YeUVXBG24",
+  authDomain: "visualneuroscience-4315d.firebaseapp.com",
+  projectId: "visualneuroscience-4315d",
+  storageBucket: "visualneuroscience-4315d.firebasestorage.app",
+  messagingSenderId: "1020711830190",
+  appId: "1:1020711830190:web:18a3408e0ed7d489e6a33f",
+  /* Analytics is on in the Firebase project, but nothing here sends it:
+     the bundled SDK carries no analytics module, so this id is inert
+     until usage counting is deliberately wired in (and named on the
+     privacy page). */
+  measurementId: "G-NLQVT5PLRB",
+
+  /* email is live; each social provider flips to true when its console
+     section in docs/AUTH-SETUP.md is done */
+  providers: { google: false, apple: false, linkedin: false, emailLink: true }
+};
