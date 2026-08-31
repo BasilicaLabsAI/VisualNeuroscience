@@ -557,6 +557,10 @@ mark{ background:var(--ink); color:var(--paper); }
 /* an area on the map: a filled tile with a hairline edge and its number */
 .ba-tile{ cursor:pointer; transition:opacity .12s ease; }
 .ba-tile .fill{ stroke:var(--paper); stroke-width:1.1; }
+/* the drawing beyond the clickable areas: present, quiet, inert */
+.ba-mute{ fill:var(--ink-35); fill-opacity:.28; }
+.ba-tile.mute{ cursor:default; }
+.cartoons.picked .ba-tile.mute{ opacity:.28; }
 .ba-tile .num{
   font-family:var(--font-brand); font-weight:500; font-size:11px;
   fill:var(--ink); paint-order:stroke; stroke:var(--paper); stroke-width:2.4px;
@@ -710,7 +714,7 @@ mark{ background:var(--ink); color:var(--paper); }
     </div>
   </section>
 
-        <p class="cart-note">Both views are projections of the atlas itself, not drawings: the external view takes the first labelled voxel walking in from the side, the internal view the first walking out from the midline. So an area appears here only if it actually reaches that surface &mdash; 41 and 42 sit inside the Sylvian fissure and show on neither &mdash; and the boundaries are the atlas&rsquo;s own. Anterior is on the left in both.</p>
+        <p class="cart-note">The two faces follow the classic hand-drawn Brodmann scheme, descending from Brodmann&rsquo;s own 1909 figures. Each area is clickable on the face that shows it best; the grey parts of either drawing belong to areas picked on the other one, kept so each face reads as a whole hemisphere. Anterior is on the left in the external view and, as the scheme is conventionally drawn, on the right in the internal one. The drawing is a schematic &mdash; where each area actually sits in a real head, with the atlas&rsquo;s own boundaries, is what the <b>On the scan</b> view shows.</p>
       </div>
 
       <div class="pane hidden" id="paneScan">
@@ -1146,15 +1150,45 @@ mark{ background:var(--ink); color:var(--paper); }
     var table = MAP[which] || {};
     var NS = "http://www.w3.org/2000/svg";
     var svg = document.createElementNS(NS, "svg");
-    svg.setAttribute("viewBox", MAP.viewBox || "0 0 651 543");
+    svg.setAttribute("viewBox", (MAP.box && MAP.box[which]) || MAP.viewBox || "0 0 651 543");
     svg.setAttribute("role", "img");
     svg.setAttribute("aria-label", which === "lateral"
       ? "Brodmann areas on the external surface of the hemisphere"
       : "Brodmann areas on the internal surface of the hemisphere");
 
+    /* the parts of the drawing whose areas are picked on the other view —
+       drawn first, so the face reads as a whole brain, not islands */
+    ((MAP.mute && MAP.mute[which]) || []).forEach(function(d){
+      var p = document.createElementNS(NS, "path");
+      p.setAttribute("class", "ba-mute");
+      p.setAttribute("d", d);
+      p.setAttribute("fill-rule", "evenodd");
+      svg.appendChild(p);
+    });
+
     Object.keys(table).forEach(function(k){
       var ba = +k, spec = table[k], a = B.BY_BA[ba];
-      if (!a) return;
+      if (!a){
+        /* the drawing knows an area the atlas does not carry (12): show it,
+           numbered but inert, rather than tearing a hole in the tessellation */
+        var m = document.createElementNS(NS, "g");
+        m.setAttribute("class", "ba-tile mute");
+        var mp = document.createElementNS(NS, "path");
+        mp.setAttribute("class", "fill");
+        mp.setAttribute("d", spec.d);
+        mp.setAttribute("fill", "var(--ink-35)");
+        mp.setAttribute("fill-opacity", ".4");
+        mp.setAttribute("fill-rule", "evenodd");
+        var mt = document.createElementNS(NS, "text");
+        mt.setAttribute("class", "num");
+        mt.setAttribute("x", spec.at[0]); mt.setAttribute("y", spec.at[1]);
+        mt.textContent = ba;
+        var mi = document.createElementNS(NS, "title");
+        mi.textContent = "BA" + ba + " — not in the atlas volume";
+        m.appendChild(mp); m.appendChild(mt); m.appendChild(mi);
+        svg.appendChild(m);
+        return;
+      }
       var g = document.createElementNS(NS, "g");
       g.setAttribute("class", "ba-tile");
       g.dataset.ba = ba;
