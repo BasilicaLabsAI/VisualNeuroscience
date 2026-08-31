@@ -2,10 +2,10 @@
 
    While this is null the feature is dormant: no Log in button appears, no
    SDK is loaded, and not one network request is made — the app behaves
-   exactly as it did before accounts existed. Everything the privacy policy
-   says about third-party requests stays true until the moment someone
-   deliberately fills this in (and updates the policy to match — see
-   docs/AUTH-SETUP.md, which walks through every step).
+   exactly as it did before accounts existed. The privacy policy already
+   describes accounts under "Optional services", so activating this needs
+   no policy rewrite — only the store privacy labels change when the apps
+   ship it (docs/AUTH-SETUP.md walks through every step).
 
    NOTE: the values below are Firebase's PUBLIC web configuration. They are
    identifiers, not secrets — they are safe to commit and are meant to ship

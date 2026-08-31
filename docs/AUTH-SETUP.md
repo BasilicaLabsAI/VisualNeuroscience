@@ -23,8 +23,12 @@ skip any you don't want (its button simply never appears).
 
 1. Go to https://console.firebase.google.com and sign in with a Google
    account you control long-term (this account owns the user database).
-2. **Add project** → name it (e.g. `visualneuroscience`) → Google Analytics
-   **off** (the app promises no analytics) → **Create project**.
+2. **Add project** → name it (e.g. `visualneuroscience`) → Google Analytics:
+   your choice — the privacy page no longer forecloses analytics. Off is
+   simplest; on costs nothing now and lets you wire usage measurement in
+   later. Either way, if measurement ever runs on the pages, name the
+   provider on privacy.html (its "Usage counts" bullet reserves the spot)
+   → **Create project**.
 3. When it opens, click the **web** icon (`</>`) on the project overview to
    **add a web app**. Nickname `site`. Do **not** tick Firebase Hosting.
 4. It shows a `firebaseConfig` object. Copy the four values you need —
@@ -125,6 +129,13 @@ the plugin at runtime; the apps ship unchanged until you do this:
    open GoogleService-Info.plist, copy `REVERSED_CLIENT_ID`, and in Xcode →
    App target → Info → URL Types → add a URL scheme with that value
    (keep the existing `visualneuroscience` one too).
+6. **The Mac build needs the network entitlement.** The sandbox currently
+   grants no network access at all (the anatomy never needed it), so before
+   shipping a Mac build with accounts on: Xcode → App target → Signing &
+   Capabilities → App Sandbox → tick **Outgoing Connections (Client)**.
+   Without it every sign-in on the Mac fails with the connection error.
+   This applies to email sign-in too, not just Google — do it as part of
+   whichever provider section you reach first.
 
 ## 6 · Apple sign-in
 
@@ -243,15 +254,20 @@ apps and everything else still works.)
 
 ## 8 · When you switch it on, say so
 
-The moment `VN_FIREBASE` is non-null, two published statements become
-outdated. Update, in the same release:
+**site/privacy.html** already describes accounts (and reserves a spot for
+usage analytics) under *Optional services*, so activating email/Google/Apple
+sign-in needs no policy rewrite — just check the description still matches
+what you shipped, and bump the "Last updated" date. Two things do still need
+your hand:
 
-- **site/privacy.html** — it currently promises *no third-party requests at
-  all*. Accounts add requests to Google (Firebase Auth/Firestore) and, when
-  used, LinkedIn — and store account email, name and saved files.
 - **App Store / Play Store privacy labels** — currently "Data Not
-  Collected". With accounts: Contact Info (email, name) and User Content
-  (saved files), linked to identity, not used for tracking.
+  Collected". The release that ships accounts in the apps must declare:
+  Contact Info (email, name) and User Content (saved files), linked to
+  identity, not used for tracking. If you also wire in analytics, add its
+  categories per its provider's documentation.
+- **Analytics on the pages** — if you ever add measurement to the site
+  itself, name the provider and what it records in the privacy page's
+  "Usage counts" bullet, in the same release.
 
 ## 9 · Costs
 

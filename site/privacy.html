@@ -267,32 +267,39 @@ svg{ display:block; }
 
 <div class="title-strip">
   <h1 class="name">Privacy &amp; Support</h1>
-  <span class="anno">what is collected, which is nothing</span>
+  <span class="anno">what is collected, and what never will be</span>
 </div>
 
 <div class="policy">
 
-<p class="lede">This site and the apps built from it collect nothing about you. There is no account to make, no analytics, no advertising, no tracking, and no server that could receive anything if there were. Every scan, atlas and tractogram is a file that ships with the page and is rendered on your own machine.</p>
+<p class="lede">Very little is collected here, and two things never will be: nothing is sold, and nothing feeds advertising. There is no ad network and no tracking of you across the web. Every scan, atlas and tractogram is a file that ships with the page and is rendered on your own machine. The two optional services that do touch a network &mdash; an account, if you make one, and plain usage counts, if they are switched on &mdash; are named below, and the date at the bottom changes whenever this list does.</p>
 
 <h2>The apps</h2>
-<p>The iPhone, iPad, Mac and Android apps carry the whole site inside them &mdash; the MNI152 template, the AAL-116 and Brodmann atlases, the HCP1065 tractogram and the viewer. <b>They make no network requests at all.</b> You can put the device in aeroplane mode and everything still works, which is the plainest test of this claim and one you can run yourself.</p>
+<p>The iPhone, iPad, Mac and Android apps carry the whole site inside them &mdash; the MNI152 template, the AAL-116 and Brodmann atlases, the HCP1065 tractogram and the viewer. <b>The anatomy makes no network requests.</b> You can put the device in aeroplane mode and every page still works, which is a test you can run yourself. The network is used only by the optional services described below, and only when you use them.</p>
 <p>The app stores no personal data. Two things are kept on the device and never leave it:</p>
 <ul>
   <li>Whether you chose the light or the dark theme.</li>
   <li>A snapshot, only if you ask for one. It is written into the app&rsquo;s own documents folder and then handed to the system share sheet, so where it ends up is your choice. Nothing is sent anywhere.</li>
 </ul>
-<p>The Mac build is sandboxed and requests two entitlements: the sandbox itself, and permission to write a file where you put it. It does not request network access, because it has no use for it.</p>
+<p>The Mac build is sandboxed. It requests the sandbox itself, permission to write a file where you put it, and &mdash; from the release that introduces signing in &mdash; the standard permission to make outgoing connections, which the optional services need and the anatomy does not.</p>
 
 <h2>The website</h2>
 <p>The website is the same files, served from Cloudflare. One thing follows from being on the open web rather than in an app bundle, and it is worth stating plainly:</p>
 <ul>
   <li><b>Cloudflare sees requests.</b> Serving a page means the host receives your IP address and the usual request headers. This is how the web works and applies to every site you visit; nothing is added to it here, and none of it is used to build any profile.</li>
 </ul>
-<p>There are no third-party requests at all. The typefaces used to be the exception — they were fetched from Google Fonts, which meant Google saw an IP address on every page load — and as of 27 August 2026 they are served from this site alongside everything else. Every request a page makes now goes to the one host that serves the page.</p>
+<p>The pages themselves make no third-party requests today. The typefaces used to be the exception — they were fetched from Google Fonts, which meant Google saw an IP address on every page load — and as of 27 August 2026 they are served from this site alongside everything else.</p>
 <p>Your browser also stores, locally: the light-or-dark choice, and a cache of the site&rsquo;s files created by its service worker so that it works offline. Both live in your browser, are readable only by this site, and are cleared whenever you clear site data.</p>
 
+<h2>Optional services</h2>
+<p>Two services can add to the list above, and they are worth naming before they exist rather than after:</p>
+<ul>
+  <li><b>An account, if you make one.</b> When a Log in button is present, sign-in is handled by Google&rsquo;s Firebase service. It stores your email address, your name, and the files you choose to save, so that the same account works on the web and in the apps. That data exists to serve your account back to you: it is deleted with the account, and it is never sold or used for advertising.</li>
+  <li><b>Usage counts.</b> The site may count how its pages are used &mdash; which tools are opened, on what kind of device &mdash; to decide what to build next. If and when such counting runs, this page will name the provider and what it records. It would measure use of this site, not you across the web.</li>
+</ul>
+
 <h2>Children</h2>
-<p>The site is an educational anatomy reference. It is not directed at children, collects nothing from anyone, and therefore collects nothing from children either.</p>
+<p>The site is an educational anatomy reference. It is not directed at children and does not knowingly collect personal information from them.</p>
 
 <h2>What this is not</h2>
 <p>Nothing here is a medical device, a diagnosis, or advice about treatment. The pages summarise published work and draw published atlases; each says where its data came from and where the evidence stops. Read them as a reference, not as a clinical tool.</p>
@@ -308,7 +315,7 @@ svg{ display:block; }
   Apple and Google both require a working support contact on the listing. Put an address or a form link here, and use the same one in the <em>Support URL</em> field in App Store Connect.
 </div>
 
-<p class="stamp">Last updated 27 August 2026 &middot; VisualNeuroscience.AI</p>
+<p class="stamp">Last updated 31 August 2026 &middot; VisualNeuroscience.AI</p>
 
 </div>
 
