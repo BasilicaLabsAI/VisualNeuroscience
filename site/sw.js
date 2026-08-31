@@ -21,7 +21,7 @@
    Nothing cross-origin is touched at all — since the typefaces moved
    in-house there is no outside request left to think about. */
 
-var VERSION = "vn-16";
+var VERSION = "vn-17";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
@@ -35,7 +35,7 @@ var PRECACHE = [
   "/assets/userdata.js", "/vendor/firebase/firebase-bundle.js",
   "/assets/slice-tool.js", "/assets/region-notes.js", "/assets/network-ring.js",
   "/assets/network-states.js", "/assets/atlas-data.js",
-  "/assets/brodmann-areas.js", "/assets/brodmann-map.js",
+  "/assets/brodmann-areas.js", "/assets/brodmann-art.js",
   "/assets/logo.svg", "/manifest.webmanifest",
   "/fonts/Flux-Regular.woff2", "/fonts/fonts.css",
   "/fonts/afacad-flux-latin-400-normal.woff2", "/fonts/afacad-flux-latin-500-normal.woff2",
@@ -45,7 +45,7 @@ var PRECACHE = [
 ];
 
 /* the megabytes: fetched once, then read off disk forever */
-var IS_BULK = /\.(nii\.gz|trx)$|niivue\.js$/;
+var IS_BULK = /\.(nii\.gz|trx)$|niivue\.js$|^\/assets\/ba\//;
 
 self.addEventListener("install", function(e){
   e.waitUntil(

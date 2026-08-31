@@ -555,22 +555,15 @@ mark{ background:var(--ink); color:var(--paper); }
 .cart-stage svg{ width:100%; height:auto; display:block; }
 
 /* an area on the map: a filled tile with a hairline edge and its number */
-.ba-tile{ cursor:pointer; transition:opacity .12s ease; }
-.ba-tile .fill{ stroke:var(--paper); stroke-width:1.1; }
-/* the drawing beyond the clickable areas: present, quiet, inert */
-.ba-mute{ fill:var(--ink-35); fill-opacity:.28; }
+/* the artwork does the drawing; these rules only manage the highlight
+   patches fading in over it and the invisible click shapes */
+.ba-tile{ cursor:pointer; }
 .ba-tile.mute{ cursor:default; }
-.cartoons.picked .ba-tile.mute{ opacity:.28; }
-.ba-tile .num{
-  font-family:var(--font-brand); font-weight:500; font-size:11px;
-  fill:var(--ink); paint-order:stroke; stroke:var(--paper); stroke-width:2.4px;
-  pointer-events:none; text-anchor:middle; dominant-baseline:central;
-}
-@media (hover: hover){ .ba-tile:hover .fill{ stroke:var(--ink); stroke-width:1.8; } }
-.ba-tile.buried .fill{ stroke-dasharray:4 3; }
-.cartoons.picked .ba-tile{ opacity:.28; }
-.cartoons.picked .ba-tile.on{ opacity:1; }
-.cartoons.picked .ba-tile.on .fill{ stroke:var(--ink); stroke-width:2.2; }
+.ba-tile .art-patch{ opacity:0; transition:opacity .12s ease; pointer-events:none; }
+.ba-tile.on .art-patch{ opacity:1; }
+@media (hover: hover){ .ba-tile:hover .art-patch{ opacity:1; } }
+.ba-tile .hit{ fill:#000; fill-opacity:0; stroke:none; }
+.ba-tile.on .hit{ stroke:var(--ink); stroke-width:1.1; stroke-opacity:.85; }
 .cart-outline{ fill:none; stroke:var(--ink); stroke-width:2; }
 .cart-note{
   font-family:var(--font-serif); font-style:italic; font-size:.85rem;
@@ -714,7 +707,7 @@ mark{ background:var(--ink); color:var(--paper); }
     </div>
   </section>
 
-        <p class="cart-note">The two faces follow the classic hand-drawn Brodmann scheme, descending from Brodmann&rsquo;s own 1909 figures. Each area is clickable on the face that shows it best; the grey parts of either drawing belong to areas picked on the other one, kept so each face reads as a whole hemisphere. Anterior is on the left in the external view and, as the scheme is conventionally drawn, on the right in the internal one. The drawing is a schematic &mdash; where each area actually sits in a real head, with the atlas&rsquo;s own boundaries, is what the <b>On the scan</b> view shows.</p>
+        <p class="cart-note">The two faces are the classic hand-drawn Brodmann scheme, descending from Brodmann&rsquo;s own 1909 figures &mdash; shown as drawn, shading, outlines and numbers included. Pick an area and it lights up in the drawing&rsquo;s own colour, on the face that shows it. Anterior is on the left in the external view and, as the scheme is conventionally drawn, on the right in the internal one. The drawing is a schematic &mdash; where each area actually sits in a real head, with the atlas&rsquo;s own boundaries, is what the <b>On the scan</b> view shows.</p>
       </div>
 
       <div class="pane hidden" id="paneScan">
@@ -789,7 +782,7 @@ mark{ background:var(--ink); color:var(--paper); }
 <script src="assets/niivue.js"></script>
 <script src="assets/atlas-data.js"></script>
 <script src="assets/brodmann-areas.js"></script>
-<script src="assets/brodmann-map.js"></script>
+<script src="assets/brodmann-art.js"></script>
 <script src="assets/slice-tool.js"></script>
 <script src="assets/zoom.js"></script>
 <script src="assets/diagram-gestures.js"></script>
@@ -1137,75 +1130,52 @@ mark{ background:var(--ink); color:var(--paper); }
   });
 
   /* ── the cartoon ──────────────────────────────────────────────────────
-     Both faces of the hemisphere, traced out of the volume itself rather
-     than drawn by hand: the external view is what the first labelled voxel
-     is walking in from the left, the internal view what it is walking out
-     from the midline. Which is why area 41 is missing from the external
-     view — it really is buried in the Sylvian fissure — and why the two
-     views between them do not show all 41 areas. */
-  var MAP = window.MN_BA_MAP || {lateral:{}, medial:{}};
+     The artwork itself, untouched: each face is the base drawing as an
+     image — outlines, gyral shading and numbers exactly as drawn — and
+     each area is that drawing's own highlight, cut out as a patch that
+     fades in over the base on hover and selection. The traced shapes are
+     still here but invisible: they only catch the clicks, so picking is
+     exact while the eye sees nothing but the drawing. Assets and geometry
+     come from scripts/build_ba_artwork.py. */
+  var ART = window.MN_BA_ART || {areas:{}, base:{}, box:{}};
   var tiles = {lateral:{}, medial:{}};
 
   function drawCartoon(host, which){
-    var table = MAP[which] || {};
     var NS = "http://www.w3.org/2000/svg";
     var svg = document.createElementNS(NS, "svg");
-    svg.setAttribute("viewBox", (MAP.box && MAP.box[which]) || MAP.viewBox || "0 0 651 543");
+    svg.setAttribute("viewBox", (ART.box && ART.box[which]) || "0 0 300 200");
     svg.setAttribute("role", "img");
     svg.setAttribute("aria-label", which === "lateral"
       ? "Brodmann areas on the external surface of the hemisphere"
       : "Brodmann areas on the internal surface of the hemisphere");
 
-    /* the parts of the drawing whose areas are picked on the other view —
-       drawn first, so the face reads as a whole brain, not islands */
-    ((MAP.mute && MAP.mute[which]) || []).forEach(function(d){
-      var p = document.createElementNS(NS, "path");
-      p.setAttribute("class", "ba-mute");
-      p.setAttribute("d", d);
-      p.setAttribute("fill-rule", "evenodd");
-      svg.appendChild(p);
-    });
+    var vb = ((ART.box && ART.box[which]) || "0 0 300 200").split(" ");
+    var base = document.createElementNS(NS, "image");
+    base.setAttribute("href", ART.base[which]);
+    base.setAttribute("x", 0); base.setAttribute("y", 0);
+    base.setAttribute("width", vb[2]); base.setAttribute("height", vb[3]);
+    svg.appendChild(base);
 
-    Object.keys(table).forEach(function(k){
-      var ba = +k, spec = table[k], a = B.BY_BA[ba];
-      if (!a){
-        /* the drawing knows an area the atlas does not carry (12): show it,
-           numbered but inert, rather than tearing a hole in the tessellation */
-        var m = document.createElementNS(NS, "g");
-        m.setAttribute("class", "ba-tile mute");
-        var mp = document.createElementNS(NS, "path");
-        mp.setAttribute("class", "fill");
-        mp.setAttribute("d", spec.d);
-        mp.setAttribute("fill", "var(--ink-35)");
-        mp.setAttribute("fill-opacity", ".4");
-        mp.setAttribute("fill-rule", "evenodd");
-        var mt = document.createElementNS(NS, "text");
-        mt.setAttribute("class", "num");
-        mt.setAttribute("x", spec.at[0]); mt.setAttribute("y", spec.at[1]);
-        mt.textContent = ba;
-        var mi = document.createElementNS(NS, "title");
-        mi.textContent = "BA" + ba + " — not in the atlas volume";
-        m.appendChild(mp); m.appendChild(mt); m.appendChild(mi);
-        svg.appendChild(m);
-        return;
-      }
+    Object.keys(ART.areas).forEach(function(k){
+      var ba = +k, spec = ART.areas[k];
+      if (spec.view !== which) return;
+      var a = B.BY_BA[ba];
       var g = document.createElementNS(NS, "g");
-      g.setAttribute("class", "ba-tile");
+      g.setAttribute("class", "ba-tile" + (a ? "" : " mute"));
       g.dataset.ba = ba;
-      var path = document.createElementNS(NS, "path");
-      path.setAttribute("class", "fill");
-      path.setAttribute("d", spec.d);
-      path.setAttribute("fill", LOBE_COLOUR[a.lobe] || "#888");
-      path.setAttribute("fill-opacity", ".82");
-      path.setAttribute("fill-rule", "evenodd");
-      var t = document.createElementNS(NS, "text");
-      t.setAttribute("class", "num");
-      t.setAttribute("x", spec.at[0]); t.setAttribute("y", spec.at[1]);
-      t.textContent = ba;
+      var patch = document.createElementNS(NS, "image");
+      patch.setAttribute("class", "art-patch");
+      patch.setAttribute("href", spec.href);
+      patch.setAttribute("x", spec.x); patch.setAttribute("y", spec.y);
+      patch.setAttribute("width", spec.w); patch.setAttribute("height", spec.h);
+      var hit = document.createElementNS(NS, "path");
+      hit.setAttribute("class", "hit");
+      hit.setAttribute("d", spec.d);
+      hit.setAttribute("fill-rule", "evenodd");
       var ti = document.createElementNS(NS, "title");
-      ti.textContent = "BA" + ba + " — " + a.name;
-      g.appendChild(path); g.appendChild(t); g.appendChild(ti);
-      g.addEventListener("click", function(){ select(ba, false); });
+      ti.textContent = "BA" + ba + (a ? " — " + a.name : " — not in the atlas volume");
+      g.appendChild(patch); g.appendChild(hit); g.appendChild(ti);
+      if (a) g.addEventListener("click", function(){ select(ba, false); });
       svg.appendChild(g);
       tiles[which][ba] = g;
     });
