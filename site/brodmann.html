@@ -1157,8 +1157,9 @@ mark{ background:var(--ink); color:var(--paper); }
     svg.appendChild(base);
 
     Object.keys(ART.areas).forEach(function(k){
-      var ba = +k, spec = ART.areas[k];
-      if (spec.view !== which) return;
+      var ba = +k;
+      var spec = (ART.areas[k] || []).filter(function(e){ return e.view === which; })[0];
+      if (!spec) return;
       var a = B.BY_BA[ba];
       var g = document.createElementNS(NS, "g");
       g.setAttribute("class", "ba-tile" + (a ? "" : " mute"));
