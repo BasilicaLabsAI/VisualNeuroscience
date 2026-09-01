@@ -88,10 +88,23 @@ Apple asks for and scales the rest from:
 Both sets are required for a universal app. Upload them under the 6.9" iPhone
 and 13" iPad display sizes; App Store Connect derives the smaller ones.
 
-**Privacy.** App Privacy → Get Started → answer **"Data Not Collected"**. That
-is the truth: there is no account, no analytics, no back end, and every scan is
-in the bundle. `PrivacyInfo.xcprivacy` is already in the target and says the
-same thing in the form the reviewer's tooling reads.
+**Support and privacy URLs.** Support URL:
+`https://visualneuroscience.ai/privacy.html` (the page carries the support
+contact, **fid@ottomanlabs.ai**). Privacy Policy URL: the same page.
+
+**Privacy.** Depends on whether this build ships with accounts active
+(`site/assets/firebase-config.js` non-null at sync time — it is, as of v6.4):
+
+- *Accounts dormant*: answer **"Data Not Collected"** — no account, no
+  analytics, no back end.
+- *Accounts active* (the current default): declare **Contact Info → Email
+  Address** and **Name**, and **User Content → Other User Content** (saved
+  files) — each *linked to the user's identity*, *not used for tracking*,
+  purpose *App Functionality*. Nothing else is collected; there is still no
+  analytics and no advertising. Remember guideline 5.1.1(v): a build that
+  offers account creation must offer in-app account deletion.
+
+`PrivacyInfo.xcprivacy` is already in the target.
 
 **Export compliance** is answered in `Info.plist` —
 `ITSAppUsesNonExemptEncryption = false` — so App Store Connect will stop asking
@@ -108,13 +121,14 @@ the page will disagree with you, and a wrong rating is a rejection.
 **Review notes.** Worth writing, because it heads off the two questions this
 particular app invites:
 
-> The app runs entirely offline — the MNI152 template, the AAL-116 atlas and
-> the HCP1065 tractogram ship inside the bundle and no network request is made
-> at any point. It is an educational anatomy visualiser, not a medical device:
-> it makes no diagnosis, takes no patient data, and every study page states the
-> limits of what the imaging shows.
-
-No demo account is needed. There is nothing behind a login.
+> The anatomy runs entirely offline — the MNI152 template, the AAL-116 atlas
+> and the HCP1065 tractogram ship inside the bundle; aeroplane mode shows
+> every page. It is an educational anatomy visualiser, not a medical device:
+> it makes no diagnosis, takes no patient data, and every study page states
+> the limits of what the imaging shows. The optional account (email sign-in,
+> Firebase) only syncs a user's own saved selections between their devices;
+> no feature is gated behind it, so no demo account is needed — everything a
+> reviewer can do signed in, they can do signed out.
 
 ---
 
