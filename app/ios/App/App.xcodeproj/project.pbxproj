@@ -17,6 +17,7 @@
 		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
 		9582B6832FE993A70072D4E8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9582B6822FE993A50072D4E8 /* SceneDelegate.swift */; };
 		896A54E272D44949B35F3D63 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A50ED1AC8C634EF28BF7F0D4 /* PrivacyInfo.xcprivacy */; };
+		7A31C4B9D2E64F0A9C5B1E88 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F8D2A61B7C94E35A0D6F912 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		9582B6822FE993A50072D4E8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		A50ED1AC8C634EF28BF7F0D4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		3F8D2A61B7C94E35A0D6F912 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		69B2CE38849048D0899E57F4 /* App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -77,6 +79,7 @@
 				2FAD9762203C412B000D30F8 /* config.xml */,
 				50B271D01FEDC1A000F3C39B /* public */,
 				A50ED1AC8C634EF28BF7F0D4 /* PrivacyInfo.xcprivacy */,
+				3F8D2A61B7C94E35A0D6F912 /* GoogleService-Info.plist */,
 				69B2CE38849048D0899E57F4 /* App.entitlements */,
 			);
 			path = App;
@@ -154,6 +157,7 @@
 				504EC30D1FED79650016851F /* Main.storyboard in Resources */,
 				2FAD9763203C412B000D30F8 /* config.xml in Resources */,
 				896A54E272D44949B35F3D63 /* PrivacyInfo.xcprivacy in Resources */,
+				7A31C4B9D2E64F0A9C5B1E88 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
