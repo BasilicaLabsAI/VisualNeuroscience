@@ -48,6 +48,9 @@ window.VN_FIREBASE = {
   measurementId: "G-NLQVT5PLRB",
 
   /* email is live; each social provider flips to true when its console
-     section in docs/AUTH-SETUP.md is done */
-  providers: { google: false, apple: false, linkedin: false, emailLink: true }
+     section in docs/AUTH-SETUP.md is done. "app" means offered only inside
+     the wrapped store apps: Sign in with Apple runs natively there (no
+     Services ID needed), and stays hidden on the web until §6's Apple
+     Developer steps are done and this becomes true. */
+  providers: { google: false, apple: "app", linkedin: false, emailLink: true }
 };

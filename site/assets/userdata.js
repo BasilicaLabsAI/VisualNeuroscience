@@ -52,6 +52,12 @@ async function save(tool, name, data){
     data: JSON.parse(JSON.stringify(data ?? null)),
     updatedAt: s.serverTimestamp()
   });
+  /* the account-deletion sweep can only delete what it can find, and
+     Firestore will not enumerate a client's subcollections — so every tool
+     that ever saves registers itself */
+  await s.setDoc(s.doc(auth.db, "users", u.uid, "meta", "toolindex"),
+                 (function(o){ o[String(tool)] = true; return o; })({}),
+                 { merge: true }).catch(function(){});
 }
 
 async function load(tool, name){

@@ -90,7 +90,7 @@ function dormant(){
     signInWithGoogle: off, signInWithApple: off, signInWithLinkedIn: off,
     signUpWithEmail: off, signInWithEmail: off, sendReset: off,
     sendSignInLink: off, completeSignInLink: off,
-    linkProvider: off, signOut: () => Promise.resolve(),
+    linkProvider: off, deleteAccount: off, signOut: () => Promise.resolve(),
     pendingEmailLink: false, pendingLink: null, db: null, sdk: null,
     ready: Promise.resolve(null)
   };
@@ -114,11 +114,15 @@ async function build(){
   /* what can actually work HERE: native Google/Apple need the plugin;
      LinkedIn needs the worker, and inside an app also a system browser to
      do OAuth in (webviews are unwelcome at OAuth endpoints) plus the deep
-     link listener to come home on */
+     link listener to come home on. A provider flag may also be the string
+     "app": offered only inside the wrapped apps — the shape of Sign in
+     with Apple when the App Store build carries it before the web has its
+     Services ID. */
+  const on = v => v === true || (v === "app" && isNative);
   const providers = {
-    google:   wantP.google   && (!isNative || !!plugin),
-    apple:    wantP.apple    && (!isNative || !!plugin),
-    linkedin: wantP.linkedin && !!CFG.linkedinWorker && (!isNative || (!!browser && !!appPlug)),
+    google:   on(wantP.google)   && (!isNative || !!plugin),
+    apple:    on(wantP.apple)    && (!isNative || !!plugin),
+    linkedin: on(wantP.linkedin) && !!CFG.linkedinWorker && (!isNative || (!!browser && !!appPlug)),
     emailLink: wantP.emailLink !== false
   };
 
@@ -438,6 +442,36 @@ async function build(){
     try{ await sdk.signOut(auth); }catch(_){}
   }
 
+  /* ── delete the account, and the data with it ────────────────────────
+     App Store guideline 5.1.1(v): an app that lets a person create an
+     account must let them destroy it, in the app. The saved files go
+     first — userdata.js keeps an index of every tool that ever saved,
+     because Firestore will not enumerate subcollections for a client —
+     then the profile, then the account itself. Firebase asks for a
+     recent sign-in before it will delete a user; that surfaces as the
+     friendly log-in-again sentence, and deleting right after signing in
+     always works. */
+  async function deleteAccount(){
+    const u = auth.currentUser;
+    if (!u) throw friendly({ code: "auth/requires-recent-login" });
+    try{
+      const idxRef = sdk.doc(db, "users", u.uid, "meta", "toolindex");
+      const idx = await sdk.getDoc(idxRef);
+      const tools = idx.exists() ? Object.keys(idx.data() || {}) : [];
+      for (const tool of tools){
+        const snap = await sdk.getDocs(sdk.collection(db, "users", u.uid, "tools", tool, "files"));
+        const gone = [];
+        snap.forEach(d => gone.push(sdk.deleteDoc(d.ref)));
+        await Promise.all(gone);
+      }
+      await sdk.deleteDoc(idxRef).catch(() => {});
+      await sdk.deleteDoc(sdk.doc(db, "users", u.uid, "meta", "profile")).catch(() => {});
+    }catch(e){ console.warn("data cleanup incomplete:", e && e.message); }
+    try{ await u.delete(); }
+    catch(err){ throw friendly(err); }
+    if (plugin){ try{ await plugin.signOut(); }catch(_){} }
+  }
+
   return {
     enabled: true,
     providers,
@@ -450,6 +484,7 @@ async function build(){
     get pendingLink(){ return pendingLink; },
     linkProvider,
     signOut: doSignOut,
+    deleteAccount,
     ready, db, sdk
   };
 }

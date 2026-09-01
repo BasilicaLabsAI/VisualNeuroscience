@@ -99,10 +99,13 @@ contact, **fid@ottomanlabs.ai**). Privacy Policy URL: the same page.
   analytics, no back end.
 - *Accounts active* (the current default): declare **Contact Info → Email
   Address** and **Name**, and **User Content → Other User Content** (saved
-  files) — each *linked to the user's identity*, *not used for tracking*,
-  purpose *App Functionality*. Nothing else is collected; there is still no
-  analytics and no advertising. Remember guideline 5.1.1(v): a build that
-  offers account creation must offer in-app account deletion.
+  files) — each *linked to the user's identity*, purposes **App
+  Functionality** and **Analytics** (used to identify the most popular
+  features for improvement), and **never used for tracking** (answer No to
+  tracking; nothing crosses to other companies' apps or sites). There is no
+  advertising. Guideline 5.1.1(v) is satisfied in-app: tap your name →
+  Delete account, which removes the saved files, the profile, and the
+  account itself.
 
 `PrivacyInfo.xcprivacy` is already in the target.
 

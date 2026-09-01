@@ -10,5 +10,17 @@
 	<true/>
 	<key>com.apple.security.files.user-selected.read-write</key>
 	<true/>
+	<!-- Accounts changed two things. Outgoing connections: the optional
+	     sign-in talks to Firebase, and the Mac sandbox blocks even that
+	     without this (iOS ignores it). Sign in with Apple: required by
+	     guideline 4.8 the moment any third-party login ships, and the
+	     native sheet needs the entitlement; the matching capability must
+	     also be ticked on the App ID in the developer portal. -->
+	<key>com.apple.security.network.client</key>
+	<true/>
+	<key>com.apple.developer.applesignin</key>
+	<array>
+		<string>Default</string>
+	</array>
 </dict>
 </plist>

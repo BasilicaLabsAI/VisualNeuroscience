@@ -66,6 +66,13 @@ Notes per cell where behaviour differs:
 - ☐ **Sign out, both layers**: in an app, after Google sign-in, Log out then
   "Continue with Google" again → the account chooser appears fresh (the
   native session was cleared too, not just the webview's).
+- ☐ **Account deletion (guideline 5.1.1(v))**: sign in → tap your name in
+  the nav → Delete account → the button arms ("press again") → second press
+  deletes. Authentication → Users no longer lists the account; Firestore
+  shows no `users/{uid}` tree. Deleting long after signing in shows the
+  "log in again" sentence instead of failing silently; sign in and delete
+  immediately → works. Apple-created accounts: also revoke at
+  appleid.apple.com and confirm a fresh sign-up works after.
 - ☐ **Dormant regression**: with `VN_FIREBASE = null`, every page shows no
   Log in button, no console errors, and the network tab shows zero requests
   beyond the site's own files.

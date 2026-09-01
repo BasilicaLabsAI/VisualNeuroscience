@@ -34,7 +34,21 @@ function mount(){
     font-family:var(--font-brand,sans-serif); font-weight:500; font-size:.66rem;
     letter-spacing:.18em; text-transform:uppercase; color:var(--ink,#111);
     max-width:11em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    background:none; border:0; cursor:pointer; padding:.28rem 0;
+    text-decoration:underline; text-underline-offset:3px; text-decoration-color:transparent;
   }
+  @media (hover:hover){ .vn-auth-name:hover{ text-decoration-color:currentColor; } }
+  .vn-who{ font-size:.9rem; color:var(--ink-60,#5a5a5a); margin:-.4rem 0 1rem; }
+  .vn-danger{
+    font-family:var(--font-brand,sans-serif); font-weight:500; font-size:.68rem;
+    letter-spacing:.16em; text-transform:uppercase;
+    color:#b3261e; background:none; border:1px solid #b3261e;
+    padding:.6rem .8rem; cursor:pointer; min-height:44px; width:100%;
+    margin-top:.5rem;
+  }
+  .vn-danger.armed{ background:#b3261e; color:#fff; }
+  :root[data-theme="dark"] .vn-danger{ color:#ff8a80; border-color:#ff8a80; }
+  :root[data-theme="dark"] .vn-danger.armed{ background:#b3261e; border-color:#b3261e; color:#fff; }
   .vn-modal-wrap{
     position:fixed; inset:0; z-index:220; display:flex;
     align-items:center; justify-content:center; padding:1rem;
@@ -111,10 +125,12 @@ function mount(){
   function drawSlot(user){
     slot.textContent = "";
     if (user){
-      const name = document.createElement("span");
+      const name = document.createElement("button");
+      name.type = "button";
       name.className = "vn-auth-name";
       name.textContent = user.displayName || user.email || "Signed in";
-      name.title = user.email || "";
+      name.title = (user.email || "") + " — account";
+      name.addEventListener("click", () => openAccountModal(user));
       const out = document.createElement("button");
       out.type = "button"; out.className = "vn-auth-btn"; out.textContent = "Log out";
       out.addEventListener("click", () => auth.signOut());
@@ -125,6 +141,61 @@ function mount(){
       btn.addEventListener("click", () => openModal());
       slot.append(btn);
     }
+  }
+
+  /* the signed-in modal: who you are, leaving, and the door marked
+     deletion — App Store guideline 5.1.1(v) requires the account to be
+     destroyable where it was creatable, and destroying it takes the saved
+     files and profile with it */
+  function openAccountModal(user){
+    closeModal();
+    wrap = document.createElement("div");
+    wrap.className = "vn-modal-wrap";
+    wrap.addEventListener("click", e => { if (e.target === wrap) closeModal(); });
+    const box = document.createElement("div");
+    box.className = "vn-modal";
+    box.setAttribute("role", "dialog");
+    box.setAttribute("aria-label", "Your account");
+    const close = document.createElement("button");
+    close.type = "button"; close.className = "vn-close"; close.innerHTML = "&#215;";
+    close.setAttribute("aria-label", "Close");
+    close.addEventListener("click", closeModal);
+    const h = document.createElement("h2");
+    h.textContent = user.displayName || "Your account";
+    const who = document.createElement("p");
+    who.className = "vn-who";
+    who.textContent = user.email || "";
+    const out = document.createElement("button");
+    out.type = "button"; out.className = "vn-submit"; out.textContent = "Log out";
+    out.addEventListener("click", () => run(out, () => auth.signOut()));
+    const warn = document.createElement("p");
+    warn.className = "vn-who";
+    warn.textContent = "Deleting the account removes it for good, along with the profile and every saved file. There is no undo.";
+    warn.style.marginTop = "1.1rem";
+    const del = document.createElement("button");
+    del.type = "button"; del.className = "vn-danger";
+    del.textContent = "Delete account…";
+    let armed = false;
+    del.addEventListener("click", () => {
+      if (!armed){
+        armed = true;
+        del.textContent = "Press again to delete for ever";
+        del.classList.add("armed");
+        setTimeout(() => {
+          if (!armed) return;
+          armed = false; del.classList.remove("armed"); del.textContent = "Delete account…";
+        }, 6000);
+        return;
+      }
+      run(del, () => auth.deleteAccount());
+    });
+    statusEl = document.createElement("p");
+    statusEl.className = "vn-status";
+    statusEl.setAttribute("aria-live", "polite");
+    box.append(close, h, who, out, warn, del, statusEl);
+    wrap.appendChild(box);
+    document.body.appendChild(wrap);
+    document.addEventListener("keydown", onEsc);
   }
 
   /* ── modal ───────────────────────────────────────────────────────────── */

@@ -111,9 +111,16 @@ Google refuses OAuth inside embedded webviews (`disallowed_useragent`), so
 the store apps use the native sign-in sheet through a Capacitor plugin, and
 the code bridges the resulting credential into the webview's Firebase
 session. The bridge is already written in `site/assets/auth.js` and detects
-the plugin at runtime; the apps ship unchanged until you do this:
+the plugin at runtime.
 
-1. In `app/`: `npm install @capacitor-firebase/authentication firebase`
+> **The plugin is now a dependency (`app/package.json`), which makes the
+> Firebase config files REQUIRED for the next native build**: the plugin
+> configures native Firebase at launch and **crashes without them**. Before
+> the next archive, do steps 2–4 below (the plist and json downloads) even
+> if you skip everything else in this section.
+
+1. In `app/`: `npm install` (the plugin and its firebase peer are already
+   in package.json)
 2. Firebase console → project overview → **Add app → iOS**. Bundle ID
    exactly `ai.visualneuroscience.app`. Download
    **GoogleService-Info.plist** → in Xcode, drag it into `App/App/`
@@ -129,22 +136,30 @@ the plugin at runtime; the apps ship unchanged until you do this:
    open GoogleService-Info.plist, copy `REVERSED_CLIENT_ID`, and in Xcode →
    App target → Info → URL Types → add a URL scheme with that value
    (keep the existing `visualneuroscience` one too).
-6. **The Mac build needs the network entitlement.** The sandbox currently
-   grants no network access at all (the anatomy never needed it), so before
-   shipping a Mac build with accounts on: Xcode → App target → Signing &
-   Capabilities → App Sandbox → tick **Outgoing Connections (Client)**.
-   Without it every sign-in on the Mac fails with the connection error.
-   This applies to email sign-in too, not just Google — do it as part of
-   whichever provider section you reach first.
+6. **The Mac network entitlement is already in the repo** —
+   `com.apple.security.network.client` sits in `App.entitlements` alongside
+   the Sign in with Apple entitlement, so the sandboxed Mac build can reach
+   Firebase. Nothing to click; just confirm both show under Signing &
+   Capabilities after the next sync.
 
 ## 6 · Apple sign-in
 
-App Store **guideline 4.8**: because the iOS app offers Google/LinkedIn
-sign-in it *must* offer Sign in with Apple — so do this section before the
-next store submission that ships accounts. Two Apple quirks are already
-handled in code: the name Apple sends **only on the very first
+App Store **guideline 4.8**: if the iOS app offers any third-party sign-in
+(Google, LinkedIn) it *must* offer Sign in with Apple. Two Apple quirks are
+already handled in code: the name Apple sends **only on the very first
 authorisation** is captured and stored immediately, and a **Hide My Email**
 relay address is treated as a perfectly normal email everywhere.
+
+**The store apps already carry it** — the config ships
+`providers.apple: "app"`, which shows the Apple button only inside the
+wrapped apps, where it runs natively and needs none of the web setup below.
+The native path needs exactly three things: the Firebase config files from
+§5 steps 2–3; **Authentication → Sign-in method → Apple → Enable** in the
+Firebase console (leave the Services ID fields empty — iOS native doesn't
+use them); and the **Sign in with Apple capability ticked on the App ID**
+in the developer portal (the entitlement is already in
+`app/ios/App/App/App.entitlements`). The steps below are only for the
+**web** button; when they're done, change `"app"` to `true`.
 
 ### Apple Developer console (for web sign-in)
 
