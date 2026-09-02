@@ -529,33 +529,53 @@ var storageOK = false;
 function defaultState(){
   return {topics:{}, asked:{}, recent:[], recentE:[], mode:"mcq", answered:0, correct:0, adaptive:true, drill:null, lastTopic:null};
 }
+/* Two tiers. This device always: localStorage, so progress survives a
+   reload and works offline and signed out. The account when there is one:
+   the bridge module at the foot of the page saves every change to Firestore
+   through the site's per-user files, and on sign-in the newer of the two
+   copies wins - so progress follows the person to any device. */
+var CLOUD = { on:false, push:null };
+
 function saveState(){
-  if (typeof window.storage === "undefined") return;
-  try {
-    window.storage.set(STORE_KEY, JSON.stringify(st)).then(function(r){ storageOK = !!r; noteStorage(); })
-      .catch(function(){ storageOK = false; noteStorage(); });
-  } catch(e){ storageOK = false; noteStorage(); }
+  st.updated = Date.now();
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(st)); storageOK = true; }
+  catch(e){ storageOK = false; }
+  if (CLOUD.push) CLOUD.push(st);
+  noteStorage();
+}
+function mergeInto(parsed){
+  var d = defaultState();
+  for (var k in d){ if (parsed && parsed[k] !== undefined) d[k] = parsed[k]; }
+  if (parsed && parsed.updated) d.updated = parsed.updated;
+  return d;
 }
 function loadState(cb){
-  if (typeof window.storage === "undefined"){ storageOK=false; cb(); return; }
   try {
-    window.storage.get(STORE_KEY).then(function(r){
-      if (r && r.value){
-        try {
-          var parsed = JSON.parse(r.value);
-          var d = defaultState();
-          for (var k in d){ if (parsed[k] !== undefined) d[k] = parsed[k]; }
-          st = d; storageOK = true;
-        } catch(e){}
-      } else { storageOK = true; }
-      cb();
-    }).catch(function(){ storageOK = true; cb(); }); /* key not found yet is fine */
-  } catch(e){ storageOK=false; cb(); }
+    var raw = localStorage.getItem(STORE_KEY);
+    if (raw) st = mergeInto(JSON.parse(raw));
+    storageOK = true;
+  } catch(e){ storageOK = false; }
+  cb();
 }
 function noteStorage(){
   var el = document.getElementById("storageNote");
-  el.textContent = storageOK ? "Progress saves automatically on this device." : "Progress lasts for this session only.";
+  if (!el) return;
+  el.textContent = CLOUD.on ? "Progress saves to your account and follows you to any device."
+    : storageOK ? "Progress saves on this device. Log in to keep it across your devices."
+    : "Progress lasts for this session only.";
 }
+/* what the account bridge needs: the state, a way to adopt a newer copy,
+   and a switch that says where saving goes */
+window.PRACTICE = {
+  get: function(){ return st; },
+  adopt: function(remote){
+    st = mergeInto(remote);
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(st)); } catch(e){}
+    syncModeChips(); renderProgress(); noteStorage();
+    if (!session.answered) deal();
+  },
+  cloud: function(on, push){ CLOUD.on = on; CLOUD.push = push || null; noteStorage(); }
+};
 
 /* ---------- adaptive engine ---------- */
 function tstat(t){ return st.topics[t] || {a:0, c:0}; }
@@ -891,5 +911,37 @@ themeBtn.addEventListener("click", () => {
 </script>
 <script src="assets/firebase-config.js"></script>
 <script type="module" src="assets/auth-ui.js"></script>
+<script type="module">
+/* progress follows the account: every change is saved to Firestore under
+   the person's own tree, and on sign-in the newer copy - this device's or
+   the account's - wins. Signed out, nothing here runs and the device copy
+   stands alone. */
+import auth from "./assets/auth.js";
+import files from "./assets/userdata.js";
+if (auth.enabled && window.PRACTICE){
+  let timer = null, pending = null;
+  const flush = async () => {
+    if (!pending) return;
+    const state = pending; pending = null;
+    try { await files.save("practice", "progress", state); }
+    catch(e){ console.warn("progress sync:", e && e.message); }
+  };
+  const push = (state) => {
+    pending = state;
+    clearTimeout(timer);
+    timer = setTimeout(flush, 1200);
+  };
+  window.addEventListener("pagehide", () => { clearTimeout(timer); flush(); });
+  auth.onUser(async (u) => {
+    if (!u){ PRACTICE.cloud(false); return; }
+    let remote = null;
+    try { remote = await files.load("practice", "progress"); } catch(e){ remote = null; }
+    const local = PRACTICE.get();
+    if (remote && (remote.updated || 0) > (local.updated || 0)) PRACTICE.adopt(remote);
+    else if ((local.answered || 0) > 0 || !remote) push(local);
+    PRACTICE.cloud(true, push);
+  });
+}
+</script>
 </body>
 </html>
