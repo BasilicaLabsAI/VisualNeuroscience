@@ -560,7 +560,8 @@ function loadState(cb){
 function noteStorage(){
   var el = document.getElementById("storageNote");
   if (!el) return;
-  el.textContent = CLOUD.on ? "Progress saves to your account and follows you to any device."
+  el.textContent = CLOUD.on === "failed" ? "Saving to your account failed, so progress is kept on this device for now."
+    : CLOUD.on ? "Progress saves to your account and follows you to any device."
     : storageOK ? "Progress saves on this device. Log in to keep it across your devices."
     : "Progress lasts for this session only.";
 }
@@ -574,7 +575,8 @@ window.PRACTICE = {
     syncModeChips(); renderProgress(); noteStorage();
     if (!session.answered) deal();
   },
-  cloud: function(on, push){ CLOUD.on = on; CLOUD.push = push || null; noteStorage(); }
+  cloud: function(on, push){ CLOUD.on = on; CLOUD.push = push || null; noteStorage(); },
+  cloudState: function(){ return CLOUD.on; }
 };
 
 /* ---------- adaptive engine ---------- */
@@ -923,8 +925,15 @@ if (auth.enabled && window.PRACTICE){
   const flush = async () => {
     if (!pending) return;
     const state = pending; pending = null;
-    try { await files.save("practice", "progress", state); }
-    catch(e){ console.warn("progress sync:", e && e.message); }
+    try {
+      await files.save("practice", "progress", state);
+      if (PRACTICE.cloudState() === "failed") PRACTICE.cloud(true, push);
+    } catch(e){
+      /* say so under the panel rather than pretend: the device copy stands,
+         and the next successful save turns the note back */
+      console.warn("progress sync:", e && e.message);
+      PRACTICE.cloud("failed", push);
+    }
   };
   const push = (state) => {
     pending = state;

@@ -63,6 +63,7 @@ const ERRORS = {
   "auth/requires-recent-login":    "For safety, log in again before doing that.",
   "auth/unauthorized-domain":      "This copy of the app isn't authorised for sign-in — the site's domain needs adding in the Firebase console.",
   "auth/operation-not-allowed":    "That sign-in method isn't switched on for this app.",
+  "auth/configuration-not-found":  "Sign-in isn't set up for this app yet.",
   "auth/credential-already-in-use":"That sign-in method already belongs to a different account.",
   "auth/provider-already-linked":  "That sign-in method is already connected to this account.",
   "auth/web-storage-unsupported":  "The browser is blocking site storage, which sign-in needs — private-browsing modes often do this.",
