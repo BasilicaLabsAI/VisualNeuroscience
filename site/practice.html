@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Neuroscience Practice — VisualNeuroscience.AI</title>
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root{
+  --paper:#F5F2F7; --card:#FFFFFF; --ink:#251C39; --muted:#655C72;
+  --line:#DCD4E4; --grid:#EDE7F2;
+  --blue:#5B2E91; --blue-tint:#F1EAF9;
+  --red:#B72B57; --red-tint:#F9E9EE;
+  --amber:#A8731B; --amber-tint:#F8F0DF;
+  --serif:"Newsreader", Georgia, "Times New Roman", serif;
+  --sans:"Afacad Flux", -apple-system, "Segoe UI", sans-serif;
+  --mono:"SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.5;
+  padding-bottom:48px;}
+button{font:inherit; color:inherit; background:none; border:none; cursor:pointer; -webkit-tap-highlight-color:transparent;}
+button:focus-visible, .opt:focus-visible{outline:2px solid var(--ink); outline-offset:2px;}
+.wrap{max-width:640px; margin:0 auto; padding:0 16px;}
+
+
+/* ---------- the site strip: the rest of VisualNeuroscience.AI ---------- */
+.sitenav{border-bottom:1px solid var(--line); background:var(--paper);}
+.sitenav-in{display:flex; flex-wrap:wrap; align-items:center; gap:6px 16px; padding:10px 0;
+  font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase;}
+.sitenav a{color:var(--muted); text-decoration:none; padding:2px 0;}
+.sitenav a[aria-current]{color:var(--ink); border-bottom:1px solid var(--ink);}
+.sitenav .sitebrand{font-family:var(--serif); font-weight:700; font-size:14px; letter-spacing:.01em;
+  text-transform:none; color:var(--ink); margin-right:auto;}
+
+/* ---------- header ---------- */
+header{border-bottom:3px double var(--ink); background:var(--paper); position:sticky; top:0; z-index:10;}
+.head-in{display:flex; align-items:baseline; justify-content:space-between; padding:14px 0 10px;}
+.wordmark{font-family:var(--serif); font-weight:700; font-size:20px; letter-spacing:.01em;}
+.wordmark .amp{font-style:italic; font-weight:400;}
+.spec-chip{font-family:var(--mono); font-size:11px; letter-spacing:.08em; color:var(--muted); display:block; margin-top:1px;}
+.session{font-family:var(--mono); font-size:12px; color:var(--muted); text-align:right;}
+.session b{color:var(--ink); font-weight:500; font-size:15px;}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex; gap:8px; padding:12px 0 14px;}
+.tab{flex:1; font-family:var(--mono); font-size:12px; letter-spacing:.12em; padding:9px 0;
+  border:1px solid var(--ink); border-radius:6px; background:var(--card); color:var(--ink); text-transform:uppercase;}
+.tab[aria-selected="true"]{background:var(--ink); color:var(--paper);}
+
+/* ---------- practice ---------- */
+.focus-line{display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px;
+  letter-spacing:.06em; color:var(--muted); text-transform:uppercase; margin:2px 2px 10px; min-height:20px;}
+.focus-line .dot{width:7px; height:7px; border-radius:50%; background:var(--muted); flex:none;}
+.focus-line.f-red .dot{background:var(--red);} .focus-line.f-red{color:var(--red);}
+.focus-line.f-blue .dot{background:var(--blue);} .focus-line.f-blue{color:var(--blue);}
+.focus-line .clear-drill{margin-left:auto; font-family:var(--mono); font-size:11px; letter-spacing:.06em;
+  color:var(--ink); border:1px solid var(--line); border-radius:5px; padding:3px 8px; background:var(--card);}
+
+.qcard{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:20px 18px 18px;
+  box-shadow:0 1px 0 rgba(37,28,57,.05);}
+.eyebrow{display:flex; align-items:baseline; gap:8px; margin-bottom:12px;}
+.eyebrow .code{font-family:var(--mono); font-size:12px; font-weight:500; color:var(--blue);}
+.eyebrow .tname{font-size:12.5px; color:var(--muted);}
+.qtext{font-family:var(--serif); font-size:19px; line-height:1.45; font-weight:400; margin-bottom:16px;}
+.opts{display:flex; flex-direction:column; gap:8px;}
+.opt{display:flex; align-items:flex-start; gap:11px; width:100%; text-align:left;
+  border:1px solid var(--line); border-radius:8px; padding:11px 12px; background:var(--card);
+  transition:background .12s, border-color .12s;}
+.opt .letter{font-family:var(--mono); font-size:12px; font-weight:500; flex:none;
+  width:24px; height:24px; display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--line); border-radius:5px; margin-top:1px;}
+.opt .otext{font-size:15px; line-height:1.4; padding-top:1px;}
+.opt:not(:disabled):active{background:var(--paper);}
+.opt:disabled{cursor:default;}
+.opt.is-correct{border-color:var(--blue); background:var(--blue-tint);}
+.opt.is-correct .letter{background:var(--blue); border-color:var(--blue); color:#fff;}
+.opt.is-wrong{border-color:var(--red); background:var(--red-tint);}
+.opt.is-wrong .letter{background:var(--red); border-color:var(--red); color:#fff;}
+.opt.is-faded{opacity:.5;}
+
+.feedback{margin-top:14px; border-top:1px solid var(--line); padding-top:13px;}
+.verdict{font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; font-weight:500;}
+.verdict.v-right{color:var(--blue);} .verdict.v-wrong{color:var(--red);}
+.explain{font-size:14.5px; color:var(--ink); margin-top:6px; line-height:1.5;}
+.spec-ref{display:inline-block; margin-top:9px; font-family:var(--mono); font-size:11px; color:var(--muted);
+  border:1px solid var(--line); border-radius:5px; padding:2px 7px;}
+.next-btn{display:block; width:100%; margin-top:14px; background:var(--ink); color:var(--paper);
+  font-family:var(--mono); font-size:13px; letter-spacing:.1em; text-transform:uppercase;
+  padding:13px 0; border-radius:8px;}
+.next-btn:active{opacity:.85;}
+.verdict.v-mid{color:var(--amber);}
+
+/* ---------- essay mode ---------- */
+.mode-row{display:flex; gap:8px; margin:0 0 12px;}
+.mode-chip{flex:1; font-family:var(--mono); font-size:11px; letter-spacing:.09em; text-transform:uppercase;
+  padding:8px 0; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--muted);}
+.mode-chip[aria-pressed="true"]{border-color:var(--ink); color:var(--ink); background:var(--paper); font-weight:500;}
+.essay-hint{font-size:12.5px; color:var(--muted); margin:-6px 0 12px;}
+.draft{width:100%; min-height:110px; border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+  font-family:var(--sans); font-size:14.5px; line-height:1.5; background:var(--paper); color:var(--ink);
+  resize:vertical; margin-bottom:12px;}
+.draft:focus{outline:2px solid var(--ink); outline-offset:1px;}
+.pts-lbl{font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);
+  margin-top:14px; border-top:1px solid var(--line); padding-top:13px;}
+.pts{display:flex; flex-direction:column; gap:8px; margin-top:10px;}
+.pt{display:flex; align-items:flex-start; gap:11px; width:100%; text-align:left;
+  border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:var(--card);}
+.pt .box{flex:none; width:20px; height:20px; border:1px solid var(--line); border-radius:5px; margin-top:1px;
+  font-family:var(--mono); font-size:12px; display:flex; align-items:center; justify-content:center;}
+.pt .ptext{font-size:14px; line-height:1.45;}
+.pt.ticked{border-color:var(--blue); background:var(--blue-tint);}
+.pt.ticked .box{background:var(--blue); border-color:var(--blue); color:#fff;}
+.pt.missed{border-color:var(--amber);}
+.pt:disabled{cursor:default;}
+
+/* ---------- progress ---------- */
+.stat-band{display:grid; grid-template-columns:1fr 1fr 1.2fr; border:1px solid var(--line);
+  border-radius:10px; background:var(--card); overflow:hidden; margin-bottom:14px;}
+.stat{padding:13px 12px 11px; border-right:1px solid var(--line);}
+.stat:last-child{border-right:none;}
+.stat .num{font-family:var(--mono); font-size:21px; font-weight:500; line-height:1.1;}
+.stat .lbl{font-family:var(--mono); font-size:10px; letter-spacing:.09em; color:var(--muted);
+  text-transform:uppercase; margin-top:3px;}
+.stat .num .weak-code{color:var(--red);}
+
+.toggle-row{display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--line);
+  border-radius:10px; padding:13px 14px; margin-bottom:18px; width:100%; text-align:left;}
+.toggle-row .t-copy{flex:1;}
+.toggle-row .t-title{font-size:14.5px; font-weight:600;}
+.toggle-row .t-sub{font-size:12.5px; color:var(--muted); margin-top:1px;}
+.switch{flex:none; width:44px; height:26px; border-radius:13px; background:var(--line); position:relative; transition:background .15s;}
+.switch::after{content:""; position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%;
+  background:#fff; box-shadow:0 1px 2px rgba(0,0,0,.25); transition:left .15s;}
+.toggle-row[aria-pressed="true"] .switch{background:var(--blue);}
+.toggle-row[aria-pressed="true"] .switch::after{left:21px;}
+
+.chart-head{display:flex; align-items:baseline; justify-content:space-between; margin:0 2px 4px;}
+.chart-title{font-family:var(--serif); font-size:17px; font-weight:600;}
+.axis-note{font-family:var(--mono); font-size:10px; letter-spacing:.07em; color:var(--muted); text-transform:uppercase;}
+.hint{font-size:12.5px; color:var(--muted); margin:0 2px 12px;}
+.group-lbl{font-family:var(--mono); font-size:11px; letter-spacing:.11em; color:var(--muted);
+  text-transform:uppercase; margin:16px 2px 8px; padding-bottom:4px; border-bottom:1px solid var(--line);}
+.trow{display:block; width:100%; text-align:left; padding:7px 2px 9px; border-radius:6px;}
+.trow:active{background:rgba(37,28,57,.04);}
+.trow-top{display:flex; align-items:baseline; gap:7px; margin-bottom:5px;}
+.trow-top .code{font-family:var(--mono); font-size:11.5px; font-weight:500; color:var(--ink); flex:none;}
+.trow-top .name{font-size:13px; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.trow-top .val{margin-left:auto; font-family:var(--mono); font-size:11.5px; color:var(--muted); flex:none;}
+.track{height:22px; border:1px solid var(--line); border-radius:4px; background:
+  repeating-linear-gradient(to right, transparent 0, transparent calc(10% - 1px), var(--grid) calc(10% - 1px), var(--grid) 10%);
+  background-color:var(--card); position:relative; overflow:hidden;}
+.bar{position:absolute; inset:0 auto 0 0; width:0%; border-radius:3px 0 0 3px; transition:width .35s ease;}
+.bar.b-red{background:var(--red);} .bar.b-amber{background:var(--amber);}
+.bar.b-blue{background:var(--blue);} .bar.b-none{background:var(--line);}
+.legend{display:flex; flex-wrap:wrap; gap:12px; margin:16px 2px 0; font-family:var(--mono); font-size:10.5px;
+  letter-spacing:.05em; color:var(--muted); text-transform:uppercase;}
+.legend span{display:flex; align-items:center; gap:5px;}
+.swatch{width:10px; height:10px; border-radius:3px;}
+.reset-zone{margin-top:26px; text-align:center;}
+.reset-btn{font-family:var(--mono); font-size:12px; letter-spacing:.07em; color:var(--muted);
+  border:1px solid var(--line); border-radius:7px; padding:9px 16px; background:var(--card);}
+.reset-btn.armed{color:#fff; background:var(--red); border-color:var(--red);}
+.storage-note{font-family:var(--mono); font-size:10.5px; color:var(--muted); text-align:center; margin-top:10px;}
+
+.view{display:none; padding-top:2px;}
+.view.active{display:block;}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important;} }
+</style>
+</head>
+<body>
+<nav class="sitenav" aria-label="Site">
+  <div class="wrap sitenav-in">
+    <a class="sitebrand" href="index.html">VisualNeuroscience.AI</a>
+    <a href="regions.html">Region Atlas</a>
+    <a href="brodmann.html">Brodmann Areas</a>
+    <a href="tracts.html">Tractography</a>
+    <a href="network-atlas.html">Network Atlas</a>
+    <a href="studies.html">Visualizing Studies</a>
+    <a href="practice.html" aria-current="page">Practice</a>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="head-in">
+      <div>
+        <div class="wordmark">Neuroscience <span class="amp">practice</span></div>
+        <span class="spec-chip">KCL MSC · IOPPN</span>
+      </div>
+      <div class="session">session<br><b id="sessionScore">0/0</b></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="tabs" role="tablist">
+    <button class="tab" id="tabPractice" role="tab" aria-selected="true">Practice</button>
+    <button class="tab" id="tabProgress" role="tab" aria-selected="false">Progress</button>
+  </div>
+
+  <section class="view active" id="viewPractice">
+    <div class="mode-row" role="group" aria-label="Practice mode">
+      <button class="mode-chip" id="modeMcq" aria-pressed="true">Quick-fire</button>
+      <button class="mode-chip" id="modeEssay" aria-pressed="false">Essay</button>
+    </div>
+    <div class="focus-line" id="focusLine"><span class="dot"></span><span id="focusText"></span></div>
+    <div class="qcard" id="qcard"></div>
+  </section>
+
+  <section class="view" id="viewProgress">
+    <div class="stat-band">
+      <div class="stat"><div class="num" id="statAnswered">0</div><div class="lbl">answered</div></div>
+      <div class="stat"><div class="num" id="statAccuracy">–</div><div class="lbl">accuracy</div></div>
+      <div class="stat"><div class="num" id="statWeakest">–</div><div class="lbl">weakest topic</div></div>
+    </div>
+
+    <button class="toggle-row" id="adaptiveToggle" aria-pressed="true">
+      <span class="t-copy">
+        <span class="t-title">Focus on weak topics</span><br>
+        <span class="t-sub">Off = even coverage of all 14 areas</span>
+      </span>
+      <span class="switch" aria-hidden="true"></span>
+    </button>
+
+    <div class="chart-head">
+      <div class="chart-title">Mastery by topic</div>
+      <div class="axis-note">0 ——— 100%</div>
+    </div>
+    <p class="hint" id="chartHint">Tap any topic to drill it on its own.</p>
+    <div id="chart"></div>
+
+    <div class="legend">
+      <span><span class="swatch" style="background:var(--red)"></span>needs work</span>
+      <span><span class="swatch" style="background:var(--amber)"></span>getting there</span>
+      <span><span class="swatch" style="background:var(--blue)"></span>secure</span>
+      <span><span class="swatch" style="background:var(--line)"></span>too few answers</span>
+    </div>
+
+    <div class="reset-zone">
+      <button class="reset-btn" id="resetBtn">Reset all progress</button>
+      <div class="storage-note" id="storageNote"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const QUESTIONS = [
+{"t":1,"q":"The primary motor cortex is located in the:","o":["precentral gyrus","postcentral gyrus","superior temporal gyrus","cingulate gyrus"],"a":0,"x":"M1 (Brodmann area 4) occupies the precentral gyrus; the postcentral gyrus is primary somatosensory cortex."},
+{"t":1,"q":"Most corticospinal tract fibres cross the midline at the:","o":["internal capsule","pyramidal decussation in the medulla","optic chiasm","corpus callosum"],"a":1,"x":"Around 85–90% of fibres decussate in the caudal medulla to form the lateral corticospinal tract — hence contralateral motor control."},
+{"t":1,"q":"The hippocampus lies within the:","o":["brainstem tegmentum","occipital lobe","dorsolateral prefrontal cortex","medial temporal lobe"],"a":3,"x":"The hippocampal formation sits in the medial temporal lobe alongside the entorhinal cortex and amygdala."},
+{"t":1,"q":"Damage to Broca's area classically produces:","o":["non-fluent, effortful speech with relatively preserved comprehension","fluent speech with poor comprehension","complete deafness","loss of face recognition"],"a":0,"x":"Broca's area, in the left inferior frontal gyrus, supports speech production; Wernicke's aphasia is the fluent, poor-comprehension pattern."},
+{"t":1,"q":"Visual information reaches primary visual cortex via which thalamic relay?","o":["medial geniculate nucleus","lateral geniculate nucleus","pulvinar only","ventral posterolateral nucleus"],"a":1,"x":"Retinal ganglion cell axons synapse in the LGN, which projects to V1; the MGN is the auditory relay."},
+{"t":1,"q":"Fine touch and conscious proprioception ascend the spinal cord mainly in the:","o":["spinothalamic tract","vestibulospinal tract","rubrospinal tract","dorsal column–medial lemniscus pathway"],"a":3,"x":"Dorsal column fibres ascend ipsilaterally and decussate in the medulla; the spinothalamic tract carries pain and temperature."},
+{"t":1,"q":"A patient with cerebellar damage would most likely show:","o":["loss of pain sensation","contralateral spastic paralysis","ipsilateral ataxia and intention tremor","fluent aphasia"],"a":2,"x":"The cerebellum coordinates movement ipsilaterally; damage causes ataxia, dysmetria and intention tremor on the same side."},
+{"t":1,"q":"Cerebrospinal fluid is produced mainly by the:","o":["arachnoid granulations","pia mater","choroid plexus","dural sinuses"],"a":2,"x":"Choroid plexus in the ventricles secretes CSF, which flows lateral → third → aqueduct → fourth ventricle and is reabsorbed at arachnoid granulations."},
+{"t":2,"q":"The resting membrane potential of a neuron is closest to the equilibrium potential of:","o":["K+","Ca2+","Cl− only","Na+"],"a":0,"x":"High resting K+ permeability through leak channels holds the membrane near EK (about −90 mV); pumps maintain the gradients."},
+{"t":2,"q":"The equilibrium potential for a single ion species is given by the:","o":["Goldman equation for all ions simultaneously","Nernst equation","Michaelis–Menten equation","Hodgkin cycle"],"a":1,"x":"Nernst gives one ion's equilibrium potential from its concentration gradient; Goldman weighs several ions by permeability."},
+{"t":2,"q":"The rapid depolarising upstroke of the action potential is caused by:","o":["K+ efflux","Cl− influx","opening of voltage-gated Na+ channels","closure of leak channels"],"a":2,"x":"Depolarisation past threshold opens voltage-gated Na+ channels; Na+ rushes in, driving the membrane toward ENa."},
+{"t":2,"q":"The absolute refractory period is mainly due to:","o":["inactivation of voltage-gated Na+ channels","depletion of neurotransmitter","hyperpolarisation by Cl−","the Na+/K+ pump switching off"],"a":0,"x":"Inactivated Na+ channels cannot reopen until the membrane repolarises, so no stimulus can trigger a second spike."},
+{"t":2,"q":"Saltatory conduction is fast because voltage-gated Na+ channels are clustered:","o":["under the myelin sheath","at nodes of Ranvier","in the cell body","in dendritic spines"],"a":1,"x":"The action potential regenerates only at nodes, with current flowing passively and rapidly beneath the insulating myelin between them."},
+{"t":2,"q":"Tetrodotoxin (TTX) blocks:","o":["voltage-gated Ca2+ channels","GABA-A receptors","voltage-gated Na+ channels","the Na+/K+ ATPase"],"a":2,"x":"TTX occludes the pore of voltage-gated sodium channels, abolishing action potentials — a classic electrophysiology tool."},
+{"t":2,"q":"Which glial cell buffers extracellular K+ and takes up synaptic glutamate?","o":["microglia","ependymal cells","oligodendrocytes","astrocytes"],"a":3,"x":"Astrocytes maintain the extracellular environment via Kir channels and EAAT glutamate transporters, part of the tripartite synapse."},
+{"t":2,"q":"In the CNS, one oligodendrocyte typically:","o":["forms the blood–brain barrier alone","myelinates a single axon segment","phagocytoses debris","myelinates segments of many different axons"],"a":3,"x":"Oligodendrocytes extend processes to myelinate multiple CNS axons, whereas one Schwann cell myelinates one PNS axon segment."},
+{"t":3,"q":"Neurotransmitter release is triggered by presynaptic:","o":["Ca2+ influx through voltage-gated channels","K+ efflux","Cl− influx","Na+ pump activity"],"a":0,"x":"Depolarisation of the terminal opens voltage-gated Ca2+ channels; Ca2+ triggers synaptotagmin-dependent vesicle fusion."},
+{"t":3,"q":"The SNARE complex (synaptobrevin, syntaxin, SNAP-25) mediates:","o":["receptor desensitisation","transmitter re-uptake","vesicle docking and fusion with the presynaptic membrane","gene transcription"],"a":2,"x":"SNAREs zipper the vesicle and plasma membranes together; botulinum toxins block release by cleaving them."},
+{"t":3,"q":"Which property makes the NMDA receptor a molecular coincidence detector?","o":["it opens at rest","it conducts only Cl−","it is a GPCR","its Mg2+ block is relieved only when glutamate binds AND the membrane is depolarised"],"a":3,"x":"Requiring simultaneous presynaptic glutamate and postsynaptic depolarisation (plus co-agonist glycine/D-serine) lets it flag correlated activity."},
+{"t":3,"q":"Benzodiazepines enhance inhibition by:","o":["acting as positive allosteric modulators at GABA-A receptors","directly opening Cl− channels without GABA","blocking glutamate release","antagonising GABA-B receptors"],"a":0,"x":"They increase the frequency of GABA-evoked Cl− channel opening — they modulate, rather than replace, GABA."},
+{"t":3,"q":"Metabotropic glutamate receptors differ from AMPA receptors because they:","o":["conduct ions directly","signal through G proteins rather than an intrinsic ion channel","respond only to GABA","are found only on glia"],"a":1,"x":"mGluRs are GPCRs producing slower, modulatory effects; AMPA receptors are fast ionotropic channels."},
+{"t":3,"q":"Katz's quantal hypothesis proposed that miniature end-plate potentials reflect:","o":["single ion channels opening","release of one vesicle of transmitter","electrical coupling","random pump activity"],"a":1,"x":"Spontaneous 'minis' are the unit response to a single vesicle; evoked responses are integer multiples of this quantum."},
+{"t":3,"q":"Endocannabinoids are unusual as transmitters because they:","o":["are stored in vesicles","act only on ionotropic receptors","cannot cross membranes","travel retrogradely from postsynaptic neuron to presynaptic terminal"],"a":3,"x":"Synthesised on demand postsynaptically, they act on presynaptic CB1 receptors to suppress transmitter release."},
+{"t":3,"q":"Compared with AMPA receptor currents, NMDA receptor currents are:","o":["carried only by Cl−","faster in every respect","slower to rise and decay","voltage-independent"],"a":2,"x":"NMDA currents are slow and voltage-dependent (Mg2+ block) and carry significant Ca2+, giving them a signalling role."},
+{"t":4,"q":"Gs-coupled receptors classically signal by:","o":["opening Cl− channels directly","activating adenylyl cyclase to raise cAMP and activate PKA","inhibiting all kinases","cleaving SNAREs"],"a":1,"x":"The Gs alpha subunit stimulates adenylyl cyclase; cAMP activates protein kinase A, phosphorylating downstream targets."},
+{"t":4,"q":"Gq-coupled receptors activate phospholipase C, generating:","o":["cAMP and cGMP","arachidonic acid only","IP3 and DAG","nitric oxide"],"a":2,"x":"IP3 releases Ca2+ from the endoplasmic reticulum while DAG activates PKC — a two-armed second-messenger cascade."},
+{"t":4,"q":"BDNF exerts its main trophic effects through which receptor?","o":["D2","TrkA","p75 only","TrkB"],"a":3,"x":"BDNF signals through the receptor tyrosine kinase TrkB; NGF pairs with TrkA. Trk signalling supports survival and plasticity."},
+{"t":4,"q":"CREB is best described as:","o":["a transcription factor linking synaptic activity to gene expression","a vesicle protein","an ion channel","a myelin component"],"a":0,"x":"cAMP/Ca2+ signalling phosphorylates CREB, which drives the gene expression required for long-lasting plasticity."},
+{"t":4,"q":"Intracellular Ca2+ signals in neurons come from voltage-gated channels and from:","o":["ER stores via IP3 and ryanodine receptors","the nucleus","lysosomal rupture","myelin"],"a":0,"x":"The endoplasmic reticulum is an internal Ca2+ store released through IP3 receptors and ryanodine receptors."},
+{"t":4,"q":"Misfolded proteins are normally degraded by:","o":["the Golgi apparatus","the ubiquitin–proteasome system and autophagy","exocytosis","alternative splicing"],"a":1,"x":"Ubiquitin tagging targets proteins to the proteasome; failure of these clearance systems is a theme across neurodegeneration."},
+{"t":4,"q":"Alternative splicing matters in the nervous system because it:","o":["changes the DNA sequence","prevents transcription","greatly expands protein diversity from a limited set of genes","only occurs in glia"],"a":2,"x":"The brain shows the highest levels of alternative splicing, generating many protein isoforms per gene."},
+{"t":4,"q":"DNA methylation and histone acetylation are examples of:","o":["mutations","splicing","translation errors","epigenetic regulation of gene expression"],"a":3,"x":"They alter gene expression without changing the DNA sequence — mechanisms relevant to development, plasticity and disease."},
+{"t":5,"q":"The classic hippocampal trisynaptic circuit runs:","o":["dentate gyrus → CA3 → CA1","CA1 → CA3 → dentate gyrus","entorhinal cortex → amygdala → CA1","CA3 → thalamus → CA1"],"a":0,"x":"Entorhinal input arrives via the perforant path to the dentate gyrus, then mossy fibres to CA3, then Schaffer collaterals to CA1."},
+{"t":5,"q":"LTP at CA3–CA1 synapses is induced when NMDA-receptor Ca2+ influx activates:","o":["SNARE cleavage","phosphatases that remove AMPA receptors","CaMKII, driving AMPA receptor insertion and phosphorylation","Na+ channel inactivation"],"a":2,"x":"CaMKII is the key induction kinase; potentiation is expressed largely through increased AMPA receptor number and conductance."},
+{"t":5,"q":"Late-phase LTP differs from early-phase LTP in requiring:","o":["Mg2+ removal from the bath","new protein synthesis and CREB-dependent transcription","lower temperature","GABA release"],"a":1,"x":"Lasting potentiation depends on gene expression and new proteins — the cellular parallel of memory consolidation."},
+{"t":5,"q":"Low-frequency stimulation typically induces LTD because modest Ca2+ rises favour:","o":["kinases","transmitter depletion","action potential failure","protein phosphatases such as calcineurin, internalising AMPA receptors"],"a":3,"x":"The magnitude and kinetics of the Ca2+ signal determine whether kinases (LTP) or phosphatases (LTD) dominate."},
+{"t":5,"q":"Patient H.M. showed that bilateral medial temporal lobe removal produces:","o":["severe anterograde amnesia for declarative memory with spared skill learning","loss of procedural learning","complete retrograde amnesia for all memories","aphasia"],"a":0,"x":"H.M. could learn new motor skills (mirror drawing) but not form new declarative memories — a landmark dissociation."},
+{"t":5,"q":"Place cells were discovered in the hippocampus; grid cells are found mainly in the:","o":["cerebellum","medial entorhinal cortex","occipital cortex","striatum"],"a":1,"x":"O'Keefe described place cells; the Mosers found hexagonally-firing grid cells in medial entorhinal cortex — the 2014 Nobel work."},
+{"t":5,"q":"Systems consolidation refers to memories gradually becoming:","o":["dependent on the spinal cord","stored in glia","less dependent on the hippocampus and more on neocortex","impossible to retrieve"],"a":2,"x":"Over time, hippocampus-dependent memories are thought to be re-organised into distributed neocortical networks."},
+{"t":5,"q":"In the adult mammalian brain, new neurons are generated in the:","o":["subgranular zone of the dentate gyrus","primary motor cortex","corpus callosum","optic nerve"],"a":0,"x":"The dentate subgranular zone (and the subventricular zone) are the principal described adult neurogenic niches."},
+{"t":6,"q":"In the basal ganglia direct pathway, striatal activation ultimately:","o":["inhibits the thalamus further","disinhibits the thalamus, facilitating movement","excites GPi","silences motor cortex"],"a":1,"x":"Striatum inhibits GPi/SNr, which normally inhibit thalamus — so the net effect is thalamic disinhibition and movement facilitation."},
+{"t":6,"q":"Bradykinesia in Parkinson's disease follows from loss of dopamine neurons in the:","o":["locus coeruleus","cerebellar vermis","substantia nigra pars compacta","raphe nuclei"],"a":2,"x":"Nigrostriatal dopamine loss shifts basal ganglia balance toward the inhibitory indirect pathway, suppressing movement."},
+{"t":6,"q":"Upper motor neuron lesions typically produce:","o":["spasticity, hyperreflexia and an extensor plantar response","flaccid paralysis with fasciculations","muscle atrophy as the earliest sign","loss of sensation only"],"a":0,"x":"UMN signs are spastic; LMN lesions give flaccid weakness, wasting and fasciculations — a core clinical distinction."},
+{"t":6,"q":"Central pattern generators are spinal circuits that:","o":["require constant cortical input for every step","store declarative memories","exist only in invertebrates","generate rhythmic locomotor output without patterned sensory or cortical input"],"a":3,"x":"Spinal networks can produce the basic rhythm of locomotion, modulated by descending and sensory input."},
+{"t":6,"q":"The motor homunculus is distorted because cortical territory reflects:","o":["muscle size","fine control requirements, so hands and face are over-represented","body weight","limb length"],"a":1,"x":"Representation scales with dexterity, not anatomy — hence giant hands and lips in the map."},
+{"t":6,"q":"The cerebellum contributes to motor control chiefly by:","o":["initiating all voluntary movement","producing dopamine","relaying pain signals","comparing intended with actual movement and correcting errors"],"a":3,"x":"It acts as a comparator for motor learning and coordination; damage causes ataxia and dysmetria rather than paralysis."},
+{"t":6,"q":"Deep brain stimulation for Parkinson's disease most commonly targets the:","o":["pineal gland","hippocampus","occipital pole","subthalamic nucleus"],"a":3,"x":"High-frequency STN (or GPi) stimulation improves motor symptoms in suitable patients — a translational success story."},
+{"t":7,"q":"The dopamine hypothesis links positive symptoms of psychosis to overactivity in the:","o":["nigrostriatal pathway","tuberoinfundibular pathway","mesolimbic pathway","corticospinal tract"],"a":2,"x":"Mesolimbic hyperdopaminergia is associated with hallucinations and delusions; D2 receptor blockade underlies antipsychotic efficacy."},
+{"t":7,"q":"Evidence supporting NMDA-receptor hypofunction in psychosis includes:","o":["SSRIs causing hallucinations","ketamine and PCP producing psychosis-like symptoms in healthy people","caffeine blocking NMDA receptors","L-DOPA curing schizophrenia"],"a":1,"x":"NMDA antagonists reproduce positive, negative and cognitive symptoms, implicating glutamatergic signalling alongside dopamine."},
+{"t":7,"q":"The correct sequence of the HPA axis is:","o":["hypothalamic CRH → pituitary ACTH → adrenal cortisol","pituitary CRH → hypothalamic ACTH → adrenal cortisol","adrenal CRH → pituitary cortisol → hypothalamic ACTH","hypothalamic ACTH → pituitary cortisol → adrenal CRH"],"a":0,"x":"CRH from the hypothalamus drives pituitary ACTH, which drives adrenal cortisol; cortisol feeds back on hippocampus, hypothalamus and pituitary."},
+{"t":7,"q":"Chronic stress is thought to impair HPA regulation partly through:","o":["increased myelination","faster cortisol clearance","glucocorticoid effects on hippocampal negative feedback","loss of adrenal glands"],"a":2,"x":"Sustained cortisol exposure affects hippocampal glucocorticoid receptor signalling, weakening feedback control of the axis."},
+{"t":7,"q":"Drugs of abuse share the property of increasing dopamine in the:","o":["cerebellar cortex","spinal cord","pineal gland","nucleus accumbens"],"a":3,"x":"Whatever their primary target, addictive drugs elevate mesolimbic (VTA → accumbens) dopamine signalling."},
+{"t":7,"q":"Incentive-sensitisation theory distinguishes:","o":["'wanting' (incentive salience) from 'liking' (hedonic impact)","short-term from long-term memory","REM from NREM sleep","upper from lower motor neurons"],"a":0,"x":"With repeated use, cue-triggered 'wanting' sensitises even as 'liking' does not — helping explain craving and relapse."},
+{"t":7,"q":"Pavlovian fear conditioning depends critically on the:","o":["cerebellum only","amygdala","occipital cortex","hypoglossal nucleus"],"a":1,"x":"Convergence of conditioned and unconditioned inputs in the lateral amygdala drives learned fear via the central nucleus outputs."},
+{"t":7,"q":"SSRIs act by:","o":["blocking dopamine synthesis","antagonising GABA","stimulating cortisol release","blocking the serotonin transporter (SERT), raising synaptic 5-HT"],"a":3,"x":"Reuptake blockade elevates synaptic serotonin; the weeks-long therapeutic lag points to downstream plasticity rather than the immediate effect."},
+{"t":8,"q":"Microglia are best described as:","o":["neural crest derivatives","a type of astrocyte","yolk-sac-derived resident immune cells of the CNS","blood lymphocytes"],"a":2,"x":"They arise from yolk-sac myeloid progenitors during development and self-renew in the CNS, surveying and remodelling tissue."},
+{"t":8,"q":"The blood–brain barrier is formed principally by:","o":["endothelial tight junctions, supported by astrocyte endfeet and pericytes","neuronal axons","CSF pressure","the skull"],"a":0,"x":"The neurovascular unit — specialised endothelium plus astrocytes and pericytes — restricts entry of solutes and cells into the CNS."},
+{"t":8,"q":"Excitotoxicity refers to neuronal death caused by:","o":["too little glutamate","excessive glutamate signalling and Ca2+ overload","myelin loss","low potassium"],"a":1,"x":"Sustained glutamate receptor activation floods neurons with Ca2+, triggering cell death — central to damage in the stroke penumbra."},
+{"t":8,"q":"Astrocytes protect against excitotoxicity mainly by:","o":["releasing more glutamate","blocking Na+ channels","phagocytosing neurons","clearing synaptic glutamate through EAAT transporters"],"a":3,"x":"Excitatory amino acid transporters (e.g. EAAT2/GLT-1) keep extracellular glutamate low."},
+{"t":8,"q":"Pro-inflammatory cytokines such as IL-1β and TNF-α are implicated in:","o":["saltatory conduction","faster axon regrowth","sickness behaviour and mood changes during infection","colour vision"],"a":2,"x":"Peripheral inflammation signals to the brain, producing fatigue, anhedonia and social withdrawal — a link studied in depression research."},
+{"t":8,"q":"Complement proteins such as C1q tag synapses for:","o":["strengthening","microglial pruning during development — a mechanism reactivated in disease models","myelination","vesicle release"],"a":1,"x":"Complement-mediated pruning refines circuits developmentally; aberrant reactivation is implicated in Alzheimer's and schizophrenia models."},
+{"t":8,"q":"The discovery of meningeal lymphatic vessels revised the idea that the CNS:","o":["is completely isolated from the immune system ('immune privilege')","contains neurons","uses glucose","has a barrier"],"a":0,"x":"Functional lymphatics in the meninges drain CNS antigens and immune cells, showing brain–immune communication is routine."},
+{"t":8,"q":"Rabies virus is notable in neuroscience because it:","o":["cannot enter neurons","only infects glia","travels retrogradely along axons — a property exploited for circuit tracing","blocks GABA receptors"],"a":2,"x":"Its retrograde, trans-synaptic spread makes modified rabies a powerful tool for mapping inputs to defined neurons."},
+{"t":9,"q":"Amyloid-β is generated from APP by sequential cleavage by:","o":["α- then γ-secretase","caspases only","the proteasome","β-secretase (BACE1) then γ-secretase"],"a":3,"x":"The amyloidogenic route uses BACE1 then γ-secretase; α-cleavage instead cuts within the Aβ sequence and precludes it."},
+{"t":9,"q":"In Alzheimer's disease, plaques and tangles are respectively:","o":["extracellular amyloid-β deposits and intracellular hyperphosphorylated tau","both intracellular","intracellular amyloid and extracellular tau","both made of α-synuclein"],"a":0,"x":"Extracellular Aβ plaques plus intraneuronal neurofibrillary tangles of hyperphosphorylated tau define the classic pathology."},
+{"t":9,"q":"The strongest common genetic risk factor for late-onset Alzheimer's disease is:","o":["huntingtin expansion","the APOE ε4 allele","SOD1 mutation","the PrP gene"],"a":1,"x":"APOE ε4 raises risk in a dose-dependent way, while ε2 is relatively protective."},
+{"t":9,"q":"Lewy bodies in Parkinson's disease are aggregates rich in:","o":["tau","TDP-43","amyloid-β","α-synuclein"],"a":3,"x":"Misfolded α-synuclein accumulates in Lewy bodies and neurites, with dopaminergic SNc neurons especially vulnerable."},
+{"t":9,"q":"L-DOPA is co-administered with carbidopa because carbidopa:","o":["inhibits peripheral AADC, so more L-DOPA reaches the brain","crosses into the brain and boosts dopamine receptors","blocks dopamine reuptake","dissolves Lewy bodies"],"a":0,"x":"Blocking peripheral decarboxylation reduces side effects and increases central L-DOPA availability."},
+{"t":9,"q":"Huntington's disease is caused by:","o":["a prion","a chromosomal deletion","a dominantly inherited CAG repeat expansion in the HTT gene","vitamin deficiency"],"a":2,"x":"Expansions beyond about 36 CAG repeats cause disease, with longer repeats giving earlier onset (anticipation); striatal neurons are hit hardest."},
+{"t":9,"q":"The most common known genetic cause of ALS and frontotemporal dementia is:","o":["APOE ε4","trisomy 21","a hexanucleotide repeat expansion in C9orf72","BDNF deletion"],"a":2,"x":"C9orf72 expansions underlie a large share of familial ALS/FTD; TDP-43 mislocalisation is the near-universal ALS pathology."},
+{"t":9,"q":"Prion diseases propagate through:","o":["viral DNA integration","misfolded PrP templating the misfolding of normal PrP","autoimmune attack on myelin","bacterial toxins"],"a":1,"x":"PrPSc converts native PrPC into the pathological conformation — protein-only, self-propagating infectivity."},
+{"t":10,"q":"The BOLD signal in fMRI reflects:","o":["action potentials measured directly","radioactive decay","electrical dipoles","blood oxygenation changes coupled to neural activity"],"a":3,"x":"Deoxyhaemoglobin is paramagnetic; neurovascular coupling changes its local concentration, making BOLD an indirect activity measure."},
+{"t":10,"q":"EEG mainly records:","o":["summed postsynaptic potentials of synchronised cortical pyramidal neurons","single spikes from deep nuclei","muscle activity only","blood flow"],"a":0,"x":"Scalp EEG reflects synchronous dendritic (postsynaptic) currents in aligned pyramidal cells — excellent temporal, poor spatial resolution."},
+{"t":10,"q":"PET imaging works by detecting:","o":["magnetic susceptibility","photons from positron-emitting radiotracers such as [18F]FDG or receptor ligands","water diffusion","sound waves"],"a":1,"x":"Radiolabelled tracers report metabolism, blood flow or receptor binding — e.g. occupancy studies in psychopharmacology."},
+{"t":10,"q":"Diffusion MRI tractography infers white-matter pathways from:","o":["the BOLD signal","cortical thickness","directional anisotropy of water diffusion along axons","gamma oscillations"],"a":2,"x":"Water diffuses preferentially along fibre bundles; metrics like fractional anisotropy index microstructural organisation."},
+{"t":10,"q":"Statistical Parametric Mapping (SPM) analyses fMRI data by:","o":["averaging all voxels into one value","measuring pupil size","counting neurons","fitting a general linear model at every voxel (mass-univariate analysis)"],"a":3,"x":"A design matrix models expected responses; the GLM is fitted voxelwise, producing statistical maps — the approach taught on B5."},
+{"t":10,"q":"Voxelwise fMRI analyses require correction for multiple comparisons because:","o":["tens of thousands of tests inflate false positives at uncorrected thresholds","scanners are noisy at night","the brain has two hemispheres","BOLD is negative"],"a":0,"x":"Family-wise error or cluster-based corrections control the false-positive rate across the whole brain volume."},
+{"t":10,"q":"In fMRI task design, an event-related design differs from a block design by:","o":["never using stimuli","requiring PET","presenting discrete trials whose responses are modelled individually rather than sustained condition blocks","lasting longer than an hour"],"a":2,"x":"Event-related designs allow trial-level modelling and randomisation at the cost of statistical power per unit time."},
+{"t":10,"q":"Compared with EEG, MEG is particularly good at localising:","o":["radial sources at the gyral crown","tangential sources, since magnetic fields are less distorted by skull and scalp","subcortical dopamine","blood oxygenation"],"a":1,"x":"Magnetic fields pass through tissue with little smearing, favouring tangentially oriented (sulcal) sources."},
+{"t":11,"q":"The dorsal and ventral visual streams are often summarised as:","o":["conscious versus unconscious","colour versus motion only","left versus right","'where/how' (parietal) versus 'what' (temporal)"],"a":3,"x":"Dorsal parietal pathways serve spatial vision and action guidance; ventral temporal pathways serve object recognition."},
+{"t":11,"q":"Hemispatial neglect of the left side most commonly follows damage to the:","o":["right parietal cortex","left occipital lobe","cerebellum","spinal cord"],"a":0,"x":"Right parietal lesions impair attention to left space — patients may ignore food on the left of the plate despite intact vision."},
+{"t":11,"q":"Persistent delay-period activity during working memory tasks is a signature of neurons in the:","o":["retina","prefrontal cortex","medulla","dorsal root ganglia"],"a":1,"x":"Prefrontal neurons maintain task-relevant information across delays, supporting executive function."},
+{"t":11,"q":"The fusiform face area (FFA) is defined by its stronger response to:","o":["smells","pure tones","faces than to other object categories","hand movements"],"a":2,"x":"Located in the fusiform gyrus, the FFA is a canonical example of category-selective ventral stream cortex."},
+{"t":11,"q":"A double dissociation between two patients provides evidence that:","o":["both functions share one brain area","lesions are random","neither function is real","two cognitive functions rely on at least partly separate neural systems"],"a":3,"x":"Patient A impaired on X but not Y, and patient B the reverse, argues the functions are separately implemented — core neuropsychological logic."},
+{"t":11,"q":"The default mode network is characterised by:","o":["activity during demanding external tasks only","higher activity at rest and during self-referential thought, in medial prefrontal and posterior cingulate cortex","being confined to V1","controlling reflexes"],"a":1,"x":"The DMN deactivates during external attention and is studied in mind-wandering, memory and psychiatric conditions."},
+{"t":11,"q":"Orientation-selective simple cells in V1 were characterised by:","o":["Hubel and Wiesel","Broca","Katz","Yamanaka"],"a":0,"x":"Their recordings revealed the columnar, feature-selective organisation of visual cortex — foundational for both neuroscience and AI vision models."},
+{"t":11,"q":"In Posner-style cueing tasks, invalid spatial cues typically:","o":["speed responses","have no measurable effect","abolish vision","slow responses, revealing the cost of reorienting attention"],"a":3,"x":"Reaction-time costs and benefits of cues let researchers dissect covert attention shifting."},
+{"t":12,"q":"Induced pluripotent stem cells are generated by reprogramming somatic cells with:","o":["antibodies","dopamine and serotonin","Oct4, Sox2, Klf4 and c-Myc (Yamanaka factors)","CRISPR alone"],"a":2,"x":"Yamanaka's four transcription factors return cells to pluripotency — enabling patient-specific disease models without embryos."},
+{"t":12,"q":"A key research advantage of iPSC-derived neurons is that they:","o":["never differentiate","carry the patient's own genetic background for disease modelling","are immune to all disease","replace the need for any controls"],"a":1,"x":"Patient-derived lines let mechanisms and drugs be tested in human neurons with the relevant genotype."},
+{"t":12,"q":"During cortical development, the primary progenitors that also guide neuronal migration are:","o":["radial glia","microglia","Schwann cells","ependymal cells"],"a":0,"x":"Radial glia divide to produce neurons and provide the scaffold along which newborn neurons climb into the cortical plate."},
+{"t":12,"q":"After axotomy, the axon segment distal to the injury undergoes:","o":["immediate regrowth","conversion to dendrite","myelination","Wallerian degeneration"],"a":3,"x":"The disconnected distal stump fragments and is cleared — in the PNS this clearance by Schwann cells and macrophages supports regrowth."},
+{"t":12,"q":"Peripheral nerves regenerate better than CNS axons partly because:","o":["CNS axons lack cytoskeletons","the PNS has no immune cells","Schwann cells support regrowth while CNS myelin debris and the glial scar (e.g. Nogo, CSPGs) inhibit it","peripheral neurons are smaller"],"a":2,"x":"The permissive Schwann-cell environment contrasts with inhibitory CNS myelin proteins and chondroitin sulfate proteoglycans."},
+{"t":12,"q":"Protocols that generate dopaminergic neurons from pluripotent cells recreate developmental signals such as:","o":["SHH and FGF8 patterning cues","caffeine exposure","high glucose","mechanical shaking alone"],"a":0,"x":"Directed differentiation mimics ventral midbrain patterning; such cells have entered clinical trials as grafts for Parkinson's disease."},
+{"t":12,"q":"The two principal adult neural stem cell niches described in mammals are:","o":["cerebellum and pons","subventricular zone and dentate subgranular zone","corpus callosum and optic nerve","V1 and M1"],"a":1,"x":"The SVZ (lateral ventricles) and SGZ (dentate gyrus) retain proliferative capacity into adulthood."},
+{"t":12,"q":"A central ethical advantage of iPSCs over embryonic stem cells is that they:","o":["cannot form tumours","are cheaper to freeze","do not require the destruction of embryos","need no consent"],"a":2,"x":"Reprogramming adult cells sidesteps embryo use, though consent, ownership and safety issues remain live ethical topics on the module."},
+{"t":13,"q":"In graph-theoretic brain network analysis, brain regions and their connections are represented as:","o":["layers and filters","pixels and frames","genes and proteins","nodes and edges"],"a":3,"x":"Graph metrics (degree, clustering, path length) then quantify network organisation."},
+{"t":13,"q":"A 'small-world' network combines:","o":["high clustering with short average path lengths","low clustering with long paths","no hubs","random wiring only"],"a":0,"x":"Brain networks show locally dense clusters linked by shortcuts — efficient integration at low wiring cost."},
+{"t":13,"q":"The 'connectome' refers to:","o":["the genome of a neuron","a comprehensive map of neural connections in a nervous system","a type of MRI scanner","the set of all neurotransmitters"],"a":1,"x":"From C. elegans's complete wiring diagram to human tractography-based maps, connectomics studies connection structure."},
+{"t":13,"q":"Functional connectivity between two brain regions is defined by:","o":["direct axonal projections only","shared blood supply","statistical dependence (e.g. correlation) between their activity time series","physical distance"],"a":2,"x":"Functional connectivity is statistical; structural connectivity refers to the anatomical links measured, for example, with tractography."},
+{"t":13,"q":"An artificial neuron in a neural network computes:","o":["a weighted sum of inputs passed through a nonlinear activation function","an exact simulation of ion channels","random outputs","Fourier transforms only"],"a":0,"x":"This abstraction is loosely inspired by biological integration and thresholding, not a biophysical model."},
+{"t":13,"q":"Backpropagation is:","o":["a form of axonal transport","an algorithm that adjusts network weights using error gradients","retrograde endocannabinoid signalling","a memory consolidation stage"],"a":1,"x":"Gradient-based weight updates train deep networks; whether the brain implements anything closely analogous is an open research question."},
+{"t":13,"q":"Convolutional neural networks for vision were inspired by:","o":["the gut microbiome","the HPA axis","cerebellar circuitry","the hierarchical receptive fields described by Hubel and Wiesel"],"a":3,"x":"Simple-to-complex feature hierarchies in visual cortex motivated the Neocognitron and modern CNNs."},
+{"t":13,"q":"A model that fits its training data very well but generalises poorly to new data is:","o":["underfitting","regularised","overfitting","perfectly calibrated"],"a":2,"x":"Overfitting captures noise rather than structure — a key concern when applying machine learning to neuroimaging datasets."},
+{"t":14,"q":"A Type I error is:","o":["rejecting a true null hypothesis — a false positive","failing to detect a true effect","choosing the wrong software","a coding bug"],"a":0,"x":"Alpha (commonly .05) is the accepted false-positive rate; Type II errors are missed true effects."},
+{"t":14,"q":"Statistical power is the probability of:","o":["the null being true","making a Type I error","p being exactly .05","detecting an effect that genuinely exists"],"a":3,"x":"Power rises with sample size and effect size; underpowered studies both miss effects and inflate those they do find."},
+{"t":14,"q":"A p-value is the probability of:","o":["the null hypothesis being true","data at least as extreme as those observed, assuming the null hypothesis is true","the alternative hypothesis being true","replication succeeding"],"a":1,"x":"It is a statement about data under the null — not the probability that either hypothesis is correct."},
+{"t":14,"q":"Running many statistical tests without correction:","o":["reduces false positives","guarantees replication","inflates the family-wise false-positive rate — hence Bonferroni or FDR procedures","is required for RCTs"],"a":2,"x":"Each additional test adds another chance of a spurious 'significant' result."},
+{"t":14,"q":"A strong correlation between two variables:","o":["proves one causes the other","only occurs in experiments","means the effect is large and causal","cannot by itself establish causation — confounding and reverse causality remain possible"],"a":3,"x":"Causal claims need experimental manipulation or careful causal-inference designs."},
+{"t":14,"q":"In within-subjects designs, counterbalancing the order of conditions controls for:","o":["sample size","practice and fatigue (order) effects","genetic differences","scanner drift only"],"a":1,"x":"Each participant serves as their own control, but condition order must be varied to prevent systematic order confounds."},
+{"t":14,"q":"Preregistration of hypotheses and analyses primarily guards against:","o":["slow reviewers","large samples","HARKing and flexible analysis inflating false-positive findings","open data"],"a":2,"x":"Committing to the plan in advance separates confirmatory from exploratory analysis — a core response to the replication crisis."},
+{"t":14,"q":"Reporting effect sizes alongside p-values matters because:","o":["p-values alone say nothing about how large or meaningful an effect is","effect sizes replace statistics","journals ban p-values","effect sizes are always significant"],"a":0,"x":"With big samples, tiny effects reach significance; magnitude and confidence intervals carry the scientific meaning."}
+];
+
+
+const ESSAYS = [
+// A1·ANA
+{t:1,q:"Describe the route by which fine-touch information from a fingertip reaches conscious perception, naming the key structures and the point of decussation.",pts:["Primary afferent with cell body in the dorsal root ganglion","Ipsilateral ascent in the dorsal columns (gracile/cuneate fasciculi)","Synapse in dorsal column nuclei of the medulla","Decussation as internal arcuate fibres, forming the medial lemniscus","Relay in thalamic VPL nucleus","Projection to primary somatosensory cortex (postcentral gyrus), somatotopically organised"]},
+{t:1,q:"Compare the consequences of damage to Broca's and Wernicke's areas. What does this double dissociation suggest about language organisation?",pts:["Broca's area: left inferior frontal gyrus; non-fluent, effortful speech","Comprehension relatively preserved in Broca's aphasia","Wernicke's area: left superior temporal region; fluent but disordered speech","Comprehension impaired in Wernicke's aphasia","Double dissociation implies partly separable production and comprehension systems","Classical model is simplified — modern accounts stress distributed networks and tracts (e.g. arcuate fasciculus)"]},
+{t:1,q:"Outline the flow of cerebrospinal fluid from production to reabsorption, and give one clinical consequence of its obstruction.",pts:["Produced by choroid plexus in the ventricles","Lateral ventricles → third ventricle via interventricular foramina","Third → fourth ventricle via the cerebral aqueduct","Exits into the subarachnoid space","Reabsorbed at arachnoid granulations into venous sinuses","Obstruction (e.g. aqueduct stenosis) causes hydrocephalus with raised intracranial pressure"]},
+// A1·CEL
+{t:2,q:"Explain how the resting membrane potential of a neuron is established and maintained.",pts:["Na+/K+ ATPase builds and maintains the ion gradients (3 Na+ out, 2 K+ in)","High resting permeability to K+ through leak channels","Membrane potential therefore sits near EK (Nernst prediction, ~−90 mV)","Goldman equation: potential is a permeability-weighted average of ions","Small resting Na+ permeability depolarises the membrane slightly above EK","Impermeant intracellular anions contribute; maintenance is ATP-dependent"]},
+{t:2,q:"Describe the sequence of channel events underlying a single action potential, and explain why it is all-or-nothing and propagates in one direction.",pts:["Depolarisation to threshold opens voltage-gated Na+ channels (positive feedback)","Upstroke: Na+ influx drives membrane toward ENa","Na+ channel inactivation terminates the upstroke","Delayed voltage-gated K+ channels repolarise (with afterhyperpolarisation)","All-or-nothing follows from the regenerative Na+ feedback loop","Refractoriness of just-fired membrane prevents backward propagation"]},
+{t:2,q:"Explain how myelination increases conduction velocity, and what is lost in demyelinating disease such as MS.",pts:["Myelin raises membrane resistance and lowers capacitance","This lengthens the length constant, so depolarisation spreads further passively","Voltage-gated Na+ channels are clustered at nodes of Ranvier","Action potential regenerates node-to-node: saltatory conduction","Demyelination causes conduction slowing or block","Symptoms map onto the tracts affected (e.g. optic neuritis, sensory/motor deficits)"]},
+// A1·SYN
+{t:3,q:"Trace the steps from action potential arrival at a presynaptic terminal to depolarisation of the postsynaptic cell.",pts:["Terminal depolarisation opens voltage-gated Ca2+ channels","Ca2+ sensed by synaptotagmin on docked vesicles","SNARE-mediated vesicle fusion and transmitter release","Transmitter diffuses across the cleft","Binding to ionotropic receptors opens channels, producing an EPSP","Signal terminated by reuptake, enzymatic degradation or diffusion"]},
+{t:3,q:"Explain why the NMDA receptor is described as a molecular coincidence detector, and why this property matters for synaptic plasticity.",pts:["Requires glutamate binding (presynaptic activity)","Mg2+ block relieved only by postsynaptic depolarisation","Also requires co-agonist (glycine/D-serine)","Opens only when pre- and postsynaptic activity coincide — Hebbian logic","High Ca2+ permeability converts coincidence into an intracellular signal","This Ca2+ signal triggers LTP induction cascades (e.g. CaMKII)"]},
+{t:3,q:"Compare ionotropic and metabotropic receptor signalling, giving one neural example of each and their functional trade-offs.",pts:["Ionotropic: receptor is itself an ion channel; direct gating","Fast (millisecond) but brief — suited to point-to-point transmission","Example: AMPA or GABA-A receptors","Metabotropic: GPCRs acting via G proteins and second messengers","Slower but amplified, longer-lasting and modulatory","Example: mGluRs or GABA-B; supports neuromodulation rather than fast transmission"]},
+// A1·SIG
+{t:4,q:"Describe the Gs and Gq signalling cascades, giving a neural example of each.",pts:["Gs: activates adenylyl cyclase, raising cAMP","cAMP activates PKA, which phosphorylates targets","Example Gs: β-adrenergic or dopamine D1 receptors","Gq: activates phospholipase C","PLC generates IP3 (ER Ca2+ release) and DAG (activates PKC)","Example Gq: M1 muscarinic or group I mGluRs"]},
+{t:4,q:"Explain how synaptic activity can change gene expression, and why this matters for long-lasting memory.",pts:["Ca2+ entry via NMDA receptors and voltage-gated channels","Activation of kinase cascades (CaMK, PKA, MAPK/ERK)","Phosphorylation of the transcription factor CREB","Induction of immediate-early genes and new transcription","Late-phase LTP requires this new protein synthesis","Protein-synthesis inhibitors block late LTP and long-term memory — key evidence"]},
+{t:4,q:"Discuss the roles of neurotrophins in the developing and adult nervous system.",pts:["Family includes NGF, BDNF, NT-3, NT-4","Signal through Trk receptor tyrosine kinases with specificity (NGF–TrkA, BDNF–TrkB)","p75 provides a second, lower-affinity signalling route","Developmental role: survival and target matching (neurotrophic hypothesis)","Adult role: BDNF supports synaptic plasticity and LTP","Implicated in depression/antidepressant action and neurodegeneration research"]},
+// A3·MEM
+{t:5,q:"Describe the induction and expression mechanisms of NMDA-receptor-dependent LTP at CA3–CA1 synapses.",pts:["Strong depolarisation plus glutamate relieves NMDA Mg2+ block","Ca2+ influx into the dendritic spine","CaMKII activation and autophosphorylation","Expression: AMPA receptor phosphorylation and insertion into the synapse","Properties: input specificity and associativity","Late phase requires gene expression and protein synthesis (CREB)"]},
+{t:5,q:"What did the study of patient H.M. reveal about the organisation of human memory?",pts:["Bilateral medial temporal lobe resection for epilepsy","Severe anterograde amnesia for new declarative memories","Temporally graded retrograde amnesia; remote memories relatively spared","Intact working memory over short delays","Preserved procedural learning (e.g. mirror drawing) without recollection","Supports declarative vs non-declarative systems and a time-limited hippocampal role (consolidation)"]},
+{t:5,q:"Explain how place cells and grid cells are thought to support spatial navigation.",pts:["Place cells (hippocampus) fire in specific locations — O'Keefe","Grid cells (medial entorhinal cortex) fire in hexagonal lattices — the Mosers","Grid input may be combined to generate place fields","Grid metric supports path integration (tracking self-motion)","Remapping across environments shows flexible coding","Together framed as a 'cognitive map' — recognised by the 2014 Nobel Prize"]},
+// A3·MOT
+{t:6,q:"Explain how the direct and indirect basal ganglia pathways regulate movement, and how dopamine modulates the balance between them.",pts:["Direct: striatum inhibits GPi/SNr, disinhibiting thalamus — facilitates movement","Indirect: via GPe and STN, increasing GPi output — suppresses movement","Dopamine excites the direct pathway via D1 receptors","Dopamine inhibits the indirect pathway via D2 receptors","Net dopamine effect is pro-movement","SNc degeneration in Parkinson's shifts balance toward suppression → bradykinesia"]},
+{t:6,q:"Compare the clinical signs of upper and lower motor neuron lesions and explain their anatomical basis.",pts:["UMN: spasticity and hypertonia","UMN: hyperreflexia and extensor plantar (Babinski) response — loss of descending inhibition","LMN: flaccid weakness and hypotonia","LMN: wasting and fasciculations from denervation","The pattern localises lesions along the motor pathway","ALS characteristically shows mixed UMN and LMN signs"]},
+{t:6,q:"Discuss the cerebellum's contribution to motor learning and coordination.",pts:["Acts as a comparator of intended versus actual movement","Climbing fibres carry error signals to Purkinje cells","Parallel fibre–Purkinje synaptic plasticity (LTD) supports adaptation","Enables feedforward, predictive control of movement","Demonstrated by adaptation paradigms (prism/vestibulo-ocular reflex)","Damage → ipsilateral ataxia, dysmetria and intention tremor, not paralysis"]},
+// A3·PSY
+{t:7,q:"Critically evaluate the dopamine hypothesis of schizophrenia.",pts:["Support: antipsychotic potency correlates with D2 blockade","Support: stimulants can induce/worsen psychosis; imaging shows elevated presynaptic striatal dopamine","Mesolimbic overactivity linked to positive symptoms; framed as aberrant salience","Weakness: poorly explains negative and cognitive symptoms","NMDA-hypofunction/glutamate evidence (ketamine) complements the picture","Conclusion: dopamine dysregulation is a final common pathway within a wider neurodevelopmental account"]},
+{t:7,q:"Describe the HPA axis and explain how its dysregulation has been implicated in depression.",pts:["Hypothalamic CRH → pituitary ACTH → adrenal cortisol","Cortisol shows a diurnal rhythm and stress reactivity","Negative feedback via glucocorticoid receptors (hippocampus, hypothalamus, pituitary)","Chronic stress impairs feedback → sustained hypercortisolaemia in some patients","Evidence includes dexamethasone non-suppression findings","Links proposed to hippocampal changes and reduced BDNF/plasticity"]},
+{t:7,q:"Explain the neurobiology of addiction with reference to the mesolimbic system and incentive-sensitisation theory.",pts:["VTA → nucleus accumbens dopamine projection is central","Drugs of abuse converge on increasing accumbens dopamine","Phasic dopamine relates to reward prediction error signalling","Sensitisation of cue-triggered 'wanting' (incentive salience)","'Wanting' dissociates from 'liking' — craving without pleasure","Cue reactivity plus weakened prefrontal control explains relapse vulnerability"]},
+// A3·NIM
+{t:8,q:"Describe the components of the blood–brain barrier and explain two ways it matters for disease or drug delivery.",pts:["Capillary endothelial cells joined by tight junctions","Pericytes embedded in the basement membrane","Astrocyte endfeet ensheathing vessels (neurovascular unit)","Selective transporters plus efflux pumps (e.g. P-glycoprotein)","Barrier restricts CNS drug delivery — a major pharmacology challenge","Barrier breakdown features in stroke, MS and tumours"]},
+{t:8,q:"Explain excitotoxicity and its role in neuronal death after ischaemic stroke.",pts:["Energy failure depolarises neurons and impairs glutamate uptake","Extracellular glutamate rises","Sustained NMDA receptor activation → Ca2+ overload","Downstream damage: mitochondrial dysfunction, proteases, reactive oxygen species","Distinguish irreversibly lost core from salvageable penumbra","Clinical NMDA antagonists failed — timing/side-effect lessons; reperfusion remains key"]},
+{t:8,q:"Discuss the roles of microglia in the healthy and diseased brain.",pts:["Yolk-sac-derived, self-renewing resident immune cells","Continuous surveillance of the parenchyma","Complement-tagged synaptic pruning during development (C1q/C3)","Injury response: phagocytosis and cytokine release","Pro-inflammatory cytokines drive sickness behaviour; links to mood","Aberrant activation/pruning implicated in Alzheimer's and schizophrenia models"]},
+// B4
+{t:9,q:"Outline the amyloid cascade hypothesis of Alzheimer's disease and evaluate the evidence for and against it.",pts:["Aβ generated from APP by BACE1 then γ-secretase","Cascade: Aβ aggregation → tau pathology, inflammation, synapse and neuron loss","For: familial APP/PSEN mutations and Down syndrome converge on Aβ","For: APOE ε4 risk acts partly through amyloid handling","Against: plaque load correlates poorly with cognition; many anti-amyloid trial failures","Recent anti-amyloid antibodies slow decline modestly — supportive but not sufficient alone"]},
+{t:9,q:"Compare the genetics and molecular pathology of Parkinson's disease and Huntington's disease.",pts:["PD: mostly sporadic; genes include SNCA, LRRK2, parkin","PD pathology: α-synuclein-rich Lewy bodies; SNc dopaminergic loss","HD: fully penetrant autosomal dominant CAG repeat expansion in HTT","Repeat length inversely relates to onset age; instability → anticipation","HD pathology: polyglutamine aggregates; striatal medium spiny neuron loss","Shared theme: protein misfolding, aggregation and proteostasis failure"]},
+{t:9,q:"How are model systems used to study neurodegeneration? Discuss strengths and limitations with examples.",pts:["Transgenic mice (e.g. amyloid/tau models) test mechanisms in vivo","Toxin models (MPTP, 6-OHDA) reproduce dopaminergic loss","Patient iPSC-derived neurons and organoids provide human, genotype-matched cells","Strengths: mechanistic dissection, drug screening, defined manipulations","Limits: species differences, partial phenotypes, difficulty modelling ageing","Translational failures (e.g. neuroprotection trials) show models' predictive limits"]},
+// B5
+{t:10,q:"Explain the physiological basis of the BOLD signal and discuss two limitations of fMRI-based inference.",pts:["Neural activity triggers local haemodynamic changes (neurovascular coupling)","Deoxyhaemoglobin is paramagnetic; its concentration changes the MR signal","Response follows the slow haemodynamic response function (seconds)","BOLD is an indirect, vascular proxy — not a direct neural measure","Temporal resolution is limited relative to neural events","Interpretation limits: correlational data and reverse-inference pitfalls"]},
+{t:10,q:"Compare EEG, MEG and fMRI as methods for studying human brain function.",pts:["EEG: summed postsynaptic potentials; millisecond temporal resolution","EEG spatial localisation poor — volume conduction and the inverse problem","MEG: magnetic fields, less distorted by skull; favours tangential (sulcal) sources","fMRI: millimetre spatial resolution, whole brain including deep structures","fMRI temporally sluggish (haemodynamics)","Methods are complementary; multimodal designs combine strengths (plus cost/practicality trade-offs)"]},
+{t:10,q:"Describe the main steps of a standard SPM-style fMRI analysis pipeline.",pts:["Realignment/motion correction of the time series","Spatial normalisation to a standard template (e.g. MNI)","Spatial smoothing","General linear model: design matrix with regressors convolved with the HRF","Voxelwise parameter estimation and contrast testing (mass-univariate)","Multiple-comparison correction (family-wise error or cluster-based)"]},
+// B7
+{t:11,q:"Evaluate the two-streams hypothesis of visual processing.",pts:["Ventral stream (occipito-temporal): object identity — 'what'","Dorsal stream (occipito-parietal): spatial vision and action guidance — 'where/how'","Patient DF: impaired perception with preserved visually guided action","Optic ataxia shows the reverse — a double dissociation","Milner & Goodale reframed streams as perception vs action","Critiques: streams interact extensively; separation is not absolute"]},
+{t:11,q:"How do lesion studies and functional neuroimaging complement each other in cognitive neuroscience?",pts:["Lesions test necessity of a region for a function","Imaging maps whole-brain activity but is correlational","Double dissociations across patients separate cognitive systems","Lesion limits: accidental damage extent, individual variability, reorganisation","Imaging limits: reverse inference; activation ≠ necessity","TMS 'virtual lesions' and converging methods bridge the two"]},
+{t:11,q:"Describe the neural basis of working memory.",pts:["Prefrontal cortex central; persistent delay-period activity","Operates within distributed fronto-parietal networks","Capacity is limited (a defining feature)","Dopaminergic modulation of prefrontal function affects performance","Ongoing debate: persistent activity vs activity-silent/synaptic mechanisms","Working memory deficits are core in schizophrenia — clinical relevance"]},
+// B8
+{t:12,q:"Explain how induced pluripotent stem cells are generated and evaluate their value for modelling neurological disease.",pts:["Somatic cells reprogrammed with Yamanaka factors (Oct4, Sox2, Klf4, c-Myc)","Differentiated to neural fates by recapitulating developmental signals","Value: human neurons carrying the patient's own genotype","Extensions: 3D organoids capture aspects of tissue development","Limits: immature/fetal-like cells, line-to-line variability, missing circuits and immune context","Ethical advantage over embryonic cells, though consent and safety issues remain"]},
+{t:12,q:"Why does the adult CNS regenerate so poorly compared with the peripheral nervous system?",pts:["PNS: Schwann cells support regrowth and guide axons","PNS: efficient Wallerian debris clearance (Schwann cells, macrophages)","CNS myelin contains growth inhibitors (Nogo, MAG, OMgp)","Glial scar CSPGs form a chemical/physical barrier","Adult CNS neurons have a weak intrinsic growth programme","Experimental strategies: chondroitinase, boosting intrinsic growth (e.g. PTEN deletion), cell grafts"]},
+{t:12,q:"Discuss stem-cell-based approaches to treating Parkinson's disease.",pts:["Rationale: relatively focal loss of nigral dopaminergic neurons","Fetal tissue grafts provided proof of concept — with mixed outcomes","ESC/iPSC-derived dopaminergic neurons made via SHH/FGF8 patterning","Cells grafted into the putamen; clinical trials under way","Risks: graft-induced dyskinesias, tumourigenicity, immune rejection","Limitation: does not address non-dopaminergic pathology of PD"]},
+// B9
+{t:13,q:"Explain how graph theory is applied to brain networks, and what 'small-world' organisation implies about brain function.",pts:["Brain parcellated into nodes; connections form edges","Edges from structural (tractography) or functional (correlation) connectivity","Metrics: degree, clustering coefficient, path length","Small-world = high clustering with short average paths","Implies efficient integration at low wiring cost; hubs/rich club support integration","Hub vulnerability offers a network view of disorders"]},
+{t:13,q:"Compare biological neurons with artificial neural network units. Where does the analogy break down?",pts:["Shared abstraction: weighted summation plus nonlinear output","ANN learning uses backpropagation of global error gradients","Biological plasticity is largely local (Hebbian/STDP-like) — implausibility debate","Real neurons spike; timing and dendritic computation are richer than rate units","Brains add neuromodulation, glia, and extreme energy efficiency","Best treated as functional models, not biophysical simulations"]},
+{t:13,q:"Discuss the opportunities and pitfalls of applying machine learning to neuroimaging data.",pts:["Decoding/pattern analysis reveals information beyond univariate maps","Potential clinical prediction: diagnosis, prognosis, treatment response","Pitfall: overfitting with small, high-dimensional datasets","Requires rigorous cross-validation; beware data leakage","Interpretability of complex models is limited","Generalisation across scanners/sites and dataset bias constrain deployment"]},
+// RES
+{t:14,q:"Explain the replication crisis and describe three reforms designed to address it.",pts:["Chronically low statistical power in many literatures","Flexible analysis/p-hacking and researcher degrees of freedom","HARKing and publication bias toward positive results","Reform: preregistration and registered reports","Reform: power analysis and larger/collaborative samples","Reform: open data, code and materials; emphasis on effect estimation"]},
+{t:14,q:"Compare within-subjects and between-subjects designs for a cognitive experiment. When would you choose each?",pts:["Within: each participant experiences all conditions — own control","Within advantage: removes between-person variance, higher power","Within risk: order, practice and carryover effects","Counterbalancing condition order mitigates order effects","Between: no carryover, but individual differences add noise — needs random assignment","Choice depends on whether the manipulation permanently changes the participant"]},
+{t:14,q:"What does a p-value tell you — and not tell you — about an experimental result?",pts:["Definition: probability of data at least this extreme, assuming the null is true","It is not the probability the null (or alternative) hypothesis is true","Not the probability the finding will replicate","Heavily influenced by sample size","Significance says nothing about effect magnitude — report effect sizes and CIs","Multiple testing inflates false positives without correction"]}
+];
+
+/* ---------- topics ---------- */
+var TOPICS = [
+  {id:1, code:"A1·ANA", name:"Neuroanatomy & brain organisation", half:"core"},
+  {id:2, code:"A1·CEL", name:"Neurons, glia & membrane physiology", half:"core"},
+  {id:3, code:"A1·SYN", name:"Neurotransmission & synapses", half:"core"},
+  {id:4, code:"A1·SIG", name:"Cell signalling & molecular neurobiology", half:"core"},
+  {id:5, code:"A3·MEM", name:"Hippocampus, learning & memory", half:"core"},
+  {id:6, code:"A3·MOT", name:"Motor control & movement circuits", half:"core"},
+  {id:7, code:"A3·PSY", name:"Psychoses, stress & addiction", half:"core"},
+  {id:8, code:"A3·NIM", name:"Neuroimmunology & neuropathology", half:"core"},
+  {id:9, code:"B4", name:"Neurodegeneration", half:"opt"},
+  {id:10,code:"B5", name:"Neuroimaging: MRI, PET & EEG", half:"opt"},
+  {id:11,code:"B7", name:"Cognitive neuroscience", half:"opt"},
+  {id:12,code:"B8", name:"Stem cells & nervous system repair", half:"opt"},
+  {id:13,code:"B9", name:"Network neuroscience & AI", half:"opt"},
+  {id:14,code:"RES", name:"Research methods, statistics & R", half:"opt"}
+];
+function topicById(id){ for (var i=0;i<TOPICS.length;i++){ if(TOPICS[i].id===id) return TOPICS[i]; } return null; }
+
+/* ---------- state & persistence ---------- */
+var STORE_KEY = "kcl-msc-neuro-v1";
+var st = defaultState();
+var session = {answered:0, correct:0};
+var currentQ = null;
+var storageOK = false;
+
+function defaultState(){
+  return {topics:{}, asked:{}, recent:[], recentE:[], mode:"mcq", answered:0, correct:0, adaptive:true, drill:null, lastTopic:null};
+}
+function saveState(){
+  if (typeof window.storage === "undefined") return;
+  try {
+    window.storage.set(STORE_KEY, JSON.stringify(st)).then(function(r){ storageOK = !!r; noteStorage(); })
+      .catch(function(){ storageOK = false; noteStorage(); });
+  } catch(e){ storageOK = false; noteStorage(); }
+}
+function loadState(cb){
+  if (typeof window.storage === "undefined"){ storageOK=false; cb(); return; }
+  try {
+    window.storage.get(STORE_KEY).then(function(r){
+      if (r && r.value){
+        try {
+          var parsed = JSON.parse(r.value);
+          var d = defaultState();
+          for (var k in d){ if (parsed[k] !== undefined) d[k] = parsed[k]; }
+          st = d; storageOK = true;
+        } catch(e){}
+      } else { storageOK = true; }
+      cb();
+    }).catch(function(){ storageOK = true; cb(); }); /* key not found yet is fine */
+  } catch(e){ storageOK=false; cb(); }
+}
+function noteStorage(){
+  var el = document.getElementById("storageNote");
+  el.textContent = storageOK ? "Progress saves automatically on this device." : "Progress lasts for this session only.";
+}
+
+/* ---------- adaptive engine ---------- */
+function tstat(t){ return st.topics[t] || {a:0, c:0}; }
+function mastery(t){ var s = tstat(t); return (s.c + 1) / (s.a + 2); } /* smoothed */
+function weightedPick(items){
+  var total = 0, i;
+  for (i=0;i<items.length;i++) total += items[i].w;
+  var r = Math.random() * total;
+  for (i=0;i<items.length;i++){ r -= items[i].w; if (r <= 0) return items[i].t; }
+  return items[items.length-1].t;
+}
+function pickQuestion(){
+  var pool = QUESTIONS, topic;
+  if (st.drill){
+    topic = st.drill;
+  } else {
+    var ids = TOPICS.map(function(x){ return x.id; });
+    var weights = ids.map(function(t){
+      var s = tstat(t), w;
+      if (st.adaptive){
+        w = Math.pow(1.08 - mastery(t), 2);
+        if (s.a === 0) w += 0.30;
+      } else {
+        w = 1 / (1 + s.a * 0.15);
+      }
+      if (t === st.lastTopic) w *= 0.45;
+      return {t:t, w:w};
+    });
+    topic = weightedPick(weights);
+  }
+  var qs = [];
+  for (var i=0;i<pool.length;i++){
+    if (pool[i].t === topic && st.recent.indexOf(i) === -1) qs.push(i);
+  }
+  if (!qs.length){ for (var j=0;j<pool.length;j++){ if (pool[j].t === topic) qs.push(j); } }
+  var minAsk = Infinity, k;
+  for (k=0;k<qs.length;k++){ var c = st.asked[qs[k]] || 0; if (c < minAsk) minAsk = c; }
+  var finalists = [];
+  for (k=0;k<qs.length;k++){ if ((st.asked[qs[k]] || 0) === minAsk) finalists.push(qs[k]); }
+  return finalists[Math.floor(Math.random() * finalists.length)];
+}
+function focusReason(topicId){
+  var t = topicById(topicId), s = tstat(topicId);
+  var line = document.getElementById("focusLine");
+  line.className = "focus-line";
+  if (st.drill){
+    line.classList.add("f-blue");
+    return 'Drilling ' + t.code + ' · ' + t.name;
+  }
+  if (!st.adaptive) return 'Even coverage · ' + t.code;
+  if (s.a === 0) return 'New ground · ' + t.code + ' not yet attempted';
+  var pct = Math.round((s.c / s.a) * 100);
+  if (pct < 60){ line.classList.add("f-red"); return 'Targeting weak spot · ' + t.code + ' at ' + pct + '%'; }
+  return 'Keeping ' + t.code + ' sharp · ' + pct + '% so far';
+}
+
+/* ---------- essay engine & flow ---------- */
+var currentE = null;
+function pickEssay(){
+  var topic;
+  if (st.drill){ topic = st.drill; }
+  else {
+    var weights = TOPICS.map(function(x){
+      var s = tstat(x.id), w;
+      if (st.adaptive){ w = Math.pow(1.08 - mastery(x.id), 2); if (s.a === 0) w += 0.30; }
+      else { w = 1 / (1 + s.a * 0.15); }
+      if (x.id === st.lastTopic) w *= 0.45;
+      return {t:x.id, w:w};
+    });
+    topic = weightedPick(weights);
+  }
+  var es = [];
+  for (var i=0;i<ESSAYS.length;i++){ if (ESSAYS[i].t === topic && st.recentE.indexOf(i) === -1) es.push(i); }
+  if (!es.length){ for (var j=0;j<ESSAYS.length;j++){ if (ESSAYS[j].t === topic) es.push(j); } }
+  var minAsk = Infinity, k, c;
+  for (k=0;k<es.length;k++){ c = st.asked["e"+es[k]] || 0; if (c < minAsk) minAsk = c; }
+  var fin = [];
+  for (k=0;k<es.length;k++){ if ((st.asked["e"+es[k]] || 0) === minAsk) fin.push(es[k]); }
+  return fin[Math.floor(Math.random()*fin.length)];
+}
+function setFocusLine(topicId){
+  var drillBtn = st.drill ? '<button class="clear-drill" id="clearDrill">exit drill \u2715</button>' : "";
+  document.getElementById("focusLine").innerHTML =
+    '<span class="dot"></span><span>' + focusReason(topicId) + '</span>' + drillBtn;
+  if (st.drill){
+    var cd = document.getElementById("clearDrill");
+    if (cd) cd.addEventListener("click", function(){ st.drill = null; saveState(); deal(); });
+  }
+}
+function newEssay(){
+  var ei = pickEssay();
+  currentE = ei;
+  var e = ESSAYS[ei], t = topicById(e.t);
+  setFocusLine(e.t);
+  document.getElementById("qcard").innerHTML =
+    '<div class="eyebrow"><span class="code">' + t.code + '</span><span class="tname">' + t.name + '</span></div>' +
+    '<div class="qtext">' + e.q + '</div>' +
+    '<p class="essay-hint">Sketch your answer below or on paper, then reveal the marking points and tick what you covered.</p>' +
+    '<textarea class="draft" id="draft" placeholder="Draft your answer here (optional)\u2026"></textarea>' +
+    '<button class="next-btn" id="revealBtn">Reveal marking points</button>' +
+    '<div id="fb"></div>';
+  document.getElementById("revealBtn").addEventListener("click", revealEssay);
+  window.scrollTo(0,0);
+}
+function revealEssay(){
+  var e = ESSAYS[currentE];
+  document.getElementById("revealBtn").style.display = "none";
+  var html = '<div class="pts-lbl">Marking points \u2014 tick what your answer covered</div><div class="pts">';
+  for (var i=0;i<e.pts.length;i++){
+    html += '<button class="pt" data-i="' + i + '"><span class="box"></span><span class="ptext">' + e.pts[i] + '</span></button>';
+  }
+  html += '</div><button class="next-btn" id="markBtn">Mark my answer</button><div id="fb2"></div>';
+  document.getElementById("fb").innerHTML = html;
+  var pts = document.querySelectorAll(".pt");
+  for (var j=0;j<pts.length;j++){
+    pts[j].addEventListener("click", function(){
+      this.classList.toggle("ticked");
+      this.querySelector(".box").textContent = this.classList.contains("ticked") ? "\u2713" : "";
+    });
+  }
+  document.getElementById("markBtn").addEventListener("click", markEssay);
+}
+function markEssay(){
+  var e = ESSAYS[currentE], n = e.pts.length;
+  var pts = document.querySelectorAll(".pt"), k = 0;
+  for (var i=0;i<pts.length;i++){
+    if (pts[i].classList.contains("ticked")) k++;
+    else pts[i].classList.add("missed");
+    pts[i].disabled = true;
+  }
+  var frac = k / n;
+  var s = tstat(e.t);
+  s.a += 1; s.c += frac; st.topics[e.t] = s;
+  st.asked["e"+currentE] = (st.asked["e"+currentE] || 0) + 1;
+  st.recentE.push(currentE); if (st.recentE.length > 12) st.recentE.shift();
+  st.answered += 1; st.correct += frac;
+  st.lastTopic = e.t;
+  session.answered += 1; session.correct += frac;
+  saveState(); updateSession();
+  var pct = Math.round(frac * 100), cls, msg;
+  if (pct >= 70){ cls = "v-right"; msg = "Strong \u2014 " + k + " of " + n + " marking points"; }
+  else if (pct >= 40){ cls = "v-mid"; msg = "Partial \u2014 " + k + " of " + n + " marking points"; }
+  else { cls = "v-wrong"; msg = "Needs work \u2014 " + k + " of " + n + " marking points"; }
+  document.getElementById("markBtn").style.display = "none";
+  document.getElementById("fb2").innerHTML =
+    '<div class="feedback"><div class="verdict ' + cls + '">' + msg + '</div>' +
+    '<p class="explain">Missed points stay outlined in amber \u2014 worth a second pass before moving on.</p>' +
+    '<span class="spec-ref">module ' + topicById(e.t).code + '</span>' +
+    '<button class="next-btn" id="nextBtn">Next \u2192</button></div>';
+  document.getElementById("nextBtn").addEventListener("click", deal);
+}
+function deal(){ if (st.mode === "essay") newEssay(); else newQuestion(); }
+function fmt(n){ return (n % 1 === 0) ? n : Math.round(n * 10) / 10; }
+function syncModeChips(){
+  document.getElementById("modeMcq").setAttribute("aria-pressed", st.mode === "essay" ? "false" : "true");
+  document.getElementById("modeEssay").setAttribute("aria-pressed", st.mode === "essay" ? "true" : "false");
+}
+
+/* ---------- practice view ---------- */
+var LETTERS = ["A","B","C","D"];
+function newQuestion(){
+  var qi = pickQuestion();
+  currentQ = qi;
+  var q = QUESTIONS[qi], t = topicById(q.t);
+  var drillBtn = st.drill ? '<button class="clear-drill" id="clearDrill">exit drill ✕</button>' : "";
+  document.getElementById("focusLine").innerHTML =
+    '<span class="dot"></span><span id="focusText2">' + focusReason(q.t) + '</span>' + drillBtn;
+  if (st.drill){
+    var cd = document.getElementById("clearDrill");
+    if (cd) cd.addEventListener("click", function(){ st.drill = null; saveState(); deal(); });
+  }
+  var html = '<div class="eyebrow"><span class="code">' + t.code + '</span><span class="tname">' + t.name + '</span></div>' +
+    '<div class="qtext">' + q.q + '</div><div class="opts">';
+  for (var i=0;i<4;i++){
+    html += '<button class="opt" data-i="' + i + '"><span class="letter">' + LETTERS[i] + '</span><span class="otext">' + q.o[i] + '</span></button>';
+  }
+  html += '</div><div id="fb"></div>';
+  document.getElementById("qcard").innerHTML = html;
+  var opts = document.querySelectorAll(".opt");
+  for (var j=0;j<opts.length;j++){
+    opts[j].addEventListener("click", function(){ answer(parseInt(this.getAttribute("data-i"),10)); });
+  }
+  window.scrollTo(0,0);
+}
+function answer(choice){
+  var q = QUESTIONS[currentQ], right = (choice === q.a);
+  var opts = document.querySelectorAll(".opt");
+  for (var i=0;i<opts.length;i++){
+    opts[i].disabled = true;
+    var idx = parseInt(opts[i].getAttribute("data-i"),10);
+    if (idx === q.a) opts[i].classList.add("is-correct");
+    else if (idx === choice) opts[i].classList.add("is-wrong");
+    else opts[i].classList.add("is-faded");
+  }
+  var s = tstat(q.t);
+  s.a += 1; if (right) s.c += 1;
+  st.topics[q.t] = s;
+  st.asked[currentQ] = (st.asked[currentQ] || 0) + 1;
+  st.recent.push(currentQ);
+  if (st.recent.length > 30) st.recent.shift();
+  st.answered += 1; if (right) st.correct += 1;
+  st.lastTopic = q.t;
+  session.answered += 1; if (right) session.correct += 1;
+  saveState();
+  updateSession();
+  document.getElementById("fb").innerHTML =
+    '<div class="feedback">' +
+      '<div class="verdict ' + (right ? 'v-right">Correct' : 'v-wrong">Not quite — the answer is ' + LETTERS[q.a]) + '</div>' +
+      '<p class="explain">' + q.x + '</p>' +
+      '<span class="spec-ref">module ' + topicById(q.t).code + '</span>' +
+      '<button class="next-btn" id="nextBtn">Next question →</button>' +
+    '</div>';
+  document.getElementById("nextBtn").addEventListener("click", deal);
+}
+function updateSession(){
+  document.getElementById("sessionScore").textContent = fmt(session.correct) + "/" + session.answered;
+}
+
+/* ---------- progress view ---------- */
+function band(t){
+  var s = tstat(t);
+  if (s.a < 2) return {cls:"b-none", pct: s.a === 0 ? 0 : Math.round((s.c/s.a)*100), label:"–"};
+  var pct = Math.round((s.c / s.a) * 100);
+  if (pct < 50) return {cls:"b-red", pct:pct, label:pct + "%"};
+  if (pct < 75) return {cls:"b-amber", pct:pct, label:pct + "%"};
+  return {cls:"b-blue", pct:pct, label:pct + "%"};
+}
+function renderProgress(){
+  document.getElementById("statAnswered").textContent = st.answered;
+  document.getElementById("statAccuracy").textContent = st.answered ? Math.round((st.correct/st.answered)*100) + "%" : "–";
+  var weakest = null, weakestM = 2;
+  for (var i=0;i<TOPICS.length;i++){
+    var s = tstat(TOPICS[i].id);
+    if (s.a >= 2){
+      var m = s.c / s.a;
+      if (m < weakestM){ weakestM = m; weakest = TOPICS[i]; }
+    }
+  }
+  document.getElementById("statWeakest").innerHTML = weakest
+    ? '<span class="weak-code">' + weakest.code + '</span>' : "–";
+  var tog = document.getElementById("adaptiveToggle");
+  tog.setAttribute("aria-pressed", st.adaptive ? "true" : "false");
+
+  var html = "", lastHalf = "";
+  for (var j=0;j<TOPICS.length;j++){
+    var t = TOPICS[j];
+    if (t.half !== lastHalf){
+      html += '<div class="group-lbl">' + (t.half === "core" ? "A1–A3 · Core modules" : "B options · Specialisms & research") + '</div>';
+      lastHalf = t.half;
+    }
+    var b = band(t.id), s2 = tstat(t.id);
+    html += '<button class="trow" data-t="' + t.id + '">' +
+      '<span class="trow-top"><span class="code">' + t.code + '</span>' +
+      '<span class="name">' + t.name + '</span>' +
+      '<span class="val">' + b.label + (s2.a ? ' · ' + s2.a + ' q' : '') + '</span></span>' +
+      '<span class="track"><span class="bar ' + b.cls + '" style="width:' + b.pct + '%"></span></span>' +
+      '</button>';
+  }
+  document.getElementById("chart").innerHTML = html;
+  var rows = document.querySelectorAll(".trow");
+  for (var k=0;k<rows.length;k++){
+    rows[k].addEventListener("click", function(){
+      st.drill = parseInt(this.getAttribute("data-t"),10);
+      saveState();
+      switchView("practice");
+      deal();
+    });
+  }
+}
+
+/* ---------- tabs, toggle, reset ---------- */
+function switchView(which){
+  var p = which === "practice";
+  document.getElementById("viewPractice").classList.toggle("active", p);
+  document.getElementById("viewProgress").classList.toggle("active", !p);
+  document.getElementById("tabPractice").setAttribute("aria-selected", p ? "true" : "false");
+  document.getElementById("tabProgress").setAttribute("aria-selected", p ? "false" : "true");
+  if (!p) renderProgress();
+}
+document.getElementById("tabPractice").addEventListener("click", function(){ switchView("practice"); });
+document.getElementById("tabProgress").addEventListener("click", function(){ switchView("progress"); });
+document.getElementById("adaptiveToggle").addEventListener("click", function(){
+  st.adaptive = !st.adaptive; saveState(); renderProgress();
+});
+document.getElementById("modeMcq").addEventListener("click", function(){
+  if (st.mode !== "mcq"){ st.mode = "mcq"; saveState(); syncModeChips(); deal(); }
+});
+document.getElementById("modeEssay").addEventListener("click", function(){
+  if (st.mode !== "essay"){ st.mode = "essay"; saveState(); syncModeChips(); deal(); }
+});
+var resetArmed = false, resetTimer = null;
+document.getElementById("resetBtn").addEventListener("click", function(){
+  var btn = this;
+  if (!resetArmed){
+    resetArmed = true; btn.classList.add("armed");
+    btn.textContent = "Tap again to erase everything";
+    resetTimer = setTimeout(function(){ resetArmed=false; btn.classList.remove("armed"); btn.textContent="Reset all progress"; }, 3500);
+  } else {
+    clearTimeout(resetTimer); resetArmed = false;
+    st = defaultState(); session = {answered:0, correct:0};
+    saveState(); updateSession(); renderProgress();
+    btn.classList.remove("armed"); btn.textContent = "Reset all progress";
+    syncModeChips();
+    deal();
+  }
+});
+
+/* ---------- boot ---------- */
+loadState(function(){
+  noteStorage();
+  updateSession();
+  syncModeChips();
+  deal();
+});
+</script>
+</body>
+</html>
