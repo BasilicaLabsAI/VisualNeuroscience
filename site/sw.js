@@ -21,7 +21,7 @@
    Nothing cross-origin is touched at all — since the typefaces moved
    in-house there is no outside request left to think about. */
 
-var VERSION = "vn-22";
+var VERSION = "vn-23";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
@@ -29,6 +29,7 @@ var BULK    = VERSION + "-bulk";
 var PRECACHE = [
   "/", "/index.html", "/regions.html", "/brodmann.html",   "/tracts.html", "/network-atlas.html", "/studies.html", "/hallucinations.html",
   "/privacy.html", "/practice.html", "/assets/home/practice.jpg",
+  "/textbook.html", "/assets/home/textbook.jpg",
   "/vision.html", "/vision-model.html", "/vision-planes.html",
   "/vision-plane.html", "/vision-regions.html", "/vision-brodmann.html",
   "/assets/vision.css", "/assets/vision-bus.js", "/assets/vision-scan.js",
@@ -48,7 +49,7 @@ var PRECACHE = [
 ];
 
 /* the megabytes: fetched once, then read off disk forever */
-var IS_BULK = /\.(nii\.gz|trx)$|niivue\.js$|^\/assets\/ba\//;
+var IS_BULK = /\.(nii\.gz|trx)$|niivue\.js$|^\/assets\/ba\/|^\/vendor\/d3\//;
 
 self.addEventListener("install", function(e){
   e.waitUntil(

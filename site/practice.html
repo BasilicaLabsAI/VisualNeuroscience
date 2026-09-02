@@ -5,18 +5,103 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Neuroscience Practice — VisualNeuroscience.AI</title>
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<link rel="stylesheet" href="assets/viewer.css">
 <link rel="stylesheet" href="fonts/fonts.css">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+
 <style>
-:root{
-  --paper:#F5F2F7; --card:#FFFFFF; --ink:#251C39; --muted:#655C72;
-  --line:#DCD4E4; --grid:#EDE7F2;
-  --blue:#5B2E91; --blue-tint:#F1EAF9;
-  --red:#B72B57; --red-tint:#F9E9EE;
-  --amber:#A8731B; --amber-tint:#F8F0DF;
-  --serif:"Newsreader", Georgia, "Times New Roman", serif;
-  --sans:"Afacad Flux", -apple-system, "Segoe UI", sans-serif;
-  --mono:"SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+/* ── the site's own header and tokens, shared with every page ── */
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
 }
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+  --quiet:#8A8A8A;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+  --quiet:#8A8A8A;
+}
+
+.site-wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+/* masthead, shared with the rest of the site */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:.65em; height:.65em; flex:none; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:0;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+/* the quiz reads the site's tokens through its own names */
+:root{
+  --card:var(--paper); --muted:var(--ink-60); --line:var(--ink-35);
+  --grid:color-mix(in srgb, var(--ink) 5%, transparent);
+  --blue:#4A9BE8; --blue-tint:color-mix(in srgb, #4A9BE8 14%, transparent);
+  --red:#E86A6A;  --red-tint:color-mix(in srgb, #E86A6A 14%, transparent);
+  --amber:#E6C14C; --amber-tint:color-mix(in srgb, #E6C14C 16%, transparent);
+  --serif:'Newsreader', Georgia, serif;
+  --display:'Prata', Georgia, serif;
+  --sans:'Afacad Flux', -apple-system, "Segoe UI", sans-serif;
+  --mono:'Afacad Flux', -apple-system, "Segoe UI", sans-serif;
+}
+
 *{box-sizing:border-box; margin:0; padding:0;}
 html{-webkit-text-size-adjust:100%;}
 body{background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.5;
@@ -26,19 +111,11 @@ button:focus-visible, .opt:focus-visible{outline:2px solid var(--ink); outline-o
 .wrap{max-width:640px; margin:0 auto; padding:0 16px;}
 
 
-/* ---------- the site strip: the rest of VisualNeuroscience.AI ---------- */
-.sitenav{border-bottom:1px solid var(--line); background:var(--paper);}
-.sitenav-in{display:flex; flex-wrap:wrap; align-items:center; gap:6px 16px; padding:10px 0;
-  font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase;}
-.sitenav a{color:var(--muted); text-decoration:none; padding:2px 0;}
-.sitenav a[aria-current]{color:var(--ink); border-bottom:1px solid var(--ink);}
-.sitenav .sitebrand{font-family:var(--serif); font-weight:700; font-size:14px; letter-spacing:.01em;
-  text-transform:none; color:var(--ink); margin-right:auto;}
 
 /* ---------- header ---------- */
-header{border-bottom:3px double var(--ink); background:var(--paper); position:sticky; top:0; z-index:10;}
+header.qhead{border:1px solid var(--hair); background:var(--paper); margin-top:var(--gap);}
 .head-in{display:flex; align-items:baseline; justify-content:space-between; padding:14px 0 10px;}
-.wordmark{font-family:var(--serif); font-weight:700; font-size:20px; letter-spacing:.01em;}
+.wordmark{font-family:var(--display); font-weight:400; font-size:20px; letter-spacing:.02em;}
 .wordmark .amp{font-style:italic; font-weight:400;}
 .spec-chip{font-family:var(--mono); font-size:11px; letter-spacing:.08em; color:var(--muted); display:block; margin-top:1px;}
 .session{font-family:var(--mono); font-size:12px; color:var(--muted); text-align:right;}
@@ -47,19 +124,19 @@ header{border-bottom:3px double var(--ink); background:var(--paper); position:st
 /* ---------- tabs ---------- */
 .tabs{display:flex; gap:8px; padding:12px 0 14px;}
 .tab{flex:1; font-family:var(--mono); font-size:12px; letter-spacing:.12em; padding:9px 0;
-  border:1px solid var(--ink); border-radius:6px; background:var(--card); color:var(--ink); text-transform:uppercase;}
+  border:1px solid var(--ink); border-radius:0; background:var(--card); color:var(--ink); text-transform:uppercase;}
 .tab[aria-selected="true"]{background:var(--ink); color:var(--paper);}
 
 /* ---------- practice ---------- */
 .focus-line{display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px;
   letter-spacing:.06em; color:var(--muted); text-transform:uppercase; margin:2px 2px 10px; min-height:20px;}
-.focus-line .dot{width:7px; height:7px; border-radius:50%; background:var(--muted); flex:none;}
+.focus-line .dot{width:7px; height:7px; border-radius:0; background:var(--muted); flex:none;}
 .focus-line.f-red .dot{background:var(--red);} .focus-line.f-red{color:var(--red);}
 .focus-line.f-blue .dot{background:var(--blue);} .focus-line.f-blue{color:var(--blue);}
 .focus-line .clear-drill{margin-left:auto; font-family:var(--mono); font-size:11px; letter-spacing:.06em;
-  color:var(--ink); border:1px solid var(--line); border-radius:5px; padding:3px 8px; background:var(--card);}
+  color:var(--ink); border:1px solid var(--line); border-radius:0; padding:3px 8px; background:var(--card);}
 
-.qcard{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:20px 18px 18px;
+.qcard{background:var(--card); border:1px solid var(--line); border-radius:0; padding:20px 18px 18px;
   box-shadow:0 1px 0 rgba(37,28,57,.05);}
 .eyebrow{display:flex; align-items:baseline; gap:8px; margin-bottom:12px;}
 .eyebrow .code{font-family:var(--mono); font-size:12px; font-weight:500; color:var(--blue);}
@@ -67,11 +144,11 @@ header{border-bottom:3px double var(--ink); background:var(--paper); position:st
 .qtext{font-family:var(--serif); font-size:19px; line-height:1.45; font-weight:400; margin-bottom:16px;}
 .opts{display:flex; flex-direction:column; gap:8px;}
 .opt{display:flex; align-items:flex-start; gap:11px; width:100%; text-align:left;
-  border:1px solid var(--line); border-radius:8px; padding:11px 12px; background:var(--card);
+  border:1px solid var(--line); border-radius:0; padding:11px 12px; background:var(--card);
   transition:background .12s, border-color .12s;}
 .opt .letter{font-family:var(--mono); font-size:12px; font-weight:500; flex:none;
   width:24px; height:24px; display:flex; align-items:center; justify-content:center;
-  border:1px solid var(--line); border-radius:5px; margin-top:1px;}
+  border:1px solid var(--line); border-radius:0; margin-top:1px;}
 .opt .otext{font-size:15px; line-height:1.4; padding-top:1px;}
 .opt:not(:disabled):active{background:var(--paper);}
 .opt:disabled{cursor:default;}
@@ -86,20 +163,20 @@ header{border-bottom:3px double var(--ink); background:var(--paper); position:st
 .verdict.v-right{color:var(--blue);} .verdict.v-wrong{color:var(--red);}
 .explain{font-size:14.5px; color:var(--ink); margin-top:6px; line-height:1.5;}
 .spec-ref{display:inline-block; margin-top:9px; font-family:var(--mono); font-size:11px; color:var(--muted);
-  border:1px solid var(--line); border-radius:5px; padding:2px 7px;}
+  border:1px solid var(--line); border-radius:0; padding:2px 7px;}
 .next-btn{display:block; width:100%; margin-top:14px; background:var(--ink); color:var(--paper);
   font-family:var(--mono); font-size:13px; letter-spacing:.1em; text-transform:uppercase;
-  padding:13px 0; border-radius:8px;}
+  padding:13px 0; border-radius:0;}
 .next-btn:active{opacity:.85;}
 .verdict.v-mid{color:var(--amber);}
 
 /* ---------- essay mode ---------- */
 .mode-row{display:flex; gap:8px; margin:0 0 12px;}
 .mode-chip{flex:1; font-family:var(--mono); font-size:11px; letter-spacing:.09em; text-transform:uppercase;
-  padding:8px 0; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--muted);}
+  padding:8px 0; border:1px solid var(--line); border-radius:0; background:var(--card); color:var(--muted);}
 .mode-chip[aria-pressed="true"]{border-color:var(--ink); color:var(--ink); background:var(--paper); font-weight:500;}
 .essay-hint{font-size:12.5px; color:var(--muted); margin:-6px 0 12px;}
-.draft{width:100%; min-height:110px; border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+.draft{width:100%; min-height:110px; border:1px solid var(--line); border-radius:0; padding:10px 12px;
   font-family:var(--sans); font-size:14.5px; line-height:1.5; background:var(--paper); color:var(--ink);
   resize:vertical; margin-bottom:12px;}
 .draft:focus{outline:2px solid var(--ink); outline-offset:1px;}
@@ -107,8 +184,8 @@ header{border-bottom:3px double var(--ink); background:var(--paper); position:st
   margin-top:14px; border-top:1px solid var(--line); padding-top:13px;}
 .pts{display:flex; flex-direction:column; gap:8px; margin-top:10px;}
 .pt{display:flex; align-items:flex-start; gap:11px; width:100%; text-align:left;
-  border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:var(--card);}
-.pt .box{flex:none; width:20px; height:20px; border:1px solid var(--line); border-radius:5px; margin-top:1px;
+  border:1px solid var(--line); border-radius:0; padding:10px 12px; background:var(--card);}
+.pt .box{flex:none; width:20px; height:20px; border:1px solid var(--line); border-radius:0; margin-top:1px;
   font-family:var(--mono); font-size:12px; display:flex; align-items:center; justify-content:center;}
 .pt .ptext{font-size:14px; line-height:1.45;}
 .pt.ticked{border-color:var(--blue); background:var(--blue-tint);}
@@ -118,7 +195,7 @@ header{border-bottom:3px double var(--ink); background:var(--paper); position:st
 
 /* ---------- progress ---------- */
 .stat-band{display:grid; grid-template-columns:1fr 1fr 1.2fr; border:1px solid var(--line);
-  border-radius:10px; background:var(--card); overflow:hidden; margin-bottom:14px;}
+  border-radius:0; background:var(--card); overflow:hidden; margin-bottom:14px;}
 .stat{padding:13px 12px 11px; border-right:1px solid var(--line);}
 .stat:last-child{border-right:none;}
 .stat .num{font-family:var(--mono); font-size:21px; font-weight:500; line-height:1.1;}
@@ -127,12 +204,12 @@ header{border-bottom:3px double var(--ink); background:var(--paper); position:st
 .stat .num .weak-code{color:var(--red);}
 
 .toggle-row{display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--line);
-  border-radius:10px; padding:13px 14px; margin-bottom:18px; width:100%; text-align:left;}
+  border-radius:0; padding:13px 14px; margin-bottom:18px; width:100%; text-align:left;}
 .toggle-row .t-copy{flex:1;}
 .toggle-row .t-title{font-size:14.5px; font-weight:600;}
 .toggle-row .t-sub{font-size:12.5px; color:var(--muted); margin-top:1px;}
-.switch{flex:none; width:44px; height:26px; border-radius:13px; background:var(--line); position:relative; transition:background .15s;}
-.switch::after{content:""; position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%;
+.switch{flex:none; width:44px; height:26px; border-radius:0; background:var(--line); position:relative; transition:background .15s;}
+.switch::after{content:""; position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:0;
   background:#fff; box-shadow:0 1px 2px rgba(0,0,0,.25); transition:left .15s;}
 .toggle-row[aria-pressed="true"] .switch{background:var(--blue);}
 .toggle-row[aria-pressed="true"] .switch::after{left:21px;}
@@ -143,25 +220,25 @@ header{border-bottom:3px double var(--ink); background:var(--paper); position:st
 .hint{font-size:12.5px; color:var(--muted); margin:0 2px 12px;}
 .group-lbl{font-family:var(--mono); font-size:11px; letter-spacing:.11em; color:var(--muted);
   text-transform:uppercase; margin:16px 2px 8px; padding-bottom:4px; border-bottom:1px solid var(--line);}
-.trow{display:block; width:100%; text-align:left; padding:7px 2px 9px; border-radius:6px;}
+.trow{display:block; width:100%; text-align:left; padding:7px 2px 9px; border-radius:0;}
 .trow:active{background:rgba(37,28,57,.04);}
 .trow-top{display:flex; align-items:baseline; gap:7px; margin-bottom:5px;}
 .trow-top .code{font-family:var(--mono); font-size:11.5px; font-weight:500; color:var(--ink); flex:none;}
 .trow-top .name{font-size:13px; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .trow-top .val{margin-left:auto; font-family:var(--mono); font-size:11.5px; color:var(--muted); flex:none;}
-.track{height:22px; border:1px solid var(--line); border-radius:4px; background:
+.track{height:22px; border:1px solid var(--line); border-radius:0; background:
   repeating-linear-gradient(to right, transparent 0, transparent calc(10% - 1px), var(--grid) calc(10% - 1px), var(--grid) 10%);
   background-color:var(--card); position:relative; overflow:hidden;}
-.bar{position:absolute; inset:0 auto 0 0; width:0%; border-radius:3px 0 0 3px; transition:width .35s ease;}
+.bar{position:absolute; inset:0 auto 0 0; width:0%; border-radius:0; transition:width .35s ease;}
 .bar.b-red{background:var(--red);} .bar.b-amber{background:var(--amber);}
 .bar.b-blue{background:var(--blue);} .bar.b-none{background:var(--line);}
 .legend{display:flex; flex-wrap:wrap; gap:12px; margin:16px 2px 0; font-family:var(--mono); font-size:10.5px;
   letter-spacing:.05em; color:var(--muted); text-transform:uppercase;}
 .legend span{display:flex; align-items:center; gap:5px;}
-.swatch{width:10px; height:10px; border-radius:3px;}
+.swatch{width:10px; height:10px; border-radius:0;}
 .reset-zone{margin-top:26px; text-align:center;}
 .reset-btn{font-family:var(--mono); font-size:12px; letter-spacing:.07em; color:var(--muted);
-  border:1px solid var(--line); border-radius:7px; padding:9px 16px; background:var(--card);}
+  border:1px solid var(--line); border-radius:0; padding:9px 16px; background:var(--card);}
 .reset-btn.armed{color:#fff; background:var(--red); border-color:var(--red);}
 .storage-note{font-family:var(--mono); font-size:10.5px; color:var(--muted); text-align:center; margin-top:10px;}
 
@@ -171,19 +248,21 @@ header{border-bottom:3px double var(--ink); background:var(--paper); position:st
 </style>
 </head>
 <body>
-<nav class="sitenav" aria-label="Site">
-  <div class="wrap sitenav-in">
-    <a class="sitebrand" href="index.html">VisualNeuroscience.AI</a>
+<header class="masthead site-wrap">
+  <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="Site">
     <a href="regions.html">Region Atlas</a>
     <a href="brodmann.html">Brodmann Areas</a>
     <a href="tracts.html">Tractography</a>
     <a href="network-atlas.html">Network Atlas</a>
     <a href="studies.html">Visualizing Studies</a>
     <a href="practice.html" aria-current="page">Practice</a>
-  </div>
-</nav>
+    <a href="textbook.html">Digital Textbook</a>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button>
+  </nav>
+</header>
 
-<header>
+<header class="qhead">
   <div class="wrap">
     <div class="head-in">
       <div>
@@ -792,5 +871,25 @@ loadState(function(){
   deal();
 });
 </script>
+
+<script>
+/* the site's theme toggle, as on every page */
+const themeBtn = document.getElementById("themeBtn");
+const themeLbl = document.getElementById("themeLbl");
+if (document.documentElement.getAttribute("data-theme") === "dark"){
+  themeLbl.textContent = "Light";
+  themeBtn.setAttribute("aria-pressed", "true");
+}
+themeBtn.addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.getAttribute("data-theme") === "dark";
+  if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+  else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+  themeBtn.setAttribute("aria-pressed", String(!dark));
+  try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+});
+</script>
+<script src="assets/firebase-config.js"></script>
+<script type="module" src="assets/auth-ui.js"></script>
 </body>
 </html>
