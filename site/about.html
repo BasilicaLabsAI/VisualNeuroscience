@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — VisualNeuroscience.AI</title>
+<meta name="description" content="Who built VisualNeuroscience.AI and why: a free brain atlas made in full by one engineer who was priced out of studying neuroscience, and kept learning by building.">
+<!-- link previews. The card is built by site/share.html and rendered to
+     assets/social-card.jpg; og:image has to be absolute, so this origin is
+     the one thing to change if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="About — VisualNeuroscience.AI">
+<meta property="og:description" content="Who built VisualNeuroscience.AI and why: a free brain atlas made in full by one engineer who was priced out of studying neuroscience.">
+<meta property="og:url" content="https://visualneuroscience.ai/about.html">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The flow-state network ring over orange-tinted MNI152 brain slices, with the VisualNeuroscience.AI wordmark at its centre.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="fonts/fonts.css">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+  --quiet:#8A8A8A;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+  --quiet:#8A8A8A;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  margin:0 0 3rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+a{ color:var(--ink); }
+svg{ display:block; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* masthead, shared with the rest of the site */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:.65em; height:.65em; flex:none; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{
+  font-family:var(--font-display); font-size:1.35rem;
+  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+}
+.title-strip .anno{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60);
+}
+
+.lede{
+  font-family:var(--font-serif); font-size:1.02rem; line-height:1.6;
+  margin:0 0 calc(var(--gap) * 1.6);
+}
+
+/* ── the story ──────────────────────────────────────────────────────── */
+.policy{ max-width:72ch; }
+.policy h2{
+  font-family:var(--font-brand); font-weight:600; font-size:.66rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
+  border-bottom:1px solid var(--ink); padding:.2rem .1rem .45rem;
+  margin:calc(var(--gap) * 2.4) 0 var(--gap);
+}
+.policy h2:first-of-type{ margin-top:var(--gap); }
+.policy p{ font-size:1rem; line-height:1.65; margin-bottom:.9rem; }
+.policy ul{ margin:0 0 1rem 1.1rem; }
+.policy li{ font-size:1rem; line-height:1.6; margin-bottom:.45rem; }
+.policy b{ font-weight:400; color:var(--ink); }
+.policy .note{
+  font-family:var(--font-serif); font-style:italic; font-size:.9rem;
+  color:var(--ink-60); border-left:2px solid var(--ink-35);
+  padding-left:.8rem; margin:1rem 0;
+}
+.policy .sign{
+  font-family:var(--font-display); font-size:1.2rem; letter-spacing:.01em;
+  margin:1.6rem 0 0;
+}
+.policy .sign small{
+  display:block; font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60); margin-top:.2rem;
+}
+.policy .stamp{
+  font-family:var(--font-brand); font-size:.55rem; letter-spacing:.24em;
+  text-transform:uppercase; color:var(--ink-35);
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2.4rem;
+}
+</style>
+</head>
+<body>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="Site">
+    <a href="regions.html">Region Atlas</a>
+    <a href="brodmann.html">Brodmann Areas</a>
+    <a href="tracts.html">Tractography</a>
+    <a href="network-atlas.html">Network Atlas</a>
+    <a href="studies.html">Visualizing Studies</a>
+    <a href="practice.html">Practice</a>
+    <a href="textbook.html">Digital Textbook</a>
+    <a href="about.html" aria-current="page">About</a>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<div class="title-strip">
+  <h1 class="name">About</h1>
+  <span class="anno">who built this, and why</span>
+</div>
+
+<div class="policy">
+
+<p class="lede">VisualNeuroscience.AI was built in full by me, Fadil Karim: the viewer, the atlases, the pages, the apps and everything between them. It is a one-person project, and this page says why it exists.</p>
+
+<h2>The short version</h2>
+<p>I am an engineer by background. I started a PGCert in Applied Neuroscience and could not finish it &mdash; work and the cost got in the way, as they do for a great many people who would like to study the brain and have no lab to walk into. So I kept learning the way an engineer learns, by building. The thing I had most wanted while studying was a good map of the brain that I could open on anything, without a licence, an installer or a login. It did not exist at a price I could pay, so I made it, and I made it free.</p>
+<p>A good map of the brain should not sit behind a paywall. That is the whole idea, and everything else here follows from it.</p>
+
+<h2>What it is</h2>
+<p>An interactive brain atlas that runs in the browser: the MNI152 template with the AAL-116 atlas, Brodmann areas searchable by function, whole-brain HCP1065 tractography, receptor-density maps, brain-network states, and published studies drawn on the scan itself. Nothing installs and nothing needs an account. Every scan, atlas and tractogram ships with the page and is rendered on your own machine, so it works offline, and it works on a phone at the back of a lecture theatre.</p>
+<p>Two newer sections will keep growing. A <a href="textbook.html">digital textbook</a>, three chapters so far, with every claim cited and linked to the paper and the gaps flagged rather than papered over. And a <a href="practice.html">practice mode</a> that scores as it goes, leans toward what you keep getting wrong, and explains every answer; the first question bank follows the KCL MSc Neuroscience syllabus, and banks for other courses are next. The first study on the <a href="studies.html">shelf</a> is a paper on hallucinations in schizophrenia: ten regions of the auditory, language and control systems, switched between ordinary hearing and the hallucinating state.</p>
+<p>The same app is wrapped for iPhone, iPad, Mac and Apple Vision Pro, where the atlas becomes a set of windows you can arrange around the room.</p>
+
+<h2>Who it is for</h2>
+<p>Anyone learning neuroanatomy without a lab or a licence. Students revising on a phone between lectures. Lecturers who want something live on the screen rather than a slide of a brain. Clinicians who need a region and its function checked in a moment. Researchers who would like their own findings drawn on a brain that other people can turn. And anyone who was priced out of studying this, as I was.</p>
+
+<h2>How it is built</h2>
+<p>It is built to be read as well as used. Each page says where its data came from and where the evidence stops, and each study page says which of its regions are drawn exactly and which only approximately. The atlases are the open ones the field already trusts: the MNI152 template, the AAL parcellation, the MRIcron Brodmann atlas and the HCP1065 tractogram. The rendering is <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a>, running in your browser&rsquo;s own graphics. What the site collects, which is very little, is set out on the <a href="privacy.html">privacy page</a>.</p>
+
+<h2>Tell me what is missing</h2>
+<p>A one-person project has a short feedback loop, and I would like to use it. If a feature would make this work for your module, your research group or your society &mdash; a question bank built to your syllabus, a missing atlas, a dataset overlay, one of your own published studies visualised on the scan &mdash; write and say so, and it usually ships within the week. Corrections are the most welcome mail of all: the pages make factual claims and cite their sources, and if one of them is wrong I would rather know.</p>
+<p>Write to <a href="mailto:fid@ottomanlabs.ai"><b>fid@ottomanlabs.ai</b></a> and I read it myself.</p>
+
+<p class="sign">Fadil Karim<small>VisualNeuroscience.AI is made by <a href="https://ottomanlabs.ai/" rel="noopener">OttomanLabs</a>.</small></p>
+
+<p class="stamp">VisualNeuroscience.AI &middot; built by Fadil Karim &middot; OttomanLabs</p>
+
+</div>
+
+</main>
+
+<script src="assets/native.js"></script>
+<script>
+"use strict";
+(function(){
+  var themeBtn = document.getElementById("themeBtn");
+  var themeLbl = document.getElementById("themeLbl");
+  if (document.documentElement.getAttribute("data-theme") === "dark"){
+    themeLbl.textContent = "Light"; themeBtn.setAttribute("aria-pressed", "true");
+  }
+  themeBtn.addEventListener("click", function(){
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark";
+    if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+    else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+    themeBtn.setAttribute("aria-pressed", String(!dark));
+    try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+  });
+})();
+</script>
+
+<script src="assets/firebase-config.js"></script>
+<script type="module" src="assets/auth-ui.js"></script>
+</body>
+</html>
