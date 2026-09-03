@@ -2,13 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<!-- iPhone, iPad and Apple Vision Pro, where the iPad app runs as it is.
-	     Sign in with Apple is required by guideline 4.8 the moment any
-	     third-party login ships, and the native sheet needs the entitlement;
-	     the matching capability must also be ticked on the App ID in the
-	     developer portal. The Mac build is parked: its sandbox entitlements
-	     lived here and are in the history under the commit that removed
-	     them, for the day the Mac App Store is taken up. -->
+	<!-- One build for iPhone, iPad, Apple Vision Pro and Apple silicon Macs:
+	     the iPad app runs as it is on the last two, inside the sandbox the
+	     system gives it, so no sandbox entitlement is declared here. Sign in
+	     with Apple is required by guideline 4.8 the moment any third-party
+	     login ships, and the native sheet needs the entitlement; the matching
+	     capability must also be ticked on the App ID in the developer portal. -->
 	<key>com.apple.developer.applesignin</key>
 	<array>
 		<string>Default</string>

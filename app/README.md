@@ -22,7 +22,7 @@ serving `./site` as the plain static assets it is.
 | Android | the app bundle | everything is local already | Play |
 | iPhone, iPad | the app bundle | everything is local already | App Store |
 | Apple Vision Pro | the iPad app as it is | everything is local already | App Store, alongside the iPad app |
-| Mac | parked: Mac Catalyst is switched off in the project until the Mac App Store is taken up | | |
+| Mac (Apple silicon) | the iPad app as it is | everything is local already | Mac App Store, from the same iOS build |
 
 `site/assets/native.js` is the seam. It asks Capacitor for a share sheet, a
 haptic tick or a write to Photos when Capacitor is there, asks the browser for
@@ -61,10 +61,11 @@ npm run ios            # sync, then open App.xcodeproj
 In Xcode: set the team on the App target, confirm the bundle identifier is
 `ai.visualneuroscience.app`, then Product → Archive → Distribute App.
 
-The Mac build is the same target: Mac Catalyst is enabled on both
-configurations, so one project produces the iPhone, iPad and Mac apps from the
-same code. `store/APP-STORE.md` has the submission route for all three,
-including what differs on the Mac.
+One archive covers every Apple platform. The iPad app is offered as it is on
+Apple Vision Pro and on Macs with Apple silicon, which the project opts into
+in its build settings, so there is no Mac or Vision archive to make.
+`store/APP-STORE.md` has the submission route and `store/MAC-APP-STORE.md`
+the two switches that put the same build on the Mac App Store.
 
 ## Icons and splash
 

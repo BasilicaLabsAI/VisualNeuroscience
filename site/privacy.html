@@ -281,7 +281,7 @@ svg{ display:block; }
   <li>Whether you chose the light or the dark theme.</li>
   <li>A snapshot, only if you ask for one. It is written into the app&rsquo;s own documents folder and then handed to the system share sheet, so where it ends up is your choice. Nothing is sent anywhere.</li>
 </ul>
-<p>The Mac build is sandboxed. It requests the sandbox itself, permission to write a file where you put it, and &mdash; from the release that introduces signing in &mdash; the standard permission to make outgoing connections, which the optional services need and the anatomy does not.</p>
+<p>On a Mac with Apple silicon the app is the iPad app, unchanged, running inside the sandbox macOS gives every app from its store. It asks for nothing beyond that sandbox: the only file it writes is a snapshot you ask for, into its own container, and the only connections it makes are the optional services below, when you use them.</p>
 
 <h2>The website</h2>
 <p>The website is the same files, served from Cloudflare. One thing follows from being on the open web rather than in an app bundle, and it is worth stating plainly:</p>
@@ -312,7 +312,7 @@ svg{ display:block; }
 
 <p>Write to <a href="mailto:fid@ottomanlabs.ai"><b>fid@ottomanlabs.ai</b></a> and a person reads it. VisualNeuroscience.AI is made by <a href="https://ottomanlabs.ai/" rel="noopener">OttomanLabs</a>.</p>
 
-<p class="stamp">Last updated 2 September 2026 &middot; VisualNeuroscience.AI &middot; OttomanLabs</p>
+<p class="stamp">Last updated 3 September 2026 &middot; VisualNeuroscience.AI &middot; OttomanLabs</p>
 
 </div>
 
