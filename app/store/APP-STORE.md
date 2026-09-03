@@ -128,6 +128,9 @@ Mac through TestFlight.
 
 ## Filling in the listing
 
+Every field, written out and checked against the character limits, is in
+[`LISTING.md`](LISTING.md). Paste from there. What follows is the reasoning.
+
 **Screenshots** are in `app/store/screenshots/`, rendered at the two sizes
 Apple asks for and scales the rest from:
 
@@ -138,8 +141,9 @@ Both sets are required for a universal app. Upload them under the 6.9" iPhone
 and 13" iPad display sizes; App Store Connect derives the smaller ones.
 
 **Support and privacy URLs.** Support URL:
-`https://visualneuroscience.ai/privacy.html` (the page carries the support
-contact, **fid@ottomanlabs.ai**). Privacy Policy URL: the same page.
+`https://visualneuroscience.ai/about.html` (the page carries the support
+contact, **fid@ottomanlabs.ai**, and the story). Privacy Policy URL:
+`https://visualneuroscience.ai/privacy.html`.
 
 **Privacy.** Depends on whether this build ships with accounts active
 (`site/assets/firebase-config.js` non-null at sync time — it is, as of v6.4):
