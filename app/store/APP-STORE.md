@@ -115,6 +115,15 @@ Apple's machine, which is what a bare clone needs before it can build.
 - The first build takes longer than later ones because Homebrew installs
   Node each time; five to ten minutes is normal.
 
+## Apple Vision Pro
+
+There is no separate build. Apple offers compatible iPad apps on Vision Pro
+as they are, and this project opts in (Apple Vision, Designed for iPad, in
+the target's destinations). In App Store Connect the switch lives under
+Pricing and Availability → **iPhone and iPad Apps on Apple Vision Pro**: make
+sure it is on. The same section has the equivalent switch for Macs with
+Apple silicon; leave that one off, since the Mac is parked.
+
 ## Filling in the listing
 
 **Screenshots** are in `app/store/screenshots/`, rendered at the two sizes

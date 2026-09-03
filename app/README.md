@@ -21,7 +21,8 @@ serving `./site` as the plain static assets it is.
 | Website | Cloudflare Workers | service worker (`site/sw.js`) | — |
 | Android | the app bundle | everything is local already | Play |
 | iPhone, iPad | the app bundle | everything is local already | App Store |
-| Mac | the app bundle | everything is local already | Mac App Store |
+| Apple Vision Pro | the iPad app as it is | everything is local already | App Store, alongside the iPad app |
+| Mac | parked: Mac Catalyst is switched off in the project until the Mac App Store is taken up | | |
 
 `site/assets/native.js` is the seam. It asks Capacitor for a share sheet, a
 haptic tick or a write to Photos when Capacitor is there, asks the browser for

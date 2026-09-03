@@ -1,3 +1,9 @@
+> **Parked.** The app is being published for iPhone, iPad and Apple Vision
+> Pro first. Mac Catalyst is switched off in the project
+> (`SUPPORTS_MACCATALYST = NO`) and the sandbox entitlements the Mac needs
+> were removed from `App.entitlements`; both are one commit to restore
+> when this guide is taken up.
+
 # Publishing to the Mac App Store
 
 The Mac app is the same target as the iPhone and iPad app. **Mac Catalyst** is
