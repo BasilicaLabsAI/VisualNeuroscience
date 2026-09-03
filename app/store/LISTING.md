@@ -134,9 +134,19 @@ both **linked to the user's identity**, used for **App Functionality** and
 
 ## Age Rating
 
-Answer None to everything. The medical and treatment information
-question is about advice and treatment, which the app gives none of; it
-is an anatomy reference. The result is 4+.
+Step 1, features and capabilities: **No** to all of them. No parental
+controls or age checks, links open in the system browser, saved files
+and progress are private to each account, no feed, chat or advertising.
+
+The content steps: **None** to everything except one. *Alcohol, Tobacco,
+or Drug Use or References* is **Infrequent**: the receptor pages and the
+planned drug-interaction tiles name LSD, psilocybin, ketamine, cocaine,
+nicotine and cannabis in a pharmacological sense, and the hallucinations
+study and practice questions mention antipsychotics. That is a reference
+to substances under Apple's definition, and saying None would be the
+kind of under-rating a reviewer corrects. The medical and treatment
+information question is about advice and treatment, which the app gives
+none of, so that one stays None. The result is 12+.
 
 ## Pricing and Availability
 
