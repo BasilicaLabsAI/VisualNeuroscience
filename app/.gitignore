@@ -22,3 +22,6 @@ xcuserdata/
 # the site is copied in by `cap sync`; the original lives in ../site
 android/app/src/main/assets/public/
 ios/App/App/public/
+
+# the Capacitor sync recreates this symlink on every machine, with a path local to it
+ios/App/CapApp-SPM/symlinks/

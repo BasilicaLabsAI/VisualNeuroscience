@@ -29,9 +29,9 @@ npx cap sync ios          # after editing appId in capacitor.config.json
 ```
 
 **3. Register the identifier.** developer.apple.com → Certificates, Identifiers
-& Profiles → Identifiers → **+** → App IDs → App. Enter the bundle ID. No
-capabilities need enabling: the app has no push, no sign-in, no iCloud, no
-background modes.
+& Profiles → Identifiers → **+** → App IDs → App. Enter the bundle ID and
+tick one capability, **Sign in with Apple**, which the store build uses for
+its Apple sign-in. No push, no iCloud, no background modes.
 
 **4. Create the App Store Connect record.** appstoreconnect.apple.com → My Apps
 → **+** → New App.
@@ -76,6 +76,44 @@ The upload is validated on the way in. Processing then takes anywhere from
 minutes to an hour before the build appears in App Store Connect.
 
 ---
+
+## Or let Xcode Cloud build it
+
+Xcode Cloud is Apple's hosted build service, free for a small monthly
+allowance of build minutes. Once a workflow exists, every push to `main`
+is cloned, built, signed and uploaded to TestFlight by Apple, with no Mac
+involved. The repository is ready for it: `ios/App/ci_scripts/
+ci_post_clone.sh` installs Node, runs `npm ci` and the Capacitor sync on
+Apple's machine, which is what a bare clone needs before it can build.
+
+**Setting it up, once, from Xcode.**
+
+1. Product → Xcode Cloud → Create Workflow. Choose the App product.
+2. Grant access to your source code. The GitHub App called Xcode Cloud has
+   to be installed on the GitHub account that owns this repository, with
+   this repository selected. The dialog also lists the packages the app
+   depends on (firebase, google, and so on). Those are public repositories
+   and Xcode Cloud can read them without any grant; the buttons beside
+   them can be left alone. Next enables once *this* repository is granted.
+3. Review the workflow. The default is fine as a start: Archive for iOS on
+   every change to `main`. Edit it and add a post-action **TestFlight
+   Internal Testing** with your internal group, so each green build lands
+   on your devices by itself.
+4. Xcode Cloud manages signing with its own certificates, so nothing has
+   to be exported from the Mac. It also sets the build number from its
+   own counter on every run, so the Build field in the project no longer
+   needs bumping by hand.
+
+**Things that go wrong on the first run.**
+
+- *Cannot find package in node_modules*: the post-clone script did not
+  run. It must sit at `ios/App/ci_scripts/ci_post_clone.sh`, be executable
+  (`chmod +x`, committed), and the workflow's project must be
+  `ios/App/App.xcodeproj`.
+- *Sign in with Apple entitlement not allowed*: enable the capability on
+  the App ID at developer.apple.com → Identifiers, then re-run.
+- The first build takes longer than later ones because Homebrew installs
+  Node each time; five to ten minutes is normal.
 
 ## Filling in the listing
 

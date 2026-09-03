@@ -17,7 +17,10 @@
   "plugins": {
     "FirebaseAuthentication": {
       "skipNativeAuth": false,
-      "providers": ["apple.com", "google.com"]
+      "providers": [
+        "apple.com",
+        "google.com"
+      ]
     },
     "SplashScreen": {
       "launchAutoHide": false,
@@ -30,6 +33,23 @@
       "style": "DARK",
       "backgroundColor": "#111111",
       "overlaysWebView": false
+    }
+  },
+  "experimental": {
+    "ios": {
+      "spm": {
+        "swiftToolsVersion": "6.1",
+        "packageOptions": {
+          "@capacitor-firebase/authentication": {
+            "symlink": true
+          }
+        },
+        "packageTraits": {
+          "@capacitor-firebase/authentication": [
+            "Google"
+          ]
+        }
+      }
     }
   }
 }
