@@ -131,6 +131,35 @@ select{
   .nav-row.nav-row a{ display:block; }
 }
 
+/* ── the tab strip can never be wider than the page ─────────────────────
+   Two guarantees, whatever the browser, the zoom level or the fonts that
+   actually loaded. First, the strip wraps its own tabs and, when the
+   compact masthead below makes it a flex item, it may shrink to the line
+   rather than keep its full natural width and spill past both edges —
+   the centred strip was seen clipped at both ends in exactly that case.
+   Second, between a phone and a wide desktop the tabs are set a little
+   tighter, so eight of them and the two buttons sit on one row from
+   about 1180px up and on two tidy rows below, instead of three ragged
+   ones. Classes are doubled to outrank the per-page declarations. */
+.nav-row.nav-row{ flex-wrap:wrap; min-width:0; max-width:100%; box-sizing:border-box; }
+.masthead.masthead > .nav-row{ flex:0 1 auto; }
+/* the type, its tracking and the gaps all scale with the viewport, from a
+   compact setting at 761px up to the full one at about 1700px, so the strip
+   grows with the window rather than jumping between sizes at a breakpoint */
+@media (min-width:761px){
+  .nav-row.nav-row{ gap:.3rem clamp(.8rem, .2rem + 1.2vw, 2rem); }
+  .nav-row.nav-row a{
+    font-size:clamp(.64rem, .55rem + .11vw, .74rem);
+    letter-spacing:clamp(.2em, .1em + .12vw, .3em);
+  }
+}
+/* the Log in button and the theme toggle are one unit: where the eight
+   tabs fill a row and the buttons do not fit beside them, both drop to
+   the next row together, rather than one of them falling alone. The
+   group inherits the strip's gap so the spacing reads as one row. */
+.nav-row .nav-tools{ display:inline-flex; align-items:center; gap:inherit; }
+}
+
 /* ── enlarge: one box taking the whole grid ── */
 .views.solo{ grid-template-columns:1fr; }
 .views.solo .view{ display:none; }

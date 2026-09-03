@@ -118,8 +118,10 @@ function mount(){
   const nav = document.querySelector(".nav-row") || document.querySelector("header") || document.body;
   const slot = document.createElement("span");
   slot.className = "vn-auth-slot";
+  /* beside the theme toggle, inside whatever groups the two so they wrap
+     as one unit when the strip breaks into rows */
   const theme = nav.querySelector ? nav.querySelector(".theme-toggle") : null;
-  if (theme && theme.parentNode === nav) nav.insertBefore(slot, theme);
+  if (theme && theme.parentNode) theme.parentNode.insertBefore(slot, theme);
   else nav.appendChild(slot);
 
   function drawSlot(user){
