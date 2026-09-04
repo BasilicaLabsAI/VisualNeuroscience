@@ -42,89 +42,28 @@ the recording deleted it, so the reviewer can log in with §3.
 
 ## 2 · Reply text
 
-Paste into the App Review thread, with §3 filled in.
+App Store Connect caps a reply at 4,000 characters. This one is 3776
+with the placeholders, so fill them in briefly. Paste into the App
+Review thread.
 
 ```
-Thank you. Answers to each point, and the same text is now in the Notes
-field of App Review Information.
+Thank you. Answers to each point; the same text is in the Notes field of App Review Information.
 
-1. Screen recording: attached. Recorded on an iPad Pro running the current
-iPadOS, beginning with launch. It shows the typical flow (Region Atlas,
-Brodmann Areas, Tractography, Practice), then account registration, login
-with the demo account, Sign in with Apple, cross-device progress saving,
-and in-app account deletion. Logging in is optional and only saves
-practice progress; there is no user-generated content shared between
-users and no paid content.
+1. Screen recording: attached, made on an iPad Pro on the current iPadOS, starting from launch. It shows the typical flow (Region Atlas, Brodmann Areas, Tractography, Practice), then account registration, login with the demo account, Sign in with Apple, progress saving, and in-app account deletion. Login is optional and only saves practice progress; there is no user-generated content shared between users and no paid content.
 
-2. Purpose and audience: VisualNeuroscience.AI is an educational
-neuroanatomy reference. It renders real, published brain atlases (the
-MNI152 template, the AAL-116 parcellation, a Brodmann atlas, the HCP1065
-tractogram) on the device and lets the user select, search and read about
-brain structures, with published studies drawn onto the scan, a cited
-digital textbook and adaptive practice questions. The audience today is
-students and teachers of neuroscience, psychology and medicine, and
-clinicians who want a quick anatomical reference. The intention is to
-make it the most advanced and useful atlas of the brain available:
-targeted at students first, and over time bridging the gap to
-enthusiasts, so that anyone curious about the brain can open a real map
-of it. It solves the problem that good interactive brain atlases are
-either expensive, desktop-only, or need an installation and a licence;
-this one is free, runs offline and fits in a pocket. It is not a medical
-device and offers no diagnosis or treatment advice; each page says so and
-cites its sources.
+2. Purpose and audience: an educational neuroanatomy reference. It renders published brain atlases (MNI152 template, AAL-116 parcellation, a Brodmann atlas, the HCP1065 tractogram) on the device and lets the user select, search and read about brain structures, with published studies drawn onto the scan, a cited digital textbook and adaptive practice questions. The audience today is students and teachers of neuroscience, psychology and medicine, and clinicians wanting a quick anatomical reference. The intention is to make it the most advanced and useful atlas of the brain: targeted at students first, and over time bridging the gap to enthusiasts. Good interactive atlases are expensive, desktop-only or need a licence; this one is free, runs offline and fits in a pocket. It is not a medical device and gives no diagnosis or treatment advice; each page says so and cites its sources.
 
-3. Setting up and accessing features: nothing requires an account. Every
-tool is reachable from the tabs at the top of the home screen. Logging in
-is entirely optional at the moment: its only purpose is to save a user's
-progress in the Practice (testing) area so it follows them across
-devices. Every atlas, diagram, study and textbook chapter is available
-without an account, and the practice questions work without one too,
-with progress kept on the device. Demo account for the reviewer:
-   Email: [DEMO EMAIL]
-   Password: [DEMO PASSWORD]
-Sign in with Apple is also offered and works with any Apple ID. Account
-deletion is in the account menu (tap the account name in the header, then
-Delete account, pressed twice as the button asks).
+3. Setup and access: nothing requires an account. Every tool is reachable from the tabs at the top of the home screen. Logging in is entirely optional at the moment; its only purpose is to save progress in the Practice (testing) area across devices. Everything else, and the practice questions themselves, work without an account. Demo account:
+Email: [DEMO EMAIL]
+Password: [DEMO PASSWORD]
+Sign in with Apple also works with any Apple ID. Account deletion: tap the account name in the header, then Delete account, pressed twice as the button asks.
 
-4. External services: Firebase Authentication (Google) for sign-in;
-Cloud Firestore (Google) for the signed-in user's saved progress, under
-security rules that let each user read and write only their own data;
-Sign in with Apple. The anatomy itself uses no network service: the
-template, atlases and tractogram are inside the app bundle. The website
-that hosts the same content, visualneuroscience.ai, is served from
-Cloudflare, but the app does not load content from it. No payment
-processor, no advertising or analytics SDK, no AI service.
-   The ".AI" in the name reflects how the app is made, not a feature in
-it. Artificial intelligence is used heavily in its development: to
-research and cross-check the neuroscience literature, to assemble the
-textbook chapters and practice questions, to process the atlas data, and
-to build the software itself. Everything that ships is verified against
-its published source and cited on the page. This version contains no
-generative AI feature and makes no call to any AI service at runtime.
-AI features are planned for future versions, and they will be declared
-in the submission of whichever version introduces them.
+4. External services: Firebase Authentication (Google) for sign-in; Cloud Firestore (Google) for the signed-in user's progress, under rules that let each user read and write only their own data; Sign in with Apple. The anatomy uses no network service: template, atlases and tractogram are in the bundle. The website visualneuroscience.ai is served from Cloudflare, but the app does not load content from it. No payment processor, advertising or analytics SDK, or AI service.
+The ".AI" in the name reflects how the app is made, not a feature in it. AI is used heavily in development: to research and cross-check the literature, assemble the textbook and practice content, process the atlas data, and build the software. Everything shipped is verified against its published source and cited. This version has no generative AI feature and calls no AI service at runtime. AI features are planned for future versions and will be declared in the submission that introduces them.
 
-5. Regional differences: none. The app functions identically in every
-region. Content is in English.
+5. Regional differences: none. The app functions identically in every region. Content is in English.
 
-6. Regulated industry / third-party material: the app is not a medical
-device and is not used to diagnose or treat; it is an educational
-reference. The scientific datasets are published under open licences and
-are credited in the app and on the website:
-   - MNI152 (ICBM 2009c) template, McConnell Brain Imaging Centre,
-     Montreal Neurological Institute: free to use, copy and distribute
-     with the copyright notice.
-   - AAL parcellation (Tzourio-Mazoyer et al., 2002), Neurofunctional
-     Imaging Group (GIN): free for non-commercial academic and educational
-     use; the app is free.
-   - Brodmann atlas volume, from MRIcron (Chris Rorden): BSD licence.
-   - HCP1065 population-averaged tractography atlas (Yeh, 2018), derived
-     from Human Connectome Project data: CC BY-SA 4.0.
-   - Rendering by NiiVue (BSD 2-Clause). Charts by d3 (ISC).
-   - Studies are summarised from open-access papers, cited on the page.
-   [BRODMANN DRAWING: state the source of the schematic Brodmann drawing
-   and your permission to use it, or remove this line if the in-house
-   drawing has replaced it.]
+6. Not a medical device and not used to diagnose or treat; an educational reference. The datasets are published under open licences and credited in the app and on the website: MNI152 (ICBM 2009c) template, McConnell Brain Imaging Centre, MNI, free to use and distribute with the copyright notice; AAL parcellation (Tzourio-Mazoyer et al., 2002), GIN, free for non-commercial academic use (the app is free); Brodmann atlas volume from MRIcron (Chris Rorden), BSD; HCP1065 tractography atlas (Yeh, 2018), from Human Connectome Project data, CC BY-SA 4.0; rendering by NiiVue (BSD), charts by d3 (ISC); studies summarised from open-access papers, cited on the page. [BRODMANN DRAWING: source and permission, or delete this sentence.]
 ```
 
 ## 3 · The demo account
