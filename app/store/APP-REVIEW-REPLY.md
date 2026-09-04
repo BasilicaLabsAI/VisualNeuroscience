@@ -99,8 +99,10 @@ it. Artificial intelligence is used heavily in its development: to
 research and cross-check the neuroscience literature, to assemble the
 textbook chapters and practice questions, to process the atlas data, and
 to build the software itself. Everything that ships is verified against
-its published source and cited on the page. The app contains no
+its published source and cited on the page. This version contains no
 generative AI feature and makes no call to any AI service at runtime.
+AI features are planned for future versions, and they will be declared
+in the submission of whichever version introduces them.
 
 5. Regional differences: none. The app functions identically in every
 region. Content is in English.
