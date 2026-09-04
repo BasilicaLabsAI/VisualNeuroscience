@@ -101,11 +101,22 @@ function dormant(){
 async function build(){
   const sdk = await import("../vendor/firebase/firebase-bundle.js");
   const app  = sdk.initializeApp(CFG);
-  const auth = sdk.getAuth(app);
-  const db   = sdk.getFirestore(app);
 
   const cap = typeof window !== "undefined" ? window.Capacitor : null;
   const isNative = !!(cap && cap.isNativePlatform && cap.isNativePlatform());
+
+  /* Inside the apps, auth is initialised without the popup-redirect helper.
+     getAuth() attaches one, and on iOS that helper loads a hidden Google
+     iframe before it lets anything else run; in a WebKit web view that load
+     can simply never finish, and every sign-in, and the auth-state event
+     itself, then waits behind it for ever. The apps never use popups or
+     redirects: Apple and Google go through the native sheets and are
+     replayed as credentials, email needs no helper at all. The web keeps
+     getAuth(), whose popups it does use. */
+  const auth = isNative
+    ? sdk.initializeAuth(app, { persistence: [sdk.indexedDBLocalPersistence, sdk.browserLocalPersistence] })
+    : sdk.getAuth(app);
+  const db   = sdk.getFirestore(app);
   const plugin  = isNative && cap.Plugins ? cap.Plugins.FirebaseAuthentication : null;
   const browser = isNative && cap.Plugins ? cap.Plugins.Browser : null;
   const appPlug = isNative && cap.Plugins ? cap.Plugins.App : null;

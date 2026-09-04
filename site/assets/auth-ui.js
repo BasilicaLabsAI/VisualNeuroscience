@@ -219,12 +219,22 @@ function mount(){
      it on success, and shows the friendly message on failure. A notice that
      should stay visible (link sent, reset sent) travels as an error
      carrying keepOpen. */
+  /* a sign-in that neither succeeds nor fails within this long is reported
+     as a failure: the modal must never stay faded with nothing to press */
+  const PATIENCE = 30000;
+  function patient(p){
+    let t;
+    const late = new Promise((_, rej) => { t = setTimeout(() => rej(new Error(
+      "The sign-in service didn't answer. Check your connection and try again.")), PATIENCE); });
+    return Promise.race([p, late]).finally(() => clearTimeout(t));
+  }
+
   async function run(el, fn){
     const host = el.closest(".vn-modal") || el;
     host.classList.add("vn-busy");
     status("");
     try{
-      await fn();
+      await patient(fn());
       closeModal();
     }catch(err){
       if (err && err.keepOpen) status(err.message, false);

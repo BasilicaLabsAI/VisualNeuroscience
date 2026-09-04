@@ -13,7 +13,8 @@ To rebuild (bumping the SDK version):
 
     npm install firebase esbuild
     # entry.js re-exports the symbols listed in docs/AUTH-SETUP.md
-    npx esbuild entry.js --bundle --format=esm --minify --outfile=firebase-bundle.js
+    npx esbuild entry.js --bundle --format=esm --minify --legal-comments=none --outfile=firebase-bundle.js
+    # (the Apache notice lives in this file rather than 127 times in the bundle)
 
 Firestore is deliberately the **lite** build — plain request/response reads
 and writes with no offline replica — which is all the saved-files feature

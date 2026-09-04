@@ -301,3 +301,10 @@ itself. To bump the SDK: `npm install firebase esbuild`, recreate the
 re-export entry file listed in `site/vendor/firebase/NOTICE.md` (every
 symbol `assets/auth.js` and `assets/userdata.js` import), then
 `npx esbuild entry.js --bundle --format=esm --minify --outfile=firebase-bundle.js`.
+The entry re-exports, from `firebase/auth`: `getAuth`, `initializeAuth`,
+`indexedDBLocalPersistence`, `browserLocalPersistence`, `inMemoryPersistence`
+(the apps initialise auth without the popup-redirect helper, which hangs in
+an iOS web view), plus the sign-in, link, profile and email-link functions
+`auth.js` calls; from `firebase/app`: `initializeApp`; from
+`firebase/firestore/lite`: `getFirestore`, `doc`, `collection`, `getDoc`,
+`getDocs`, `setDoc`, `updateDoc`, `deleteDoc`, `serverTimestamp`.
