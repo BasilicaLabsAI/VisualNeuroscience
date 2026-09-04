@@ -109,6 +109,11 @@ Routing App Coverage File, App Clip and iMessage App: leave alone.
 
 ## App Review Information
 
+A first submission from a new developer account draws an "Information
+Needed" reply asking for a screen recording and a written account of the
+app; [`APP-REVIEW-REPLY.md`](APP-REVIEW-REPLY.md) has the recording shot
+list and the reply text ready to fill in.
+
 Sign-in required: **No**. Notes:
 
 ```
