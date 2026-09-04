@@ -61,13 +61,17 @@ neuroanatomy reference. It renders real, published brain atlases (the
 MNI152 template, the AAL-116 parcellation, a Brodmann atlas, the HCP1065
 tractogram) on the device and lets the user select, search and read about
 brain structures, with published studies drawn onto the scan, a cited
-digital textbook and adaptive practice questions. The audience is
+digital textbook and adaptive practice questions. The audience today is
 students and teachers of neuroscience, psychology and medicine, and
-clinicians who want a quick anatomical reference. It solves the problem
-that good interactive brain atlases are either expensive, desktop-only,
-or need an installation and a licence; this one is free, runs offline and
-fits in a pocket. It is not a medical device and offers no diagnosis or
-treatment advice; each page says so and cites its sources.
+clinicians who want a quick anatomical reference. The intention is to
+make it the most advanced and useful atlas of the brain available:
+targeted at students first, and over time bridging the gap to
+enthusiasts, so that anyone curious about the brain can open a real map
+of it. It solves the problem that good interactive brain atlases are
+either expensive, desktop-only, or need an installation and a licence;
+this one is free, runs offline and fits in a pocket. It is not a medical
+device and offers no diagnosis or treatment advice; each page says so and
+cites its sources.
 
 3. Setting up and accessing features: nothing requires an account. Every
 tool is reachable from the tabs at the top of the home screen. Logging in
