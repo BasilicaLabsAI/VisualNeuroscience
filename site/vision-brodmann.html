@@ -17,11 +17,13 @@
 .face svg{ width:100%; height:100%; }
 .ba-tile{ cursor:pointer; }
 .ba-tile.mute{ cursor:default; }
-.ba-tile .art-patch{ opacity:0; transition:opacity .12s ease; pointer-events:none; }
-.ba-tile.on .art-patch{ opacity:1; }
-@media (hover:hover){ .ba-tile:hover .art-patch{ opacity:1; } }
-.ba-tile .hit{ fill:#000; fill-opacity:0; stroke:none; }
-.ba-tile.on .hit{ stroke:#F4F2EE; stroke-width:1.1; stroke-opacity:.9; }
+.ba-tile .shape{ fill:#F4F2EE; fill-opacity:.06; stroke:#F4F2EE; stroke-opacity:.7; stroke-width:1.1; stroke-linejoin:round; transition:fill-opacity .12s ease; }
+.ba-tile .num{ font-family:var(--font-brand); font-weight:500; fill:#F4F2EE; pointer-events:none; user-select:none; }
+@media (hover:hover){ .ba-tile:not(.mute):hover .shape{ fill-opacity:.2; } }
+.ba-tile.on .shape{ fill-opacity:1; stroke:#111; stroke-width:1.4; }
+.ba-tile.on .num{ fill:#111; }
+.ba-tile.mute .shape{ stroke-dasharray:3 2.5; stroke-opacity:.4; fill-opacity:.03; }
+.ba-tile.mute .num{ fill-opacity:.45; }
 .readout{ flex:none; }
 .readout .fn-name{ font-family:var(--font-display); font-size:1.2rem; }
 .readout .fn-sub{ font-family:var(--font-brand); font-weight:500; font-size:.6rem;
@@ -49,39 +51,36 @@
 </div>
 
 <script src="assets/brodmann-areas.js"></script>
-<script src="assets/brodmann-art.js"></script>
+<script src="assets/brodmann-outline.js"></script>
 <script>
 (function(){
-  var B = window.MN_BRODMANN, ART = window.MN_BA_ART;
+  var B = window.MN_BRODMANN, OUT = window.MN_BA_OUTLINE;
   var NS = "http://www.w3.org/2000/svg";
   var tiles = {lateral:{}, medial:{}};
   var selected = null;
 
   function draw(host, which){
     var svg = document.createElementNS(NS, "svg");
-    svg.setAttribute("viewBox", ART.box[which]);
-    var vb = ART.box[which].split(" ");
-    var base = document.createElementNS(NS, "image");
-    base.setAttribute("href", ART.base[which]);
-    base.setAttribute("width", vb[2]); base.setAttribute("height", vb[3]);
-    svg.appendChild(base);
-    Object.keys(ART.areas).forEach(function(k){
+    svg.setAttribute("viewBox", OUT.box[which]);
+    Object.keys(OUT.areas).forEach(function(k){
       var ba = +k;
-      var spec = (ART.areas[k] || []).filter(function(e){ return e.view === which; })[0];
+      var spec = (OUT.areas[k] || []).filter(function(e){ return e.view === which; })[0];
       if (!spec) return;
       var a = B.BY_BA[ba];
       var g = document.createElementNS(NS, "g");
       g.setAttribute("class", "ba-tile" + (a ? "" : " mute"));
-      var patch = document.createElementNS(NS, "image");
-      patch.setAttribute("class", "art-patch");
-      patch.setAttribute("href", spec.href);
-      patch.setAttribute("x", spec.x); patch.setAttribute("y", spec.y);
-      patch.setAttribute("width", spec.w); patch.setAttribute("height", spec.h);
-      var hit = document.createElementNS(NS, "path");
-      hit.setAttribute("class", "hit");
-      hit.setAttribute("d", spec.d);
-      hit.setAttribute("fill-rule", "evenodd");
-      g.appendChild(patch); g.appendChild(hit);
+      var shape = document.createElementNS(NS, "path");
+      shape.setAttribute("class", "shape");
+      shape.setAttribute("d", spec.d);
+      shape.setAttribute("fill-rule", "evenodd");
+      var num = document.createElementNS(NS, "text");
+      num.setAttribute("class", "num");
+      num.setAttribute("x", spec.at[0]); num.setAttribute("y", spec.at[1]);
+      num.setAttribute("text-anchor", "middle");
+      num.setAttribute("dominant-baseline", "central");
+      num.setAttribute("font-size", Math.max(6.5, Math.min(12, (spec.r || 8) * 1.15)).toFixed(1));
+      num.textContent = ba;
+      g.appendChild(shape); g.appendChild(num);
       if (a) g.addEventListener("click", function(){ select(ba); });
       svg.appendChild(g);
       tiles[which][ba] = g;

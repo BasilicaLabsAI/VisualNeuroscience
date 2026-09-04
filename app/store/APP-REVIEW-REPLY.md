@@ -43,7 +43,8 @@ the recording deleted it, so the reviewer can log in with §3.
 ## 2 · Reply text
 
 App Store Connect caps a reply at 4,000 characters. This one is 3776
-with the placeholders, so fill them in briefly. Paste into the App
+with the placeholders, so fill them in briefly. The Brodmann drawing
+sentence is settled: the map is the app's own line work. Paste into the App
 Review thread.
 
 ```
@@ -63,7 +64,7 @@ The ".AI" in the name reflects how the app is made, not a feature in it. AI is u
 
 5. Regional differences: none. The app functions identically in every region. Content is in English.
 
-6. Not a medical device and not used to diagnose or treat; an educational reference. The datasets are published under open licences and credited in the app and on the website: MNI152 (ICBM 2009c) template, McConnell Brain Imaging Centre, MNI, free to use and distribute with the copyright notice; AAL parcellation (Tzourio-Mazoyer et al., 2002), GIN, free for non-commercial academic use (the app is free); Brodmann atlas volume from MRIcron (Chris Rorden), BSD; HCP1065 tractography atlas (Yeh, 2018), from Human Connectome Project data, CC BY-SA 4.0; rendering by NiiVue (BSD), charts by d3 (ISC); studies summarised from open-access papers, cited on the page. [BRODMANN DRAWING: source and permission, or delete this sentence.]
+6. Not a medical device and not used to diagnose or treat; an educational reference. The datasets are published under open licences and credited in the app and on the website: MNI152 (ICBM 2009c) template, McConnell Brain Imaging Centre, MNI, free to use and distribute with the copyright notice; AAL parcellation (Tzourio-Mazoyer et al., 2002), GIN, free for non-commercial academic use (the app is free); Brodmann atlas volume from MRIcron (Chris Rorden), BSD; HCP1065 tractography atlas (Yeh, 2018), from Human Connectome Project data, CC BY-SA 4.0; rendering by NiiVue (BSD), charts by d3 (ISC); studies summarised from open-access papers, cited on the page. The Brodmann map is the app's own line drawing of Brodmann's public-domain 1909 scheme.
 ```
 
 ## 3 · The demo account
