@@ -52,8 +52,9 @@ field of App Review Information.
 iPadOS, beginning with launch. It shows the typical flow (Region Atlas,
 Brodmann Areas, Tractography, Practice), then account registration, login
 with the demo account, Sign in with Apple, cross-device progress saving,
-and in-app account deletion. There is no user-generated content shared
-between users and no paid content.
+and in-app account deletion. Logging in is optional and only saves
+practice progress; there is no user-generated content shared between
+users and no paid content.
 
 2. Purpose and audience: VisualNeuroscience.AI is an educational
 neuroanatomy reference. It renders real, published brain atlases (the
@@ -69,9 +70,12 @@ fits in a pocket. It is not a medical device and offers no diagnosis or
 treatment advice; each page says so and cites its sources.
 
 3. Setting up and accessing features: nothing requires an account. Every
-tool is reachable from the tabs at the top of the home screen. The
-optional Log in button (top of every page) keeps practice-question
-progress across devices. Demo account for the reviewer:
+tool is reachable from the tabs at the top of the home screen. Logging in
+is entirely optional at the moment: its only purpose is to save a user's
+progress in the Practice (testing) area so it follows them across
+devices. Every atlas, diagram, study and textbook chapter is available
+without an account, and the practice questions work without one too,
+with progress kept on the device. Demo account for the reviewer:
    Email: [DEMO EMAIL]
    Password: [DEMO PASSWORD]
 Sign in with Apple is also offered and works with any Apple ID. Account
