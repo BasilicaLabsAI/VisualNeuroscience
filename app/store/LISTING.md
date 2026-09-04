@@ -36,7 +36,7 @@ https://visualneuroscience.ai/privacy.html
 A free, interactive atlas of the human brain: AAL regions, Brodmann areas by function, whole-brain tractography, receptor maps and cited studies. Works offline.
 ```
 
-**Description** (3316/4000)
+**Description** (3461/4000)
 
 ```
 VisualNeuroscience.AI is an interactive atlas of the human brain, built for anyone learning neuroanatomy without a lab or a licence. Turn a real MNI152 brain, click through its regions, search Brodmann areas by what they do, follow the white-matter tracts, and see published studies drawn on the scan itself. Everything ships inside the app and renders on your device, so it works on a train, at the back of a lecture theatre, or in aeroplane mode.
@@ -68,6 +68,8 @@ BUILT ON OPEN DATA
 
 The MNI152 template, the AAL parcellation, the MRIcron Brodmann atlas and the HCP1065 tractogram, rendered with NiiVue. Each page says where its data came from and where the evidence stops.
 
+Brodmann Areas diagram adapted with permission from IFEN – Institute for EEG-Neurofeedback / Neurofeedback Academy (neurofeedback-academy.com).
+
 WHO IT IS FOR
 
 Students revising between lectures. Lecturers who want a live brain on the screen instead of a slide. Clinicians who need a region and its function in a moment. Researchers who would like their findings drawn on a brain other people can turn. And anyone who wanted to study this and was priced out.
@@ -78,6 +80,13 @@ Not a medical device and not a diagnostic tool. An educational reference that su
 
 Also on the web at visualneuroscience.ai
 ```
+
+The IFEN credit line was added on 4 September 2026, when the rights holder
+granted permission for the diagram (see `docs/PERMISSIONS.md`). App Store
+Connect lets the description be edited while the version's status reads
+Rejected, which is how an Information Needed request shows; if the field is
+open, paste the whole description again now, otherwise it goes in with the
+next metadata update.
 
 **Keywords** (95/100)
 

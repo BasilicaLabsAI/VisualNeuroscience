@@ -42,9 +42,9 @@ the recording deleted it, so the reviewer can log in with §3.
 
 ## 2 · Reply text
 
-App Store Connect caps a reply at 4,000 characters. This one is 3776
+App Store Connect caps a reply at 4,000 characters. This one is 3938
 with the placeholders, so fill them in briefly. The Brodmann drawing
-sentence is settled: the map is the app's own line work. Paste into the App
+sentence reflects the permission IFEN granted on 4 September 2026. Paste into the App
 Review thread.
 
 ```
@@ -64,7 +64,20 @@ The ".AI" in the name reflects how the app is made, not a feature in it. AI is u
 
 5. Regional differences: none. The app functions identically in every region. Content is in English.
 
-6. Not a medical device and not used to diagnose or treat; an educational reference. The datasets are published under open licences and credited in the app and on the website: MNI152 (ICBM 2009c) template, McConnell Brain Imaging Centre, MNI, free to use and distribute with the copyright notice; AAL parcellation (Tzourio-Mazoyer et al., 2002), GIN, free for non-commercial academic use (the app is free); Brodmann atlas volume from MRIcron (Chris Rorden), BSD; HCP1065 tractography atlas (Yeh, 2018), from Human Connectome Project data, CC BY-SA 4.0; rendering by NiiVue (BSD), charts by d3 (ISC); studies summarised from open-access papers, cited on the page. The Brodmann map is the app's own line drawing of Brodmann's public-domain 1909 scheme.
+6. Not a medical device and not used to diagnose or treat; an educational reference. The datasets are published under open licences and credited in the app and on the website: MNI152 (ICBM 2009c) template, McConnell Brain Imaging Centre, MNI, free to use and distribute with the copyright notice; AAL parcellation (Tzourio-Mazoyer et al., 2002), GIN, free for non-commercial academic use (the app is free); Brodmann atlas volume from MRIcron (Chris Rorden), BSD; HCP1065 tractography atlas (Yeh, 2018), from Human Connectome Project data, CC BY-SA 4.0; rendering by NiiVue (BSD), charts by d3 (ISC); studies summarised from open-access papers, cited on the page. The Brodmann map is a line drawing adapted, with the rights holder's written permission of 4 September 2026, from the Brodmann Areas diagram of IFEN (Institute for EEG-Neurofeedback / Neurofeedback Academy), credited on the page.
+```
+
+## 2b · Permission update for the thread
+
+IFEN granted permission for the Brodmann diagram on 4 September 2026 (the
+record is `docs/PERMISSIONS.md`). Post this as a further message in the App
+Review thread so the reviewer has the current position on point 6. It is
+1131 characters.
+
+```
+Update on point 6, third-party material. IFEN (Institute for EEG-Neurofeedback / Neurofeedback Academy, Neurofeedback-Partner GmbH, Germany), the rights holder of the Brodmann Areas diagram referred to in my earlier messages, granted written permission on 4 September 2026 to use and adapt the diagram on the VisualNeuroscience.AI website and in the associated apps. The permission is free of charge for this educational, non-commercial project, on condition of the acknowledgement "Brodmann Areas diagram adapted with permission from IFEN – Institute for EEG-Neurofeedback / Neurofeedback Academy", which IFEN also welcomed in the store listing.
+
+The Brodmann map in the app is a line drawing adapted from that diagram under this permission. The acknowledgement appears on the Brodmann Areas page in the app and on the website, and is in the store description. This supersedes my earlier notes about the drawing; the correction I sent to point 6 is now accurate. All other third-party material is unchanged: open-licence atlases and libraries, credited in the app and on the website. I can forward the permission email on request.
 ```
 
 ## 3 · The demo account
