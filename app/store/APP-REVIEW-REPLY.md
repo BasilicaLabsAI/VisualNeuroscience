@@ -94,6 +94,13 @@ template, atlases and tractogram are inside the app bundle. The website
 that hosts the same content, visualneuroscience.ai, is served from
 Cloudflare, but the app does not load content from it. No payment
 processor, no advertising or analytics SDK, no AI service.
+   The ".AI" in the name reflects how the app is made, not a feature in
+it. Artificial intelligence is used heavily in its development: to
+research and cross-check the neuroscience literature, to assemble the
+textbook chapters and practice questions, to process the atlas data, and
+to build the software itself. Everything that ships is verified against
+its published source and cited on the page. The app contains no
+generative AI feature and makes no call to any AI service at runtime.
 
 5. Regional differences: none. The app functions identically in every
 region. Content is in English.
