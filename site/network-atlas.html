@@ -338,6 +338,7 @@ svg{ display:block; }
         <span class="val" id="overlayVal">85%</span>
       </div>
       <p class="rail-note" id="scan-note">MNI152 template &middot; AAL-116 parcellation</p>
+      <div id="export3d"></div>
     </div>
 
     <div class="card">
@@ -401,6 +402,7 @@ svg{ display:block; }
 <script src="assets/slice-tool.js"></script>
 <script src="assets/zoom.js"></script>
 <script src="assets/diagram-gestures.js"></script>
+<script src="assets/export3d.js"></script>
 <script>
 "use strict";
 
@@ -775,6 +777,52 @@ function deselect(){
   repaint();
 }
 $("clearBtn").addEventListener("click", () => { if (pinned()) deselect(); });
+
+/* ── 3D export ──────────────────────────────────────────────────────────
+   The state as a model: every region with a parcel as a surface in its ring
+   colour, the regions without one as spheres at their coordinates, and the
+   couplings of the state now showing as tubes between region centres —
+   solid where they strengthen, grey where they fall quiet. */
+if (window.MN_EXPORT3D){
+  MN_EXPORT3D.attach({
+    host: $("export3d"),
+    basename: () => "network-" + ((ring.state && ring.state.id) || "state"),
+    options: [
+      { id: "links", label: "The couplings in this state", checked: true },
+      { id: "shell", label: "The brain surface", checked: true }
+    ],
+    build: async (ctx) => {
+      if (typeof niivue === "undefined") await loadScript("assets/niivue.js");
+      if (typeof MN_ATLAS === "undefined") await loadScript("assets/atlas-data.js");
+      const [atlas, tpl] = await MN_EXPORT3D.volumes(scanInstances[0], MN_ATLAS.ATLAS_URL, MN_ATLAS.TPL_URL);
+      const parts = [], centre = {};
+      for (const n of DATA.NODES){
+        const rgb = MN_EXPORT3D.hexColour(n.color), em = emphasisFor(n);
+        const alpha = em >= EMPH.full ? 1 : em >= EMPH.mid ? 0.7 : 0.4;
+        const ps = parcelsOf(n);
+        if (ps.length){
+          parts.push(MN_EXPORT3D.labelSurface(atlas, ps, { name: n.full, colour: rgb, alpha }));
+          centre[n.id] = MN_EXPORT3D.labelCentroid(atlas, ps);
+        } else if (n.mni){
+          parts.push(MN_EXPORT3D.sphere(n.mni, 5, { name: n.full, colour: rgb, alpha }));
+          centre[n.id] = n.mni;
+        }
+      }
+      if (ctx.options.links && ring.state){
+        const live = [], quiet = [];
+        for (const l of ring.state.links){
+          const a = centre[l.s], b = centre[l.t];
+          if (!a || !b) continue;
+          (l.quiet ? quiet : live).push(MN_EXPORT3D.tube(a, b, 0.8 + 2.2 * l.w, { colour: [1, 1, 1] }));
+        }
+        if (live.length) parts.push(MN_EXPORT3D.merge(live, { name: "Couplings that strengthen", colour: [0.95, 0.93, 0.9] }));
+        if (quiet.length) parts.push(MN_EXPORT3D.merge(quiet, { name: "Couplings that fall quiet", colour: [0.5, 0.5, 0.5], alpha: 0.5 }));
+      }
+      if (ctx.options.shell) parts.push(MN_EXPORT3D.brainSurface(tpl, { alpha: 0.2 }));
+      return { name: "VisualNeuroscience network " + ((ring.state && ring.state.label) || ""), parts };
+    }
+  });
+}
 
 /* …and the ring follows the crosshair back, while nothing is pinned. Only the
    ring moves: repainting the scan on every drag frame would cost more than the

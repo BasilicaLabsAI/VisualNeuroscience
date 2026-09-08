@@ -280,6 +280,19 @@ svg{ display:block; }
         <button class="btn-wide ts-btn active" id="spinBtn" type="button" aria-pressed="true">Revolve</button>
       </div>
 
+      <div class="card">
+        <h2>Export</h2>
+        <div class="rail-row">
+          <span class="tool-label">Lines</span>
+          <div class="selwrap"><select id="exportDensity" aria-label="How many streamlines to export">
+            <option value="1000">1,000 streamlines</option>
+            <option value="5000" selected>5,000 streamlines</option>
+            <option value="all">Every streamline (large file)</option>
+          </select></div>
+        </div>
+        <div id="export3d"></div>
+      </div>
+
     </aside>
 
     <section class="centre" aria-label="Tractogram viewports">
@@ -324,6 +337,7 @@ svg{ display:block; }
 <script src="assets/native.js"></script>
 <script src="assets/stage-lifecycle.js"></script>
 <script src="assets/zoom.js"></script>
+<script src="assets/export3d.js"></script>
 <script>
 (function(){
   "use strict";
@@ -528,6 +542,32 @@ svg{ display:block; }
      towards the whole tractogram. */
 
 
+
+  /* ── 3D export ────────────────────────────────────────────────────────
+     An even sample of the streamlines as polylines, coloured by direction
+     as the page draws them (or the single accent colour if that is showing).
+     Formats with no line primitive get thin three-sided tubes, and fewer
+     of them, because a million-point tube mesh is nobody's idea of a file. */
+  if (window.MN_EXPORT3D){
+    var densityEl = document.getElementById("exportDensity");
+    MN_EXPORT3D.attach({
+      host: document.getElementById("export3d"),
+      basename: function(){ return "tractogram-hcp1065-" + (densityEl.value === "all" ? "all" : densityEl.value); },
+      build: function(ctx){
+        var nv = byKey.Ren, mesh = nv && nv.meshes && nv.meshes[0];
+        if (!mesh || !mesh.pts || !mesh.offsetPt0) throw new Error("The tractogram is still loading.");
+        var total = mesh.offsetPt0.length - 1;
+        var cap = densityEl.value === "all" ? total : (Number(densityEl.value) || 5000);
+        if (!ctx.format.lines) cap = Math.min(cap, 1500);
+        var sample = MN_EXPORT3D.sampleLines(mesh.pts, mesh.offsetPt0, cap);
+        var part = MN_EXPORT3D.lines(sample.pts, sample.offsets, {
+          name: "HCP1065 streamlines (" + sample.count + " of " + (mesh.offsetPt0.length - 1) + ")",
+          colour: colourMode === "accent" ? [ACCENT[0] / 255, ACCENT[1] / 255, ACCENT[2] / 255] : null
+        });
+        return { name: "VisualNeuroscience tractogram", parts: [part], tubeRadius: 0.3 };
+      }
+    });
+  }
 
   document.getElementById("resetBtn").addEventListener("click", function(){
     if (!byKey.Ren) return;

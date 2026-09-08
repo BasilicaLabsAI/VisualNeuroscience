@@ -644,6 +644,13 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
       <div class="card">
         <h2>Export</h2>
         <button class="btn" id="shotBtn" type="button">Save PNG snapshot</button>
+        <div id="export3d"></div>
+      </div>
+
+      <div class="card">
+        <h2>Saved models</h2>
+        <p class="empty-note">Name the view &mdash; the highlighted regions, their colours, the camera and any cuts &mdash; and open it again later.</p>
+        <div id="models"></div>
       </div>
     </aside>
 
@@ -740,6 +747,8 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 <script src="assets/region-notes.js"></script>
 <script src="assets/slice-tool.js"></script>
 <script src="assets/zoom.js"></script>
+<script src="assets/export3d.js"></script>
+<script src="assets/models.js"></script>
 <script>
 "use strict";
 (function(){
@@ -793,6 +802,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
     {key:"render",   canvasId:"glRen", st: niivue.SLICE_TYPE.RENDER}
   ];
   var INSTANCES = {};
+  var sliceTool = null;      /* the clip-plane panel on the 3D box, once attached */
   function makeNV(sliceType){
     return new niivue.Niivue({
       backColor: [0, 0, 0, 1],   /* pure black, matching the scan's own background so the two blend */
@@ -1256,6 +1266,85 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
   renderDropdown();
   renderChips();
 
+  /* ── 3D export ────────────────────────────────────────────────────────
+     Each highlighted region as its own closed surface in its own colour,
+     with the brain's outer surface for context, in whichever format the
+     person picks. The geometry is made off the very voxels on screen. */
+  if (window.MN_EXPORT3D){
+    MN_EXPORT3D.attach({
+      host: document.getElementById("export3d"),
+      basename: function(){ return selections.size ? "brain-regions" : "brain-surface"; },
+      options: [{ id: "shell", label: "Include the brain surface", checked: true }],
+      build: function(ctx){
+        return MN_EXPORT3D.volumes(allNV()[0], ATLAS_URL, TPL_URL).then(function(v){
+          var atlas = v[0], tpl = v[1], parts = [];
+          selections.forEach(function(s){
+            parts.push(MN_EXPORT3D.labelSurface(atlas, s.indices, {
+              name: s.name + (s.sideTag ? " (" + s.sideTag + ")" : ""),
+              colour: MN_EXPORT3D.hexColour(s.color)
+            }));
+          });
+          if (ctx.options.shell) parts.push(MN_EXPORT3D.brainSurface(tpl, { alpha: selections.size ? 0.25 : 1 }));
+          if (!parts.filter(Boolean).length) throw new Error("Highlight a region first, or include the brain surface.");
+          return { name: "VisualNeuroscience regions", parts: parts };
+        });
+      }
+    });
+  }
+
+  /* ── saved models ─────────────────────────────────────────────────────
+     What a model holds is exactly what someone would want back: the
+     regions and their colours, the overlay opacity, the layout, the 3D
+     camera, the crosshair and the cuts. Where it is kept is models.js's
+     business. */
+  function activeView(){
+    var b = document.querySelector(".ts-btn.active[data-view]");
+    return b ? b.getAttribute("data-view") : "grid";
+  }
+  if (window.MN_MODELS){
+    MN_MODELS.attach({
+      tool: "regions", noun: "model",
+      host: document.getElementById("models"),
+      capture: function(){
+        var ren = INSTANCES.render, sels = [];
+        selections.forEach(function(s, key){
+          sels.push({ key: key, name: s.name, base: s.base, sideTag: s.sideTag, indices: s.indices.slice(), color: s.color });
+        });
+        return {
+          v: 1, tool: "regions", selections: sels,
+          opacity: Number(opacityEl.value), mirror: mirrorEl.checked, view: activeView(),
+          camera: ren ? { azimuth: ren.scene.renderAzimuth, elevation: ren.scene.renderElevation,
+                          zoom: Number(ren.scene.volScaleMultiplier) || 1 } : null,
+          crosshair: ren && ren.scene.crosshairPos ? Array.prototype.slice.call(ren.scene.crosshairPos) : null,
+          cuts: sliceTool && sliceTool.state ? sliceTool.state() : null
+        };
+      },
+      restore: function(m){
+        if (!m || m.tool !== "regions" || !Array.isArray(m.selections)) throw new Error("That is not a Region Atlas model.");
+        selections.clear();
+        m.selections.forEach(function(s){
+          if (!s || !s.key || !Array.isArray(s.indices)) return;
+          selections.set(s.key, { name: s.name || s.base || "Region", base: s.base, sideTag: s.sideTag || "",
+                                  indices: s.indices.map(Number), color: /^#[0-9A-Fa-f]{6}$/.test(s.color || "") ? s.color : nextColor() });
+        });
+        renderChips(); applyColormap();
+        if (m.opacity){ opacityEl.value = String(m.opacity); opacityEl.dispatchEvent(new Event("input")); }
+        if (typeof m.mirror === "boolean" && mirrorEl.checked !== m.mirror){ mirrorEl.checked = m.mirror; renderDropdown(); }
+        if (m.view){ var b = document.querySelector('.ts-btn[data-view="' + m.view + '"]'); if (b && !b.classList.contains("active")) b.click(); }
+        var ren = INSTANCES.render;
+        if (ren && m.camera){
+          if (isFinite(m.camera.azimuth)) ren.scene.renderAzimuth = Number(m.camera.azimuth);
+          if (isFinite(m.camera.elevation)) ren.scene.renderElevation = Number(m.camera.elevation);
+          if (m.camera.zoom > 0) ren.scene.volScaleMultiplier = Number(m.camera.zoom);
+        }
+        if (Array.isArray(m.crosshair) && m.crosshair.length === 3)
+          allNV().forEach(function(nv){ nv.scene.crosshairPos = m.crosshair.map(Number); });
+        if (sliceTool && sliceTool.setState) sliceTool.setState(m.cuts);
+        allNV().forEach(function(nv){ try{ nv.drawScene(); }catch(e){} });
+      }
+    });
+  }
+
   async function boot(){
     try{
       var tplUrl = TPL_URL;
@@ -1289,7 +1378,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
          which is what the render draws. The 2D planes already are slices. */
       if (window.MN_SLICE){
         var renBox = document.querySelector('.view[data-box="render"]');
-        if (renBox) MN_SLICE.attach({
+        if (renBox) sliceTool = MN_SLICE.attach({
           stage: renBox.querySelector(".mri-stage"),
           tools: renBox.querySelector(".view-tools"),
           nv: INSTANCES.render
@@ -1836,5 +1925,11 @@ if (location.hash === '#receptors'){
 </script>
 <script src="assets/firebase-config.js"></script>
 <script type="module" src="assets/auth-ui.js"></script>
+<script type="module">
+/* saved models follow the account, through the same file store Practice uses */
+import auth from "./assets/auth.js";
+import files from "./assets/userdata.js";
+if (window.MN_MODELS) MN_MODELS.connect(auth, files);
+</script>
 </body>
 </html>

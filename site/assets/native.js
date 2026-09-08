@@ -15,8 +15,9 @@
      MN.tap("light" | "medium")        haptic tick, silent on the web
      MN.share({title, text, url})      share sheet, else Web Share, else copy
      MN.saveImage(dataUrl, name)       Photos/Files, else a download
+     MN.saveFile(blob, name)           Files and the share sheet, else a download
 
-   All four resolve rather than throw: a page should never break because the
+   All five resolve rather than throw: a page should never break because the
    platform underneath it cannot do something. */
 window.MN = (function(){
 
@@ -77,6 +78,37 @@ function saveImage(dataUrl, name){
   return Promise.resolve();
 }
 
+/* A file of any kind — a 3D model, say. Native: the bytes go to Documents
+   and then onto the share sheet, the same route as a snapshot, which is how
+   they reach Files, AirDrop or another app. Web: an ordinary download. */
+function blobToBase64(blob){
+  return new Promise(function(resolve, reject){
+    var r = new FileReader();
+    r.onload = function(){ resolve(dataUrlToBase64(r.result)); };
+    r.onerror = function(){ reject(r.error || new Error("could not read the file")); };
+    r.readAsDataURL(blob);
+  });
+}
+function saveFile(blob, name){
+  name = name || "visualneuroscience.bin";
+  if (P.Filesystem){
+    return blobToBase64(blob).then(function(b64){
+      return P.Filesystem.writeFile({ path: name, data: b64, directory: "DOCUMENTS", recursive: true });
+    }).then(function(res){
+      if (!P.Share || !res || !res.uri) return res;
+      return P.Share.share({ title: name, files: [res.uri] }).catch(function(){ return res; });
+    });
+  }
+  try {
+    var u = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = u; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(u); }, 1500);
+  } catch (e) {}
+  return Promise.resolve();
+}
+
 /* the splash is held until the page says it is ready, so a cold start does
    not show a blank webview while fourteen megabytes come off disk */
 function ready(){
@@ -97,5 +129,5 @@ if (!isNative && "serviceWorker" in navigator &&
 }
 
 return { isNative: isNative, platform: platform,
-         tap: tap, share: share, saveImage: saveImage, ready: ready };
+         tap: tap, share: share, saveImage: saveImage, saveFile: saveFile, ready: ready };
 })();

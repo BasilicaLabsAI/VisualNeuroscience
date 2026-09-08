@@ -373,3 +373,52 @@ button, .ts-btn, .seg-btn, .barow{ touch-action:manipulation; }
   .tl-touch{ display:inline; }
   .tl-mouse{ display:none; }
 }
+
+/* ── 3D export and saved models, the controls a rail card holds ──────── */
+.x3d .btn, .models .btn{
+  display:inline-block; font-family:var(--font-brand); font-weight:500;
+  font-size:.66rem; letter-spacing:.18em; text-transform:uppercase;
+  border:1px solid var(--ink); background:var(--paper); color:var(--ink);
+  padding:.55rem .9rem .48rem; cursor:pointer; border-radius:0;
+}
+.x3d .btn:disabled{ opacity:.5; cursor:default; }
+@media (hover: hover){ .x3d .btn:not(:disabled):hover, .models .btn:hover{ background:var(--ink); color:var(--paper); } }
+.x3d .btns{ display:flex; gap:.6rem; }
+.x3d .btns .btn{ flex:1; text-align:center; }
+.x3d .toggle{ display:flex; align-items:center; gap:.45rem; font-family:var(--font-serif); font-size:.92rem; cursor:pointer; }
+.x3d .toggle input{ width:14px; height:14px; accent-color:var(--ink); margin:0; }
+.x3d{ display:flex; flex-direction:column; gap:.55rem; margin-top:.4rem; }
+.x3d .btns{ margin-top:0; }
+.x3d .toggles{ display:grid; gap:.35rem; }
+.x3d-note, .x3d-status, .models-note{
+  font-family:var(--font-serif); font-style:italic; font-size:.86rem; line-height:1.45;
+  color:var(--ink-60); margin:0;
+}
+.x3d-status:empty, .models-note:empty{ display:none; }
+.x3d-status.err, .models-note.err{ color:var(--ink); font-style:normal; }
+.models{ display:flex; flex-direction:column; gap:.55rem; margin-top:.4rem; }
+.models .mform{ display:flex; gap:.5rem; align-items:stretch; }
+.models .mform input{
+  flex:1; min-width:0; font-family:var(--font-serif); font-size:.95rem;
+  border:1px solid var(--ink); background:var(--paper); color:var(--ink);
+  padding:.45rem .6rem; border-radius:0;
+}
+.models .mform input:focus{ outline:2px solid var(--ink); outline-offset:1px; }
+.models .mform .btn{ flex:none; width:auto; padding:.55rem .9rem .48rem; letter-spacing:.18em; font-size:.66rem; }  /* the pages' .card .btn is full-width */
+.models .mlist{ display:flex; flex-direction:column; gap:.3rem; }
+.models .mlist.busy{ opacity:.55; pointer-events:none; }
+.models .mrow{ display:flex; align-items:center; gap:.5rem; border:1px solid var(--hair); padding:.3rem .35rem .3rem .6rem; }
+.models .mname{
+  flex:1; min-width:0; text-align:left; background:none; border:0; padding:.15rem 0; cursor:pointer;
+  font-family:var(--font-serif); font-size:.95rem; line-height:1.25; color:var(--ink);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+@media (hover: hover){ .models .mname:hover{ text-decoration:underline; } }
+.models .mdate{ flex:none; font-family:var(--font-brand); font-size:.6rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-60); }
+.models .mdel{
+  flex:none; width:1.6rem; height:1.6rem; border:1px solid var(--hair); background:none; color:var(--ink);
+  font-size:.95rem; line-height:1; cursor:pointer; padding:0;
+}
+.models .mdel.armed{ width:auto; padding:0 .45rem; font-family:var(--font-brand); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; background:var(--ink); color:var(--paper); border-color:var(--ink); }
+@media (hover: hover){ .models .mdel:hover{ background:var(--ink); color:var(--paper); } }
+@media (pointer: coarse){ .models .mdel{ min-width:36px; min-height:36px; } }

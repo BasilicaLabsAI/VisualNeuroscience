@@ -116,6 +116,17 @@ https://visualneuroscience.ai
 
 Routing App Coverage File, App Clip and iMessage App: leave alone.
 
+## Next update: what's new (1.1)
+
+For the *What's New in This Version* field when the next build is
+submitted. 4,000 characters allowed; this is well under.
+
+```
+• Export the brain in 3D. Every 3D view now saves as a model file: glTF (.glb), USDZ for Apple Quick Look, OBJ, STL for printing, PLY, VRML and X3D. Highlighted regions export as surfaces in their own colours, with the brain's outer surface for context; the Brodmann page exports its border graph; the Network Atlas exports the couplings of the state showing; the tractogram exports as coloured streamlines. Open a USDZ from Files to see the brain in your room.
+• Saved models. Name a Region Atlas view — the regions, their colours, the camera, the cuts — and open it again later. Signed in, models follow your account to every device.
+• The Brodmann map is now a line drawing, credited to IFEN, whose diagram it is adapted from.
+```
+
 ## App Review Information
 
 A first submission from a new developer account draws an "Information

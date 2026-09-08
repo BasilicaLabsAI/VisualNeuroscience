@@ -18,6 +18,7 @@
    same wherever it appears. Wire one up with:
 
      MN_SLICE.attach({ stage: <.mri-stage>, tools: <.view-tools>, nv: <Niivue> });
+       → { open, close, reset, state, setState }
 
    Meshes are not clipped by this — clip planes act on the volume only —
    so a page whose 3D view is a tractogram gets nothing useful from it. */
@@ -151,10 +152,29 @@ function attach(o){
   btn.addEventListener("click", function(){ setOn(!on); });
   resetBtn.addEventListener("click", resetAll);
 
+  /* the cuts as a plain object, so a saved view can carry them */
+  function state(){
+    var c = {}; AXES.forEach(function(ax){ c[ax.id] = cuts[ax.id]; });
+    return { on: on, cuts: c };
+  }
+  function setState(st){
+    if (!st || typeof st !== "object"){ resetAll(); setOn(false); return; }
+    AXES.forEach(function(ax){
+      var v = Number(st.cuts && st.cuts[ax.id]) || 0;
+      v = Math.max(-1, Math.min(1, v));
+      cuts[ax.id] = v;
+      rows[ax.id].slider.value = String(v);
+      rows[ax.id].edge.classList.toggle("cutting", Math.abs(v) > 0.005);
+    });
+    setOn(!!st.on);
+  }
+
   return {
     open: function(){ setOn(true); },
     close: function(){ setOn(false); },
-    reset: resetAll
+    reset: resetAll,
+    state: state,
+    setState: setState
   };
 }
 

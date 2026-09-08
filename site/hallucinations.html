@@ -439,6 +439,7 @@ td.hl{ color:var(--over); }
         <span class="slider-val" id="overlayVal">85%</span>
       </div>
       <p class="rail-note" id="coverage"></p>
+      <div id="export3d"></div>
     </div>
 
     <div class="card panel" id="panel" aria-live="polite">
@@ -656,6 +657,7 @@ td.hl{ color:var(--over); }
 <script src="assets/slice-tool.js"></script>
 <script src="assets/zoom.js"></script>
 <script src="assets/diagram-gestures.js"></script>
+<script src="assets/export3d.js"></script>
 <script>
 "use strict";
 
@@ -1157,6 +1159,35 @@ function applyOpacity(){
   }
 }
 opacityEl.addEventListener("input", applyOpacity);
+
+/* ── 3D export ──────────────────────────────────────────────────────────
+   The circuit as a model: each region's parcels as one surface in the
+   region's colour, faded where the state now showing has it fall back, with
+   the brain's outer surface for context. */
+if (window.MN_EXPORT3D){
+  MN_EXPORT3D.attach({
+    host: $("export3d"),
+    basename: () => "hallucinations-" + state,
+    options: [{ id: "shell", label: "The brain surface", checked: true }],
+    build: async (ctx) => {
+      if (typeof niivue === "undefined") await loadScript("assets/niivue.js");
+      if (typeof MN_ATLAS === "undefined") await loadScript("assets/atlas-data.js");
+      const [atlas, tpl] = await MN_EXPORT3D.volumes(scanInstances[0], MN_ATLAS.ATLAS_URL, MN_ATLAS.TPL_URL);
+      const parts = [];
+      for (const region of REGIONS){
+        const ps = parcelsOf(region);
+        if (!ps.length) continue;
+        const em = emphasisFor(region.id), d = DATA[region.id] || {};
+        parts.push(MN_EXPORT3D.labelSurface(atlas, ps, {
+          name: d.t || region.id, colour: MN_EXPORT3D.hexColour(REGION_COLOUR[region.id]),
+          alpha: em >= EMPH.full ? 1 : em >= EMPH.mid ? 0.7 : 0.4
+        }));
+      }
+      if (ctx.options.shell) parts.push(MN_EXPORT3D.brainSurface(tpl, { alpha: 0.2 }));
+      return { name: "VisualNeuroscience hallucinations " + (state === "halluc" ? "hallucinating" : "normal audition"), parts };
+    }
+  });
+}
 
 $("btn-healthy").addEventListener("click", () => { state = "healthy"; renderAll(); });
 $("btn-halluc").addEventListener("click", () => { state = "halluc"; renderAll(); });

@@ -678,6 +678,11 @@ mark{ background:var(--ink); color:var(--paper); }
         </div>
         <div class="btns"><button class="btn" id="clearBtn" type="button">Clear selection</button></div>
       </div>
+
+      <div class="card">
+        <h2>Export</h2>
+        <div id="export3d"></div>
+      </div>
     </aside>
 
     <section class="centre" aria-label="The map">
@@ -797,6 +802,7 @@ mark{ background:var(--ink); color:var(--paper); }
 <script src="assets/slice-tool.js"></script>
 <script src="assets/zoom.js"></script>
 <script src="assets/diagram-gestures.js"></script>
+<script src="assets/export3d.js"></script>
 <script>
 "use strict";
 (function(){
@@ -845,6 +851,14 @@ mark{ background:var(--ink); color:var(--paper); }
      One area at a time. The page answers "what does this do", and two
      answers at once is a different question. */
   var selected = null;
+
+  /* put every viewport's crosshair on an MNI coordinate, so a pick from the
+     list, the map or the graph lands the scan on the area */
+  function goTo(mm){
+    allNV().forEach(function(nv){
+      try{ nv.scene.crosshairPos = nv.mm2frac(mm); nv.drawScene(); }catch(e){}
+    });
+  }
 
   function paint(){
     var R = new Array(N).fill(0), G = new Array(N).fill(0),
@@ -936,6 +950,52 @@ mark{ background:var(--ink); color:var(--paper); }
   document.addEventListener("keydown", function(e){
     if (e.key === "Escape") closeFn();
   });
+
+  /* ── 3D export ────────────────────────────────────────────────────────
+     The picked area as a surface off the atlas volume, the border graph as
+     spheres at each area's centre of mass joined by tubes as thick as the
+     border is long, and the brain's outer surface for context. */
+  if (window.MN_EXPORT3D){
+    MN_EXPORT3D.attach({
+      host: document.getElementById("export3d"),
+      basename: function(){ return selected != null ? "brodmann-area-" + selected : "brodmann-areas"; },
+      options: [
+        { id: "area",  label: "The picked area, as a surface", checked: true },
+        { id: "graph", label: "The border graph", checked: true },
+        { id: "shell", label: "The brain surface", checked: true }
+      ],
+      build: function(ctx){
+        return MN_EXPORT3D.volumes(allNV()[0], BA_URL, TPL_URL).then(function(v){
+          var ba = v[0], tpl = v[1], parts = [];
+          if (ctx.options.area && selected != null){
+            var a = B.BY_BA[selected];
+            parts.push(MN_EXPORT3D.labelSurface(ba, [selected], {
+              name: "BA" + selected + " " + a.name, colour: MN_EXPORT3D.hexColour(LOBE_COLOUR[a.lobe] || "#888888")
+            }));
+          }
+          if (ctx.options.graph){
+            B.AREAS.forEach(function(a){
+              parts.push(MN_EXPORT3D.sphere(a.at, 3.2, {
+                name: "BA" + a.ba + " " + a.name, colour: MN_EXPORT3D.hexColour(LOBE_COLOUR[a.lobe] || "#888888")
+              }));
+            });
+            var maxW = 0;
+            B.EDGES.forEach(function(e){ if (e[2] > maxW) maxW = e[2]; });
+            var tubes = [];
+            B.EDGES.forEach(function(e){
+              var p = B.BY_BA[e[0]], q = B.BY_BA[e[1]];
+              if (!p || !q) return;
+              tubes.push(MN_EXPORT3D.tube(p.at, q.at, 0.35 + 1.4 * Math.sqrt(e[2] / maxW), { colour: [0.55, 0.55, 0.55] }));
+            });
+            if (tubes.length) parts.push(MN_EXPORT3D.merge(tubes, { name: "Borders", colour: [0.55, 0.55, 0.55] }));
+          }
+          if (ctx.options.shell) parts.push(MN_EXPORT3D.brainSurface(tpl, { alpha: 0.22 }));
+          if (!parts.filter(Boolean).length) throw new Error("Tick at least one thing to export, or pick an area.");
+          return { name: "VisualNeuroscience Brodmann", parts: parts };
+        });
+      }
+    });
+  }
 
   function select(ba, fromList){
     selected = (selected === ba) ? null : ba;

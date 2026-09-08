@@ -23,5 +23,6 @@ If a deploy misbehaves, check the Worker's build settings (**your Worker → Set
 - The chart data embedded in `site/receptors.html` derives from the merged CSV with each `min:max` range collapsed to its max value.
 - `site/assets/tracts/hcp1065.trk` — the web tractogram, built locally rather than committed (see `scripts/README.md`).
 - `docs/atlas-regions.txt` — the full AAL-116 region list the brain map carries, with each region's label number.
+- 3D export (glTF, USDZ, OBJ, STL, PLY, VRML, X3D) and saved models are described in `docs/EXPORT-3D.md`; the geometry is built in the browser by `site/assets/export3d.js`.
 
 The Python modules in `backend/` (`BrainMapping.py`, `UniversalTools.py`) and the notebooks alongside the data are the processing and exploration tools the dataset was built with.
