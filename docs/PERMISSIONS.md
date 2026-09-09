@@ -59,7 +59,7 @@ original drawing could be restored under the same permission if wanted.
 | MNI152 (ICBM 2009c) template | McConnell Brain Imaging Centre, MNI | Free to use and distribute with the copyright notice | Footer of every atlas page; `about.html` |
 | AAL-116 parcellation | Tzourio-Mazoyer et al., 2002; GIN | Free for non-commercial academic use | `regions.html` footer; `about.html` |
 | Brodmann atlas volume | MRIcron (Chris Rorden) | BSD | `brodmann.html` footer; `about.html` |
-| HCP1065 tractography atlas | Yeh, 2018, from Human Connectome Project data | CC BY-SA 4.0 | `tracts.html` footer |
+| HCP1065 tractography atlas | Yeh FC, *Nat Commun* 13:4933 (2022), from Human Connectome Project data; the shipped copy is NiiVue's subsampled redistribution | CC BY-SA 4.0, attribution and share-alike | `tracts.html` credits; `site/assets/tracts/README.md` |
 | NiiVue | Rorden lab | BSD | Footers; `about.html` |
 | d3 | Mike Bostock and contributors | ISC | `vendor/d3/` |
 | Firebase JS SDK | Google | Apache 2.0 | `site/vendor/firebase/NOTICE.md` |
