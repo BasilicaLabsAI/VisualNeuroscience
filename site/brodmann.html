@@ -1555,6 +1555,13 @@ mark{ background:var(--ink); color:var(--paper); }
   drawCartoon(document.getElementById("cartLateral"), "lateral");
   drawCartoon(document.getElementById("cartMedial"), "medial");
   buildGraph();
+
+  /* deep link: #ba=17 arrives with that area picked, from the MCP server
+     or anywhere else a link can live */
+  (function(){
+    var m = location.hash.match(/^#ba=(\d{1,2})$/);
+    if (m && B.BY_BA[Number(m[1])]) select(Number(m[1]), false);
+  })();
   bindGraph();
   if (window.MN_DIAG){
     MN_DIAG.attach({ svg: document.querySelector("#cartLateral svg") });

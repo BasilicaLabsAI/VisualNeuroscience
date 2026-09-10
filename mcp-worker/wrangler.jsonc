@@ -1,0 +1,9 @@
+// The MCP server: deploy from this directory with `npx wrangler deploy`.
+// See docs/MCP.md for the account steps and the custom domain.
+{
+  "name": "visualneuroscience-mcp",
+  "main": "worker.js",
+  "compatibility_date": "2026-09-01",
+  // Uncomment once the DNS record exists in the Cloudflare zone:
+  // "routes": [{ "pattern": "mcp.visualneuroscience.ai", "custom_domain": true }]
+}

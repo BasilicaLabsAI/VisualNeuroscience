@@ -862,7 +862,11 @@ function showState(id){
   repaint();
 }
 sel.addEventListener("change", () => showState(sel.value));
-showState(DATA.STATES[0].id);
+/* deep link: #state=meditation opens on that state */
+const hashState = (location.hash.match(/^#state=([\w-]+)$/) || [])[1];
+const firstState = DATA.STATES.some(s => s.id === hashState) ? hashState : DATA.STATES[0].id;
+sel.value = firstState;
+showState(firstState);
 
 const slider = $("wt");
 ring.setWeight(+slider.value);

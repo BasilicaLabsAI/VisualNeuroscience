@@ -212,28 +212,23 @@ svg{ display:block; }
 <h2>How it is built</h2>
 <p>It is built to be read as well as used. Each page says where its data came from and where the evidence stops, and each study page says which of its regions are drawn exactly and which only approximately. The atlases are the open ones the field already trusts: the MNI152 template, the AAL parcellation, the MRIcron Brodmann atlas and the HCP1065 tractogram. The rendering is <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a>, running in your browser&rsquo;s own graphics. What the site collects, which is very little, is set out on the <a href="privacy.html">privacy page</a>.</p>
 
-<h2>Tell me what is missing</h2>
-<p>A one-person project has a short feedback loop, and I would like to use it. If a feature would make this work for your module, your research group or your society &mdash; a question bank built to your syllabus, a missing atlas, a dataset overlay, one of your own published studies visualised on the scan &mdash; write and say so, and it usually ships within the week. Corrections are the most welcome mail of all: the pages make factual claims and cite their sources, and if one of them is wrong I would rather know.</p>
-<p>Write to <a href="mailto:fid@ottomanlabs.ai"><b>fid@ottomanlabs.ai</b></a> and I read it myself.</p>
+<h2>Where it stands</h2>
+<p>I believe it is the most advanced and most usable brain atlas on the App Store, and I say that having looked. The deep atlases live in research infrastructure like the EU&rsquo;s EBRAINS, built for laboratories and priced in expertise. Nothing there, and nothing on the store, puts this much of the brain in your pocket, readable without training, on a train, offline, for nothing. That is the gap this app exists to close, and on the measure that matters to a learner &mdash; what you can actually reach and use &mdash; I would put it ahead of any of them.</p>
 
-<!-- ── Placeholders for the page's next form ──────────────────────────
-     Kept hidden until the copy is signed off: the atlas itself, the
-     developer, how it was built with AI, and a short video from the maker.
-     Unhide each section as its content lands; the video replaces the
-     .vid-slot figure. Nothing below renders today. -->
-<section id="next-app" hidden>
-  <h2>The atlas</h2>
-</section>
-<section id="next-maker" hidden>
-  <h2>The developer</h2>
-</section>
-<section id="next-ai" hidden>
-  <h2>How it was built</h2>
-</section>
+<h2>Built with AI</h2>
+<p>This app is also an experiment in how one person can build. I directed Anthropic&rsquo;s Claude models as the implementation engine &mdash; Opus 4.8 at the start, then Opus 5, then Fable 5 and Fable 5.1 as each arrived &mdash; across roughly twenty thousand lines of shipped code. The division of labour was strict: I owned what to build, which data to trust, and whether the result met the bar; the AI wrote most of the code; nothing shipped without being verified headlessly against the running product, and no scientific claim without its published source. The &ldquo;.AI&rdquo; in the name is how the app was made before it is anything the app does.</p>
+
+<p>You can also ask the atlas questions from an AI assistant: the same data behind these pages is served to Claude, ChatGPT, Kimi and anything else that speaks the Model Context Protocol, with answers that link straight into the view they describe.</p>
+
+<!-- Unhide when the video from the maker lands; the file replaces the figure. -->
 <section id="next-video" hidden>
   <h2>From the maker</h2>
   <figure class="vid-slot"></figure>
 </section>
+
+<h2>Tell me what is missing</h2>
+<p>A one-person project has a short feedback loop, and I would like to use it. If a feature would make this work for your module, your research group or your society &mdash; a question bank built to your syllabus, a missing atlas, a dataset overlay, one of your own published studies visualised on the scan &mdash; write and say so, and it usually ships within the week. Corrections are the most welcome mail of all: the pages make factual claims and cite their sources, and if one of them is wrong I would rather know.</p>
+<p>Write to <a href="mailto:fid@ottomanlabs.ai"><b>fid@ottomanlabs.ai</b></a> and I read it myself.</p>
 
 <p class="sign">Fadil Karim<small>VisualNeuroscience.AI is made by <a href="https://ottomanlabs.ai/" rel="noopener">OttomanLabs</a>.</small></p>
 

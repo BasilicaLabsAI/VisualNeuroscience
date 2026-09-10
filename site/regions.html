@@ -1266,6 +1266,30 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
   renderDropdown();
   renderChips();
 
+  /* ── deep links ───────────────────────────────────────────────────────
+     #sel=P:Hippocampus|L:Amygdala highlights those selections on load, so
+     a link — from the MCP server, a lecture slide, a chat answer — opens
+     the exact view. P pairs, L and R take a side, S is a single structure. */
+  function applyHashSelections(){
+    var m = location.hash.match(/^#sel=(.+)$/);
+    if (!m) return;
+    var tokens;
+    try{ tokens = decodeURIComponent(m[1]).split(/[|,]/); }catch(e){ return; }
+    tokens.forEach(function(tok){
+      var mode = tok.slice(0, 1), base = tok.slice(2), r = byBase[base];
+      if (!r || tok.slice(1, 2) !== ":") return;
+      var key = mode + ":" + base;
+      if (selections.has(key)) return;
+      var entry = null;
+      if (mode === "P" && r.L != null) entry = {name: r.pretty, base: r.base, sideTag: "L+R", indices: [r.L, r.R]};
+      else if (mode === "L" && r.L != null) entry = {name: r.pretty, base: r.base, sideTag: "L", indices: [r.L]};
+      else if (mode === "R" && r.R != null) entry = {name: r.pretty, base: r.base, sideTag: "R", indices: [r.R]};
+      else if (mode === "S" && r.S != null) entry = {name: r.pretty, base: r.base, sideTag: "", indices: [r.S]};
+      if (entry){ entry.color = nextColor(); selections.set(key, entry); }
+    });
+    if (selections.size){ renderChips(); applyColormap(); }
+  }
+
   /* ── 3D export ────────────────────────────────────────────────────────
      Each highlighted region as its own closed surface in its own colour,
      with the brain's outer surface for context, in whichever format the
@@ -1402,6 +1426,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
         });
       }
       applyColormap();
+      applyHashSelections();
       statusEl.classList.add("hidden");
     } catch(err){
       console.error(err);
