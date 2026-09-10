@@ -609,6 +609,17 @@ mark{ background:var(--ink); color:var(--paper); }
 .graph-stage.picked .g-node.near{ opacity:1; }
 .graph-stage.picked .g-edge{ stroke:var(--ink-35); opacity:.12; }
 .graph-stage.picked .g-edge.on{ opacity:1; stroke:var(--ink); }
+.g-brain{
+  fill:var(--ink); fill-opacity:.05;
+  stroke:var(--ink); stroke-opacity:.2; stroke-width:1;
+  pointer-events:none;
+}
+.g-ring{
+  fill:none; stroke:var(--ink); stroke-opacity:.1; stroke-width:.75;
+  pointer-events:none;
+}
+.graph-stage.picked .g-brain{ fill-opacity:.03; stroke-opacity:.12; }
+.graph-stage.picked .g-ring{ stroke-opacity:.07; }
 
 @media (max-width:760px){
   .cartoons{ grid-template-columns:1fr; }
@@ -712,11 +723,10 @@ mark{ background:var(--ink); color:var(--paper); }
 
   <section class="graphsec" aria-label="How the areas border one another">
     <h2 class="sec-h">The same areas in 3D <small>at their true positions &middot; joined where they border</small></h2>
-    <p class="graph-lede">Every area drawn at its own centre of mass in the scan, joined to the areas it actually shares a border with &mdash; measured off the volume, not asserted. Thicker lines are longer borders. Drag to turn it, pinch to zoom, two fingers to pan; the shape you are turning is the brain's own, because the nodes sit where the areas sit.</p>
+    <p class="graph-lede">Every area drawn at its own centre of mass in the scan, joined to the areas it actually shares a border with &mdash; measured off the volume, not asserted. Thicker lines are longer borders, and the brain drawn faintly around them is the template&rsquo;s own outer surface, turning with the graph so you can see where each area actually sits. Drag to turn it, pinch to zoom, two fingers to pan.</p>
     <div class="graph-wrap">
       <div class="graph-stage" id="graphStage"></div>
       <div class="graph-tools">
-        <button class="ts-btn" id="gSpin" type="button" aria-pressed="true">Pause</button>
         <button class="ts-btn" id="gReset" type="button">Reset view</button>
         <span class="graph-count" id="gCount"></span>
       </div>
@@ -799,6 +809,7 @@ mark{ background:var(--ink); color:var(--paper); }
 <script src="assets/atlas-data.js"></script>
 <script src="assets/brodmann-areas.js"></script>
 <script src="assets/brodmann-outline.js"></script>
+<script src="assets/brain-hull.js"></script>
 <script src="assets/slice-tool.js"></script>
 <script src="assets/zoom.js"></script>
 <script src="assets/diagram-gestures.js"></script>
@@ -1270,8 +1281,18 @@ mark{ background:var(--ink); color:var(--paper); }
      in MNI millimetres, so turning the graph turns the brain. Edges are the
      borders measured off the volume, weighted by how much border there is. */
   var GS = 660, GH = 400;                    /* the drawing box */
-  var gSvg, gNodes = {}, gEdges = [], gAngle = 0.6, gTilt = -0.25, gSpin = true, gRaf = null;
-  var gDiag = null;
+  /* How far the eye stands from the middle, in the same millimetres the
+     nodes use. Close enough to give depth, far enough that the brain drawn
+     around them keeps its own profile: at the 520 this began with, the near
+     surface was magnified almost two to one and the outline ballooned into
+     a circle. */
+  var PERSP = 1500;
+  var gSvg, gNodes = {}, gEdges = [], gAngle = 0.6, gTilt = -0.25;
+  var gDiag = null, gBrain = null, gRings = [];
+  var HULL = window.MN_BRAIN_HULL || null;
+  /* every ring point in one list, for the silhouette and for the fit */
+  var HULL_PTS = [];
+  if (HULL) HULL.rings.forEach(function(r){ HULL_PTS.push.apply(HULL_PTS, r); });
 
   /* The cloud is centred on its own middle and scaled by its widest radius,
      computed once. Fitting the bounding box every frame instead would make
@@ -1288,30 +1309,114 @@ mark{ background:var(--ink); color:var(--paper); }
        rotations it can be turned to, and the scale is fixed from that: it
        fills the box, and it is one scale, so turning it does not make the
        whole graph swell and shrink. */
-    var maxX = 1, maxZ = 1;
-    for (var ai = 0; ai < 24; ai++){
-      var A = ai * Math.PI / 12, ca = Math.cos(A), sa = Math.sin(A);
-      for (var ti = -5; ti <= 5; ti++){
-        var T = ti * 0.12, ct = Math.cos(T), st = Math.sin(T);
-        for (var k = 0; k < n; k++){
-          var p = B.AREAS[k].at;
-          var x = p[0]-gMid[0], y = p[1]-gMid[1], z = p[2]-gMid[2];
-          var X = x*ca - y*sa, Y = x*sa + y*ca;
-          var Z = Y*st + z*ct;
-          if (Math.abs(X) > maxX) maxX = Math.abs(X);
-          if (Math.abs(Z) > maxZ) maxZ = Math.abs(Z);
+    /* Every point that has to fit, which now includes the brain around the
+       nodes: a box sized to the areas alone would clip its poles. */
+    var fitPts = B.AREAS.map(function(a){ return a.at; });
+    for (var h = 0; h < HULL_PTS.length; h += 2) fitPts.push(HULL_PTS[h]);
+
+    /* How far the widest and tallest the cloud ever gets, in drawn pixels,
+       at a given scale — the same projection the drawing uses, perspective
+       included. Leaving perspective out of this is what let the near side
+       of the brain hang over the edge of the box: a point in front of the
+       middle is magnified, so its linear extent understates it. */
+    var MARGIN = 34;
+    function extents(k){
+      var mx = 1, mz = 1;
+      for (var ai = 0; ai < 24; ai++){
+        var A = ai * Math.PI / 12, ca = Math.cos(A), sa = Math.sin(A);
+        for (var ti = -5; ti <= 5; ti++){
+          var T = ti * 0.12, ct = Math.cos(T), st = Math.sin(T);
+          for (var j = 0; j < fitPts.length; j++){
+            var p = fitPts[j];
+            var x = p[0]-gMid[0], y = p[1]-gMid[1], z = p[2]-gMid[2];
+            var X = x*ca - y*sa, Y = x*sa + y*ca;
+            var Y2 = Y*ct - z*st, Z2 = Y*st + z*ct;
+            var denom = PERSP + Y2 * k;
+            if (denom <= 1) continue;                 /* behind the eye */
+            var persp = PERSP / denom;
+            var ax = Math.abs(X * k * persp), az = Math.abs(Z2 * k * persp);
+            if (ax > mx) mx = ax;
+            if (az > mz) mz = az;
+          }
         }
       }
+      return [mx, mz];
     }
+
     /* Scale to the width and then make the box exactly as tall as the
        result needs. Fitting a long, low cloud into a fixed frame the other
-       way round leaves half the width empty, which is what it did. */
-    gK = (GS/2 - 30) / maxX;
-    GH = Math.round(2 * maxZ * gK) + 44;
+       way round leaves half the width empty, which is what it did. Because
+       perspective depends on the scale it is solving for, the scale is
+       settled by a few passes rather than one division. */
+    var target = GS/2 - MARGIN;
+    gK = 1.9;
+    for (var pass = 0; pass < 5; pass++){
+      var e = extents(gK);
+      gK *= target / e[0];
+    }
+    var fin = extents(gK);
+    GH = Math.round(2 * fin[1]) + 44;
     if (gSvg){
       if (gDiag) gDiag.setBase(0, 0, GS, GH);
       else gSvg.setAttribute("viewBox", "0 0 " + GS + " " + GH);
     }
+  }
+
+  /* ── the brain the graph sits inside ──────────────────────────────────
+     The graph turns, so the brain behind it cannot be a picture. What
+     ships is a cage of contour rings — the template's own outline in ten
+     sagittal and nine coronal planes — and the page puts them through the
+     same projection as the nodes. The rings are drawn as they are, and
+     their points also give the silhouette: project them all, take the
+     farthest in each of eighty-four directions around the middle, and
+     smooth that ring into one closed path. A few thousand multiplies per
+     turn, and correct from every angle rather than only the one it was
+     drawn at. */
+  var BRAIN_BINS = 84;
+  function ringPath(ring){
+    var d = "";
+    for (var i = 0; i < ring.length; i++){
+      var pr = project(ring[i]);
+      d += (i ? "L" : "M") + pr.x.toFixed(1) + " " + pr.y.toFixed(1);
+    }
+    return d + "Z";
+  }
+
+  function brainOutline(){
+    var pts = HULL_PTS, n = pts.length;
+    if (!n) return "";
+    var px = new Float64Array(n), py = new Float64Array(n), cx = 0, cy = 0, i;
+    for (i = 0; i < n; i++){
+      var pr = project(pts[i]);
+      px[i] = pr.x; py[i] = pr.y; cx += pr.x; cy += pr.y;
+    }
+    cx /= n; cy /= n;
+    var bestR = new Float64Array(BRAIN_BINS), bx = new Float64Array(BRAIN_BINS), by = new Float64Array(BRAIN_BINS);
+    for (i = 0; i < n; i++){
+      var dx = px[i] - cx, dy = py[i] - cy, r = dx*dx + dy*dy;
+      var b = Math.floor((Math.atan2(dy, dx) + Math.PI) / (2 * Math.PI) * BRAIN_BINS) % BRAIN_BINS;
+      if (r > bestR[b]){ bestR[b] = r; bx[b] = px[i]; by[b] = py[i]; }
+    }
+    /* a direction with no point of its own borrows the mean of its
+       neighbours, so the ring never gains a notch at the origin */
+    var ring = [];
+    for (b = 0; b < BRAIN_BINS; b++){
+      if (bestR[b] > 0){ ring.push([bx[b], by[b]]); continue; }
+      var prev = (b - 1 + BRAIN_BINS) % BRAIN_BINS, nextb = (b + 1) % BRAIN_BINS;
+      if (bestR[prev] > 0 && bestR[nextb] > 0)
+        ring.push([(bx[prev] + bx[nextb]) / 2, (by[prev] + by[nextb]) / 2]);
+    }
+    if (ring.length < 8) return "";
+    /* closed Catmull-Rom through the ring, as cubics: an organic edge
+       rather than an eighty-four-sided polygon */
+    var m = ring.length, d = "M" + ring[0][0].toFixed(1) + " " + ring[0][1].toFixed(1);
+    for (i = 0; i < m; i++){
+      var p0 = ring[(i - 1 + m) % m], p1 = ring[i], p2 = ring[(i + 1) % m], p3 = ring[(i + 2) % m];
+      d += "C" + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + " " + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(1) +
+           " " + (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + " " + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(1) +
+           " " + p2[0].toFixed(1) + " " + p2[1].toFixed(1);
+    }
+    return d + "Z";
   }
 
   function project(mm){
@@ -1321,7 +1426,7 @@ mark{ background:var(--ink); color:var(--paper); }
     var X = x * ca - y * sa, Y = x * sa + y * ca;
     var ct = Math.cos(gTilt), st = Math.sin(gTilt);
     var Y2 = Y * ct - z * st, Z2 = Y * st + z * ct;
-    var persp = 520 / (520 + Y2 * gK);
+    var persp = PERSP / (PERSP + Y2 * gK);
     return { x: GS/2 + X * gK * persp, y: GH/2 - Z2 * gK * persp, d: Y2, s: persp };
   }
 
@@ -1329,6 +1434,23 @@ mark{ background:var(--ink); color:var(--paper); }
     var host = document.getElementById("graphStage");
     gSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     host.innerHTML = ""; host.appendChild(gSvg);
+
+    if (HULL){
+      var bg = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      bg.setAttribute("class", "g-brainwrap");
+      gBrain = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      gBrain.setAttribute("class", "g-brain");
+      var bt = document.createElementNS("http://www.w3.org/2000/svg", "title");
+      bt.textContent = "The brain's outer surface, from the MNI152 template";
+      gBrain.appendChild(bt);
+      bg.appendChild(gBrain);
+      HULL.rings.forEach(function(){
+        var r = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        r.setAttribute("class", "g-ring");
+        gRings.push(r); bg.appendChild(r);
+      });
+      gSvg.appendChild(bg);
+    }
 
     var maxW = 0;
     B.EDGES.forEach(function(e){ if (e[2] > maxW) maxW = e[2]; });
@@ -1370,6 +1492,10 @@ mark{ background:var(--ink); color:var(--paper); }
   }
 
   function layoutGraph(){
+    if (gBrain){
+      gBrain.setAttribute("d", brainOutline());
+      for (var ri = 0; ri < gRings.length; ri++) gRings[ri].setAttribute("d", ringPath(HULL.rings[ri]));
+    }
     var pos = {};
     B.AREAS.forEach(function(a){ pos[a.ba] = project(a.at); });
 
@@ -1412,35 +1538,6 @@ mark{ background:var(--ink); color:var(--paper); }
     });
   }
 
-  /* The turn runs only while it can be seen and is wanted: scrolled out of
-     view the frame loop stops outright rather than idling, and a reader who
-     asked the OS for reduced motion gets a still graph that still turns by
-     hand. */
-  var gVisible = true;
-  function tick(){
-    gRaf = null;
-    if (!gSpin || !gVisible) return;
-    gAngle += 0.004; layoutGraph();
-    gRaf = requestAnimationFrame(tick);
-  }
-  function drive(){
-    if (gSpin && gVisible && !gRaf) gRaf = requestAnimationFrame(tick);
-  }
-  function spin(){
-    if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches){
-      gSpin = false;
-      var b = document.getElementById("gSpin");
-      b.textContent = "Turn"; b.setAttribute("aria-pressed", "false");
-    }
-    if ("IntersectionObserver" in window){
-      new IntersectionObserver(function(entries){
-        gVisible = entries[0].isIntersecting;
-        drive();
-      }, {threshold: 0.05}).observe(document.getElementById("graphStage"));
-    }
-    drive();
-  }
-
   function bindGraph(){
     var stage = document.getElementById("graphStage");
     /* one finger turns it; the moment a second finger arrives the gesture
@@ -1464,13 +1561,6 @@ mark{ background:var(--ink); color:var(--paper); }
     });
     ["pointerup","pointercancel"].forEach(function(ev){
       stage.addEventListener(ev, function(e){ held.delete(e.pointerId); down = false; });
-    });
-    var btn = document.getElementById("gSpin");
-    btn.addEventListener("click", function(){
-      gSpin = !gSpin;
-      btn.textContent = gSpin ? "Pause" : "Turn";
-      btn.setAttribute("aria-pressed", String(gSpin));
-      drive();
     });
     document.getElementById("gReset").addEventListener("click", function(){
       gAngle = 0.6; gTilt = -0.25; layoutGraph();
@@ -1568,7 +1658,6 @@ mark{ background:var(--ink); color:var(--paper); }
     MN_DIAG.attach({ svg: document.querySelector("#cartMedial svg") });
     gDiag = MN_DIAG.attach({ svg: gSvg, stage: document.getElementById("graphStage"), rotates: true });
   }
-  spin();
   markCartoon(); markGraph();
 
   /* deep link: brodmann.html#ba17 opens on that area */
