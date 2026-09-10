@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Brodmann Areas — VisualNeuroscience.AI</title>
 <meta name="description" content="The 41 Brodmann areas the atlas draws, on the MNI152 template. Pick an area to see what it does, or search by number, by anatomical name, or by what a region is for.">
 <!-- link previews. The card is built by site/share.html and rendered to
@@ -429,7 +429,7 @@ table.dtable td.num{ font-size:.84rem; }
   color:var(--ink-60); margin:0 0 .5rem;
 }
 
-.balist{ max-height:min(58vh,560px); overflow-y:auto; margin:0 -.2rem; padding:0 .2rem; }
+.balist{ max-height:min(58vh,560px); max-height:min(58dvh,560px); overflow-y:auto; margin:0 -.2rem; padding:0 .2rem; }
 .balobe{
   font-family:var(--font-brand); font-weight:500; font-size:.55rem;
   letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
@@ -488,7 +488,7 @@ mark{ background:var(--ink); color:var(--paper); }
 .modal-scrim{ position:absolute; inset:0; background:rgba(0,0,0,.72); }
 .modal-box{
   position:relative; z-index:1;
-  width:min(560px,100%); max-height:min(80vh,720px); overflow-y:auto;
+  width:min(560px,100%); max-height:min(80vh,720px); max-height:min(80dvh,720px); overflow-y:auto;
   background:var(--paper); color:var(--ink);
   border:1px solid var(--hair); padding:clamp(18px,3vw,30px);
   box-shadow:0 24px 70px rgba(0,0,0,.5);

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Network Atlas — VisualNeuroscience.AI</title>
 <meta name="description" content="The flow state's network ring beside the MNI152 scan: click a region on the ring and the same region lights up on the brain, in the same colour.">
 <!-- link previews. The card is built by site/share.html and rendered to
@@ -250,7 +250,7 @@ svg{ display:block; }
    boxes run in one band above the ring. */
 @media (min-width:1101px) and (max-width:1239px){
   .views{ grid-template-columns:repeat(4,1fr); }
-  .mri-stage{ height:clamp(190px,21vh,270px); }
+  .mri-stage{ height:clamp(190px,21vh,270px); height:clamp(190px,21dvh,270px); }
 }
 /* the ring scales with the column, so the lettering has to grow back */
 @media (max-width:1100px){
@@ -276,7 +276,7 @@ svg{ display:block; }
    the svg's percentage meaningful, and the auto margins then simply centre
    a box whose size is already decided. */
 @media (orientation: landscape) and (max-height: 1120px){
-  .ring-stage{ width:min(100%, calc(100vh - 170px)); margin-left:auto; margin-right:auto; }
+  .ring-stage{ width:min(100%, calc(100vh - 170px)); width:min(100%, calc(100dvh - 170px)); margin-left:auto; margin-right:auto; }
 }
 </style>
 </head>

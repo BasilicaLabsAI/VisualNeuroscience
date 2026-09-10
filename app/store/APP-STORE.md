@@ -126,6 +126,40 @@ Pricing and Availability: **iPhone and iPad Apps on Apple Vision Pro** and
 side is described in `MAC-APP-STORE.md`, including how to try builds on a
 Mac through TestFlight.
 
+## iPhone Duo
+
+Apple announced its first foldable on 9 September 2026: a 5.4-inch outer
+display, a 7.6-inch near-square inner one, iOS 27, on sale 23 October.
+The app runs on it as an iPhone app from day one — the target is the
+universal iPhone-and-iPad binary with no fixed-size flag, so nothing
+blocks the install and nothing letterboxes.
+
+What makes it work *well* is the web layer, and that is done and
+verified: every page declares `viewport-fit=cover` with safe-area padding
+on the body (web and native alike, so notches, rounded corners and
+whatever inset iOS 27 gives the hinge are respected), stage heights carry
+`dvh` fallbacks so they track a viewport that changes size while the page
+runs, and every viewport re-measures on resize — a fold or unfold is
+exactly the Split View resize the pages already handle. A headless suite
+folds and unfolds each main page through four live resizes between
+phone-narrow and near-square and checks nothing clips, overflows or goes
+stale.
+
+Still waiting on Apple, none of it urgent:
+
+- **Xcode 27.1** ships the iPhone Duo SDK and simulator "later this
+  month" (developer.apple.com/iphone-duo). When Xcode Cloud moves to it,
+  rebuild; until then builds are simply not Duo-aware, which is fine.
+- **New Info.plist keys or size classes**, if any — the "Preparing your
+  app for iPhone Duo" guide is not yet published. Check it when it lands.
+- **Screenshots** at whatever sizes App Store Connect adds for the two
+  displays: regenerate with the existing headless pipeline once the pixel
+  sizes are published.
+
+The legacy `armv7` entry in `UIRequiredDeviceCapabilities` is now
+`arm64`, the documented value for every device that can run current iOS —
+a 32-bit relic had no business gating installs on new hardware.
+
 ## Filling in the listing
 
 Every field, written out and checked against the character limits, is in

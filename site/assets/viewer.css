@@ -45,7 +45,7 @@
 .seg-word{ font-size:.46rem; letter-spacing:.06em; }
 .seg-arrow{ font-size:.74rem; letter-spacing:-.04em; }
 
-.mri-stage{ position:relative; background:#000000; height:clamp(240px,36vh,430px); }
+.mri-stage{ position:relative; background:#000000; height:clamp(240px,36vh,430px); height:clamp(240px,36dvh,430px); }
 .mri-stage canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; outline:none; }
 
 /* ── page layout: a rail of inputs beside the viewports, shared by every
@@ -164,7 +164,7 @@ select{
 .views.solo{ grid-template-columns:1fr; }
 .views.solo .view{ display:none; }
 .views.solo .view.solo-on{ display:flex; }
-.views.solo .mri-stage{ height:clamp(420px,68vh,900px); }
+.views.solo .mri-stage{ height:clamp(420px,68vh,900px); height:clamp(420px,68dvh,900px); }
 .zoom-btn{ padding:0 .5rem; height:1.8rem; display:inline-flex; align-items:center; }
 
 /* the 3D box leads the grid; the atlas names it "render", the other two "Ren" */
@@ -254,11 +254,13 @@ select{
    around should not also drag the page, and long-press selection is turned
    off on the chrome for the same reason — but not on the prose, which is
    there to be read and quoted. */
-:root[data-native] body{
+body{
   padding-top:env(safe-area-inset-top);
   padding-bottom:env(safe-area-inset-bottom);
   padding-left:env(safe-area-inset-left);
   padding-right:env(safe-area-inset-right);
+}
+:root[data-native] body{
   overscroll-behavior:none;
 }
 :root[data-native]{ -webkit-tap-highlight-color:transparent; }
@@ -310,13 +312,13 @@ select{
 
   /* the grid takes what the chrome gave back: two rows that fill the
      screen, one row that fills it alone */
-  .views:not(.solo) .mri-stage{ height:clamp(200px, calc((100vh - 330px)/2), 560px); }
-  .views.solo .mri-stage{ height:clamp(300px, calc(100vh - 260px), 900px); }
+  .views:not(.solo) .mri-stage{ height:clamp(200px, calc((100vh - 330px)/2), 560px); height:clamp(200px, calc((100dvh - 330px)/2), 560px); }
+  .views.solo .mri-stage{ height:clamp(300px, calc(100vh - 260px), 900px); height:clamp(300px, calc(100dvh - 260px), 900px); }
 }
 /* the 768-tall iPads: the title strip wraps to two lines at this width, so
    the stages surrender the difference rather than push past the fold */
 @media (orientation: landscape) and (max-height: 800px) and (min-width: 761px){
-  .views:not(.solo) .mri-stage{ height:clamp(185px, calc((100vh - 372px)/2), 560px); }
+  .views:not(.solo) .mri-stage{ height:clamp(185px, calc((100vh - 372px)/2), 560px); height:clamp(185px, calc((100dvh - 372px)/2), 560px); }
 }
 
 /* ── a stage whose GL context has been taken away ────────────────────────
@@ -349,7 +351,7 @@ button, .ts-btn, .seg-btn, .barow{ touch-action:manipulation; }
 }
 /* the grown controls thicken the chrome, so the stages give it back */
 @media (pointer:coarse) and (orientation:landscape) and (max-height:1120px){
-  .views:not(.solo) .mri-stage{ height:clamp(185px, calc((100vh - 412px)/2), 560px); }
+  .views:not(.solo) .mri-stage{ height:clamp(185px, calc((100vh - 412px)/2), 560px); height:clamp(185px, calc((100dvh - 412px)/2), 560px); }
   /* grown to 44px, the full toolbars wrap to two rows in a 1024-wide grid;
      the wordier parts go, as they already do on a phone */
   .view-tools .tool-label{ display:none; }
@@ -359,7 +361,7 @@ button, .ts-btn, .seg-btn, .barow{ touch-action:manipulation; }
    so the four-up runs small — solo view is the working mode at this size,
    and it gets the full height */
 @media (pointer:coarse) and (orientation:landscape) and (max-height:800px){
-  .views:not(.solo) .mri-stage{ height:clamp(155px, calc((100vh - 444px)/2), 560px); }
+  .views:not(.solo) .mri-stage{ height:clamp(155px, calc((100vh - 444px)/2), 560px); height:clamp(155px, calc((100dvh - 444px)/2), 560px); }
 }
 
 /* a zoomed diagram (diagram-gestures.js) can be dragged around by mouse,

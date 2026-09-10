@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Tractography — VisualNeuroscience.AI</title>
 <meta name="description" content="A whole-brain tractogram you can turn in your hands: diffusion MRI fibre pathways from the HCP1065 population atlas, coloured by the direction each fibre runs.">
 <!-- link previews. The card is built by site/share.html and rendered to
@@ -150,7 +150,7 @@ svg{ display:block; }
 .views{ grid-template-columns:1fr; }
 /* no frame around it: the tractogram sits on the page, unboxed */
 .views .view{ border:0; }
-.views .view[data-box="Ren"] .mri-stage{ height:clamp(420px,68vh,900px); }
+.views .view[data-box="Ren"] .mri-stage{ height:clamp(420px,68vh,900px); height:clamp(420px,68dvh,900px); }
 
 /* ── the rail's inputs ── */
 .rail-row{ display:flex; align-items:center; gap:.5rem; margin:.5rem 0; }
