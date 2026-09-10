@@ -138,6 +138,62 @@ svg{ display:block; }
 
 /* ── the story ──────────────────────────────────────────────────────── */
 .policy{ max-width:72ch; margin:0 auto; }
+
+/* ── the framed portrait ───────────────────────────────────────────────
+   Lifted off the CV: the photograph is a picture, but the engraved frame,
+   its name ribbon and the signature are line drawings held as alpha
+   stencils, so `background:currentColor` paints them in the page's ink —
+   dark on paper, pale in the dark theme, from one set of files. The
+   engraving sits behind the photograph and the ribbon in front of it,
+   which is how the original stacks them. */
+.mugshot{
+  display:flex; align-items:flex-end; justify-content:center;
+  gap:clamp(.2rem,1.2vw,1rem); margin:0 auto var(--gap);
+}
+.mugshot .frame{
+  position:relative; flex:none;
+  width:clamp(148px,26vw,214px); aspect-ratio:.82078;
+}
+.mugshot .frame > *{ position:absolute; }
+.mugshot .stencil{
+  inset:0; background:currentColor;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  -webkit-mask-size:100% 100%; mask-size:100% 100%;
+}
+.mugshot .engraving{
+  -webkit-mask-image:url(assets/portrait/frame-back.webp);
+  mask-image:url(assets/portrait/frame-back.webp);
+  opacity:.72;
+}
+.mugshot .ribbon-fill{
+  -webkit-mask-image:url(assets/portrait/ribbon-fill.webp);
+  mask-image:url(assets/portrait/ribbon-fill.webp);
+  background:var(--paper);
+}
+.mugshot .ribbon-line{
+  -webkit-mask-image:url(assets/portrait/ribbon-line.webp);
+  mask-image:url(assets/portrait/ribbon-line.webp);
+}
+.mugshot .photo{
+  left:3.137%; top:3.099%; width:93.724%; height:92.344%;
+  display:block; object-fit:contain;
+}
+.mugshot .autograph{
+  flex:none; width:clamp(96px,17vw,140px); aspect-ratio:2.9291;
+  margin-bottom:clamp(.5rem,2vw,1.4rem);
+  background:currentColor;
+  -webkit-mask:url(assets/portrait/signature.webp) no-repeat center/100% 100%;
+  mask:url(assets/portrait/signature.webp) no-repeat center/100% 100%;
+}
+/* No mask support: show the photograph and drop the line work rather than
+   painting solid blocks of ink where the stencils were. */
+@supports not ((-webkit-mask-image:url(x)) or (mask-image:url(x))){
+  .mugshot .stencil, .mugshot .autograph{ display:none; }
+}
+@media (max-width:420px){
+  .mugshot{ flex-direction:column; align-items:center; gap:.2rem; }
+  .mugshot .autograph{ margin-bottom:0; width:min(60vw,190px); }
+}
 .policy h2{
   font-family:var(--font-brand); font-weight:600; font-size:.66rem;
   letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
@@ -195,7 +251,17 @@ svg{ display:block; }
 
 <div class="policy">
 
-<p class="lede">VisualNeuroscience.AI was built in full by me, Fadil Karim: the viewer, the atlases, the pages, the apps and everything between them. It is a one-person project, and this page says why it exists.</p>
+<figure class="mugshot">
+  <div class="frame">
+    <span class="stencil engraving" aria-hidden="true"></span>
+    <img class="photo" src="assets/portrait/portrait.webp" alt="Fadil Karim" width="454" height="545" decoding="async">
+    <span class="stencil ribbon-fill" aria-hidden="true"></span>
+    <span class="stencil ribbon-line" aria-hidden="true"></span>
+  </div>
+  <div class="autograph" role="img" aria-label="Fadil Karim&rsquo;s signature"></div>
+</figure>
+
+<p class="lede">Welcome to VisualNeuroscience.AI. My name is Fadil. I built this app to be the most complete and useful atlas of the brain for all levels, and I will keep working on it to bring it closer to that vision. I am currently a one-person team, and I built this app for iOS, visionOS and the web with the help of Anthropic&rsquo;s Claude AI, without which it would not have been possible.</p>
 
 <h2>The short version</h2>
 <p>I am an engineer by background. I finished a PGCert in Applied Neuroscience at King&rsquo;s College London and could not carry it on to the full master&rsquo;s &mdash; full-time work and the cost got in the way, as they do for a great many people who would like to study the brain and have no lab to walk into. So I kept learning the way an engineer learns, by building. The thing I had most wanted while studying was a good map of the brain that I could open on anything, without a licence, an installer or a login. It did not exist at a price I could pay, so I made it, and I made it free.</p>

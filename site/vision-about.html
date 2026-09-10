@@ -17,6 +17,35 @@
 }
 .vcard h3:first-of-type{ border-top:0; padding-top:0; margin-top:.6rem; }
 .pending{ font-style:italic; color:var(--ink-60); }
+/* the framed portrait: engraving behind, ribbon in front, both stencils
+   painted in the window's own ink */
+.mugshot{ display:flex; align-items:flex-end; justify-content:center; gap:.6rem; margin:0 0 1rem; }
+.mugshot .frame{ position:relative; flex:none; width:132px; aspect-ratio:.82078; }
+.mugshot .frame > *{ position:absolute; }
+.mugshot .stencil{
+  inset:0; background:currentColor;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  -webkit-mask-size:100% 100%; mask-size:100% 100%;
+}
+.mugshot .engraving{
+  -webkit-mask-image:url(assets/portrait/frame-back.webp);
+  mask-image:url(assets/portrait/frame-back.webp); opacity:.72;
+}
+.mugshot .ribbon-fill{
+  -webkit-mask-image:url(assets/portrait/ribbon-fill.webp);
+  mask-image:url(assets/portrait/ribbon-fill.webp);
+  background:#1A1A1D;                 /* the glass card's own ground */
+}
+.mugshot .ribbon-line{
+  -webkit-mask-image:url(assets/portrait/ribbon-line.webp);
+  mask-image:url(assets/portrait/ribbon-line.webp);
+}
+.mugshot .photo{ left:3.137%; top:3.099%; width:93.724%; height:92.344%; display:block; }
+.mugshot .autograph{
+  flex:none; width:92px; aspect-ratio:2.9291; margin-bottom:.5rem; background:currentColor;
+  -webkit-mask:url(assets/portrait/signature.webp) no-repeat center/100% 100%;
+  mask:url(assets/portrait/signature.webp) no-repeat center/100% 100%;
+}
 .vid{
   margin-top:.5rem; aspect-ratio:16/9; border:1px dashed var(--edge);
   border-radius:18px; display:flex; align-items:center; justify-content:center;
@@ -36,6 +65,16 @@
   <div class="vcard">
     <div class="vkicker">The project</div>
     <h2>About</h2>
+
+    <figure class="mugshot">
+      <div class="frame">
+        <span class="stencil engraving" aria-hidden="true"></span>
+        <img class="photo" src="assets/portrait/portrait.webp" alt="Fadil Karim" width="454" height="545" decoding="async">
+        <span class="stencil ribbon-fill" aria-hidden="true"></span>
+        <span class="stencil ribbon-line" aria-hidden="true"></span>
+      </div>
+      <div class="autograph" role="img" aria-label="Fadil Karim&rsquo;s signature"></div>
+    </figure>
 
     <h3>The atlas</h3>
     <p>An interactive atlas of the human brain: the MNI152 head under the AAL-116 parcellation, the Brodmann areas searchable by what they do, whole-brain tractography, receptor densities, network states and published studies drawn on the scan &mdash; free, offline, and rendered on your own device. I believe it is the most advanced and most usable brain atlas on the App Store: the deep atlases live in research infrastructure like the EU&rsquo;s EBRAINS, built for laboratories, and nothing there or on the store puts this much of the brain in your hands, readable without training.</p>
