@@ -140,12 +140,13 @@ svg{ display:block; }
 .policy{ max-width:72ch; margin:0 auto; }
 
 /* ── the framed portrait ───────────────────────────────────────────────
-   Lifted off the CV: the photograph is a picture, but the engraved frame,
-   its name ribbon and the signature are line drawings held as alpha
-   stencils, so `background:currentColor` paints them in the page's ink —
-   dark on paper, pale in the dark theme, from one set of files. The
-   engraving sits behind the photograph and the ribbon in front of it,
-   which is how the original stacks them. */
+   Lifted off the CV and reproduced as it is drawn there: the frame keeps
+   its own cream ground and olive engraving, the ribbon its own colours,
+   in both themes. The engraving sits behind the photograph and the ribbon
+   in front of it, across the shoulders, which is how the original stacks
+   them. The signature is the exception: it lies on the page rather than
+   on the frame's ground, so it is an alpha stencil that CSS paints in the
+   page's ink, dark on paper and pale in the dark theme. */
 .mugshot{
   display:flex; align-items:flex-end; justify-content:center;
   gap:clamp(.2rem,1.2vw,1rem); margin:0 auto var(--gap);
@@ -155,25 +156,7 @@ svg{ display:block; }
   width:clamp(148px,26vw,214px); aspect-ratio:.82078;
 }
 .mugshot .frame > *{ position:absolute; }
-.mugshot .stencil{
-  inset:0; background:currentColor;
-  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
-  -webkit-mask-size:100% 100%; mask-size:100% 100%;
-}
-.mugshot .engraving{
-  -webkit-mask-image:url(assets/portrait/frame-back.webp);
-  mask-image:url(assets/portrait/frame-back.webp);
-  opacity:.72;
-}
-.mugshot .ribbon-fill{
-  -webkit-mask-image:url(assets/portrait/ribbon-fill.webp);
-  mask-image:url(assets/portrait/ribbon-fill.webp);
-  background:var(--paper);
-}
-.mugshot .ribbon-line{
-  -webkit-mask-image:url(assets/portrait/ribbon-line.webp);
-  mask-image:url(assets/portrait/ribbon-line.webp);
-}
+.mugshot .engraving, .mugshot .ribbon{ inset:0; width:100%; height:100%; display:block; }
 .mugshot .photo{
   left:3.137%; top:3.099%; width:93.724%; height:92.344%;
   display:block; object-fit:contain;
@@ -185,10 +168,11 @@ svg{ display:block; }
   -webkit-mask:url(assets/portrait/signature.webp) no-repeat center/100% 100%;
   mask:url(assets/portrait/signature.webp) no-repeat center/100% 100%;
 }
-/* No mask support: show the photograph and drop the line work rather than
-   painting solid blocks of ink where the stencils were. */
+/* No mask support: drop the signature rather than painting a solid block
+   of ink where its stencil was. The frame carries its own colours and is
+   unaffected. */
 @supports not ((-webkit-mask-image:url(x)) or (mask-image:url(x))){
-  .mugshot .stencil, .mugshot .autograph{ display:none; }
+  .mugshot .autograph{ display:none; }
 }
 @media (max-width:420px){
   .mugshot{ flex-direction:column; align-items:center; gap:.2rem; }
@@ -253,10 +237,9 @@ svg{ display:block; }
 
 <figure class="mugshot">
   <div class="frame">
-    <span class="stencil engraving" aria-hidden="true"></span>
+    <img class="engraving" src="assets/portrait/frame-back.webp" alt="" width="704" height="857" decoding="async">
     <img class="photo" src="assets/portrait/portrait.webp" alt="Fadil Karim" width="454" height="545" decoding="async">
-    <span class="stencil ribbon-fill" aria-hidden="true"></span>
-    <span class="stencil ribbon-line" aria-hidden="true"></span>
+    <img class="ribbon" src="assets/portrait/ribbon.webp" alt="" width="704" height="857" decoding="async">
   </div>
   <div class="autograph" role="img" aria-label="Fadil Karim&rsquo;s signature"></div>
 </figure>

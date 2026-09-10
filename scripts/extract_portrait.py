@@ -63,21 +63,18 @@ def classify(page):
     return back, front, sign, backdrop
 
 
-def stencil(paths, box, out, pad=0.5, mode="stroke"):
-    """Replay the paths in black on white over `box`, then keep only their
-       darkness as alpha.
+def replay(paths, box, pad=0.5, ink=None):
+    """Redraw the paths over `box` on a transparent page, in document order.
 
-       `mode` decides what a stroke-and-fill path contributes: "stroke" gives
-       its outline, "fill" its solid interior. The ribbon needs both, on two
-       layers — an opaque banner painted in the page colour, with the outline
-       and the letters over it in ink — because in the original it is a cream
-       banner lying across the shoulders, and a hollow one would vanish."""
+       With `ink` left alone each path keeps the CV's own colours, which is
+       how the frame is reproduced. Passing an ink colour draws everything
+       in it instead, for the signature, whose stencil CSS recolours."""
     box = pymupdf.Rect(box.x0 - pad, box.y0 - pad, box.x1 + pad, box.y1 + pad)
     tmp = pymupdf.open()
     page = tmp.new_page(width=box.width, height=box.height)
     shift = pymupdf.Matrix(1, 0, 0, 1, -box.x0, -box.y0)
-    shape = page.new_shape()
     for dr in paths:
+        shape = page.new_shape()          # one shape per path, so z-order holds
         for it in dr["items"]:
             if it[0] == "l":
                 shape.draw_line(it[1] * shift, it[2] * shift)
@@ -87,21 +84,36 @@ def stencil(paths, box, out, pad=0.5, mode="stroke"):
                 shape.draw_rect(it[1] * shift)
             elif it[0] == "qu":
                 shape.draw_quad(it[1] * shift)
-        stroked = dr["type"] in ("s", "fs") and mode == "stroke"
-        filled = dr["type"] == "f" or (dr["type"] == "fs" and mode == "fill")
-        shape.finish(color=(0, 0, 0) if stroked else None,
-                     fill=(0, 0, 0) if filled else None,
+        stroke = dr.get("color") if dr["type"] in ("s", "fs") else None
+        fill = dr.get("fill") if dr["type"] in ("f", "fs") else None
+        if ink is not None:
+            stroke = ink if stroke is not None else None
+            fill = ink if fill is not None else None
+        shape.finish(color=stroke, fill=fill,
                      width=max(dr.get("width") or 0.04, 0.04),
+                     even_odd=bool(dr.get("even_odd")),
                      closePath=bool(dr.get("closePath")))
-    shape.commit()
-    pix = page.get_pixmap(matrix=pymupdf.Matrix(SCALE, SCALE), colorspace=pymupdf.csGRAY)
-    grey = Image.frombytes("L", (pix.width, pix.height), pix.samples)
-    img = Image.new("LA", grey.size, (0, 0))          # greyscale+alpha: half the bytes of RGBA
-    # ink becomes opacity, quantised: the engraving is a texture rather than a
-    # gradient, and 32 levels halve the file with nothing visible lost
-    img.putalpha(grey.point(lambda v: ((255 - v) // 8) * 8))
+        shape.commit()
+    pix = page.get_pixmap(matrix=pymupdf.Matrix(SCALE, SCALE), alpha=True)
+    return Image.frombytes("RGBA", (pix.width, pix.height), pix.samples)
+
+
+def colour_layer(paths, box, out):
+    """The frame as the CV draws it, transparent everywhere it does not."""
+    img = replay(paths, box)
     img.save(out, lossless=True, method=6)
     return img.size
+
+
+def stencil(paths, box, out):
+    """Line work reduced to opacity, for CSS to paint in the page's ink."""
+    img = replay(paths, box, ink=(0, 0, 0))
+    out_img = Image.new("LA", img.size, (0, 0))       # greyscale+alpha: half the bytes
+    # quantised to 32 levels: this is a texture, not a gradient, and it halves
+    # the file with nothing visible lost
+    out_img.putalpha(img.getchannel("A").point(lambda v: (v // 8) * 8))
+    out_img.save(out, lossless=True, method=6)
+    return out_img.size
 
 
 def flatten(items, to_px, steps=64):
@@ -129,11 +141,11 @@ def main(src):
     frame_box, sign_box = union(back + front), union(sign)
     OUT.mkdir(parents=True, exist_ok=True)
 
-    banner = [d for d in front if d["type"] == "fs"]
-    print("engraving   ", stencil(back,   frame_box, OUT / "frame-back.webp"), f"({len(back)} paths)")
-    print("ribbon fill ", stencil(banner, frame_box, OUT / "ribbon-fill.webp", mode="fill"), f"({len(banner)} paths)")
-    print("ribbon line ", stencil(front,  frame_box, OUT / "ribbon-line.webp"), f"({len(front)} paths)")
-    print("signature   ", stencil(sign,   sign_box,  OUT / "signature.webp"), f"({len(sign)} paths)")
+    # the cream ground belongs to the frame, behind the photograph
+    print("frame       ", colour_layer([backdrop] + back, frame_box, OUT / "frame-back.webp"),
+          f"({len(back) + 1} paths)")
+    print("ribbon      ", colour_layer(front, frame_box, OUT / "ribbon.webp"), f"({len(front)} paths)")
+    print("signature   ", stencil(sign, sign_box, OUT / "signature.webp"), f"({len(sign)} paths)")
 
     # the photograph, clipped to the oval it is laid over
     img_info = next(i for i in page.get_image_info(xrefs=True) if i["xref"] == 263)

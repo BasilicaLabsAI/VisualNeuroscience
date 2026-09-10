@@ -21,7 +21,7 @@
    Nothing cross-origin is touched at all — since the typefaces moved
    in-house there is no outside request left to think about. */
 
-var VERSION = "vn-39";
+var VERSION = "vn-40";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
@@ -45,8 +45,7 @@ var PRECACHE = [
   "/assets/brain-hull.js",
   "/assets/logo.svg", "/manifest.webmanifest",
   "/assets/portrait/portrait.webp", "/assets/portrait/frame-back.webp",
-  "/assets/portrait/ribbon-fill.webp", "/assets/portrait/ribbon-line.webp",
-  "/assets/portrait/signature.webp",
+  "/assets/portrait/ribbon.webp", "/assets/portrait/signature.webp",
   "/fonts/Flux-Regular.woff2", "/fonts/fonts.css",
   "/fonts/afacad-flux-latin-400-normal.woff2", "/fonts/afacad-flux-latin-500-normal.woff2",
   "/fonts/afacad-flux-latin-600-normal.woff2", "/fonts/newsreader-latin-400-normal.woff2",
