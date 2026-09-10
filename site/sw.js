@@ -21,7 +21,7 @@
    Nothing cross-origin is touched at all — since the typefaces moved
    in-house there is no outside request left to think about. */
 
-var VERSION = "vn-33";
+var VERSION = "vn-34";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
@@ -32,6 +32,7 @@ var PRECACHE = [
   "/textbook.html", "/assets/home/textbook.jpg",
   "/vision.html", "/vision-model.html", "/vision-planes.html",
   "/vision-plane.html", "/vision-regions.html", "/vision-brodmann.html",
+  "/vision-about.html",
   "/assets/vision.css", "/assets/vision-bus.js", "/assets/vision-scan.js",
   "/assets/viewer.css", "/assets/native.js", "/assets/zoom.js",
   "/assets/stage-lifecycle.js", "/assets/diagram-gestures.js",
