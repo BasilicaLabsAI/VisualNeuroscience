@@ -36,7 +36,7 @@ https://visualneuroscience.ai/privacy.html
 A free, interactive atlas of the human brain: AAL regions, Brodmann areas by function, whole-brain tractography, receptor maps and cited studies. Works offline.
 ```
 
-**Description** (3461/4000)
+**Description** (3490/4000)
 
 ```
 VisualNeuroscience.AI is an interactive atlas of the human brain, built for anyone learning neuroanatomy without a lab or a licence. Turn a real MNI152 brain, click through its regions, search Brodmann areas by what they do, follow the white-matter tracts, and see published studies drawn on the scan itself. Everything ships inside the app and renders on your device, so it works on a train, at the back of a lecture theatre, or in aeroplane mode.
@@ -74,7 +74,7 @@ WHO IT IS FOR
 
 Students revising between lectures. Lecturers who want a live brain on the screen instead of a slide. Clinicians who need a region and its function in a moment. Researchers who would like their findings drawn on a brain other people can turn. And anyone who wanted to study this and was priced out.
 
-Built in full by one engineer who started a postgraduate certificate in neuroscience, could not finish it, and kept learning by building the free map of the brain he had wanted. It is a one-person project with a short feedback loop: if something is missing for your course or your group, write, and it usually ships within the week.
+Built in full by one engineer who finished a postgraduate certificate in neuroscience, could not afford to carry it on to the master's, and kept learning by building the free map of the brain he had wanted. It is a one-person project with a short feedback loop: if something is missing for your course or your group, write, and it usually ships within the week.
 
 Not a medical device and not a diagnostic tool. An educational reference that summarises published work and draws published atlases, with its sources on every page.
 
