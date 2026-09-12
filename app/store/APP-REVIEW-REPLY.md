@@ -99,3 +99,119 @@ above minus the first paragraph, with the demo credentials filled in.
 Do not resubmit a new build in response to this; it is a request for
 information, and the same build should stay under review. Reply in the
 thread and the review continues.
+
+---
+
+# Answering the 4.3(a) rejection — Design — Spam (12 September 2026)
+
+Build 1.0 (14), submission 979d790e-caea-4eee-a37a-b8a2d201a044, reviewed
+on an iPad Air 11-inch (M3). The finding: "the app shares a similar binary,
+metadata, and/or concept as apps submitted to the App Store by other
+developers, with only minor differences." Apple does not name the app it
+compared against, and its reply to the appeal is often a form letter, so
+the message has to make the comparison collapse on its own.
+
+## What probably triggered it
+
+None of these is confirmed; the reply asks Apple which one it was.
+
+- **Name.** An app called "NOURAKU – Visual Neuroscience" (Fuji Bit Inc.)
+  is on the store. A name match is the cheapest "similar metadata" there
+  is, and the subtitle "Interactive brain atlas" reads like a category, not
+  an app.
+- **Concept.** "Brain atlas" apps exist (3D Brain, Brain Tutor, general
+  anatomy apps). A reviewer who opens the app, sees a brain, and has not
+  used the tools files it under the concept.
+- **Binary.** Every Capacitor app has the same native shell. Apple's
+  automated similarity check is known to flag thin shells around web
+  content, especially when the same content is reachable in a browser.
+
+## The order of moves
+
+1. **Reply in the thread first** (App Store Connect → the app → App Review
+   → the message). One message, the text in §6. Do not upload a new build
+   and do not press Submit for Review again with build 14: after a 4.3(a)
+   an unchanged resubmission is what the "repeated submissions" paragraph
+   in the email is about.
+2. **If the answer is a form letter or a second 4.3(a)**, appeal to the App
+   Review Board: developer.apple.com/contact/app-store, topic "Appeal an
+   app rejection". A different team reads appeals. Text in §7.
+3. **In parallel, prepare build 15** with the metadata changes in §8, so
+   that if a resubmission is needed it is visibly not the same submission.
+
+## 6 · Reply text
+
+2,982 characters with the placeholders. Fill the brackets, delete any
+sentence that is not true of you, and keep it under 4,000.
+
+```
+Thank you for the review. I believe this comparison is mistaken and would like to resolve it. Could you tell me which app or apps the submission was compared with, so I can address the overlap precisely? In the meantime, the facts:
+
+1. Authorship. VisualNeuroscience.AI is written by me alone, from an empty repository, over [N] months. It is not a purchased, repackaged or templated app. It shares no source code, assets or content with any other app, and I have not submitted it, or anything like it, under any other developer account. The only other place this code runs is my own website, visualneuroscience.ai, which I own and which carries the same name and content. I can give App Review read access to the private source repository, or a screen recording of it, on request.
+
+2. Content. The anatomy is rendered on the device from published, licensed datasets that I processed myself: the MNI152 template, the AAL-116 parcellation, the MRIcron Brodmann volume and the HCP1065 tractogram, plus the Brodmann diagram used with IFEN's written permission, documented earlier in this thread. The textbook chapters, the studies overlay, the receptor maps, the network atlas and the practice question bank are written and assembled by me and cited to their source papers.
+
+3. Concept. I have compared this app with every brain atlas app I can find on the App Store. None combines an MNI152 atlas with selectable AAL regions, Brodmann areas searchable by function, whole-brain tractography, receptor density maps, a network-state atlas, published studies drawn onto the scan, a cited textbook and adaptive practice questions, in one free app that works fully offline. That combination is the app; it is not a variation on an existing one.
+
+4. Name. The App Store name is VisualNeuroscience.AI, my registered domain. If the concern is proximity to another listing whose name contains "Visual Neuroscience", I will change the name in this submission; please confirm that is the issue.
+
+5. Binary. The app is built with Capacitor, an open-source framework, so the thin native layer (WebKit view, Sign in with Apple, haptics, file export, share sheet, offline bundle) is the same one used by many independent apps. Everything above that layer is original. If an automated binary comparison flagged it, I would be grateful to know against which app, because there is no other app containing this code.
+
+6. Context. [I am a one-person developer and this is my first App Store submission.] The website has been live at visualneuroscience.ai since [month], the domain is registered to me, and the About page there describes who built the app and how. The app exists so that students can use the atlas offline on a tablet, which the website cannot do.
+
+Please tell me what would demonstrate this to your satisfaction and I will provide it: repository access, a recording of the development history, domain registration, or the IFEN permission correspondence already attached above.
+
+Thank you.
+```
+
+## 7 · Appeal text
+
+Only if the thread reply fails. The form asks for the app name, the Apple
+ID number (App Information → General → Apple ID), the submission ID, and a
+statement. 1,308 characters.
+
+```
+App: VisualNeuroscience.AI, Apple ID [number], submission 979d790e-caea-4eee-a37a-b8a2d201a044, version 1.0 (14), rejected under 4.3(a) on 12 September 2026.
+
+I am appealing because the app is original and I have been unable to learn what it was compared with. It is written entirely by me, from scratch, under this one account. It is not a template, is not repackaged from any other app, and no other app contains its code or content. Its only other home is my own website at the same name, visualneuroscience.ai.
+
+The app renders published brain atlases on the device (MNI152, AAL-116, a Brodmann atlas, the HCP1065 tractogram) and adds receptor maps, a network atlas, studies drawn onto the scan, a cited textbook and adaptive practice. I know of no App Store app that offers this combination, and none that does so free and fully offline. Guideline 4.3(a) targets repackaged and duplicate apps; this is neither.
+
+In the review thread I offered read access to the private source repository, the domain registration, and the rights-holder permission for the one third-party diagram, and asked which app was the basis of the comparison. I have not received a specific answer. I would welcome any of those being checked, and if the concern is the name, I will change it.
+
+Thank you for looking at this again.
+```
+
+## 8 · Changes for build 15, whether or not the reply works
+
+Do these before any resubmission so the next submission is different in
+the places a reviewer reads first: name, subtitle, screenshots, opening
+lines.
+
+- **Subtitle.** Replace "Interactive brain atlas" (a category) with
+  something no other listing could say, within 30 characters:
+  `MRI atlas, tracts, Brodmann` (27) or `Atlases, tracts, studies` (24).
+- **Screenshots.** First three: the tractogram turning in 3D, the Region
+  Atlas with a region lit in three planes and 3D, and Brodmann areas with
+  the function search open. A brain on a black background alone looks
+  like every other brain app; the tools do not.
+- **Description.** Open with the combination sentence from point 3 of the
+  reply, then the sections already written. Add one line near the end:
+  "Built by one developer; the website and the app share the same code and
+  the same author."
+- **Keywords.** Add `MNI152` and `AAL`; nothing else on the store uses
+  them.
+- **The build itself.** Build 15 carries everything shipped since 14: the
+  About page, 3D export, saved models, the MCP link, the iPhone Duo
+  layout. The About page in particular answers "who made this" inside the
+  app, which is the question 4.3(a) is really asking.
+- **Notes field.** Keep the demo credentials and add one sentence:
+  "Original app by a single developer; source available to App Review on
+  request. See the About page inside the app."
+
+## 9 · What not to do
+
+Do not resubmit build 14 unchanged. Do not send more than one message
+before Apple answers. Do not request an expedited review. Do not upload a
+new build until the thread reply has been answered, unless a week passes
+with nothing.
