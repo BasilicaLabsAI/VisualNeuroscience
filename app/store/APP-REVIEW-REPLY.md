@@ -141,7 +141,7 @@ None of these is confirmed; the reply asks Apple which one it was.
 
 ## 6 · Reply text
 
-3,034 characters with the placeholders. Fill the brackets, delete any
+3,601 characters with the placeholders. Fill the brackets, delete any
 sentence that is not true of you, and keep it under 4,000.
 
 ```
@@ -157,12 +157,21 @@ Thank you for the review. I believe this comparison is mistaken and would like t
 
 5. Binary. The app is built with Capacitor, an open-source framework, so the thin native layer (WebKit view, Sign in with Apple, haptics, file export, share sheet, offline bundle) is the same one used by many independent apps. Everything above that layer is original. If an automated binary comparison flagged it, I would be grateful to know against which app, because there is no other app containing this code.
 
-6. Context. [I am a one-person developer and this is my first App Store submission.] The website has been live at visualneuroscience.ai since [month], the domain is registered to me, and the About page there describes who built the app and how. The app exists so that students can use the atlas offline on a tablet, which the website cannot do.
+6. Context. I am a one-person developer. I built this because, as a neuroscience student, I looked for exactly this tool for years and it did not exist, on the App Store or anywhere else: good atlases are desktop-only, licensed, or single-purpose, and an institution would not fund one. I have been open about how it was made. The About page in the app and on the website explains that the data processing, the code and the content were built by me using AI-assisted development tools, and that every dataset is cited to its published source; nothing in the app is generated at runtime. My GitHub profile is github.com/[handle]; the app's own repository is private and screenshots of its history are attached. The website has been live at visualneuroscience.ai since [month], and the domain is registered to me. The app exists so that students can use the atlas offline on a tablet, which the website cannot do.
 
 Please tell me what would demonstrate this to your satisfaction and I will provide it: a recording of the development history, domain registration, or the IFEN permission correspondence already attached above.
 
 Thank you.
 ```
+
+## 6 · Tone
+
+Facts only. No "unfair", no "accused", no mention of September or of
+workload, and no argument that the app could only be built with AI: that
+is the sentence a 4.3(a) reviewer is primed to hear. Say how it was made
+in one plain sentence, consistent with the first thread, and move on. Do
+not attach a passport or a CV; Apple verified identity at enrolment, and
+the About page plus a GitHub profile link do the same job.
 
 ## 6a · What to attach to the reply
 
