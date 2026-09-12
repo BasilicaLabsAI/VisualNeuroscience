@@ -141,13 +141,13 @@ None of these is confirmed; the reply asks Apple which one it was.
 
 ## 6 · Reply text
 
-2,982 characters with the placeholders. Fill the brackets, delete any
+3,034 characters with the placeholders. Fill the brackets, delete any
 sentence that is not true of you, and keep it under 4,000.
 
 ```
 Thank you for the review. I believe this comparison is mistaken and would like to resolve it. Could you tell me which app or apps the submission was compared with, so I can address the overlap precisely? In the meantime, the facts:
 
-1. Authorship. VisualNeuroscience.AI is written by me alone, from an empty repository, over [N] months. It is not a purchased, repackaged or templated app. It shares no source code, assets or content with any other app, and I have not submitted it, or anything like it, under any other developer account. The only other place this code runs is my own website, visualneuroscience.ai, which I own and which carries the same name and content. I can give App Review read access to the private source repository, or a screen recording of it, on request.
+1. Authorship. VisualNeuroscience.AI is written by me alone, from an empty repository, and every commit in its history is under my name. It is not a purchased, repackaged or templated app. It shares no source code, assets or content with any other app, and I have not submitted it, or anything like it, under any other developer account. The only other place this code runs is my own website, visualneuroscience.ai, which I own and which carries the same name and content. The repository is private; screenshots of its commit history and contributor page are attached, and I will open it to any GitHub account you name.
 
 2. Content. The anatomy is rendered on the device from published, licensed datasets that I processed myself: the MNI152 template, the AAL-116 parcellation, the MRIcron Brodmann volume and the HCP1065 tractogram, plus the Brodmann diagram used with IFEN's written permission, documented earlier in this thread. The textbook chapters, the studies overlay, the receptor maps, the network atlas and the practice question bank are written and assembled by me and cited to their source papers.
 
@@ -159,10 +159,33 @@ Thank you for the review. I believe this comparison is mistaken and would like t
 
 6. Context. [I am a one-person developer and this is my first App Store submission.] The website has been live at visualneuroscience.ai since [month], the domain is registered to me, and the About page there describes who built the app and how. The app exists so that students can use the atlas offline on a tablet, which the website cannot do.
 
-Please tell me what would demonstrate this to your satisfaction and I will provide it: repository access, a recording of the development history, domain registration, or the IFEN permission correspondence already attached above.
+Please tell me what would demonstrate this to your satisfaction and I will provide it: a recording of the development history, domain registration, or the IFEN permission correspondence already attached above.
 
 Thank you.
 ```
+
+## 6a · What to attach to the reply
+
+App Review does not log into GitHub or any other service, and has no
+account to invite. Offering access is good faith; what the reviewer
+actually looks at is the thread and its attachments. Attach these, as
+screenshots or a short screen recording:
+
+1. The repository's front page on GitHub: the Private badge, your account
+   as owner, the commit count, and the "Insights → Contributors" page
+   showing one contributor.
+2. The commit list scrolled from the first commit (27 August 2026) to
+   the latest, so the dates and the single author are visible. A
+   fifteen-second recording is enough.
+3. The domain's registration page at the registrar, with your address
+   and phone number blurred and the registrant name and dates visible.
+4. The About page on the website, which names the author.
+
+Do not make the repository public for this; it would not be read, and
+a public repository needs a licence file and a pass over the docs first
+(third-party addresses in docs/PERMISSIONS.md, the Firebase client key in
+the iOS project, the auth worker config). If it goes public later for the
+funding application, do that pass then.
 
 ## 7 · Appeal text
 
