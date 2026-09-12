@@ -141,14 +141,14 @@ None of these is confirmed; the reply asks Apple which one it was.
 
 ## 6 · Reply text
 
-3,664 characters. Delete any sentence that is not true of you and keep
+3,747 characters. Delete any sentence that is not true of you and keep
 it under 4,000. The site date is the earliest the repository proves;
 use the real one if it went live sooner.
 
 ```
 Thank you for the review. I believe this comparison is mistaken and would like to resolve it. Could you tell me which app or apps the submission was compared with, so I can address the overlap precisely? In the meantime, the facts:
 
-1. Authorship. VisualNeuroscience.AI is written by me alone, from an empty repository, and every commit in its history is under my name. It is not a purchased, repackaged or templated app. It shares no source code, assets or content with any other app, and I have not submitted it, or anything like it, under any other developer account. The only other place this code runs is my own website, visualneuroscience.ai, which I own and which carries the same name and content. The repository is private; screenshots of its commit history and contributor page are attached, and I will open it to any GitHub account you name.
+1. Authorship. VisualNeuroscience.AI is written by me alone. Its repository has been mine since September 2024, under an earlier name of this same GitHub account, and the current app was built in it from 11 August 2026. It is not a purchased, repackaged or templated app. It shares no source code, assets or content with any other app, and I have not submitted it, or anything like it, under any other developer account. The only other place this code runs is my own website, visualneuroscience.ai, which I own and which carries the same name and content. The repository is private; screenshots of its commit history and contributor page are attached, and I will open it to any GitHub account you name.
 
 2. Content. The anatomy is rendered on the device from published, licensed datasets that I processed myself: the MNI152 template, the AAL-116 parcellation, the MRIcron Brodmann volume and the HCP1065 tractogram, plus the Brodmann diagram used with IFEN's written permission, documented earlier in this thread. The textbook chapters, the studies overlay, the receptor maps, the network atlas and the practice question bank are written and assembled by me and cited to their source papers.
 
@@ -184,9 +184,14 @@ screenshots or a short screen recording:
 1. The repository's front page on GitHub: the Private badge, your account
    as owner, the commit count, and the "Insights → Contributors" page
    showing one contributor.
-2. The commit list scrolled from the first commit (27 August 2026) to
-   the latest, so the dates and the single author are visible. A
-   fifteen-second recording is enough.
+2. The commit list scrolled from the start of the current app (11 August
+   2026) to the latest, so the dates and the author are visible; a
+   fifteen-second recording is enough. The repository itself goes back to
+   September 2024 under the account's earlier name, which is worth
+   showing too. Three commits on 13 and 14 August carry the AI tool's
+   name as author; they were made from this account, and the reply's
+   point 6 already discloses the tooling, so there is nothing to hide,
+   but do not claim every commit is under your own name.
 3. The domain's registration page at the registrar, with your address
    and phone number blurred and the registrant name and dates visible.
 4. The About page on the website, which names the author.
