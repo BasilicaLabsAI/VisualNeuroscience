@@ -141,8 +141,9 @@ None of these is confirmed; the reply asks Apple which one it was.
 
 ## 6 · Reply text
 
-3,601 characters with the placeholders. Fill the brackets, delete any
-sentence that is not true of you, and keep it under 4,000.
+3,664 characters. Delete any sentence that is not true of you and keep
+it under 4,000. The site date is the earliest the repository proves;
+use the real one if it went live sooner.
 
 ```
 Thank you for the review. I believe this comparison is mistaken and would like to resolve it. Could you tell me which app or apps the submission was compared with, so I can address the overlap precisely? In the meantime, the facts:
@@ -157,7 +158,7 @@ Thank you for the review. I believe this comparison is mistaken and would like t
 
 5. Binary. The app is built with Capacitor, an open-source framework, so the thin native layer (WebKit view, Sign in with Apple, haptics, file export, share sheet, offline bundle) is the same one used by many independent apps. Everything above that layer is original. If an automated binary comparison flagged it, I would be grateful to know against which app, because there is no other app containing this code.
 
-6. Context. I am a one-person developer. I built this because, as a neuroscience student, I looked for exactly this tool for years and it did not exist, on the App Store or anywhere else: good atlases are desktop-only, licensed, or single-purpose, and an institution would not fund one. I have been open about how it was made. The About page in the app and on the website explains that the data processing, the code and the content were built by me using AI-assisted development tools, and that every dataset is cited to its published source; nothing in the app is generated at runtime. My GitHub profile is github.com/[handle]; the app's own repository is private and screenshots of its history are attached. The website has been live at visualneuroscience.ai since [month], and the domain is registered to me. The app exists so that students can use the atlas offline on a tablet, which the website cannot do.
+6. Context. I am a one-person developer. I built this because, as a neuroscience student, I looked for exactly this tool for years and it did not exist, on the App Store or anywhere else: good atlases are desktop-only, licensed, or single-purpose, and an institution would not fund one. I have been open about how it was made. The About page in the app and on the website explains that the data processing, the code and the content were built by me using AI-assisted development tools, and that every dataset is cited to its published source; nothing in the app is generated at runtime. My GitHub account is github.com/OttomanLabsAI, open since February 2023 with 46 public repositories; the app's own repository is private and screenshots of its history are attached. The website has been live at visualneuroscience.ai since August 2026, and the domain is registered to me. The app exists so that students can use the atlas offline on a tablet, which the website cannot do.
 
 Please tell me what would demonstrate this to your satisfaction and I will provide it: a recording of the development history, domain registration, or the IFEN permission correspondence already attached above.
 
