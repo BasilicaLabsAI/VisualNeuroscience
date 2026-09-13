@@ -56,7 +56,7 @@ final class BrainScene {
             var skin = PhysicallyBasedMaterial()
             skin.baseColor = .init(tint: UIColor(red: 0.86, green: 0.83, blue: 0.80, alpha: 1))
             skin.roughness = 0.6
-            skin.metallic = 0
+            skin.metallic = 0.0
             skin.faceCulling = .none
             let whole = try await MeshResource(from: [descriptor(for: loaded.0)])
             brain.model = ModelComponent(mesh: whole, materials: [skin])
