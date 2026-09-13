@@ -47,7 +47,7 @@ struct BrainVolumeView: View {
             RotateGesture3D()
                 .targetedToAnyEntity()
                 .onChanged { value in
-                    let q = value.gestureValue.rotation3D.quaternion.vector
+                    let q = value.gestureValue.rotation.quaternion.vector
                     let turn = simd_quatf(ix: -Float(q.x), iy: Float(q.y), iz: -Float(q.z), r: Float(q.w))
                     scene.root.orientation = turn * twistStartOrientation
                 }
