@@ -1,10 +1,10 @@
 import Foundation
 import simd
 
-/// Cuts the brain surface back to the part that lies below three
-/// axis-aligned planes, one per MNI axis, so the sliders can take the right
-/// side, the front and the top off the brain. Triangles wholly inside keep
-/// their shared vertices; triangles the planes cross are clipped exactly
+/// Cuts a surface mesh back to the part between six axis-aligned planes,
+/// a lower and an upper one per MNI axis, so the sliders can take the
+/// brain apart from the outside in. Triangles wholly inside keep their
+/// shared vertices; triangles a plane crosses are clipped exactly
 /// (Sutherland–Hodgman, one plane after another) and fan-triangulated, with
 /// normals interpolated along the cut edges.
 enum MeshClipper {
@@ -14,10 +14,22 @@ enum MeshClipper {
         var indices: [UInt32]
     }
 
-    /// `keepBelow` is the millimetre coordinate per axis above which geometry
-    /// is removed; an axis at or beyond `limit` is left alone.
-    static func clip(_ m: BrainMesh, keepBelow: SIMD3<Float>, limit: SIMD3<Float>) -> Output {
-        let planes = (0..<3).filter { keepBelow[$0] < limit[$0] - 0.01 }
+    private struct Plane {
+        let axis: Int
+        let at: Float
+        let keepBelow: Bool
+        /// Signed distance: negative or zero is kept.
+        func d(_ p: SIMD3<Float>) -> Float { keepBelow ? p[axis] - at : at - p[axis] }
+    }
+
+    /// Keeps `lo[axis] <= p <= hi[axis]` on each axis. A bound at or beyond
+    /// the volume's own limit is left alone.
+    static func clip(_ m: BrainMesh, lo: SIMD3<Float>, hi: SIMD3<Float>, limitLo: SIMD3<Float>, limitHi: SIMD3<Float>) -> Output {
+        var planes: [Plane] = []
+        for axis in 0..<3 {
+            if lo[axis] > limitLo[axis] + 0.01 { planes.append(Plane(axis: axis, at: lo[axis], keepBelow: false)) }
+            if hi[axis] < limitHi[axis] - 0.01 { planes.append(Plane(axis: axis, at: hi[axis], keepBelow: true)) }
+        }
         if planes.isEmpty { return Output(positions: m.positions, normals: m.normals, indices: m.indices) }
 
         var out = Output(positions: [], normals: [], indices: [])
@@ -37,7 +49,7 @@ enum MeshClipper {
 
         var polyP = [SIMD3<Float>](), polyN = [SIMD3<Float>]()
         var tmpP = [SIMD3<Float>](), tmpN = [SIMD3<Float>]()
-        polyP.reserveCapacity(8); polyN.reserveCapacity(8); tmpP.reserveCapacity(8); tmpN.reserveCapacity(8)
+        polyP.reserveCapacity(10); polyN.reserveCapacity(10); tmpP.reserveCapacity(10); tmpN.reserveCapacity(10)
 
         let triCount = m.indices.count / 3
         for t in 0..<triCount {
@@ -45,11 +57,10 @@ enum MeshClipper {
             let p0 = m.positions[i0], p1 = m.positions[i1], p2 = m.positions[i2]
 
             var allIn = true, anyIn = false
-            for axis in planes {
-                let c = keepBelow[axis]
-                let a = p0[axis] <= c, b = p1[axis] <= c, d = p2[axis] <= c
-                if !(a && b && d) { allIn = false }
-                if a || b || d { anyIn = true }
+            for pl in planes {
+                let a = pl.d(p0) <= 0, b = pl.d(p1) <= 0, c = pl.d(p2) <= 0
+                if !(a && b && c) { allIn = false }
+                if a || b || c { anyIn = true }
             }
             if allIn {
                 out.indices.append(shared(i0)); out.indices.append(shared(i1)); out.indices.append(shared(i2))
@@ -62,10 +73,9 @@ enum MeshClipper {
             polyN.append(m.normals[i0]); polyN.append(m.normals[i1]); polyN.append(m.normals[i2])
 
             var keep = true
-            for axis in planes {
-                let c = keepBelow[axis]
+            for pl in planes {
                 var inside = 0
-                for p in polyP where p[axis] <= c { inside += 1 }
+                for p in polyP where pl.d(p) <= 0 { inside += 1 }
                 if inside == 0 { keep = false; break }
                 if inside == polyP.count { continue }
                 tmpP.removeAll(keepingCapacity: true); tmpN.removeAll(keepingCapacity: true)
@@ -73,7 +83,7 @@ enum MeshClipper {
                 for a in 0..<n {
                     let b = (a + 1) % n
                     let pa = polyP[a], pb = polyP[b]
-                    let da = pa[axis] - c, db = pb[axis] - c
+                    let da = pl.d(pa), db = pl.d(pb)
                     let aIn = da <= 0, bIn = db <= 0
                     if aIn { tmpP.append(pa); tmpN.append(polyN[a]) }
                     if aIn != bIn {

@@ -7,20 +7,22 @@ puts the brain in the room.
 ## What it does
 
 It opens on a **console**, a small window with one button per thing the app
-can show, and the region picker:
+can show:
 
 - **The brain.** A volumetric window with the MNI152 brain as an object you
-  can walk around. Drag it to turn it any way you like, pinch to size it.
-  With **Slice panes** on, three translucent panes sit in the brain, one per
-  MNI axis; drag a pane by the part that sticks out and the cut slides
-  through the brain, the cut face showing the template's MRI slice at that
-  position. The three cuts combine, so two or three together take a corner
-  out. The surface is the one the Region Atlas renders, at full resolution.
-- **Highlight regions.** The console's picker lists the AAL-116 regions as
-  the Region Atlas does, grouped by lobe, left and right together unless the
-  mirror switch is off. A picked region appears on the brain as its own
-  surface in the page's colour, the brain goes translucent around it, and
-  the cut faces tint the region's voxels the same colour.
+  can walk around, facing you as a person would. Drag it to turn it any way
+  you like, pinch to size it, turn two hands to spin it. Its own console
+  opens with it, holding six sliders and the region picker. The sliders cut
+  the brain from the outside in, a pair per axis on one line, left and
+  right, back and front, bottom and top, each pair mirrored so both knobs
+  travel inwards from their own edge; every cut face shows the template's
+  MRI slice at that position. The surface is the one the Region Atlas
+  renders, at full resolution.
+- **Highlight regions.** The brain console's picker lists the AAL-116
+  regions as the Region Atlas does, grouped by lobe, left and right together
+  unless the mirror switch is off. A picked region appears on the brain as
+  its own surface in the page's colour, the brain goes translucent around
+  it, and the cut faces tint the region's voxels the same colour.
 - **The atlas.** The website in a browser window: the Region Atlas, Brodmann
   areas, tractography and the rest, as they are on the web. This loads the
   live site for now; the iPhone and iPad app carries the same pages offline.
@@ -29,13 +31,14 @@ can show, and the region picker:
 
 | File | Holds |
 |---|---|
-| `VisionAtlas/VisionAtlasApp.swift` | The three windows: console, brain volume, atlas browser. |
-| `VisionAtlas/ConsoleView.swift` | The console, its buttons and the region picker. |
-| `VisionAtlas/Atlas.swift` | What is highlighted, shared by the console and the brain window. |
+| `VisionAtlas/VisionAtlasApp.swift` | The four windows: console, brain volume, brain console, atlas browser. |
+| `VisionAtlas/ConsoleView.swift` | The console and its buttons. |
+| `VisionAtlas/BrainConsoleView.swift` | The brain's console: the six cut sliders and the region picker. |
+| `VisionAtlas/Atlas.swift` | The cuts and what is highlighted, shared by the brain console and the brain window. |
 | `VisionAtlas/Regions.swift` | The AAL region table, generated from the site's. |
-| `VisionAtlas/BrainVolumeView.swift` | The volumetric window: RealityView, the drag, pinch and pane gestures. |
-| `VisionAtlas/BrainScene.swift` | The scene: loads the data, rebuilds the cut meshes, paints the slice on each cut face, places the panes. |
-| `VisionAtlas/MeshClipper.swift` | Cuts a surface mesh back to the kept part, exactly at the planes. |
+| `VisionAtlas/BrainVolumeView.swift` | The volumetric window: RealityView and the drag, pinch and two-hand turn gestures. |
+| `VisionAtlas/BrainScene.swift` | The scene: loads the data, rebuilds the cut meshes, paints the slice on each of the six cut faces. |
+| `VisionAtlas/MeshClipper.swift` | Cuts a surface mesh back to the part between six planes, exactly at the planes. |
 | `VisionAtlas/BrainData.swift` | Reads the data files; gunzips with the Compression framework. |
 | `VisionAtlas/AtlasBrowser.swift` | The web view window. |
 | `VisionAtlas/Resources/brain.mesh.gz` | The brain's outer surface, 662,148 triangles, packed. |
@@ -75,11 +78,14 @@ nothing changes for them.
 ## Frames
 
 The data is in MNI millimetres: x to the subject's right, y anterior, z
-superior. RealityKit wants metres with y up, so a point (x, y, z) mm is
-placed at (x, z, −y) × scale ÷ 1000, centred on the middle of the volume. The
-brain is shown at twice life size, which is about a football.
+superior. RealityKit wants metres with y up and the viewer at +z, so a point
+(x, y, z) mm is placed at (−x, z, y) × scale ÷ 1000, centred on the middle
+of the volume: the brain faces the viewer, its right on the viewer's left,
+as a person's would. It is shown at twice life size, about a football.
 
 The cut faces are textured quads. Their texture coordinates assume RealityKit's
 convention that v = 0 is the bottom row of the image; if a slice ever shows
 upside down, that assumption is the thing to flip, in `sliceQuad` in
-`BrainScene.swift`.
+`BrainScene.swift`. The two-hand turn gesture cannot be tried in the
+simulator; if it spins the wrong way on a headset, the signs in the
+`RotateGesture3D` handler in `BrainVolumeView.swift` are the thing to change.

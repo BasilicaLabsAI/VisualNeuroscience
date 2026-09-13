@@ -21,6 +21,18 @@ final class Atlas {
 
     /// Add left and right together, as the page does by default.
     var mirror = true
+
+    /// The cuts, as fractions of each MNI axis: `cutLo` is where the kept
+    /// part starts (0 = nothing cut from the left, back or bottom) and
+    /// `cutHi` where it ends (1 = nothing cut from the right, front or top).
+    var cutLo = SIMD3<Float>(0, 0, 0)
+    var cutHi = SIMD3<Float>(1, 1, 1)
+    var isCut: Bool { cutLo != SIMD3(0, 0, 0) || cutHi != SIMD3(1, 1, 1) }
+
+    /// Keeps at least a sliver between the two cuts of an axis.
+    func setCutLo(_ axis: Int, _ f: Float) { cutLo[axis] = min(max(0, f), cutHi[axis] - 0.04) }
+    func setCutHi(_ axis: Int, _ f: Float) { cutHi[axis] = max(min(1, f), cutLo[axis] + 0.04) }
+    func resetCuts() { cutLo = SIMD3(0, 0, 0); cutHi = SIMD3(1, 1, 1) }
     private(set) var selections: [Selection] = []
     /// Bumps on every change, for anyone caching work per selection set.
     private(set) var version = 0

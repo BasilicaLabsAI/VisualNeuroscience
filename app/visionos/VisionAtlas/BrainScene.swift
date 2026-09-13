@@ -5,22 +5,19 @@ import SwiftUI
 import UIKit
 import simd
 
-/// The brain as an object in the room: the outer surface, cut back by three
-/// slice panes, with the template's slice painted on each cut face.
+/// The brain as an object in the room: the outer surface, cut back from
+/// the outside in by six sliders, with the template's slice painted on each
+/// cut face, and any highlighted regions as surfaces of their own.
 ///
 /// Frames: the data is in MNI millimetres (x right, y anterior, z superior).
-/// RealityKit wants metres with y up, so a point (x, y, z) mm becomes
-/// (x, z, −y) × scale / 1000, centred on the middle of the volume. Every
-/// entity hangs off `root`, so turning the root turns the brain, the cut
-/// faces and the panes together.
+/// RealityKit wants metres with y up and the viewer at +z, so a point
+/// (x, y, z) mm becomes (−x, z, y) × scale / 1000, centred on the middle of
+/// the volume: the brain faces the viewer, its right on the viewer's left,
+/// as a person's would. Every entity hangs off `root`, so turning the root
+/// turns everything together.
 @Observable @MainActor
 final class BrainScene {
     let root = Entity()
-
-    /// Fraction of each MNI axis kept, 1 = whole brain. x: right side, y: front, z: top.
-    var cut = SIMD3<Float>(1, 1, 1)
-    /// The tinted panes that show where each cut sits and can be dragged.
-    var panesOn = false
     var isLoading = true
     var errorText: String?
 
@@ -38,25 +35,24 @@ final class BrainScene {
     /// One entity per highlighted AAL label, keyed by label.
     private var regionEntities: [Int: ModelEntity] = [:]
     private var regionMeshes: [Int: BrainMesh] = [:]
+    /// Six cut faces: index axis * 2 + side, side 0 the lower cut, 1 the upper.
+    private let faces = (0..<6).map { _ in ModelEntity() }
+    private var faceSliceIndex = [Int](repeating: -1, count: 6)
+    private var faceTextures = [TextureResource?](repeating: nil, count: 6)
     private var facesVersion = -1
-    private let faces = [ModelEntity(), ModelEntity(), ModelEntity()]
-    private let sheets = [ModelEntity(), ModelEntity(), ModelEntity()]
-    private var faceSliceIndex = [-1, -1, -1]
-    private var faceTextures: [TextureResource?] = [nil, nil, nil]
     private var busy = false
     private var pending = false
 
     init() {
         root.addChild(brain)
         for f in faces { f.isEnabled = false; root.addChild(f) }
-        for s in sheets { s.isEnabled = false; root.addChild(s) }
     }
 
     /// The scene-frame direction of an MNI axis: right, anterior, superior.
     static func axisDirection(_ axis: Int) -> SIMD3<Float> {
         switch axis {
-        case 0: return SIMD3(1, 0, 0)
-        case 1: return SIMD3(0, 0, -1)
+        case 0: return SIMD3(-1, 0, 0)
+        case 1: return SIMD3(0, 0, 1)
         default: return SIMD3(0, 1, 0)
         }
     }
@@ -84,9 +80,11 @@ final class BrainScene {
             skin.faceCulling = .none
             let whole = try await MeshResource(from: [descriptor(positions: loaded.0.positions, normals: loaded.0.normals, indices: loaded.0.indices)])
             brain.model = ModelComponent(mesh: whole, materials: [skin])
-            brain.components.set(InputTargetComponent())
 
-            for axis in 0..<3 { try await makeSheet(axis: axis, lo: loaded.1.minMm, hi: loaded.1.maxMm) }
+            // A box the size of the volume so the gestures have something to hit.
+            let extent = (loaded.1.maxMm - loaded.1.minMm) * k
+            root.components.set(CollisionComponent(shapes: [.generateBox(size: SIMD3(extent.x, extent.z, extent.y))]))
+            root.components.set(InputTargetComponent())
 
             isLoading = false
             selectionsChanged()
@@ -94,80 +92,6 @@ final class BrainScene {
             errorText = error.localizedDescription
             isLoading = false
         }
-    }
-
-    /// A pane is a translucent tinted sheet across the whole volume in its
-    /// cut plane, built once at the volume's centre and moved along its axis
-    /// as the cut moves. It has a thin collision box so it can be grabbed
-    /// where it sticks out beyond the brain.
-    private func makeSheet(axis: Int, lo: SIMD3<Float>, hi: SIMD3<Float>) async throws {
-        let sheet = sheets[axis]
-        var at = centre
-        var d = MeshDescriptor(name: "pane\(axis)")
-        let u = axis == 0 ? 1 : 0, v = axis == 2 ? 1 : 2
-        func corner(_ a: Float, _ b: Float) -> SIMD3<Float> { at[u] = a; at[v] = b; return toScene(at) }
-        let n = Self.axisDirection(axis)
-        d.positions = MeshBuffer([corner(lo[u], lo[v]), corner(hi[u], lo[v]), corner(hi[u], hi[v]), corner(lo[u], hi[v])])
-        d.normals = MeshBuffer([n, n, n, n])
-        d.primitives = .triangles([0, 1, 2, 0, 2, 3])
-
-        var tint = UnlitMaterial()
-        tint.color = .init(tint: UIColor(red: 0.36, green: 0.64, blue: 1.0, alpha: 1))
-        tint.blending = .transparent(opacity: 0.26)
-        tint.faceCulling = .none
-        sheet.model = ModelComponent(mesh: try await MeshResource(from: [d]), materials: [tint])
-
-        var size = (hi - lo) * k
-        size[axis] = 0.006
-        let box = ShapeResource.generateBox(size: SIMD3(size.x, size.z, size.y))
-        sheet.components.set(CollisionComponent(shapes: [box]))
-        sheet.components.set(InputTargetComponent())
-    }
-
-    // MARK: interaction
-
-    /// Which pane an entity is, if it is one.
-    func paneAxis(of entity: Entity) -> Int? {
-        sheets.firstIndex { $0 == entity }
-    }
-
-    /// Slides a pane to where a drag has taken it. `movement` is the drag so
-    /// far in scene metres; only its component along the pane's normal
-    /// counts, and the brain's own turn and size are taken out.
-    func slide(axis: Int, from start: Float, by movement: SIMD3<Float>) {
-        guard let volume else { return }
-        let normal = root.orientation.act(Self.axisDirection(axis))
-        let metres = simd_dot(movement, normal)
-        let mm = metres / (k * max(root.scale.x, 0.01))
-        let span = volume.maxMm[axis] - volume.minMm[axis]
-        setCut(axis: axis, fraction: start + mm / span)
-    }
-
-    func setCut(axis: Int, fraction: Float) {
-        let f = max(0.02, min(1, fraction))
-        guard f != cut[axis] else { return }
-        cut[axis] = f
-        placeSheet(axis: axis)
-        cutChanged()
-    }
-
-    func showWholeBrain() {
-        cut = SIMD3(1, 1, 1)
-        for axis in 0..<3 { placeSheet(axis: axis) }
-        cutChanged()
-    }
-
-    func panesChanged() {
-        for s in sheets { s.isEnabled = panesOn && !isLoading }
-    }
-
-    /// The pane sits a hair on the far side of the cut, so the cut face
-    /// covers it where there is brain and the tint shows only around it.
-    private func placeSheet(axis: Int) {
-        guard let volume else { return }
-        let lo = volume.minMm, hi = volume.maxMm
-        let mm = lo[axis] + (hi[axis] - lo[axis]) * cut[axis] + 0.05
-        sheets[axis].position = Self.axisDirection(axis) * ((mm - centre[axis]) * k)
     }
 
     // MARK: highlighted regions
@@ -198,13 +122,13 @@ final class BrainScene {
         }
         skin.blending = wanted.isEmpty ? .opaque : .transparent(opacity: 0.25)
         brain.model?.materials = [skin]
-        cutChanged()
+        cutsChanged()
     }
 
     // MARK: cuts
 
     /// Rebuilds run one at a time; a change during a rebuild queues one more.
-    func cutChanged() {
+    func cutsChanged() {
         pending = true
         Task { await drain() }
     }
@@ -222,13 +146,14 @@ final class BrainScene {
     private func rebuild() async {
         guard let mesh, let volume else { return }
         let lo = volume.minMm, hi = volume.maxMm
-        let cutMm = lo + (hi - lo) * cut
+        let cutLo = lo + (hi - lo) * Atlas.shared.cutLo
+        let cutHi = lo + (hi - lo) * Atlas.shared.cutHi
 
         let regionInputs = regionEntities.keys.compactMap { label in regionMeshes[label].map { (label, $0) } }
         let (clipped, clippedRegions) = await Task.detached(priority: .userInitiated) { () -> (MeshClipper.Output, [Int: MeshClipper.Output]) in
             var out: [Int: MeshClipper.Output] = [:]
-            for (label, m) in regionInputs { out[label] = MeshClipper.clip(m, keepBelow: cutMm, limit: hi) }
-            return (MeshClipper.clip(mesh, keepBelow: cutMm, limit: hi), out)
+            for (label, m) in regionInputs { out[label] = MeshClipper.clip(m, lo: cutLo, hi: cutHi, limitLo: lo, limitHi: hi) }
+            return (MeshClipper.clip(mesh, lo: cutLo, hi: cutHi, limitLo: lo, limitHi: hi), out)
         }.value
         for (label, part) in clippedRegions {
             guard let entity = regionEntities[label] else { continue }
@@ -241,82 +166,85 @@ final class BrainScene {
             }
         }
         do {
-            let d = descriptor(positions: clipped.positions, normals: clipped.normals, indices: clipped.indices)
-            let resource = try await MeshResource(from: [d])
-            brain.model?.mesh = resource
-            // the brain is grabbed by its own shape, so a pane can be caught
-            // wherever the cut has exposed it
-            brain.components.set(CollisionComponent(shapes: [try await ShapeResource.generateConvex(from: resource)]))
+            brain.model?.mesh = try await MeshResource(from: [descriptor(positions: clipped.positions, normals: clipped.normals, indices: clipped.indices)])
         } catch {
             errorText = error.localizedDescription
         }
 
+        let version = Atlas.shared.version
+        let colours = Atlas.shared.labelColours.mapValues { SIMD3<UInt8>(hex: $0) }
         for axis in 0..<3 {
-            let face = faces[axis]
-            guard cut[axis] < 0.999 else { face.isEnabled = false; continue }
-            do {
-                let index = volume.index(axis: axis, mm: cutMm[axis])
-                let version = Atlas.shared.version
-                if faceSliceIndex[axis] != index || faceTextures[axis] == nil || facesVersion != version {
-                    let colours = Atlas.shared.labelColours.mapValues { SIMD3<UInt8>(hex: $0) }
-                    guard let image = volume.sliceImage(axis: axis, at: index, labels: labels, colours: colours) else { continue }
-                    faceTextures[axis] = try await TextureResource(image: image, options: .init(semantic: .color))
-                    faceSliceIndex[axis] = index
-                    facesVersion = version
+            for side in 0..<2 {
+                let slot = axis * 2 + side
+                let face = faces[slot]
+                let open = side == 0 ? Atlas.shared.cutLo[axis] > 0.001 : Atlas.shared.cutHi[axis] < 0.999
+                guard open else { face.isEnabled = false; continue }
+                let at = side == 0 ? cutLo[axis] : cutHi[axis]
+                do {
+                    let index = volume.index(axis: axis, mm: at)
+                    if faceSliceIndex[slot] != index || faceTextures[slot] == nil || facesVersion != version {
+                        guard let image = volume.sliceImage(axis: axis, at: index, labels: labels, colours: colours) else { continue }
+                        faceTextures[slot] = try await TextureResource(image: image, options: .init(semantic: .color))
+                        faceSliceIndex[slot] = index
+                    }
+                    guard let texture = faceTextures[slot] else { continue }
+                    var paint = UnlitMaterial()
+                    paint.color = .init(tint: .white, texture: .init(texture))
+                    paint.blending = .transparent(opacity: 1.0)
+                    paint.opacityThreshold = 0.5
+                    paint.faceCulling = .none
+                    let quad = sliceQuad(axis: axis, side: side, at: at, cutLo: cutLo, cutHi: cutHi, lo: lo, hi: hi)
+                    face.model = ModelComponent(mesh: try await MeshResource(from: [quad]), materials: [paint])
+                    face.isEnabled = true
+                } catch {
+                    errorText = error.localizedDescription
                 }
-                guard let texture = faceTextures[axis] else { continue }
-                var paint = UnlitMaterial()
-                paint.color = .init(tint: .white, texture: .init(texture))
-                paint.blending = .transparent(opacity: 1.0)
-                paint.opacityThreshold = 0.5
-                paint.faceCulling = .none
-                face.model = ModelComponent(mesh: try await MeshResource(from: [sliceQuad(axis: axis, cutMm: cutMm, lo: lo, hi: hi)]), materials: [paint])
-                face.isEnabled = true
-            } catch {
-                errorText = error.localizedDescription
             }
         }
-        for axis in 0..<3 { placeSheet(axis: axis) }
-        panesChanged()
+        facesVersion = version
     }
 
     // MARK: geometry
 
     private func toScene(_ p: SIMD3<Float>) -> SIMD3<Float> {
         let q = p - centre
-        return SIMD3(q.x, q.z, -q.y) * k
+        return SIMD3(-q.x, q.z, q.y) * k
     }
 
     private func descriptor(positions: [SIMD3<Float>], normals: [SIMD3<Float>], indices: [UInt32]) -> MeshDescriptor {
         var d = MeshDescriptor(name: "brain")
         d.positions = MeshBuffer(positions.map(toScene))
-        d.normals = MeshBuffer(normals.map { SIMD3($0.x, $0.z, -$0.y) })
+        d.normals = MeshBuffer(normals.map { SIMD3(-$0.x, $0.z, $0.y) })
         d.primitives = .triangles(indices)
         return d
     }
 
     /// The face of one cut: a rectangle in the cut plane, trimmed to the
-    /// other two cuts, with texture coordinates that put the slice image's
-    /// left edge at the axis minimum and its top row at the maximum of the
-    /// vertical axis (z for the sagittal and coronal faces, y for the axial).
-    private func sliceQuad(axis: Int, cutMm: SIMD3<Float>, lo: SIMD3<Float>, hi: SIMD3<Float>) -> MeshDescriptor {
+    /// cuts on the other two axes, with texture coordinates that put the
+    /// slice image's left edge at the axis minimum and its top row at the
+    /// maximum of the vertical axis (z for the sagittal and coronal faces,
+    /// y for the axial). It sits a hair inside the cut, so the surface's
+    /// edge never fights it.
+    private func sliceQuad(axis: Int, side: Int, at: Float, cutLo: SIMD3<Float>, cutHi: SIMD3<Float>, lo: SIMD3<Float>, hi: SIMD3<Float>) -> MeshDescriptor {
         let u = axis == 0 ? 1 : 0          // horizontal axis of the image
         let v = axis == 2 ? 1 : 2          // vertical axis of the image
-        let uMax = min(cutMm[u], hi[u]), vMax = min(cutMm[v], hi[v])
-        let fu = (uMax - lo[u]) / (hi[u] - lo[u]), fv = (vMax - lo[v]) / (hi[v] - lo[v])
-        let at = cutMm[axis] - 0.05        // a hair inside the cut, so the surface's edge never fights it
+        let u0 = max(cutLo[u], lo[u]), u1 = min(cutHi[u], hi[u])
+        let v0 = max(cutLo[v], lo[v]), v1 = min(cutHi[v], hi[v])
+        let fu0 = (u0 - lo[u]) / (hi[u] - lo[u]), fu1 = (u1 - lo[u]) / (hi[u] - lo[u])
+        let fv0 = (v0 - lo[v]) / (hi[v] - lo[v]), fv1 = (v1 - lo[v]) / (hi[v] - lo[v])
+        let inside = side == 0 ? at + 0.05 : at - 0.05
 
         func corner(_ a: Float, _ b: Float) -> SIMD3<Float> {
             var p = SIMD3<Float>(0, 0, 0)
-            p[axis] = at; p[u] = a; p[v] = b
+            p[axis] = inside; p[u] = a; p[v] = b
             return toScene(p)
         }
-        let n = Self.axisDirection(axis)
+        let n = Self.axisDirection(axis) * (side == 0 ? -1 : 1)
 
-        var d = MeshDescriptor(name: "slice\(axis)")
-        d.positions = MeshBuffer([corner(lo[u], lo[v]), corner(uMax, lo[v]), corner(uMax, vMax), corner(lo[u], vMax)])
+        var d = MeshDescriptor(name: "slice\(axis)\(side)")
+        d.positions = MeshBuffer([corner(u0, v0), corner(u1, v0), corner(u1, v1), corner(u0, v1)])
         d.normals = MeshBuffer([n, n, n, n])
-        d.textureCoordinates = MeshBuffer([SIMD2(0, 0), SIMD2(fu, 0), SIMD2(fu, fv), SIMD2(0, fv)])
+        d.textureCoordinates = MeshBuffer([SIMD2(fu0, fv0), SIMD2(fu1, fv0), SIMD2(fu1, fv1), SIMD2(fu0, fv1)])
         d.primitives = .triangles([0, 1, 2, 0, 2, 3])
         return d
     }
@@ -325,9 +253,9 @@ final class BrainScene {
 extension Volume {
     /// One slice as an RGBA image, opaque where there is brain and clear
     /// elsewhere, rows running from the top of the brain (or the front, for
-    /// an axial slice) downwards.
-    /// Where `labels` and `colours` are given, voxels whose label is in
-    /// `colours` are tinted at 90 %, as the Region Atlas overlays them.
+    /// an axial slice) downwards. Where `labels` and `colours` are given,
+    /// voxels whose label is in `colours` are tinted at 90 %, as the Region
+    /// Atlas overlays them.
     func sliceImage(axis: Int, at index: Int, labels: Volume? = nil, colours: [Int: SIMD3<UInt8>] = [:]) -> CGImage? {
         let X = dims.x, Y = dims.y, Z = dims.z
         let w = axis == 0 ? Y : X
@@ -337,14 +265,13 @@ extension Volume {
         var px = [UInt8](repeating: 0, count: w * h * 4)
         for row in 0..<h {
             for col in 0..<w {
-                let value: UInt8
-                var vox = SIMD3<Int>(0, 0, 0)
+                let vox: SIMD3<Int>
                 switch axis {
                 case 0:  vox = SIMD3(i, col, Z - 1 - row)
                 case 1:  vox = SIMD3(col, i, Z - 1 - row)
                 default: vox = SIMD3(col, Y - 1 - row, i)
                 }
-                value = data[(vox.z * Y + vox.y) * X + vox.x]
+                let value = data[(vox.z * Y + vox.y) * X + vox.x]
                 guard value > 0 else { continue }
                 let o = (row * w + col) * 4
                 let g = UInt8(min(255, Int(value) * 5 / 4))
