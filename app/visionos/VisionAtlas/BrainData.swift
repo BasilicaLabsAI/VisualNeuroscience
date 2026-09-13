@@ -5,10 +5,10 @@ import simd
 // The two data files the brain window draws from, both made from the site's
 // own MNI152 template by app/scripts/make-vision-assets.js:
 //
-//   brain.mesh    the outer surface of the brain, as the Region Atlas exports
-//                 it: 'VNM1', vertex count, index count, then float32 xyz
-//                 positions, float32 normals and uint32 triangle indices,
-//                 little-endian, in MNI millimetres.
+//   brain.mesh.gz the outer surface of the brain, as the Region Atlas exports
+//                 it, gzipped: 'VNM2', vertex count, index count, then xyz
+//                 positions as int16 hundredths of a millimetre, normals as
+//                 int8, and uint32 triangle indices, little-endian, MNI frame.
 //   brain.vol.gz  the template's voxels, gzipped: 'VNV1', three uint32
 //                 dimensions, float32 spacing, float32 origin xyz, then one
 //                 byte per voxel with x fastest. Everything outside the brain
@@ -97,35 +97,104 @@ struct BrainMesh {
     var indices: [UInt32]
 
     static func load(named name: String) throws -> BrainMesh {
-        guard let url = Bundle.main.url(forResource: name, withExtension: "mesh") else { throw BrainDataError.missing("\(name).mesh") }
-        let data = try Data(contentsOf: url)
-        return try data.withUnsafeBytes { raw -> BrainMesh in
-            guard raw.count >= 12 else { throw BrainDataError.corrupt("\(name).mesh") }
-            let magic = String(decoding: raw[0..<4], as: UTF8.self)
-            let v = Int(raw.loadUnaligned(fromByteOffset: 4, as: UInt32.self))
-            let n = Int(raw.loadUnaligned(fromByteOffset: 8, as: UInt32.self))
-            guard magic == "VNM1", v > 0, n > 0, n % 3 == 0, raw.count == 12 + v * 24 + n * 4 else { throw BrainDataError.corrupt("\(name).mesh") }
+        guard let url = Bundle.main.url(forResource: name, withExtension: "mesh.gz") else { throw BrainDataError.missing("\(name).mesh.gz") }
+        let b = try Gzip.inflate(try Data(contentsOf: url), name: "\(name).mesh.gz")
+        guard b.count >= 12, b.tag(at: 0) == "VNM2" else { throw BrainDataError.corrupt("\(name).mesh.gz") }
+        let v = Int(b.u32(at: 4)), n = Int(b.u32(at: 8))
+        guard v > 0, n > 0, n % 3 == 0, b.count == 12 + v * 9 + n * 4 else { throw BrainDataError.corrupt("\(name).mesh.gz") }
 
-            func floats(from offset: Int, count: Int) -> [Float] {
-                [Float](unsafeUninitializedCapacity: count) { buf, filled in
-                    UnsafeMutableRawBufferPointer(buf).copyMemory(from: UnsafeRawBufferPointer(rebasing: raw[offset..<offset + count * 4]))
-                    filled = count
-                }
+        var positions = [SIMD3<Float>](); positions.reserveCapacity(v)
+        var normals = [SIMD3<Float>](); normals.reserveCapacity(v)
+        let indices: [UInt32] = b.withUnsafeBytes { raw in
+            var o = 12
+            for _ in 0..<v {
+                let x = raw.loadUnaligned(fromByteOffset: o, as: Int16.self)
+                let y = raw.loadUnaligned(fromByteOffset: o + 2, as: Int16.self)
+                let z = raw.loadUnaligned(fromByteOffset: o + 4, as: Int16.self)
+                positions.append(SIMD3(Float(x), Float(y), Float(z)) * 0.01)
+                o += 6
             }
-            func vectors(_ f: [Float]) -> [SIMD3<Float>] {
-                var out = [SIMD3<Float>](); out.reserveCapacity(f.count / 3)
-                var i = 0
-                while i < f.count { out.append(SIMD3(f[i], f[i + 1], f[i + 2])); i += 3 }
-                return out
+            for _ in 0..<v {
+                let x = raw.load(fromByteOffset: o, as: Int8.self)
+                let y = raw.load(fromByteOffset: o + 1, as: Int8.self)
+                let z = raw.load(fromByteOffset: o + 2, as: Int8.self)
+                let raw3 = SIMD3(Float(x), Float(y), Float(z))
+                normals.append(simd_length(raw3) > 0 ? simd_normalize(raw3) : SIMD3(0, 0, 1))
+                o += 3
             }
-            let positions = vectors(floats(from: 12, count: v * 3))
-            let normals = vectors(floats(from: 12 + v * 12, count: v * 3))
-            let indices = [UInt32](unsafeUninitializedCapacity: n) { buf, filled in
-                UnsafeMutableRawBufferPointer(buf).copyMemory(from: UnsafeRawBufferPointer(rebasing: raw[(12 + v * 24)..<(12 + v * 24 + n * 4)]))
+            return [UInt32](unsafeUninitializedCapacity: n) { buf, filled in
+                UnsafeMutableRawBufferPointer(buf).copyMemory(from: UnsafeRawBufferPointer(rebasing: raw[o..<o + n * 4]))
                 filled = n
             }
-            guard indices.allSatisfy({ Int($0) < v }) else { throw BrainDataError.corrupt("\(name).mesh") }
-            return BrainMesh(positions: positions, normals: normals, indices: indices)
         }
+        guard indices.allSatisfy({ Int($0) < v }) else { throw BrainDataError.corrupt("\(name).mesh.gz") }
+        return BrainMesh(positions: positions, normals: normals, indices: indices)
+    }
+}
+
+/// A surface for every AAL label, decoded one label at a time as they are
+/// asked for. Same packing as the brain, under a small table of contents.
+final class RegionMeshes: @unchecked Sendable {
+    private let bytes: [UInt8]
+    private let offsets: [Int: (offset: Int, verts: Int, indices: Int)]
+
+    init(named name: String) throws {
+        guard let url = Bundle.main.url(forResource: name, withExtension: "mesh.gz") else { throw BrainDataError.missing("\(name).mesh.gz") }
+        let b = try Gzip.inflate(try Data(contentsOf: url), name: "\(name).mesh.gz")
+        guard b.count >= 8, String(decoding: b[0..<4], as: UTF8.self) == "VNR1" else { throw BrainDataError.corrupt("\(name).mesh.gz") }
+        let count = Int(UInt32(b[4]) | UInt32(b[5]) << 8 | UInt32(b[6]) << 16 | UInt32(b[7]) << 24)
+        var table: [Int: (Int, Int, Int)] = [:]
+        var o = 8
+        for _ in 0..<count {
+            guard o + 10 <= b.count else { throw BrainDataError.corrupt("\(name).mesh.gz") }
+            let label = Int(UInt16(b[o]) | UInt16(b[o + 1]) << 8)
+            let v = Int(UInt32(b[o + 2]) | UInt32(b[o + 3]) << 8 | UInt32(b[o + 4]) << 16 | UInt32(b[o + 5]) << 24)
+            let n = Int(UInt32(b[o + 6]) | UInt32(b[o + 7]) << 8 | UInt32(b[o + 8]) << 16 | UInt32(b[o + 9]) << 24)
+            o += 10
+            guard o + v * 9 + n * 4 <= b.count else { throw BrainDataError.corrupt("\(name).mesh.gz") }
+            table[label] = (o, v, n)
+            o += v * 9 + n * 4
+        }
+        bytes = b
+        offsets = table
+    }
+
+    func mesh(for label: Int) -> BrainMesh? {
+        guard let entry = offsets[label] else { return nil }
+        let v = entry.verts, n = entry.indices
+        var positions = [SIMD3<Float>](); positions.reserveCapacity(v)
+        var normals = [SIMD3<Float>](); normals.reserveCapacity(v)
+        let indices: [UInt32] = bytes.withUnsafeBytes { raw in
+            var o = entry.offset
+            for _ in 0..<v {
+                let x = raw.loadUnaligned(fromByteOffset: o, as: Int16.self)
+                let y = raw.loadUnaligned(fromByteOffset: o + 2, as: Int16.self)
+                let z = raw.loadUnaligned(fromByteOffset: o + 4, as: Int16.self)
+                positions.append(SIMD3(Float(x), Float(y), Float(z)) * 0.01)
+                o += 6
+            }
+            for _ in 0..<v {
+                let raw3 = SIMD3(Float(raw.load(fromByteOffset: o, as: Int8.self)), Float(raw.load(fromByteOffset: o + 1, as: Int8.self)), Float(raw.load(fromByteOffset: o + 2, as: Int8.self)))
+                normals.append(simd_length(raw3) > 0 ? simd_normalize(raw3) : SIMD3(0, 0, 1))
+                o += 3
+            }
+            return [UInt32](unsafeUninitializedCapacity: n) { buf, filled in
+                UnsafeMutableRawBufferPointer(buf).copyMemory(from: UnsafeRawBufferPointer(rebasing: raw[o..<o + n * 4]))
+                filled = n
+            }
+        }
+        guard indices.allSatisfy({ Int($0) < v }) else { return nil }
+        return BrainMesh(positions: positions, normals: normals, indices: indices)
+    }
+}
+
+extension Volume {
+    /// The byte at the voxel nearest a millimetre position, 0 outside.
+    func value(atMm p: SIMD3<Float>) -> UInt8 {
+        let i = Int(((p.x - origin.x) / spacing).rounded())
+        let j = Int(((p.y - origin.y) / spacing).rounded())
+        let k = Int(((p.z - origin.z) / spacing).rounded())
+        guard i >= 0, j >= 0, k >= 0, i < dims.x, j < dims.y, k < dims.z else { return 0 }
+        return data[(k * dims.y + j) * dims.x + i]
     }
 }

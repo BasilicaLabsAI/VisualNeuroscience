@@ -6,7 +6,7 @@ struct VisionAtlasApp: App {
         WindowGroup(id: "console") {
             ConsoleView()
         }
-        .defaultSize(width: 760, height: 460)
+        .defaultSize(width: 820, height: 700)
 
         WindowGroup(id: "brain") {
             BrainVolumeView()

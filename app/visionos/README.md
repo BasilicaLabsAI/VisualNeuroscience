@@ -7,42 +7,54 @@ puts the brain in the room.
 ## What it does
 
 It opens on a **console**, a small window with one button per thing the app
-can show:
+can show, and the region picker:
 
 - **The brain.** A volumetric window with the MNI152 brain as an object you
-  can walk around and turn by dragging. Three sliders under it cut the brain
-  open along the sagittal, coronal and axial planes, from the right, the
-  front and the top. Each cut face shows the template's MRI slice at that
-  position, so cutting in reveals the anatomy the surface hides. The three
-  cuts combine, so two or three together take a corner out.
+  can walk around. Drag it to turn it any way you like, pinch to size it.
+  With **Slice panes** on, three translucent panes sit in the brain, one per
+  MNI axis; drag a pane by the part that sticks out and the cut slides
+  through the brain, the cut face showing the template's MRI slice at that
+  position. The three cuts combine, so two or three together take a corner
+  out. The surface is the one the Region Atlas renders, at full resolution.
+- **Highlight regions.** The console's picker lists the AAL-116 regions as
+  the Region Atlas does, grouped by lobe, left and right together unless the
+  mirror switch is off. A picked region appears on the brain as its own
+  surface in the page's colour, the brain goes translucent around it, and
+  the cut faces tint the region's voxels the same colour.
 - **The atlas.** The website in a browser window: the Region Atlas, Brodmann
   areas, tractography and the rest, as they are on the web. This loads the
   live site for now; the iPhone and iPad app carries the same pages offline.
-
-More models go on the console as they are made; the brain is the first.
 
 ## Files
 
 | File | Holds |
 |---|---|
 | `VisionAtlas/VisionAtlasApp.swift` | The three windows: console, brain volume, atlas browser. |
-| `VisionAtlas/ConsoleView.swift` | The console and its buttons. |
-| `VisionAtlas/BrainVolumeView.swift` | The volumetric window: RealityView, drag-to-turn, the slider ornament. |
-| `VisionAtlas/BrainScene.swift` | The scene behind it: loads the data, rebuilds the cut mesh, paints the slice on each cut face. |
-| `VisionAtlas/MeshClipper.swift` | Cuts the surface mesh back to the kept part, exactly at the planes. |
-| `VisionAtlas/BrainData.swift` | Reads the two data files; gunzips with the Compression framework. |
+| `VisionAtlas/ConsoleView.swift` | The console, its buttons and the region picker. |
+| `VisionAtlas/Atlas.swift` | What is highlighted, shared by the console and the brain window. |
+| `VisionAtlas/Regions.swift` | The AAL region table, generated from the site's. |
+| `VisionAtlas/BrainVolumeView.swift` | The volumetric window: RealityView, the drag, pinch and pane gestures. |
+| `VisionAtlas/BrainScene.swift` | The scene: loads the data, rebuilds the cut meshes, paints the slice on each cut face, places the panes. |
+| `VisionAtlas/MeshClipper.swift` | Cuts a surface mesh back to the kept part, exactly at the planes. |
+| `VisionAtlas/BrainData.swift` | Reads the data files; gunzips with the Compression framework. |
 | `VisionAtlas/AtlasBrowser.swift` | The web view window. |
-| `VisionAtlas/Resources/brain.mesh` | The brain's outer surface, 148,080 triangles, MNI millimetres. |
+| `VisionAtlas/Resources/brain.mesh.gz` | The brain's outer surface, 662,148 triangles, packed. |
 | `VisionAtlas/Resources/brain.vol.gz` | The MNI152 template, brain voxels only, 0.74 mm. |
+| `VisionAtlas/Resources/regions.mesh.gz` | A surface for each of the 116 AAL labels, packed. |
+| `VisionAtlas/Resources/aal.vol.gz` | The AAL labels, one byte per voxel, 1 mm. |
 
-The two data files are made from `site/assets/mni152.nii.gz` by
+The data files and `Regions.swift` are made from `site/assets/mni152.nii.gz`,
+`site/assets/aal.nii.gz` and `site/assets/atlas-data.js` by
 `scripts/make-vision-assets.mjs`, using the same surface code the Region
 Atlas uses for its 3D export, so the brain here is the one the website
 exports. Run `npm run vision-assets` from `app/` to remake them; they only
-change if the template does.
+change if the template, the atlas or the region list does, and each run
+adds their size to the repository's history, so run it for a reason.
 
 The Xcode project lists no files by hand: the `VisionAtlas` folder is a
-synchronised group, so anything put in it is part of the target.
+synchronised group, so anything put in it is part of the target. The
+`Info.plist` sits beside the project on purpose; inside the folder, Xcode
+would copy it into the bundle as a resource as well.
 
 ## Building and running
 
