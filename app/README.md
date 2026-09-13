@@ -21,7 +21,7 @@ serving `./site` as the plain static assets it is.
 | Website | Cloudflare Workers | service worker (`site/sw.js`) | — |
 | Android | the app bundle | everything is local already | Play |
 | iPhone, iPad | the app bundle | everything is local already | App Store |
-| Apple Vision Pro | the iPad app as it is | everything is local already | App Store, alongside the iPad app |
+| Apple Vision Pro | its own app in `visionos/`, see `visionos/README.md` | the brain is bundled; the atlas pages are the live site for now | App Store, the visionOS platform of the same app |
 | Mac (Apple silicon) | the iPad app as it is | everything is local already | Mac App Store, from the same iOS build |
 
 `site/assets/native.js` is the seam. It asks Capacitor for a share sheet, a
