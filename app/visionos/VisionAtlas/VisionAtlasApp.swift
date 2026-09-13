@@ -6,7 +6,7 @@ struct VisionAtlasApp: App {
         WindowGroup(id: "console") {
             ConsoleView()
         }
-        .defaultSize(width: 760, height: 460)
+        .defaultSize(width: 960, height: 460)
 
         WindowGroup(id: "brain") {
             BrainVolumeView()
@@ -19,9 +19,20 @@ struct VisionAtlasApp: App {
         }
         .defaultSize(width: 640, height: 720)
 
-        WindowGroup(id: "atlas") {
-            AtlasWindow()
+        WindowGroup(id: "notes") {
+            RegionNotesView()
         }
-        .defaultSize(width: 1500, height: 1000)
+        .defaultSize(width: 560, height: 720)
+
+        WindowGroup(id: "brodmann") {
+            BrodmannConsoleView()
+        }
+        .defaultSize(width: 720, height: 860)
+
+        WindowGroup(id: "tracts") {
+            TractVolumeView()
+        }
+        .windowStyle(.volumetric)
+        .defaultSize(width: 0.7, height: 0.7, depth: 0.7, in: .meters)
     }
 }

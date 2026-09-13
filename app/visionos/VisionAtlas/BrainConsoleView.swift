@@ -5,6 +5,7 @@ import SwiftUI
 /// pair per axis on one line, each pair mirrored so both knobs travel
 /// inwards from their own edge.
 struct BrainConsoleView: View {
+    @Environment(\.openWindow) private var openWindow
     @State private var atlas = Atlas.shared
 
     private var groups: [String] {
@@ -112,17 +113,23 @@ struct BrainConsoleView: View {
     @ViewBuilder
     private func regionItems(_ region: AtlasRegion) -> some View {
         if region.single != nil {
-            Button(region.name) { atlas.add(region, side: .single) }
+            Button(region.name) { add(region, .single) }
                 .disabled(atlas.isSelected(region, side: .single))
         } else if atlas.mirror {
-            Button(region.name) { atlas.add(region, side: .pair) }
+            Button(region.name) { add(region, .pair) }
                 .disabled(atlas.isSelected(region, side: .pair))
         } else {
-            Button(region.name + " (L)") { atlas.add(region, side: .left) }
+            Button(region.name + " (L)") { add(region, .left) }
                 .disabled(atlas.isSelected(region, side: .left))
-            Button(region.name + " (R)") { atlas.add(region, side: .right) }
+            Button(region.name + " (R)") { add(region, .right) }
                 .disabled(atlas.isSelected(region, side: .right))
         }
+    }
+
+    /// Adding a region also opens the window that says what it does.
+    private func add(_ region: AtlasRegion, _ side: Atlas.Side) {
+        atlas.add(region, side: side)
+        openWindow(id: "notes")
     }
 }
 

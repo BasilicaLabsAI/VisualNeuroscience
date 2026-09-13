@@ -1,7 +1,6 @@
 import SwiftUI
 
-/// The window the app opens with: one button per thing it can put in the
-/// room, and one that opens the atlas as it is on the web.
+/// The window the app opens with: one button per thing it can put in the room.
 struct ConsoleView: View {
     @Environment(\.openWindow) private var openWindow
 
@@ -21,9 +20,12 @@ struct ConsoleView: View {
                     openWindow(id: "brain")
                     openWindow(id: "brain-console")
                 }
-                ConsoleButton(title: "The atlas",
-                              detail: "Region Atlas, Brodmann areas, tractography and the rest, as a window.",
-                              symbol: "rectangle.on.rectangle") { openWindow(id: "atlas") }
+                ConsoleButton(title: "Brodmann areas",
+                              detail: "The 41 areas searchable by what they do, and drawn on the brain when you ask.",
+                              symbol: "square.grid.3x3") { openWindow(id: "brodmann") }
+                ConsoleButton(title: "Tractography",
+                              detail: "The HCP1065 white-matter tracts in the room, coloured by direction.",
+                              symbol: "point.3.connected.trianglepath.dotted") { openWindow(id: "tracts") }
             }
         }
         .padding(44)
@@ -48,7 +50,7 @@ struct ConsoleButton: View {
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            .frame(width: 260, alignment: .leading)
+            .frame(width: 230, alignment: .leading)
             .padding(24)
         }
         .buttonStyle(.bordered)

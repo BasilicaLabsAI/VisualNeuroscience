@@ -22,37 +22,49 @@ can show:
   regions as the Region Atlas does, grouped by lobe, left and right together
   unless the mirror switch is off. A picked region appears on the brain as
   its own surface in the page's colour, the brain goes translucent around
-  it, and the cut faces tint the region's voxels the same colour.
-- **The atlas.** The website in a browser window: the Region Atlas, Brodmann
-  areas, tractography and the rest, as they are on the web. This loads the
-  live site for now; the iPhone and iPad app carries the same pages offline.
+  it, and the cut faces tint the region's voxels the same colour. Picking a
+  region opens **What they do**, a window that lists every highlighted
+  region in its colour with its function, stacked by layer as the page does.
+- **Brodmann areas.** The 41 areas as the site lists them, searchable by
+  function, name or number and grouped by lobe. Tapping an area opens its
+  function and caveat; ticking it picks it. With **Show on the brain** on,
+  the picked areas are drawn on the brain and on the cut faces in their
+  colours, and appear in the What they do window.
+- **Tractography.** A second volumetric window with a sample of the HCP1065
+  streamlines as thin tubes coloured by direction, the brain's surface
+  faintly around them, turning and sizing like the brain.
 
 ## Files
 
 | File | Holds |
 |---|---|
-| `VisionAtlas/VisionAtlasApp.swift` | The four windows: console, brain volume, brain console, atlas browser. |
+| `VisionAtlas/VisionAtlasApp.swift` | The windows: console, brain, brain console, notes, Brodmann, tractography. |
 | `VisionAtlas/ConsoleView.swift` | The console and its buttons. |
 | `VisionAtlas/BrainConsoleView.swift` | The brain's console: the six cut sliders and the region picker. |
-| `VisionAtlas/Atlas.swift` | The cuts and what is highlighted, shared by the brain console and the brain window. |
-| `VisionAtlas/Regions.swift` | The AAL region table, generated from the site's. |
-| `VisionAtlas/BrainVolumeView.swift` | The volumetric window: RealityView and the drag, pinch and two-hand turn gestures. |
-| `VisionAtlas/BrainScene.swift` | The scene: loads the data, rebuilds the cut meshes, paints the slice on each of the six cut faces. |
+| `VisionAtlas/RegionNotesView.swift` | What the highlighted regions and areas do, in their colours. |
+| `VisionAtlas/BrodmannConsoleView.swift` | The Brodmann list, search, and the switch that puts picks on the brain. |
+| `VisionAtlas/Atlas.swift` | The cuts and what is highlighted, shared by every window. |
+| `VisionAtlas/Generated.swift` | The region, note, Brodmann and frame tables, generated from the site's. |
+| `VisionAtlas/BrainVolumeView.swift` | The brain's volumetric window. |
+| `VisionAtlas/BrainScene.swift` | The brain scene: loads the data, rebuilds the cut meshes, paints the slice on each of the six cut faces. |
+| `VisionAtlas/Tracts.swift` | The tractography scene and its window. |
+| `VisionAtlas/Turnable.swift` | The drag, pinch and two-hand turn gestures every object answers to. |
 | `VisionAtlas/MeshClipper.swift` | Cuts a surface mesh back to the part between six planes, exactly at the planes. |
 | `VisionAtlas/BrainData.swift` | Reads the data files; gunzips with the Compression framework. |
-| `VisionAtlas/AtlasBrowser.swift` | The web view window. |
 | `VisionAtlas/Resources/brain.mesh.gz` | The brain's outer surface, 662,148 triangles, packed. |
 | `VisionAtlas/Resources/brain.vol.gz` | The MNI152 template, brain voxels only, 0.74 mm. |
 | `VisionAtlas/Resources/regions.mesh.gz` | A surface for each of the 116 AAL labels, packed. |
 | `VisionAtlas/Resources/aal.vol.gz` | The AAL labels, one byte per voxel, 1 mm. |
+| `VisionAtlas/Resources/brodmann.mesh.gz` | A surface for each of the 41 Brodmann areas, packed. |
+| `VisionAtlas/Resources/brodmann.vol.gz` | The Brodmann labels, one byte per voxel, 1 mm. |
+| `VisionAtlas/Resources/tracts.mesh.gz` | 4,000 HCP1065 streamlines as tubes, one mesh per direction colour. |
 
-The data files and `Regions.swift` are made from `site/assets/mni152.nii.gz`,
-`site/assets/aal.nii.gz` and `site/assets/atlas-data.js` by
-`scripts/make-vision-assets.mjs`, using the same surface code the Region
-Atlas uses for its 3D export, so the brain here is the one the website
-exports. Run `npm run vision-assets` from `app/` to remake them; they only
-change if the template, the atlas or the region list does, and each run
-adds their size to the repository's history, so run it for a reason.
+The data files and `Generated.swift` are made from the site's template,
+atlases, tractogram and region tables by `scripts/make-vision-assets.mjs`,
+using the same surface code the Region Atlas uses for its 3D export, so
+everything in the room is what the website draws. Run `npm run vision-assets`
+from `app/` to remake them; they only change if the site's data does, and
+each run adds their size to the repository's history, so run it for a reason.
 
 The Xcode project lists no files by hand: the `VisionAtlas` folder is a
 synchronised group, so anything put in it is part of the target. The

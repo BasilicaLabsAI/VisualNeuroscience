@@ -161,11 +161,57 @@ final class RegionMeshes: @unchecked Sendable {
 
     func mesh(for label: Int) -> BrainMesh? {
         guard let entry = offsets[label] else { return nil }
-        let v = entry.verts, n = entry.indices
+        return BrainMesh.unpack(bytes, at: entry.offset, verts: entry.verts, indices: entry.indices)
+    }
+}
+
+extension Volume {
+    /// The byte at the voxel nearest a millimetre position, 0 outside.
+    func value(atMm p: SIMD3<Float>) -> UInt8 {
+        let i = Int(((p.x - origin.x) / spacing).rounded())
+        let j = Int(((p.y - origin.y) / spacing).rounded())
+        let k = Int(((p.z - origin.z) / spacing).rounded())
+        guard i >= 0, j >= 0, k >= 0, i < dims.x, j < dims.y, k < dims.z else { return 0 }
+        return data[(k * dims.y + j) * dims.x + i]
+    }
+}
+
+/// The tractogram as tubes, one mesh per direction colour.
+struct TractMeshes {
+    struct Bin {
+        let colour: SIMD3<UInt8>
+        let mesh: BrainMesh
+    }
+    let bins: [Bin]
+
+    static func load(named name: String) throws -> TractMeshes {
+        guard let url = Bundle.main.url(forResource: name, withExtension: "mesh.gz") else { throw BrainDataError.missing("\(name).mesh.gz") }
+        let b = try Gzip.inflate(try Data(contentsOf: url), name: "\(name).mesh.gz")
+        guard b.count >= 8, String(decoding: b[0..<4], as: UTF8.self) == "VNT1" else { throw BrainDataError.corrupt("\(name).mesh.gz") }
+        let count = Int(UInt32(b[4]) | UInt32(b[5]) << 8 | UInt32(b[6]) << 16 | UInt32(b[7]) << 24)
+        var bins: [Bin] = []
+        var o = 8
+        for _ in 0..<count {
+            guard o + 11 <= b.count else { throw BrainDataError.corrupt("\(name).mesh.gz") }
+            let colour = SIMD3<UInt8>(b[o], b[o + 1], b[o + 2])
+            let v = Int(UInt32(b[o + 3]) | UInt32(b[o + 4]) << 8 | UInt32(b[o + 5]) << 16 | UInt32(b[o + 6]) << 24)
+            let n = Int(UInt32(b[o + 7]) | UInt32(b[o + 8]) << 8 | UInt32(b[o + 9]) << 16 | UInt32(b[o + 10]) << 24)
+            o += 11
+            guard o + v * 9 + n * 4 <= b.count, let mesh = BrainMesh.unpack(b, at: o, verts: v, indices: n) else { throw BrainDataError.corrupt("\(name).mesh.gz") }
+            bins.append(Bin(colour: colour, mesh: mesh))
+            o += v * 9 + n * 4
+        }
+        return TractMeshes(bins: bins)
+    }
+}
+
+extension BrainMesh {
+    /// Decodes the packed form: int16 hundredths of a millimetre, int8 normals, uint32 indices.
+    static func unpack(_ bytes: [UInt8], at offset: Int, verts v: Int, indices n: Int) -> BrainMesh? {
         var positions = [SIMD3<Float>](); positions.reserveCapacity(v)
         var normals = [SIMD3<Float>](); normals.reserveCapacity(v)
         let indices: [UInt32] = bytes.withUnsafeBytes { raw in
-            var o = entry.offset
+            var o = offset
             for _ in 0..<v {
                 let x = raw.loadUnaligned(fromByteOffset: o, as: Int16.self)
                 let y = raw.loadUnaligned(fromByteOffset: o + 2, as: Int16.self)
@@ -185,16 +231,5 @@ final class RegionMeshes: @unchecked Sendable {
         }
         guard indices.allSatisfy({ Int($0) < v }) else { return nil }
         return BrainMesh(positions: positions, normals: normals, indices: indices)
-    }
-}
-
-extension Volume {
-    /// The byte at the voxel nearest a millimetre position, 0 outside.
-    func value(atMm p: SIMD3<Float>) -> UInt8 {
-        let i = Int(((p.x - origin.x) / spacing).rounded())
-        let j = Int(((p.y - origin.y) / spacing).rounded())
-        let k = Int(((p.z - origin.z) / spacing).rounded())
-        guard i >= 0, j >= 0, k >= 0, i < dims.x, j < dims.y, k < dims.z else { return 0 }
-        return data[(k * dims.y + j) * dims.x + i]
     }
 }
