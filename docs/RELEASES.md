@@ -8,6 +8,11 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.5 — 13 September 2026 — The app can be built in the cloud
+Commit · Share the Xcode scheme so Xcode Cloud can build the app
+
+The iPhone and iPad app can now be built and sent to TestFlight by Xcode Cloud from a bare clone of the repository: the scheme it builds is committed to the project rather than living only on one Mac. The store notes describe the two things that stop a first cloud run, a missing shared scheme and a build number below the last upload. Nothing in the site changed.
+
 ## v10.4 — 13 September 2026 — The portrait takes the centre line
 Commit · Centre the portrait on the page and tuck the signature beside it
 

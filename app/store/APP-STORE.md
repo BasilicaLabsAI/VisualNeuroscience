@@ -110,6 +110,15 @@ Apple's machine, which is what a bare clone needs before it can build.
   run. It must sit at `ios/App/ci_scripts/ci_post_clone.sh`, be executable
   (`chmod +x`, committed), and the workflow's project must be
   `ios/App/App.xcodeproj`.
+- *No scheme named App*, or the workflow's scheme list is empty: the
+  scheme was not shared. Xcode Cloud clones the repository fresh, and a
+  scheme that lives only in the Mac's user data is invisible there. The
+  shared copy is committed at `ios/App/App.xcodeproj/xcshareddata/
+  xcschemes/App.xcscheme`; if Xcode ever re-creates it, tick *Shared* in
+  Product → Scheme → Manage Schemes and commit the file.
+- *The upload is refused as a lower build number*: App Store Connect
+  already holds build 14, and Xcode Cloud numbers builds from its own
+  counter. Set the workflow's next build number above the last upload.
 - *Sign in with Apple entitlement not allowed*: enable the capability on
   the App ID at developer.apple.com → Identifiers, then re-run.
 - The first build takes longer than later ones because Homebrew installs
