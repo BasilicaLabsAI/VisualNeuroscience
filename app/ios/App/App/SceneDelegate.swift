@@ -8,8 +8,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
 
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = CAPBridgeViewController()
+        let bridge = CAPBridgeViewController()
+        window?.rootViewController = bridge
         window?.makeKeyAndVisible()
+
+        // A swipe from the left edge goes back a page, as it does in every
+        // iPhone app. assets/navbar.js draws the bar that goes with it.
+        bridge.loadViewIfNeeded()
+        bridge.bridge?.webView?.allowsBackForwardNavigationGestures = true
 
         SceneDelegateProxy.shared.scene(scene, willConnectTo: session, options: connectionOptions)
     }

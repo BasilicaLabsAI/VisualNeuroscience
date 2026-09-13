@@ -120,7 +120,7 @@ function mount(){
   slot.className = "vn-auth-slot";
   /* beside the theme toggle, inside whatever groups the two so they wrap
      as one unit when the strip breaks into rows */
-  const theme = nav.querySelector ? nav.querySelector(".theme-toggle") : null;
+  const theme = document.querySelector(".theme-toggle");
   if (theme && theme.parentNode) theme.parentNode.insertBefore(slot, theme);
   else nav.appendChild(slot);
 

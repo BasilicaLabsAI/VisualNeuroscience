@@ -8,6 +8,11 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.6 — 13 September 2026 — The app navigates the iPhone way
+Commit · Give the app an iPhone-style top bar and a message from the developer on About
+
+Inside the iPhone and iPad app the website's masthead and tab row are gone. In their place is the bar an iPhone app has: a back button on the left naming the screen it returns to, the page's title in the middle, and the theme and account buttons on the right. Pages slide in from the right and out again on the way back, and a swipe from the left edge goes back. The website itself is unchanged. The About page now opens with a short message from the developer, followed by what VisualNeuroscience is.
+
 ## v10.5 — 13 September 2026 — The app can be built in the cloud
 Commit · Share the Xcode scheme so Xcode Cloud can build the app
 

@@ -278,6 +278,68 @@ body{
   -webkit-touch-callout:none;
 }
 
+/* ── the app's top bar ───────────────────────────────────────────────────
+   Inside the native app the masthead and its tab row give way to a bar
+   pinned to the top, built by assets/navbar.js: back on the left, the
+   title in the middle, theme and account on the right. The website never
+   sees any of this. */
+:root[data-native] .masthead{ display:none; }
+:root[data-native] body{ padding-top:calc(env(safe-area-inset-top) + 44px); }
+.vn-bar{
+  position:fixed; top:0; left:0; right:0; z-index:60;
+  box-sizing:border-box; height:calc(env(safe-area-inset-top) + 44px);
+  padding:env(safe-area-inset-top) 6px 0 6px;
+  display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
+  background:color-mix(in srgb, var(--paper) 84%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  color:var(--ink); font-family:var(--font-brand);
+  -webkit-user-select:none; user-select:none;
+  view-transition-name:vn-bar;
+}
+.vn-bar-left, .vn-bar-right{ display:flex; align-items:center; min-width:0; }
+.vn-bar-right{ justify-content:flex-end; gap:.4rem; }
+.vn-bar-title{
+  font-size:1.02rem; font-weight:600; letter-spacing:.01em; text-align:center;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding:0 .4rem;
+}
+.vn-bar-brand{ font-weight:500; font-size:1.08rem; }
+.vn-back{
+  display:inline-flex; align-items:center; gap:.1rem; max-width:100%;
+  background:none; border:0; padding:0 .5rem 0 .1rem; min-height:44px;
+  color:var(--ink); font:inherit; font-size:1.02rem; cursor:pointer; -webkit-tap-highlight-color:transparent;
+}
+.vn-back:active{ opacity:.45; }
+.vn-chevron{
+  flex:none; width:.62rem; height:.62rem; margin:0 .32rem 0 .3rem;
+  border-left:2px solid currentColor; border-bottom:2px solid currentColor;
+  transform:rotate(45deg) translate(1px,-1px);
+}
+.vn-back-label{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.vn-bar .theme-toggle{ padding:.22rem .5rem; }
+.vn-bar .vn-auth-slot{ display:inline-flex; align-items:center; }
+@media (max-width:420px){ .vn-bar .theme-toggle #themeLbl{ display:none; } }
+
+/* pages slide like screens: in from the right going forward, out again
+   coming back. Only the app opts in (navbar.js adds the @view-transition
+   rule), so on the website these rules never fire. */
+::view-transition-old(root), ::view-transition-new(root){
+  animation-duration:.34s; animation-timing-function:cubic-bezier(.32,.72,0,1);
+  mix-blend-mode:normal;
+}
+:root[data-vn-dir="push"]::view-transition-old(root){ animation-name:vn-out-left; }
+:root[data-vn-dir="push"]::view-transition-new(root){ animation-name:vn-in-right; }
+:root[data-vn-dir="back"]::view-transition-old(root){ animation-name:vn-out-right; }
+:root[data-vn-dir="back"]::view-transition-new(root){ animation-name:vn-in-left; }
+::view-transition-old(vn-bar), ::view-transition-new(vn-bar){ animation-duration:.2s; }
+@keyframes vn-in-right{ from{ transform:translateX(100%); } }
+@keyframes vn-out-left{ to{ transform:translateX(-28%); opacity:.55; } }
+@keyframes vn-in-left{ from{ transform:translateX(-28%); opacity:.55; } }
+@keyframes vn-out-right{ to{ transform:translateX(100%); } }
+@media (prefers-reduced-motion: reduce){
+  ::view-transition-old(root), ::view-transition-new(root){ animation:none; }
+}
+
 /* A touch screen has no hover and no scroll wheel, so the viewports get the
    room instead: a stage sized for a thumb, and the gesture claimed from the
    browser so a pinch zooms the brain rather than the page. */
