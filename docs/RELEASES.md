@@ -8,6 +8,11 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.4 — 13 September 2026 — The portrait takes the centre line
+Commit · Centre the portrait on the page and tuck the signature beside it
+
+On the About page, and its visionOS twin, the framed portrait now sits on the page's centre line by itself, and the signature hangs off the frame's right edge, tucked into the corner below the oval's shoulder rather than floating a hand's width away. On narrow phones the signature still drops beneath the frame, centred.
+
 ## v10.3 — 12 September 2026 — A ledger of releases, and the tags to match
 Commit · Keep a ledger of releases, and a script that pushes their tags
 
