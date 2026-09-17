@@ -152,6 +152,7 @@ img{ max-width:100%; height:auto; display:block; }
 .m-tracts { grid-column:span 5; }
 .m-brodmann{ grid-column:span 6; }
 .m-studies{ grid-column:span 6; }
+.m-cells  { grid-column:span 12; }
 .m-practice{ grid-column:span 6; }
 .m-textbook{ grid-column:span 6; }
 .m-ledger { grid-column:span 12; }
@@ -259,6 +260,7 @@ img{ max-width:100%; height:auto; display:block; }
   .m-tracts { grid-column:span 3; }
   .m-brodmann{ grid-column:span 3; }
   .m-studies{ grid-column:span 3; }
+  .m-cells  { grid-column:span 6; }
   .m-practice{ grid-column:span 3; }
   .m-textbook{ grid-column:span 3; }
   .m-ledger { grid-column:span 6; }
@@ -267,7 +269,7 @@ img{ max-width:100%; height:auto; display:block; }
 /* ── phone: one box on each line, and the wide box stacks ── */
 @media (max-width:760px){
   .mosaic{ grid-template-columns:minmax(0,1fr); }
-  .m-atlas, .m-network, .m-tracts, .m-brodmann, .m-studies, .m-practice, .m-textbook, .m-ledger{
+  .m-atlas, .m-network, .m-tracts, .m-brodmann, .m-studies, .m-cells, .m-practice, .m-textbook, .m-ledger{
     grid-column:1 / -1; grid-row:auto;
   }
   .ledger{ grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -287,6 +289,7 @@ img{ max-width:100%; height:auto; display:block; }
     <a href="brodmann.html">Brodmann Areas</a>
     <a href="tracts.html">Tractography</a>
     <a href="network-atlas.html">Network Atlas</a>
+    <a href="microanatomy.html">Microanatomy</a>
     <a href="studies.html">Visualizing Studies</a>
     <a href="practice.html">Practice</a>
     <a href="textbook.html">Digital Textbook</a>
@@ -365,6 +368,18 @@ img{ max-width:100%; height:auto; display:block; }
         <div class="go">Open the shelf &rarr;</div>
       </div>
       <div class="plate"><img src="assets/studies/hallucinations.png" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+    </a>
+
+    <!-- ── the cells ──────────────────────────────────────────────── -->
+    <a class="box m-cells box-h" href="microanatomy.html">
+      <div class="side">
+        <div class="kicker">Under the microscope</div>
+        <h2>Microanatomy</h2>
+        <p>The brain at the cell's scale. An original drawing of a large multipolar neuron, built from code, with seventeen structures to click &mdash; dendrites and spines, the cell body and what fills it, the axon hillock and initial segment, two incoming synapses and an astrocyte. Read what each one does, colour them all at once, or test yourself and find every structure from memory.</p>
+        <div class="meta">1 cell drawn &middot; 17 structures &middot; explore and test modes</div>
+        <div class="go">Open the cell &rarr;</div>
+      </div>
+      <div class="plate"><img src="assets/home/cells.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
     </a>
 
     <!-- ── the practice ───────────────────────────────────────────── -->

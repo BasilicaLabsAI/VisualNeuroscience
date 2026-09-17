@@ -1,0 +1,277 @@
+{
+ "cell": "multipolar-neuron",
+ "name": "Multipolar neuron",
+ "centre": [
+  648,
+  392
+ ],
+ "parts": [
+  {
+   "id": "dendrites",
+   "name": "Dendrites",
+   "acc": "#905ad8",
+   "anchor": [
+    304.8,
+    385.3
+   ],
+   "label": [
+    304.8,
+    341.8
+   ],
+   "find": "the dendrites",
+   "that": "Those are the dendrites",
+   "desc": "Branching extensions of the cell body that receive signals from other neurons. A large multipolar neuron has many of them, and between them they carry most of the cell’s incoming synapses."
+  },
+  {
+   "id": "spines",
+   "name": "Dendritic spines",
+   "acc": "#5cf662",
+   "anchor": [
+    246.2,
+    134.9
+   ],
+   "label": [
+    172.9,
+    47.5
+   ],
+   "find": "a dendritic spine",
+   "desc": "Tiny knobs studding the dendrites. Each is the receiving side of a synapse, usually an excitatory one. Spines change in shape and number as connections strengthen or weaken, which is one way the brain stores what it learns."
+  },
+  {
+   "id": "soma",
+   "name": "Cell body (soma)",
+   "acc": "#ff586d",
+   "anchor": [
+    598.1,
+    339.8
+   ],
+   "label": [
+    482.5,
+    319.4
+   ],
+   "short": "Cell body",
+   "find": "the cell body",
+   "aka": "the soma or perikaryon",
+   "desc": "The neuron’s control centre. It holds the nucleus and most of the machinery for making proteins, and it adds up the signals arriving from the dendrites."
+  },
+  {
+   "id": "nucleus",
+   "name": "Nucleus",
+   "acc": "#5f5ad8",
+   "anchor": [
+    622.0,
+    378.0
+   ],
+   "label": [
+    499.0,
+    333.2
+   ],
+   "find": "the nucleus",
+   "desc": "Holds the cell’s DNA. In neurons it is large, round and pale, because much of the DNA is unpacked and in active use."
+  },
+  {
+   "id": "nucleolus",
+   "name": "Nucleolus",
+   "acc": "#bfe34f",
+   "anchor": [
+    642.0,
+    393.5
+   ],
+   "label": [
+    799.8,
+    365.7
+   ],
+   "find": "the nucleolus",
+   "desc": "The dense spot inside the nucleus where ribosomes are assembled. It is prominent in neurons because they make protein at a very high rate."
+  },
+  {
+   "id": "nissl",
+   "name": "Nissl bodies (rough ER)",
+   "acc": "#d85ab9",
+   "anchor": [
+    606.4,
+    323.3
+   ],
+   "label": [
+    427.2,
+    426.8
+   ],
+   "short": "Nissl bodies",
+   "find": "a Nissl body",
+   "aka": "Nissl substance",
+   "desc": "Stacks of rough endoplasmic reticulum: folded membrane studded with ribosomes, where membrane and secreted proteins are made. They fill the cell body and the base of the dendrites but stop at the axon hillock, a classic way to tell axon from dendrite under the microscope."
+  },
+  {
+   "id": "ribosomes",
+   "name": "Free ribosomes",
+   "acc": "#4bdde7",
+   "anchor": [
+    714.8,
+    462.5
+   ],
+   "label": [
+    811.1,
+    462.5
+   ],
+   "find": "the free ribosomes",
+   "that": "Those are free ribosomes",
+   "aka": "polyribosomes, when clustered",
+   "desc": "Small protein-making particles loose in the cytoplasm, often gathered in rosettes. They make the proteins that stay inside the cell."
+  },
+  {
+   "id": "mito",
+   "name": "Mitochondria",
+   "acc": "#fa9b38",
+   "anchor": [
+    619.2,
+    340.6
+   ],
+   "label": [
+    489.3,
+    317.7
+   ],
+   "find": "a mitochondrion",
+   "desc": "Produce the cell’s energy as ATP. Neurons need a great deal of it: the brain uses about a fifth of the body’s energy at rest. Mitochondria are found throughout the cell, out into the dendrites and along the axon."
+  },
+  {
+   "id": "golgi",
+   "name": "Golgi apparatus",
+   "acc": "#42f08a",
+   "anchor": [
+    608.3,
+    426.8
+   ],
+   "label": [
+    448.0,
+    426.8
+   ],
+   "find": "the Golgi apparatus",
+   "aka": "the Golgi body",
+   "desc": "A stack of flattened membrane sacs beside the nucleus. It finishes, sorts and packages newly made proteins into vesicles for delivery, many of them bound for the distant axon terminals."
+  },
+  {
+   "id": "lys",
+   "name": "Lysosomes",
+   "acc": "#93f457",
+   "anchor": [
+    637.6,
+    347.8
+   ],
+   "label": [
+    501.5,
+    323.8
+   ],
+   "find": "a lysosome",
+   "desc": "Membrane-bound sacs of digestive enzymes that break down worn-out parts of the cell for recycling. With age they fill with a yellow-brown pigment, lipofuscin."
+  },
+  {
+   "id": "tubes",
+   "name": "Neurotubules",
+   "acc": "#f34590",
+   "anchor": [
+    739.3,
+    419.9
+   ],
+   "label": [
+    814.9,
+    463.6
+   ],
+   "find": "the neurotubules",
+   "that": "Those are neurotubules",
+   "aka": "microtubules",
+   "desc": "Long hollow filaments that gather in the axon hillock and run the length of the axon. Motor proteins carry cargo along them like rails: kinesin outward to the terminals, dynein back to the cell body."
+  },
+  {
+   "id": "hillock",
+   "name": "Axon hillock",
+   "acc": "#4eace4",
+   "anchor": [
+    795.1,
+    422.4
+   ],
+   "label": [
+    859.0,
+    476.0
+   ],
+   "find": "the axon hillock",
+   "desc": "The cone-shaped region where the axon leaves the cell body. It has no Nissl bodies, only bundles of neurotubules funnelling into the axon."
+  },
+  {
+   "id": "initial",
+   "name": "Initial segment",
+   "acc": "#c15ad8",
+   "anchor": [
+    859.3,
+    425.9
+   ],
+   "label": [
+    859.3,
+    469.4
+   ],
+   "find": "the initial segment",
+   "aka": "the trigger zone",
+   "desc": "The first stretch of the axon, just beyond the hillock and before any myelin. Its membrane is packed with voltage-gated sodium channels, so this is normally where the action potential starts."
+  },
+  {
+   "id": "axon",
+   "name": "Axon",
+   "acc": "#4ae8bc",
+   "anchor": [
+    1106.4,
+    476.5
+   ],
+   "label": [
+    1106.4,
+    520.0
+   ],
+   "find": "the axon",
+   "desc": "The single long fibre that carries the cell’s output, the action potential, away from the cell body to other neurons, muscles or glands. Here it runs off the edge of the drawing; in the body it can be up to a metre long."
+  },
+  {
+   "id": "syn_soma",
+   "name": "Axosomatic synapse",
+   "acc": "#ff744a",
+   "anchor": [
+    745.2,
+    343.0
+   ],
+   "label": [
+    856.7,
+    362.7
+   ],
+   "find": "the axosomatic synapse",
+   "desc": "An axon terminal from another neuron ending directly on the cell body. Synapses here are often inhibitory, and being so close to the initial segment they have a strong say in whether the neuron fires."
+  },
+  {
+   "id": "syn_dend",
+   "name": "Axodendritic synapse",
+   "acc": "#e1c951",
+   "anchor": [
+    670.4,
+    242.0
+   ],
+   "label": [
+    769.7,
+    184.7
+   ],
+   "find": "the axodendritic synapse",
+   "desc": "An axon terminal ending on a dendrite, the most common kind of synapse. The terminal is full of vesicles of neurotransmitter; the dark band on the dendrite’s side is the postsynaptic density, where the receptors sit."
+  },
+  {
+   "id": "glia",
+   "name": "Astrocyte process",
+   "acc": "#5182e1",
+   "anchor": [
+    916.8,
+    205.5
+   ],
+   "label": [
+    1007.2,
+    257.7
+   ],
+   "find": "the astrocyte process",
+   "aka": "a glial process",
+   "desc": "An arm of a neighbouring astrocyte, a star-shaped glial cell. Its end-feet wrap the neuron’s surface and its synapses, clearing away neurotransmitter and potassium and supplying fuel."
+  }
+ ]
+}

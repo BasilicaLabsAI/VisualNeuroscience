@@ -26,6 +26,7 @@
     "": "Home", "index.html": "Home",
     "regions.html": "Region Atlas", "brodmann.html": "Brodmann Areas",
     "tracts.html": "Tractography", "network-atlas.html": "Network Atlas",
+    "microanatomy.html": "Microanatomy",
     "studies.html": "Visualizing Studies", "hallucinations.html": "Hallucinations",
     "practice.html": "Practice", "textbook.html": "Digital Textbook",
     "about.html": "About", "privacy.html": "Privacy & Support"

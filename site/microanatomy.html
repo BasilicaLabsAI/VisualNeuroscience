@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Microanatomy — VisualNeuroscience.AI</title>
+<meta name="description" content="The brain at the microscope's scale: a multipolar neuron drawn from code, with seventeen structures to click, read about, and then find again from memory.">
+<!-- link previews. The card is built by site/share.html and rendered to
+     assets/social-card.jpg; og:image has to be absolute, so this origin is
+     the one thing to change if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="Microanatomy — VisualNeuroscience.AI">
+<meta property="og:description" content="The brain at the microscope's scale: a multipolar neuron drawn from code, with seventeen structures to click, read about, and then find again from memory.">
+<meta property="og:url" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/microanatomy.html">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The flow-state network ring over orange-tinted MNI152 brain slices, with the VisualNeuroscience.AI wordmark at its centre.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="fonts/fonts.css">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+  --quiet:#8A8A8A;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+
+  /* the plate's own inks: the cell, the glia, the organelles. A warm
+     paper-and-ink palette on the light page, its negative on the dark. */
+  --cell:#ece6db; --glia:#d5dedd; --bouton:#e6dac3; --nuc:#f9f6f0; --nucleolus:#6b665e;
+  --nissl:#d0c9bc; --nissl-line:#77716a; --mito:#8e8980; --mito-line:#f1ece3; --lys:#55514b;
+  --rib:#69645c; --tube:#7b756c; --golgi-lumen:#dbd4c8; --ves:#f6f2ea; --fibril:#96a3a3;
+  --anuc:#b7c3c3; --hov-of:#bdb6a9; --pen:#1d1b18;
+}
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+  --quiet:#8A8A8A;
+
+  --cell:#1a1917; --glia:#1b2526; --bouton:#2b251b; --nuc:#2c2a26; --nucleolus:#a8a297;
+  --nissl:#3a372f; --nissl-line:#a39d91; --mito:#7f7a70; --mito-line:#1a1917; --lys:#c0baae;
+  --rib:#aba599; --tube:#928c80; --golgi-lumen:#37342e; --ves:#33302a; --fibril:#566667;
+  --anuc:#34484a; --hov-of:#4c4840; --pen:#e9e4da;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  margin:0 0 3rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+a{ color:var(--ink); }
+svg{ display:block; }
+button{ font:inherit; color:inherit; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* masthead, shared with the rest of the site */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
+.brand .mark{ width:.65em; height:.65em; flex:none; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{
+  font-family:var(--font-display); font-size:1.35rem;
+  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+}
+.title-strip .anno{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60);
+}
+
+.lede{
+  font-family:var(--font-serif); font-size:1.02rem; line-height:1.6;
+  margin:0 0 calc(var(--gap) * 1.6);
+}
+
+/* ── the cells ──────────────────────────────────────────────────────────
+   One tile per cell, the way the studies shelf lists its papers: the
+   drawn one is a solid tile and the current page, the rest are dashed so
+   the section has its shape without claiming any of them is drawn yet. */
+.cells{
+  display:grid; gap:var(--gap); list-style:none; margin:0 0 var(--gap); padding:0;
+  grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));
+}
+.cellt{
+  border:1px solid var(--hair); padding:.8rem .9rem .9rem;
+  display:flex; flex-direction:column; min-width:0; color:var(--ink);
+}
+.cellt[aria-current]{ background:var(--ink); color:var(--paper); }
+.cellt.soon{ border:1px dashed var(--ink-35); }
+.cellt .ck{
+  font-family:var(--font-brand); font-weight:500; font-size:.52rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+}
+.cellt[aria-current] .ck{ color:var(--paper); opacity:.7; }
+.cellt.soon .ck{ color:var(--ink-35); }
+.cellt .cn{
+  font-family:var(--font-display); font-weight:400;
+  font-size:1.08rem; line-height:1.15; margin-top:.3rem;
+}
+.cellt.soon .cn{ color:var(--ink-35); }
+.cellt .cs{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.8rem; color:var(--ink-60); margin-top:.15rem;
+}
+.cellt[aria-current] .cs{ color:var(--paper); opacity:.75; }
+.cellt.soon .cs{ color:var(--ink-35); }
+
+/* ── the stage: the plate and its rail ──────────────────────────────── */
+.stage{
+  display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:var(--gap);
+  align-items:start; margin-bottom:var(--gap);
+}
+.plate{ position:relative; min-width:0; border:1px solid var(--hair); background:var(--paper); }
+.plate-cap{
+  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center;
+  gap:.35rem .8rem; padding:.5rem .8rem; border-bottom:1px solid var(--hair);
+}
+.plate-cap b{
+  font-family:var(--font-brand); font-weight:500; font-size:.68rem;
+  letter-spacing:.28em; text-transform:uppercase;
+}
+.modes{ display:inline-flex; border:1px solid var(--hair); }
+.modes button{
+  border:0; border-left:1px solid var(--hair); border-radius:0;
+  background:var(--paper); color:var(--ink); cursor:pointer;
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.2em; text-transform:uppercase; line-height:1;
+  padding:.5rem .7rem .42rem;
+}
+.modes button:first-child{ border-left:0; }
+.modes button[aria-pressed="true"]{ background:var(--ink); color:var(--paper); }
+@media (hover: hover){ .modes button:hover{ background:var(--ink); color:var(--paper); } }
+
+.scroller{ overflow:hidden; aspect-ratio:1200/780; width:100%; overscroll-behavior:contain; }
+.scroller.zoomed{ overflow:auto; cursor:grab; }
+.scroller.zoomed.drag{ cursor:grabbing; }
+.scroller svg{ width:calc(var(--z,1)*100%); }
+.plate-foot{
+  display:flex; align-items:center; gap:.9rem; flex-wrap:wrap;
+  border-top:1px solid var(--hair); padding:.45rem .8rem;
+}
+.plate-foot p{
+  font-family:var(--font-serif); font-style:italic; font-size:.82rem;
+  line-height:1.4; color:var(--ink-60); margin:0; flex:1 1 20rem;
+}
+.tip{
+  position:absolute; pointer-events:none; z-index:3;
+  background:var(--ink); color:var(--paper); padding:.18rem .55rem;
+  font-family:var(--font-brand); font-size:.9rem; white-space:nowrap;
+  transform:translate(-50%,calc(-100% - 14px));
+}
+
+/* the rail: what is picked, then the index of everything that can be */
+.rail{ display:flex; flex-direction:column; gap:var(--gap); min-width:0; }
+.card{ border:1px solid var(--hair); padding:1rem 1.05rem 1.1rem; background:var(--paper); }
+.card h2.card-h{
+  font-family:var(--font-brand); font-weight:500; font-size:.68rem;
+  letter-spacing:.3em; text-transform:uppercase; text-align:center;
+  border-bottom:1px solid var(--hair); padding-bottom:.55rem; margin-bottom:.75rem;
+}
+.detail{ min-height:13.5rem; }
+.detail h2, .q-prompt{
+  font-family:var(--font-display); font-weight:400; font-size:1.45rem;
+  line-height:1.14; margin:0 0 .5rem; letter-spacing:.005em;
+}
+.detail .bar{ display:block; width:2.4rem; height:.32rem; background:var(--acc,var(--ink)); margin-bottom:.7rem; }
+.detail p{ font-family:var(--font-serif); font-size:.98rem; line-height:1.55; margin:0 0 .5rem; }
+.detail .aka{ font-family:var(--font-brand); color:var(--ink-60); font-size:.92rem; }
+.detail .hint{ color:var(--ink-60); }
+.index{ list-style:none; margin:0; padding:0; columns:2; column-gap:.8rem; }
+.index li{ break-inside:avoid; }
+.index button{
+  display:flex; align-items:flex-start; gap:.55rem; width:100%; text-align:left;
+  background:none; border:0; padding:.22rem .3rem .22rem .15rem;
+  font-family:var(--font-brand); font-size:.98rem; line-height:1.3; cursor:pointer; color:var(--ink);
+}
+@media (hover: hover){ .index button:hover{ background:color-mix(in srgb, var(--ink) 7%, transparent); } }
+.index button.hov{ background:color-mix(in srgb, var(--ink) 7%, transparent); }
+.index .sw{ margin-top:.36em; flex:none; width:.72rem; height:.72rem; border-radius:50%; border:1.6px solid var(--acc); background:transparent; }
+.index button[aria-current="true"] .sw, .rail.all .index .sw{ background:var(--acc); }
+.index button[aria-current="true"]{ background:color-mix(in srgb, var(--ink) 7%, transparent); }
+.all-toggle{
+  display:flex; align-items:center; gap:.55rem; margin-top:.8rem; padding-top:.8rem;
+  border-top:1px solid var(--hair); color:var(--ink-60); cursor:pointer;
+  font-family:var(--font-brand); font-size:.92rem;
+}
+.all-toggle input{ width:1rem; height:1rem; accent-color:var(--ink); margin:0; }
+
+/* the test */
+.q-count{ font-family:var(--font-brand); color:var(--ink-60); margin:0 0 .35rem; font-size:.92rem; }
+.q-prompt .q-find{
+  display:block; font-family:var(--font-brand); font-size:.6rem; letter-spacing:.24em;
+  text-transform:uppercase; color:var(--ink-60); margin-bottom:.3rem;
+}
+.q-fb{ font-family:var(--font-serif); font-size:.98rem; line-height:1.55; min-height:8.5rem; margin:.2rem 0 .8rem; }
+.q-fb.shake{ animation:shake .28s; }
+@keyframes shake{ 25%{ transform:translateX(-4px); } 75%{ transform:translateX(4px); } }
+.q-actions{ display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1rem; }
+.q-ticks{ display:grid; grid-template-columns:repeat(var(--n,17),1fr); gap:3px; padding-top:.9rem; border-top:1px solid var(--hair); }
+.q-ticks i{ display:block; height:.62rem; border:1px solid var(--ink-35); }
+.q-ticks i.now{ border-color:var(--ink); }
+.q-ticks i.hit{ background:var(--acc); border-color:var(--acc); }
+.q-ticks i.miss{ background:var(--acc); border-color:var(--acc); opacity:.38; }
+
+.attrib{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.85rem; color:var(--ink-60);
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2rem;
+}
+
+@media (max-width:1100px) and (orientation:portrait),
+       (max-width:900px) and (orientation:landscape){
+  .stage{ grid-template-columns:1fr; }
+  .rail{ display:grid; grid-template-columns:1fr 1fr; align-items:start; }
+  .index{ columns:3; }
+}
+@media (max-width:760px){
+  .rail{ grid-template-columns:1fr; }
+  /* the tiles pair up rather than stack, so the drawing is not a screen
+     and a half below the fold */
+  .cells{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .cellt{ padding:.6rem .7rem .7rem; }
+  .cellt .cn{ font-size:.98rem; }
+  .scroller{ aspect-ratio:auto; height:min(62svh,30rem); }
+  .index{ columns:2; }
+  .detail{ min-height:0; }
+  .tip{ display:none; }
+}
+@media (prefers-reduced-motion:reduce){ *{ transition:none!important; animation:none!important; } }
+
+/* ── the drawing ────────────────────────────────────────────────────────
+   The plate's rules. Fills inside <use> clones come from inherited custom
+   properties (--of fill, --ol line), because selectors cannot reach into a
+   <use> shadow tree; each clickable piece carries its accent as --acc. */
+.mn{ display:block; width:100%; height:auto; overflow:hidden; -webkit-tap-highlight-color:transparent; }
+.mn-ink{ fill:var(--pen); stroke:var(--pen); stroke-width:3.2; stroke-linejoin:round; }
+.mn-body{ fill:var(--cell); }
+.mn-fillcell{ fill:var(--of); }
+.mn-spn-ink{ fill:none; stroke:var(--pen); stroke-linecap:round; }
+.mn-spn-body{ fill:none; stroke:var(--cell); stroke-linecap:round; }
+.mn-tint{ fill:transparent; pointer-events:none; }
+.mn-hit{ fill:transparent; pointer-events:fill; }
+.mn-pad{ fill:transparent; stroke:none; pointer-events:all; }
+.mn-fat{ fill:none; stroke:transparent; stroke-width:11; stroke-linecap:round; pointer-events:stroke; }
+.mn-fat-s{ stroke-width:5.5; }
+.mn-spn-hit{ fill:none; stroke:transparent; stroke-linecap:round; pointer-events:stroke; }
+.mn-of{ fill:var(--of); stroke:var(--pen); stroke-width:1.15; }
+.mn-ol{ fill:none; stroke:var(--ol); stroke-width:.95; stroke-linecap:round; stroke-linejoin:round; }
+.mn-dots{ fill:none; stroke:var(--ol); stroke-width:2.1; stroke-linecap:round; }
+.mn-ves{ fill:var(--ves); stroke:var(--pen); stroke-width:.9; }
+.mn-glint{ fill:var(--cell); opacity:.5; }
+.mn-psd{ fill:none; stroke:var(--pen); stroke-width:3.3; stroke-linecap:round; }
+.mn-glia{ --of:var(--glia); } .mn-bouton{ --of:var(--bouton); }
+.mn-bouton>use[href$="u-mito"]{ --of:var(--mito); --ol:var(--mito-line); }
+.mn-fibril{ fill:none; stroke:var(--fibril); stroke-width:.85; stroke-linecap:round; }
+.mn-anuc{ fill:var(--anuc); stroke:var(--pen); stroke-width:1.1; }
+.mn-rib{ --ol:var(--rib); }
+.mn-nissl{ --of:var(--nissl); --ol:var(--nissl-line); }
+.mn-mito{ --of:var(--mito); --ol:var(--mito-line); }
+.mn-lys{ --of:var(--lys); }
+.mn-golgi{ --of:var(--golgi-lumen); }
+.mn-g-ink{ fill:none; stroke:var(--pen); stroke-width:4.4; stroke-linecap:round; }
+.mn-g-lumen{ fill:none; stroke:var(--of); stroke-width:2.1; stroke-linecap:round; }
+.mn-tubes{ --ol:var(--tube); } .mn-tubes .mn-ol{ stroke-width:1.05; }
+.mn-nucleus{ --of:var(--nuc); --ol:var(--rib); } .mn-nucleus>.mn-of{ stroke-width:1.5; }
+.mn-env{ fill:none; stroke:var(--pen); stroke-width:.6; opacity:.5; }
+.mn-chromatin{ stroke-width:2.5; opacity:.42; }
+.mn-nucleolus{ --of:var(--nucleolus); }
+/* interaction states */
+.mn [data-part]{ cursor:pointer; }
+.mn [data-part]:focus{ outline:none; }
+.mn [data-vis]{ --acc-fill:var(--acc); --acc-line:var(--acc); transition:fill .16s, stroke .16s; }
+@supports (color:color-mix(in srgb,red,blue)){
+  .mn [data-vis]{ --acc-fill:color-mix(in srgb, var(--acc) 82%, var(--cell)); --acc-line:color-mix(in srgb, var(--acc) 58%, var(--pen)); }
+}
+.mn [data-vis].hov{ --of:var(--hov-of); }
+.mn .mn-tint.hov{ fill:var(--pen); fill-opacity:.13; }
+.mn .mn-spn-body.hov{ stroke:var(--hov-of); }
+.mn [data-vis].on{ --of:var(--acc-fill); --ol:var(--acc-line); }
+.mn .mn-tint.on{ fill:var(--acc-fill); fill-opacity:1; }
+.mn .mn-spn-body.on{ stroke:var(--acc-fill); }
+.mn .mn-psd.on{ stroke:var(--acc-line); }
+.mn.all-on [data-vis]{ --of:var(--acc-fill); --ol:var(--acc-line); }
+.mn.all-on .mn-tint{ fill:var(--acc-fill); fill-opacity:1; }
+.mn.all-on .mn-spn-body{ stroke:var(--acc-fill); }
+.mn.all-on .mn-tint[data-vis="soma"]{ fill-opacity:.36; }
+.mn.all-on .mn-tint[data-vis="soma"].on{ fill-opacity:1; }
+.mn [data-vis].no{ --of:var(--hov-of); }
+.mn .mn-tint.no{ fill:var(--pen); fill-opacity:.3; }
+.mn-psd, .mn-callout, .mn-tubes .mn-ol{ pointer-events:none; }
+/* the label drawn for the picked structure */
+.mn-lab-t{ fill:var(--ink); font-family:var(--font-brand); font-weight:500; }
+.mn-lab-r{ fill:var(--paper); stroke:var(--pen); stroke-width:1px; vector-effect:non-scaling-stroke; }
+.mn-lab-l{ stroke:var(--pen); stroke-width:1.1px; vector-effect:non-scaling-stroke; }
+.mn-lab-h{ stroke:var(--paper); stroke-width:4px; opacity:.9; vector-effect:non-scaling-stroke; }
+.mn-lab-d{ fill:var(--pen); stroke:var(--paper); stroke-width:1.2px; vector-effect:non-scaling-stroke; }
+</style>
+</head>
+<body>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="Site">
+    <a href="regions.html">Region Atlas</a>
+    <a href="brodmann.html">Brodmann Areas</a>
+    <a href="tracts.html">Tractography</a>
+    <a href="network-atlas.html">Network Atlas</a>
+    <a href="microanatomy.html" aria-current="page">Microanatomy</a>
+    <a href="studies.html">Visualizing Studies</a>
+    <a href="practice.html">Practice</a>
+    <a href="textbook.html">Digital Textbook</a>
+    <a href="about.html">About</a>
+    <span class="nav-tools"><button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button></span>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<div class="title-strip">
+  <h1 class="name">Microanatomy</h1>
+  <span class="anno">the brain at the microscope&rsquo;s scale</span>
+</div>
+
+<p class="lede">The atlas pages draw the brain a region at a time. This one goes down to the cell. Each drawing is an original schematic built from code, with every structure a click target: pick one and read what it does, colour them all to see how the cell is put together, or switch to <em>Test yourself</em> and find each one from memory. The first cell is a large multipolar neuron, the commonest kind in the brain and spinal cord, with an astrocyte and two incoming synapses for company.</p>
+
+<h2 class="sec-h">Cells <small>one drawn, more to follow</small></h2>
+
+<ul class="cells">
+  <li class="cellt" aria-current="page">
+    <div class="ck">Neuron</div>
+    <div class="cn">Multipolar neuron</div>
+    <div class="cs">17 structures</div>
+  </li>
+  <li class="cellt soon"><div class="ck">Neuron</div><div class="cn">Pyramidal cell</div><div class="cs">Coming soon</div></li>
+  <li class="cellt soon"><div class="ck">Neuron</div><div class="cn">Purkinje cell</div><div class="cs">Coming soon</div></li>
+  <li class="cellt soon"><div class="ck">Glia</div><div class="cn">Astrocyte</div><div class="cs">Coming soon</div></li>
+  <li class="cellt soon"><div class="ck">Glia</div><div class="cn">Oligodendrocyte</div><div class="cs">Coming soon</div></li>
+  <li class="cellt soon"><div class="ck">Glia</div><div class="cn">Microglia</div><div class="cs">Coming soon</div></li>
+</ul>
+
+<div class="stage">
+
+  <section class="plate" aria-label="Drawing of a large multipolar neuron">
+    <div class="plate-cap">
+      <b>Multipolar neuron</b>
+      <div class="modes" role="group" aria-label="Mode">
+        <button type="button" data-mode="explore" aria-pressed="true">Explore</button>
+        <button type="button" data-mode="quiz" aria-pressed="false">Test yourself</button>
+      </div>
+    </div>
+    <div class="scroller" id="scroller">
+      <svg class="mn" id="plate" data-cell="multipolar-neuron" viewBox="0 0 1200 780" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Multipolar neuron"></svg>
+    </div>
+    <div class="plate-foot">
+      <div class="seg" aria-label="Zoom"><button type="button" class="seg-btn seg-arrow" id="zout" aria-label="Zoom out">&minus;</button><button type="button" class="seg-btn seg-arrow" id="zin" aria-label="Zoom in">+</button></div>
+      <p>A schematic, not to scale: the organelles are drawn larger and far fewer than in a real cell, and the axon runs on well past the edge of the frame. <span class="verb">Click</span> any part of the drawing to find out what it is.</p>
+    </div>
+    <div class="tip" id="tip" hidden></div>
+  </section>
+
+  <aside class="rail" id="side">
+    <div id="explore" class="card">
+      <h2 class="card-h">Structure</h2>
+      <div class="detail" id="detail" aria-live="polite"></div>
+      <ul class="index" id="index"></ul>
+      <label class="all-toggle"><input type="checkbox" id="allon"> Colour every structure</label>
+    </div>
+    <div id="quiz" class="card" hidden>
+      <h2 class="card-h">Test yourself</h2>
+      <p class="q-count" id="qcount"></p>
+      <h2 class="q-prompt"><span class="q-find" id="qfind">Find</span><span id="qname"></span></h2>
+      <p class="q-fb" id="qfb" role="status" aria-live="polite"></p>
+      <div class="q-actions">
+        <button type="button" class="ts-btn active" id="qnext" hidden>Next structure</button>
+        <button type="button" class="ts-btn" id="qreveal">Show me</button>
+        <button type="button" class="ts-btn" id="qagain" hidden>Start again</button>
+      </div>
+      <div class="q-ticks" id="qticks" aria-hidden="true"></div>
+    </div>
+  </aside>
+
+</div>
+
+<p class="attrib">The drawing is an original schematic generated from code rather than traced from a micrograph, so it owes nothing to any published plate. The descriptions are standard textbook anatomy and do not yet carry citations; the <a href="textbook.html">digital textbook</a> is where each claim gets its paper. <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a>.</p>
+
+</main>
+
+<script>
+"use strict";
+/* theme, shared with the rest of the site */
+const themeBtn = document.getElementById("themeBtn");
+const themeLbl = document.getElementById("themeLbl");
+if (document.documentElement.getAttribute("data-theme") === "dark"){
+  themeLbl.textContent = "Light";
+  themeBtn.setAttribute("aria-pressed", "true");
+}
+themeBtn.addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.getAttribute("data-theme") === "dark";
+  if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+  else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+  themeBtn.setAttribute("aria-pressed", String(!dark));
+  try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+});
+</script>
+
+<script src="assets/native.js"></script>
+<script src="assets/navbar.js"></script>
+<script src="assets/cells.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script type="module" src="assets/auth-ui.js"></script>
+</body>
+</html>
