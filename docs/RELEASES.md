@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.11 — 17 September 2026 — The cortex's own cell
+Commit · Draw a layer V pyramidal cell, and let the tiles switch between cells
+
+Microanatomy gains its second drawing: a layer V pyramidal neuron, the cell the cerebral cortex is mostly made of. It stands in its cortical layers, its one thick apical dendrite climbing to a tuft under the surface, obliques leaving that trunk, a basal skirt below, spines everywhere, and a myelinated axon heading for the white matter with a collateral turning back into the cortex and an oligodendrocyte laying the sheath. Nineteen structures to pick, read and then find again from memory, including the initial segment where the signal is made, the nodes of Ranvier it jumps between, and the inhibitory terminals that can veto the lot. The tiles above the plate now switch between cells without a reload, each cell drawn in its own frame, with its own caption, and reachable by its own link. Like the first cell it is generated from code rather than traced, and this one needs nothing installed to rebuild.
+
 ## v10.10 — 17 September 2026 — Every receptor listed, the gaps named
-Commit · List every receptor sub-type in the density section and say where information runs out
+Commit `12aaa2b` · List every receptor sub-type in the density section and say where information runs out
 
 The receptor section now lists all sixty-nine receptor sub-types and transporters in every picker, chart, heat-map and table, whichever source is showing. The nineteen with an open PET map and the fifteen measured by autoradiography carry their numbers as before; the rest say "not enough information" with the reason: measured only as a class, mapped only as gene expression, or never measured region by region in humans at all. The MCP server answers the same way by name.
 

@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Microanatomy — VisualNeuroscience.AI</title>
-<meta name="description" content="The brain at the microscope's scale: a multipolar neuron drawn from code, with eighteen structures to click, read about, and then find again from memory.">
+<meta name="description" content="The brain at the microscope's scale: a multipolar neuron drawn from code, two cells so far, with every structure to click, read about, and then find again from memory.">
 <!-- link previews. The card is built by site/share.html and rendered to
      assets/social-card.jpg; og:image has to be absolute, so this origin is
      the one thing to change if the site moves to its own domain. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="VisualNeuroscience.AI">
 <meta property="og:title" content="Microanatomy — VisualNeuroscience.AI">
-<meta property="og:description" content="The brain at the microscope's scale: a multipolar neuron drawn from code, with eighteen structures to click, read about, and then find again from memory.">
+<meta property="og:description" content="The brain at the microscope's scale: a multipolar neuron drawn from code, two cells so far, with every structure to click, read about, and then find again from memory.">
 <meta property="og:url" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/microanatomy.html">
 <meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -153,24 +153,33 @@ button{ font:inherit; color:inherit; }
   display:grid; gap:var(--gap); list-style:none; margin:0 0 var(--gap); padding:0;
   grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));
 }
+.cells > li{ display:flex; min-width:0; }
 .cellt{
   border:1px solid var(--hair); padding:.8rem .9rem .9rem;
-  display:flex; flex-direction:column; min-width:0; color:var(--ink);
+  display:flex; flex-direction:column; min-width:0; width:100%; color:var(--ink);
+  background:var(--paper); text-align:left; font:inherit; cursor:pointer;
+  transition:background .18s ease;
 }
-.cellt[aria-current]{ background:var(--ink); color:var(--paper); }
+li > .cellt{ cursor:pointer; }
+@media (hover: hover){ button.cellt:hover{ background:color-mix(in srgb, var(--ink) 8%, transparent); } }
+.cellt[aria-current]{ background:var(--ink); color:var(--paper); cursor:default; }
+@media (hover: hover){ .cellt[aria-current]:hover{ background:var(--ink); } }
 .cellt.soon{ border:1px dashed var(--ink-35); }
 .cellt .ck{
+  display:block;
   font-family:var(--font-brand); font-weight:500; font-size:.52rem;
   letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
 }
 .cellt[aria-current] .ck{ color:var(--paper); opacity:.7; }
 .cellt.soon .ck{ color:var(--ink-35); }
 .cellt .cn{
+  display:block;
   font-family:var(--font-display); font-weight:400;
   font-size:1.08rem; line-height:1.15; margin-top:.3rem;
 }
 .cellt.soon .cn{ color:var(--ink-35); }
 .cellt .cs{
+  display:block;
   font-family:var(--font-serif); font-style:italic;
   font-size:.8rem; color:var(--ink-60); margin-top:.15rem;
 }
@@ -203,7 +212,7 @@ button{ font:inherit; color:inherit; }
 .modes button[aria-pressed="true"]{ background:var(--ink); color:var(--paper); }
 @media (hover: hover){ .modes button:hover{ background:var(--ink); color:var(--paper); } }
 
-.scroller{ overflow:hidden; aspect-ratio:1200/780; width:100%; overscroll-behavior:contain; }
+.scroller{ overflow:hidden; aspect-ratio:var(--ar, 1200/780); width:100%; overscroll-behavior:contain; }
 .scroller.zoomed{ overflow:auto; cursor:grab; }
 .scroller.zoomed.drag{ cursor:grabbing; }
 .scroller svg{ width:calc(var(--z,1)*100%); }
@@ -364,7 +373,22 @@ button{ font:inherit; color:inherit; }
 .mn .mn-ghost.hov, .mn .mn-ghost.on{ --gi:var(--pen); }
 .mn [data-vis].no{ --of:var(--hov-of); }
 .mn .mn-tint.no{ fill:var(--pen); fill-opacity:.3; }
-.mn-psd, .mn-callout, .mn-tubes .mn-ol{ pointer-events:none; }
+.mn-psd, .mn-callout, .mn-tubes .mn-ol, .mn-bands{ pointer-events:none; }
+/* the cortical layers the pyramidal cell stands in: context, not a target */
+.mn-band{ fill:var(--pen); opacity:.04; }
+.mn-band-line{ stroke:var(--pen); stroke-width:1; opacity:.16; stroke-dasharray:5 5; }
+.mn-band-t{ fill:var(--ink); opacity:.42; font-family:var(--font-brand); font-weight:500; font-size:13px; letter-spacing:.14em; text-transform:uppercase; }
+.mn-band-edge{ opacity:.3; font-style:normal; }
+/* the sheath, the bare gaps in it, and the cell that lays it down */
+.mn-myelin{ --of:var(--bouton); }
+.mn-mye-body{ fill:none; stroke:var(--of); stroke-linecap:round; }
+.mn-node-mark{ fill:none; stroke:var(--pen); stroke-width:2.6; stroke-linecap:round; opacity:.55; }
+.mn-node.on .mn-node-mark, .mn.all-on .mn-node .mn-node-mark{ stroke:var(--acc-line); opacity:1; stroke-width:3.4; }
+.mn-oligo{ --of:var(--glia); }
+.mn-oli-nuc{ fill:var(--pen); opacity:.5; }
+/* the two kinds of terminal that land on a pyramidal cell */
+.mn-exc-b{ --of:var(--bouton); }
+.mn-inhib-b{ --of:var(--anuc); }
 /* the label drawn for the picked structure */
 .mn-lab-t{ fill:var(--ink); font-family:var(--font-brand); font-weight:500; }
 .mn-lab-r{ fill:var(--paper); stroke:var(--pen); stroke-width:1px; vector-effect:non-scaling-stroke; }
@@ -397,28 +421,32 @@ button{ font:inherit; color:inherit; }
   <span class="anno">the brain at the microscope&rsquo;s scale</span>
 </div>
 
-<p class="lede">The atlas pages draw the brain a region at a time. This one goes down to the cell. Each drawing is an original schematic built from code, with every structure a click target: pick one and read what it does, colour them all to see how the cell is put together, or switch to <em>Test yourself</em> and find each one from memory. The first cell is a large multipolar neuron, the commonest kind in the brain and spinal cord, with the axons that reach it, an astrocyte and two labelled synapses for company.</p>
+<p class="lede">The atlas pages draw the brain a region at a time. This one goes down to the cell. Each drawing is an original schematic built from code, with every structure a click target: pick one and read what it does, colour them all to see how the cell is put together, or switch to <em>Test yourself</em> and find each one from memory. Two are drawn so far. A large multipolar neuron, the commonest kind in the brain and spinal cord, with the axons that reach it, an astrocyte and two labelled synapses; and the cortex&rsquo;s own cell, a layer V pyramidal neuron, standing in its layers with its apical dendrite climbing to the surface and its myelinated axon leaving for the white matter.</p>
 
-<h2 class="sec-h">Cells <small>one drawn, more to follow</small></h2>
+<h2 class="sec-h">Cells <small>two drawn, more to follow</small></h2>
 
 <ul class="cells">
-  <li class="cellt" aria-current="page">
-    <div class="ck">Neuron</div>
-    <div class="cn">Multipolar neuron</div>
-    <div class="cs">18 structures</div>
-  </li>
-  <li class="cellt soon"><div class="ck">Neuron</div><div class="cn">Pyramidal cell</div><div class="cs">Coming soon</div></li>
-  <li class="cellt soon"><div class="ck">Neuron</div><div class="cn">Purkinje cell</div><div class="cs">Coming soon</div></li>
-  <li class="cellt soon"><div class="ck">Glia</div><div class="cn">Astrocyte</div><div class="cs">Coming soon</div></li>
-  <li class="cellt soon"><div class="ck">Glia</div><div class="cn">Oligodendrocyte</div><div class="cs">Coming soon</div></li>
-  <li class="cellt soon"><div class="ck">Glia</div><div class="cn">Microglia</div><div class="cs">Coming soon</div></li>
+  <li><button class="cellt" type="button" data-cell="multipolar-neuron" data-name="Multipolar neuron" aria-current="page">
+    <span class="ck">Neuron</span>
+    <span class="cn">Multipolar neuron</span>
+    <span class="cs">18 structures</span>
+  </button></li>
+  <li><button class="cellt" type="button" data-cell="pyramidal-neuron" data-name="Pyramidal cell">
+    <span class="ck">Neuron &middot; cortex</span>
+    <span class="cn">Pyramidal cell</span>
+    <span class="cs">19 structures</span>
+  </button></li>
+  <li class="cellt soon"><span class="ck">Neuron</span><span class="cn">Purkinje cell</span><span class="cs">Coming soon</span></li>
+  <li class="cellt soon"><span class="ck">Glia</span><span class="cn">Astrocyte</span><span class="cs">Coming soon</span></li>
+  <li class="cellt soon"><span class="ck">Glia</span><span class="cn">Oligodendrocyte</span><span class="cs">Coming soon</span></li>
+  <li class="cellt soon"><span class="ck">Glia</span><span class="cn">Microglia</span><span class="cs">Coming soon</span></li>
 </ul>
 
 <div class="stage">
 
   <section class="plate" aria-label="Drawing of a large multipolar neuron">
     <div class="plate-cap">
-      <b>Multipolar neuron</b>
+      <b id="plateName">Multipolar neuron</b>
       <div class="modes" role="group" aria-label="Mode">
         <button type="button" data-mode="explore" aria-pressed="true">Explore</button>
         <button type="button" data-mode="quiz" aria-pressed="false">Test yourself</button>
@@ -429,7 +457,7 @@ button{ font:inherit; color:inherit; }
     </div>
     <div class="plate-foot">
       <div class="seg" aria-label="Zoom"><button type="button" class="seg-btn seg-arrow" id="zout" aria-label="Zoom out">&minus;</button><button type="button" class="seg-btn seg-arrow" id="zin" aria-label="Zoom in">+</button></div>
-      <p>A schematic, not to scale: the organelles are drawn larger and far fewer than in a real cell, and the axon runs on well past the edge of the frame. <span class="verb">Click</span> any part of the drawing to find out what it is.</p>
+      <p id="plateNote">A schematic, not to scale: the organelles are drawn larger and far fewer than in a real cell, and the axon runs on well past the edge of the frame. <span class="verb">Click</span> any part of the drawing to find out what it is.</p>
     </div>
     <div class="tip" id="tip" hidden></div>
   </section>
@@ -457,7 +485,7 @@ button{ font:inherit; color:inherit; }
 
 </div>
 
-<p class="attrib">The drawing is an original schematic generated from code rather than traced from a micrograph, so it owes nothing to any published plate. The descriptions are standard textbook anatomy and do not yet carry citations; the <a href="textbook.html">digital textbook</a> is where each claim gets its paper. <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a>.</p>
+<p class="attrib">Each drawing is an original schematic generated from code rather than traced from a micrograph, so it owes nothing to any published plate. The descriptions are standard textbook anatomy and do not yet carry citations; the <a href="textbook.html">digital textbook</a> is where each claim gets its paper. <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a>.</p>
 
 </main>
 

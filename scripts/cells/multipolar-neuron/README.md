@@ -45,4 +45,6 @@ Seed 12 reproduces the drawing the page ships.
 
 ## Adding another cell
 A cell is one SVG and one JSON in `site/assets/cells/` following the same conventions, plus a
-tile on the page. `cells.js` reads the pair named by the plate's `data-cell` attribute.
+tile on the page carrying `data-cell`. `cells.js` fetches the pair, takes the frame from the
+JSON's `box`, and switches between cells without a reload. `scripts/cells/pyramidal-neuron/`
+is the same idea with no dependencies at all, if numpy and shapely are not to hand.

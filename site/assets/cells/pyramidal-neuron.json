@@ -1,0 +1,319 @@
+{
+ "cell": "pyramidal-neuron",
+ "name": "Pyramidal cell",
+ "box": [
+  1180,
+  1010
+ ],
+ "note": "A schematic, not to scale: the organelles are drawn larger and far fewer than in a real cell, a real one carries tens of thousands of spines rather than the two thousand here, and the bands behind the cell are the cortical layers, marked to show how far it reaches.",
+ "centre": [
+  548.0,
+  536.0
+ ],
+ "parts": [
+  {
+   "id": "apical",
+   "name": "Apical dendrite",
+   "acc": "#905ad8",
+   "anchor": [
+    533.2,
+    329.1
+   ],
+   "label": [
+    398,
+    320
+   ],
+   "find": "the apical dendrite",
+   "that": "That is the apical dendrite",
+   "desc": "The one thick dendrite that climbs from the peak of the cell body towards the surface of the cortex. It is what makes a cell pyramidal, and it lets one cell listen at two depths at once: the layers around its body, and layer I far above."
+  },
+  {
+   "id": "tuft",
+   "name": "Apical tuft",
+   "acc": "#49e9ab",
+   "anchor": [
+    546.5,
+    151.6
+   ],
+   "label": [
+    250,
+    60
+   ],
+   "find": "the apical tuft",
+   "that": "That is the apical tuft",
+   "desc": "Where the apical dendrite reaches the top layer it breaks into a spray of fine branches. These collect signals arriving from the thalamus and from other cortical areas, rather than from the cell's immediate neighbours."
+  },
+  {
+   "id": "oblique",
+   "name": "Oblique dendrites",
+   "acc": "#4d9fe5",
+   "anchor": [
+    457.4,
+    147.8
+   ],
+   "label": [
+    846,
+    290
+   ],
+   "find": "an oblique dendrite",
+   "that": "Those are the oblique dendrites",
+   "desc": "Side branches leaving the apical trunk at an angle as it passes through the middle layers. Most of the traffic between one part of the cortex and another lands here."
+  },
+  {
+   "id": "basal",
+   "name": "Basal dendrites",
+   "acc": "#5379df",
+   "anchor": [
+    861.3,
+    650.1
+   ],
+   "label": [
+    912,
+    700
+   ],
+   "find": "the basal dendrites",
+   "that": "Those are the basal dendrites",
+   "desc": "The skirt of dendrites spreading from the base of the cell body into the layer around it. Together with the obliques they carry the bulk of the cell's local input."
+  },
+  {
+   "id": "spines",
+   "name": "Dendritic spines",
+   "acc": "#ddcf55",
+   "anchor": [
+    392.5,
+    695.3
+   ],
+   "label": [
+    222,
+    470
+   ],
+   "find": "a dendritic spine",
+   "that": "That is a dendritic spine",
+   "desc": "A tiny stalk with a head, standing out from the dendrite. Nearly every excitatory contact a pyramidal cell receives lands on one, and a single cell carries tens of thousands. They grow, shrink and disappear with experience, which is much of what learning looks like in a cortex."
+  },
+  {
+   "id": "syn",
+   "name": "Excitatory synapse",
+   "acc": "#ff645b",
+   "anchor": [
+    314.8,
+    738.3
+   ],
+   "label": [
+    176,
+    764
+   ],
+   "find": "the excitatory synapse",
+   "that": "That is the excitatory synapse",
+   "desc": "A terminal from another cell resting on a spine head, with the cleft between the two. The spine keeps the chemistry of that one contact separate from its neighbours a micrometre away."
+  },
+  {
+   "id": "soma",
+   "name": "Cell body (soma)",
+   "acc": "#ff4f7c",
+   "anchor": [
+    582.0,
+    590.0
+   ],
+   "label": [
+    760,
+    534
+   ],
+   "find": "the cell body",
+   "that": "That is the cell body",
+   "desc": "The pyramid the cell is named for: a peak drawn up into the apical dendrite, a flat base the basal dendrites leave from, and the axon departing beneath. It holds the nucleus and does the cell's housekeeping."
+  },
+  {
+   "id": "nucleus",
+   "name": "Nucleus",
+   "acc": "#96f357",
+   "anchor": [
+    526.0,
+    540.0
+   ],
+   "label": [
+    398,
+    486
+   ],
+   "find": "the nucleus",
+   "that": "That is the nucleus",
+   "desc": "Holds the cell's DNA. In neurons it is large, round and pale, because much of the DNA is unpacked and in active use."
+  },
+  {
+   "id": "nucleolus",
+   "name": "Nucleolus",
+   "acc": "#f3a93f",
+   "anchor": [
+    555.0,
+    547.0
+   ],
+   "label": [
+    700,
+    470
+   ],
+   "find": "the nucleolus",
+   "that": "That is the nucleolus",
+   "desc": "The dense spot inside the nucleus where ribosomes are assembled. It is prominent in neurons because they make protein at a great rate."
+  },
+  {
+   "id": "nissl",
+   "name": "Nissl bodies (rough ER)",
+   "acc": "#d85ac4",
+   "anchor": [
+    509.1,
+    187.4
+   ],
+   "label": [
+    742,
+    600
+   ],
+   "find": "a Nissl body",
+   "that": "Those are the Nissl bodies",
+   "desc": "Stacks of rough endoplasmic reticulum, studded with ribosomes. They take up the stain Franz Nissl introduced, which is how the layers of the cortex were first seen, and in a pyramidal cell they reach up into the base of the apical dendrite."
+  },
+  {
+   "id": "mito",
+   "name": "Mitochondria",
+   "acc": "#ff813f",
+   "anchor": [
+    531.2,
+    511.9
+   ],
+   "label": [
+    386,
+    584
+   ],
+   "find": "a mitochondrion",
+   "that": "Those are the mitochondria",
+   "desc": "The cell's power supply. A pyramidal cell spends most of its energy pumping ions back across the membrane after each signal, so it keeps mitochondria wherever that work is done."
+  },
+  {
+   "id": "inhib",
+   "name": "Inhibitory terminals",
+   "acc": "#4ec7e4",
+   "anchor": [
+    482.6,
+    574.2
+   ],
+   "label": [
+    372,
+    646
+   ],
+   "find": "an inhibitory terminal",
+   "that": "Those are the inhibitory terminals",
+   "desc": "Terminals from local inhibitory cells, gathered around the cell body and the start of the axon. Sitting this close to where the signal is generated, a handful of them can veto everything the dendrites have collected."
+  },
+  {
+   "id": "hillock",
+   "name": "Axon hillock",
+   "acc": "#49e9d7",
+   "anchor": [
+    543.0,
+    635.0
+   ],
+   "label": [
+    330,
+    620
+   ],
+   "find": "the axon hillock",
+   "that": "That is the axon hillock",
+   "desc": "The cone where the axon leaves the cell body. It gathers what every dendrite has sent inward and hands it to the initial segment."
+  },
+  {
+   "id": "initial",
+   "name": "Initial segment",
+   "acc": "#e9499d",
+   "anchor": [
+    550.0,
+    689.0
+   ],
+   "label": [
+    318,
+    686
+   ],
+   "find": "the initial segment",
+   "that": "That is the initial segment",
+   "desc": "The short bare stretch just past the hillock, packed with sodium channels. This is where the signal is actually generated: the decision the whole cell has been building towards is made here."
+  },
+  {
+   "id": "axon",
+   "name": "Axon",
+   "acc": "#3ff37a",
+   "anchor": [
+    522.3,
+    994.5
+   ],
+   "label": [
+    742,
+    972
+   ],
+   "find": "the axon",
+   "that": "That is the axon",
+   "desc": "The single fibre that carries the cell's output away, here down through the deep layers and into the white matter. A layer V pyramidal cell's axon may leave the cortex altogether, for the spinal cord or the brainstem. It is visible at the nodes; between them the sheath covers it."
+  },
+  {
+   "id": "myelin",
+   "name": "Myelin sheath",
+   "acc": "#bc5ad8",
+   "anchor": [
+    544.4,
+    826.7
+   ],
+   "label": [
+    322,
+    790
+   ],
+   "find": "the myelin sheath",
+   "that": "That is the myelin sheath",
+   "desc": "Wrapped insulation laid down in lengths along the axon. It stops the signal leaking out and forces it to jump from one gap to the next, which makes conduction both faster and cheaper."
+  },
+  {
+   "id": "node",
+   "name": "Node of Ranvier",
+   "acc": "#bce44e",
+   "anchor": [
+    541.6,
+    857.8
+   ],
+   "label": [
+    742,
+    856
+   ],
+   "find": "a node of Ranvier",
+   "that": "That is a node of Ranvier",
+   "desc": "A bare gap between two lengths of sheath. The signal is rebuilt at each one and leaps to the next, so it travels by jumps rather than crawling the whole way."
+  },
+  {
+   "id": "collateral",
+   "name": "Axon collateral",
+   "acc": "#645ad8",
+   "anchor": [
+    405.1,
+    747.8
+   ],
+   "label": [
+    196,
+    902
+   ],
+   "find": "an axon collateral",
+   "that": "That is an axon collateral",
+   "desc": "A branch that turns back into the cortex instead of leaving with the main axon. Through these a pyramidal cell speaks to its neighbours, and to itself, while its message also travels far away."
+  },
+  {
+   "id": "oligo",
+   "name": "Oligodendrocyte",
+   "acc": "#64f75f",
+   "anchor": [
+    904,
+    880
+   ],
+   "label": [
+    1040,
+    920
+   ],
+   "find": "the oligodendrocyte",
+   "that": "That is the oligodendrocyte",
+   "desc": "The glial cell that lays down the myelin. One of them reaches out to several axons at once, wrapping a length of each, which is why the white matter is white."
+  }
+ ]
+}

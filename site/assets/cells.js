@@ -6,8 +6,14 @@
    data-vis, and a JSON file naming each structure with its accent colour,
    where its label sits and what it does. Both are generated from code by
    scripts/cells/, so the drawing and the words stay in step. This file
-   fetches the pair named by the page and puts the drawing into the empty
+   fetches the pair the page asks for and puts the drawing into the empty
    <svg> the page holds ready, then wires everything to it.
+
+   More than one cell can be drawn the same way, so the tiles above the
+   plate switch between them: each carries data-cell, the drawing it names
+   is fetched, and the plate takes the frame that cell was drawn in rather
+   than one shape for all. A switch leaves the page where it is and puts
+   the cell in the address, so a particular cell can be linked to.
 
    The page supplies the rest of the DOM by id: plate, scroller, tip, side,
    detail, index, allon, explore, quiz, and the quiz controls. */
@@ -19,10 +25,14 @@
   var side = document.getElementById("side"), detail = document.getElementById("detail"), index = document.getElementById("index");
   if (!svg || !scroller) return;
   var cell = svg.getAttribute("data-cell") || "multipolar-neuron";
+  var plateName = document.getElementById("plateName");
+  var plateNote = document.getElementById("plateNote");
+  var defaultNote = plateNote ? plateNote.innerHTML : "";
+  var tiles = Array.prototype.slice.call(document.querySelectorAll(".cellt[data-cell]"));
   var coarse = window.matchMedia("(pointer: coarse)").matches;
   if (coarse) document.querySelectorAll(".verb").forEach(function(v){ v.textContent = "Tap"; });
 
-  var PARTS = [], byId = {}, callout = null, centre = [600, 390];
+  var PARTS = [], byId = {}, callout = null, centre = [600, 390], box = [1200, 780];
   var mode = "explore", sel = null, hov = null;
 
   function vis(id){ return svg.querySelectorAll('[data-vis="' + id + '"]'); }
@@ -45,7 +55,7 @@
     if (!callout) return;
     callout.textContent = "";
     if (!p) return;
-    var k = 1200 / Math.max(svg.getBoundingClientRect().width, 1);      /* drawing units per screen pixel */
+    var k = box[0] / Math.max(svg.getBoundingClientRect().width, 1);    /* drawing units per screen pixel */
     var fs = Math.min(30, Math.max(6, 14.5 * k));
     var ax = p.anchor[0], ay = p.anchor[1], lx = p.label[0], ly = p.label[1];
     var t = el("text", { x: lx, y: ly, "text-anchor": "middle", "dominant-baseline": "central", "class": "mn-lab-t", "font-size": fs.toFixed(1) });
@@ -53,7 +63,7 @@
     callout.appendChild(t);
     var bb = t.getBBox(), px = fs * 0.62, py = fs * 0.36;
     var bw = bb.width + 2 * px, bh = bb.height + 2 * py;
-    var bx = Math.min(Math.max(lx - bw / 2, 6), 1194 - bw), by = Math.min(Math.max(ly - bh / 2, 6), 774 - bh);
+    var bx = Math.min(Math.max(lx - bw / 2, 6), box[0] - 6 - bw), by = Math.min(Math.max(ly - bh / 2, 6), box[1] - 6 - bh);
     t.setAttribute("x", (bx + bw / 2).toFixed(1)); t.setAttribute("y", (by + bh / 2).toFixed(1));
     var nx = Math.max(bx, Math.min(ax, bx + bw)), ny = Math.max(by, Math.min(ay, by + bh));
     var line = { x1: ax, y1: ay, x2: nx.toFixed(1), y2: ny.toFixed(1) };
@@ -166,12 +176,12 @@
   }
   function centreOn(x, y){
     var w = svg.getBoundingClientRect(), r = scroller.getBoundingClientRect();
-    scroller.scrollLeft = x / 1200 * w.width - r.width / 2; scroller.scrollTop = y / 780 * w.height - r.height / 2;
+    scroller.scrollLeft = x / box[0] * w.width - r.width / 2; scroller.scrollTop = y / box[1] * w.height - r.height / 2;
   }
   function bringIntoView(p){
     if (!scroller.classList.contains("zoomed")) return;
     var w = svg.getBoundingClientRect(), r = scroller.getBoundingClientRect();
-    var px = p.anchor[0] / 1200 * w.width - scroller.scrollLeft, py = p.anchor[1] / 780 * w.height - scroller.scrollTop;
+    var px = p.anchor[0] / box[0] * w.width - scroller.scrollLeft, py = p.anchor[1] / box[1] * w.height - scroller.scrollTop;
     if (px < 40 || py < 40 || px > r.width - 40 || py > r.height - 40) centreOn((p.anchor[0] + p.label[0]) / 2, (p.anchor[1] + p.label[1]) / 2);
   }
   zin.addEventListener("click", function(){ setZoom(zi + 1); });
@@ -254,29 +264,86 @@
   }
   document.querySelectorAll(".modes button").forEach(function(b){ b.addEventListener("click", function(){ setMode(b.getAttribute("data-mode")); }); });
 
-  /* ---------- load the cell, then go */
+  /* ---------- loading a cell ----------
+     Everything the last cell left behind is put back first, because the
+     plate is reused rather than rebuilt: nothing selected, explore mode,
+     no colour-everything, and the zoom back at its rest. */
   function fail(){
     detail.textContent = "";
     var h = document.createElement("h2"); h.textContent = "The drawing did not load";
     var p = document.createElement("p"); p.className = "hint"; p.textContent = "Check the connection and reload the page.";
     detail.appendChild(h); detail.appendChild(p);
   }
-  Promise.all([
-    fetch("assets/cells/" + cell + ".svg").then(function(r){ if (!r.ok) throw new Error(r.status); return r.text(); }),
-    fetch("assets/cells/" + cell + ".json").then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
-  ]).then(function(got){
-    var doc = new DOMParser().parseFromString(got[0], "image/svg+xml");
-    var root = doc.documentElement;
-    if (!root || root.nodeName !== "svg") throw new Error("not an svg");
-    svg.textContent = "";
-    Array.prototype.slice.call(root.childNodes).forEach(function(n){ svg.appendChild(document.importNode(n, true)); });
-    if (root.getAttribute("aria-label")) svg.setAttribute("aria-label", root.getAttribute("aria-label"));
-    callout = svg.querySelector("#mn-callout");
-    PARTS = got[1].parts || []; byId = {}; PARTS.forEach(function(p){ byId[p.id] = p; });
-    if (got[1].centre) centre = got[1].centre;
-    svg.classList.add("ready");
-    buildIndex(); renderDetail();
-    if (window.matchMedia("(max-width: 40rem)").matches){ setZoom(2); centreOn(centre[0], centre[1]); }
-    else setZoom(0);
-  }).catch(function(err){ if (window.console) console.warn("cell plate:", err); fail(); });
+  function markTiles(){
+    tiles.forEach(function(b){
+      var on = b.getAttribute("data-cell") === cell;
+      if (on) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
+      b.disabled = false;
+    });
+  }
+  function load(name, fromTile){
+    cell = name;
+    sel = null; hov = null; q = null;
+    callout = null; PARTS = []; byId = {};
+    svg.classList.remove("ready", "all-on");
+    side.classList.remove("all");
+    if (allon) allon.checked = false;
+    tip.hidden = true;
+    if (mode !== "explore") setMode("explore");
+    svg.setAttribute("data-cell", name);
+    markTiles();
+    return Promise.all([
+      fetch("assets/cells/" + name + ".svg").then(function(r){ if (!r.ok) throw new Error(r.status); return r.text(); }),
+      fetch("assets/cells/" + name + ".json").then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+    ]).then(function(got){
+      if (cell !== name) return;                       /* a later switch won the race */
+      var doc = new DOMParser().parseFromString(got[0], "image/svg+xml");
+      var root = doc.documentElement;
+      if (!root || root.nodeName !== "svg") throw new Error("not an svg");
+      svg.textContent = "";
+      Array.prototype.slice.call(root.childNodes).forEach(function(n){ svg.appendChild(document.importNode(n, true)); });
+      if (root.getAttribute("aria-label")) svg.setAttribute("aria-label", root.getAttribute("aria-label"));
+      /* the plate takes the frame the cell was drawn in, so a tall cell is
+         not squeezed into a wide box */
+      box = got[1].box || [1200, 780];
+      svg.setAttribute("viewBox", "0 0 " + box[0] + " " + box[1]);
+      scroller.style.setProperty("--ar", box[0] + "/" + box[1]);
+      callout = svg.querySelector("#mn-callout");
+      PARTS = got[1].parts || []; byId = {}; PARTS.forEach(function(p){ byId[p.id] = p; });
+      centre = got[1].centre || [box[0] / 2, box[1] / 2];
+      if (got[1].name && plateName) plateName.textContent = got[1].name;
+      /* a cell may say what its own drawing does and does not promise; the
+         caption written into the page is the fallback */
+      if (plateNote){
+        if (got[1].note){
+          plateNote.textContent = got[1].note + " ";
+          var verb = document.createElement("span"); verb.className = "verb";
+          verb.textContent = coarse ? "Tap" : "Click";
+          plateNote.appendChild(verb);
+          plateNote.appendChild(document.createTextNode(" any part of the drawing to find out what it is."));
+        } else plateNote.innerHTML = defaultNote;
+      }
+      svg.classList.add("ready");
+      buildIndex(); renderDetail();
+      zi = 0; scroller.scrollLeft = 0; scroller.scrollTop = 0;
+      if (window.matchMedia("(max-width: 40rem)").matches){ setZoom(2); centreOn(centre[0], centre[1]); }
+      else setZoom(0);
+      if (fromTile){
+        try { history.replaceState(history.state, "", "#cell=" + name); } catch (e){}
+        var t = tiles.filter(function(b){ return b.getAttribute("data-cell") === name; })[0];
+        if (t) t.focus({ preventScroll: true });
+      }
+    }).catch(function(err){ if (window.console) console.warn("cell plate:", err); fail(); });
+  }
+  tiles.forEach(function(b){
+    b.addEventListener("click", function(){
+      var want = b.getAttribute("data-cell");
+      if (want && want !== cell) load(want, true);
+    });
+  });
+
+  /* a cell named in the address opens on that cell */
+  var asked = (location.hash.match(/^#cell=([\w-]+)$/) || [])[1];
+  if (asked && tiles.some(function(b){ return b.getAttribute("data-cell") === asked; })) cell = asked;
+  load(cell, false);
 })();
