@@ -690,7 +690,11 @@ mark{ background:var(--ink); color:var(--paper); }
    outline in ink with its number inside; picking fills it in the colour
    it wears on the scan. Areas the atlas volume does not carry are drawn
    dashed and cannot be picked. */
+/* The map lives in the column under the scans, which is where the room is:
+   the rail beside it runs long once the Brodmann list is in it, and this
+   fills the space rather than leaving a field of black. */
 .bamap{ margin-top:var(--gap); }
+.centre .bamap .cart-stage{ padding:.4rem; }
 .cartoons{ display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); }
 .cart{ border:1px solid var(--hair); min-width:0; margin:0; }
 .cart figcaption{
@@ -798,6 +802,14 @@ mark{ background:var(--ink); color:var(--paper); }
       </div>
 
       <div class="card">
+        <h2>Highlighted</h2>
+        <div class="rchips" id="chips">
+          <div class="empty-note" id="emptyMsg">Nothing highlighted yet — pick a region or a Brodmann area above.</div>
+        </div>
+        <div class="btns"><button class="btn" id="clearBtn" type="button">Clear all</button></div>
+      </div>
+
+      <div class="card">
         <h2>Brodmann areas</h2>
         <div class="searchwrap">
           <input type="search" id="baq" autocomplete="off" spellcheck="false"
@@ -808,14 +820,6 @@ mark{ background:var(--ink); color:var(--paper); }
         </div>
         <p class="search-count" id="baqcount">All 41 areas.</p>
         <div class="balist" id="balist" role="group" aria-label="Brodmann areas"></div>
-      </div>
-
-      <div class="card">
-        <h2>Highlighted</h2>
-        <div class="rchips" id="chips">
-          <div class="empty-note" id="emptyMsg">Nothing highlighted yet — pick a region or a Brodmann area above.</div>
-        </div>
-        <div class="btns"><button class="btn" id="clearBtn" type="button">Clear all</button></div>
       </div>
 
       <div class="card">
@@ -840,7 +844,7 @@ mark{ background:var(--ink); color:var(--paper); }
       </div>
     </aside>
 
-    <section class="centre" aria-label="MRI viewports">
+    <section class="centre" aria-label="Brain viewports and the Brodmann map">
       <div class="views-wrap">
         <div class="views" id="viewsGrid">
           <div class="view" data-box="axial">
@@ -876,6 +880,23 @@ mark{ background:var(--ink); color:var(--paper); }
         <div class="stat"><div class="k">Highlighted</div><div class="v" id="statCount">0 <small>regions</small></div></div>
         <div class="stat"><div class="k">Probe</div><div class="v probe-v"><span id="cursorRegion">—</span><small id="cursorCoords">hover a view · drag = crosshair</small></div></div>
       </div>
+
+    <section class="bamap" id="baMapSec" aria-labelledby="bamap-h">
+      <h2 class="sec-h" id="bamap-h">Brodmann map <small>both faces of the hemisphere &middot; click an area to highlight it</small></h2>
+      <div class="cartoons">
+        <figure class="cart">
+          <figcaption><b>External</b><span>lateral surface</span></figcaption>
+          <div class="cart-stage" id="cartLateral"></div>
+        </figure>
+        <figure class="cart">
+          <figcaption><b>Internal</b><span>medial surface</span></figcaption>
+          <div class="cart-stage" id="cartMedial"></div>
+        </figure>
+      </div>
+      <p class="cart-miss" id="cartMiss"></p>
+      <p class="cart-note">The two faces are a line map of the classic Brodmann scheme, descending from Brodmann&rsquo;s own 1909 figures: every area outlined and numbered, nothing drawn beneath. Pick an area, here or in the list, and it fills in its colour on the face that shows it. Anterior is on the left in the external view and, as the scheme is conventionally drawn, on the right in the internal one. The drawing is a schematic &mdash; where each area actually sits in a real head, with the atlas&rsquo;s own boundaries, is what the scan above shows. Brodmann Areas diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN &ndash; Institute for EEG-Neurofeedback / Neurofeedback Academy</a>.</p>
+      <p class="ba-foot">Brodmann numbered the cortex in 1909 by how its cells are layered, not by what it does &mdash; which is why the numbers wander about the brain and why several of his 52 have no agreed human counterpart. The 41 drawn here are those the shipped atlas labels; 12&ndash;16, 31, 33 and 49&ndash;52 are absent. Each area is bilateral: Brodmann described cortical types, not hemispheres, so where a function is strongly one-sided the note says so rather than the atlas splitting the area. The boundaries are an approximation to begin with &mdash; they were drawn from a handful of post-mortem brains, and no two people's cortex is folded the same way. This particular volume descends from the Talairach Daemon, whose labels were grown outwards to fill the brain: 14% of what it marks lies in white matter that the AAL atlas does not count as cortex at all, and label 48 has become a catch-all for the peri-Sylvian region rather than the small area Brodmann gave that number to. Read a boundary as a neighbourhood, not a border. Educational, not diagnostic.</p>
+    </section>
     </section>
 
   </div>
@@ -888,22 +909,6 @@ mark{ background:var(--ink); color:var(--paper); }
   </section>
 
 
-  <section class="bamap" id="baMapSec" aria-labelledby="bamap-h">
-    <h2 class="sec-h" id="bamap-h">Brodmann map <small>both faces of the hemisphere &middot; click an area to highlight it</small></h2>
-    <div class="cartoons">
-      <figure class="cart">
-        <figcaption><b>External</b><span>lateral surface</span></figcaption>
-        <div class="cart-stage" id="cartLateral"></div>
-      </figure>
-      <figure class="cart">
-        <figcaption><b>Internal</b><span>medial surface</span></figcaption>
-        <div class="cart-stage" id="cartMedial"></div>
-      </figure>
-    </div>
-    <p class="cart-miss" id="cartMiss"></p>
-    <p class="cart-note">The two faces are a line map of the classic Brodmann scheme, descending from Brodmann&rsquo;s own 1909 figures: every area outlined and numbered, nothing drawn beneath. Pick an area, here or in the list, and it fills in its colour on the face that shows it. Anterior is on the left in the external view and, as the scheme is conventionally drawn, on the right in the internal one. The drawing is a schematic &mdash; where each area actually sits in a real head, with the atlas&rsquo;s own boundaries, is what the scan above shows. Brodmann Areas diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN &ndash; Institute for EEG-Neurofeedback / Neurofeedback Academy</a>.</p>
-    <p class="ba-foot">Brodmann numbered the cortex in 1909 by how its cells are layered, not by what it does &mdash; which is why the numbers wander about the brain and why several of his 52 have no agreed human counterpart. The 41 drawn here are those the shipped atlas labels; 12&ndash;16, 31, 33 and 49&ndash;52 are absent. Each area is bilateral: Brodmann described cortical types, not hemispheres, so where a function is strongly one-sided the note says so rather than the atlas splitting the area. The boundaries are an approximation to begin with &mdash; they were drawn from a handful of post-mortem brains, and no two people's cortex is folded the same way. This particular volume descends from the Talairach Daemon, whose labels were grown outwards to fill the brain: 14% of what it marks lies in white matter that the AAL atlas does not count as cortex at all, and label 48 has become a catch-all for the peri-Sylvian region rather than the small area Brodmann gave that number to. Read a boundary as a neighbourhood, not a border. Educational, not diagnostic.</p>
-  </section>
 
   <section class="rxsec" id="receptorSec" aria-labelledby="rx-h">
     <h2 class="sec-h" id="rx-h">Receptor density <small id="rx-unit"></small></h2>

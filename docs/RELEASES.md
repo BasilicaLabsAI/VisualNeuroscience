@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.12 — 17 September 2026 — The Brodmann map moves under the scans
+Commit · Put the Brodmann map in the room under the viewports, and lead the rail with what is highlighted
+
+Since the Brodmann areas moved into the Region Atlas the rail had run much longer than the column beside it, leaving a field of empty black under the four viewports. The two-face map now sits there, wide enough to read at a glance and still beside the scan it is a schematic of. The rail also leads with what is currently highlighted, so the chips sit directly under the region picker rather than below the whole list of areas.
+
 ## v10.11 — 17 September 2026 — The cortex's own cell
-Commit · Draw a layer V pyramidal cell, and let the tiles switch between cells
+Commit `9f76a31` · Draw a layer V pyramidal cell, and let the tiles switch between cells
 
 Microanatomy gains its second drawing: a layer V pyramidal neuron, the cell the cerebral cortex is mostly made of. It stands in its cortical layers, its one thick apical dendrite climbing to a tuft under the surface, obliques leaving that trunk, a basal skirt below, spines everywhere, and a myelinated axon heading for the white matter with a collateral turning back into the cortex and an oligodendrocyte laying the sheath. Nineteen structures to pick, read and then find again from memory, including the initial segment where the signal is made, the nodes of Ranvier it jumps between, and the inhibitory terminals that can veto the lot. The tiles above the plate now switch between cells without a reload, each cell drawn in its own frame, with its own caption, and reachable by its own link. Like the first cell it is generated from code rather than traced, and this one needs nothing installed to rebuild.
 
