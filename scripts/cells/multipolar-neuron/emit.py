@@ -12,7 +12,7 @@ PARTS = [  # id, name  (index order)
     ("nucleolus", "Nucleolus"), ("nissl", "Nissl bodies (rough ER)"), ("ribosomes", "Free ribosomes"), ("mito", "Mitochondria"),
     ("golgi", "Golgi apparatus"), ("lys", "Lysosomes"), ("tubes", "Neurotubules"), ("hillock", "Axon hillock"),
     ("initial", "Initial segment"), ("axon", "Axon"), ("syn_soma", "Axosomatic synapse"), ("syn_dend", "Axodendritic synapse"),
-    ("glia", "Astrocyte process"),
+    ("afferents", "Incoming axons"), ("glia", "Astrocyte process"),
 ]
 
 def rainbow(t, l_floor=0.60, s_floor=0.62):
@@ -28,11 +28,12 @@ def rainbow(t, l_floor=0.60, s_floor=0.62):
     r, g, b = colorsys.hls_to_rgb(hh, ll, ss)
     return "#%02x%02x%02x" % tuple(int(round(v * 255)) for v in (r, g, b))
 
-HUE_T = dict(dendrites=0.000, spines=0.588, soma=0.235, nucleus=0.941, nucleolus=0.471, nissl=0.118, ribosomes=0.765, mito=0.353,
-             golgi=0.647, lys=0.529, tubes=0.176, hillock=0.824, initial=0.059, axon=0.706, syn_soma=0.294, syn_dend=0.412, glia=0.882)
+HUE_ORDER = ["dendrites", "initial", "nissl", "tubes", "soma", "syn_soma", "mito", "syn_dend", "afferents", "nucleolus", "lys", "spines",
+             "golgi", "axon", "ribosomes", "hillock", "glia", "nucleus"]
+HUE_T = {pid: k / len(HUE_ORDER) for k, pid in enumerate(HUE_ORDER)}
 
 def accents():
-    """Seventeen evenly spaced stops on the rainbow, dealt out so that neighbours on the drawing never share a hue."""
+    """Evenly spaced stops round the rainbow, dealt out so that neighbours on the drawing never share a hue."""
     return {pid: rainbow(HUE_T[pid]) for pid, _ in PARTS}
 
 def xf(c, th=0.0, sc=1.0):
@@ -49,7 +50,8 @@ def dots_path(points):
     return "".join(f"M{P(p)}h.01" for p in points)
 
 LIGHT = dict(ink="#1d1b18", cell="#ece6db", glia="#d5dedd", bouton="#e6dac3", nuc="#f9f6f0", nucleolus="#6b665e", nissl="#d0c9bc", nissl_line="#77716a",
-             mito="#8e8980", mito_line="#f1ece3", lys="#55514b", rib="#69645c", tube="#7b756c", golgi_lumen="#dbd4c8", ves="#f6f2ea", fibril="#96a3a3", anuc="#b7c3c3")
+             mito="#8e8980", mito_line="#f1ece3", lys="#55514b", rib="#69645c", tube="#7b756c", golgi_lumen="#dbd4c8", ves="#f6f2ea", fibril="#96a3a3", anuc="#b7c3c3",
+             ghost_ink="#9d988e", ghost_fill="#f1eee8")
 
 def literal_styles(T):
     """Presentation attributes for the standalone file (no CSS, no variables) keyed by (class, context)."""
@@ -59,6 +61,8 @@ def literal_styles(T):
     return {
         ("mn-ink", None): f'fill="{ink}" stroke="{ink}" stroke-width="3.2" stroke-linejoin="round"',
         ("mn-body", None): f'fill="{T["cell"]}"',
+        ("mn-gink", None): f'fill="{T["ghost_ink"]}" stroke="{T["ghost_ink"]}" stroke-width="2.4" stroke-linejoin="round"',
+        ("mn-gfill", None): f'fill="{T["ghost_fill"]}"',
         ("mn-fillcell", "glia"): f'fill="{T["glia"]}"', ("mn-fillcell", "bouton"): f'fill="{T["bouton"]}"',
         ("mn-spn-ink", None): f'fill="none" stroke="{ink}" stroke-linecap="round"',
         ("mn-spn-body", None): f'fill="none" stroke="{T["cell"]}" stroke-linecap="round"',
@@ -110,6 +114,8 @@ def build(G, standalone=False, idp="mn-", theme=None):
     for k in ("soma", "dendrites", "hillock", "initial", "axon"):
         defs.append(f'<path id="{I("r-" + k)}" d="{geom_path(R[k], 0.12)}"/>')
     defs.append(f'<path id="{I("astro-sil")}" d="{geom_path(S["astro"]["poly"].intersection(box(-6, -6, W + 6, H + 6)), 0.1)}"/>')
+    for k, f in enumerate(G.get("afferents", [])):
+        defs.append(f'<path id="{I("af%d" % k)}" d="{geom_path(f["poly"], 0.08)}"/>')
     defs.append(f'<path id="{I("b1-sil")}" d="{geom_path(S["syn_soma"]["poly"], 0.08)}"/>')
     defs.append(f'<path id="{I("b2-sil")}" d="{geom_path(S["syn_dend"]["poly"], 0.08)}"/>')
     hw, hh = NL / 2, NW / 2
@@ -122,6 +128,15 @@ def build(G, standalone=False, idp="mn-", theme=None):
                 f'<path{st("mn-ol", "mito")} d="M-7.2 0l2.4-2.3 2.4 4.6 2.4-4.6 2.4 4.6 2.4-4.6 2.4 2.3"/></g>')
 
     out = []
+    # ---- incoming axons from other neurons: faint, drawn first so they pass behind everything else
+    if G.get("afferents"):
+        lines = []
+        for f in G["afferents"]:
+            q, _, _ = resample(f["path"], 12.0)
+            q = q[(q[:, 0] > -10) & (q[:, 0] < W + 10) & (q[:, 1] > -10) & (q[:, 1] < H + 10)]
+            if len(q) > 3: lines.append(smooth_open(q))
+        out.append(f'<g{grp("afferents", "mn-ghost", "incoming-axons")}>' + pad(f'<path class="mn-fat" d="{"".join(lines)}"/>') +
+                   "".join(use("af%d" % k, st("mn-gink")) + use("af%d" % k, st("mn-gfill")) for k in range(len(G["afferents"]))) + "</g>")
     # ---- neighbouring cells: astrocyte and the two afferent boutons
     A = S["astro"]
     fib = []
@@ -234,6 +249,10 @@ def anchors(G):
     A["axon"] = ax["pts"][i(420)]
     A["syn_soma"] = S["syn_soma"]["c"]; A["syn_dend"] = S["syn_dend"]["c"]
     m = S["astro"]["main"]; A["glia"] = m[int(len(m) * 0.45)]
+    if G.get("afferents"):      # the bouton with the most open space round it
+        crowd = G["neuron"].buffer(8)
+        cands = [c for f in G["afferents"] for c, a in f["boutons"] if 60 < c[0] < W - 60 and 60 < c[1] < H - 60]
+        A["afferents"] = min(cands, key=lambda c: Point(c).buffer(46).intersection(crowd).area)
     # a quiet patch of cytoplasm for the cell body
     blocks = unary_union([Point(c).buffer(16) for c, th, sc in O["nissl"]] + [Point(c).buffer(13) for c, th, sc in O["mito"]] +
                          [Point(O["nucleus"]["c"]).buffer(40)] + [LineString(t).buffer(6) for t in O["tubes"]] + [Point(c).buffer(9) for c in O["rosettes"]] +
@@ -252,7 +271,8 @@ def labels(G, A):
     """Pick a label-box position for every anchor: nearest spot that stays off the artwork."""
     from shapely.geometry import box
     S = G["S"]
-    occ = unary_union([G["neuron"].buffer(8.5), S["astro"]["poly"].buffer(5), S["syn_soma"]["poly"].buffer(5), S["syn_dend"]["poly"].buffer(5)])
+    occ = unary_union([G["neuron"].buffer(8.5), S["astro"]["poly"].buffer(5), S["syn_soma"]["poly"].buffer(5), S["syn_dend"]["poly"].buffer(5)] +
+                      [f["poly"].buffer(3) for f in G.get("afferents", [])])
     out = {}
     taken = []
     for pid, name in PARTS:

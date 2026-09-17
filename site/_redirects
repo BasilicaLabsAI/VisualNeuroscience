@@ -2,3 +2,7 @@
 /regionatlas /regions.html 301
 /receptors /regions.html 301
 /receptors.html /regions.html 301
+
+# The Brodmann areas moved into the Region Atlas; its deep links land there too.
+/brodmann /regions.html 301
+/brodmann.html /regions.html 301

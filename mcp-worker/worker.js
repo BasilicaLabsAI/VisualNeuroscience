@@ -107,7 +107,7 @@ const norm = s => String(s || "").toLowerCase();
 const link = (path, label) => "[" + label + "](" + SITE + "/" + path + ")";
 
 function regionLink(r){ return link("regions.html#sel=" + encodeURIComponent(r.sel), "Open in the Region Atlas"); }
-function baLink(a){ return link("brodmann.html#ba=" + a.ba, "Open in the Brodmann Areas"); }
+function baLink(a){ return link("regions.html#sel=B:" + a.ba, "Open in the Region Atlas"); }
 function stateLink(s){ return link("network-atlas.html#state=" + s.id, "Open in the Network Atlas"); }
 
 function findRegion(name){

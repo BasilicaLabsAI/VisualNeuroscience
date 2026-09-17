@@ -1,6 +1,6 @@
 # Multipolar neuron: the drawing behind the Microanatomy page
 
-An original drawing of a large multipolar neuron, generated from code (seeded), with 17
+An original drawing of a large multipolar neuron, generated from code (seeded), with 18
 clickable structures. The page that shows it, `site/microanatomy.html`, adds the Explore and
 Test-yourself modes, zoom and pan, and the site's light and dark themes; the plate logic is
 `site/assets/cells.js`.
@@ -9,7 +9,7 @@ Test-yourself modes, zoom and pan, and the site's light and dark themes; the pla
 - `site/assets/cells/multipolar-neuron.svg`: the drawing, with `data-part` on every click target
   and `data-vis` on everything that recolours. It carries no colours of its own: the page paints
   it through custom properties, so it follows the theme.
-- `site/assets/cells/multipolar-neuron.json`: the seventeen structures, each with its accent
+- `site/assets/cells/multipolar-neuron.json`: the eighteen structures, each with its accent
   colour, label anchor and position, name, description and quiz wording.
 
 Edit here, not in the built files.
@@ -27,8 +27,8 @@ Seed 12 reproduces the drawing the page ships.
   3 dendrite growth. 4 silhouette and regions. 5 spines. 6 organelles.
 - `tree.py`, `geom.py`: branch grower with collision rejection; outline and path helpers.
 - `silhouette.py`: shapely polygon to compact SVG path data.
-- `emit.py`: the SVG markup, accent hues (`HUE_T`), label anchors and label positions.
-- `parts_text.py`: names, descriptions and quiz wording for the 17 structures. The descriptions
+- `emit.py`: the SVG markup, accent hues (`HUE_ORDER`), label anchors and label positions.
+- `parts_text.py`: names, descriptions and quiz wording for the 18 structures. The descriptions
   are uncited textbook-level text, and the page says so.
 - `build.py`: runs the above and writes the two assets.
 
@@ -41,7 +41,7 @@ Seed 12 reproduces the drawing the page ships.
   because selectors cannot reach into `<use>` shadow trees. The plate's colour tokens and rules
   live in the page's stylesheet.
 - To add a structure: geometry in `neuron.py`, markup in `emit.build()`, then an entry in
-  `PARTS`, `HUE_T`, `anchors()` and `parts_text.TEXT`.
+  `PARTS`, `HUE_ORDER`, `anchors()` and `parts_text.TEXT`.
 
 ## Adding another cell
 A cell is one SVG and one JSON in `site/assets/cells/` following the same conventions, plus a

@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Microanatomy — VisualNeuroscience.AI</title>
-<meta name="description" content="The brain at the microscope's scale: a multipolar neuron drawn from code, with seventeen structures to click, read about, and then find again from memory.">
+<meta name="description" content="The brain at the microscope's scale: a multipolar neuron drawn from code, with eighteen structures to click, read about, and then find again from memory.">
 <!-- link previews. The card is built by site/share.html and rendered to
      assets/social-card.jpg; og:image has to be absolute, so this origin is
      the one thing to change if the site moves to its own domain. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="VisualNeuroscience.AI">
 <meta property="og:title" content="Microanatomy — VisualNeuroscience.AI">
-<meta property="og:description" content="The brain at the microscope's scale: a multipolar neuron drawn from code, with seventeen structures to click, read about, and then find again from memory.">
+<meta property="og:description" content="The brain at the microscope's scale: a multipolar neuron drawn from code, with eighteen structures to click, read about, and then find again from memory.">
 <meta property="og:url" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/microanatomy.html">
 <meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -61,7 +61,7 @@ if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</
   --cell:#ece6db; --glia:#d5dedd; --bouton:#e6dac3; --nuc:#f9f6f0; --nucleolus:#6b665e;
   --nissl:#d0c9bc; --nissl-line:#77716a; --mito:#8e8980; --mito-line:#f1ece3; --lys:#55514b;
   --rib:#69645c; --tube:#7b756c; --golgi-lumen:#dbd4c8; --ves:#f6f2ea; --fibril:#96a3a3;
-  --anuc:#b7c3c3; --hov-of:#bdb6a9; --pen:#1d1b18;
+  --anuc:#b7c3c3; --hov-of:#bdb6a9; --pen:#1d1b18; --ghost-ink:#9d988e; --ghost-fill:#f1eee8;
 }
 :root[data-theme="dark"]{
   --paper:#111111;
@@ -74,7 +74,7 @@ if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</
   --cell:#1a1917; --glia:#1b2526; --bouton:#2b251b; --nuc:#2c2a26; --nucleolus:#a8a297;
   --nissl:#3a372f; --nissl-line:#a39d91; --mito:#7f7a70; --mito-line:#1a1917; --lys:#c0baae;
   --rib:#aba599; --tube:#928c80; --golgi-lumen:#37342e; --ves:#33302a; --fibril:#566667;
-  --anuc:#34484a; --hov-of:#4c4840; --pen:#e9e4da;
+  --anuc:#34484a; --hov-of:#4c4840; --pen:#e9e4da; --ghost-ink:#5a564e; --ghost-fill:#131211;
 }
 
 *{ box-sizing:border-box; margin:0; padding:0; }
@@ -308,6 +308,10 @@ button{ font:inherit; color:inherit; }
 .mn-ink{ fill:var(--pen); stroke:var(--pen); stroke-width:3.2; stroke-linejoin:round; }
 .mn-body{ fill:var(--cell); }
 .mn-fillcell{ fill:var(--of); }
+/* the incoming axons: fainter fibres from other cells, passing behind */
+.mn-ghost{ --gi:var(--ghost-ink); --of:var(--ghost-fill); }
+.mn-gink{ fill:var(--gi); stroke:var(--gi); stroke-width:2.4; stroke-linejoin:round; }
+.mn-gfill{ fill:var(--of); }
 .mn-spn-ink{ fill:none; stroke:var(--pen); stroke-linecap:round; }
 .mn-spn-body{ fill:none; stroke:var(--cell); stroke-linecap:round; }
 .mn-tint{ fill:transparent; pointer-events:none; }
@@ -357,6 +361,7 @@ button{ font:inherit; color:inherit; }
 .mn.all-on .mn-spn-body{ stroke:var(--acc-fill); }
 .mn.all-on .mn-tint[data-vis="soma"]{ fill-opacity:.36; }
 .mn.all-on .mn-tint[data-vis="soma"].on{ fill-opacity:1; }
+.mn .mn-ghost.hov, .mn .mn-ghost.on{ --gi:var(--pen); }
 .mn [data-vis].no{ --of:var(--hov-of); }
 .mn .mn-tint.no{ fill:var(--pen); fill-opacity:.3; }
 .mn-psd, .mn-callout, .mn-tubes .mn-ol{ pointer-events:none; }
@@ -374,7 +379,6 @@ button{ font:inherit; color:inherit; }
   <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
   <nav class="nav-row" aria-label="Site">
     <a href="regions.html">Region Atlas</a>
-    <a href="brodmann.html">Brodmann Areas</a>
     <a href="tracts.html">Tractography</a>
     <a href="network-atlas.html">Network Atlas</a>
     <a href="microanatomy.html" aria-current="page">Microanatomy</a>
@@ -393,7 +397,7 @@ button{ font:inherit; color:inherit; }
   <span class="anno">the brain at the microscope&rsquo;s scale</span>
 </div>
 
-<p class="lede">The atlas pages draw the brain a region at a time. This one goes down to the cell. Each drawing is an original schematic built from code, with every structure a click target: pick one and read what it does, colour them all to see how the cell is put together, or switch to <em>Test yourself</em> and find each one from memory. The first cell is a large multipolar neuron, the commonest kind in the brain and spinal cord, with an astrocyte and two incoming synapses for company.</p>
+<p class="lede">The atlas pages draw the brain a region at a time. This one goes down to the cell. Each drawing is an original schematic built from code, with every structure a click target: pick one and read what it does, colour them all to see how the cell is put together, or switch to <em>Test yourself</em> and find each one from memory. The first cell is a large multipolar neuron, the commonest kind in the brain and spinal cord, with the axons that reach it, an astrocyte and two labelled synapses for company.</p>
 
 <h2 class="sec-h">Cells <small>one drawn, more to follow</small></h2>
 
@@ -401,7 +405,7 @@ button{ font:inherit; color:inherit; }
   <li class="cellt" aria-current="page">
     <div class="ck">Neuron</div>
     <div class="cn">Multipolar neuron</div>
-    <div class="cs">17 structures</div>
+    <div class="cs">18 structures</div>
   </li>
   <li class="cellt soon"><div class="ck">Neuron</div><div class="cn">Pyramidal cell</div><div class="cs">Coming soon</div></li>
   <li class="cellt soon"><div class="ck">Neuron</div><div class="cn">Purkinje cell</div><div class="cs">Coming soon</div></li>

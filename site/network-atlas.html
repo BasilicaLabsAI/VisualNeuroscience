@@ -35,6 +35,8 @@
 (function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
 if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
 <style>
+html{ overflow-anchor:none; }
+
 @font-face{
   font-family:'Flux';
   src:url('fonts/Flux-Regular.woff2') format('woff2');
@@ -286,7 +288,6 @@ svg{ display:block; }
   <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
   <nav class="nav-row" aria-label="Site">
     <a href="regions.html">Region Atlas</a>
-    <a href="brodmann.html">Brodmann Areas</a>
     <a href="tracts.html">Tractography</a>
     <a href="network-atlas.html" aria-current="page">Network Atlas</a>
     <a href="microanatomy.html">Microanatomy</a>
@@ -863,7 +864,18 @@ function showState(id){
   unread();
   repaint();
 }
-sel.addEventListener("change", () => showState(sel.value));
+/* Changing state rewrites the title strip and the rail's subtitle above the
+   picker, and a longer line wraps, so the picker itself would slide under
+   the pointer. It is held where it was: its place on screen is measured
+   before the change and the scroll put back to it after, in one step; the
+   page's own scroll anchoring is off so nothing compensates twice. */
+function holdInPlace(el, fn){
+  const before = el.getBoundingClientRect().top;
+  fn();
+  const delta = el.getBoundingClientRect().top - before;
+  if (Math.abs(delta) > 0.5) window.scrollTo({ top: window.scrollY + delta, left: window.scrollX, behavior: "instant" });
+}
+sel.addEventListener("change", () => holdInPlace(sel, () => showState(sel.value)));
 /* deep link: #state=meditation opens on that state */
 const hashState = (location.hash.match(/^#state=([\w-]+)$/) || [])[1];
 const firstState = DATA.STATES.some(s => s.id === hashState) ? hashState : DATA.STATES[0].id;

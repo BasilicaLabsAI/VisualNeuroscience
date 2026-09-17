@@ -4,7 +4,7 @@
 over streamable HTTP. Any assistant that talks MCP can search the atlas,
 ask what a region or Brodmann area does, read receptor densities and the
 brain-state stories, and every answer links straight into the view it
-describes — `regions.html#sel=…`, `brodmann.html#ba=…`,
+describes — `regions.html#sel=…` (a Brodmann area is `B:17` in the same list),
 `network-atlas.html#state=…` are real deep links the pages restore.
 
 Five tools, all read-only and annotated as such: `search_brain`,

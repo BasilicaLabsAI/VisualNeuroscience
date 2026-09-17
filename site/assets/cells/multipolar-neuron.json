@@ -15,8 +15,8 @@
     385.3
    ],
    "label": [
-    304.8,
-    341.8
+    371.5,
+    423.8
    ],
    "find": "the dendrites",
    "that": "Those are the dendrites",
@@ -25,14 +25,14 @@
   {
    "id": "spines",
    "name": "Dendritic spines",
-   "acc": "#5cf662",
+   "acc": "#4af56c",
    "anchor": [
     246.2,
     134.9
    ],
    "label": [
-    172.9,
-    47.5
+    162.6,
+    35.3
    ],
    "find": "a dendritic spine",
    "desc": "Tiny knobs studding the dendrites. Each is the receiving side of a synapse, usually an excitatory one. Spines change in shape and number as connections strengthen or weaken, which is one way the brain stores what it learns."
@@ -40,7 +40,7 @@
   {
    "id": "soma",
    "name": "Cell body (soma)",
-   "acc": "#ff586d",
+   "acc": "#ff5375",
    "anchor": [
     598.1,
     339.8
@@ -57,7 +57,7 @@
   {
    "id": "nucleus",
    "name": "Nucleus",
-   "acc": "#5f5ad8",
+   "acc": "#625ad8",
    "anchor": [
     622.0,
     378.0
@@ -72,7 +72,7 @@
   {
    "id": "nucleolus",
    "name": "Nucleolus",
-   "acc": "#bfe34f",
+   "acc": "#aff05b",
    "anchor": [
     642.0,
     393.5
@@ -87,14 +87,14 @@
   {
    "id": "nissl",
    "name": "Nissl bodies (rough ER)",
-   "acc": "#d85ab9",
+   "acc": "#d85abf",
    "anchor": [
     606.4,
     323.3
    ],
    "label": [
-    427.2,
-    426.8
+    843.4,
+    365.1
    ],
    "short": "Nissl bodies",
    "find": "a Nissl body",
@@ -104,7 +104,7 @@
   {
    "id": "ribosomes",
    "name": "Free ribosomes",
-   "acc": "#4bdde7",
+   "acc": "#4cd1e6",
    "anchor": [
     714.8,
     462.5
@@ -121,7 +121,7 @@
   {
    "id": "mito",
    "name": "Mitochondria",
-   "acc": "#fa9b38",
+   "acc": "#ff8c38",
    "anchor": [
     619.2,
     340.6
@@ -136,14 +136,14 @@
   {
    "id": "golgi",
    "name": "Golgi apparatus",
-   "acc": "#42f08a",
+   "acc": "#45ed9c",
    "anchor": [
     608.3,
     426.8
    ],
    "label": [
-    448.0,
-    426.8
+    814.6,
+    463.2
    ],
    "find": "the Golgi apparatus",
    "aka": "the Golgi body",
@@ -152,7 +152,7 @@
   {
    "id": "lys",
    "name": "Lysosomes",
-   "acc": "#93f457",
+   "acc": "#79f659",
    "anchor": [
     637.6,
     347.8
@@ -167,7 +167,7 @@
   {
    "id": "tubes",
    "name": "Neurotubules",
-   "acc": "#f34590",
+   "acc": "#ee4496",
    "anchor": [
     739.3,
     419.9
@@ -184,7 +184,7 @@
   {
    "id": "hillock",
    "name": "Axon hillock",
-   "acc": "#4eace4",
+   "acc": "#4ea6e4",
    "anchor": [
     795.1,
     422.4
@@ -199,7 +199,7 @@
   {
    "id": "initial",
    "name": "Initial segment",
-   "acc": "#c15ad8",
+   "acc": "#be5ad8",
    "anchor": [
     859.3,
     425.9
@@ -215,7 +215,7 @@
   {
    "id": "axon",
    "name": "Axon",
-   "acc": "#4ae8bc",
+   "acc": "#49e9cb",
    "anchor": [
     1106.4,
     476.5
@@ -230,7 +230,7 @@
   {
    "id": "syn_soma",
    "name": "Axosomatic synapse",
-   "acc": "#ff744a",
+   "acc": "#ff6b53",
    "anchor": [
     745.2,
     343.0
@@ -245,7 +245,7 @@
   {
    "id": "syn_dend",
    "name": "Axodendritic synapse",
-   "acc": "#e1c951",
+   "acc": "#ebb947",
    "anchor": [
     670.4,
     242.0
@@ -258,9 +258,26 @@
    "desc": "An axon terminal ending on a dendrite, the most common kind of synapse. The terminal is full of vesicles of neurotransmitter; the dark band on the dendrite’s side is the postsynaptic density, where the receptors sit."
   },
   {
+   "id": "afferents",
+   "name": "Incoming axons",
+   "acc": "#d2da58",
+   "anchor": [
+    104.7,
+    328.8
+   ],
+   "label": [
+    141.4,
+    227.9
+   ],
+   "find": "an incoming axon",
+   "that": "That’s an incoming axon",
+   "aka": "afferent axons",
+   "desc": "Axons from other neurons threading through the dendritic tree. Each swelling is a bouton making a synapse on a spine head, called an axospinous synapse, and the axon carries on past it to other spines and other cells. They are drawn faint and only a few are shown: in real tissue nearly every spine has one."
+  },
+  {
    "id": "glia",
    "name": "Astrocyte process",
-   "acc": "#5182e1",
+   "acc": "#527de0",
    "anchor": [
     916.8,
     205.5

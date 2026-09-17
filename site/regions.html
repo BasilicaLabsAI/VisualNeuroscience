@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Region Atlas — VisualNeuroscience.AI</title>
-<meta name="description" content="Explore the brain in the browser: highlight any AAL-116 region on the MNI152 template across axial, coronal, sagittal and 3D views. Free, fast, nothing to install.">
+<meta name="description" content="Explore the brain in the browser: highlight any AAL-116 region or Brodmann area on the MNI152 template across axial, coronal, sagittal and 3D views. Free, fast, nothing to install.">
 <!-- link previews. The card is built by site/share.html and rendered to
      assets/social-card.jpg; og:image has to be absolute, so this origin is
      the one thing to change if the site moves to its own domain. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="VisualNeuroscience.AI">
 <meta property="og:title" content="Region Atlas — VisualNeuroscience.AI">
-<meta property="og:description" content="Explore the brain in the browser: highlight any AAL-116 region on the MNI152 template across axial, coronal, sagittal and 3D views. Free, fast, nothing to install.">
+<meta property="og:description" content="Explore the brain in the browser: highlight any AAL-116 region or Brodmann area on the MNI152 template across axial, coronal, sagittal and 3D views. Free, fast, nothing to install.">
 <meta property="og:url" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/regions.html">
 <meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -76,7 +76,7 @@ if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</
 }
 
 *{ box-sizing:border-box; margin:0; padding:0; }
-html{ scroll-behavior:smooth; }
+html{ scroll-behavior:smooth; overflow-anchor:none; }
 body{
   background:var(--paper); color:var(--ink);
   font-family:var(--font-serif); font-size:1rem; line-height:1.62;
@@ -483,6 +483,38 @@ table.dtable td.num{ font-size:.84rem; }
 .table-note { margin-top: 14px; color: var(--ink-60); font-style: italic; }
 .rail .mode-group { display: flex; gap: .4rem; }
 .rail .mode-group .ts-btn { flex: 1; text-align: center; }
+/* ── the heat-map: sub-types down, structures across ── */
+.heat-head{ display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1.2rem; margin-bottom:.7rem; }
+.heat-lede{ flex:1 1 24rem; font-family:var(--font-serif); font-size:.92rem; line-height:1.5; color:var(--ink-60); margin:0; }
+.heat-legend{ display:inline-flex; align-items:center; gap:.35rem; font-family:var(--font-brand); font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); }
+.heat-legend i{ display:block; width:6rem; height:.7rem; border:1px solid var(--hair); background:linear-gradient(90deg,#FFE066,#FF8C1A,#C1121F); }
+.heat{ overflow:auto; border:1px solid var(--hair); max-height:min(78vh,900px); max-height:min(78dvh,900px); margin-bottom:var(--gap); }
+.heat table{ border-collapse:separate; border-spacing:0; font-size:.72rem; line-height:1.15; }
+.heat th, .heat td{ padding:0; border-right:1px solid var(--paper); border-bottom:1px solid var(--paper); }
+.heat thead th{ position:sticky; top:0; z-index:2; background:var(--paper); vertical-align:bottom; height:9.5rem; }
+.heat thead th.corner{ left:0; z-index:3; }
+.heat th.col{ width:1.45rem; min-width:1.45rem; }
+.heat th.col button{
+  display:block; width:100%; height:100%; border:0; background:none; color:var(--ink-60); cursor:pointer;
+  writing-mode:vertical-rl; transform:rotate(180deg); text-align:left; padding:.35rem 0 .3rem;
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem; letter-spacing:.03em; line-height:1;
+  white-space:nowrap; text-decoration:none;
+}
+@media (hover: hover){ .heat th.col button:hover{ color:var(--ink); text-decoration:underline; text-underline-offset:2px; } }
+.heat th.col button.picked{ color:var(--sel, var(--ink)); font-weight:600; }
+.heat th.rlabel{
+  position:sticky; left:0; z-index:1; background:var(--paper); text-align:left; font-weight:500;
+  font-family:var(--font-brand); font-size:.7rem; letter-spacing:.02em; padding:.12rem .7rem .12rem .4rem; white-space:nowrap; color:var(--ink);
+}
+.heat tr.fam th{
+  position:sticky; left:0; z-index:1; background:var(--paper); text-align:left;
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem; letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+  padding:.55rem .4rem .2rem; border-bottom:1px solid var(--ink-35);
+}
+.heat td.cell{ width:1.45rem; height:1.15rem; min-width:1.45rem; background:var(--c, transparent); cursor:default; }
+.heat td.cell.none{ background:transparent; background-image:linear-gradient(135deg, transparent 47%, var(--ink-35) 47%, var(--ink-35) 53%, transparent 53%); }
+.heat td.cell.picked{ box-shadow:inset 0 0 0 2px var(--sel, var(--ink)); }
+
 /* the graphs sit below the brain, full width */
   .below { margin-top: var(--gap); }
 /* a structure label that can be clicked through to the scan */
@@ -563,6 +595,122 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 }
 .hidden{ display:none !important; }
 
+/* ── the Brodmann areas ────────────────────────────────────────────────
+   A search box and a list grouped by lobe, beside the AAL dropdown. The
+   list is the navigation: forty-one entries with names and functions are
+   worth seeing at once and worth searching. A picked row inverts and its
+   swatch takes the colour the area wears on the scan. */
+.searchwrap{ position:relative; margin-bottom:.55rem; }
+.searchwrap input{
+  width:100%; padding:.55rem 2rem .5rem .6rem;
+  font-family:var(--font-serif); font-size:.95rem;
+  color:var(--ink); background:var(--paper);
+  border:1px solid var(--hair); border-radius:0;
+}
+.searchwrap input::placeholder{ color:var(--ink-35); font-style:italic; }
+.searchwrap input:focus{ outline:2px solid var(--ink); outline-offset:1px; }
+.searchwrap .clear{
+  position:absolute; right:.3rem; top:50%; transform:translateY(-50%);
+  border:0; background:none; color:var(--ink-60); cursor:pointer;
+  font-size:1.1rem; line-height:1; padding:.2rem .3rem;
+}
+@media (hover: hover){ .searchwrap .clear:hover{ color:var(--ink); } }
+.search-count{
+  font-family:var(--font-serif); font-style:italic; font-size:.78rem;
+  color:var(--ink-60); margin:0 0 .5rem;
+}
+.balist{ max-height:min(42vh,400px); max-height:min(42dvh,400px); overflow-y:auto; margin:0 -.2rem; padding:0 .2rem; }
+.balobe{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+  border-bottom:1px solid var(--ink-35); padding:.5rem .1rem .3rem; margin-top:.5rem;
+}
+.balobe:first-child{ margin-top:0; }
+.barow{
+  display:flex; align-items:baseline; gap:.5rem; width:100%;
+  border:0; border-bottom:1px solid var(--hair); background:none;
+  color:var(--ink); text-align:left; cursor:pointer;
+  padding:.42rem .25rem .38rem; font-family:var(--font-serif); font-size:.9rem;
+}
+@media (hover: hover){ .barow:hover{ background:color-mix(in srgb, var(--ink) 9%, transparent); } }
+.barow[aria-pressed="true"]{ background:var(--ink); color:var(--paper); }
+.barow .num{
+  font-family:var(--font-brand); font-weight:500; font-size:.72rem;
+  letter-spacing:.06em; min-width:2.6rem; flex:none; font-variant-numeric:tabular-nums;
+}
+.barow .nm{ min-width:0; line-height:1.3; }
+.barow .swatch{
+  width:.6rem; height:.6rem; flex:none; border:1px solid currentColor;
+  align-self:center; margin-left:auto; background:var(--sel, transparent);
+}
+.balist-empty{
+  font-family:var(--font-serif); font-style:italic; font-size:.85rem;
+  color:var(--ink-60); padding:.8rem .2rem;
+}
+mark{ background:var(--ink); color:var(--paper); }
+.barow[aria-pressed="true"] mark{ background:var(--paper); color:var(--ink); }
+@media (max-width:1100px){ .balist{ max-height:min(40vh,360px); } }
+
+/* the Brodmann block among the notes: one tier of its own, below the
+   three layers, with the caveat that belongs with each area */
+.rnote .caveat{
+  font-style:italic; font-size:.84rem; color:var(--ink-60);
+  border-left:2px solid var(--ink-35); padding-left:.6rem; margin-top:.45rem;
+}
+
+/* ── the two-face map ──────────────────────────────────────────────────
+   Most of the cortex is either folded into a sulcus or facing the other
+   way, so a scan can never show the whole Brodmann scheme at once. The
+   line map can, which is what it has always been for. An area on it is an
+   outline in ink with its number inside; picking fills it in the colour
+   it wears on the scan. Areas the atlas volume does not carry are drawn
+   dashed and cannot be picked. */
+.bamap{ margin-top:var(--gap); }
+.cartoons{ display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); }
+.cart{ border:1px solid var(--hair); min-width:0; margin:0; }
+.cart figcaption{
+  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline;
+  gap:.35rem .8rem; padding:.6rem .8rem .5rem; border-bottom:1px solid var(--hair);
+}
+.cart figcaption b{
+  font-family:var(--font-brand); font-weight:500; font-size:.68rem;
+  letter-spacing:.28em; text-transform:uppercase;
+}
+.cart figcaption span{
+  font-family:var(--font-serif); font-style:italic; font-size:.82rem; color:var(--ink-60);
+}
+.cart-stage{ padding:.5rem; }
+.cart-stage svg{ width:100%; height:auto; display:block; }
+.ba-tile{ cursor:pointer; }
+.ba-tile.mute{ cursor:default; }
+.ba-tile .shape{
+  fill:var(--ink); fill-opacity:.045; stroke:var(--ink); stroke-opacity:.72;
+  stroke-width:1.1; stroke-linejoin:round; transition:fill-opacity .12s ease;
+}
+.ba-tile .num{
+  font-family:var(--font-brand); font-weight:500; fill:var(--ink);
+  pointer-events:none; user-select:none;
+}
+@media (hover: hover){ .ba-tile:not(.mute):hover .shape{ fill-opacity:.18; } }
+.ba-tile.on .shape{ fill:var(--sel, var(--ink)); fill-opacity:1; stroke:var(--ink); stroke-opacity:1; stroke-width:1.4; }
+.ba-tile.on .num{ fill:#111111; }
+.ba-tile.mute .shape{ stroke-dasharray:3 2.5; stroke-opacity:.4; fill-opacity:.02; }
+.ba-tile.mute .num{ fill-opacity:.45; }
+.cart-note{
+  font-family:var(--font-serif); font-style:italic; font-size:.85rem;
+  color:var(--ink-60); margin-top:.7rem;
+}
+.cart-miss{
+  font-family:var(--font-serif); font-style:italic; font-size:.9rem;
+  color:var(--ink); margin-top:.7rem;
+}
+.cart-miss:empty{ display:none; }
+.ba-foot{
+  font-family:var(--font-serif); font-style:italic; font-size:.85rem;
+  color:var(--ink-60); margin-top:.9rem;
+}
+@media (max-width:760px){ .cartoons{ grid-template-columns:1fr; } }
+
 .stats{ margin-top:var(--gap); }
 .probe-v{ font-size:.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .probe-v small{ display:block; margin-left:0; margin-top:.12rem; font-variant-numeric:tabular-nums; }
@@ -582,7 +730,6 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
   <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
   <nav class="nav-row" aria-label="Site">
     <a href="regions.html" aria-current="page">Region Atlas</a>
-    <a href="brodmann.html">Brodmann Areas</a>
     <a href="tracts.html">Tractography</a>
     <a href="network-atlas.html">Network Atlas</a>
     <a href="microanatomy.html">Microanatomy</a>
@@ -598,7 +745,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 
   <div class="title-strip">
     <span class="name">Region Atlas</span>
-    <span class="anno">MNI152 T1 · 0.74&thinsp;mm iso · AAL-116 parcellation</span>
+    <span class="anno">MNI152 T1 · 0.74&thinsp;mm iso · AAL-116 parcellation · 41 Brodmann areas</span>
     <div class="ts-views" role="group" aria-label="Layout">
       <button class="ts-btn active" data-view="grid" type="button">Grid</button>
       <button class="ts-btn" data-view="axial" type="button">Axial</button>
@@ -626,9 +773,22 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
       </div>
 
       <div class="card">
+        <h2>Brodmann areas</h2>
+        <div class="searchwrap">
+          <input type="search" id="baq" autocomplete="off" spellcheck="false"
+                 placeholder="number, name, or what it does&hellip;"
+                 aria-label="Search Brodmann areas by number, anatomical name, or function"
+                 aria-describedby="baqcount">
+          <button class="clear hidden" id="baqclear" type="button" aria-label="Clear search">&times;</button>
+        </div>
+        <p class="search-count" id="baqcount">All 41 areas.</p>
+        <div class="balist" id="balist" role="group" aria-label="Brodmann areas"></div>
+      </div>
+
+      <div class="card">
         <h2>Highlighted</h2>
         <div class="rchips" id="chips">
-          <div class="empty-note" id="emptyMsg">Nothing highlighted yet — pick a region above.</div>
+          <div class="empty-note" id="emptyMsg">Nothing highlighted yet — pick a region or a Brodmann area above.</div>
         </div>
         <div class="btns"><button class="btn" id="clearBtn" type="button">Clear all</button></div>
       </div>
@@ -687,7 +847,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 
       <div class="stats">
         <div class="stat"><div class="k">Template</div><div class="v">MNI152 <small>0.74&thinsp;mm</small></div></div>
-        <div class="stat"><div class="k">Atlas</div><div class="v">AAL <small>116 regions</small></div></div>
+        <div class="stat"><div class="k">Atlases</div><div class="v">AAL <small>116 regions</small> · Brodmann <small>41 areas</small></div></div>
         <div class="stat"><div class="k">Highlighted</div><div class="v" id="statCount">0 <small>regions</small></div></div>
         <div class="stat"><div class="k">Probe</div><div class="v probe-v"><span id="cursorRegion">—</span><small id="cursorCoords">hover a view · drag = crosshair</small></div></div>
       </div>
@@ -697,11 +857,28 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 
   <section class="notes" id="notesSec" aria-label="Highlighted regions">
     <h2 class="sec-h">Highlighted regions <small id="notesCount"></small></h2>
-    <p class="notes-empty" id="notesEmpty">Add a region above and what it does appears here, stacked by layer: cerebrum at the top, the limbic midbrain beneath it, the reptilian core at the bottom.</p>
+    <p class="notes-empty" id="notesEmpty">Add a region or a Brodmann area above and what it does appears here, stacked by layer: cerebrum at the top, the limbic midbrain beneath it, the reptilian core at the bottom, and the Brodmann areas in a block of their own.</p>
     <div id="notesTiers"></div>
     <p class="notes-caveat">The three layers are MacLean's triune scheme. It stacks a brain map tidily and it is poor evolutionary history — the &ldquo;reptilian&rdquo; structures are not reptilian, and every layer here is present in every vertebrate with a brain. The grouping is a way of reading the map, not a claim about how it was built.</p>
   </section>
 
+
+  <section class="bamap" id="baMapSec" aria-labelledby="bamap-h">
+    <h2 class="sec-h" id="bamap-h">Brodmann map <small>both faces of the hemisphere &middot; click an area to highlight it</small></h2>
+    <div class="cartoons">
+      <figure class="cart">
+        <figcaption><b>External</b><span>lateral surface</span></figcaption>
+        <div class="cart-stage" id="cartLateral"></div>
+      </figure>
+      <figure class="cart">
+        <figcaption><b>Internal</b><span>medial surface</span></figcaption>
+        <div class="cart-stage" id="cartMedial"></div>
+      </figure>
+    </div>
+    <p class="cart-miss" id="cartMiss"></p>
+    <p class="cart-note">The two faces are a line map of the classic Brodmann scheme, descending from Brodmann&rsquo;s own 1909 figures: every area outlined and numbered, nothing drawn beneath. Pick an area, here or in the list, and it fills in its colour on the face that shows it. Anterior is on the left in the external view and, as the scheme is conventionally drawn, on the right in the internal one. The drawing is a schematic &mdash; where each area actually sits in a real head, with the atlas&rsquo;s own boundaries, is what the scan above shows. Brodmann Areas diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN &ndash; Institute for EEG-Neurofeedback / Neurofeedback Academy</a>.</p>
+    <p class="ba-foot">Brodmann numbered the cortex in 1909 by how its cells are layered, not by what it does &mdash; which is why the numbers wander about the brain and why several of his 52 have no agreed human counterpart. The 41 drawn here are those the shipped atlas labels; 12&ndash;16, 31, 33 and 49&ndash;52 are absent. Each area is bilateral: Brodmann described cortical types, not hemispheres, so where a function is strongly one-sided the note says so rather than the atlas splitting the area. The boundaries are an approximation to begin with &mdash; they were drawn from a handful of post-mortem brains, and no two people's cortex is folded the same way. This particular volume descends from the Talairach Daemon, whose labels were grown outwards to fill the brain: 14% of what it marks lies in white matter that the AAL atlas does not count as cortex at all, and label 48 has become a catch-all for the peri-Sylvian region rather than the small area Brodmann gave that number to. Read a boundary as a neighbourhood, not a border. Educational, not diagnostic.</p>
+  </section>
 
   <section class="rxsec" id="receptorSec" aria-labelledby="rx-h">
     <h2 class="sec-h" id="rx-h">Receptor density <small>fmol&thinsp;/&thinsp;mg tissue</small></h2>
@@ -709,8 +886,8 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
     <div class="rx-controls">
       <div class="ts-views" role="group" aria-label="View">
         <button class="ts-btn active" data-tab="chart" type="button">Chart</button>
-        <button class="ts-btn" data-tab="density" type="button">Density Table</button>
         <button class="ts-btn" data-tab="types" type="button">Receptor Types</button>
+        <button class="ts-btn" data-tab="density" type="button">Density Table</button>
       </div>
       <div class="mode-group" id="axis-group" role="group" aria-label="Chart axis">
         <button class="ts-btn active" data-axis="structure" type="button">By Receptor</button>
@@ -730,13 +907,24 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
         <div id="chart-legend" class="legend"></div>
       </div>
       <div id="density-table" class="table-wrap hidden"></div>
-      <div id="types-table" class="table-wrap hidden"></div>
+      <div id="types-pane" class="hidden">
+        <div class="heat-head">
+          <p class="heat-lede">Every receptor sub-type against every measured structure, yellow where a sub-type is sparsest and red where it is densest. Click a structure&rsquo;s name to light it up on the scan.</p>
+          <div class="mode-group" id="heat-scale" role="group" aria-label="Colour scale">
+            <button class="ts-btn active" data-scale="row" type="button">Within each receptor</button>
+            <button class="ts-btn" data-scale="all" type="button">Across the whole table</button>
+          </div>
+          <span class="heat-legend" aria-hidden="true"><i></i><small>least</small><small>most</small></span>
+        </div>
+        <div id="types-heat" class="heat"></div>
+        <div id="types-table" class="table-wrap"></div>
+      </div>
     </div>
     <p class="rx-note" id="rx-coverage"></p>
   </section>
 
   <p class="estab">Runs fully offline · single file · no server</p>
-  <p class="credits">© 2026 VisualNeuroscience.AI · rendered with <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a> (Rorden lab) · MNI152 template · AAL atlas · set in Flux, Newsreader &amp; Prata &middot; <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy</a></p>
+  <p class="credits">© 2026 VisualNeuroscience.AI · rendered with <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a> (Rorden lab) · MNI152 template · AAL atlas · Brodmann atlas from <a href="https://github.com/neurolabusc/MRIcron" target="_blank" rel="noopener">MRIcron</a> (BSD) · Brodmann diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN</a> · set in Flux, Newsreader &amp; Prata &middot; <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy</a></p>
 
 </main>
 
@@ -746,7 +934,10 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 <script src="assets/stage-lifecycle.js"></script>
 <script src="assets/niivue.js"></script>
 <script src="assets/atlas-data.js"></script>
+<script src="assets/brodmann-areas.js"></script>
+<script src="assets/brodmann-outline.js"></script>
 <script src="assets/region-notes.js"></script>
+<script src="assets/diagram-gestures.js"></script>
 <script src="assets/slice-tool.js"></script>
 <script src="assets/zoom.js"></script>
 <script src="assets/export3d.js"></script>
@@ -757,6 +948,13 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
   var TPL_URL = MN_ATLAS.TPL_URL, ATLAS_URL = MN_ATLAS.ATLAS_URL;
   var REGIONS = MN_ATLAS.REGIONS, RAW_LABELS = MN_ATLAS.RAW_LABELS;
   var N_LABELS = RAW_LABELS.length;
+
+  /* The Brodmann areas ride alongside the AAL parcels: a second label
+     volume on the same scan, its own list in the rail, and a place in the
+     same highlighted set, so a region and an area can be lit together. */
+  var B = window.MN_BRODMANN || null;
+  var BA_URL = "assets/brodmann.nii.gz";
+  var N_BA = B ? B.MAX + 1 : 0;
 
   var PALETTE = ["#915AD8","#D85AC9","#FE4B83","#FF7847","#E6C14C","#AFF05B","#52F667","#4AE8B7","#4FBEE3","#5575DD"];
 
@@ -945,26 +1143,31 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
     return PALETTE[selections.size % PALETTE.length];
   }
 
-  function applyColormap(){
-    var R = new Array(N_LABELS).fill(0),
-        G = new Array(N_LABELS).fill(0),
-        B = new Array(N_LABELS).fill(0),
-        A = new Array(N_LABELS).fill(0),
-        I = [];
-    for (var i = 0; i < N_LABELS; i++) I.push(i);
+  function isBA(s){ return s.atlas === "ba"; }
+  function labelMap(n, labels, which){
+    var R = new Array(n).fill(0), G = new Array(n).fill(0),
+        Bl = new Array(n).fill(0), A = new Array(n).fill(0), I = [];
+    for (var i = 0; i < n; i++) I.push(i);
     selections.forEach(function(s){
+      if (isBA(s) !== which) return;
       var rgb = hexToRgb(s.color);
       s.indices.forEach(function(idx){
-        R[idx] = rgb[0]; G[idx] = rgb[1]; B[idx] = rgb[2]; A[idx] = 255;
+        if (idx < 0 || idx >= n) return;
+        R[idx] = rgb[0]; G[idx] = rgb[1]; Bl[idx] = rgb[2]; A[idx] = 255;
       });
     });
-    var cm = {R:R, G:G, B:B, A:A, I:I, labels: RAW_LABELS};
+    return {R:R, G:G, B:Bl, A:A, I:I, labels: labels};
+  }
+  function applyColormap(){
+    var aal = labelMap(N_LABELS, RAW_LABELS, false);
+    var ba = B ? labelMap(N_BA, B.LABELS, true) : null;
     allNV().forEach(function(nv){
-      if (nv.volumes && nv.volumes.length > 1){
-        nv.volumes[1].setColormapLabel(cm);
-        nv.updateGLVolume();
-      }
+      if (!nv.volumes || nv.volumes.length < 2) return;
+      nv.volumes[1].setColormapLabel(aal);
+      if (ba && nv.volumes.length > 2) nv.volumes[2].setColormapLabel(ba);
+      nv.updateGLVolume();
     });
+    markBAList(); markCartoon();
   }
 
 
@@ -980,13 +1183,12 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
   function renderNotes(){
     notesSec.innerHTML = "";
     notesEmpty.classList.toggle("hidden", selections.size > 0);
-    notesCount.textContent = selections.size
-      ? selections.size + (selections.size === 1 ? " region" : " regions")
-      : "";
+    notesCount.textContent = countText();
     if (!selections.size || typeof MN_NOTES === "undefined") return;
 
-    var bucket = {};
+    var bucket = {}, areas = [];
     selections.forEach(function(sel){
+      if (isBA(sel)){ areas.push(sel); return; }
       var note = MN_NOTES.NOTES[sel.base];
       if (!note) return;
       (bucket[note.tier] = bucket[note.tier] || []).push({sel: sel, note: note});
@@ -1023,6 +1225,46 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
       box.appendChild(body);
       notesSec.appendChild(box);
     });
+
+    /* the Brodmann areas, in a block of their own below the three layers:
+       cytoarchitecture is a different way of cutting the cortex up, and
+       the areas do not belong to MacLean's tiers */
+    if (areas.length && B){
+      var bbox = document.createElement("div"); bbox.className = "tier";
+      var bhead = document.createElement("div"); bhead.className = "tier-head";
+      bhead.innerHTML = "<b>Brodmann areas</b><span>cytoarchitecture, 1909</span>" +
+        '<span class="n">' + areas.length + "</span>";
+      bbox.appendChild(bhead);
+      var bbody = document.createElement("div"); bbody.className = "tier-body";
+      areas.forEach(function(sel){
+        var a = B.BY_BA[sel.ba]; if (!a) return;
+        var lobe = B.LOBES.filter(function(l){ return l.id === a.lobe; })[0];
+        var cell = document.createElement("div"); cell.className = "rnote";
+        var h = document.createElement("h3");
+        var dot = document.createElement("span"); dot.className = "dot"; dot.style.background = sel.color;
+        h.appendChild(dot);
+        h.appendChild(document.createTextNode(a.name));
+        var side = document.createElement("span"); side.className = "side";
+        side.textContent = "BA" + a.ba + (lobe ? " \u00B7 " + lobe.label : "");
+        h.appendChild(side);
+        var p = document.createElement("p"); p.textContent = a.fn;
+        cell.appendChild(h); cell.appendChild(p);
+        if (a.note){ var c = document.createElement("p"); c.className = "caveat"; c.textContent = a.note; cell.appendChild(c); }
+        bbody.appendChild(cell);
+      });
+      bbox.appendChild(bbody);
+      notesSec.appendChild(bbox);
+    }
+  }
+
+  /* "2 regions · 1 area", or whichever of the two is there */
+  function countText(){
+    var r = 0, a = 0;
+    selections.forEach(function(s){ if (isBA(s)) a++; else r++; });
+    var bits = [];
+    if (r) bits.push(r + (r === 1 ? " region" : " regions"));
+    if (a) bits.push(a + (a === 1 ? " area" : " areas"));
+    return bits.join(" \u00B7 ");
   }
 
   function notifySel(){
@@ -1032,7 +1274,9 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
     notifySel();
     chipsEl.querySelectorAll(".rchip").forEach(function(c){ c.remove(); });
     emptyMsg.classList.toggle("hidden", selections.size > 0);
-    statCount.innerHTML = selections.size + " <small>region" + (selections.size === 1 ? "" : "s") + "</small>";
+    statCount.innerHTML = selections.size
+      ? countText().replace(/(\d+) ([a-z]+)/g, "$1 <small>$2</small>")
+      : "0 <small>highlighted</small>";
     selections.forEach(function(s, key){
       var chip = document.createElement("div"); chip.className = "rchip";
       var dot = document.createElement("span"); dot.className = "dot"; dot.style.background = s.color;
@@ -1139,6 +1383,11 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
     },
     onChange: function(cb){ selWatchers.push(cb); }
   };
+  function centreMm(mm){
+    allNV().forEach(function(nv){
+      try{ nv.scene.crosshairPos = nv.mm2frac(mm); nv.drawScene(); }catch(e){}
+    });
+  }
 
   var byBase = {};
   REGIONS.forEach(function(r){ byBase[r.base] = r; });
@@ -1174,6 +1423,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
     opacityVal.textContent = opacityEl.value + "%";
     allNV().forEach(function(nv){
       if (nv.volumes && nv.volumes.length > 1) nv.setOpacity(1, opacityEl.value / 100);
+      if (nv.volumes && nv.volumes.length > 2) nv.setOpacity(2, opacityEl.value / 100);
     });
   });
 
@@ -1259,13 +1509,236 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
       if (loc && loc.mm){
         coordsOut.textContent = "MNI " + loc.mm[0].toFixed(0) + " " + loc.mm[1].toFixed(0) + " " + loc.mm[2].toFixed(0) + " mm";
       }
-      var idx = 0;
+      var idx = 0, ba = 0;
       if (loc && loc.values && loc.values.length > 1 && loc.values[1]) idx = Math.round(loc.values[1].value || 0);
-      regionOut.textContent = (idx > 0 && PRETTY[idx]) ? PRETTY[idx] : "\u2014";
+      if (loc && loc.values && loc.values.length > 2 && loc.values[2]) ba = Math.round(loc.values[2].value || 0);
+      var bits = [];
+      if (idx > 0 && PRETTY[idx]) bits.push(PRETTY[idx]);
+      if (ba > 0 && B && B.BY_BA[ba]) bits.push("BA" + ba);
+      regionOut.textContent = bits.length ? bits.join(" \u00B7 ") : "\u2014";
     } catch(e){}
   }
 
+  /* ── the Brodmann areas ───────────────────────────────────────────────
+     An area is a selection like any other, keyed B:<number>, drawn on the
+     second label volume in a palette colour of its own. It can be picked
+     from the searchable list in the rail, from the two-face map below the
+     notes, or by a deep link. */
+  function baEntry(a, colour){
+    return { atlas: "ba", ba: a.ba, name: a.name, base: "BA" + a.ba, sideTag: "BA" + a.ba,
+             indices: [a.ba], color: colour };
+  }
+  function addBA(ba, quiet){
+    var a = B && B.BY_BA[ba];
+    if (!a) return false;
+    var key = "B:" + a.ba;
+    if (selections.has(key)) return false;
+    selections.set(key, baEntry(a, nextColor()));
+    if (!quiet){ renderChips(); applyColormap(); }
+    return true;
+  }
+  function centreOnBA(ba){
+    var a = B && B.BY_BA[ba];
+    if (a && a.at) centreMm(a.at);
+  }
+  function toggleBA(ba, fromList){
+    var key = "B:" + ba;
+    if (selections.has(key)){
+      selections.delete(key); renderChips(); applyColormap();
+      return;
+    }
+    if (!addBA(ba)) return;
+    centreOnBA(ba);
+    if (window.MN) MN.tap("light");
+    if (!fromList) scrollBAListTo(ba);
+  }
+  function baColour(ba){
+    var e = selections.get("B:" + ba);
+    return e ? e.color : null;
+  }
+
+  var baListEl = document.getElementById("balist");
+  var baQ = document.getElementById("baq");
+  var baQClear = document.getElementById("baqclear");
+  var baQCount = document.getElementById("baqcount");
+  var baRows = {};
+
+  function norm(s){ return String(s).toLowerCase(); }
+  function hayFor(a){
+    return norm("ba" + a.ba + " " + a.ba + " " + a.name + " " + a.region + " " +
+                a.fn + " " + a.note + " " + a.lobe + " " + (a.tags || ""));
+  }
+  /* Two passes, because loose matching on several words is too generous:
+     a multi-word query is tried as a phrase first, and only if nothing
+     carries the phrase does it fall back to every-word-somewhere. */
+  function baMatches(a, terms, phrase){
+    if (!terms.length) return true;
+    var hay = hayFor(a);
+    if (phrase) return hay.indexOf(phrase) !== -1;
+    return terms.every(function(t){ return hay.indexOf(t) !== -1; });
+  }
+  function phraseFor(terms, raw){
+    if (terms.length < 2 || !B) return null;
+    var whole = norm(raw).trim().replace(/\s+/g, " ");
+    return B.AREAS.some(function(a){ return hayFor(a).indexOf(whole) !== -1; }) ? whole : null;
+  }
+  function highlightText(text, terms){
+    if (!terms.length) return document.createTextNode(text);
+    var frag = document.createDocumentFragment();
+    var low = norm(text), i = 0;
+    while (i < text.length){
+      var best = -1, bestLen = 0;
+      terms.forEach(function(term){
+        var at = low.indexOf(term, i);
+        if (at !== -1 && (best === -1 || at < best)){ best = at; bestLen = term.length; }
+      });
+      if (best === -1){ frag.appendChild(document.createTextNode(text.slice(i))); break; }
+      if (best > i) frag.appendChild(document.createTextNode(text.slice(i, best)));
+      var mk = document.createElement("mark");
+      mk.textContent = text.slice(best, best + bestLen);
+      frag.appendChild(mk);
+      i = best + bestLen;
+    }
+    return frag;
+  }
+  function buildBAList(){
+    if (!B || !baListEl) return;
+    var terms = norm(baQ.value).split(/\s+/).filter(Boolean);
+    var phrase = phraseFor(terms, baQ.value);
+    baListEl.innerHTML = "";
+    baRows = {};
+    var shown = 0;
+    B.LOBES.forEach(function(lobe){
+      var mine = B.AREAS.filter(function(a){ return a.lobe === lobe.id && baMatches(a, terms, phrase); });
+      if (!mine.length) return;
+      var h = document.createElement("div");
+      h.className = "balobe";
+      h.textContent = lobe.label + " \u00B7 " + lobe.sub;
+      baListEl.appendChild(h);
+      mine.forEach(function(a){
+        shown++;
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "barow"; b.dataset.ba = a.ba;
+        var num = document.createElement("span"); num.className = "num";
+        num.appendChild(highlightText("BA" + a.ba, phrase ? [phrase] : terms));
+        var nm = document.createElement("span"); nm.className = "nm";
+        nm.appendChild(highlightText(a.name, phrase ? [phrase] : terms));
+        var sw = document.createElement("span"); sw.className = "swatch";
+        b.appendChild(num); b.appendChild(nm); b.appendChild(sw);
+        b.addEventListener("click", function(){ toggleBA(a.ba, true); });
+        baListEl.appendChild(b);
+        baRows[a.ba] = b;
+      });
+    });
+    if (!shown){
+      var e = document.createElement("p");
+      e.className = "balist-empty";
+      e.textContent = "Nothing matches \u201C" + baQ.value.trim() + "\u201D. Try a number, a gyrus, or what you want the area to do.";
+      baListEl.appendChild(e);
+    }
+    baQCount.textContent = terms.length
+      ? shown + (shown === 1 ? " area matches" : " areas match")
+      : "All " + B.AREAS.length + " areas.";
+    baQClear.classList.toggle("hidden", !baQ.value);
+    markBAList();
+  }
+  function markBAList(){
+    Object.keys(baRows).forEach(function(ba){
+      var c = baColour(Number(ba));
+      baRows[ba].setAttribute("aria-pressed", String(!!c));
+      if (c) baRows[ba].style.setProperty("--sel", c); else baRows[ba].style.removeProperty("--sel");
+    });
+  }
+  function scrollBAListTo(ba){
+    var r = baRows[ba];
+    if (r && r.scrollIntoView) r.scrollIntoView({block: "nearest"});
+  }
+  if (baQ){
+    baQ.addEventListener("input", buildBAList);
+    baQ.addEventListener("keydown", function(e){
+      if (e.key === "Escape"){ baQ.value = ""; buildBAList(); }
+      /* Enter picks the only match, which is what typing "17" means */
+      if (e.key === "Enter"){
+        var only = Object.keys(baRows);
+        if (only.length === 1) toggleBA(Number(only[0]), true);
+      }
+    });
+    baQClear.addEventListener("click", function(){ baQ.value = ""; buildBAList(); baQ.focus(); });
+  }
+
+  /* The line map. Each area is its own outline with its number set at the
+     most interior point of the shape, so a wedge or a crescent still reads.
+     Nothing is drawn beneath the outlines: the map is the drawing. Geometry
+     and anchors come from scripts/make_brodmann_outline.mjs. */
+  var OUT = window.MN_BA_OUTLINE || {areas: {}, box: {}};
+  var tiles = {lateral: {}, medial: {}};
+  function drawCartoon(host, which){
+    if (!host || !B) return;
+    var NS = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", (OUT.box && OUT.box[which]) || "0 0 600 400");
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", which === "lateral"
+      ? "Brodmann areas on the external surface of the hemisphere"
+      : "Brodmann areas on the internal surface of the hemisphere");
+    Object.keys(OUT.areas).forEach(function(k){
+      var ba = +k;
+      var spec = (OUT.areas[k] || []).filter(function(e){ return e.view === which; })[0];
+      if (!spec) return;
+      var a = B.BY_BA[ba];
+      var g = document.createElementNS(NS, "g");
+      g.setAttribute("class", "ba-tile" + (a ? "" : " mute"));
+      g.dataset.ba = ba;
+      var shape = document.createElementNS(NS, "path");
+      shape.setAttribute("class", "shape");
+      shape.setAttribute("d", spec.d);
+      shape.setAttribute("fill-rule", "evenodd");
+      var num = document.createElementNS(NS, "text");
+      num.setAttribute("class", "num");
+      num.setAttribute("x", spec.at[0]); num.setAttribute("y", spec.at[1]);
+      num.setAttribute("text-anchor", "middle");
+      num.setAttribute("dominant-baseline", "central");
+      num.setAttribute("font-size", Math.max(6.5, Math.min(12, (spec.r || 8) * 1.15)).toFixed(1));
+      num.textContent = ba;
+      var ti = document.createElementNS(NS, "title");
+      ti.textContent = "BA" + ba + (a ? " \u2014 " + a.name : " \u2014 not in the atlas volume");
+      g.appendChild(shape); g.appendChild(num); g.appendChild(ti);
+      if (a) g.addEventListener("click", function(){ toggleBA(ba, false); });
+      svg.appendChild(g);
+      tiles[which][ba] = g;
+    });
+    host.innerHTML = "";
+    host.appendChild(svg);
+  }
+  function markCartoon(){
+    ["lateral", "medial"].forEach(function(w){
+      Object.keys(tiles[w]).forEach(function(ba){
+        var c = baColour(Number(ba));
+        tiles[w][ba].classList.toggle("on", !!c);
+        if (c) tiles[w][ba].style.setProperty("--sel", c); else tiles[w][ba].style.removeProperty("--sel");
+      });
+    });
+    /* an area can be real and simply not face either way */
+    var note = document.getElementById("cartMiss");
+    if (!note) return;
+    var buried = [];
+    selections.forEach(function(s){
+      if (isBA(s) && !tiles.lateral[s.ba] && !tiles.medial[s.ba]) buried.push("BA" + s.ba);
+    });
+    note.textContent = buried.length
+      ? buried.join(", ") + (buried.length === 1 ? " does" : " do") + " not reach either surface \u2014 buried, and only the scan shows " + (buried.length === 1 ? "it." : "them.")
+      : "";
+  }
+
   renderDropdown();
+  buildBAList();
+  drawCartoon(document.getElementById("cartLateral"), "lateral");
+  drawCartoon(document.getElementById("cartMedial"), "medial");
+  if (window.MN_DIAG){
+    var cl = document.querySelector("#cartLateral svg"), cmn = document.querySelector("#cartMedial svg");
+    if (cl) MN_DIAG.attach({ svg: cl });
+    if (cmn) MN_DIAG.attach({ svg: cmn });
+  }
   renderChips();
 
   /* ── deep links ───────────────────────────────────────────────────────
@@ -1273,13 +1746,18 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
      a link — from the MCP server, a lecture slide, a chat answer — opens
      the exact view. P pairs, L and R take a side, S is a single structure. */
   function applyHashSelections(){
+    /* the Brodmann page used to answer #ba=17 and #ba17; its links land here now */
+    var old = location.hash.match(/^#ba=?(\d{1,2})$/i);
+    if (old){ addBA(Number(old[1]), true); if (selections.size){ renderChips(); applyColormap(); centreOnBA(Number(old[1])); } return; }
     var m = location.hash.match(/^#sel=(.+)$/);
     if (!m) return;
     var tokens;
     try{ tokens = decodeURIComponent(m[1]).split(/[|,]/); }catch(e){ return; }
     tokens.forEach(function(tok){
       var mode = tok.slice(0, 1), base = tok.slice(2), r = byBase[base];
-      if (!r || tok.slice(1, 2) !== ":") return;
+      if (tok.slice(1, 2) !== ":") return;
+      if (mode === "B"){ addBA(Number(base), true); return; }
+      if (!r) return;
       var key = mode + ":" + base;
       if (selections.has(key)) return;
       var entry = null;
@@ -1304,8 +1782,11 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
       build: function(ctx){
         return MN_EXPORT3D.volumes(allNV()[0], ATLAS_URL, TPL_URL).then(function(v){
           var atlas = v[0], tpl = v[1], parts = [];
+          var nv0 = allNV()[0], baVol = nv0 && nv0.volumes && nv0.volumes.length > 2 ? nv0.volumes[2] : null;
           selections.forEach(function(s){
-            parts.push(MN_EXPORT3D.labelSurface(atlas, s.indices, {
+            var vol = isBA(s) ? baVol : atlas;
+            if (!vol) return;
+            parts.push(MN_EXPORT3D.labelSurface(vol, s.indices, {
               name: s.name + (s.sideTag ? " (" + s.sideTag + ")" : ""),
               colour: MN_EXPORT3D.hexColour(s.color)
             }));
@@ -1334,7 +1815,8 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
       capture: function(){
         var ren = INSTANCES.render, sels = [];
         selections.forEach(function(s, key){
-          sels.push({ key: key, name: s.name, base: s.base, sideTag: s.sideTag, indices: s.indices.slice(), color: s.color });
+          sels.push({ key: key, name: s.name, base: s.base, sideTag: s.sideTag, indices: s.indices.slice(), color: s.color,
+                      atlas: s.atlas || "aal", ba: s.ba });
         });
         return {
           v: 1, tool: "regions", selections: sels,
@@ -1350,8 +1832,14 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
         selections.clear();
         m.selections.forEach(function(s){
           if (!s || !s.key || !Array.isArray(s.indices)) return;
+          var colour = /^#[0-9A-Fa-f]{6}$/.test(s.color || "") ? s.color : nextColor();
+          if (s.atlas === "ba"){
+            var a = B && B.BY_BA[Number(s.ba)];
+            if (a) selections.set("B:" + a.ba, baEntry(a, colour));
+            return;
+          }
           selections.set(s.key, { name: s.name || s.base || "Region", base: s.base, sideTag: s.sideTag || "",
-                                  indices: s.indices.map(Number), color: /^#[0-9A-Fa-f]{6}$/.test(s.color || "") ? s.color : nextColor() });
+                                  indices: s.indices.map(Number), color: colour });
         });
         renderChips(); applyColormap();
         if (m.opacity){ opacityEl.value = String(m.opacity); opacityEl.dispatchEvent(new Event("input")); }
@@ -1389,7 +1877,8 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
       await Promise.all(PLANES.map(function(p){
         return INSTANCES[p.key].loadVolumes([
           {url: tplUrl, name: "mni152.nii.gz", colormap: "gray", opacity: 1},
-          {url: atlasUrl, name: "aal.nii.gz", opacity: 0.9}
+          {url: atlasUrl, name: "aal.nii.gz", opacity: 0.9},
+          {url: BA_URL, name: "brodmann.nii.gz", opacity: 0.9}
         ]);
       }));
       PLANES.forEach(function(p){ INSTANCES[p.key].setSliceType(p.st); });
@@ -1819,6 +2308,85 @@ function renderRegionTable(structure) {
   wrap.innerHTML = html + '</tbody></table>';
 }
 
+/* ── the heat-map ────────────────────────────────────────────────────────
+   One box per sub-type per structure, coloured for how dense the sub-type
+   is there. The scale runs from yellow to red. "Within each receptor" sets
+   the reddest box of a row at that row's own maximum, so a sparse family
+   still shows where it concentrates; "Across the whole table" puts every
+   box on one scale, so the dense ionotropic receptors stand out and the
+   rest go pale, which is also true. */
+let heatScale = 'row';
+const HEAT_STOPS = [[255, 224, 102], [255, 140, 26], [193, 18, 31]];
+function heatColour(t) {
+  t = Math.max(0, Math.min(1, t));
+  const seg = t < 0.5 ? 0 : 1, u = (t - seg * 0.5) * 2;
+  const a = HEAT_STOPS[seg], b = HEAT_STOPS[seg + 1];
+  return 'rgb(' + [0, 1, 2].map(i => Math.round(a[i] + (b[i] - a[i]) * u)).join(',') + ')';
+}
+function heatRows() {
+  const rows = [];
+  for (const col of DATA.columns) {
+    const fam = familyOf(col.name);
+    if (!fam) continue;
+    rows.push({ fam, label: shortLabel(col.name, fam), col });
+  }
+  const order = RECEPTORS.slice();
+  rows.sort((a, b) => order.indexOf(a.fam) - order.indexOf(b.fam));
+  return rows;
+}
+function renderHeat() {
+  const host = document.getElementById('types-heat');
+  if (!host) return;
+  const rows = heatRows();
+  let allMax = 0;
+  rows.forEach(r => r.col.values.forEach(v => { if (v > allMax) allMax = v; }));
+  let html = '<table><thead><tr><th class="corner"></th>';
+  for (const s of DATA.structures)
+    html += '<th class="col"><button type="button" data-structure="' + escapeHtml(s) + '" title="' + escapeHtml(s) + '">' + escapeHtml(s) + '</button></th>';
+  html += '</tr></thead><tbody>';
+  let lastFam = null;
+  rows.forEach(r => {
+    if (r.fam !== lastFam) {
+      html += '<tr class="fam"><th colspan="' + (DATA.structures.length + 1) + '">' + escapeHtml(r.fam) + '</th></tr>';
+      lastFam = r.fam;
+    }
+    const rowMax = Math.max.apply(null, r.col.values.map(v => v || 0));
+    const top = heatScale === 'row' ? rowMax : allMax;
+    html += '<tr><th class="rlabel" title="' + escapeHtml(r.col.name) + '">' + escapeHtml(r.label) + '</th>';
+    DATA.structures.forEach((s, i) => {
+      const v = r.col.values[i];
+      if (!(v > 0)) { html += '<td class="cell none" data-structure="' + escapeHtml(s) + '" title="' + escapeHtml(r.label + ' \u00B7 ' + s + ': not recorded') + '"></td>'; return; }
+      const t = top > 0 ? v / top : 0;
+      html += '<td class="cell" data-structure="' + escapeHtml(s) + '" style="--c:' + heatColour(t) + '" title="' +
+        escapeHtml(r.label + ' \u00B7 ' + s + ': ' + formatRange(r.col.raw[i]) + ' fmol/mg') + '"></td>';
+    });
+    html += '</tr>';
+  });
+  host.innerHTML = html + '</tbody></table>';
+  host.querySelectorAll('th.col button').forEach(b => {
+    b.addEventListener('click', () => toggleStructure(b.dataset.structure));
+  });
+  markHeatColumns();
+}
+function markHeatColumns() {
+  const host = document.getElementById('types-heat');
+  if (!host || !window.MN_SEL) return;
+  host.querySelectorAll('[data-structure]').forEach(el => {
+    const m = REGION_INFO[el.dataset.structure];
+    const col = m ? MN_SEL.colour(m.aal) : null;
+    el.classList.toggle('picked', !!col);
+    if (col) el.style.setProperty('--sel', col); else el.style.removeProperty('--sel');
+  });
+}
+const heatGroup = document.getElementById('heat-scale');
+if (heatGroup) heatGroup.querySelectorAll('[data-scale]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    heatGroup.querySelectorAll('[data-scale]').forEach(b => b.classList.toggle('active', b === btn));
+    heatScale = btn.dataset.scale;
+    renderHeat();
+  });
+});
+
 function renderTypesTable() {
   let html = '<table class="data-table"><thead><tr>';
   for (const h of TYPES.header) html += '<th>' + escapeHtml(h) + '</th>';
@@ -1879,7 +2447,7 @@ modeGroup.querySelectorAll('[data-mode]').forEach(btn => {
 const panes = {
   chart: document.getElementById('chart-pane'),
   density: document.getElementById('density-table'),
-  types: document.getElementById('types-table')
+  types: document.getElementById('types-pane')
 };
 document.querySelectorAll('[data-tab]').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -1906,19 +2474,37 @@ const UNSOURCED = ["Olfactory Cortex", "Insula", "Anterior Cingulate", "Middle C
 
 let shownStructure = null;   /* the dropdown's ensure-on check reads this */
 
+/* A pick made down here lights a region up above, and its reading note
+   lands in the section between, so everything from there down moves. The
+   reader is looking at this section, so it is held where it was: measure
+   its place on the page before the change and put the scroll back to it
+   after, in one step. The page's own scroll anchoring is switched off so
+   the two do not compensate twice. */
+function holdSection(fn){
+  const sec = document.getElementById('receptorSec');
+  const before = sec ? sec.getBoundingClientRect().top : null;
+  fn();
+  if (before === null) return;
+  const delta = sec.getBoundingClientRect().top - before;
+  if (Math.abs(delta) > 0.5) window.scrollTo({ top: window.scrollY + delta, left: window.scrollX, behavior: 'instant' });
+}
 function toggleStructure(structure){
   const map = REGION_INFO[structure];
   if (!map || !map.aal.length || !window.MN_SEL) return;
-  const col = MN_SEL.toggle(map.aal);
-  shownStructure = col ? structure : null;
-  if (col) MN_SEL.centre(map.aal);
+  holdSection(() => {
+    const col = MN_SEL.toggle(map.aal);
+    shownStructure = col ? structure : null;
+    if (col) MN_SEL.centre(map.aal);
+  });
 }
 function showStructure(structure){
   const map = REGION_INFO[structure];
   if (!map || !map.aal.length || !window.MN_SEL) return;
-  MN_SEL.toggle(map.aal, true);
-  shownStructure = structure;
-  MN_SEL.centre(map.aal);
+  holdSection(() => {
+    MN_SEL.toggle(map.aal, true);
+    shownStructure = structure;
+    MN_SEL.centre(map.aal);
+  });
 }
 
 /* labels wear the selection's own colour, and follow it however it changes —
@@ -1931,7 +2517,7 @@ function markPickedLabels(){
     el.style.fill = col || '';
   });
 }
-if (window.MN_SEL) MN_SEL.onChange(markPickedLabels);
+if (window.MN_SEL) MN_SEL.onChange(function(){ markPickedLabels(); markHeatColumns(); });
 const _chartRedraw = redraw;
 redraw = function(){ _chartRedraw(); markPickedLabels(); };
 
@@ -1943,6 +2529,8 @@ document.getElementById('rx-coverage').textContent =
 fillDropdown();
 redraw();
 renderDensityTable();
+renderHeat();
+renderTypesTable();
 
 /* the old address, and links into the section, both land here */
 if (location.hash === '#receptors'){

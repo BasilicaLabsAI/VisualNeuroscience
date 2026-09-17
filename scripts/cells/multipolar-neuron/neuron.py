@@ -436,6 +436,91 @@ def stage6(G, rng):
     G["O"] = O
     return G
 
+# ------------------------------------------------------------------ stage 7: incoming axons (drawn faint, behind the cell)
+GHOST_OUT = 1.2                       # outline thickness of the faint fibres
+SPINE_EXT = {0: 0.85, 1: 2.05, 2: 1.5}   # how far a drawn spine reaches past its centreline tip, by kind
+
+def stage7(G, rng, P=None):
+    """Axons of other neurons crossing the dendritic field. Where a fibre passes a spine head it swells into an
+    en-passant bouton that sits one cleft away from that spine, then carries on and leaves the frame."""
+    P = P or {}
+    neuron = G["neuron"]; S = G["S"]; ax = G["axon"]
+    tips = np.array([t for b, t, k in G["spines"]]); bases = np.array([b for b, t, k in G["spines"]]); kinds = [k for b, t, k in G["spines"]]
+    sdir = tips - bases; sdir /= np.linalg.norm(sdir, axis=1)[:, None]
+    A_MAJ, B_MIN, R_F, CLEFT = 6.2, 4.0, 1.5, 1.3
+    contact = lambda k: SPINE_EXT[k] + OUT + CLEFT + GHOST_OUT + B_MIN
+    others = unary_union([S["astro"]["poly"], S["syn_soma"]["poly"], S["syn_dend"]["poly"]])
+    keep = prep(unary_union([others.buffer(24), LineString(ax["pts"]).buffer(30), Point(C).buffer(150)]))
+    hide = prep(neuron.buffer(B_MIN + 1.0))
+    fibres = []; used = np.zeros(len(tips), bool); placed_B = np.zeros((0, 2)); laid = []
+    want = P.get("afferents", 8)
+    for attempt in range(6000):
+        if len(fibres) >= want: break
+        phi = rng.uniform(-math.pi, math.pi); rho = rng.uniform(190, 560)
+        p0 = C + rho * U(phi) * np.array([1.0, 0.8])
+        if not (30 < p0[0] < W - 30 and 30 < p0[1] < H - 30): continue
+        th0 = phi + rng.choice([-1, 1]) * rng.uniform(ang(32), ang(62))
+        kap = rng.uniform(-0.0016, 0.0016)
+        def run(sign):
+            pts = []; x, y = p0; th = th0 + (math.pi if sign < 0 else 0); k = kap * sign
+            for i in range(900):
+                k = 0.985 * k + rng.gauss(0, 0.00042)
+                k = max(-0.0075, min(0.0075, k))
+                th += k * 2.0
+                x += 2.0 * math.cos(th); y += 2.0 * math.sin(th)
+                pts.append((x, y))
+                if x < -14 or x > W + 14 or y < -14 or y > H + 14: break
+            return pts
+        path = np.array(run(-1)[::-1] + [tuple(p0)] + run(+1))
+        if len(path) < 230: continue
+        line = LineString(path)
+        if keep.intersects(line): continue
+        # keep fibres from running alongside each other
+        if any(np.sum(np.min(np.hypot(path[::6, None, 0] - q[None, ::6, 0], path[::6, None, 1] - q[None, ::6, 1]), axis=1) < 17) > 5 for q in laid): continue
+        if sum(1 for q in laid if LineString(q).crosses(line)) > 2: continue
+        s = arclen(path)
+        D = np.hypot(tips[:, None, 0] - path[None, :, 0], tips[:, None, 1] - path[None, :, 1])
+        j = np.argmin(D, axis=1); d = D[np.arange(len(tips)), j]
+        cand = []
+        for i in np.where((d < 15.5) & (d > 1.0) & ~used)[0]:
+            if j[i] < 8 or j[i] > len(path) - 9: continue
+            q = path[j[i]]; u = (q - tips[i]) / d[i]
+            if u @ sdir[i] < 0.5: continue                      # the fibre has to pass beyond the spine head, not beside the neck
+            Bc = tips[i] + u * contact(kinds[i])
+            if not (10 < Bc[0] < W - 10 and 10 < Bc[1] < H - 10): continue
+            if hide.contains(Point(Bc)) or others.distance(Point(Bc)) < 9: continue
+            od = np.hypot(tips[:, 0] - Bc[0], tips[:, 1] - Bc[1]); od[i] = 99
+            if od.min() < B_MIN + 2.2: continue                  # not on top of a neighbouring spine
+            if len(placed_B) and np.min(np.hypot(placed_B[:, 0] - Bc[0], placed_B[:, 1] - Bc[1])) < 13: continue
+            cand.append((abs(contact(kinds[i]) - d[i]) - (1.5 if kinds[i] == 1 else 0), i, Bc))
+        cand.sort(key=lambda c: c[0])
+        chosen = []
+        for cost, i, Bc in cand:
+            if cost > 6.5: break
+            if all(abs(s[j[i]] - s[j[c[1]]]) > 34 for c in chosen): chosen.append((cost, i, Bc))
+            if len(chosen) >= 7: break
+        if len(chosen) < 3: continue
+        # bend the path so it passes exactly through every bouton centre
+        disp = np.zeros_like(path)
+        for cost, i, Bc in chosen:
+            w = np.exp(-((s - s[j[i]]) / 15.0) ** 2)
+            disp += np.outer(w, Bc - path[j[i]])
+        path2 = path + disp
+        if keep.intersects(LineString(path2)): continue
+        tg = np.gradient(path2, axis=0); tg /= np.linalg.norm(tg, axis=1)[:, None]
+        shapes = [LineString(path2).buffer(R_F, quad_segs=6)]; bout = []
+        for cost, i, Bc in chosen:
+            c = path2[j[i]]; a = math.degrees(math.atan2(tg[j[i]][1], tg[j[i]][0]))
+            shapes.append(affinity.rotate(affinity.scale(Point(c).buffer(1.0, quad_segs=16), A_MAJ, B_MIN), a, origin=(c[0], c[1])))
+            bout.append((c, a)); used[i] = True
+            placed_B = np.vstack([placed_B, c])
+        poly = closing(unary_union(shapes), 3.2, qs=8).intersection(box(-8, -8, W + 8, H + 8))
+        poly = biggest(poly)
+        fibres.append(dict(path=path2, boutons=bout, poly=poly, spines=[i for _, i, _ in chosen]))
+        laid.append(path2)
+    G["afferents"] = fibres
+    return G
+
 def compose(seed=31, P=None, verbose=False, upto=9):
     P = P or {}
     rng = random.Random(seed)
@@ -446,6 +531,8 @@ def compose(seed=31, P=None, verbose=False, upto=9):
     if upto >= 4: stage4(G)
     if upto >= 5: stage5(G, rng, P)
     if upto >= 6: stage6(G, random.Random(seed * 7 + 3))
+    if upto >= 7: stage7(G, random.Random(seed * 11 + 5), P)
     if verbose:
-        print("branches", len(G.get("branches", [])), "len", int(sum(b.length for b in G.get("branches", []))), "spines", len(G.get("spines", [])))
+        print("branches", len(G.get("branches", [])), "len", int(sum(b.length for b in G.get("branches", []))), "spines", len(G.get("spines", [])),
+              "incoming axons", len(G.get("afferents", [])), "boutons", sum(len(f["boutons"]) for f in G.get("afferents", [])))
     return G

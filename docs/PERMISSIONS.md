@@ -7,8 +7,8 @@ here first.
 
 ## Brodmann Areas diagram (permission granted)
 
-**What.** The two-face Brodmann map on `brodmann.html` and in the Vision Pro
-window `vision-brodmann.html`, the lateral and medial views with every area
+**What.** The two-face Brodmann map on the Region Atlas, `regions.html`, and
+in the Vision Pro window `vision-brodmann.html`, the lateral and medial views with every area
 outlined and numbered. The outlines were traced, area by area, from the
 Brodmann Areas diagram published by IFEN at
 <https://neurofeedback-academy.com/brodmann-area>. Brodmann's 1909 scheme
@@ -40,8 +40,10 @@ reviewer on request. It is not in the repository.
 
 **Where the credit sits.**
 
-- `site/brodmann.html`: the sentence under the map, and the footer credits
-  line, both linking to neurofeedback-academy.com.
+- `site/regions.html`: the sentence under the map in the Brodmann map
+  section, and the footer credits line, both linking to
+  neurofeedback-academy.com. Until v10.8 the map had its own page,
+  `brodmann.html`, which carried the same two credits.
 - `app/store/LISTING.md`: the description, under "Built on open data".
 - `app/store/APP-REVIEW-REPLY.md`: point 6 of the review reply, and the
   follow-up message for the review thread.
@@ -58,7 +60,7 @@ original drawing could be restored under the same permission if wanted.
 |---|---|---|---|
 | MNI152 (ICBM 2009c) template | McConnell Brain Imaging Centre, MNI | Free to use and distribute with the copyright notice | Footer of every atlas page; `about.html` |
 | AAL-116 parcellation | Tzourio-Mazoyer et al., 2002; GIN | Free for non-commercial academic use | `regions.html` footer; `about.html` |
-| Brodmann atlas volume | MRIcron (Chris Rorden) | BSD | `brodmann.html` footer; `about.html` |
+| Brodmann atlas volume | MRIcron (Chris Rorden) | BSD | `regions.html` footer; `about.html` |
 | HCP1065 tractography atlas | Yeh FC, *Nat Commun* 13:4933 (2022), from Human Connectome Project data; the shipped copy is NiiVue's subsampled redistribution | CC BY-SA 4.0, attribution and share-alike | `tracts.html` credits; `site/assets/tracts/README.md` |
 | NiiVue | Rorden lab | BSD | Footers; `about.html` |
 | d3 | Mike Bostock and contributors | ISC | `vendor/d3/` |

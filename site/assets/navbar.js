@@ -24,7 +24,7 @@
 
   var TITLES = {
     "": "Home", "index.html": "Home",
-    "regions.html": "Region Atlas", "brodmann.html": "Brodmann Areas",
+    "regions.html": "Region Atlas",
     "tracts.html": "Tractography", "network-atlas.html": "Network Atlas",
     "microanatomy.html": "Microanatomy",
     "studies.html": "Visualizing Studies", "hallucinations.html": "Hallucinations",

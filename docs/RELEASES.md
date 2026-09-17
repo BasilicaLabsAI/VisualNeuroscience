@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.8 — 17 September 2026 — The Brodmann areas join the atlas
+Commit · Bring the Brodmann areas into the Region Atlas and retire their own page
+
+The Brodmann areas now live in the Region Atlas rather than on a page of their own. A searchable list sits in the rail under the AAL dropdown, the classic two-face map sits below the notes, and a picked area is highlighted on the same scan in its own colour alongside any AAL regions, with its function and caveat in a block of its own among the readings. The probe names both the parcel and the area under the crosshair, 3D export and saved models carry areas as well as regions, and the old page's address and deep links land in the atlas. The border graph is retired from the page, with its measured edges and the brain hull kept in the repository for later. The receptor section gains a heat-map on the Receptor Types tab, every sub-type against every measured structure from yellow to red, with the tabs reordered to put it second; choosing from a dropdown on the atlas or the Network Atlas no longer shifts the page under the pointer. The neuron on the Microanatomy page gains its incoming axons, eighteen structures now.
+
 ## v10.7 — 17 September 2026 — The brain, down to the single cell
-Commit · Add a Microanatomy page with a multipolar neuron drawn from code
+Commit `3d167ab` · Add a Microanatomy page with a multipolar neuron drawn from code
 
 A new Microanatomy page takes the site below the region and the area to the cell. Its first drawing is a large multipolar neuron with an astrocyte and two incoming synapses, an original schematic generated from code rather than traced from a plate, with seventeen structures to click: pick one and read what it does, colour every structure at once, or switch to Test yourself and find each one from memory. The page is in the site's own type and colours, follows the theme, works on a phone, and carries the app's top bar; it is linked from every page's tabs and has its own box on the front page. The drawing's generator lives in the repository so more cells can be added the same way. The Vision Pro app's later refinements travel in the same push: the brain faces the viewer, six mirrored sliders cut it from the outside in, and the Brodmann areas, the tractography and a notes window for the highlighted regions join the room.
 

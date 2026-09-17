@@ -150,8 +150,7 @@ img{ max-width:100%; height:auto; display:block; }
 .m-atlas  { grid-column:span 7; grid-row:span 2; }
 .m-network{ grid-column:span 5; }
 .m-tracts { grid-column:span 5; }
-.m-brodmann{ grid-column:span 6; }
-.m-studies{ grid-column:span 6; }
+.m-studies{ grid-column:span 12; }
 .m-cells  { grid-column:span 12; }
 .m-practice{ grid-column:span 6; }
 .m-textbook{ grid-column:span 6; }
@@ -258,8 +257,7 @@ img{ max-width:100%; height:auto; display:block; }
   .m-atlas  { grid-column:span 6; grid-row:auto; }
   .m-network{ grid-column:span 3; }
   .m-tracts { grid-column:span 3; }
-  .m-brodmann{ grid-column:span 3; }
-  .m-studies{ grid-column:span 3; }
+  .m-studies{ grid-column:span 6; }
   .m-cells  { grid-column:span 6; }
   .m-practice{ grid-column:span 3; }
   .m-textbook{ grid-column:span 3; }
@@ -269,7 +267,7 @@ img{ max-width:100%; height:auto; display:block; }
 /* ── phone: one box on each line, and the wide box stacks ── */
 @media (max-width:760px){
   .mosaic{ grid-template-columns:minmax(0,1fr); }
-  .m-atlas, .m-network, .m-tracts, .m-brodmann, .m-studies, .m-cells, .m-practice, .m-textbook, .m-ledger{
+  .m-atlas, .m-network, .m-tracts, .m-studies, .m-cells, .m-practice, .m-textbook, .m-ledger{
     grid-column:1 / -1; grid-row:auto;
   }
   .ledger{ grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -286,7 +284,6 @@ img{ max-width:100%; height:auto; display:block; }
   <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
   <nav class="nav-row" aria-label="Site">
     <a href="regions.html">Region Atlas</a>
-    <a href="brodmann.html">Brodmann Areas</a>
     <a href="tracts.html">Tractography</a>
     <a href="network-atlas.html">Network Atlas</a>
     <a href="microanatomy.html">Microanatomy</a>
@@ -312,11 +309,11 @@ img{ max-width:100%; height:auto; display:block; }
     <a class="box m-atlas" href="regions.html">
       <div class="kicker">The Atlas</div>
       <h2>Region Atlas</h2>
-      <p>Pick any of the 116 AAL regions and watch it light up on the MNI152 template at once in axial, coronal, sagittal and 3D. Cut the volume open along any axis to see the scan inside the slice, probe a voxel to learn which parcel it belongs to, and read what each highlighted region does beneath the views — stacked cerebrum, midbrain, reptilian core. The receptor densities live here too: click a structure on the chart and it lights up in the same viewports.</p>
+      <p>Pick any of the 116 AAL regions and watch it light up on the MNI152 template at once in axial, coronal, sagittal and 3D. The 41 Brodmann areas live here too: search them by number, by the gyrus they sit on, or by what you want an area to do, pick them off the classic two-face map, and they light up on the same scan in their own colours. Cut the volume open along any axis to see the scan inside the slice, probe a voxel to learn which parcel and area it belongs to, and read what each highlight does beneath the views. The receptor densities are here as well: click a structure on the chart and it lights up in the same viewports.</p>
       <div class="fig" aria-hidden="true">
         <span class="shot"><img src="assets/home/atlas.jpg" alt="" decoding="async" width="900" height="1013"></span>
       </div>
-      <div class="meta">116 parcels &middot; four viewports &middot; receptor densities &middot; slice tool &middot; PNG and 3D export &middot; saved models</div>
+      <div class="meta">116 parcels &middot; 41 Brodmann areas &middot; four viewports &middot; receptor densities &middot; slice tool &middot; PNG and 3D export &middot; saved models</div>
       <div class="go">Open the atlas &rarr;</div>
     </a>
 
@@ -345,18 +342,6 @@ img{ max-width:100%; height:auto; display:block; }
     </a>
 
 
-    <!-- ── the cytoarchitecture ───────────────────────────────────── -->
-    <a class="box m-brodmann" href="brodmann.html">
-      <div class="kicker">Cytoarchitecture</div>
-      <h2>Brodmann Areas</h2>
-      <p>The 41 areas Brodmann's 1909 map still has a human counterpart for, drawn on the scan. Pick one and read what it is for, or search by number, by the gyrus it sits on, or by what you want an area to do — type <em>faces</em>, or <em>working memory</em>, and it finds them.</p>
-      <div class="fig" aria-hidden="true">
-        <span class="shot"><img src="assets/home/brodmann.jpg" alt="" loading="lazy" decoding="async"></span>
-      </div>
-      <div class="meta">41 areas &middot; searchable by function</div>
-      <div class="go">Open the areas &rarr;</div>
-    </a>
-
     <!-- ── the papers ─────────────────────────────────────────────── -->
     <a class="box m-studies box-h" href="studies.html">
       <div class="side">
@@ -375,8 +360,8 @@ img{ max-width:100%; height:auto; display:block; }
       <div class="side">
         <div class="kicker">Under the microscope</div>
         <h2>Microanatomy</h2>
-        <p>The brain at the cell's scale. An original drawing of a large multipolar neuron, built from code, with seventeen structures to click &mdash; dendrites and spines, the cell body and what fills it, the axon hillock and initial segment, two incoming synapses and an astrocyte. Read what each one does, colour them all at once, or test yourself and find every structure from memory.</p>
-        <div class="meta">1 cell drawn &middot; 17 structures &middot; explore and test modes</div>
+        <p>The brain at the cell's scale. An original drawing of a large multipolar neuron, built from code, with eighteen structures to click &mdash; dendrites and spines, the cell body and what fills it, the axon hillock and initial segment, the axons that arrive from other cells, two labelled synapses and an astrocyte. Read what each one does, colour them all at once, or test yourself and find every structure from memory.</p>
+        <div class="meta">1 cell drawn &middot; 18 structures &middot; explore and test modes</div>
         <div class="go">Open the cell &rarr;</div>
       </div>
       <div class="plate"><img src="assets/home/cells.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
