@@ -23,7 +23,7 @@ const PROTOCOL_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"];
 const INSTRUCTIONS =
   "VisualNeuroscience.AI is a free interactive atlas of the human brain (web, iPhone, iPad, Mac, " +
   "Apple Vision Pro). These tools answer from the atlas's own data: AAL-116 regions and their " +
-  "functions, the 41 Brodmann areas with their measured borders, receptor densities across 18 " +
+  "functions, the 41 Brodmann areas with their measured borders, sourced receptor densities across 45 " +
   "structures, and six brain states as network reconfigurations. Answers include links that open " +
   "the same view in the app or on the web. The data is educational reference material with its " +
   "sources cited on the site; it is not medical advice.";
@@ -75,14 +75,17 @@ const TOOLS = [
     name: "receptor_density",
     title: "Receptor density in a structure",
     description:
-      "How thickly the neurotransmitter receptors sit in one brain structure (fmol/mg tissue), " +
-      "or where one receptor is densest across all 18 structures. Give a structure, a receptor, or both.",
+      "Receptor density in one AAL region, or where one receptor is densest across the 45 cerebral regions, " +
+      "from two open sources kept apart: in vivo PET (19 receptors and transporters, Hansen et al. 2022 compilation, " +
+      "reported as the tracer's measure and as a share of the receptor's densest region) and ex vivo autoradiography " +
+      "(15 receptors, Zilles & Palomero-Gallagher 2017, fmol/mg protein). Give a region, a receptor, or both.",
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     inputSchema: {
       type: "object",
       properties: {
-        structure: { type: "string", description: "A structure, e.g. 'Hippocampus' (optional)" },
-        receptor: { type: "string", description: "A receptor or family, e.g. 'D2', '5-HT2A', 'GABA' (optional)" }
+        structure: { type: "string", description: "An AAL region, e.g. 'Hippocampus', 'Putamen', 'Anterior Cingulate' (optional)" },
+        receptor: { type: "string", description: "A receptor, transporter or family, e.g. 'D2', '5-HT2A', 'GABA', 'SERT' (optional)" },
+        source: { type: "string", enum: ["pet", "autoradiography", "both"], description: "Which layer to read; both by default" }
       }
     }
   },
@@ -156,8 +159,8 @@ function doSearch({ query }){
     if (matches(norm(s.id + " " + s.label + " " + s.title + " " + s.blurb)))
       out.push("**" + s.title + "** (brain state). " + s.blurb + " " + stateLink(s));
   }
-  const rx = DATA.receptors.columns.filter(c => matches(norm(c.name))).slice(0, 4);
-  for (const c of rx) out.push("**" + c.name + "** (receptor measure across 18 structures — ask receptor_density). " + link("regions.html#receptors", "Open the receptor charts"));
+  const rx = allReceptors().filter(c => matches(norm(c.name)) || matches(norm(c.family))).slice(0, 4);
+  for (const c of rx) out.push("**" + c.name + "** (" + c.layer + " receptor data across the cerebral regions — ask receptor_density). " + link("regions.html#receptors", "Open the receptor charts"));
 
   if (!out.length) return text("Nothing in the atlas matches “" + query + "”. Try a region name, a Brodmann number, or a function like “working memory” or “faces”.");
   const seen = new Set(), unique = out.filter(l => !seen.has(l) && seen.add(l));
@@ -177,8 +180,8 @@ function doRegion({ name }){
     "",
     "Layer: " + (DATA.tiers[r.tier] || "unplaced") + " · Atlas: AAL-116 on the MNI152 template.",
   ];
-  if (DATA.receptors.structures.some(s => norm(s).includes(norm(r.name).split(",")[0])))
-    lines.push("Receptor densities are charted for this structure — ask receptor_density.");
+  if (DATA.receptors.regions.some(s => s.base === r.base))
+    lines.push("Receptor densities are charted for this region — ask receptor_density.");
   lines.push("", regionLink(r) + " — it opens highlighted on the scan, in three planes and 3D.");
   return text(lines.join("\n"));
 }
@@ -204,29 +207,40 @@ function doBrodmann({ area }){
   return text(lines.filter(l => l !== "").join("\n"));
 }
 
-function doReceptor({ structure, receptor }){
+function allReceptors(){
   const R = DATA.receptors;
-  const sQ = norm(structure), rQ = norm(receptor);
-  const sIdx = sQ ? R.structures.findIndex(s => norm(s).includes(sQ)) : -1;
-  if (sQ && sIdx < 0) return toolError("No receptor data for “" + structure + "”. The 18 charted structures: " + R.structures.join(", ") + ".");
-  const cols = rQ ? R.columns.filter(c => norm(c.name).includes(rQ)) : R.columns;
-  if (!cols.length) return toolError("No receptor measure matches “" + receptor + "”. Try a family (GABA, Dopamine, Serotonin) or a subtype (D2, 5-HT2A, NR2B).");
-
+  return R.pet.receptors.map(r => ({ ...r, layer: "PET" })).concat(R.autoradiography.receptors.map(r => ({ ...r, layer: "autoradiography" })));
+}
+function doReceptor({ structure, receptor, source }){
+  const R = DATA.receptors;
+  const sQ = norm(structure), rQ = norm(receptor), which = source || "both";
+  const reg = sQ ? (R.regions.find(x => norm(x.name) === sQ) || R.regions.find(x => norm(x.name).includes(sQ) || norm(x.base).includes(sQ.replace(/ /g, "_")))) : null;
+  if (sQ && !reg) return toolError("No receptor data for “" + structure + "”. The regions carried are the 45 cerebral AAL regions; the cerebellum is left out because it is the reference tissue for most tracers.");
+  const layers = [];
+  if (which !== "autoradiography") layers.push({ key: "PET", title: "In vivo PET", receptors: R.pet.receptors, unit: r => r.measure, fmtV: v => v && (v.value.toFixed(3) + " " + "(" + v.share + "% of the receptor's densest region)"), rank: v => v ? v.share : -1 });
+  if (which !== "pet") layers.push({ key: "AR", title: "Ex vivo autoradiography", receptors: R.autoradiography.receptors, unit: () => "fmol/mg protein", fmtV: v => v == null ? null : v.toFixed(0) + " fmol/mg protein", rank: v => v == null ? -1 : v });
   const chartLink = link("regions.html#receptors", "Open the receptor charts");
-  if (sIdx >= 0 && rQ){
-    const rows = cols.map(c => "- " + c.name + ": **" + c.values[sIdx] + "**");
-    return text("Receptor density in the " + R.structures[sIdx] + " (fmol/mg tissue):\n\n" + rows.join("\n") + "\n\n" + chartLink);
+  const caveat = "PET values are binding measures that differ by tracer, so compare a PET receptor across regions, not receptors against each other; autoradiography is absolute density from three post-mortem brains, cortex only. Sources: Hansen et al. 2022 (doi:10.1038/s41593-022-01186-3, CC BY-NC-SA 4.0) and Zilles & Palomero-Gallagher 2017 (doi:10.3389/fnana.2017.00078, CC BY 4.0).";
+  const out = [];
+  for (const L of layers){
+    const cols = rQ ? L.receptors.filter(c => norm(c.name).includes(rQ) || norm(c.family).includes(rQ) || norm(c.id).includes(rQ.replace(/[^a-z0-9]/g, ""))) : L.receptors;
+    if (!cols.length) continue;
+    if (reg && rQ){
+      const rows = cols.map(c => { const v = c.values[reg.base]; return "- " + c.name + (c.tracer ? " (" + c.tracer + ", " + c.measure + ", n=" + c.n + "; " + c.cite + ")" : "") + ": **" + (L.fmtV(v) || "no data for this region") + "**"; });
+      out.push("**" + L.title + "** in the " + reg.name + ":\n" + rows.join("\n"));
+    } else if (reg){
+      const ranked = L.receptors.map(c => [c, c.values[reg.base]]).filter(([, v]) => v != null).sort((a, b) => L.rank(b[1]) - L.rank(a[1]));
+      out.push("**" + L.title + "** in the " + reg.name + (L.key === "PET" ? ", by share of each receptor's own densest region" : ", densest first") + ":\n" + ranked.map(([c, v]) => "- " + c.name + ": **" + L.fmtV(v) + "**").join("\n"));
+    } else {
+      const c = cols[0];
+      const ranked = R.regions.map(x => [x, c.values[x.base]]).filter(([, v]) => v != null).sort((a, b) => L.rank(b[1]) - L.rank(a[1]));
+      const more = cols.length > 1 ? "\n(" + (cols.length - 1) + " more " + L.key + " entries match “" + receptor + "” — name one to narrow it.)" : "";
+      out.push("**" + c.name + "**, " + L.title.toLowerCase() + (c.tracer ? " (" + c.tracer + ", " + c.measure + ", n=" + c.n + "; " + c.cite + ")" : "") + ", densest first:\n" +
+        ranked.slice(0, 20).map(([x, v]) => "- " + x.name + ": **" + L.fmtV(v) + "**").join("\n") + more);
+    }
   }
-  if (sIdx >= 0){
-    const ranked = R.columns.map(c => [c.name, c.values[sIdx]]).sort((a, b) => b[1] - a[1]);
-    const rows = ranked.slice(0, 12).map(([n, v]) => "- " + n + ": **" + v + "**");
-    return text("The densest receptor measures in the " + R.structures[sIdx] + " (fmol/mg tissue), top 12 of " + R.columns.length + ":\n\n" + rows.join("\n") + "\n\n" + chartLink);
-  }
-  const c = cols[0];
-  const ranked = R.structures.map((s, i) => [s, c.values[i]]).sort((a, b) => b[1] - a[1]);
-  const more = cols.length > 1 ? "\n\n(" + (cols.length - 1) + " more measures match “" + receptor + "” — name a subtype to narrow it.)" : "";
-  return text("**" + c.name + "** across the 18 charted structures, densest first:\n\n" +
-    ranked.map(([s, v]) => "- " + s + ": **" + v + "**").join("\n") + more + "\n\n" + chartLink);
+  if (!out.length) return toolError("No receptor matches “" + receptor + "”. Try a family (GABA, dopamine, serotonin), a receptor (D2, 5-HT2A, M1, NMDA) or a transporter (SERT, DAT, NET, VAChT). Sub-types with no open human data are listed on the page.");
+  return text(out.join("\n\n") + "\n\n" + caveat + "\n\n" + chartLink);
 }
 
 function doState({ state }){

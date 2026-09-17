@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.9 — 17 September 2026 — Receptor densities with a source behind every number
+Commit · Replace the placeholder receptor table with sourced PET and autoradiography data
+
+The receptor section of the Region Atlas had been drawing a table with no source behind it: forty-eight distinct values across two thousand cells, thirty columns copied from one another, and magnitudes an order or two away from measurement. It is withdrawn. In its place are two open datasets, kept apart because they measure different things: in vivo PET, nineteen receptors and transporters from the group-average tracer maps compiled by Hansen and colleagues in 2022, parcellated onto this site's own AAL volume and charted as each receptor's share of its densest region; and ex vivo autoradiography, fifteen receptors in fmol/mg protein from Zilles and Palomero-Gallagher's 2017 cortical series, mapped onto the regions area by area with each match marked exact or approximate. Every receptor carries its tracer, its measure, its sample and its citation; the section says plainly what has no open human data; the derived tables are published as CSV under the licences they inherit; and the MCP server answers from the same numbers.
+
 ## v10.8 — 17 September 2026 — The Brodmann areas join the atlas
-Commit · Bring the Brodmann areas into the Region Atlas and retire their own page
+Commit `83b9e3d` · Bring the Brodmann areas into the Region Atlas and retire their own page
 
 The Brodmann areas now live in the Region Atlas rather than on a page of their own. A searchable list sits in the rail under the AAL dropdown, the classic two-face map sits below the notes, and a picked area is highlighted on the same scan in its own colour alongside any AAL regions, with its function and caveat in a block of its own among the readings. The probe names both the parcel and the area under the crosshair, 3D export and saved models carry areas as well as regions, and the old page's address and deep links land in the atlas. The border graph is retired from the page, with its measured edges and the brain hull kept in the repository for later. The receptor section gains a heat-map on the Receptor Types tab, every sub-type against every measured structure from yellow to red, with the tabs reordered to put it second; choosing from a dropdown on the atlas or the Network Atlas no longer shifts the page under the pointer. The neuron on the Microanatomy page gains its incoming axons, eighteen structures now.
 

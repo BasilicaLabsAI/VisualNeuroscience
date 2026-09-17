@@ -60,6 +60,8 @@ original drawing could be restored under the same permission if wanted.
 |---|---|---|---|
 | MNI152 (ICBM 2009c) template | McConnell Brain Imaging Centre, MNI | Free to use and distribute with the copyright notice | Footer of every atlas page; `about.html` |
 | AAL-116 parcellation | Tzourio-Mazoyer et al., 2002; GIN | Free for non-commercial academic use | `regions.html` footer; `about.html` |
+| Receptor PET maps (19 group-average tracer maps) | Hansen JY et al., *Nat Neurosci* 2022;25:1569, compilation at github.com/netneurolab/hansen_receptors; each map's originating study is named on its receptor | CC BY-NC-SA 4.0 (the repository's LICENSE.md). Attribution, non-commercial, and the derived table shared alike | `regions.html` receptor section, per receptor and in the sources block; `backend/data/receptors/README.md` |
+| Receptor autoradiography (15 receptors, 44 cortical areas) | Zilles K, Palomero-Gallagher N. *Front Neuroanat* 2017;11:78, via the Hansen repository (Goulas et al. 2021) | CC BY 4.0 | `regions.html` receptor section; `backend/data/receptors/README.md` |
 | Brodmann atlas volume | MRIcron (Chris Rorden) | BSD | `regions.html` footer; `about.html` |
 | HCP1065 tractography atlas | Yeh FC, *Nat Commun* 13:4933 (2022), from Human Connectome Project data; the shipped copy is NiiVue's subsampled redistribution | CC BY-SA 4.0, attribution and share-alike | `tracts.html` credits; `site/assets/tracts/README.md` |
 | NiiVue | Rorden lab | BSD | Footers; `about.html` |
@@ -67,6 +69,14 @@ original drawing could be restored under the same permission if wanted.
 | Firebase JS SDK | Google | Apache 2.0 | `site/vendor/firebase/NOTICE.md` |
 | Afacad Flux, Newsreader, Prata | Their authors; the files are self-hosted in `site/fonts/` | SIL Open Font License 1.1 | `site/fonts/LICENSE-*.txt` |
 | Studies drawn on the scan | Open-access papers, cited on each page | As published | The page itself |
+
+The receptor PET compilation is the one CC BY-NC-SA item: its ShareAlike
+term applies to the parcellated table this site derives from it, which is
+therefore published under the same licence in `backend/data/receptors/`,
+and its NonCommercial term is one more reason the app must stay free. The
+[11C]flumazenil GABA-A map in that compilation comes from an atlas paper
+published CC BY-NC-ND; it is used here as the compilation redistributes it,
+under the compilation's licence.
 
 Nothing else on the site or in the apps is third-party material. The
 practice questions, the textbook chapters, the function notes and the

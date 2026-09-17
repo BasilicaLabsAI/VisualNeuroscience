@@ -27,13 +27,14 @@ const NOTES = evalAsset("assets/region-notes.js").MN_NOTES;
 const BA    = evalAsset("assets/brodmann-areas.js").MN_BRODMANN;
 const NET   = evalAsset("assets/network-states.js").MN_NET;
 
+const RX    = evalAsset("assets/receptor-data.js").MN_RECEPTORS;
+
 const html = fs.readFileSync(site("regions.html"), "utf8");
 const grab = name => {
   const m = html.match(new RegExp("const " + name + " = ({.*?});", "s"));
   if (!m) throw new Error(name + " not found in regions.html");
   return JSON.parse(m[1]);
 };
-const DATA = grab("DATA");
 const TYPES = grab("TYPES");
 
 /* regions: one row per AAL base, with its note and its selection key */
@@ -75,10 +76,23 @@ const networks = {
   }))
 };
 
-/* receptors: the merged density table, column names split into family/measure */
+/* receptors: the two sourced layers, per cerebral AAL region. PET values are
+   the parcel means in the tracer's own measure plus a share of the receptor's
+   densest region; autoradiography is fmol/mg protein with the areas behind it */
 const receptors = {
-  structures: DATA.structures,
-  columns: DATA.columns.map(c => ({ name: c.name, values: c.values })),
+  regions: RX.regions.map(r => ({ base: r.base, name: r.name, group: r.group })),
+  pet: {
+    source: RX.pet.source, measures: RX.pet.measures,
+    receptors: RX.pet.receptors.map(r => ({
+      id: r.id, name: r.name, family: r.family, kind: r.kind, tracer: r.tracer, measure: r.measure, ref: r.ref, n: r.n, age: r.age, cite: r.cite, note: r.note,
+      values: Object.fromEntries(Object.entries(r.values).map(([b, v]) => [b, v.m == null ? null : { value: v.m, share: Math.round(Math.max(0, v.m / r.max) * 100) }]))
+    }))
+  },
+  autoradiography: {
+    source: RX.autoradiography.source, unit: RX.autoradiography.unit, sample: RX.autoradiography.sample,
+    receptors: RX.autoradiography.receptors.map(r => ({ id: r.id, name: r.name, family: r.family, values: r.values, areas: r.areas }))
+  },
+  gaps: RX.gaps,
   types: TYPES.rows.map(r => ({ subunit: r[0], type: r[1], family: r[2], category: r[3], mechanism: r[4] }))
 };
 
@@ -92,5 +106,5 @@ fs.mkdirSync(path.dirname(dest), { recursive: true });
 fs.writeFileSync(dest, "/* Generated: " + out.built + " */\nexport default " + JSON.stringify(out) + ";\n");
 console.log("wrote", dest,
   "regions", regions.length, "brodmann", brodmann.length,
-  "states", networks.states.length, "receptor columns", receptors.columns.length,
+  "states", networks.states.length, "PET receptors", receptors.pet.receptors.length, "autoradiography receptors", receptors.autoradiography.receptors.length,
   Math.round(fs.statSync(dest).size / 1024) + " KB");
