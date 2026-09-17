@@ -536,6 +536,9 @@ table.dtable td.num{ font-size:.84rem; }
 #receptor-graph .x-label{ cursor:pointer; }
 #receptor-graph .x-label.picked{ font-weight:600; }
 #receptor-graph .bar.empty{ fill:none; stroke:var(--ink-35); stroke-dasharray:3 2; }
+.data-table td.nei{ color:var(--ink-60); font-style:italic; font-family:var(--font-serif); white-space:normal; }
+.heat th.rlabel.nodata{ color:var(--ink-60); }
+.heat th.rlabel small{ font-family:var(--font-serif); font-style:italic; font-size:.62rem; color:var(--ink-35); margin-left:.3rem; }
 
 /* the graphs sit below the brain, full width */
   .below { margin-top: var(--gap); }
@@ -1970,9 +1973,12 @@ const RX = window.MN_RECEPTORS;
 const REG = RX ? RX.regions : [];
 const BY_BASE = Object.fromEntries(REG.map(r => [r.base, r]));
 const GROUP_ORDER = ["Frontal", "Insula & Cingulate", "Medial Temporal", "Temporal", "Parietal", "Occipital", "Subcortical"];
-const FAMILIES = ["Glutamate", "GABA", "Dopamine", "Serotonin", "Acetylcholine", "Noradrenaline", "Histamine", "Opioid", "Cannabinoid"];
+const FAMILIES = ["Glutamate", "GABA", "Dopamine", "Serotonin", "Acetylcholine", "Noradrenaline", "Histamine", "Opioid", "Cannabinoid",
+                  "Neuropeptide Y", "Somatostatin", "Melatonin", "Orexin", "Prostaglandin"];
 const FAMILY_COLOR = { Glutamate: "#FEBDB4", GABA: "#EBD97C", Dopamine: "#AADFB0", Serotonin: "#9CD8FE", Acetylcholine: "#E1C0FA",
-                       Noradrenaline: "#F8C396", Histamine: "#89E1E1", Opioid: "#FCB9D5", Cannabinoid: "#B9CFFF" };
+                       Noradrenaline: "#F8C396", Histamine: "#89E1E1", Opioid: "#FCB9D5", Cannabinoid: "#B9CFFF",
+                       "Neuropeptide Y": "#BFDB9F", Somatostatin: "#FEBFA6", Melatonin: "#8CDEF2", Orexin: "#F0BCEA", Prostaglandin: "#97E2C5" };
+const NEI = "Not enough information";
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 let layer = "pet";        /* "pet" | "ar" */
@@ -1980,12 +1986,28 @@ let axisMode = "receptor"; /* "receptor" | "region" */
 let heatScale = "row";
 
 function L() { return layer === "pet" ? RX.pet : RX.autoradiography; }
-function receptors() { return L().receptors; }
-function shortName(r) { return r.name.replace(" (class)", "").replace(" / benzodiazepine site", "/BZ").replace(" benzodiazepine site", "/BZ").replace(" muscarinic", "").replace(" nicotinic", ""); }
+/* Every receptor in the catalogue, whether or not this source has numbers for
+   it. An entry carries the source's data in .data, or a reason in .reason
+   that begins "Not enough information". */
+function receptors() {
+  return RX.catalogue.map(c => {
+    const key = layer === "pet" ? c.pet : c.ar;
+    const data = key ? L().receptors.find(r => r.id === key) || null : null;
+    let reason = null;
+    if (!data) {
+      if (c.reason) reason = c.reason;
+      else if (layer === "pet" && c.ar) reason = NEI + " from PET: this receptor is measured here by autoradiography only. Switch the source.";
+      else if (layer === "ar" && c.pet) reason = NEI + " from autoradiography: this receptor is measured here by PET only. Switch the source.";
+      else reason = NEI + ".";
+    }
+    return { id: c.id, name: c.name, family: c.family, data, reason };
+  });
+}
+function shortName(r) { return r.name.replace(" (class)", "").replace(" (transporter)", "").replace(" / benzodiazepine site", "/BZ").replace(" benzodiazepine site", "/BZ").replace(" muscarinic", "").replace(" nicotinic", "").replace(" adrenoceptors", ""); }
 /* the value as measured */
-function raw(r, base) { const v = r.values[base]; if (v == null) return null; return layer === "pet" ? v.m : v; }
+function raw(r, base) { if (!r.data) return null; const v = r.data.values[base]; if (v == null) return null; return layer === "pet" ? v.m : v; }
 /* the value as charted: PET as a share of the receptor's densest region, autoradiography as is */
-function shown(r, base) { const v = raw(r, base); if (v == null) return null; return layer === "pet" ? Math.max(0, v / r.max) * 100 : v; }
+function shown(r, base) { const v = raw(r, base); if (v == null) return null; return layer === "pet" ? Math.max(0, v / r.data.max) * 100 : v; }
 function unitOf(r) { return layer === "pet" ? r.measure : "fmol/mg protein"; }
 function fmt(v, d) { return v == null ? "—" : Number(v).toLocaleString(undefined, { maximumFractionDigits: d == null ? 2 : d }); }
 function escapeHtml(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
@@ -2001,7 +2023,7 @@ function fillDropdown(keep) {
     receptors().forEach(r => { (groups[r.family] = groups[r.family] || []).push(r); });
     FAMILIES.filter(f => groups[f]).forEach(f => {
       const og = document.createElement("optgroup"); og.label = f;
-      groups[f].forEach(r => { const o = document.createElement("option"); o.value = r.id; o.textContent = r.name + (r.kind === "transporter" ? " (transporter)" : ""); og.appendChild(o); });
+      groups[f].forEach(r => { const o = document.createElement("option"); o.value = r.id; o.textContent = r.name + (r.data ? "" : " \u00B7 not enough information"); og.appendChild(o); });
       dropdown.appendChild(og);
     });
     dropdown.setAttribute("aria-label", "Receptor");
@@ -2039,7 +2061,7 @@ function buildChart() {
       yLabel: layer === "pet" ? "% of the receptor's densest region" : "fmol/mg protein",
       bars: cats.map(reg => ({ key: reg.base, label: regionShort(reg), region: reg, value: shown(r, reg.base), colour: FAMILY_COLOR[r.family],
         tip: tipFor(r, reg) })),
-      legend: [{ name: r.name + (layer === "pet" ? " · " + r.tracer + " · " + r.measure : " · autoradiography"), colour: FAMILY_COLOR[r.family] }],
+      legend: [{ name: r.name + (r.data ? (layer === "pet" ? " · " + r.data.tracer + " · " + r.data.measure : " · autoradiography") : " · " + NEI.toLowerCase()), colour: FAMILY_COLOR[r.family] }],
       max: layer === "pet" ? 100 : null
     };
   }
@@ -2055,15 +2077,16 @@ function buildChart() {
   };
 }
 function tipFor(r, reg) {
-  const v = r.values[reg.base];
-  if (v == null) return "<div class=\"tt-series\">" + escapeHtml(r.name + " · " + reg.name) + "</div>no data for this region";
+  if (!r.data) return "<div class=\"tt-series\">" + escapeHtml(r.name + " · " + reg.name) + "</div>" + escapeHtml(r.reason);
+  const v = r.data.values[reg.base];
+  if (v == null) return "<div class=\"tt-series\">" + escapeHtml(r.name + " · " + reg.name) + "</div>" + NEI + ": this map does not cover the region";
   if (layer === "pet") {
     return "<div class=\"tt-series\">" + escapeHtml(r.name + " · " + reg.name) + "</div>" +
-      "<div class=\"tt-value\">" + fmt(Math.max(0, v.m / r.max) * 100, 0) + "% of densest region</div>" +
-      escapeHtml(r.measure) + " " + fmt(v.m, 3) + " (L " + fmt(v.l, 3) + " · R " + fmt(v.r, 3) + ")<br>" +
-      escapeHtml(r.tracer) + " · covered " + Math.round(v.cov * 100) + "% of the region";
+      "<div class=\"tt-value\">" + fmt(Math.max(0, v.m / r.data.max) * 100, 0) + "% of densest region</div>" +
+      escapeHtml(r.data.measure) + " " + fmt(v.m, 3) + " (L " + fmt(v.l, 3) + " · R " + fmt(v.r, 3) + ")<br>" +
+      escapeHtml(r.data.tracer) + " · covered " + Math.round(v.cov * 100) + "% of the region";
   }
-  const a = r.areas[reg.base];
+  const a = r.data.areas[reg.base];
   return "<div class=\"tt-series\">" + escapeHtml(r.name + " · " + reg.name) + "</div>" +
     "<div class=\"tt-value\">" + fmt(v, 0) + " fmol/mg protein</div>" +
     "from area" + (a.areas.length > 1 ? "s " : " ") + escapeHtml(a.areas.join(", ")) + " · " + (a.fit === "exact" ? "exact match" : "approximate match");
@@ -2122,15 +2145,20 @@ function renderCite() {
       : "<span class=\"k\">Reading the bars</span>Autoradiography shares one unit, so these are the measured densities in fmol/mg protein. Pick a receptor to see which cortical areas stand behind each region.";
     return;
   }
-  const r = currentReceptor();
+  const c = currentReceptor();
+  if (!c.data) {
+    host.innerHTML = "<span class=\"k\">" + NEI + "</span><b>" + escapeHtml(c.name) + "</b><div class=\"note\">" + escapeHtml(c.reason) + "</div>";
+    return;
+  }
+  const r = c.data;
   if (layer === "pet") {
-    host.innerHTML = "<span class=\"k\">Source of this map</span><b>" + escapeHtml(r.name) + (r.kind === "transporter" ? " transporter" : "") + "</b>" +
+    host.innerHTML = "<span class=\"k\">Source of this map</span><b>" + escapeHtml(c.name) + "</b>" +
       "<div class=\"row2\"><span>Tracer <b>" + escapeHtml(r.tracer) + "</b></span><span>Measure <b>" + escapeHtml(r.measure) + "</b>, " + escapeHtml(RX.pet.measures[r.measure] || "") + "</span><span>Reference <b>" + escapeHtml(r.ref) + "</b></span><span>Healthy volunteers <b>" + r.n + "</b>, mean age " + escapeHtml(r.age) + "</span><span>Regions covered <b>" + r.covered + " of " + REG.length + "</b></span></div>" +
       escapeHtml(r.cite) + ". Group-average map compiled in Hansen JY et al., <i>Nat Neurosci</i> 2022;25:1569–1581, <a href=\"https://doi.org/10.1038/s41593-022-01186-3\" target=\"_blank\" rel=\"noopener\">doi:10.1038/s41593-022-01186-3</a> (CC BY-NC-SA 4.0), parcellated onto AAL-116 by this site." +
       (r.note ? "<div class=\"note\">" + escapeHtml(r.note) + "</div>" : "");
   } else {
     const reached = Object.keys(r.values).length;
-    host.innerHTML = "<span class=\"k\">Source of these densities</span><b>" + escapeHtml(r.name) + "</b>" +
+    host.innerHTML = "<span class=\"k\">Source of these densities</span><b>" + escapeHtml(c.name) + "</b>" +
       "<div class=\"row2\"><span>Method <b>quantitative in vitro receptor autoradiography</b></span><span>Unit <b>fmol/mg protein</b></span><span>Sample <b>" + escapeHtml(RX.autoradiography.sample.split(";")[0]) + "</b></span><span>Regions reached <b>" + reached + " of " + REG.length + "</b></span></div>" +
       "Zilles K, Palomero-Gallagher N. <i>Front Neuroanat</i> 2017;11:78, <a href=\"https://doi.org/10.3389/fnana.2017.00078\" target=\"_blank\" rel=\"noopener\">doi:10.3389/fnana.2017.00078</a> (CC BY 4.0). Forty-four cytoarchitectonic areas mapped onto AAL regions by this site; each region is the mean of the areas that fall in it, and the table says which." +
       "<div class=\"note\">Three brains, aged 72 to 77. Cortex only: the subcortical regions, the insula, the hippocampus and the amygdala have no values here.</div>";
@@ -2141,23 +2169,26 @@ function renderCite() {
 function renderDensityTable() {
   const wrap = document.getElementById("density-table");
   let html;
+  const nei = n => "<td class=\"nei\" colspan=\"" + n + "\">" + NEI + "</td>";
   if (axisMode === "receptor") {
-    const r = currentReceptor();
-    if (layer === "pet") {
+    const c = currentReceptor(), r = c.data;
+    if (!r) {
+      html = "<table class=\"data-table\"><thead><tr><th>Receptor</th><th>Status</th></tr></thead><tbody><tr><td class=\"name\">" + escapeHtml(c.name) + "</td><td class=\"nei\">" + escapeHtml(c.reason) + "</td></tr>";
+    } else if (layer === "pet") {
       html = "<table class=\"data-table\"><thead><tr><th>Region</th><th>Left</th><th>Right</th><th>Mean (" + escapeHtml(r.measure) + ")</th><th>Share of densest</th><th>Covered</th></tr></thead><tbody>";
-      REG.forEach(reg => { const v = r.values[reg.base]; html += "<tr><td class=\"name\">" + escapeHtml(reg.name) + "</td><td>" + fmt(v && v.l, 3) + "</td><td>" + fmt(v && v.r, 3) + "</td><td>" + fmt(v && v.m, 3) + "</td><td>" + (v && v.m != null ? fmt(Math.max(0, v.m / r.max) * 100, 0) + "%" : "—") + "</td><td>" + (v ? Math.round(v.cov * 100) + "%" : "—") + "</td></tr>"; });
+      REG.forEach(reg => { const v = r.values[reg.base]; html += "<tr><td class=\"name\">" + escapeHtml(reg.name) + "</td>" + (v && v.m != null ? "<td>" + fmt(v.l, 3) + "</td><td>" + fmt(v.r, 3) + "</td><td>" + fmt(v.m, 3) + "</td><td>" + fmt(Math.max(0, v.m / r.max) * 100, 0) + "%</td><td>" + Math.round(v.cov * 100) + "%</td>" : nei(5)) + "</tr>"; });
     } else {
       html = "<table class=\"data-table\"><thead><tr><th>Region</th><th>fmol/mg protein</th><th>From areas</th><th>Match</th></tr></thead><tbody>";
-      REG.forEach(reg => { const v = r.values[reg.base]; if (v == null) return; const a = r.areas[reg.base]; html += "<tr><td class=\"name\">" + escapeHtml(reg.name) + "</td><td>" + fmt(v, 0) + "</td><td>" + escapeHtml(a.areas.join(", ")) + "</td><td>" + a.fit + "</td></tr>"; });
+      REG.forEach(reg => { const v = r.values[reg.base]; const a = r.areas[reg.base]; html += "<tr><td class=\"name\">" + escapeHtml(reg.name) + "</td>" + (v != null ? "<td>" + fmt(v, 0) + "</td><td>" + escapeHtml(a.areas.join(", ")) + "</td><td>" + a.fit + "</td>" : nei(3)) + "</tr>"; });
     }
   } else {
     const reg = currentRegion();
     if (layer === "pet") {
       html = "<table class=\"data-table\"><thead><tr><th>Receptor</th><th>Family</th><th>Tracer</th><th>Measure</th><th>Value</th><th>Share of densest</th><th>n</th><th>Source</th></tr></thead><tbody>";
-      receptors().forEach(r => { const v = r.values[reg.base]; html += "<tr><td class=\"name\">" + escapeHtml(r.name) + "</td><td>" + escapeHtml(r.family) + "</td><td>" + escapeHtml(r.tracer) + "</td><td>" + escapeHtml(r.measure) + "</td><td>" + fmt(v && v.m, 3) + "</td><td>" + (v && v.m != null ? fmt(Math.max(0, v.m / r.max) * 100, 0) + "%" : "—") + "</td><td>" + r.n + "</td><td>" + escapeHtml(r.cite) + "</td></tr>"; });
+      receptors().forEach(c => { const r = c.data, v = r && r.values[reg.base]; html += "<tr><td class=\"name\">" + escapeHtml(c.name) + "</td><td>" + escapeHtml(c.family) + "</td>" + (r && v && v.m != null ? "<td>" + escapeHtml(r.tracer) + "</td><td>" + escapeHtml(r.measure) + "</td><td>" + fmt(v.m, 3) + "</td><td>" + fmt(Math.max(0, v.m / r.max) * 100, 0) + "%</td><td>" + r.n + "</td><td>" + escapeHtml(r.cite) + "</td>" : nei(6)) + "</tr>"; });
     } else {
       html = "<table class=\"data-table\"><thead><tr><th>Receptor</th><th>Family</th><th>fmol/mg protein</th><th>From areas</th><th>Match</th></tr></thead><tbody>";
-      receptors().forEach(r => { const v = r.values[reg.base]; const a = r.areas[reg.base]; html += "<tr><td class=\"name\">" + escapeHtml(r.name) + "</td><td>" + escapeHtml(r.family) + "</td><td>" + fmt(v, 0) + "</td><td>" + (a ? escapeHtml(a.areas.join(", ")) : "—") + "</td><td>" + (a ? a.fit : "no cortical area maps here") + "</td></tr>"; });
+      receptors().forEach(c => { const r = c.data, v = r && r.values[reg.base], a = r && r.areas[reg.base]; html += "<tr><td class=\"name\">" + escapeHtml(c.name) + "</td><td>" + escapeHtml(c.family) + "</td>" + (v != null ? "<td>" + fmt(v, 0) + "</td><td>" + escapeHtml(a.areas.join(", ")) + "</td><td>" + a.fit + "</td>" : nei(3)) + "</tr>"; });
     }
   }
   wrap.innerHTML = html + "</tbody></table>";
@@ -2176,24 +2207,24 @@ function renderHeat() {
   const scaleAll = layer === "ar" && heatScale === "all";
   document.getElementById("heat-scale").hidden = layer !== "ar";
   document.getElementById("heat-lede").textContent = layer === "pet"
-    ? "Every PET map against every region, yellow where a receptor is sparsest and red where it is densest, scaled within each receptor because the tracers report different quantities. A hatched box is a region the map does not cover. Click a region's name to light it up on the scan."
-    : "Every autoradiography receptor against every region it reaches, yellow to red. Within each receptor shows where each one concentrates; across the whole table puts them all on one fmol/mg scale. Click a region's name to light it up on the scan.";
+    ? "Every receptor in the catalogue against every region: yellow where a receptor is sparsest and red where it is densest, scaled within each receptor because the tracers report different quantities. A hatched row has not enough information from PET; a hatched box is a region the map does not cover. Click a region's name to light it up on the scan."
+    : "Every receptor in the catalogue against every region the autoradiography reaches, yellow to red. Within each receptor shows where each one concentrates; across the whole table puts them all on one fmol/mg scale. A hatched row has not enough information from this source. Click a region's name to light it up on the scan.";
   let allMax = 0;
   rs.forEach(r => REG.forEach(reg => { const v = raw(r, reg.base); if (v > allMax) allMax = v; }));
-  const cols = layer === "ar" ? REG.filter(reg => rs.some(r => r.values[reg.base] != null)) : REG;
+  const cols = layer === "ar" ? REG.filter(reg => rs.some(r => r.data && r.data.values[reg.base] != null)) : REG;
   let html = "<table><thead><tr><th class=\"corner\"></th>";
   cols.forEach(reg => { html += "<th class=\"col\"><button type=\"button\" data-base=\"" + reg.base + "\" title=\"" + escapeHtml(reg.name) + "\">" + escapeHtml(reg.name) + "</button></th>"; });
   html += "</tr></thead><tbody>";
   let lastFam = null;
   rs.forEach(r => {
     if (r.family !== lastFam) { html += "<tr class=\"fam\"><th colspan=\"" + (cols.length + 1) + "\">" + escapeHtml(r.family) + "</th></tr>"; lastFam = r.family; }
-    const top = scaleAll ? allMax : r.max;
-    html += "<tr><th class=\"rlabel\" title=\"" + escapeHtml(r.name) + "\">" + escapeHtml(shortName(r)) + "</th>";
+    const top = scaleAll ? allMax : (r.data ? r.data.max : 1);
+    html += "<tr><th class=\"rlabel" + (r.data ? "" : " nodata") + "\" title=\"" + escapeHtml(r.data ? r.name : r.reason) + "\">" + escapeHtml(shortName(r)) + (r.data ? "" : " <small>" + NEI.toLowerCase() + "</small>") + "</th>";
     cols.forEach(reg => {
       const v = raw(r, reg.base);
-      if (v == null) { html += "<td class=\"cell none\" data-base=\"" + reg.base + "\" title=\"" + escapeHtml(shortName(r) + " · " + reg.name + ": no data") + "\"></td>"; return; }
+      if (v == null) { html += "<td class=\"cell none\" data-base=\"" + reg.base + "\" title=\"" + escapeHtml(shortName(r) + " · " + reg.name + ": " + (r.data ? NEI + " for this region" : r.reason)) + "\"></td>"; return; }
       const t = top > 0 ? Math.max(0, v) / top : 0;
-      const label = layer === "pet" ? fmt(Math.max(0, v / r.max) * 100, 0) + "% of densest (" + r.measure + " " + fmt(v, 3) + ")" : fmt(v, 0) + " fmol/mg protein";
+      const label = layer === "pet" ? fmt(Math.max(0, v / r.data.max) * 100, 0) + "% of densest (" + r.data.measure + " " + fmt(v, 3) + ")" : fmt(v, 0) + " fmol/mg protein";
       html += "<td class=\"cell\" data-base=\"" + reg.base + "\" style=\"--c:" + heatColour(t) + "\" title=\"" + escapeHtml(shortName(r) + " · " + reg.name + ": " + label) + "\"></td>";
     });
     html += "</tr>";
@@ -2290,10 +2321,12 @@ function renderCoverage() {
   const el = document.getElementById("rx-coverage");
   if (layer === "pet") {
     const rs = receptors();
-    el.textContent = rs.length + " receptors and transporters over the " + REG.length + " cerebral AAL regions, each region averaged over its voxels in the group-mean map, left and right kept apart. The cerebellum is left out because it is the reference tissue for most of these tracers, so its binding is near zero by construction. A region is left empty where the map covers less than half of it; 5-HT4 reaches the subcortex only.";
+    const withData = rs.filter(r => r.data).length;
+    el.textContent = "The lists carry all " + rs.length + " receptor sub-types and transporters; " + withData + " have an open PET map, and the rest say so. Each region is averaged over its voxels in the group-mean map, left and right kept apart. The cerebellum is left out because it is the reference tissue for most of these tracers, so its binding is near zero by construction. A region is left empty where the map covers less than half of it; 5-HT4 reaches the subcortex only.";
   } else {
-    const reached = REG.filter(reg => receptors().some(r => r.values[reg.base] != null)).length;
-    el.textContent = receptors().length + " receptors in " + reached + " of the " + REG.length + " regions, reached from 44 cytoarchitectonic areas of the cortex. Where an area is part of a gyrus, or spans two, the match is marked approximate. Nothing subcortical, and no insula, hippocampus or amygdala, was measured in this series.";
+    const reached = REG.filter(reg => receptors().some(r => r.data && r.data.values[reg.base] != null)).length;
+    const rs = receptors(), withData = rs.filter(r => r.data).length;
+    el.textContent = "The lists carry all " + rs.length + " receptor sub-types and transporters; " + withData + " were measured in this series, in " + reached + " of the " + REG.length + " regions, reached from 44 cytoarchitectonic areas of the cortex, and the rest say so. Where an area is part of a gyrus, or spans two, the match is marked approximate. Nothing subcortical, and no insula, hippocampus or amygdala, was measured in this series.";
   }
 }
 function renderSources() {

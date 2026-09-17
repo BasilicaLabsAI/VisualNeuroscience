@@ -81,6 +81,7 @@ const networks = {
    densest region; autoradiography is fmol/mg protein with the areas behind it */
 const receptors = {
   regions: RX.regions.map(r => ({ base: r.base, name: r.name, group: r.group })),
+  catalogue: RX.catalogue,
   pet: {
     source: RX.pet.source, measures: RX.pet.measures,
     receptors: RX.pet.receptors.map(r => ({

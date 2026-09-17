@@ -293,6 +293,96 @@ const AR = AR_NAMES.map((nm, j) => {
 });
 console.error("autoradiography:", AR.length, "receptors,", Object.keys(AR[0].values).length, "regions reached from", AREA_MAP.length, "areas");
 
+/* ── every receptor the section lists, whether or not either source has a
+   number for it. The page shows the whole catalogue and writes "Not enough
+   information" against the rest, with the reason. pet and ar name the
+   layer entries that carry the data; a status of "class" means the sub-type
+   was only ever measured as its class, "mrna" that only gene expression has
+   been mapped region by region, "none" that no open human region-by-region
+   density exists at all. ────────────────────────────────────────────────── */
+const REASON = {
+  class: "Not enough information for this sub-type: measured only as its receptor class, listed separately.",
+  mrna: "Not enough information: only gene expression has been mapped region by region, not receptor density.",
+  none: "Not enough information: no open human region-by-region density data has been published."
+};
+const CATALOGUE = [
+  ["NMDA", "NMDA", "Glutamate", { pet: "NMDA", ar: "NMDA" }],
+  ["AMPA", "AMPA", "Glutamate", { ar: "AMPA" }],
+  ["KAINATE", "Kainate", "Glutamate", { ar: "KAINATE" }],
+  ["MGLUR5", "mGluR5", "Glutamate", { pet: "MGLUR5" }],
+  ["GABAA", "GABA-A", "GABA", { ar: "GABAA" }],
+  ["GABAA_BZ", "GABA-A benzodiazepine site", "GABA", { pet: "GABAA", ar: "GABAA_BZ" }],
+  ["GABAB", "GABA-B", "GABA", { ar: "GABAB" }],
+  ["D1", "D1", "Dopamine", { pet: "D1", ar: "D1" }],
+  ["D2", "D2", "Dopamine", { pet: "D2" }],
+  ["D3", "D3", "Dopamine", { status: "none" }],
+  ["D4", "D4", "Dopamine", { status: "none" }],
+  ["D5", "D5", "Dopamine", { status: "none" }],
+  ["DAT", "DAT (transporter)", "Dopamine", { pet: "DAT" }],
+  ["5HT1A", "5-HT1A", "Serotonin", { pet: "5HT1A", ar: "5HT1A" }],
+  ["5HT1B", "5-HT1B", "Serotonin", { pet: "5HT1B" }],
+  ["5HT1D", "5-HT1D", "Serotonin", { status: "none" }],
+  ["5HT1E", "5-HT1E", "Serotonin", { status: "none" }],
+  ["5HT1F", "5-HT1F", "Serotonin", { status: "none" }],
+  ["5HT2A", "5-HT2A", "Serotonin", { pet: "5HT2A" }],
+  ["5HT2", "5-HT2 (class)", "Serotonin", { ar: "5HT2" }],
+  ["5HT2B", "5-HT2B", "Serotonin", { status: "class" }],
+  ["5HT2C", "5-HT2C", "Serotonin", { status: "class" }],
+  ["5HT3", "5-HT3", "Serotonin", { status: "none" }],
+  ["5HT4", "5-HT4", "Serotonin", { pet: "5HT4" }],
+  ["5HT5A", "5-HT5A", "Serotonin", { status: "none" }],
+  ["5HT6", "5-HT6", "Serotonin", { pet: "5HT6" }],
+  ["5HT7", "5-HT7", "Serotonin", { status: "none" }],
+  ["SERT", "SERT (transporter)", "Serotonin", { pet: "SERT" }],
+  ["M1", "M1 muscarinic", "Acetylcholine", { pet: "M1", ar: "M1" }],
+  ["M2", "M2 muscarinic", "Acetylcholine", { ar: "M2" }],
+  ["M3", "M3 muscarinic", "Acetylcholine", { ar: "M3" }],
+  ["M4", "M4 muscarinic", "Acetylcholine", { status: "none" }],
+  ["A4B2", "α4β2 nicotinic", "Acetylcholine", { pet: "A4B2", ar: "A4B2" }],
+  ["A7", "α7 nicotinic", "Acetylcholine", { status: "none" }],
+  ["VACHT", "VAChT (transporter)", "Acetylcholine", { pet: "VACHT" }],
+  ["ALPHA1", "α1 adrenoceptors (class)", "Noradrenaline", { ar: "ALPHA1" }],
+  ["ALPHA1A", "α1A", "Noradrenaline", { status: "class" }],
+  ["ALPHA1B", "α1B", "Noradrenaline", { status: "class" }],
+  ["ALPHA1D", "α1D", "Noradrenaline", { status: "class" }],
+  ["ALPHA2", "α2 adrenoceptors (class)", "Noradrenaline", { ar: "ALPHA2" }],
+  ["ALPHA2A", "α2A", "Noradrenaline", { status: "class" }],
+  ["ALPHA2B", "α2B", "Noradrenaline", { status: "class" }],
+  ["ALPHA2C", "α2C", "Noradrenaline", { status: "class" }],
+  ["BETA1", "β1", "Noradrenaline", { status: "none" }],
+  ["BETA2", "β2", "Noradrenaline", { status: "none" }],
+  ["BETA3", "β3", "Noradrenaline", { status: "none" }],
+  ["NET", "NET (transporter)", "Noradrenaline", { pet: "NET" }],
+  ["H1", "H1", "Histamine", { status: "none" }],
+  ["H2", "H2", "Histamine", { status: "none" }],
+  ["H3", "H3", "Histamine", { pet: "H3" }],
+  ["MOR", "μ-opioid", "Opioid", { pet: "MOR" }],
+  ["DOR", "δ-opioid", "Opioid", { status: "none" }],
+  ["KOR", "κ-opioid", "Opioid", { status: "none" }],
+  ["CB1", "CB1", "Cannabinoid", { pet: "CB1" }],
+  ["CB2", "CB2", "Cannabinoid", { status: "none" }],
+  ["Y1", "Y1", "Neuropeptide Y", { status: "mrna" }],
+  ["Y2", "Y2", "Neuropeptide Y", { status: "mrna" }],
+  ["SST1", "SST1", "Somatostatin", { status: "mrna" }],
+  ["SST2", "SST2", "Somatostatin", { status: "mrna" }],
+  ["SST3", "SST3", "Somatostatin", { status: "mrna" }],
+  ["SST4", "SST4", "Somatostatin", { status: "mrna" }],
+  ["MT1", "MT1", "Melatonin", { status: "mrna" }],
+  ["MT2", "MT2", "Melatonin", { status: "mrna" }],
+  ["OX1", "OX1", "Orexin", { status: "mrna" }],
+  ["OX2", "OX2", "Orexin", { status: "mrna" }],
+  ["EP1", "EP1", "Prostaglandin", { status: "mrna" }],
+  ["EP2", "EP2", "Prostaglandin", { status: "mrna" }],
+  ["EP3", "EP3", "Prostaglandin", { status: "mrna" }],
+  ["EP4", "EP4", "Prostaglandin", { status: "mrna" }]
+].map(([id, name, family, link]) => ({ id, name, family, pet: link.pet || null, ar: link.ar || null, status: link.status || null, reason: link.status ? REASON[link.status] : null }));
+for (const c of CATALOGUE) {
+  if (c.pet && !PET.some(r => r.id === c.pet)) throw new Error("catalogue names a PET entry that is not built: " + c.pet);
+  if (c.ar && !AR.some(r => r.id === c.ar)) throw new Error("catalogue names an autoradiography entry that is not built: " + c.ar);
+}
+for (const r of PET) if (!CATALOGUE.some(c => c.pet === r.id)) throw new Error("PET entry missing from the catalogue: " + r.id);
+for (const r of AR) if (!CATALOGUE.some(c => c.ar === r.id)) throw new Error("autoradiography entry missing from the catalogue: " + r.id);
+
 /* ── what has no open human data at all, so the page can say so ────────── */
 const GAPS = {
   classOnly: ["α1 and α2 adrenoceptors are measured as classes, not as α1A/α1B/α1D or α2A/α2B/α2C", "5-HT2 in the autoradiography is the class, not 5-HT2A alone", "the autoradiography D1 ligand is D1-like"],
@@ -305,6 +395,7 @@ const round = (v, d) => v == null ? null : +v.toFixed(d);
 const out = {
   built: "by scripts/build_receptor_data.mjs from the Hansen et al. 2022 compilation and the Zilles & Palomero-Gallagher 2017 autoradiography table, parcellated onto the site's AAL-116 volume",
   regions: REGIONS,
+  catalogue: CATALOGUE,
   pet: {
     title: "In vivo PET",
     source: { cite: "Hansen JY, Shafiei G, Markello RD, et al. Mapping neurotransmitter systems to the structural and functional organization of the human neocortex. Nat Neurosci 2022;25:1569–1581.", doi: "10.1038/s41593-022-01186-3", repo: "https://github.com/netneurolab/hansen_receptors", licence: "CC BY-NC-SA 4.0" },

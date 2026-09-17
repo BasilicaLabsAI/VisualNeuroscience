@@ -239,7 +239,13 @@ function doReceptor({ structure, receptor, source }){
         ranked.slice(0, 20).map(([x, v]) => "- " + x.name + ": **" + L.fmtV(v) + "**").join("\n") + more);
     }
   }
-  if (!out.length) return toolError("No receptor matches “" + receptor + "”. Try a family (GABA, dopamine, serotonin), a receptor (D2, 5-HT2A, M1, NMDA) or a transporter (SERT, DAT, NET, VAChT). Sub-types with no open human data are listed on the page.");
+  /* the catalogue lists every sub-type; the ones without numbers say so by name */
+  if (rQ){
+    const cat = (R.catalogue || []).filter(c => norm(c.name).includes(rQ) || norm(c.family).includes(rQ) || norm(c.id).includes(rQ.replace(/[^a-z0-9]/g, "")));
+    const nei = cat.filter(c => !c.pet && !c.ar).map(c => "- " + c.name + " (" + c.family + "): " + (c.reason || "Not enough information."));
+    if (nei.length) out.push("**Not enough information**\n" + nei.join("\n"));
+  }
+  if (!out.length) return toolError("No receptor matches “" + receptor + "”. Try a family (GABA, dopamine, serotonin), a receptor (D2, 5-HT2A, M1, NMDA) or a transporter (SERT, DAT, NET, VAChT).");
   return text(out.join("\n\n") + "\n\n" + caveat + "\n\n" + chartLink);
 }
 
