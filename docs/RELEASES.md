@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.13 — 18 September 2026 — The pyramidal cell redrawn
+Commit · Regrow the pyramidal cell so its branches keep clear of one another
+
+The pyramidal cell's first drawing tangled: its basal dendrites ran through each other and through the axon, its spines were a fur of beads along every branch, its body was pinched round a nucleus that filled it, and the sheath was a fat sausage with an oligodendrocyte reduced to two lines. Every branch is now tried against everything already placed and shortened until it finds room, so the skirt fans out clean. Spines stand at spaced intervals in the three shapes the multipolar cell uses, and none is set where its head would land on a neighbour. The body is a proper pyramid with room for its organelles, the Nissl bodies reach into the base of the trunk rather than its top, the sheath is slimmer and thins at each paranode, the collateral leaves the bare axon before the sheath begins, the oligodendrocyte is a cell with a body and processes, and every terminal lies along the membrane it rests on rather than pointing at it. All nineteen structures still take their own clicks, and every label now sits in clear space.
+
 ## v10.12 — 17 September 2026 — The Brodmann map moves under the scans
-Commit · Put the Brodmann map in the room under the viewports, and lead the rail with what is highlighted
+Commit `ed56580` · Put the Brodmann map in the room under the viewports, and lead the rail with what is highlighted
 
 Since the Brodmann areas moved into the Region Atlas the rail had run much longer than the column beside it, leaving a field of empty black under the four viewports. The two-face map now sits there, wide enough to read at a glance and still beside the scan it is a schematic of. The rail also leads with what is currently highlighted, so the chips sit directly under the region picker rather than below the whole list of areas.
 

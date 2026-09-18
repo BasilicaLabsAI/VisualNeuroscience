@@ -29,16 +29,23 @@ Edit here, not in the built files.
 Standard library only: no numpy, no shapely, nothing to install. Seed 7 reproduces the drawing
 the page ships.
 
-## How it is drawn
+## How it is grown
 Every dendrite and the axon is a centreline plus a radius that tapers along it, grown by a
-seeded random walk inside rules about where a pyramidal cell sends its branches. A run of
-centreline is stroked twice, once in ink a little wider and once in the cell colour on top, so
-branches merge into one silhouette instead of showing seams. Runs whose radius rounds to the
-same step share a stroke width, and one path element carries every run of that width in a
-structure, which is what keeps the file to a few hundred elements.
+seeded random walk inside rules about where a pyramidal cell sends its branches. Each branch is
+tried against everything already placed, on a grid so the check stays cheap, and thrown away if
+it would run through a neighbour, the cell body, the axon, the pia or the white matter; a branch
+that finds no room is shortened until it does. That is what keeps the basal skirt a skirt rather
+than a tangle. Spines are then set out along each dendrite at spaced intervals in the three
+shapes the multipolar cell uses, and one is dropped wherever its head would land on another
+branch or another spine.
 
-Nothing is allowed out of the frame: the tuft is clamped under the pia, which is also what a
-real tuft does, and the basal skirt is clamped at the sides.
+## How it is drawn
+A run of centreline is stroked twice, once in ink a little wider and once in the cell colour on
+top, so branches merge into one silhouette instead of showing seams. Runs whose radius rounds to
+the same step share a stroke width, and one path element carries every run of that width in a
+structure, which is what keeps the file to a few hundred elements. Each length of sheath thins
+at both ends the way the wraps peel off at a paranode, and its ends are square so its ink cannot
+reach over the bare axon beyond it.
 
 ## Conventions in the drawing
 - `data-part="<id>"` marks a click target. `data-vis="<id>"` marks what gets recoloured:
