@@ -550,6 +550,11 @@ table.dtable td.num{ font-size:.84rem; }
 #receptor-graph .x-label.picked{ font-weight:600; }
 #receptor-graph .bar.empty{ fill:none; stroke:var(--ink-35); stroke-dasharray:3 2; }
 .data-table td.nei{ color:var(--ink-60); font-style:italic; font-family:var(--font-serif); white-space:normal; }
+.heat th.rlabel button{
+  border:0; background:none; padding:0; margin:0; cursor:pointer; color:inherit; font:inherit; letter-spacing:inherit; text-align:left;
+}
+@media (hover: hover){ .heat th.rlabel button:hover{ text-decoration:underline; text-underline-offset:2px; color:var(--ink); } }
+.heat th.rlabel button.on{ font-weight:600; text-decoration:underline; text-underline-offset:2px; }
 .heat th.rlabel.nodata{ color:var(--ink-60); }
 .heat th.rlabel small{ font-family:var(--font-serif); font-style:italic; font-size:.62rem; color:var(--ink-35); margin-left:.3rem; }
 
@@ -2381,8 +2386,8 @@ function renderHeat() {
   const scaleAll = layer === "ar" && heatScale === "all";
   document.getElementById("heat-scale").hidden = layer !== "ar";
   document.getElementById("heat-lede").textContent = layer === "pet"
-    ? "Every receptor in the catalogue against every region: yellow where a receptor is sparsest and red where it is densest, scaled within each receptor because the tracers report different quantities. A hatched row has not enough information from PET; a hatched box is a region the map does not cover. Click a region's name to light it up on the scan."
-    : "Every receptor in the catalogue against every region the autoradiography reaches, yellow to red. Within each receptor shows where each one concentrates; across the whole table puts them all on one fmol/mg scale. A hatched row has not enough information from this source. Click a region's name to light it up on the scan.";
+    ? "Every receptor in the catalogue against every region: yellow where a receptor is sparsest and red where it is densest, scaled within each receptor because the tracers report different quantities. A hatched row has not enough information from PET; a hatched box is a region the map does not cover. Click a receptor's name to chart it, or a region's name to light it up on the scan."
+    : "Every receptor in the catalogue against every region the autoradiography reaches, yellow to red. Within each receptor shows where each one concentrates; across the whole table puts them all on one fmol/mg scale. A hatched row has not enough information from this source. Click a receptor's name to chart it, or a region's name to light it up on the scan.";
   let allMax = 0;
   rs.forEach(r => REG.forEach(reg => { const v = raw(r, reg.base); if (v > allMax) allMax = v; }));
   const cols = layer === "ar" ? REG.filter(reg => rs.some(r => r.data && r.data.values[reg.base] != null)) : REG;
@@ -2393,7 +2398,8 @@ function renderHeat() {
   rs.forEach(r => {
     if (r.family !== lastFam) { html += "<tr class=\"fam\"><th colspan=\"" + (cols.length + 1) + "\">" + escapeHtml(r.family) + "</th></tr>"; lastFam = r.family; }
     const top = scaleAll ? allMax : (r.data ? r.data.max : 1);
-    html += "<tr><th class=\"rlabel" + (r.data ? "" : " nodata") + "\" title=\"" + escapeHtml(r.data ? r.name : r.reason) + "\">" + escapeHtml(shortName(r)) + (r.data ? "" : " <small>" + NEI.toLowerCase() + "</small>") + "</th>";
+    const on = axisMode === "receptor" && dropdown.value === r.id;
+    html += "<tr><th class=\"rlabel" + (r.data ? "" : " nodata") + "\" title=\"" + escapeHtml((r.data ? r.name : r.reason) + " · click to chart it") + "\"><button type=\"button\" data-rx=\"" + escapeHtml(r.id) + "\"" + (on ? " class=\"on\"" : "") + ">" + escapeHtml(shortName(r)) + "</button>" + (r.data ? "" : " <small>" + NEI.toLowerCase() + "</small>") + "</th>";
     cols.forEach(reg => {
       const v = raw(r, reg.base);
       if (v == null) { html += "<td class=\"cell none\" data-base=\"" + reg.base + "\" title=\"" + escapeHtml(shortName(r) + " · " + reg.name + ": " + (r.data ? NEI + " for this region" : r.reason)) + "\"></td>"; return; }
@@ -2405,7 +2411,24 @@ function renderHeat() {
   });
   host.innerHTML = html + "</tbody></table>";
   host.querySelectorAll("th.col button").forEach(b => b.addEventListener("click", () => toggleRegion(BY_BASE[b.dataset.base])));
+  host.querySelectorAll("th.rlabel button").forEach(b => b.addEventListener("click", () => pickReceptor(b.dataset.rx)));
   markPicked();
+}
+/* a receptor named in the table becomes the chart's receptor: the axis
+   goes to receptors if it was on regions, the picker takes it, the chart
+   tab comes forward and the section scrolls back to the top */
+function pickReceptor(id) {
+  if (!receptors().some(r => r.id === id)) return;
+  if (axisMode !== "receptor") {
+    axisMode = "receptor";
+    document.querySelectorAll("#axis-group [data-axis]").forEach(b => b.classList.toggle("active", b.dataset.axis === "receptor"));
+    fillDropdown(false);
+  }
+  dropdown.value = id;
+  const chartTab = document.querySelector("[data-tab=\"chart\"]");
+  if (chartTab && !chartTab.classList.contains("active")) chartTab.click(); else renderChart();
+  redraw();
+  document.getElementById("rx-h").scrollIntoView({ block: "start", behavior: "smooth" });
 }
 document.querySelectorAll("#heat-scale [data-scale]").forEach(btn => {
   btn.addEventListener("click", () => {

@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.32 — 19 September 2026 — A receptor picked from the table
+Commit · Let a receptor's name in the density table pick it for the chart
+
+The receptor-types table names every receptor down its left edge, and those names are now buttons: click one and the chart comes forward with that receptor picked, its transmitter and its schematic drawn beneath, the section scrolled back to its top. The receptor already charted is underlined in the table, and the table's note says what a click does.
+
 ## v10.31 — 19 September 2026 — The density chart scrolls sideways on a phone
-Commit · Let the density chart scroll sideways where the screen is too narrow for its bars
+Commit `e9a4b04` · Let the density chart scroll sideways where the screen is too narrow for its bars
 
 On a phone the forty-five bars of the density chart were squeezed into the width of the screen and their labels ran into one another. Each bar now has a least width, and where that comes to more than the screen the chart scrolls sideways with a finger, the value axis pinned at the left edge so the numbers stay put while the bars pass under it, and a line beneath saying so. On a wide screen nothing changes.
 
