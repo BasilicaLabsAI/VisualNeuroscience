@@ -21,6 +21,12 @@ are drawn faintly behind it as context and are not click targets.
 
 Edit here, not in the built files.
 
+**Held back.** The drawing is not on the page at the moment: its tile is greyed out as coming
+soon, the built files are not in `site/assets/cells/`, and `site/sw.js` does not precache them.
+To put it back: run the build below, restore the two precache entries in `sw.js` and bump its
+`VERSION`, and turn the tile in `site/microanatomy.html` back into a `<button data-cell=
+"pyramidal-neuron">` like the multipolar one.
+
 ## Rebuild
     cd scripts/cells/pyramidal-neuron
     python3 build.py        # seed 7, rewrites both files under site/assets/cells/

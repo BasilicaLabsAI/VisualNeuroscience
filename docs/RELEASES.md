@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.14 — 19 September 2026 — The pyramidal cell held back
+Commit · Take the pyramidal cell off the Microanatomy page and grey out its tile
+
+The pyramidal cell is withdrawn from the page for now. Its tile stays where it was, greyed out as coming soon beside the other cells to follow, and a link to it opens the multipolar neuron instead. The drawing's generator stays in the repository, ready to rebuild, and its README says how to put it back.
+
 ## v10.13 — 18 September 2026 — The pyramidal cell redrawn
-Commit · Regrow the pyramidal cell so its branches keep clear of one another
+Commit `65b5fd8` · Regrow the pyramidal cell so its branches keep clear of one another
 
 The pyramidal cell's first drawing tangled: its basal dendrites ran through each other and through the axon, its spines were a fur of beads along every branch, its body was pinched round a nucleus that filled it, and the sheath was a fat sausage with an oligodendrocyte reduced to two lines. Every branch is now tried against everything already placed and shortened until it finds room, so the skirt fans out clean. Spines stand at spaced intervals in the three shapes the multipolar cell uses, and none is set where its head would land on a neighbour. The body is a proper pyramid with room for its organelles, the Nissl bodies reach into the base of the trunk rather than its top, the sheath is slimmer and thins at each paranode, the collateral leaves the bare axon before the sheath begins, the oligodendrocyte is a cell with a body and processes, and every terminal lies along the membrane it rests on rather than pointing at it. All nineteen structures still take their own clicks, and every label now sits in clear space.
 
