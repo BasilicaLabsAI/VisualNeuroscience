@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.26 — 19 September 2026 — The receptor search hides what it filters out
+Commit · Hide the receptor tiles the search filters out
+
+The search box counted correctly but left every tile on the page: the tile's own layout rule overrode the hidden mark. Tiles the search rules out now disappear, and so do groups left empty.
+
 ## v10.25 — 19 September 2026 — The receptor drawings tell their steps, and a search box
-Commit · Let every part of a receptor drawing tell its step on a hover, and add a search box
+Commit `e728762` · Let every part of a receptor drawing tell its step on a hover, and add a search box
 
 Every part of the receptor schematics now answers a hover or a tap with its step, numbered in order: the transmitter arriving, the receptor changing shape or opening, how long it stays open, the G protein's α subunit letting go and its βγ pair going its own way (steps 3-a and 3-b, since they happen at once), the arrow to the enzyme, and what the second messenger is and does, each written for the tile it sits in with its own transmitter, ion and G protein. The sides of the membrane are named as outside and inside the cell, and they and the membrane itself explain themselves too. A search box at the top of the section filters the hundred and fifty tiles as you type, by name, plain name, transmitter, drug, kind, group or what a receptor does: "nicotine" finds the four nicotinic receptors, "serotonin" every 5-HT receptor and the serotonin transporter.
 
