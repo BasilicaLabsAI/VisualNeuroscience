@@ -507,7 +507,13 @@ table.dtable td.num{ font-size:.84rem; }
 .heat-lede{ flex:1 1 24rem; font-family:var(--font-serif); font-size:.92rem; line-height:1.5; color:var(--ink-60); margin:0; }
 .heat-legend{ display:inline-flex; align-items:center; gap:.35rem; font-family:var(--font-brand); font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); }
 .heat-legend i{ display:block; width:6rem; height:.7rem; border:1px solid var(--hair); background:linear-gradient(90deg,#FFE066,#FF8C1A,#C1121F); }
-.heat{ overflow:auto; border:1px solid var(--hair); max-height:min(78vh,900px); max-height:min(78dvh,900px); margin-bottom:var(--gap); }
+/* the table sits in the page at its full height rather than in a box of
+   its own; only where its columns are wider than the screen does it
+   scroll, and then sideways alone. Where it fits, the column names stay
+   put at the top of the window as the page scrolls. */
+.heat{ overflow-x:auto; margin-bottom:var(--gap); }
+.heat.fits{ overflow:visible; }
+:root[data-native] .heat thead th{ top:calc(env(safe-area-inset-top) + 44px); }
 .heat table{ border-collapse:separate; border-spacing:0; font-size:.72rem; line-height:1.15; }
 .heat th, .heat td{ padding:0; border-right:1px solid var(--paper); border-bottom:1px solid var(--paper); }
 .heat thead th{ position:sticky; top:0; z-index:2; background:var(--paper); vertical-align:bottom; height:9.5rem; }
@@ -2315,7 +2321,7 @@ function renderChart() {
   markPicked();
 }
 let resizeTimer;
-window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(renderChart, 150); });
+window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { renderChart(); fitHeat(); }, 150); });
 
 /* ── what the receptor looks like: the transmitter that binds it, and the
    machine it is, both drawn by assets/rxfig.js from the same files the
@@ -2430,7 +2436,16 @@ function renderHeat() {
   host.innerHTML = html + "</tbody></table>";
   host.querySelectorAll("th.col button").forEach(b => b.addEventListener("click", () => toggleRegion(BY_BASE[b.dataset.base])));
   host.querySelectorAll("th.rlabel button").forEach(b => b.addEventListener("click", () => pickReceptor(b.dataset.rx)));
+  fitHeat();
   markPicked();
+}
+/* the table scrolls sideways only when it must: where it fits the screen it
+   is left open, so its column names can stick to the top of the window */
+function fitHeat() {
+  const host = document.getElementById("types-heat");
+  if (!host.clientWidth) return;            /* the pane is hidden; measured when it shows */
+  host.classList.remove("fits");
+  host.classList.toggle("fits", host.scrollWidth <= host.clientWidth + 1);
 }
 /* a receptor named in the table becomes the chart's receptor: the axis
    goes to receptors if it was on regions, the picker takes it, the chart
@@ -2546,6 +2561,7 @@ document.querySelectorAll("[data-tab]").forEach(btn => {
     dropdown.parentElement.classList.toggle("inapplicable", tab === "types");
     document.getElementById("axis-group").classList.toggle("inapplicable", tab === "types");
     if (tab === "chart") renderChart();
+    if (tab === "types") fitHeat();          /* measured only once it is on show */
   });
 });
 

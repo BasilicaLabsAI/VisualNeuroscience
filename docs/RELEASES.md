@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.35 — 19 September 2026 — The density table sits in the page
+Commit · Take the density table out of its own scrolling box
+
+The receptor-by-region table was boxed in a window of its own, with its own vertical scroll inside the page's, so a thumb on a phone never knew which it was moving. The box is gone: the table now runs down the page at its full height. Where its columns are wider than the screen it scrolls sideways alone, the receptor names staying put at the left; where it fits, the column names stay at the top of the window as the page scrolls past.
+
 ## v10.34 — 19 September 2026 — The reference table charts what it names
-Commit · Let a row of the receptor-types reference pick its receptor for the chart
+Commit `932b7fb` · Let a row of the receptor-types reference pick its receptor for the chart
 
 Where a row of the reference stands for something in the density catalogue, it now charts it on a click: a sub-unit of NMDA, AMPA, kainate or GABA-A names the channel it belongs to, α4, β2 and α7 name the nicotinic receptors that carry them, μ, δ and κ the opioid receptors, and a named receptor names itself, ninety-one rows for sixty entries. Such rows carry an arrow after the name and underline the receptor already charted; the rows with no density entry, the purinergic, TRP and voltage-gated channels among them, stay as they were.
 
