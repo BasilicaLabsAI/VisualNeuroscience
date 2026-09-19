@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.30 — 19 September 2026 — The transmitters take the filter, and both sections fold
+Commit · Fold the transmitter and receptor sections shut, and give the transmitters the receptors' filter row
+
+The Neurotransmitters section now carries the same row of chips the Receptors section has: all seventeen, then the five monoamines one by one or all together, then the other groups whole, so one molecule can be looked at on its own. Both sections, the transmitters and the receptors, now fold shut under their headings and open on a click, so the page opens on the cell drawing at its old length; a link into either, such as a receptor's entry from the Region Atlas, opens the fold it lands in.
+
 ## v10.29 — 19 September 2026 — A region's receptors, ranked against the rest of the brain
-Commit · Lay out every receptor under a region's density chart, each ranked against the other regions
+Commit `9a1593b` · Lay out every receptor under a region's density chart, each ranked against the other regions
 
 Picking a region for the density chart now draws the whole catalogue beneath it, whether or not this source has a number for it there: fourteen families in turn, the transmitter's skeletal formula on the left and its receptors on the right, each as the schematic of its kind with every part still telling its step on a hover. Under each receptor is where the region stands for it — the densest of the forty-five regions mapped, 3rd densest, in the top quarter, the sparsest — with the number as measured, how far behind the densest region it is or how far ahead of the runner-up, how many times the sparsest, and, from PET, a hemisphere that is noticeably denser than the other. A receptor without a number says why: measured by the other source only, a map that covers less than half of the region, or a series that is cortex only. A line at the top sums the region up — how many receptors are mapped there, which it is the densest region for, which it is near the top for, and which it is among the sparsest for — and the densest gets an outlined tile. Picking a receptor gains a line of its own: the three regions it is densest in, the one it is sparsest in, and the gap between them.
 

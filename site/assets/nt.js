@@ -5,7 +5,10 @@
    per molecule holding its skeletal formula (inline SVG, so it takes the
    page's colours), its name, what it is for, and a disclosure with a few
    lines on what it does. No colours live here or in the JSON: the SVG
-   paths refer to --ink and --el-* and the stylesheet supplies them. */
+   paths refer to --ink and --el-* and the stylesheet supplies them.
+   Above the tiles a row of transmitters narrows the list to one, the
+   monoamines first and one by one, then the other groups whole, the same
+   row the Receptors section carries. */
 (function(){
   "use strict";
   var host = document.getElementById("ntGroups");
@@ -63,6 +66,59 @@
       host.appendChild(sec);
     });
     host.classList.add("ready");
+    narrow(doc);
+    if (window.VN_reveal) window.VN_reveal();
+  }
+
+  /* ── narrowing the list: one transmitter, or one group ─────────────── */
+  function narrow(doc){
+    var chips = document.getElementById("ntFilter");
+    if (!chips) return;
+    var tiles = [];
+    doc.groups.forEach(function(g){
+      g.items.forEach(function(it){ tiles.push({ el: document.getElementById("nt-" + it.id), id: it.id, group: g.id }); });
+    });
+    var filters = [{ id: "all", label: "All", kind: "all", test: function(){ return true; } }];
+    var mono = doc.groups.filter(function(g){ return g.id === "monoamine"; })[0];
+    if (mono){
+      filters.push({ id: "monoamines", label: "All five", kind: "mono", test: function(t){ return t.group === "monoamine"; } });
+      mono.items.forEach(function(it){
+        filters.push({ id: it.id, label: it.name, kind: "mono", test: function(t){ return t.id === it.id; } });
+      });
+    }
+    doc.groups.forEach(function(g){
+      if (g.id === "monoamine") return;
+      filters.push({ id: g.id, label: g.name, kind: "other", test: function(t){ return t.group === g.id; } });
+    });
+    var byId = {}, seen = {}, picked = "all";
+    filters.forEach(function(f){
+      byId[f.id] = f;
+      if (f.kind !== "all" && !seen[f.kind]){
+        seen[f.kind] = true;
+        chips.appendChild(el("span", "rx-chip-label", f.kind === "mono" ? "Monoamines" : "Everything else"));
+      }
+      var b = el("button", "rx-chip" + (f.kind === "mono" ? " mono" : "") + (f.id === "all" ? " on" : ""));
+      b.type = "button"; b.setAttribute("data-filter", f.id);
+      b.setAttribute("aria-pressed", f.id === "all" ? "true" : "false");
+      b.appendChild(document.createTextNode(f.label));
+      b.appendChild(el("small", null, String(tiles.filter(f.test).length)));
+      chips.appendChild(b);
+    });
+    chips.addEventListener("click", function(e){
+      var b = e.target.closest && e.target.closest(".rx-chip");
+      if (!b) return;
+      picked = b.getAttribute("data-filter");
+      chips.querySelectorAll(".rx-chip").forEach(function(o){
+        var on = o === b;
+        o.classList.toggle("on", on);
+        o.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      var f = byId[picked] || byId.all;
+      tiles.forEach(function(t){ t.el.hidden = !f.test(t); });
+      host.querySelectorAll(".nt-group").forEach(function(sec){
+        sec.hidden = !sec.querySelector(".nt:not([hidden])");
+      });
+    });
   }
 
   fetch("assets/nt/molecules.json").then(function(r){

@@ -281,7 +281,20 @@ li > .cellt{ cursor:pointer; }
   grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
 }
 .rx{ border:1px solid var(--hair); background:var(--paper); display:flex; flex-direction:column; min-width:0; }
-.rx[hidden], #rxGroups .nt-group[hidden]{ display:none; }
+.rx[hidden], .nt[hidden], .nt-group[hidden]{ display:none; }
+
+/* ── the two sections fold, shut until opened ─────────────────────────
+   The heading is the summary: its rule and spacing stay, and a plus at
+   the far right turns to a minus when the section is open. A link into a
+   tile inside opens the fold itself. */
+.sec-fold > summary{ list-style:none; cursor:pointer; }
+.sec-fold > summary::-webkit-details-marker{ display:none; }
+.sec-fold > summary .sec-h{ margin-bottom:0; }
+.sec-fold[open] > summary .sec-h{ margin-bottom:var(--gap); }
+.sec-fold > summary .sec-h::after{ content:"+"; font-weight:500; font-size:1.1em; letter-spacing:0; margin-left:auto; }
+.sec-fold[open] > summary .sec-h::after{ content:"\2212"; }
+.sec-fold > summary .sec-h small{ margin-left:0; }
+@media (hover: hover){ .sec-fold > summary:hover .sec-h{ border-bottom-width:2px; padding-bottom:calc(.45rem - 1px); } }
 .rx-draw{ padding:.5rem .5rem 0; }
 .rx-cap{ padding:.45rem .9rem .35rem; }
 .rx-cap .ck{
@@ -604,13 +617,17 @@ li > .cellt{ cursor:pointer; }
 </div>
 
 <section class="nt-sec" id="neurotransmitters" aria-labelledby="ntH">
-  <h2 class="sec-h" id="ntH">Neurotransmitters <small>the messengers, drawn</small></h2>
-  <p class="lede">What crosses the synapse. Each is drawn as a skeletal formula: every corner and line-end a carbon, hydrogens on carbon left out, the other elements named. Most are small, a single amino acid or something made from one in a step or two, which is why the brain can make, release and clear them in milliseconds. Open <em>What it does</em> under any of them.</p>
+<details class="sec-fold" id="ntFold">
+  <summary><h2 class="sec-h" id="ntH">Neurotransmitters <small>the messengers, drawn</small></h2></summary>
+  <p class="lede">What crosses the synapse. Each is drawn as a skeletal formula: every corner and line-end a carbon, hydrogens on carbon left out, the other elements named. Most are small, a single amino acid or something made from one in a step or two, which is why the brain can make, release and clear them in milliseconds. Pick a transmitter to see it on its own &mdash; the monoamines first, since they are what most drugs act on &mdash; and open <em>What it does</em> under any of them.</p>
+  <div class="rx-filter" id="ntFilter" role="group" aria-label="Isolate one transmitter"></div>
   <div id="ntGroups"></div>
+</details>
 </section>
 
 <section class="nt-sec" id="receptors" aria-labelledby="rxH">
-  <h2 class="sec-h" id="rxH">Receptors and channels <small>what the messengers land on</small></h2>
+<details class="sec-fold" id="rxFold">
+  <summary><h2 class="sec-h" id="rxH">Receptors and channels <small>what the messengers land on</small></h2></summary>
   <p class="lede">A transmitter does nothing until something binds it. Here is what does: the receptors for the molecules above, with the ion channels and transporters that work alongside them, a hundred and fifty in all. There are only ten kinds of machine among them, drawn first, and the first thing to know is that they come in two speeds. An <button type="button" class="rx-term" data-term="Ionotropic">ionotropic</button> receptor is a channel: the transmitter opens it in under a millisecond and it shuts as soon as the transmitter leaves. A <button type="button" class="rx-term" data-term="Metabotropic">metabotropic</button> receptor has no pore; it works through a G protein and chemical messengers inside the cell, so it is slower to act and keeps acting for seconds or minutes after the transmitter has gone. Most transmitters have both kinds, and most drugs that act on the brain act on one of the machines below. Pick a transmitter below to see only its receptors &mdash; the monoamines first, since they are what most drugs act on &mdash; and search inside it by name, drug or effect. Every word in a tile&rsquo;s small capitals, and <button type="button" class="rx-term" data-term="affinity">affinity</button>, <button type="button" class="rx-term" data-term="agonist">agonist</button>, <button type="button" class="rx-term" data-term="antagonist">antagonist</button> and <button type="button" class="rx-term" data-term="autoreceptor">autoreceptor</button> here, opens a plain explanation on a hover or a tap. Each tile gives the code chemists use with the plain name under it, what binds it and how tightly, the drugs people have heard of that act on it, what happens when it is bound, and under <em>What the kind means</em> the kind&rsquo;s explanation again with a line of context.</p>
   <div class="rx-filter" id="rxFilter" role="group" aria-label="Isolate one transmitter"></div>
   <div class="rx-search">
@@ -619,6 +636,7 @@ li > .cellt{ cursor:pointer; }
   </div>
   <div id="rxKinds" class="rx-kinds"></div>
   <div id="rxGroups"></div>
+</details>
 </section>
 
 <p class="attrib">Each drawing is an original schematic generated from code rather than traced from a micrograph, so it owes nothing to any published plate. The descriptions are standard textbook anatomy and do not yet carry citations; the <a href="textbook.html">digital textbook</a> is where each claim gets its paper. <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a>. The molecules are drawn from their chemical structures by RDKit, an open-source toolkit, and coloured by the page.</p>
@@ -642,6 +660,21 @@ themeBtn.addEventListener("click", () => {
   themeBtn.setAttribute("aria-pressed", String(!dark));
   try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
 });
+
+/* a link into a folded section opens it — the section itself, or a tile
+   the scripts draw inside it once their data has arrived */
+function revealHash(){
+  const id = decodeURIComponent(location.hash.slice(1));
+  const t = id && document.getElementById(id);
+  if (!t) return false;
+  const fold = t.closest("details.sec-fold") || t.querySelector("details.sec-fold");
+  if (fold && !fold.open) fold.open = true;
+  if (fold) requestAnimationFrame(() => t.scrollIntoView({ block: "start" }));
+  return true;
+}
+window.VN_reveal = revealHash;
+revealHash();
+window.addEventListener("hashchange", revealHash);
 </script>
 
 <script src="assets/native.js"></script>

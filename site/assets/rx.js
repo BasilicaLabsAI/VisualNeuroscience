@@ -74,6 +74,7 @@
     host.classList.add("ready");
     FIG.popups(doc.glossary, doc.steps);
     narrow(doc);
+    if (window.VN_reveal) window.VN_reveal();
   }
 
   /* ── narrowing the list: a transmitter, and words ─────────────────────
