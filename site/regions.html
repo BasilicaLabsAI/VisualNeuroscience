@@ -2254,7 +2254,25 @@ function fmtTick(v) { return v >= 1000 ? (v / 1000).toLocaleString() + "k" : Str
 const tooltip = document.getElementById("chart-tooltip");
 function showTip(e, html) { tooltip.innerHTML = html; tooltip.style.display = "block"; moveTip(e); }
 function moveTip(e) { const x = e.clientX != null ? e.clientX : (e.touches && e.touches[0].clientX), y = e.clientY != null ? e.clientY : (e.touches && e.touches[0].clientY); tooltip.style.left = Math.min(x + 14, innerWidth - 270) + "px"; tooltip.style.top = (y + 16) + "px"; }
-function hideTip() { tooltip.style.display = "none"; }
+function hideTip() { tooltip.style.display = "none"; clearTimeout(hideTip._t); }
+/* on a touch screen a bar answers a tap, not the start of a swipe across
+   the chart, and the tip goes on the next touch anywhere, on any scroll, or
+   by itself after a few seconds */
+let touchAt = null;
+function touchTip(rect, tip) {
+  rect.addEventListener("touchstart", e => { const t = e.touches[0]; touchAt = { x: t.clientX, y: t.clientY }; }, { passive: true });
+  rect.addEventListener("touchmove", e => { const t = e.touches[0]; if (touchAt && Math.hypot(t.clientX - touchAt.x, t.clientY - touchAt.y) > 8) touchAt = null; }, { passive: true });
+  rect.addEventListener("touchend", e => {
+    if (!touchAt) return;
+    const t = e.changedTouches[0];
+    showTip({ clientX: t.clientX, clientY: t.clientY }, tip);
+    touchAt = null;
+    clearTimeout(hideTip._t); hideTip._t = setTimeout(hideTip, 4000);
+    tooltip._shownAt = Date.now();
+  }, { passive: true });
+}
+document.addEventListener("touchstart", e => { if (tooltip.style.display === "block" && !(e.target.closest && e.target.closest("#receptor-graph .bar"))) hideTip(); }, { passive: true });
+window.addEventListener("scroll", hideTip, { passive: true });
 
 function buildChart() {
   if (axisMode === "receptor") {
@@ -2299,10 +2317,17 @@ function renderChart() {
   const c = buildChart();
   const host = document.getElementById("receptor-graph");
   host.innerHTML = "";
+  hideTip();
   const n = c.bars.length;
   const avail = Math.max(host.clientWidth || 900, 320);
   const scrolls = CHART.left + CHART.right + n * CHART.slot > avail;         /* wider than the screen, it scrolls */
-  const gutter = scrolls ? 80 : 0;                                            /* room for the first labels, which lean left under the pinned axis */
+  /* the labels lean left from their bars, so the first few reach back past
+     the first bar; the gutter is only as wide as the longest reach, so
+     none of them ends under the pinned axis */
+  const fs = n > 30 ? 9 : 10, slot0 = scrolls ? CHART.slot : (avail - CHART.left - CHART.right) / n;
+  let reach = 0;
+  c.bars.forEach((b, i) => { reach = Math.max(reach, b.label.length * fs * 0.56 * Math.cos(52 * Math.PI / 180) - slot0 * (i + 0.5)); });
+  const gutter = Math.ceil(Math.max(0, reach)) + 4;
   const width = scrolls ? CHART.left + gutter + n * CHART.slot + CHART.right : avail;
   host.classList.toggle("scrolls", scrolls);
   host.style.setProperty("--axis-w", CHART.left + "px");
@@ -2328,7 +2353,7 @@ function renderChart() {
     if (b.value == null) rect = svgEl("rect", { x, y: y(0) - 6, width: bw, height: 6, class: "bar empty" });
     else rect = svgEl("rect", { x, y: y(b.value), width: bw, height: Math.max(0, y(0) - y(b.value)), class: "bar", fill: b.colour });
     rect.addEventListener("mouseenter", e => showTip(e, b.tip)); rect.addEventListener("mousemove", moveTip); rect.addEventListener("mouseleave", hideTip);
-    rect.addEventListener("touchstart", e => showTip(e, b.tip), { passive: true });
+    touchTip(rect, b.tip);
     svg.appendChild(rect);
     const lx = x + bw / 2, ly = y(0) + 10;
     const label = svgEl("text", { x: lx, y: ly, transform: "rotate(-52 " + lx + " " + ly + ")", "text-anchor": "end", class: "axis-label x-label", "font-size": n > 30 ? 9 : 10 });

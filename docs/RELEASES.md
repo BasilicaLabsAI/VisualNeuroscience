@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.37 — 19 September 2026 — The chart's tip goes when it should, and the bars start sooner
+Commit · Show the chart's tip on a tap alone and let it go, and start the bars just past their labels
+
+On a touch screen the chart's tip came up at the start of any swipe across the bars and then stayed, so it was there before a reader had asked for anything. It now answers a tap and not a swipe, and goes on the next touch anywhere, on any scroll, when the chart is redrawn, or by itself after four seconds. The bars had also been standing a long way in from the axis; the room before them is now only what the leaning labels need to stay clear of the pinned axis, which is about half of what it was.
+
 ## v10.36 — 19 September 2026 — Every receptor in a row beneath the table
-Commit · Slide every receptor across beneath the density table, and let a name picked in it slide to its card
+Commit `228f88b` · Slide every receptor across beneath the density table, and let a name picked in it slide to its card
 
 Beneath the receptor-by-region table now runs a row of all sixty-nine receptors, one card each: the schematic of its kind with its transmitter and G protein written in, its plain name, what it does, and where it is densest and sparsest in this source, slid across by a thumb on a phone or by the arrows on a computer, with a count saying which is in view. Picking a receptor's name in the table, or a row of the reference below it, no longer leaves the tab: it outlines that receptor's card and slides the row to it. Each card offers to chart the receptor, or to open its whole entry on the Microanatomy page.
 
