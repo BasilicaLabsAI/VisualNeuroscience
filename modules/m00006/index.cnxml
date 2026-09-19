@@ -1,0 +1,22 @@
+<document xmlns="http://cnx.rice.edu/cnxml" class="introduction">
+  <title>Introduction</title>
+  <metadata xmlns:md="http://cnx.rice.edu/mdml">
+    <md:title>Introduction</md:title>
+    <md:content-id>m00006</md:content-id>
+    <md:uuid>8d50329d-3bbb-4ce8-931d-0c5b3824a155</md:uuid>
+  </metadata>
+  <content class="introduction">
+    <figure class="splash" id="splorsh">
+      <media alt="PET images of human brains with sagittal, coronal and horizontal view show abundant coloring to indicate receptor binding particularly in the cingulate gyrus and basal ganglia.">
+        <image mime-type="image/jpg" src="../../media/ch09-splash.jpg" />
+      </media>
+      <caption>Binding of CB1 receptor averaged over 35 men shows high binding in many brain regions, including basal ganglia and cingulate gyrus. Image credit: Kantonen, T., Karjalainen, T., Pekkarinen, L. et al. Cerebral μ-opioid and CB1 receptor systems have distinct roles in human feeding behavior. Transl Psychiatry 11, 442 (2021). https://doi.org/10.1038/s41398-021-01559-5. CC BY 4.0</caption>
+    </figure>
+    <note class="meet-author" id="note-00001">
+      <title>Yuan B Peng, MD PhD</title>
+      <para id="para-00001"><link url="https://openstax.org/r/Neuro9Author">Yuan B Peng</link></para>
+    </note>
+    <para id="introductorypara">Imagine that you were on a bus or metro in the busy morning hour. Somebody steps on your toe. It is painful; not only painful (a sensory experience), but makes you upset (an emotional response). However, the person immediately apologizes for his/her accident. Even if you are still in pain, the sincerity of the apology can make your emotion subside. Just a second later, though, the same person steps on your toe again. With the same painful stimulus, your emotion will go through the sky. Why?</para>
+    <para id="para-00002">The somatosensory system is unique among the five sensory systems in our body. It enables us to feel a variety of inputs—touch, pressure, temperature, pain, and itch—all of which help us sense the external environment and also protect our body from injury or potential injury. Here, we will learn how the somatosensory system is organized. We will start with the special structures called sensory receptors that are located in the skin, muscle, joints, internal organs, and all over the body. We will then learn how this sensory information is passed along unique sensory pathways from the periphery all the way to our brain. Finally, we will gain a greater understanding of how that sensory information is modulated and used by our brain in ways that can make the same stimulus have different meanings to you, such as what happened in the repeat toe injuries example above.</para>
+  </content>
+</document>
