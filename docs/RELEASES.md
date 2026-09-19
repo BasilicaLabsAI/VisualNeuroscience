@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.18 — 19 September 2026 — The receptors, drawn
+Commit · List the receptors, channels and transporters under the neurotransmitters, each with its kind of machine drawn
+
+Under the neurotransmitters, what they land on: a hundred and fifty receptors, ion channels and transporters in fifteen groups, from the AMPA receptor to the vesicular acetylcholine transporter. There are only ten kinds of machine among them, and those are drawn first, each with what the kind means: the ligand-gated channels, the glutamate receptors, the three flavours of G-protein-coupled receptor with their G proteins, the voltage-gated channels that nothing binds, the background channels and the carriers. Every tile then carries its kind's schematic with its own ligand, ion and G protein written in, what binds it and how tightly, what it does when bound, and a line of context. The voltage-gated sodium, calcium and potassium channels are here too, since every receptor on the page acts through them.
+
 ## v10.17 — 19 September 2026 — The neurotransmitters, drawn
-Commit · Draw the neurotransmitters as skeletal formulas under the cells
+Commit `4a184ef` · Draw the neurotransmitters as skeletal formulas under the cells
 
 Microanatomy gains a second section under the cell plates: the neurotransmitters, seventeen of them, each drawn as a skeletal formula the way a chemist would draw it, in tiles grouped by kind. The amino acids glutamate, GABA, glycine, aspartate and D-serine; acetylcholine; the monoamines dopamine, noradrenaline, adrenaline, serotonin and histamine; the purines adenosine and ATP; the endocannabinoids anandamide and 2-AG; nitric oxide; and one neuropeptide, met-enkephalin, drawn to show the scale of the rest. Each carries its formula and what it is for, with a few lines on what it does behind a disclosure. The drawings are made from the molecules' structures by RDKit and take their colours from the page, so they follow the light and dark themes like the cells do.
 

@@ -237,6 +237,57 @@ li > .cellt{ cursor:pointer; }
 }
 @media (max-width:430px){ .nt-grid{ grid-template-columns:1fr; } }
 
+/* ── the receptors and channels ──────────────────────────────────────
+   Schematics drawn by scripts/receptors, one per kind of machine, filled
+   in per molecule by rx.js; the tiles share the neurotransmitter tiles'
+   bones and add two rows of text. */
+.rx-kinds{
+  display:grid; gap:var(--gap); margin:0 0 calc(var(--gap) * 1.4);
+  grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
+}
+.rx-kind{ border:1px solid var(--hair); background:var(--paper); display:flex; flex-direction:column; min-width:0; }
+.rx-kind .cn{ display:block; font-family:var(--font-display); font-size:1.02rem; line-height:1.15; }
+.rx-means{ font-family:var(--font-serif); font-size:.86rem; line-height:1.5; margin:.35rem 0 0; }
+.rx-grid{
+  display:grid; gap:var(--gap); list-style:none; margin:0; padding:0;
+  grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+}
+.rx{ border:1px solid var(--hair); background:var(--paper); display:flex; flex-direction:column; min-width:0; }
+.rx-draw{ padding:.5rem .5rem 0; }
+.rx-draw .rxd{ display:block; width:100%; height:auto; aspect-ratio:320 / 200; }
+.rx-cap{ padding:.45rem .9rem .35rem; }
+.rx-cap .ck{
+  display:block; font-family:var(--font-brand); font-weight:500; font-size:.52rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+}
+.rx-cap .cn{ display:block; font-family:var(--font-display); font-weight:400; font-size:1.08rem; line-height:1.15; margin-top:.3rem; }
+.rx-rows{ padding:0 .9rem .7rem; display:flex; flex-direction:column; gap:.4rem; }
+.rx-row{ display:grid; grid-template-columns:3.4em minmax(0,1fr); gap:.5rem; align-items:baseline; }
+.rx-k{
+  font-family:var(--font-brand); font-weight:500; font-size:.52rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60); padding-top:.2em;
+}
+.rx-v{ font-family:var(--font-serif); font-size:.88rem; line-height:1.45; }
+.rx-note{ color:var(--ink-60); }
+/* the schematics */
+.rxd-mem{ fill:var(--cell); }
+.rxd-hair{ fill:none; stroke:var(--pen); stroke-width:1.1; opacity:.55; }
+.rxd-body{ fill:var(--nissl); stroke:var(--pen); stroke-width:1.3; }
+.rxd-g{ fill:var(--golgi-lumen); stroke:var(--pen); stroke-width:1.1; }
+.rxd-lig{ fill:var(--el-n); stroke:var(--pen); stroke-width:1; }
+.rxd-co{ fill:var(--el-o); stroke:var(--pen); stroke-width:.8; }
+.rxd-ion{ fill:none; stroke:var(--el-o); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.rxd-t{ font-family:var(--font-serif); font-style:italic; font-size:13.5px; fill:var(--ink); }
+.rxd-tg{ font-size:12px; }
+.rxd-side{ font-family:var(--font-brand); font-weight:500; font-size:8.5px; letter-spacing:.14em; text-transform:uppercase; fill:var(--ink-60); }
+.rxd-plus{ font-family:var(--font-serif); font-weight:700; font-size:12px; fill:var(--ink); }
+@media (max-width:760px){
+  .rx-kinds, .rx-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; }
+  .rx-cap, .rx-rows{ padding-left:.6rem; padding-right:.6rem; }
+  .rx-cap .cn{ font-size:.95rem; }
+}
+@media (max-width:430px){ .rx-kinds, .rx-grid{ grid-template-columns:1fr; } }
+
 /* ── the stage: the plate and its rail ──────────────────────────────── */
 .stage{
   display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:var(--gap);
@@ -472,7 +523,7 @@ li > .cellt{ cursor:pointer; }
   <span class="anno">the brain at the microscope&rsquo;s scale</span>
 </div>
 
-<p class="lede">The atlas pages draw the brain a region at a time. This one goes down to the cell, and below that to the molecules that pass between cells. Each drawing is an original schematic built from code, with every structure a click target: pick one and read what it does, colour them all to see how the cell is put together, or switch to <em>Test yourself</em> and find each one from memory. One is drawn so far: a large multipolar neuron, the commonest kind in the brain and spinal cord, with the axons that reach it, an astrocyte, two labelled synapses, and its own axon leaving under a myelin sheath. The cortex&rsquo;s own cell, the pyramidal neuron, is next.</p>
+<p class="lede">The atlas pages draw the brain a region at a time. This one goes down to the cell, and below that to the molecules that pass between cells and the receptors they land on. Each drawing is an original schematic built from code, with every structure a click target: pick one and read what it does, colour them all to see how the cell is put together, or switch to <em>Test yourself</em> and find each one from memory. One is drawn so far: a large multipolar neuron, the commonest kind in the brain and spinal cord, with the axons that reach it, an astrocyte, two labelled synapses, and its own axon leaving under a myelin sheath. The cortex&rsquo;s own cell, the pyramidal neuron, is next.</p>
 
 <h2 class="sec-h">Cells <small>one drawn, more to follow</small></h2>
 
@@ -538,6 +589,13 @@ li > .cellt{ cursor:pointer; }
   <div id="ntGroups"></div>
 </section>
 
+<section class="nt-sec" id="receptors" aria-labelledby="rxH">
+  <h2 class="sec-h" id="rxH">Receptors and channels <small>what the messengers land on</small></h2>
+  <p class="lede">A transmitter does nothing until something binds it. Here is what does: the receptors for the molecules above, with the ion channels and transporters that work alongside them, a hundred and fifty in all. There are only ten kinds of machine among them, drawn first: read those and every tile below makes sense. Each tile then says what binds it and how tightly, and what happens when it does; <em>What the kind means</em> repeats the kind's explanation under it.</p>
+  <div id="rxKinds" class="rx-kinds"></div>
+  <div id="rxGroups"></div>
+</section>
+
 <p class="attrib">Each drawing is an original schematic generated from code rather than traced from a micrograph, so it owes nothing to any published plate. The descriptions are standard textbook anatomy and do not yet carry citations; the <a href="textbook.html">digital textbook</a> is where each claim gets its paper. <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a>. The molecules are drawn from their chemical structures by RDKit, an open-source toolkit, and coloured by the page.</p>
 
 </main>
@@ -565,6 +623,7 @@ themeBtn.addEventListener("click", () => {
 <script src="assets/navbar.js"></script>
 <script src="assets/cells.js"></script>
 <script src="assets/nt.js"></script>
+<script src="assets/rx.js"></script>
 <script src="assets/firebase-config.js"></script>
 <script type="module" src="assets/auth-ui.js"></script>
 </body>
