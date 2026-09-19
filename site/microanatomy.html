@@ -62,6 +62,9 @@ if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</
   --nissl:#d0c9bc; --nissl-line:#77716a; --mito:#8e8980; --mito-line:#f1ece3; --lys:#55514b;
   --rib:#69645c; --tube:#7b756c; --golgi-lumen:#dbd4c8; --ves:#f6f2ea; --fibril:#96a3a3;
   --anuc:#b7c3c3; --hov-of:#bdb6a9; --pen:#1d1b18; --ghost-ink:#9d988e; --ghost-fill:#f1eee8;
+
+  /* the elements in the skeletal formulas, the colours chemists expect */
+  --el-n:#1a4fd6; --el-o:#d2222d; --el-s:#a08c00; --el-p:#d97a00;
 }
 :root[data-theme="dark"]{
   --paper:#111111;
@@ -75,6 +78,8 @@ if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</
   --nissl:#3a372f; --nissl-line:#a39d91; --mito:#7f7a70; --mito-line:#1a1917; --lys:#c0baae;
   --rib:#aba599; --tube:#928c80; --golgi-lumen:#37342e; --ves:#33302a; --fibril:#566667;
   --anuc:#34484a; --hov-of:#4c4840; --pen:#e9e4da; --ghost-ink:#5a564e; --ghost-fill:#131211;
+
+  --el-n:#7aa4ff; --el-o:#ff6f6f; --el-s:#e6d24a; --el-p:#ffa347;
 }
 
 *{ box-sizing:border-box; margin:0; padding:0; }
@@ -185,6 +190,52 @@ li > .cellt{ cursor:pointer; }
 }
 .cellt[aria-current] .cs{ color:var(--paper); opacity:.75; }
 .cellt.soon .cs{ color:var(--ink-35); }
+
+/* ── the neurotransmitters ────────────────────────────────────────────
+   Skeletal formulas drawn by scripts/neurotransmitters, one tile each in
+   a grid like the cells'. The drawings arrive as inline SVG whose paths
+   refer to --ink and the --el-* colours above, so they follow the theme
+   the way the cell plates do. */
+.nt-sec{ margin-top:calc(var(--gap) * 2); }
+.nt-group{ margin-top:calc(var(--gap) * 1.4); }
+.nt-gh{ font-family:var(--font-display); font-weight:400; font-size:1.15rem; line-height:1.15; margin:0 0 .25rem; }
+.nt-note{
+  font-family:var(--font-serif); font-style:italic; font-size:.88rem;
+  color:var(--ink-60); margin:0 0 var(--gap); max-width:72ch;
+}
+.nt-grid{
+  display:grid; gap:var(--gap); list-style:none; margin:0; padding:0;
+  grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+}
+.nt{ border:1px solid var(--hair); background:var(--paper); display:flex; flex-direction:column; min-width:0; }
+.nt-draw{ padding:.6rem .6rem 0; }
+.nt-draw .mol{ display:block; width:100%; height:auto; aspect-ratio:320 / 220; }
+.nt-cap{ padding:.5rem .9rem .5rem; }
+.nt-cap .ck{
+  display:block; font-family:var(--font-brand); font-weight:500; font-size:.52rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+}
+.nt-cap .ck sub, .nt-cap .ck sup{ font-size:.85em; letter-spacing:0; line-height:0; }
+.nt-cap .cn{ display:block; font-family:var(--font-display); font-weight:400; font-size:1.08rem; line-height:1.15; margin-top:.3rem; }
+.nt-cap .cs{ display:block; font-family:var(--font-serif); font-style:italic; font-size:.8rem; color:var(--ink-60); margin-top:.15rem; }
+.nt-more{ margin-top:auto; border-top:1px solid var(--hair); }
+.nt-more summary{
+  cursor:pointer; padding:.45rem .9rem; list-style:none;
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60);
+}
+.nt-more summary::-webkit-details-marker{ display:none; }
+.nt-more summary::after{ content:"+"; float:right; font-size:.8rem; line-height:1; }
+.nt-more[open] summary::after{ content:"\2212"; }
+@media (hover: hover){ .nt-more summary:hover{ color:var(--ink); } }
+.nt-more p{ padding:0 .9rem .8rem; font-family:var(--font-serif); font-size:.9rem; line-height:1.5; }
+@media (max-width:760px){
+  .nt-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; }
+  .nt-cap{ padding:.4rem .6rem .4rem; }
+  .nt-cap .cn{ font-size:.95rem; }
+  .nt-more summary, .nt-more p{ padding-left:.6rem; padding-right:.6rem; }
+}
+@media (max-width:430px){ .nt-grid{ grid-template-columns:1fr; } }
 
 /* ── the stage: the plate and its rail ──────────────────────────────── */
 .stage{
@@ -421,7 +472,7 @@ li > .cellt{ cursor:pointer; }
   <span class="anno">the brain at the microscope&rsquo;s scale</span>
 </div>
 
-<p class="lede">The atlas pages draw the brain a region at a time. This one goes down to the cell. Each drawing is an original schematic built from code, with every structure a click target: pick one and read what it does, colour them all to see how the cell is put together, or switch to <em>Test yourself</em> and find each one from memory. One is drawn so far: a large multipolar neuron, the commonest kind in the brain and spinal cord, with the axons that reach it, an astrocyte, two labelled synapses, and its own axon leaving under a myelin sheath. The cortex&rsquo;s own cell, the pyramidal neuron, is next.</p>
+<p class="lede">The atlas pages draw the brain a region at a time. This one goes down to the cell, and below that to the molecules that pass between cells. Each drawing is an original schematic built from code, with every structure a click target: pick one and read what it does, colour them all to see how the cell is put together, or switch to <em>Test yourself</em> and find each one from memory. One is drawn so far: a large multipolar neuron, the commonest kind in the brain and spinal cord, with the axons that reach it, an astrocyte, two labelled synapses, and its own axon leaving under a myelin sheath. The cortex&rsquo;s own cell, the pyramidal neuron, is next.</p>
 
 <h2 class="sec-h">Cells <small>one drawn, more to follow</small></h2>
 
@@ -481,7 +532,13 @@ li > .cellt{ cursor:pointer; }
 
 </div>
 
-<p class="attrib">Each drawing is an original schematic generated from code rather than traced from a micrograph, so it owes nothing to any published plate. The descriptions are standard textbook anatomy and do not yet carry citations; the <a href="textbook.html">digital textbook</a> is where each claim gets its paper. <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a>.</p>
+<section class="nt-sec" id="neurotransmitters" aria-labelledby="ntH">
+  <h2 class="sec-h" id="ntH">Neurotransmitters <small>the messengers, drawn</small></h2>
+  <p class="lede">What crosses the synapse. Each is drawn as a skeletal formula: every corner and line-end a carbon, hydrogens on carbon left out, the other elements named. Most are small, a single amino acid or something made from one in a step or two, which is why the brain can make, release and clear them in milliseconds. Open <em>What it does</em> under any of them.</p>
+  <div id="ntGroups"></div>
+</section>
+
+<p class="attrib">Each drawing is an original schematic generated from code rather than traced from a micrograph, so it owes nothing to any published plate. The descriptions are standard textbook anatomy and do not yet carry citations; the <a href="textbook.html">digital textbook</a> is where each claim gets its paper. <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a>. The molecules are drawn from their chemical structures by RDKit, an open-source toolkit, and coloured by the page.</p>
 
 </main>
 
@@ -507,6 +564,7 @@ themeBtn.addEventListener("click", () => {
 <script src="assets/native.js"></script>
 <script src="assets/navbar.js"></script>
 <script src="assets/cells.js"></script>
+<script src="assets/nt.js"></script>
 <script src="assets/firebase-config.js"></script>
 <script type="module" src="assets/auth-ui.js"></script>
 </body>

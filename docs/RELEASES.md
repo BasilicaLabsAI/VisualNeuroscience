@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.17 — 19 September 2026 — The neurotransmitters, drawn
+Commit · Draw the neurotransmitters as skeletal formulas under the cells
+
+Microanatomy gains a second section under the cell plates: the neurotransmitters, seventeen of them, each drawn as a skeletal formula the way a chemist would draw it, in tiles grouped by kind. The amino acids glutamate, GABA, glycine, aspartate and D-serine; acetylcholine; the monoamines dopamine, noradrenaline, adrenaline, serotonin and histamine; the purines adenosine and ATP; the endocannabinoids anandamide and 2-AG; nitric oxide; and one neuropeptide, met-enkephalin, drawn to show the scale of the rest. Each carries its formula and what it is for, with a few lines on what it does behind a disclosure. The drawings are made from the molecules' structures by RDKit and take their colours from the page, so they follow the light and dark themes like the cells do.
+
 ## v10.16 — 19 September 2026 — The Network Atlas squares up
-Commit · Set the ring and the render side by side as squares, with the three planes in a band beneath
+Commit `542f231` · Set the ring and the render side by side as squares, with the three planes in a band beneath
 
 On a desktop the Network Atlas used to give the ring a square of its own and cram the four scan boxes into whatever was left, which at some widths meant four boxes eighty pixels wide. The ring and the 3D render now sit side by side as two equal squares, and the axial, coronal and sagittal planes run in a band beneath them, each a third of the same width, so the ring, the brain and the three planes are all readable at once.
 
