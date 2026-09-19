@@ -101,23 +101,104 @@
 }
 },
 "glossary": {
-"Ionotropic": "A receptor that is itself an ion channel. The transmitter lands on it and the pore opens within a millisecond; ions flow and the membrane potential changes at once. Fast, and finished as soon as the transmitter leaves. The electrical, moment-to-moment side of signalling.",
-"Metabotropic": "A receptor with no pore of its own. When the transmitter binds it switches on a G protein inside the cell, which sets off chemical messengers (cAMP, IP₃, Ca²⁺) that open or close channels and change the cell over seconds to minutes. Slower to start than a channel and lasting far longer: the mood-setting side of signalling.",
-"GPCR": "G-protein-coupled receptor: the commonest kind of receptor in the body, one protein that snakes through the membrane seven times, holding a G protein on the inside. About a third of all medicines act on one. Which G protein it holds, Gs, Gi/o or Gq, decides what it does when bound.",
-"Gs": "The stimulatory G protein. It switches on adenylyl cyclase, so cAMP rises and protein kinase A wakes up. Tends to excite the cell and strengthen its responses.",
-"Gi/o": "The inhibitory G protein. It switches adenylyl cyclase off so cAMP falls, and its βγ arm opens K⁺ channels and closes Ca²⁺ channels. Tends to quieten the cell, or stop a terminal releasing.",
-"Gq": "The G protein that turns on phospholipase C, which splits a membrane lipid into IP₃ and DAG. IP₃ releases Ca²⁺ from the cell's stores and DAG switches on protein kinase C. Usually excitation, with a long tail.",
-"cation channel": "A pore for positive ions: Na⁺ and K⁺, sometimes Ca²⁺. Opening it lets Na⁺ rush in, so the inside of the cell becomes more positive and moves towards the threshold for an action potential. Excitatory.",
-"chloride channel": "A pore for chloride. Opening it lets Cl⁻ in, which holds the membrane at or below its resting potential, so the cell is harder to fire. Inhibitory in the adult brain.",
-"glutamate receptor": "The AMPA, NMDA and kainate receptors: four subunits, each with a clamshell that closes on a glutamate, around a pore for cations. The fast excitatory synapse of the brain, and the machinery of learning.",
-"Voltage-gated channel": "Not a receptor: nothing binds it. A charged helix inside it senses the voltage across the membrane and pulls the gate open when the cell depolarises. Sodium channels make the action potential, potassium channels end it, calcium channels turn it into transmitter release.",
-"Background channel": "A channel open at rest, or opened from inside the cell rather than by a transmitter. These set the resting potential and how easily a neuron fires.",
-"Ca²⁺-activated K⁺ channel": "A potassium channel opened by calcium arriving inside the cell, so every burst of activity is followed by a pause.",
-"Transporter": "Not a receptor: a carrier protein that binds a transmitter and hauls it across the membrane one molecule at a time, powered by the sodium gradient. Reuptake transporters pull transmitter out of the synapse to end the signal, and are what most antidepressants and stimulants block; vesicular transporters load it into vesicles for the next release.",
-"affinity": "How tightly a receptor holds its transmitter: high affinity means it is occupied at low concentrations and lets go slowly, low affinity means it needs a lot and lets go fast. A synapse releases transmitter in a brief burst of very high concentration, so low-affinity receptors like AMPA answer only to release right in front of them, while high-affinity receptors like D2 sense the faint background level too.",
-"agonist": "A molecule that binds a receptor and switches it on, as the transmitter itself does. Morphine is an agonist at the μ-opioid receptor; nicotine at nicotinic receptors.",
-"antagonist": "A molecule that binds a receptor and blocks it, so the transmitter cannot act. Naloxone at the μ-opioid receptor; antipsychotics at D2; antihistamines at H1.",
-"autoreceptor": "A receptor on the terminal that released the transmitter, sensing how much is out there and turning release down. The cell's own volume control."
+"Ionotropic": [
+"A receptor that is itself an ion channel",
+"Transmitter binds, pore opens, ions flow: under a millisecond",
+"Shuts as soon as the transmitter leaves",
+"The fast, electrical side of signalling"
+],
+"Metabotropic": [
+"A receptor with no pore of its own",
+"Binding switches on a G protein inside the cell",
+"Slower to start: tens of milliseconds to seconds",
+"Keeps acting for seconds to minutes after the transmitter has gone"
+],
+"GPCR": [
+"G-protein-coupled receptor: one protein crossing the membrane seven times",
+"Holds a G protein on the inside; Gs, Gi/o or Gq decides what it does",
+"The commonest receptor kind in the body",
+"About a third of all medicines act on one"
+],
+"Gs": [
+"The stimulatory G protein",
+"Switches on adenylyl cyclase: cAMP rises",
+"cAMP wakes protein kinase A",
+"Usually excites the cell and strengthens its responses"
+],
+"Gi/o": [
+"The inhibitory G protein",
+"Switches adenylyl cyclase off: cAMP falls",
+"Its βγ arm opens K⁺ channels and closes Ca²⁺ channels",
+"Quietens the cell, or stops a terminal releasing"
+],
+"Gq": [
+"Switches on phospholipase C, which splits a membrane lipid into IP₃ and DAG",
+"IP₃ releases Ca²⁺ from the cell's stores",
+"DAG switches on protein kinase C",
+"Usually excitation, with a long tail"
+],
+"cation channel": [
+"A pore for positive ions: Na⁺ and K⁺, sometimes Ca²⁺",
+"Open, it lets Na⁺ rush in",
+"The inside turns more positive, towards the firing threshold",
+"Excitatory"
+],
+"chloride channel": [
+"A pore for Cl⁻",
+"Open, it lets chloride in",
+"Holds the membrane at or below rest, so the cell is harder to fire",
+"Inhibitory in the adult brain"
+],
+"glutamate receptor": [
+"AMPA, NMDA and kainate: four subunits round a pore",
+"Each subunit's clamshell closes on a glutamate",
+"Opens for cations: fast excitation",
+"The machinery of learning at the synapse"
+],
+"Voltage-gated channel": [
+"Not a receptor: nothing binds it",
+"A charged helix senses the membrane voltage and pulls the gate open on depolarisation",
+"Na⁺ channels make the action potential, K⁺ channels end it",
+"Ca²⁺ channels turn it into transmitter release"
+],
+"Background channel": [
+"Open at rest, or gated from inside the cell",
+"Not opened by a transmitter",
+"Sets the resting potential",
+"Sets how easily the neuron fires"
+],
+"Ca²⁺-activated K⁺ channel": [
+"A K⁺ channel opened by Ca²⁺ arriving inside",
+"Follows every burst with a pause",
+"Sets how fast a neuron can keep firing"
+],
+"Transporter": [
+"Not a receptor: a carrier that hauls the transmitter across the membrane",
+"One molecule per cycle, powered by the Na⁺ gradient",
+"Reuptake transporters end the signal: what most antidepressants and stimulants block",
+"Vesicular transporters load the next release"
+],
+"affinity": [
+"How tightly a receptor holds its transmitter",
+"High affinity: occupied at low concentrations, lets go slowly",
+"Low affinity: needs a lot, lets go fast",
+"A synapse releases a brief, intense burst: low-affinity receptors answer only to release right in front of them, high-affinity ones sense the background too"
+],
+"agonist": [
+"A molecule that binds a receptor and switches it on, as the transmitter does",
+"Morphine at the μ-opioid receptor",
+"Nicotine at nicotinic receptors"
+],
+"antagonist": [
+"A molecule that binds a receptor and blocks it",
+"The transmitter can no longer act",
+"Naloxone at the μ-opioid receptor; antipsychotics at D2; antihistamines at H1"
+],
+"autoreceptor": [
+"A receptor on the terminal that released the transmitter",
+"Senses how much is out there",
+"Turns release down: the cell's own volume control"
+]
 },
 "groups": [
 {

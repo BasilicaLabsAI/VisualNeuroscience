@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.24 — 19 September 2026 — Receptor popups in bullet points
+Commit · Set the receptor popups as short bullet points
+
+The explanations behind Ionotropic, Metabotropic, GPCR, Gs and the rest of the receptor words are now three or four short bullet points each rather than a paragraph, so a hover gives the point at a glance.
+
 ## v10.23 — 19 September 2026 — Room at the edges of the book
-Commit · Stand the textbook in from the window's edges
+Commit `ce83514` · Stand the textbook in from the window's edges
 
 The textbook's folds ran almost to the edge of the window. They now stand in by about a twelfth of the width on each side, so the book has room around it at every size; on a phone the margin is a thumb's width, since the screen is small.
 

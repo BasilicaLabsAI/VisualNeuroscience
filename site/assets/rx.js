@@ -106,14 +106,15 @@
   function popups(G){
     var pop = el("div", "rx-pop");
     pop.setAttribute("role", "dialog"); pop.hidden = true;
-    var head = el("b"), body = el("p");
+    var head = el("b"), body = el("ul");
     pop.appendChild(head); pop.appendChild(body);
     document.body.appendChild(pop);
     var current = null, pinned = false;
     function show(btn){
       var term = btn.getAttribute("data-term");
       if (!G[term]) return;
-      head.textContent = term; body.textContent = G[term];
+      head.textContent = term; body.textContent = "";
+      G[term].forEach(function(line){ body.appendChild(el("li", null, line)); });
       pop.hidden = false; current = btn;
       var r = btn.getBoundingClientRect(), w = Math.min(360, window.innerWidth - 24);
       pop.style.width = w + "px";
