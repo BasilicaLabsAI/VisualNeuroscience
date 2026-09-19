@@ -20,6 +20,14 @@ and `carrier` (a transporter). They carry no colours; the page paints them throu
 properties. Text elements marked `data-slot` are filled by `rx.js` for each molecule, and a slot
 with nothing to say is removed.
 
+## The words for newcomers
+`PLAIN` gives every entry a plain name to sit under its code; `DRUGS` a line of drugs and
+poisons people have heard of that act there; `GLOSSARY` an explanation for every word a
+kind's label is made of, plus affinity, agonist, antagonist and autoreceptor. The page turns
+each word of a kind into a button that opens the glossary entry in a popup, on hover and on
+tap. The build refuses to run if an entry lacks a plain name or a drugs line, or a label
+carries a word the glossary does not explain.
+
 ## The words
 `GROUPS` in `build.py` holds every entry as a tuple: id, name, kind, ligand label, ion label,
 G-protein label (blank to take the kind's default), what binds it, what it does, a note. The

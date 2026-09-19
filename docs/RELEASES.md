@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.20 — 19 September 2026 — The receptors, for newcomers
+Commit · Give every receptor its plain name, a drugs line and a popup behind each word of its kind
+
+The receptor tiles now speak to someone meeting them for the first time. Every code carries its plain name underneath: 5-HT2A is the serotonin-2A receptor, Nav1.6 the voltage-gated sodium channel 1.6, SERT the serotonin reuptake transporter. A new Drugs line names what people have heard of that acts there: nicotine, alcohol, caffeine, the psychedelics, the benzodiazepines, the SSRIs, the antipsychotics, the beta-blockers, morphine and naloxone, ketamine, capsaicin, paracetamol, and the poisons, from strychnine to pufferfish. The section now opens with the point that matters most, that ionotropic receptors are fast and brief and metabotropic ones slow and lasting, and every word in a tile's kind, Ionotropic, Metabotropic, GPCR, Gs, Gi/o, Gq and the rest, is a separate link that opens a plain explanation on a hover on a desk or a tap on a phone, as do affinity, agonist, antagonist and autoreceptor in the introduction.
+
 ## v10.19 — 19 September 2026 — The Digital Textbook becomes OpenStax's whole book
-Commit · Replace the Digital Textbook with OpenStax's Introduction to Behavioral Neuroscience, built into the site's pages
+Commit `8069e76` · Replace the Digital Textbook with OpenStax's Introduction to Behavioral Neuroscience, built into the site's pages
 
 The Digital Textbook is now OpenStax's *Introduction to Behavioral Neuroscience*, all of it: nineteen chapters and eighty-five sections, from the cells of the nervous system to attention and executive function, with every figure, note, table, key term, summary and reference list, set in the site's own pages and type rather than shown as a PDF. The contents page folds each chapter open to its sections; each chapter page folds each section open to its text, with expand-all and collapse-all buttons and links that open the fold they point into. The five hundred figures are recompressed to WebP. The book is CC BY-NC-SA 4.0 and every page carries OpenStax's attribution; the interactive exercises and videos that live on their servers are linked rather than carried. The site's earlier three-chapter textbook leaves the site and the apps but stays in the repository under archive/.
 

@@ -261,6 +261,22 @@ li > .cellt{ cursor:pointer; }
   letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
 }
 .rx-cap .cn{ display:block; font-family:var(--font-display); font-weight:400; font-size:1.08rem; line-height:1.15; margin-top:.3rem; }
+.rx-cap .cs{ display:block; font-family:var(--font-serif); font-style:italic; font-size:.86rem; color:var(--ink-60); margin-top:.15rem; }
+/* a word with a popup behind it */
+.rx-term{
+  font:inherit; color:inherit; background:none; border:0; padding:0; cursor:help;
+  letter-spacing:inherit; text-transform:inherit;
+  text-decoration:underline dotted; text-decoration-color:var(--ink-35); text-underline-offset:3px;
+}
+.lede .rx-term{ text-decoration-color:var(--ink); }
+@media (hover: hover){ .rx-term:hover{ text-decoration-style:solid; color:var(--ink); } }
+.rx-term[aria-expanded="true"]{ text-decoration-style:solid; color:var(--ink); }
+.rx-pop{
+  position:absolute; z-index:40; border:1px solid var(--hair); background:var(--paper); color:var(--ink);
+  padding:.7rem .9rem .8rem; box-shadow:0 8px 28px rgba(0,0,0,.28);
+}
+.rx-pop b{ display:block; font-family:var(--font-display); font-weight:400; font-size:1.02rem; margin-bottom:.3rem; }
+.rx-pop p{ margin:0; font-family:var(--font-serif); font-size:.9rem; line-height:1.5; }
 .rx-rows{ padding:0 .9rem .7rem; display:flex; flex-direction:column; gap:.4rem; }
 .rx-row{ display:grid; grid-template-columns:3.4em minmax(0,1fr); gap:.5rem; align-items:baseline; }
 .rx-k{
@@ -591,7 +607,7 @@ li > .cellt{ cursor:pointer; }
 
 <section class="nt-sec" id="receptors" aria-labelledby="rxH">
   <h2 class="sec-h" id="rxH">Receptors and channels <small>what the messengers land on</small></h2>
-  <p class="lede">A transmitter does nothing until something binds it. Here is what does: the receptors for the molecules above, with the ion channels and transporters that work alongside them, a hundred and fifty in all. There are only ten kinds of machine among them, drawn first: read those and every tile below makes sense. Each tile then says what binds it and how tightly, and what happens when it does; <em>What the kind means</em> repeats the kind's explanation under it.</p>
+  <p class="lede">A transmitter does nothing until something binds it. Here is what does: the receptors for the molecules above, with the ion channels and transporters that work alongside them, a hundred and fifty in all. There are only ten kinds of machine among them, drawn first, and the first thing to know is that they come in two speeds. An <button type="button" class="rx-term" data-term="Ionotropic">ionotropic</button> receptor is a channel: the transmitter opens it in under a millisecond and it shuts as soon as the transmitter leaves. A <button type="button" class="rx-term" data-term="Metabotropic">metabotropic</button> receptor has no pore; it works through a G protein and chemical messengers inside the cell, so it is slower to act and keeps acting for seconds or minutes after the transmitter has gone. Most transmitters have both kinds, and most drugs that act on the brain act on one of the machines below. Every word in a tile&rsquo;s small capitals, and <button type="button" class="rx-term" data-term="affinity">affinity</button>, <button type="button" class="rx-term" data-term="agonist">agonist</button>, <button type="button" class="rx-term" data-term="antagonist">antagonist</button> and <button type="button" class="rx-term" data-term="autoreceptor">autoreceptor</button> here, opens a plain explanation on a hover or a tap. Each tile gives the code chemists use with the plain name under it, what binds it and how tightly, the drugs people have heard of that act on it, what happens when it is bound, and under <em>What the kind means</em> the kind&rsquo;s explanation again with a line of context.</p>
   <div id="rxKinds" class="rx-kinds"></div>
   <div id="rxGroups"></div>
 </section>

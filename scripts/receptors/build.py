@@ -18,6 +18,27 @@ The text is uncited textbook-level description, and the page says so.
 import json, os
 
 # ── the kinds, and what each means ──────────────────────────────────────────
+# what the parts of a kind's label mean, in plain words: the page shows these
+# in a popup when a reader hovers or taps the word
+GLOSSARY = {
+ "Ionotropic": "A receptor that is itself an ion channel. The transmitter lands on it and the pore opens within a millisecond; ions flow and the membrane potential changes at once. Fast, and finished as soon as the transmitter leaves. The electrical, moment-to-moment side of signalling.",
+ "Metabotropic": "A receptor with no pore of its own. When the transmitter binds it switches on a G protein inside the cell, which sets off chemical messengers (cAMP, IP₃, Ca²⁺) that open or close channels and change the cell over seconds to minutes. Slower to start than a channel and lasting far longer: the mood-setting side of signalling.",
+ "GPCR": "G-protein-coupled receptor: the commonest kind of receptor in the body, one protein that snakes through the membrane seven times, holding a G protein on the inside. About a third of all medicines act on one. Which G protein it holds, Gs, Gi/o or Gq, decides what it does when bound.",
+ "Gs": "The stimulatory G protein. It switches on adenylyl cyclase, so cAMP rises and protein kinase A wakes up. Tends to excite the cell and strengthen its responses.",
+ "Gi/o": "The inhibitory G protein. It switches adenylyl cyclase off so cAMP falls, and its βγ arm opens K⁺ channels and closes Ca²⁺ channels. Tends to quieten the cell, or stop a terminal releasing.",
+ "Gq": "The G protein that turns on phospholipase C, which splits a membrane lipid into IP₃ and DAG. IP₃ releases Ca²⁺ from the cell's stores and DAG switches on protein kinase C. Usually excitation, with a long tail.",
+ "cation channel": "A pore for positive ions: Na⁺ and K⁺, sometimes Ca²⁺. Opening it lets Na⁺ rush in, so the inside of the cell becomes more positive and moves towards the threshold for an action potential. Excitatory.",
+ "chloride channel": "A pore for chloride. Opening it lets Cl⁻ in, which holds the membrane at or below its resting potential, so the cell is harder to fire. Inhibitory in the adult brain.",
+ "glutamate receptor": "The AMPA, NMDA and kainate receptors: four subunits, each with a clamshell that closes on a glutamate, around a pore for cations. The fast excitatory synapse of the brain, and the machinery of learning.",
+ "Voltage-gated channel": "Not a receptor: nothing binds it. A charged helix inside it senses the voltage across the membrane and pulls the gate open when the cell depolarises. Sodium channels make the action potential, potassium channels end it, calcium channels turn it into transmitter release.",
+ "Background channel": "A channel open at rest, or opened from inside the cell rather than by a transmitter. These set the resting potential and how easily a neuron fires.",
+ "Ca²⁺-activated K⁺ channel": "A potassium channel opened by calcium arriving inside the cell, so every burst of activity is followed by a pause.",
+ "Transporter": "Not a receptor: a carrier protein that binds a transmitter and hauls it across the membrane one molecule at a time, powered by the sodium gradient. Reuptake transporters pull transmitter out of the synapse to end the signal, and are what most antidepressants and stimulants block; vesicular transporters load it into vesicles for the next release.",
+ "affinity": "How tightly a receptor holds its transmitter: high affinity means it is occupied at low concentrations and lets go slowly, low affinity means it needs a lot and lets go fast. A synapse releases transmitter in a brief burst of very high concentration, so low-affinity receptors like AMPA answer only to release right in front of them, while high-affinity receptors like D2 sense the faint background level too.",
+ "agonist": "A molecule that binds a receptor and switches it on, as the transmitter itself does. Morphine is an agonist at the μ-opioid receptor; nicotine at nicotinic receptors.",
+ "antagonist": "A molecule that binds a receptor and blocks it, so the transmitter cannot act. Naloxone at the μ-opioid receptor; antipsychotics at D2; antihistamines at H1.",
+ "autoreceptor": "A receptor on the terminal that released the transmitter, sensing how much is out there and turning release down. The cell's own volume control.",
+}
 KINDS = {
  "iono_cat": dict(label="Ionotropic · cation channel", arch="lgic",
    means="A ligand-gated ion channel. The transmitter itself opens a pore through the receptor, cations rush in and the membrane depolarises. Fast, and over in milliseconds."),
@@ -599,14 +620,185 @@ GROUPS = [
  ]),
 ]
 
-out = {"kinds": {k: dict(v, svg=ARCH[v["arch"]]) for k, v in KINDS.items()}, "groups": []}
+PLAIN = {
+ "AMPA": "AMPA glutamate receptor", "NMDA": "NMDA glutamate receptor", "KAINATE": "Kainate glutamate receptor",
+ "MGLUR1": "Metabotropic glutamate receptor 1", "MGLUR5": "Metabotropic glutamate receptor 5", "MGLUR2": "Metabotropic glutamate receptor 2",
+ "MGLUR3": "Metabotropic glutamate receptor 3", "MGLUR4": "Metabotropic glutamate receptor 4", "MGLUR6": "Metabotropic glutamate receptor 6",
+ "MGLUR7": "Metabotropic glutamate receptor 7", "MGLUR8": "Metabotropic glutamate receptor 8",
+ "GABAA": "GABA type A receptor", "GABAA_RHO": "GABA type A receptor, ρ subunits", "GABAB": "GABA type B receptor", "GLYR": "Glycine receptor",
+ "NACHR_MUSCLE": "Nicotinic acetylcholine receptor of muscle", "A4B2": "Nicotinic acetylcholine receptor α4β2", "A7": "Nicotinic acetylcholine receptor α7",
+ "A3B4": "Nicotinic acetylcholine receptor α3β4", "M1": "Muscarinic acetylcholine receptor 1", "M2": "Muscarinic acetylcholine receptor 2",
+ "M3": "Muscarinic acetylcholine receptor 3", "M4": "Muscarinic acetylcholine receptor 4", "M5": "Muscarinic acetylcholine receptor 5",
+ "D1": "Dopamine receptor 1", "D2": "Dopamine receptor 2", "D3": "Dopamine receptor 3", "D4": "Dopamine receptor 4", "D5": "Dopamine receptor 5",
+ "ALPHA1A": "Noradrenaline alpha-1A receptor", "ALPHA1B": "Noradrenaline alpha-1B receptor", "ALPHA1D": "Noradrenaline alpha-1D receptor",
+ "ALPHA2A": "Noradrenaline alpha-2A receptor", "ALPHA2B": "Noradrenaline alpha-2B receptor", "ALPHA2C": "Noradrenaline alpha-2C receptor",
+ "BETA1": "Noradrenaline beta-1 receptor", "BETA2": "Adrenaline beta-2 receptor", "BETA3": "Noradrenaline beta-3 receptor",
+ "5HT1A": "Serotonin-1A receptor", "5HT1B": "Serotonin-1B receptor", "5HT1D": "Serotonin-1D receptor", "5HT1E": "Serotonin-1E receptor", "5HT1F": "Serotonin-1F receptor",
+ "5HT2A": "Serotonin-2A receptor", "5HT2B": "Serotonin-2B receptor", "5HT2C": "Serotonin-2C receptor", "5HT3": "Serotonin-3 receptor, the channel",
+ "5HT4": "Serotonin-4 receptor", "5HT5A": "Serotonin-5A receptor", "5HT6": "Serotonin-6 receptor", "5HT7": "Serotonin-7 receptor",
+ "H1": "Histamine receptor 1", "H2": "Histamine receptor 2", "H3": "Histamine receptor 3", "H4": "Histamine receptor 4",
+ "A1": "Adenosine receptor A1", "A2A": "Adenosine receptor A2A", "A2B": "Adenosine receptor A2B", "A3": "Adenosine receptor A3",
+ "P2X1": "ATP-gated channel P2X1", "P2X2": "ATP-gated channel P2X2", "P2X3": "ATP-gated channel P2X3", "P2X4": "ATP-gated channel P2X4",
+ "P2X5": "ATP-gated channel P2X5", "P2X6": "ATP-gated channel P2X6", "P2X7": "ATP-gated channel P2X7",
+ "P2Y1": "ADP receptor P2Y1", "P2Y2": "ATP and UTP receptor P2Y2", "P2Y4": "UTP receptor P2Y4", "P2Y6": "UDP receptor P2Y6", "P2Y11": "ATP receptor P2Y11",
+ "P2Y12": "ADP receptor P2Y12", "P2Y13": "ADP receptor P2Y13", "P2Y14": "UDP-sugar receptor P2Y14",
+ "CB1": "Cannabinoid receptor 1", "CB2": "Cannabinoid receptor 2",
+ "MOR": "Mu opioid receptor, the morphine receptor", "DOR": "Delta opioid receptor", "KOR": "Kappa opioid receptor", "NOP": "Nociceptin receptor",
+ "NK1": "Neurokinin-1, the substance P receptor", "NK2": "Neurokinin-2 receptor", "NK3": "Neurokinin-3 receptor",
+ "Y1": "Neuropeptide Y receptor 1", "Y2": "Neuropeptide Y receptor 2", "Y4": "Neuropeptide Y receptor 4", "Y5": "Neuropeptide Y receptor 5",
+ "SSTR1": "Somatostatin receptor 1", "SSTR2": "Somatostatin receptor 2", "SSTR3": "Somatostatin receptor 3", "SSTR4": "Somatostatin receptor 4", "SSTR5": "Somatostatin receptor 5",
+ "OX1": "Orexin receptor 1", "OX2": "Orexin receptor 2", "OTR": "Oxytocin receptor", "V1A": "Vasopressin receptor 1a", "V1B": "Vasopressin receptor 1b",
+ "CRF1": "Corticotropin-releasing factor receptor 1", "CRF2": "Corticotropin-releasing factor receptor 2", "MC4R": "Melanocortin receptor 4",
+ "MT1": "Melatonin receptor 1", "MT2": "Melatonin receptor 2",
+ "EP1": "Prostaglandin E receptor 1", "EP2": "Prostaglandin E receptor 2", "EP3": "Prostaglandin E receptor 3", "EP4": "Prostaglandin E receptor 4",
+ "BDKRB1": "Bradykinin receptor 1", "BDKRB2": "Bradykinin receptor 2",
+ "TRPV1": "Transient receptor potential vanilloid 1, the chilli receptor", "TRPM8": "Transient receptor potential melastatin 8, the menthol receptor",
+ "TRPA1": "Transient receptor potential ankyrin 1, the mustard receptor", "TRPM3": "Transient receptor potential melastatin 3",
+ "NAV11": "Voltage-gated sodium channel 1.1", "NAV12": "Voltage-gated sodium channel 1.2", "NAV16": "Voltage-gated sodium channel 1.6",
+ "NAV17": "Voltage-gated sodium channel 1.7", "NAV18": "Voltage-gated sodium channel 1.8",
+ "CAV12": "Voltage-gated calcium channel 1.2, L-type", "CAV13": "Voltage-gated calcium channel 1.3, L-type", "CAV21": "Voltage-gated calcium channel 2.1, P/Q-type",
+ "CAV22": "Voltage-gated calcium channel 2.2, N-type", "CAV23": "Voltage-gated calcium channel 2.3, R-type", "CAV3": "Voltage-gated calcium channel 3, T-type",
+ "KV1": "Voltage-gated potassium channel 1, delayed rectifier", "KV2": "Voltage-gated potassium channel 2.1", "KV4": "Voltage-gated potassium channel 4, A-type",
+ "KV7": "Voltage-gated potassium channel 7, the M-current", "KV11": "Voltage-gated potassium channel 11.1, hERG",
+ "HCN1": "Hyperpolarisation-activated cation channel 1", "HCN2": "Hyperpolarisation-activated cation channel 2",
+ "BK": "Big-conductance calcium-activated potassium channel", "SK": "Small-conductance calcium-activated potassium channel",
+ "KIR2": "Inward-rectifier potassium channel 2", "GIRK": "G-protein-gated inward-rectifier potassium channel", "KATP": "ATP-sensitive potassium channel",
+ "TREK1": "Two-pore-domain potassium leak channel TREK-1", "TASK": "Two-pore-domain potassium leak channels TASK-1 and TASK-3",
+ "EAAT2": "Glutamate transporter 2, on astrocytes", "EAAT1": "Glutamate transporter 1, on glia", "EAAT3": "Glutamate transporter 3, on neurons",
+ "GAT1": "GABA transporter 1", "GLYT1": "Glycine transporter 1", "GLYT2": "Glycine transporter 2",
+ "DAT": "Dopamine reuptake transporter", "NET": "Noradrenaline reuptake transporter", "SERT": "Serotonin reuptake transporter",
+ "VMAT2": "Vesicular monoamine transporter 2", "VGLUT": "Vesicular glutamate transporters 1 and 2", "VGAT": "Vesicular GABA and glycine transporter",
+ "VACHT": "Vesicular acetylcholine transporter",
+}
+
+# drugs and poisons people have heard of, by what they act on: prescription,
+# over the counter, recreational, and the odd toxin, in plain words
+DRUGS = {
+ "AMPA": "Perampanel (epilepsy) blocks it. Ketamine's antidepressant effect is thought to end here, by boosting AMPA signalling.",
+ "NMDA": "Ketamine and esketamine (Spravato) block it, as do PCP, nitrous oxide in part, dextromethorphan (cough medicine) and memantine (Alzheimer's). Alcohol dampens it, which is part of both the drunkenness and the blackout.",
+ "KAINATE": "Topiramate (epilepsy, migraine) blocks it in part. No drug aims at it alone.",
+ "MGLUR1": "None in everyday use.", "MGLUR5": "None approved; mavoglurant and basimglurant were tried for fragile X and depression.",
+ "MGLUR2": "None approved; pomaglumetad was tried as an antipsychotic.", "MGLUR3": "None in everyday use.", "MGLUR4": "None approved; foliglurax was tried for Parkinson's.",
+ "MGLUR6": "None.", "MGLUR7": "None in everyday use.", "MGLUR8": "None in everyday use.",
+ "GABAA": "The benzodiazepines: diazepam (Valium), lorazepam, alprazolam (Xanax), clonazepam. The sleeping pills zolpidem (Ambien) and zopiclone. Barbiturates, propofol and the gas anaesthetics. Alcohol, which potentiates it. Muscimol from the fly agaric mushroom. Brexanolone and zuranolone, the neurosteroid antidepressants.",
+ "GABAA_RHO": "None; it ignores benzodiazepines.",
+ "GABAB": "Baclofen (spasticity, and used off-label for alcohol dependence). GHB and sodium oxybate (narcolepsy) act here in part.",
+ "GLYR": "Strychnine, the rat poison, blocks it. Alcohol and gas anaesthetics potentiate it.",
+ "NACHR_MUSCLE": "The muscle relaxants of surgery: rocuronium, vecuronium, succinylcholine. Curare, the arrow poison. Cobra and krait venoms block it; that is what paralyses.",
+ "A4B2": "Nicotine, in cigarettes, vapes and patches. Varenicline (Champix, Chantix) and cytisine, the quitting drugs, are partial agonists here.",
+ "A7": "Nicotine. Galantamine (Alzheimer's) makes it more responsive. Bupropion blocks it weakly.",
+ "A3B4": "Nicotine. Mecamylamine blocks it; bupropion (Zyban, Wellbutrin) blocks it in part, one reason it helps people stop smoking.",
+ "M1": "Blocked by scopolamine (motion-sickness patches), atropine, and as a side effect by tricyclic antidepressants, old antihistamines and some antipsychotics: the dry mouth and fuzzy memory. Donepezil and rivastigmine raise acetylcholine to reach it.",
+ "M2": "Atropine, which speeds the heart by blocking it. Ipratropium and tiotropium inhalers.",
+ "M3": "Oxybutynin and solifenacin (overactive bladder), tiotropium and ipratropium (COPD inhalers) block it; pilocarpine (dry mouth, glaucoma) switches it on.",
+ "M4": "Xanomeline, in the 2024 antipsychotic Cobenfy, switches it on: the first antipsychotic that does not touch dopamine receptors.",
+ "M5": "None in everyday use.",
+ "D1": "No drug in everyday use acts on it directly. Cocaine, amphetamine and methylphenidate reach it by raising dopamine.",
+ "D2": "Every antipsychotic blocks it: haloperidol, risperidone, olanzapine, quetiapine, aripiprazole (a partial agonist). Metoclopramide and domperidone (anti-sickness), which is why they can cause tremor. The Parkinson's drugs pramipexole, ropinirole and rotigotine switch it on, and levodopa reaches it as dopamine. Cabergoline and bromocriptine.",
+ "D3": "Pramipexole and ropinirole (Parkinson's, restless legs) prefer it. Cariprazine, the antipsychotic, is a partial agonist here.",
+ "D4": "Clozapine binds it well. No drug aims at it alone.",
+ "D5": "None.",
+ "ALPHA1A": "Prazosin and doxazosin (blood pressure; prazosin for PTSD nightmares), tamsulosin (prostate) block it. Phenylephrine, the decongestant, and midodrine switch it on. Many antipsychotics and antidepressants block it by accident: the dizziness on standing.",
+ "ALPHA1B": "The same drugs as α1A: prazosin, doxazosin, phenylephrine.",
+ "ALPHA1D": "The same drugs as α1A; tamsulosin touches it.",
+ "ALPHA2A": "Clonidine (blood pressure, ADHD, opioid withdrawal), guanfacine (ADHD), dexmedetomidine (sedation in intensive care) and tizanidine switch it on. Mirtazapine, the antidepressant, blocks it, which is how it raises noradrenaline and serotonin. Yohimbine.",
+ "ALPHA2B": "Clonidine and the other α2 agonists; mirtazapine blocks it.",
+ "ALPHA2C": "Clonidine; mirtazapine blocks it.",
+ "BETA1": "The beta-blockers: metoprolol, atenolol, bisoprolol, propranolol. Dobutamine switches it on in a failing heart.",
+ "BETA2": "Salbutamol (Ventolin, albuterol), salmeterol and formoterol inhalers switch it on; adrenaline in an EpiPen. Propranolol blocks it: stage fright, migraine, and the softening of emotional memories.",
+ "BETA3": "Mirabegron and vibegron (overactive bladder).",
+ "5HT1A": "Buspirone (anxiety) is a partial agonist; so are aripiprazole, vilazodone and vortioxetine in part. Every SSRI reaches it by raising serotonin. LSD and psilocin bind it as well as 5-HT2A.",
+ "5HT1B": "The triptans: sumatriptan, rizatriptan, zolmitriptan (migraine). Ergotamine.",
+ "5HT1D": "The triptans and ergotamine.",
+ "5HT1E": "None.",
+ "5HT1F": "Lasmiditan (Reyvow), the migraine drug that does not narrow blood vessels.",
+ "5HT2A": "The classic psychedelics: LSD, psilocybin (as psilocin), mescaline, DMT, 2C-B. The atypical antipsychotics block it: clozapine, quetiapine, risperidone, olanzapine. Trazodone and mirtazapine block it, which helps sleep. Pimavanserin (Parkinson's psychosis).",
+ "5HT2B": "Fenfluramine (the diet drug withdrawn for heart-valve damage), pergolide and cabergoline at high dose, MDMA.",
+ "5HT2C": "Lorcaserin (the diet drug, withdrawn), agomelatine and mirtazapine block it; olanzapine too, part of the appetite. Fluoxetine touches it.",
+ "5HT3": "Ondansetron (Zofran), granisetron and palonosetron, the anti-sickness drugs of chemotherapy. Mirtazapine and vortioxetine block it. Alcohol potentiates it; metoclopramide blocks it weakly.",
+ "5HT4": "Prucalopride (constipation), metoclopramide in part; cisapride, withdrawn for heart rhythm.",
+ "5HT5A": "None.",
+ "5HT6": "No drug aims at it; clozapine, olanzapine and several antidepressants block it in passing.",
+ "5HT7": "No drug aims at it; aripiprazole, lurasidone and amisulpride touch it.",
+ "H1": "The old antihistamines: diphenhydramine (Benadryl, Nytol), chlorphenamine, promethazine, hydroxyzine, and the sleep aids and cold remedies built on them. The non-drowsy ones, cetirizine and loratadine, which stay out of the brain. Doxepin at low dose (insomnia). Blocked by olanzapine, quetiapine and mirtazapine: the sedation and the weight gain.",
+ "H2": "Famotidine (Pepcid), cimetidine, nizatidine; ranitidine (Zantac) until it was withdrawn.",
+ "H3": "Pitolisant (Wakix) for narcolepsy blocks it, raising histamine and wakefulness.",
+ "H4": "None in everyday use.",
+ "A1": "Caffeine and theophylline block it: tea, coffee, energy drinks. Adenosine itself, injected, resets a racing heart through it.",
+ "A2A": "Caffeine blocks it; istradefylline (Nourianz) blocks it for Parkinson's. Regadenoson (heart scans) switches it on.",
+ "A2B": "Caffeine, weakly.", "A3": "None in everyday use.",
+ "P2X1": "None.", "P2X2": "None.", "P2X3": "Gefapixant (chronic cough) blocks it.", "P2X4": "Ivermectin potentiates it in passing.",
+ "P2X5": "None.", "P2X6": "None.", "P2X7": "None approved; blockers have been tried for depression and arthritis.",
+ "P2Y1": "None.", "P2Y2": "Diquafosol (dry eye, in Japan).", "P2Y4": "None.", "P2Y6": "None.", "P2Y11": "None.",
+ "P2Y12": "The blood thinners clopidogrel (Plavix), ticagrelor and prasugrel block it.", "P2Y13": "None.", "P2Y14": "None.",
+ "CB1": "THC, the active part of cannabis, and its prescribed forms dronabinol and nabilone; nabiximols (Sativex). The synthetic cannabinoids sold as spice or K2, which are full agonists and far more dangerous. CBD acts on it only indirectly. Rimonabant blocked it and was withdrawn for depression.",
+ "CB2": "THC weakly; CBD indirectly. No selective drug in use.",
+ "MOR": "Morphine, heroin, fentanyl, oxycodone, hydrocodone, codeine, methadone, tramadol; buprenorphine, the partial agonist; loperamide (Imodium), which stays in the gut. Naloxone (Narcan) and naltrexone block it. Kratom's mitragynine acts here.",
+ "DOR": "No selective drug in use; buprenorphine and methadone touch it.",
+ "KOR": "Salvinorin A, from Salvia divinorum, the most potent natural hallucinogen. Pentazocine and nalbuphine. Naltrexone and buprenorphine block it; a blocker, aticaprant, is in trials for depression.",
+ "NOP": "None in use; buprenorphine is a partial agonist here. Cebranopadol in trials.",
+ "NK1": "Aprepitant (Emend) and fosaprepitant block it for chemotherapy nausea.", "NK2": "None in everyday use.", "NK3": "Fezolinetant (Veozah) blocks it for hot flushes.",
+ "Y1": "None.", "Y2": "None.", "Y4": "None.", "Y5": "None; blockers were tried for obesity.",
+ "SSTR1": "None.", "SSTR2": "Octreotide and lanreotide (acromegaly, gut tumours).", "SSTR3": "None.", "SSTR4": "None.", "SSTR5": "Pasireotide (Cushing's disease).",
+ "OX1": "Suvorexant (Belsomra), lemborexant and daridorexant, the orexin sleeping pills, block it.", "OX2": "The same three sleeping pills.",
+ "OTR": "Oxytocin (Pitocin, Syntocinon) to start labour; carbetocin. Atosiban blocks it to delay labour.",
+ "V1A": "None in everyday use.", "V1B": "None in everyday use.",
+ "CRF1": "None approved; blockers were tried for depression and anxiety and failed.", "CRF2": "None.",
+ "MC4R": "Setmelanotide (Imcivree) for genetic obesity; bremelanotide (Vyleesi) for low sexual desire.",
+ "MT1": "Melatonin itself, sold over the counter; ramelteon (Rozerem); agomelatine, the antidepressant; tasimelteon.",
+ "MT2": "The same: melatonin, ramelteon, agomelatine, tasimelteon.",
+ "EP1": "Aspirin, ibuprofen, naproxen and diclofenac act one step up, stopping the prostaglandin being made; paracetamol probably does the same in the brain.",
+ "EP2": "The same NSAIDs, upstream.", "EP3": "The NSAIDs upstream, which is how they bring a fever down. Misoprostol switches it on.", "EP4": "The NSAIDs upstream; indometacin closes a baby's ductus arteriosus through it.",
+ "BDKRB1": "None in everyday use.", "BDKRB2": "Icatibant blocks it (hereditary angioedema). ACE inhibitors raise bradykinin, hence their cough.",
+ "TRPV1": "Capsaicin, in chillies and in capsaicin creams and the Qutenza patch. Paracetamol's breakdown product AM404 acts here and at TRPA1 in the spinal cord, which may be part of how it works.",
+ "TRPM8": "Menthol, in Vicks, cough sweets and cooling gels. Eucalyptol.",
+ "TRPA1": "Mustard oil, wasabi, horseradish, cinnamon, the sting of onions and tear gas. Paracetamol's metabolite AM404. Gas anaesthetics irritate through it.",
+ "TRPM3": "None in use.",
+ "NAV11": "Local anaesthetics: lidocaine, bupivacaine, and cocaine's numbing. Phenytoin, carbamazepine, lamotrigine (epilepsy) slow it. Tetrodotoxin, the pufferfish poison, blocks it.",
+ "NAV12": "The same local anaesthetics and epilepsy drugs; tetrodotoxin.",
+ "NAV16": "The same local anaesthetics and epilepsy drugs; riluzole (motor neuron disease) damps its persistent current.",
+ "NAV17": "Local anaesthetics; no selective drug has yet succeeded.",
+ "NAV18": "Suzetrigine (Journavx), approved in 2025, the first non-opioid painkiller that blocks a single sodium channel. Local anaesthetics.",
+ "CAV12": "The blood-pressure drugs amlodipine, nifedipine, felodipine, verapamil and diltiazem block it.",
+ "CAV13": "The same calcium-channel blockers, weakly; isradipine was tried for Parkinson's.",
+ "CAV21": "Gabapentin and pregabalin bind its α2δ partner and quieten it. No direct blocker in use.",
+ "CAV22": "Ziconotide (Prialt), the cone-snail toxin given into the spine for severe pain. Gabapentin and pregabalin through α2δ. Opioids and cannabinoids close it indirectly.",
+ "CAV23": "None.",
+ "CAV3": "Ethosuximide (absence seizures), zonisamide; mibefradil, withdrawn.",
+ "KV1": "Dalfampridine (4-aminopyridine) blocks it to speed walking in multiple sclerosis.",
+ "KV2": "None.", "KV4": "None.",
+ "KV7": "Retigabine opened it for epilepsy and was withdrawn; azetukalner is in trials. Flupirtine.",
+ "KV11": "Blocked on purpose by sotalol, dofetilide and amiodarone (heart rhythm), and by accident by erythromycin, haloperidol, methadone, citalopram and dozens more: the QT-prolongation warning on the label.",
+ "HCN1": "Ivabradine blocks the family; gabapentin and propofol touch it.", "HCN2": "Ivabradine (heart rate); lamotrigine touches it.",
+ "BK": "None in use.", "SK": "None in use; apamin from bee venom blocks it.",
+ "KIR2": "None in use; chloroquine blocks it in passing.",
+ "GIRK": "Opened indirectly by opioids, baclofen, clonidine and every Gi-coupled drug; alcohol opens it directly, part of the sedation.",
+ "KATP": "The diabetes drugs gliclazide and glibenclamide close it; diazoxide, minoxidil (Rogaine) and nicorandil open it.",
+ "TREK1": "The gas anaesthetics isoflurane and sevoflurane open it; riluzole and fluoxetine touch it.",
+ "TASK": "Opened by the gas anaesthetics; blocked by acid.",
+ "EAAT2": "None in use; ceftriaxone raises its levels in research.", "EAAT1": "None.", "EAAT3": "None.",
+ "GAT1": "Tiagabine (epilepsy) blocks it.",
+ "GLYT1": "None approved; bitopertin and iclepertin have been tried for schizophrenia.", "GLYT2": "None.",
+ "DAT": "Cocaine, methylphenidate (Ritalin, Concerta) and modafinil block it; amphetamine (Adderall), methamphetamine and MDMA reverse it. Bupropion blocks it weakly.",
+ "NET": "Atomoxetine (Strattera) and reboxetine block it, as do the SNRIs venlafaxine and duloxetine, the tricyclics, bupropion, cocaine and methylphenidate; amphetamine reverses it.",
+ "SERT": "The SSRIs fluoxetine (Prozac), sertraline (Zoloft), citalopram, escitalopram, paroxetine; the SNRIs; the tricyclics; tramadol; MDMA (ecstasy), which reverses it. St John's wort in part.",
+ "VMAT2": "Reserpine, tetrabenazine, deutetrabenazine and valbenazine (Huntington's chorea, tardive dyskinesia) block it; amphetamine and methamphetamine disrupt it.",
+ "VGLUT": "None.", "VGAT": "None.", "VACHT": "None in use; vesamicol in the laboratory.",
+}
+
+def parts_of(label):
+    return [p for chunk in label.split(" · ") for p in chunk.split(", ")]
+
+out = {"kinds": {k: dict(v, svg=ARCH[v["arch"]], parts=parts_of(v["label"])) for k, v in KINDS.items()}, "glossary": GLOSSARY, "groups": []}
+missing = [p for v in KINDS.values() for p in parts_of(v["label"]) if p not in GLOSSARY]
+assert not missing, f"label parts without a glossary entry: {missing}"
 n = 0
 for gid, name, note, items in GROUPS:
     rows = []
     for rid, nm, kind, lig, ion, g, binds, effect, note_ in items:
         gl, ge = G.get(kind, ("", ""))
-        rows.append(dict(id=rid, name=nm, kind=kind, lig=lig, ion=ion, g=(g or gl), eff=ge if kind in G else "",
-                         binds=binds, effect=effect, note=note_))
+        rows.append(dict(id=rid, name=nm, plain=PLAIN.get(rid, ""), kind=kind, lig=lig, ion=ion, g=(g or gl), eff=ge if kind in G else "",
+                         binds=binds, drugs=DRUGS.get(rid, ""), effect=effect, note=note_))
         n += 1
     out["groups"].append(dict(id=gid, name=name, note=note, items=rows))
 
@@ -615,4 +807,8 @@ dest = os.path.normpath(os.path.join(here, "..", "..", "site", "assets", "rx"))
 os.makedirs(dest, exist_ok=True)
 with open(os.path.join(dest, "receptors.json"), "w", encoding="utf-8") as fh:
     json.dump(out, fh, ensure_ascii=False, indent=0); fh.write("\n")
+nodrug = [it[0] for g in GROUPS for it in g[3] if it[0] not in DRUGS]
+assert not nodrug, f"entries without a drugs line: {nodrug}"
+unnamed = [it[0] for g in GROUPS for it in g[3] if it[0] not in PLAIN]
+assert not unnamed, f"entries without a plain name: {unnamed}"
 print("wrote receptors.json:", n, "entries in", len(GROUPS), "groups,", len(KINDS), "kinds,", os.path.getsize(os.path.join(dest, "receptors.json")), "bytes")
