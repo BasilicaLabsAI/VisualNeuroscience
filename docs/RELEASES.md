@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.15 — 19 September 2026 — The multipolar neuron's axon gets its sheath
+Commit · Sheathe the multipolar neuron's axon and mark its nodes of Ranvier
+
+The multipolar neuron's axon now leaves the initial segment under a myelin sheath: three lengths of it, each thinning at its paranodes, with a bare node of Ranvier between each pair, so the plate shows where the action potential is made and where it jumps. Both are structures in their own right, with their own colour, description and quiz question, which brings the cell to twenty. The two mitochondria that used to travel down the axon are gone, since past the initial segment the axon is under its sheath and nothing inside it can be seen.
+
 ## v10.14 — 19 September 2026 — The pyramidal cell held back
-Commit · Take the pyramidal cell off the Microanatomy page and grey out its tile
+Commit `e17ce06` · Take the pyramidal cell off the Microanatomy page and grey out its tile
 
 The pyramidal cell is withdrawn from the page for now. Its tile stays where it was, greyed out as coming soon beside the other cells to follow, and a link to it opens the multipolar neuron instead. The drawing's generator stays in the repository, ready to rebuild, and its README says how to put it back.
 

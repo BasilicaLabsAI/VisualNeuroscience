@@ -11,7 +11,8 @@ PARTS = [  # id, name  (index order)
     ("dendrites", "Dendrites"), ("spines", "Dendritic spines"), ("soma", "Cell body (soma)"), ("nucleus", "Nucleus"),
     ("nucleolus", "Nucleolus"), ("nissl", "Nissl bodies (rough ER)"), ("ribosomes", "Free ribosomes"), ("mito", "Mitochondria"),
     ("golgi", "Golgi apparatus"), ("lys", "Lysosomes"), ("tubes", "Neurotubules"), ("hillock", "Axon hillock"),
-    ("initial", "Initial segment"), ("axon", "Axon"), ("syn_soma", "Axosomatic synapse"), ("syn_dend", "Axodendritic synapse"),
+    ("initial", "Initial segment"), ("axon", "Axon"), ("myelin", "Myelin sheath"), ("node", "Node of Ranvier"),
+    ("syn_soma", "Axosomatic synapse"), ("syn_dend", "Axodendritic synapse"),
     ("afferents", "Incoming axons"), ("glia", "Astrocyte process"),
 ]
 
@@ -28,8 +29,8 @@ def rainbow(t, l_floor=0.60, s_floor=0.62):
     r, g, b = colorsys.hls_to_rgb(hh, ll, ss)
     return "#%02x%02x%02x" % tuple(int(round(v * 255)) for v in (r, g, b))
 
-HUE_ORDER = ["dendrites", "initial", "nissl", "tubes", "soma", "syn_soma", "mito", "syn_dend", "afferents", "nucleolus", "lys", "spines",
-             "golgi", "axon", "ribosomes", "hillock", "glia", "nucleus"]
+HUE_ORDER = ["dendrites", "initial", "nissl", "tubes", "soma", "myelin", "syn_soma", "mito", "syn_dend", "node", "afferents", "nucleolus",
+             "lys", "spines", "golgi", "axon", "ribosomes", "hillock", "glia", "nucleus"]
 HUE_T = {pid: k / len(HUE_ORDER) for k, pid in enumerate(HUE_ORDER)}
 
 def accents():
@@ -80,7 +81,36 @@ def literal_styles(T):
         ("mn-env", None): f'fill="none" stroke="{ink}" stroke-width=".6" opacity=".5"',
         ("mn-g-ink", None): f'fill="none" stroke="{ink}" stroke-width="4.4" stroke-linecap="round"',
         ("mn-g-lumen", None): f'fill="none" stroke="{T["golgi_lumen"]}" stroke-width="2.1" stroke-linecap="round"',
+        ("mn-mye-ink", None): f'fill="none" stroke="{ink}" stroke-linecap="butt"',
+        ("mn-mye-body", None): f'fill="none" stroke="{T["bouton"]}" stroke-linecap="butt"',
+        ("mn-node-mark", None): f'fill="none" stroke="{ink}" stroke-width="2.6" stroke-linecap="round" opacity=".55"',
     }
+
+def tube_runs(segments, step=0.55):
+    """Centreline pieces with a radius tapering along each, batched into (width, path data) pairs
+    so one path element carries every run of a width. Same scheme as the pyramidal cell."""
+    buckets = {}
+    for pts, r0, r1 in segments:
+        s = arclen(pts); total = s[-1] or 1.0
+        cur, start = None, 0
+        for i in range(len(pts)):
+            q = max(step, round((r0 + (r1 - r0) * s[i] / total) / step) * step)
+            if cur is None:
+                cur = q
+            elif q != cur or i == len(pts) - 1:
+                if i - start >= 1: buckets.setdefault(round(cur, 2), []).append(pts[start:i + 1])
+                start, cur = i, q
+    return [(w, "".join("M" + P(seg[0]) + "".join("L" + P(p) for p in seg[1:]) for seg in buckets[w])) for w in sorted(buckets, reverse=True)]
+
+def sheath_pieces(ax, M):
+    """Each length of sheath as three pieces: a paranode thinning in, the body, a paranode thinning out."""
+    pts, s = ax["pts"], ax["s"]
+    cut = lambda a, b: pts[(s >= a - 1e-6) & (s <= b + 1e-6)]
+    out = []
+    for a, b in M["internodes"]:
+        t = M["taper"]
+        out += [(cut(a, a + t), M["r_para"], M["r"]), (cut(a + t, b - t), M["r"], M["r"]), (cut(b - t, b), M["r"], M["r_para"])]
+    return out
 
 def build(G, standalone=False, idp="mn-", theme=None):
     from shapely.geometry import box
@@ -213,6 +243,30 @@ def build(G, standalone=False, idp="mn-", theme=None):
     no = O["nucleolus"]
     out.append(f'<g{grp("nucleolus", "mn-nucleolus")}>' + padc(no["c"], no["r"] + 2.5) + circ(no["c"], no["r"], "mn-of", "nucleolus") +
                circ(no["c"] + np.array([-2.2, -2.4]), 2.1, "mn-glint") + "</g>")
+
+    # ---- the sheath over the axon, and the bare nodes between its lengths; drawn last but for the
+    # spine targets, so each takes its own click off the axon under it
+    ax = G["axon"]; M = G["myelin"]
+    mye = tube_runs(sheath_pieces(ax, M))
+    line = lambda pts: "M" + P(pts[0]) + "".join("L" + P(p) for p in pts[1:])
+    cut = lambda a, b: ax["pts"][(ax["s"] >= a - 1e-6) & (ax["s"] <= b + 1e-6)]
+    mye_hit = "".join(line(cut(a, b)) for a, b in M["internodes"])
+    out.append(pad(f'<g class="mn-spn-hit" data-part="myelin"><path stroke-width="{fmt(2 * M["r"] + 8)}" stroke-linecap="butt" d="{mye_hit}"/></g>'))
+    ink_open = st("mn-mye-ink") if standalone else ' class="mn-spn-ink"'
+    out.append(f'<g{grp("myelin", "mn-myelin", "myelin-sheath")}>' +
+               f'<g{ink_open}>' + "".join(f'<path stroke-width="{fmt(w * 2 + 2.4)}" stroke-linecap="butt" d="{d}"/>' for w, d in mye) + "</g>" +
+               f'<g{st("mn-mye-body")}>' + "".join(f'<path stroke-width="{fmt(w * 2)}" stroke-linecap="butt" d="{d}"/>' for w, d in mye) + "</g></g>")
+    nodes = [cut(a, b) for a, b in M["nodes"]]
+    rn = float(ax["r"][int(np.searchsorted(ax["s"], M["nodes"][0][0]))])
+    marks = ""
+    for pts in nodes:
+        for p, q in ((pts[0], pts[1]), (pts[-1], pts[-2])):
+            a = math.atan2(q[1] - p[1], q[0] - p[0]) + math.pi / 2
+            marks += f'<path{st("mn-node-mark")} d="M{P(p + 7 * np.array([math.cos(a), math.sin(a)]))}L{P(p - 7 * np.array([math.cos(a), math.sin(a)]))}"/>'
+    node_d = "".join(line(pts) for pts in nodes)
+    out.append(pad(f'<g class="mn-spn-hit" data-part="node"><path stroke-width="{fmt(2 * rn + 16)}" d="{node_d}"/></g>'))
+    out.append(f'<g{st("mn-spn-ink")}><path stroke-width="{fmt(2 * rn + 3.2)}" d="{node_d}"/></g>')
+    out.append(f'<g{grp("node", "mn-spn-body mn-node", "node-of-ranvier")}><path stroke-width="{fmt(2 * rn)}" d="{node_d}"/>' + marks + "</g>")
     if not standalone:
         out.append('<g class="mn-spn-hit" data-part="spines">' + "".join(use("sp%d" % k, f' stroke-width="{7.5 if k < 3 else 9:g}"') for k in range(4)) + "</g>")
         out.append(f'<g id="{I("callout")}" class="mn-callout" aria-hidden="true"></g>')
@@ -221,7 +275,8 @@ def build(G, standalone=False, idp="mn-", theme=None):
 def standalone_svg(G):
     inner, _ = build(G, standalone=True)
     head = (f'<?xml version="1.0" encoding="UTF-8"?>\n<!-- Multipolar neuron: an original drawing constructed from code. Unlabelled. One id per structure;\n'
-            f'     the unpainted shapes in #mn-regions outline dendrites, cell body, axon hillock, initial segment and axon. -->\n'
+            f'     the unpainted shapes in #mn-regions outline dendrites, cell body, axon hillock, initial segment and axon;\n'
+            f'     the sheath and the nodes of Ranvier are drawn over the axon. -->\n'
             f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 {W} {H}" width="{W}" height="{H}">\n<title>Multipolar neuron</title>\n')
     return head + inner + "\n</svg>\n"
 
@@ -246,7 +301,10 @@ def anchors(G):
     i = lambda sv: int(np.searchsorted(ax["s"], sv))
     A["hillock"] = ax["pts"][i(104)] + ax["nrm"] * 7.0
     A["initial"] = ax["pts"][i(168)]
-    A["axon"] = ax["pts"][i(420)]
+    A["axon"] = ax["pts"][i(215)]                      # the bare stretch before the sheath begins
+    M = G["myelin"]
+    A["myelin"] = ax["pts"][i(sum(M["internodes"][1]) / 2)]
+    A["node"] = ax["pts"][i(sum(M["nodes"][0]) / 2)]
     A["syn_soma"] = S["syn_soma"]["c"]; A["syn_dend"] = S["syn_dend"]["c"]
     m = S["astro"]["main"]; A["glia"] = m[int(len(m) * 0.45)]
     if G.get("afferents"):      # the bouton with the most open space round it
@@ -271,8 +329,8 @@ def labels(G, A):
     """Pick a label-box position for every anchor: nearest spot that stays off the artwork."""
     from shapely.geometry import box
     S = G["S"]
-    occ = unary_union([G["neuron"].buffer(8.5), S["astro"]["poly"].buffer(5), S["syn_soma"]["poly"].buffer(5), S["syn_dend"]["poly"].buffer(5)] +
-                      [f["poly"].buffer(3) for f in G.get("afferents", [])])
+    occ = unary_union([G["neuron"].buffer(8.5), G["myelin_poly"].buffer(5), S["astro"]["poly"].buffer(5), S["syn_soma"]["poly"].buffer(5),
+                       S["syn_dend"]["poly"].buffer(5)] + [f["poly"].buffer(3) for f in G.get("afferents", [])])
     out = {}
     taken = []
     for pid, name in PARTS:

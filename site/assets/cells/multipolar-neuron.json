@@ -25,7 +25,7 @@
   {
    "id": "spines",
    "name": "Dendritic spines",
-   "acc": "#4af56c",
+   "acc": "#42f08d",
    "anchor": [
     246.2,
     134.9
@@ -40,7 +40,7 @@
   {
    "id": "soma",
    "name": "Cell body (soma)",
-   "acc": "#ff5375",
+   "acc": "#fe4b83",
    "anchor": [
     598.1,
     339.8
@@ -57,7 +57,7 @@
   {
    "id": "nucleus",
    "name": "Nucleus",
-   "acc": "#625ad8",
+   "acc": "#675ad8",
    "anchor": [
     622.0,
     378.0
@@ -72,7 +72,7 @@
   {
    "id": "nucleolus",
    "name": "Nucleolus",
-   "acc": "#aff05b",
+   "acc": "#7ff658",
    "anchor": [
     642.0,
     393.5
@@ -87,7 +87,7 @@
   {
    "id": "nissl",
    "name": "Nissl bodies (rough ER)",
-   "acc": "#d85abf",
+   "acc": "#d85ac8",
    "anchor": [
     606.4,
     323.3
@@ -104,7 +104,7 @@
   {
    "id": "ribosomes",
    "name": "Free ribosomes",
-   "acc": "#4cd1e6",
+   "acc": "#50bee2",
    "anchor": [
     714.8,
     462.5
@@ -121,7 +121,7 @@
   {
    "id": "mito",
    "name": "Mitochondria",
-   "acc": "#ff8c38",
+   "acc": "#fb9937",
    "anchor": [
     619.2,
     340.6
@@ -136,7 +136,7 @@
   {
    "id": "golgi",
    "name": "Golgi apparatus",
-   "acc": "#45ed9c",
+   "acc": "#4be7b7",
    "anchor": [
     608.3,
     426.8
@@ -152,7 +152,7 @@
   {
    "id": "lys",
    "name": "Lysosomes",
-   "acc": "#79f659",
+   "acc": "#52f667",
    "anchor": [
     637.6,
     347.8
@@ -167,7 +167,7 @@
   {
    "id": "tubes",
    "name": "Neurotubules",
-   "acc": "#ee4496",
+   "acc": "#e54da4",
    "anchor": [
     739.3,
     419.9
@@ -184,7 +184,7 @@
   {
    "id": "hillock",
    "name": "Axon hillock",
-   "acc": "#4ea6e4",
+   "acc": "#4d99e5",
    "anchor": [
     795.1,
     422.4
@@ -199,7 +199,7 @@
   {
    "id": "initial",
    "name": "Initial segment",
-   "acc": "#be5ad8",
+   "acc": "#b95ad8",
    "anchor": [
     859.3,
     425.9
@@ -215,22 +215,52 @@
   {
    "id": "axon",
    "name": "Axon",
-   "acc": "#49e9cb",
+   "acc": "#4ae8e3",
    "anchor": [
-    1106.4,
-    476.5
+    906.3,
+    436.0
    ],
    "label": [
-    1106.4,
-    520.0
+    906.3,
+    479.5
    ],
    "find": "the axon",
-   "desc": "The single long fibre that carries the cell’s output, the action potential, away from the cell body to other neurons, muscles or glands. Here it runs off the edge of the drawing; in the body it can be up to a metre long."
+   "desc": "The single long fibre that carries the cell’s output, the action potential, away from the cell body to other neurons, muscles or glands. Here it runs off the edge of the drawing; in the body it can be up to a metre long. It is bare just past the initial segment and at each node; between the nodes the sheath covers it."
+  },
+  {
+   "id": "myelin",
+   "name": "Myelin sheath",
+   "acc": "#ff5e63",
+   "anchor": [
+    1047.2,
+    466.6
+   ],
+   "label": [
+    1047.2,
+    423.1
+   ],
+   "find": "the myelin sheath",
+   "desc": "Wrapped insulation laid down in lengths along the axon by a glial cell, an oligodendrocyte in the brain or a Schwann cell in a nerve. It stops the signal leaking out and forces it to jump from one gap to the next, which makes conduction both faster and cheaper."
+  },
+  {
+   "id": "node",
+   "name": "Node of Ranvier",
+   "acc": "#cedc56",
+   "anchor": [
+    1000.1,
+    457.2
+   ],
+   "label": [
+    1000.1,
+    413.7
+   ],
+   "find": "a node of Ranvier",
+   "desc": "A bare gap between two lengths of sheath, packed with sodium channels. The action potential is rebuilt at each one and leaps to the next, so it travels by jumps rather than crawling the whole way."
   },
   {
    "id": "syn_soma",
    "name": "Axosomatic synapse",
-   "acc": "#ff6b53",
+   "acc": "#ff7847",
    "anchor": [
     745.2,
     343.0
@@ -245,7 +275,7 @@
   {
    "id": "syn_dend",
    "name": "Axodendritic synapse",
-   "acc": "#ebb947",
+   "acc": "#e6c14c",
    "anchor": [
     670.4,
     242.0
@@ -260,7 +290,7 @@
   {
    "id": "afferents",
    "name": "Incoming axons",
-   "acc": "#d2da58",
+   "acc": "#aff05b",
    "anchor": [
     104.7,
     328.8
@@ -277,7 +307,7 @@
   {
    "id": "glia",
    "name": "Astrocyte process",
-   "acc": "#527de0",
+   "acc": "#5575dd",
    "anchor": [
     916.8,
     205.5

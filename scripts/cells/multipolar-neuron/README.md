@@ -1,6 +1,6 @@
 # Multipolar neuron: the drawing behind the Microanatomy page
 
-An original drawing of a large multipolar neuron, generated from code (seeded), with 18
+An original drawing of a large multipolar neuron, generated from code (seeded), with 20
 clickable structures. The page that shows it, `site/microanatomy.html`, adds the Explore and
 Test-yourself modes, zoom and pan, and the site's light and dark themes; the plate logic is
 `site/assets/cells.js`.
@@ -9,7 +9,7 @@ Test-yourself modes, zoom and pan, and the site's light and dark themes; the pla
 - `site/assets/cells/multipolar-neuron.svg`: the drawing, with `data-part` on every click target
   and `data-vis` on everything that recolours. It carries no colours of its own: the page paints
   it through custom properties, so it follows the theme.
-- `site/assets/cells/multipolar-neuron.json`: the eighteen structures, each with its accent
+- `site/assets/cells/multipolar-neuron.json`: the twenty structures, each with its accent
   colour, label anchor and position, name, description and quiz wording.
 
 Edit here, not in the built files.
@@ -23,12 +23,12 @@ Edit here, not in the built files.
 Seed 12 reproduces the drawing the page ships.
 
 ## Where things live
-- `neuron.py`: the geometry, in stages. 1 soma, axon, trunks. 2 synapses and astrocyte.
+- `neuron.py`: the geometry, in stages. 1 soma, axon and its sheath, trunks. 2 synapses and astrocyte.
   3 dendrite growth. 4 silhouette and regions. 5 spines. 6 organelles.
 - `tree.py`, `geom.py`: branch grower with collision rejection; outline and path helpers.
 - `silhouette.py`: shapely polygon to compact SVG path data.
 - `emit.py`: the SVG markup, accent hues (`HUE_ORDER`), label anchors and label positions.
-- `parts_text.py`: names, descriptions and quiz wording for the 18 structures. The descriptions
+- `parts_text.py`: names, descriptions and quiz wording for the 20 structures. The descriptions
   are uncited textbook-level text, and the page says so.
 - `build.py`: runs the above and writes the two assets.
 

@@ -115,6 +115,11 @@ def stage1(rng, P):
     G["trunks"] = trunks
     G["gw"] = gw
     G["core"] = closing(unary_union([soma, G["axon_poly"]] + [t.poly for t in trunks]), 22.0)
+    # the sheath: lengths of myelin along the axon past the initial segment, with a bare node of
+    # Ranvier between each pair, the last length running off the edge of the drawing. Each length
+    # thins at both ends the way the wraps peel off at a paranode.
+    G["myelin"] = dict(internodes=[(226, 304), (320, 398), (414, 492)], nodes=[(304, 320), (398, 414)], r=9.0, r_para=6.2, taper=8)
+    G["myelin_poly"] = unary_union([substring(LineString(ax_pts), a, b).buffer(9.0) for a, b in G["myelin"]["internodes"]])
     return G
 
 # ------------------------------------------------------------------ stage 2: synapses + astrocyte
@@ -402,11 +407,7 @@ def stage6(G, rng):
         nissl.append((c, th, 1.0))
     for c, th in scatter(9, ML, MW, 100, anyo):
         mito.append((c, th, 1.0))
-    # one mitochondrion in the hillock, two slim ones travelling down the axon
-    for sv, k, sc in ((330, 0.0, 0.62), (486, 0.0, 0.62)):
-        i = int(np.searchsorted(ax["s"], sv)); p = ax["pts"][i] + nrm * k
-        t_loc = math.atan2(*(ax["pts"][i + 1] - ax["pts"][i - 1])[::-1])
-        mito.append((p, t_loc, sc)); placed.append(capsule(p, t_loc, ML * sc, MW * sc).buffer(2))
+    # (none are drawn along the axon: past the initial segment it is under its sheath)
     lys = [(c, rng.uniform(4.3, 5.6)) for c, _ in scatter(6, 0, 11.5, 92, anyo, pad=2.2)]
     ros = [c for c, _ in scatter(30, 0, 10.0, 104, anyo, pad=1.6)]
     rib_dots = []
