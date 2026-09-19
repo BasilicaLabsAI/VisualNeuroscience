@@ -838,6 +838,29 @@ DRUGS = {
  "VGLUT": "None.", "VGAT": "None.", "VACHT": "None in use; vesamicol in the laboratory.",
 }
 
+# The filter above the list: a transmitter to isolate. The monoamines come
+# first and together, since they are what a reader usually wants; the rest
+# follow in the order the groups are written.
+FILTERS = [
+ dict(id="all", label="All", kind="all", groups=[]),
+ dict(id="monoamines", label="All four", kind="mono", groups=["dopamine", "adrenergic", "serotonin", "histamine"]),
+ dict(id="dopamine", label="Dopamine", kind="mono", groups=["dopamine"]),
+ dict(id="noradrenaline", label="Noradrenaline", kind="mono", groups=["adrenergic"]),
+ dict(id="serotonin", label="Serotonin", kind="mono", groups=["serotonin"]),
+ dict(id="histamine", label="Histamine", kind="mono", groups=["histamine"]),
+ dict(id="glutamate", label="Glutamate", kind="other", groups=["glutamate"]),
+ dict(id="gaba", label="GABA & glycine", kind="other", groups=["gaba"]),
+ dict(id="ach", label="Acetylcholine", kind="other", groups=["ach"]),
+ dict(id="purine", label="Adenosine & ATP", kind="other", groups=["purine"]),
+ dict(id="cannabinoid", label="Endocannabinoid", kind="other", groups=["cannabinoid"]),
+ dict(id="opioid", label="Opioid", kind="other", groups=["opioid"]),
+ dict(id="peptide", label="Neuropeptides", kind="other", groups=["peptide"]),
+ dict(id="trp", label="TRP channels", kind="other", groups=["trp"]),
+ dict(id="voltage", label="Voltage-gated", kind="other", groups=["voltage"]),
+ dict(id="background", label="Background K\u207a", kind="other", groups=["background"]),
+ dict(id="transporter", label="Transporters", kind="other", groups=["transporter"]),
+]
+
 def parts_of(label):
     return [p for chunk in label.split(" · ") for p in chunk.split(", ")]
 
@@ -850,7 +873,14 @@ def steps_json():
             d[key] = dict(n=n, title=title, lines=lines, variants=(st[4] if len(st) > 4 else None))
         out[arch] = d
     return out
-out = {"kinds": {k: dict(v, svg=ARCH[v["arch"]], parts=parts_of(v["label"])) for k, v in KINDS.items()}, "glossary": GLOSSARY, "steps": steps_json(), "groups": []}
+out = {"kinds": {k: dict(v, svg=ARCH[v["arch"]], parts=parts_of(v["label"])) for k, v in KINDS.items()},
+       "glossary": GLOSSARY, "steps": steps_json(), "filters": FILTERS, "groups": []}
+known = {g[0] for g in GROUPS}
+for f in FILTERS:
+    missing = [g for g in f["groups"] if g not in known]
+    assert not missing, f"filter {f['id']} names groups that do not exist: {missing}"
+covered = {g for f in FILTERS for g in f["groups"]}
+assert covered == known, f"filters miss groups: {sorted(known - covered)}"
 # every hover target in a drawing has a step to tell
 for arch, svg in ARCH.items():
     for key in re.findall(r'data-hot="([^"]+)"', svg):

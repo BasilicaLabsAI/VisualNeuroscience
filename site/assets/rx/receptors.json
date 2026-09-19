@@ -603,6 +603,145 @@
 }
 }
 },
+"filters": [
+{
+"id": "all",
+"label": "All",
+"kind": "all",
+"groups": []
+},
+{
+"id": "monoamines",
+"label": "All four",
+"kind": "mono",
+"groups": [
+"dopamine",
+"adrenergic",
+"serotonin",
+"histamine"
+]
+},
+{
+"id": "dopamine",
+"label": "Dopamine",
+"kind": "mono",
+"groups": [
+"dopamine"
+]
+},
+{
+"id": "noradrenaline",
+"label": "Noradrenaline",
+"kind": "mono",
+"groups": [
+"adrenergic"
+]
+},
+{
+"id": "serotonin",
+"label": "Serotonin",
+"kind": "mono",
+"groups": [
+"serotonin"
+]
+},
+{
+"id": "histamine",
+"label": "Histamine",
+"kind": "mono",
+"groups": [
+"histamine"
+]
+},
+{
+"id": "glutamate",
+"label": "Glutamate",
+"kind": "other",
+"groups": [
+"glutamate"
+]
+},
+{
+"id": "gaba",
+"label": "GABA & glycine",
+"kind": "other",
+"groups": [
+"gaba"
+]
+},
+{
+"id": "ach",
+"label": "Acetylcholine",
+"kind": "other",
+"groups": [
+"ach"
+]
+},
+{
+"id": "purine",
+"label": "Adenosine & ATP",
+"kind": "other",
+"groups": [
+"purine"
+]
+},
+{
+"id": "cannabinoid",
+"label": "Endocannabinoid",
+"kind": "other",
+"groups": [
+"cannabinoid"
+]
+},
+{
+"id": "opioid",
+"label": "Opioid",
+"kind": "other",
+"groups": [
+"opioid"
+]
+},
+{
+"id": "peptide",
+"label": "Neuropeptides",
+"kind": "other",
+"groups": [
+"peptide"
+]
+},
+{
+"id": "trp",
+"label": "TRP channels",
+"kind": "other",
+"groups": [
+"trp"
+]
+},
+{
+"id": "voltage",
+"label": "Voltage-gated",
+"kind": "other",
+"groups": [
+"voltage"
+]
+},
+{
+"id": "background",
+"label": "Background K⁺",
+"kind": "other",
+"groups": [
+"background"
+]
+},
+{
+"id": "transporter",
+"label": "Transporters",
+"kind": "other",
+"groups": [
+"transporter"
+]
+}
+],
 "groups": [
 {
 "id": "glutamate",

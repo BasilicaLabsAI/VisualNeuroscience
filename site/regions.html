@@ -28,6 +28,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="assets/rxfig.css">
 <link rel="stylesheet" href="fonts/fonts.css">
 <meta name="color-scheme" content="dark light">
 <script>/* Dark is the default; only an explicit choice of light overrides it.
@@ -912,7 +913,7 @@ mark{ background:var(--ink); color:var(--paper); }
 
   <section class="rxsec" id="receptorSec" aria-labelledby="rx-h">
     <h2 class="sec-h" id="rx-h">Receptor density <small id="rx-unit"></small></h2>
-    <p class="rx-lede">How thickly each receptor sits in each region, from two open sources: in vivo PET, one group-average tracer map per receptor or transporter, averaged over each AAL region; and ex vivo autoradiography, absolute densities in fmol/mg protein from post-mortem cortex, mapped onto the regions area by area. The two measure different things and are never put on one axis. Click a region&rsquo;s name and it lights up in the viewports above as a highlighted region like any other; pick a receptor and its source, tracer, sample and caveat are set out beneath the chart.</p>
+    <p class="rx-lede">How thickly each receptor sits in each region, from two open sources: in vivo PET, one group-average tracer map per receptor or transporter, averaged over each AAL region; and ex vivo autoradiography, absolute densities in fmol/mg protein from post-mortem cortex, mapped onto the regions area by area. The two measure different things and are never put on one axis. Click a region&rsquo;s name and it lights up in the viewports above as a highlighted region like any other; pick a receptor and what binds it and what it sits in are drawn beneath the chart, with its source, tracer, sample and caveat under those.</p>
     <div class="rx-controls">
       <div class="ts-views" role="group" aria-label="Source">
         <button class="ts-btn active" data-layer="pet" type="button">In vivo PET</button>
@@ -935,6 +936,7 @@ mark{ background:var(--ink); color:var(--paper); }
       <div id="chart-pane">
         <div id="receptor-graph"></div>
         <div id="chart-legend" class="legend"></div>
+        <div class="rxfig" id="rx-figs" data-for=""></div>
         <div class="rx-cite" id="rx-cite"></div>
       </div>
       <div id="density-table" class="table-wrap hidden"></div>
@@ -976,6 +978,7 @@ mark{ background:var(--ink); color:var(--paper); }
 <script src="assets/zoom.js"></script>
 <script src="assets/export3d.js"></script>
 <script src="assets/models.js"></script>
+<script src="assets/rxfig.js"></script>
 <script src="assets/receptor-data.js"></script>
 <script>
 "use strict";
@@ -2142,8 +2145,22 @@ function renderChart() {
 let resizeTimer;
 window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(renderChart, 150); });
 
+/* ── what the receptor looks like: the transmitter that binds it, and the
+   machine it is, both drawn by assets/rxfig.js from the same files the
+   Microanatomy page draws them from ── */
+function renderFigs() {
+  const host = document.getElementById("rx-figs");
+  if (!host || !window.VN_RXFIG) return;
+  if (axisMode !== "receptor") { host.setAttribute("data-for", ""); host.textContent = ""; return; }
+  const c = currentReceptor();
+  if (host.getAttribute("data-for") === c.id) return;      /* already drawn */
+  host.setAttribute("data-for", c.id);
+  window.VN_RXFIG.figure(host, { id: c.id, family: c.family, name: c.name });
+}
+
 /* ── what the picked receptor is, and where it came from ── */
 function renderCite() {
+  renderFigs();
   const host = document.getElementById("rx-cite");
   if (axisMode !== "receptor") {
     host.innerHTML = layer === "pet"

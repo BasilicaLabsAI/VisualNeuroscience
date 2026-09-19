@@ -1,0 +1,77 @@
+/* The receptor schematics and their popups, shared by the pages that draw
+   them: the Receptors and channels section of Microanatomy, and the panel
+   under the Region Atlas's density chart.
+
+   The drawings carry no colours of their own — scripts/receptors/build.py
+   emits them referring to the properties below, so they follow whichever
+   theme the page is in. Microanatomy defines the same values inline for
+   its cell plates; the values agree, so either order is safe. */
+:root{
+  --cell:#ece6db; --pen:#1d1b18; --nissl:#d0c9bc; --golgi-lumen:#dbd4c8; --hov-of:#bdb6a9;
+  /* the elements in the drawings, the colours chemists expect */
+  --el-n:#1a4fd6; --el-o:#d2222d; --el-s:#a08c00; --el-p:#d97a00;
+}
+:root[data-theme="dark"]{
+  --cell:#1a1917; --pen:#e9e4da; --nissl:#3a372f; --golgi-lumen:#37342e; --hov-of:#4c4840;
+  --el-n:#7aa4ff; --el-o:#ff6f6f; --el-s:#e6d24a; --el-p:#ffa347;
+}
+
+/* ── the schematic ── */
+.rx-draw .rxd{ display:block; width:100%; height:auto; aspect-ratio:320 / 200; }
+.rxd-mem{ fill:var(--cell); }
+.rxd-hair{ fill:none; stroke:var(--pen); stroke-width:1.1; opacity:.55; }
+.rxd-body{ fill:var(--nissl); stroke:var(--pen); stroke-width:1.3; }
+.rxd-g{ fill:var(--golgi-lumen); stroke:var(--pen); stroke-width:1.1; }
+.rxd-lig{ fill:var(--el-n); stroke:var(--pen); stroke-width:1; }
+.rxd-co{ fill:var(--el-o); stroke:var(--pen); stroke-width:.8; }
+.rxd-ion{ fill:none; stroke:var(--el-o); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.rxd-t{ font-family:var(--font-serif); font-style:italic; font-size:13.5px; fill:var(--ink); }
+.rxd-tg{ font-size:12px; }
+.rxd-side{ font-family:var(--font-brand); font-weight:500; font-size:8.5px; letter-spacing:.14em; text-transform:uppercase; fill:var(--ink-60); }
+.rxd-plus{ font-family:var(--font-serif); font-weight:700; font-size:12px; fill:var(--ink); }
+/* the parts that tell their step; the thin arrows and small balls get a
+   wide invisible target so a pointer near them counts */
+.rxd-hot{ cursor:help; outline:none; }
+.rxd-hit{ fill:none; stroke:transparent; stroke-width:16; pointer-events:stroke; }
+.rxd-hitc{ fill:transparent; stroke:none; pointer-events:fill; }
+@media (hover: hover){ .rxd-hot:hover .rxd-body, .rxd-hot:hover .rxd-g{ fill:var(--hov-of); } .rxd-hot:hover .rxd-lig{ stroke-width:2; } .rxd-hot:hover .rxd-ion{ stroke-width:3; } .rxd-hot:hover .rxd-side, .rxd-hot:hover .rxd-t{ fill:var(--ink); } .rxd-hot:hover .rxd-mem{ fill:var(--hov-of); } }
+.rxd-hot[aria-expanded="true"] .rxd-body, .rxd-hot[aria-expanded="true"] .rxd-g, .rxd-hot:focus-visible .rxd-body{ fill:var(--hov-of); }
+.rxd-hot[aria-expanded="true"] .rxd-side, .rxd-hot[aria-expanded="true"] .rxd-t{ fill:var(--ink); }
+
+/* ── a word with a popup behind it, and the popup ── */
+.rx-term{
+  font:inherit; color:inherit; background:none; border:0; padding:0; cursor:help;
+  letter-spacing:inherit; text-transform:inherit;
+  text-decoration:underline dotted; text-decoration-color:var(--ink-35); text-underline-offset:3px;
+}
+@media (hover: hover){ .rx-term:hover{ text-decoration-style:solid; color:var(--ink); } }
+.rx-term[aria-expanded="true"]{ text-decoration-style:solid; color:var(--ink); }
+.rx-pop{
+  position:absolute; z-index:40; border:1px solid var(--hair); background:var(--paper); color:var(--ink); pointer-events:none;
+  padding:.7rem .9rem .8rem; box-shadow:0 8px 28px rgba(0,0,0,.28);
+}
+.rx-pop b{ display:block; font-family:var(--font-display); font-weight:400; font-size:1.02rem; margin-bottom:.3rem; }
+.rx-pop ul{ margin:0; padding-left:1.1rem; font-family:var(--font-serif); font-size:.9rem; line-height:1.45; }
+.rx-pop li{ margin:.15rem 0; }
+.rx-pop li::marker{ color:var(--ink-60); }
+
+/* ── the panel under a density chart: the transmitter and its receptor ── */
+.rxfig{ display:grid; gap:var(--gap,14px); margin-top:.9rem; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); }
+.rxfig:empty{ display:none; }
+.rxfig figure{ border:1px solid var(--hair); background:var(--paper); margin:0; padding:.55rem .55rem 0; display:flex; flex-direction:column; min-width:0; }
+.rxfig .rx-draw{ padding:0; }
+.rxfig .mol{ display:block; width:100%; height:auto; aspect-ratio:320 / 220; }
+.rxfig figcaption{ padding:.5rem .35rem .7rem; }
+.rxfig .ck{
+  display:block; font-family:var(--font-brand); font-weight:500; font-size:.52rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+}
+.rxfig .cn{ display:block; font-family:var(--font-display); font-weight:400; font-size:1.05rem; line-height:1.15; margin-top:.3rem; }
+.rxfig .cs{ display:block; font-family:var(--font-serif); font-style:italic; font-size:.84rem; color:var(--ink-60); margin-top:.15rem; }
+.rxfig .rxfig-does{ font-family:var(--font-serif); font-size:.86rem; line-height:1.45; margin:.4rem 0 0; }
+.rxfig .rxfig-more{
+  display:inline-block; margin-top:.5rem; font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink); text-decoration:none; border-bottom:1px solid var(--ink);
+}
+.rxfig-none{ font-family:var(--font-serif); font-style:italic; font-size:.86rem; color:var(--ink-60); margin:.9rem 0 0; }
+@media (max-width:560px){ .rxfig{ grid-template-columns:1fr; } }

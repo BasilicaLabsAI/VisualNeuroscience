@@ -20,6 +20,11 @@ and `carrier` (a transporter). They carry no colours; the page paints them throu
 properties. Text elements marked `data-slot` are filled by `rx.js` for each molecule, and a slot
 with nothing to say is removed.
 
+## The filter
+`FILTERS` in `build.py` is the row of transmitters above the list: which groups each chip
+isolates, and whether it belongs with the monoamines or the rest. The build refuses to run if a
+chip names a group that does not exist, or if a group belongs to no chip.
+
 ## The words for newcomers
 `PLAIN` gives every entry a plain name to sit under its code; `DRUGS` a line of drugs and
 poisons people have heard of that act there; `GLOSSARY` an explanation for every word a
