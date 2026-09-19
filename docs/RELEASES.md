@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.28 — 19 September 2026 — A transmitter to isolate, and the receptor drawn beside its density
+Commit `a13a028` · Add a transmitter filter to the receptors, and draw the transmitter and receptor under the density chart
+
+Two ways in to the same hundred and fifty receptors. On Microanatomy a row of transmitters now sits above the list, the four monoamines first and together since they are what most drugs act on, then everything else; picking one shows only its receptors, and the search box then searches inside what is picked. In the Region Atlas, picking a receptor for the density chart draws two things beneath it: the transmitter that binds it, as the skeletal formula from the Microanatomy page, and the receptor itself as the schematic of its kind, with its own transmitter, ion and G protein written in and every part still telling its step on a hover. The drawings, their popups and their colours moved into a pair of shared files so the two pages cannot drift apart.
+
 ## v10.27 — 19 September 2026 — A newsletter box
-Commit · Add a newsletter box, and the worker that passes the address on
+Commit `069f400` · Add a newsletter box, and the worker that passes the address on
 
 A small card now offers the newsletter once a reader has been on a page for twenty seconds or scrolled half of it: an address, one button, and a line saying where the address goes. Closing it keeps it away for a fortnight, signing up for good, both remembered in the browser alone. The address goes to a new Worker of ours, which emails it to the maker of the site while the mailing-list service is being set up and, once Mailchimp's three secrets are in place, adds it to the list as pending so Mailchimp sends its own confirmation. The privacy page says all of this.
 
