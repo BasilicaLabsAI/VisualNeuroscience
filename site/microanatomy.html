@@ -241,6 +241,15 @@ li > .cellt{ cursor:pointer; }
    Schematics drawn by scripts/receptors, one per kind of machine, filled
    in per molecule by rx.js; the tiles share the neurotransmitter tiles'
    bones and add two rows of text. */
+.rx-search{ display:flex; align-items:center; gap:.8rem; margin:0 0 var(--gap); }
+.rx-search input{
+  flex:1; min-width:0; font:inherit; font-family:var(--font-serif); font-size:1rem;
+  color:var(--ink); background:var(--paper); border:1px solid var(--hair); padding:.55rem .8rem;
+}
+.rx-search input:focus{ outline:2px solid var(--ink); outline-offset:1px; }
+.rx-search input::placeholder{ color:var(--ink-60); font-style:italic; }
+.rx-count{ flex:none; font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60); min-width:7em; text-align:right; }
+.rx-kinds.searching{ display:none; }
 .rx-kinds{
   display:grid; gap:var(--gap); margin:0 0 calc(var(--gap) * 1.4);
   grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
@@ -272,7 +281,7 @@ li > .cellt{ cursor:pointer; }
 @media (hover: hover){ .rx-term:hover{ text-decoration-style:solid; color:var(--ink); } }
 .rx-term[aria-expanded="true"]{ text-decoration-style:solid; color:var(--ink); }
 .rx-pop{
-  position:absolute; z-index:40; border:1px solid var(--hair); background:var(--paper); color:var(--ink);
+  position:absolute; z-index:40; border:1px solid var(--hair); background:var(--paper); color:var(--ink); pointer-events:none;
   padding:.7rem .9rem .8rem; box-shadow:0 8px 28px rgba(0,0,0,.28);
 }
 .rx-pop b{ display:block; font-family:var(--font-display); font-weight:400; font-size:1.02rem; margin-bottom:.3rem; }
@@ -299,6 +308,14 @@ li > .cellt{ cursor:pointer; }
 .rxd-tg{ font-size:12px; }
 .rxd-side{ font-family:var(--font-brand); font-weight:500; font-size:8.5px; letter-spacing:.14em; text-transform:uppercase; fill:var(--ink-60); }
 .rxd-plus{ font-family:var(--font-serif); font-weight:700; font-size:12px; fill:var(--ink); }
+/* the parts of a drawing that tell their step; the thin arrows and small
+   balls get a wide invisible target so a pointer near them counts */
+.rxd-hot{ cursor:help; outline:none; }
+.rxd-hit{ fill:none; stroke:transparent; stroke-width:16; pointer-events:stroke; }
+.rxd-hitc{ fill:transparent; stroke:none; pointer-events:fill; }
+@media (hover: hover){ .rxd-hot:hover .rxd-body, .rxd-hot:hover .rxd-g{ fill:var(--hov-of); } .rxd-hot:hover .rxd-lig{ stroke-width:2; } .rxd-hot:hover .rxd-ion{ stroke-width:3; } .rxd-hot:hover .rxd-side, .rxd-hot:hover .rxd-t{ fill:var(--ink); } .rxd-hot:hover .rxd-mem{ fill:var(--hov-of); } }
+.rxd-hot[aria-expanded="true"] .rxd-body, .rxd-hot[aria-expanded="true"] .rxd-g, .rxd-hot:focus-visible .rxd-body{ fill:var(--hov-of); }
+.rxd-hot[aria-expanded="true"] .rxd-side, .rxd-hot[aria-expanded="true"] .rxd-t{ fill:var(--ink); }
 @media (max-width:760px){
   .rx-kinds, .rx-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; }
   .rx-cap, .rx-rows{ padding-left:.6rem; padding-right:.6rem; }
@@ -610,6 +627,10 @@ li > .cellt{ cursor:pointer; }
 <section class="nt-sec" id="receptors" aria-labelledby="rxH">
   <h2 class="sec-h" id="rxH">Receptors and channels <small>what the messengers land on</small></h2>
   <p class="lede">A transmitter does nothing until something binds it. Here is what does: the receptors for the molecules above, with the ion channels and transporters that work alongside them, a hundred and fifty in all. There are only ten kinds of machine among them, drawn first, and the first thing to know is that they come in two speeds. An <button type="button" class="rx-term" data-term="Ionotropic">ionotropic</button> receptor is a channel: the transmitter opens it in under a millisecond and it shuts as soon as the transmitter leaves. A <button type="button" class="rx-term" data-term="Metabotropic">metabotropic</button> receptor has no pore; it works through a G protein and chemical messengers inside the cell, so it is slower to act and keeps acting for seconds or minutes after the transmitter has gone. Most transmitters have both kinds, and most drugs that act on the brain act on one of the machines below. Every word in a tile&rsquo;s small capitals, and <button type="button" class="rx-term" data-term="affinity">affinity</button>, <button type="button" class="rx-term" data-term="agonist">agonist</button>, <button type="button" class="rx-term" data-term="antagonist">antagonist</button> and <button type="button" class="rx-term" data-term="autoreceptor">autoreceptor</button> here, opens a plain explanation on a hover or a tap. Each tile gives the code chemists use with the plain name under it, what binds it and how tightly, the drugs people have heard of that act on it, what happens when it is bound, and under <em>What the kind means</em> the kind&rsquo;s explanation again with a line of context.</p>
+  <div class="rx-search">
+    <input type="search" id="rxSearch" placeholder="Search by name, transmitter, drug, kind or effect&hellip;" aria-label="Search the receptors, channels and transporters" autocomplete="off" spellcheck="false">
+    <span id="rxCount" class="rx-count" aria-live="polite"></span>
+  </div>
   <div id="rxKinds" class="rx-kinds"></div>
   <div id="rxGroups"></div>
 </section>

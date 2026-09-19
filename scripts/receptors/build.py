@@ -15,7 +15,7 @@ molecule's own ligand, ion and G protein, so one drawing serves a family.
 
 The text is uncited textbook-level description, and the page says so.
 """
-import json, os
+import json, os, re
 
 # ── the kinds, and what each means ──────────────────────────────────────────
 # what the parts of a kind's label mean, in plain words: the page shows these
@@ -63,20 +63,25 @@ KINDS = {
 }
 
 # ── the drawings ───────────────────────────────────────────────────────────
+def hot(key, inner):
+    """A part of the drawing that opens a step when hovered or tapped."""
+    return f'<g class="rxd-hot" data-hot="{key}" tabindex="0" role="button">{inner}</g>'
+
 def membrane():
-    return ('<rect class="rxd-mem" x="0" y="104" width="320" height="44"/>'
-            '<line class="rxd-hair" x1="0" x2="320" y1="104" y2="104"/><line class="rxd-hair" x1="0" x2="320" y1="148" y2="148"/>'
-            '<text class="rxd-side" x="8" y="97">outside</text><text class="rxd-side" x="8" y="163">inside</text>')
+    return (hot("membrane", '<rect class="rxd-mem" x="0" y="104" width="320" height="44"/>'
+            '<line class="rxd-hair" x1="0" x2="320" y1="104" y2="104"/><line class="rxd-hair" x1="0" x2="320" y1="148" y2="148"/>') +
+            hot("outside", '<text class="rxd-side" x="8" y="97">outside the cell</text>') +
+            hot("inside", '<text class="rxd-side" x="8" y="163">inside the cell</text>'))
 
 def arrow_down(x, y0, y1, dashed_to=None):
-    d = f'<path class="rxd-ion" d="M{x} {y0}V{y1}"/>'
+    d = f'<path class="rxd-hit" d="M{x} {y0}V{y1}"/><path class="rxd-ion" d="M{x} {y0}V{y1}"/>'
     return d + f'<path class="rxd-ion rxd-head" d="M{x - 5} {y1 - 7}L{x} {y1}L{x + 5} {y1 - 7}"/>'
 
 def arrow_up(x, y0, y1):
-    return f'<path class="rxd-ion" d="M{x} {y0}V{y1}"/><path class="rxd-ion rxd-head" d="M{x - 5} {y1 + 7}L{x} {y1}L{x + 5} {y1 + 7}"/>'
+    return f'<path class="rxd-hit" d="M{x} {y0}V{y1}"/><path class="rxd-ion" d="M{x} {y0}V{y1}"/><path class="rxd-ion rxd-head" d="M{x - 5} {y1 + 7}L{x} {y1}L{x + 5} {y1 + 7}"/>'
 
 def ball(x, y, r=7):
-    return f'<circle class="rxd-lig" cx="{x}" cy="{y}" r="{r}"/>'
+    return f'<circle class="rxd-hitc" cx="{x}" cy="{y}" r="{r + 9}"/><circle class="rxd-lig" cx="{x}" cy="{y}" r="{r}"/>'
 
 def slot(name, x, y, anchor="middle", cls="rxd-t"):
     return f'<text class="{cls}" data-slot="{name}" x="{x}" y="{y}" text-anchor="{anchor}"></text>'
@@ -84,8 +89,8 @@ def slot(name, x, y, anchor="middle", cls="rxd-t"):
 def lgic():
     L = '<path class="rxd-body" d="M108 166V62Q108 34 132 34H146Q152 34 152 44V166Z"/>'
     R = '<path class="rxd-body" d="M212 166V62Q212 34 188 34H174Q168 34 168 44V166Z"/>'
-    return (membrane() + L + R + ball(106, 70) + slot("ligand", 94, 74, "end") +
-            arrow_down(160, 20, 176) + slot("ion", 172, 30, "start"))
+    return (membrane() + hot("receptor", L + R) + hot("ligand", ball(106, 70) + slot("ligand", 94, 74, "end")) +
+            hot("ion", arrow_down(160, 20, 176) + slot("ion", 172, 30, "start")))
 
 def iglur():
     def sub(cx):
@@ -93,18 +98,19 @@ def iglur():
                 f'<path class="rxd-body" d="M{cx - 20} 80Q{cx - 20} 58 {cx} 58Q{cx + 20} 58 {cx + 20} 80Z"/>'
                 f'<path class="rxd-body" d="M{cx - 20} 84Q{cx - 20} 104 {cx} 104Q{cx + 20} 104 {cx + 20} 84Z"/>'
                 f'<rect class="rxd-body" x="{cx - 20}" y="106" width="40" height="60" rx="6"/>')
-    return (membrane() + sub(130) + sub(190) + ball(130, 82, 6) + ball(190, 82, 6) +
-            slot("ligand", 100, 86, "end") + arrow_down(160, 96, 178) + slot("ion", 216, 100, "start"))
+    return (membrane() + hot("receptor", sub(130) + sub(190)) + hot("ligand", ball(130, 82, 6) + ball(190, 82, 6) + slot("ligand", 100, 86, "end")) +
+            hot("ion", arrow_down(160, 96, 178) + slot("ion", 216, 100, "start")))
 
 def gpcr():
     helices = "".join(f'<rect class="rxd-body" x="{96 + i * 20}" y="98" width="13" height="56" rx="6"/>' for i in range(7))
     loops = "".join(f'<path class="rxd-hair" d="M{103 + i * 20} 98Q{113 + i * 20} 84 {123 + i * 20} 98"/>' for i in (0, 2, 4)) + \
             "".join(f'<path class="rxd-hair" d="M{103 + i * 20} 154Q{113 + i * 20} 168 {123 + i * 20} 154"/>' for i in (1, 3))
-    g = ('<ellipse class="rxd-g" cx="140" cy="176" rx="24" ry="13"/>' + slot("g", 140, 180, "middle", "rxd-t rxd-tg") +
-         '<ellipse class="rxd-g" cx="176" cy="182" rx="13" ry="9"/><text class="rxd-t rxd-tg" x="176" y="185" text-anchor="middle">β</text>'
-         '<ellipse class="rxd-g" cx="196" cy="174" rx="9" ry="7"/><text class="rxd-t rxd-tg" x="196" y="177" text-anchor="middle">γ</text>')
-    eff = '<path class="rxd-ion" d="M210 176H244"/><path class="rxd-ion rxd-head" d="M238 171L244 176L238 181"/>' + slot("effect", 250, 180, "start")
-    return membrane() + helices + loops + ball(156, 88) + slot("ligand", 156, 70) + g + eff
+    ga = hot("galpha", '<ellipse class="rxd-g" cx="140" cy="176" rx="24" ry="13"/>' + slot("g", 140, 180, "middle", "rxd-t rxd-tg"))
+    gbg = hot("gbg", '<ellipse class="rxd-g" cx="176" cy="182" rx="13" ry="9"/><text class="rxd-t rxd-tg" x="176" y="185" text-anchor="middle">β</text>'
+              '<ellipse class="rxd-g" cx="196" cy="174" rx="9" ry="7"/><text class="rxd-t rxd-tg" x="196" y="177" text-anchor="middle">γ</text>')
+    arrow = hot("arrow", '<path class="rxd-hit" d="M206 176H246"/><path class="rxd-ion" d="M210 176H244"/><path class="rxd-ion rxd-head" d="M238 171L244 176L238 181"/>')
+    eff = hot("effect", slot("effect", 250, 180, "start"))
+    return membrane() + hot("receptor", helices + loops) + hot("ligand", ball(156, 88) + slot("ligand", 156, 70)) + ga + gbg + arrow + eff
 
 def vgc():
     cols = ('<rect class="rxd-body" x="104" y="96" width="46" height="60" rx="8"/>'
@@ -112,22 +118,68 @@ def vgc():
     s4 = "".join(f'<text class="rxd-plus" x="{x}" y="{y}" text-anchor="middle">+</text>' for x in (118, 202) for y in (114, 128, 142))
     gate = '<path class="rxd-hair" d="M150 152L143 164"/><path class="rxd-hair" d="M170 152L177 164"/>'
     trace = '<path class="rxd-ion" d="M22 62H44V40H68"/><text class="rxd-t" x="22" y="32">ΔV</text>'
-    return (membrane() + cols + s4 + gate + trace + arrow_down(160, 56, 186) + slot("ion", 172, 66, "start") +
-            '<text class="rxd-side" x="118" y="90" text-anchor="middle">S4</text><text class="rxd-side" x="202" y="90" text-anchor="middle">S4</text>')
+    return (membrane() + hot("trace", trace) + hot("sensor", cols + s4 +
+            '<text class="rxd-side" x="118" y="90" text-anchor="middle">S4</text><text class="rxd-side" x="202" y="90" text-anchor="middle">S4</text>') +
+            hot("gate", gate) + hot("ion", arrow_down(160, 56, 186) + slot("ion", 172, 66, "start")))
 
 def pore():
     cols = ('<rect class="rxd-body" x="112" y="96" width="38" height="60" rx="8"/>'
             '<rect class="rxd-body" x="170" y="96" width="38" height="60" rx="8"/>')
-    return membrane() + cols + arrow_up(160, 190, 62) + slot("ion", 172, 66, "start") + slot("ligand", 108, 176, "end")
+    return membrane() + hot("receptor", cols) + hot("ion", arrow_up(160, 190, 62) + slot("ion", 172, 66, "start")) + hot("ligand", slot("ligand", 108, 176, "end"))
 
 def carrier():
     body = '<rect class="rxd-body" x="118" y="92" width="84" height="68" rx="16"/>'
     path = ('<path class="rxd-ion" d="M160 60V92"/><path class="rxd-ion" d="M160 160V186"/>'
             '<path class="rxd-ion rxd-head" d="M155 179L160 186L165 179"/>'
             '<path class="rxd-hair" d="M140 110Q160 126 140 142"/><path class="rxd-hair" d="M180 110Q160 126 180 142"/>')
-    return (membrane() + body + path + ball(160, 62) + slot("ligand", 176, 66, "start") +
-            '<circle class="rxd-co" cx="142" cy="66" r="4"/>' + slot("co", 134, 70, "end"))
+    return (membrane() + hot("receptor", body + path) + hot("ligand", ball(160, 62) + slot("ligand", 176, 66, "start")) +
+            hot("co", '<circle class="rxd-co" cx="142" cy="66" r="4"/>' + slot("co", 134, 70, "end")))
 
+SIDES = {
+ "outside": dict(title="Outside the cell", lines=["The synaptic cleft: a gap of about 20 nanometres between two cells", "The transmitter is released into it from the terminal opposite", "It is cleared again within milliseconds by transporters and enzymes"]),
+ "inside": dict(title="Inside the cell", lines=["The cytoplasm of the receiving neuron", "Where G proteins, second messengers and the cell's channels do their work", "What happens here decides whether the cell fires"]),
+ "membrane": dict(title="The cell membrane", lines=["A double layer of lipid, 5 nanometres thick", "Ions cannot cross it except through a channel or a carrier", "Holds the voltage difference, about −70 mV inside at rest, that signalling plays with"]),
+}
+STEPS = {
+ "lgic": [
+  ("ligand", "1", "{lig} arrives and binds", ["Released across the cleft, it lands on a site between two subunits", "Two or more molecules must bind before the pore opens", "Held for a few milliseconds, then it lets go"]),
+  ("receptor", "2", "The channel opens", ["The subunits twist and the gate in the middle of the pore swings open", "Within a millisecond of binding", "Each opening lasts about 1 to 10 milliseconds; with the transmitter still there the channel desensitises and shuts anyway"]),
+  ("ion", "3", "{ion} flows through", ["Ions run down their gradient through the open pore, tens of thousands per millisecond", "Cations flowing in push the inside positive: excitation", "Chloride flowing in holds it down: inhibition"]),
+ ],
+ "iglur": [
+  ("ligand", "1", "{lig} binds in the clamshells", ["Each of the four subunits has a clamshell that closes on one glutamate", "The NMDA receptor also needs glycine or D-serine on two of its subunits", "Bound for about a millisecond at AMPA receptors, far longer at NMDA"]),
+  ("receptor", "2", "The closed clamshells pull the pore open", ["Within a millisecond of binding", "AMPA receptors desensitise within a few milliseconds even with glutamate still bound", "NMDA receptors open only once the membrane is depolarised enough to expel the Mg²⁺ plugging the pore"]),
+  ("ion", "3", "{ion} flows in", ["Na⁺ in, K⁺ out: the spine depolarises", "NMDA receptors pass Ca²⁺ as well, the trigger for plasticity", "Over within a few milliseconds at AMPA, tens to hundreds at NMDA"]),
+ ],
+ "gpcr": [
+  ("ligand", "1", "{lig} arrives and binds", ["Sits in a pocket between the helices, from the outside", "Held for milliseconds to seconds, depending on its affinity", "Nothing flows: no pore opens"]),
+  ("receptor", "2", "The receptor changes shape", ["The seven helices shift and the inside face opens", "Active for as long as the transmitter is bound, typically tens of milliseconds to seconds", "Used for long, it is phosphorylated and pulled inside the cell for minutes"]),
+  ("galpha", "3-a", "The α subunit lets go", ["{g}: the α subunit swaps its GDP for GTP and breaks away from β and γ", "One receptor sets off many G proteins while it is active", "It carries the message to its enzyme (step 4)"]),
+  ("gbg", "3-b", "The βγ pair goes its own way", ["β and γ stay together and leave at the same time as α", "They act on channels directly: opening K⁺ channels (GIRK), closing Ca²⁺ channels", "For Gi/o receptors this is much of the effect"]),
+  ("arrow", "4", "α finds its enzyme", ["Adenylyl cyclase for Gs and Gi/o, phospholipase C for Gq", "The enzyme makes second messengers by the hundred: the signal is amplified", "Ends when α hydrolyses its GTP, seconds later, and rejoins βγ"]),
+  ("effect", "5", "{eff}: the second messenger", ["What the enzyme makes or stops making", "Second messengers switch on kinases that change channels, receptors and, over minutes, gene expression", "This is the slow, lasting side of signalling"], {
+     "↑ cAMP": ["Cyclic AMP rises and switches on protein kinase A", "PKA phosphorylates channels and receptors, and over minutes reaches the nucleus", "Lasts seconds to minutes, until phosphodiesterases clear the cAMP"],
+     "↓ cAMP": ["Cyclic AMP falls: protein kinase A goes quiet", "With βγ opening K⁺ channels and closing Ca²⁺ channels, the cell or terminal is damped", "Lasts as long as the receptor is active, seconds or more"],
+     "IP₃ · DAG": ["IP₃ opens Ca²⁺ stores inside the cell; Ca²⁺ floods the cytoplasm", "DAG switches on protein kinase C", "Excitation with a long tail: Ca²⁺ and PKC change channels for seconds to minutes"]}),
+ ],
+ "vgc": [
+  ("trace", "1", "The membrane depolarises", ["Receptors upstream have let cations in and the inside has turned less negative", "Past about −55 mV the channel notices", "Nothing binds: the voltage itself is the signal"]),
+  ("sensor", "2", "The S4 sensors move", ["Each domain carries a helix studded with positive charges, S4", "The change in voltage pushes them outward through the membrane", "Within a fraction of a millisecond"]),
+  ("gate", "3", "The gate opens", ["The moving sensors pull the gate at the inner mouth open", "Sodium channels stay open about a millisecond, then a plug inactivates them until the cell repolarises", "Potassium channels open more slowly and stay open a few milliseconds"]),
+  ("ion", "4", "{ion} flows", ["Na⁺ in: the rising stroke of the action potential", "K⁺ out: the falling stroke, and the pause after", "Ca²⁺ in at a terminal: vesicles fuse and transmitter is released"]),
+ ],
+ "pore": [
+  ("ligand", "1", "Gated from inside, or not at all", ["{lig} from inside the cell decides whether it is open", "A leak channel is simply open at rest", "No transmitter from outside is involved"]),
+  ("receptor", "2", "The pore stays open", ["Open for as long as the inside signal lasts: hundreds of milliseconds after a burst, or always", "The commonest way a Gi/o receptor changes a cell"]),
+  ("ion", "3", "K⁺ leaves", ["Potassium runs out down its gradient", "The inside turns more negative: the cell is held at rest or below it", "Harder to fire, or paused after firing"]),
+ ],
+ "carrier": [
+  ("ligand", "1", "{lig} binds on the outside", ["The carrier's binding site faces the cleft", "Transmitter still floating there after release lands on it", "High affinity: it catches what is left"]),
+  ("co", "1", "Na⁺ binds with it", ["One or more sodium ions bind alongside the transmitter", "The sodium gradient, kept up by the Na⁺/K⁺ pump, is the fuel", "The carrier will not flip without them"]),
+  ("receptor", "2", "The carrier flips", ["The site swings from facing out to facing in: alternating access", "One transmitter per cycle, about 10 to 100 cycles a second", "Amphetamine runs the cycle backwards"]),
+  ("inside_release", "3", "Released inside", ["The transmitter and the sodium let go inside the cell", "The cleft is emptied: the signal has ended", "The transmitter is repacked into a vesicle or broken down"]),
+ ],
+}
 ARCH = {k: f'<svg class="rxd" viewBox="0 0 320 200" role="img" aria-label="Schematic of a {n}">{f()}</svg>'
         for k, n, f in (("lgic", "ligand-gated ion channel", lgic), ("iglur", "ionotropic glutamate receptor", iglur),
                         ("gpcr", "G-protein-coupled receptor", gpcr), ("vgc", "voltage-gated ion channel", vgc),
@@ -789,7 +841,20 @@ DRUGS = {
 def parts_of(label):
     return [p for chunk in label.split(" · ") for p in chunk.split(", ")]
 
-out = {"kinds": {k: dict(v, svg=ARCH[v["arch"]], parts=parts_of(v["label"])) for k, v in KINDS.items()}, "glossary": GLOSSARY, "groups": []}
+def steps_json():
+    out = {}
+    for arch, steps in STEPS.items():
+        d = dict(SIDES)
+        for st in steps:
+            key, n, title, lines = st[0], st[1], st[2], st[3]
+            d[key] = dict(n=n, title=title, lines=lines, variants=(st[4] if len(st) > 4 else None))
+        out[arch] = d
+    return out
+out = {"kinds": {k: dict(v, svg=ARCH[v["arch"]], parts=parts_of(v["label"])) for k, v in KINDS.items()}, "glossary": GLOSSARY, "steps": steps_json(), "groups": []}
+# every hover target in a drawing has a step to tell
+for arch, svg in ARCH.items():
+    for key in re.findall(r'data-hot="([^"]+)"', svg):
+        assert key in steps_json()[arch], f"{arch}: no step for {key}"
 missing = [p for v in KINDS.values() for p in parts_of(v["label"]) if p not in GLOSSARY]
 assert not missing, f"label parts without a glossary entry: {missing}"
 n = 0

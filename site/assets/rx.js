@@ -25,6 +25,8 @@
      slot is removed rather than left as a stray label */
   function diagram(kind, fill){
     var box = el("div", "rx-draw");
+    box.setAttribute("data-arch", kind.arch);
+    ["ligand", "ion", "g", "effect"].forEach(function(k){ box.setAttribute("data-" + k, fill[k] || ""); });
     box.innerHTML = kind.svg;
     var slots = box.querySelectorAll("[data-slot]");
     for (var i = 0; i < slots.length; i++){
@@ -97,13 +99,62 @@
       host.appendChild(sec);
     });
     host.classList.add("ready");
-    popups(doc.glossary);
+    popups(doc.glossary, doc.steps);
+    search(doc);
   }
 
   /* One popup for the whole page. On a mouse it opens on hover and focus
      and closes when the pointer leaves; on a touch screen a tap opens it
      and a tap anywhere else, or Escape, closes it. */
-  function popups(G){
+  /* The search box: every word typed must appear somewhere in a tile's
+     name, plain name, group, kind, transmitter, drugs, or what it binds
+     and does. Tiles that miss are hidden, groups with nothing left go
+     with them, and the count says what is showing. */
+  function search(doc){
+    var input = document.getElementById("rxSearch"), count = document.getElementById("rxCount");
+    if (!input) return;
+    var hay = [];
+    doc.groups.forEach(function(g){
+      g.items.forEach(function(it){
+        var k = doc.kinds[it.kind];
+        var text = [it.name, it.plain, g.name, g.kind || "", k.label, it.lig, it.ion, it.g, it.eff, it.binds, it.drugs, it.effect, it.note].join(" ").toLowerCase();
+        hay.push({ el: document.getElementById("rx-" + it.id), text: text.replace(/[\u2010-\u2015]/g, "-") });
+      });
+    });
+    var total = hay.length, timer = null;
+    function apply(){
+      var words = input.value.toLowerCase().replace(/[\u2010-\u2015]/g, "-").split(/\s+/).filter(Boolean);
+      var shown = 0;
+      hay.forEach(function(h){
+        var ok = words.every(function(w){ return h.text.indexOf(w) !== -1; });
+        h.el.hidden = !ok; if (ok) shown++;
+      });
+      host.querySelectorAll(".nt-group").forEach(function(sec){
+        sec.hidden = !sec.querySelector(".rx:not([hidden])");
+      });
+      kindsHost.classList.toggle("searching", words.length > 0);
+      count.textContent = words.length ? shown + " of " + total : "";
+    }
+    input.addEventListener("input", function(){ clearTimeout(timer); timer = setTimeout(apply, 80); });
+    input.addEventListener("search", apply);
+    if (input.value) apply();
+  }
+
+  /* what a part of a drawing has to say for the tile it sits in: the
+     step's words with the tile's own ligand, ion, G protein and effect
+     written in, and the effect step's own wording for that G protein */
+  function stepFor(part, STEPS){
+    var draw = part.closest(".rx-draw");
+    var arch = draw && draw.getAttribute("data-arch");
+    var st = STEPS[arch] && STEPS[arch][part.getAttribute("data-hot")];
+    if (!st) return null;
+    var fill = { lig: draw.getAttribute("data-ligand") || "the transmitter", ion: draw.getAttribute("data-ion") || "ions",
+                 g: draw.getAttribute("data-g") || "Gα", eff: draw.getAttribute("data-effect") || "the effector" };
+    var sub = function(s){ return s.replace(/\{(\w+)\}/g, function(_, k){ return fill[k] || ""; }); };
+    var lines = (st.variants && st.variants[fill.eff]) || st.lines;
+    return { title: (st.n ? "Step " + st.n + " · " : "") + sub(st.title), lines: lines.map(sub) };
+  }
+  function popups(G, STEPS){
     var pop = el("div", "rx-pop");
     pop.setAttribute("role", "dialog"); pop.hidden = true;
     var head = el("b"), body = el("ul");
@@ -111,12 +162,17 @@
     document.body.appendChild(pop);
     var current = null, pinned = false;
     function show(btn){
-      var term = btn.getAttribute("data-term");
-      if (!G[term]) return;
-      head.textContent = term; body.textContent = "";
-      G[term].forEach(function(line){ body.appendChild(el("li", null, line)); });
+      var what;
+      if (btn.classList.contains("rxd-hot")) what = stepFor(btn, STEPS);
+      else { var term = btn.getAttribute("data-term"); if (G[term]) what = { title: term, lines: G[term] }; }
+      if (!what) return;
+      head.textContent = what.title; body.textContent = "";
+      what.lines.forEach(function(line){ body.appendChild(el("li", null, line)); });
       pop.hidden = false; current = btn;
-      var r = btn.getBoundingClientRect(), w = Math.min(360, window.innerWidth - 24);
+      /* a step's popup sits under the whole drawing, never over the part
+         beside the one hovered; a word's popup sits under the word */
+      var anchor = btn.classList.contains("rxd-hot") ? btn.closest(".rx-draw") : btn;
+      var r = anchor.getBoundingClientRect(), w = Math.min(360, window.innerWidth - 24);
       pop.style.width = w + "px";
       var x = Math.max(12, Math.min(r.left, window.innerWidth - w - 12));
       var below = r.bottom + 8 + pop.offsetHeight < window.innerHeight || r.top < pop.offsetHeight + 16;
@@ -130,7 +186,7 @@
     }
     var hover = window.matchMedia("(hover: hover)").matches;
     document.addEventListener("click", function(e){
-      var b = e.target.closest && e.target.closest(".rx-term");
+      var b = e.target.closest && e.target.closest(".rx-term, .rxd-hot");
       if (b){
         e.preventDefault();
         if (current === b && pinned){ hide(); return; }
@@ -140,20 +196,23 @@
     });
     if (hover){
       document.addEventListener("mouseover", function(e){
-        var b = e.target.closest && e.target.closest(".rx-term");
+        var b = e.target.closest && e.target.closest(".rx-term, .rxd-hot");
         if (b && !pinned) show(b);
       });
       document.addEventListener("mouseout", function(e){
-        var b = e.target.closest && e.target.closest(".rx-term");
-        if (b && !pinned && !(e.relatedTarget && pop.contains(e.relatedTarget))) hide();
+        var b = e.target.closest && e.target.closest(".rx-term, .rxd-hot");
+        if (b && !pinned) hide();
       });
-      pop.addEventListener("mouseleave", function(){ if (!pinned) hide(); });
+
     }
     document.addEventListener("focusin", function(e){
-      var b = e.target.closest && e.target.closest(".rx-term");
+      var b = e.target.closest && e.target.closest(".rx-term, .rxd-hot");
       if (b) show(b); else if (!pop.contains(e.target)) hide();
     });
-    document.addEventListener("keydown", function(e){ if (e.key === "Escape") hide(); });
+    document.addEventListener("keydown", function(e){
+      if (e.key === "Escape") hide();
+      if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("rxd-hot")){ e.preventDefault(); show(e.target); pinned = true; }
+    });
     window.addEventListener("scroll", function(){ if (current && !pinned) hide(); }, { passive: true });
   }
 

@@ -4,7 +4,7 @@
 "label": "Ionotropic · cation channel",
 "arch": "lgic",
 "means": "A ligand-gated ion channel. The transmitter itself opens a pore through the receptor, cations rush in and the membrane depolarises. Fast, and over in milliseconds.",
-"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a ligand-gated ion channel\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/><text class=\"rxd-side\" x=\"8\" y=\"97\">outside</text><text class=\"rxd-side\" x=\"8\" y=\"163\">inside</text><path class=\"rxd-body\" d=\"M108 166V62Q108 34 132 34H146Q152 34 152 44V166Z\"/><path class=\"rxd-body\" d=\"M212 166V62Q212 34 188 34H174Q168 34 168 44V166Z\"/><circle class=\"rxd-lig\" cx=\"106\" cy=\"70\" r=\"7\"/><text class=\"rxd-t\" data-slot=\"ligand\" x=\"94\" y=\"74\" text-anchor=\"end\"></text><path class=\"rxd-ion\" d=\"M160 20V176\"/><path class=\"rxd-ion rxd-head\" d=\"M155 169L160 176L165 169\"/><text class=\"rxd-t\" data-slot=\"ion\" x=\"172\" y=\"30\" text-anchor=\"start\"></text></svg>",
+"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a ligand-gated ion channel\"><g class=\"rxd-hot\" data-hot=\"membrane\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/></g><g class=\"rxd-hot\" data-hot=\"outside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"97\">outside the cell</text></g><g class=\"rxd-hot\" data-hot=\"inside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"163\">inside the cell</text></g><g class=\"rxd-hot\" data-hot=\"receptor\" tabindex=\"0\" role=\"button\"><path class=\"rxd-body\" d=\"M108 166V62Q108 34 132 34H146Q152 34 152 44V166Z\"/><path class=\"rxd-body\" d=\"M212 166V62Q212 34 188 34H174Q168 34 168 44V166Z\"/></g><g class=\"rxd-hot\" data-hot=\"ligand\" tabindex=\"0\" role=\"button\"><circle class=\"rxd-hitc\" cx=\"106\" cy=\"70\" r=\"16\"/><circle class=\"rxd-lig\" cx=\"106\" cy=\"70\" r=\"7\"/><text class=\"rxd-t\" data-slot=\"ligand\" x=\"94\" y=\"74\" text-anchor=\"end\"></text></g><g class=\"rxd-hot\" data-hot=\"ion\" tabindex=\"0\" role=\"button\"><path class=\"rxd-hit\" d=\"M160 20V176\"/><path class=\"rxd-ion\" d=\"M160 20V176\"/><path class=\"rxd-ion rxd-head\" d=\"M155 169L160 176L165 169\"/><text class=\"rxd-t\" data-slot=\"ion\" x=\"172\" y=\"30\" text-anchor=\"start\"></text></g></svg>",
 "parts": [
 "Ionotropic",
 "cation channel"
@@ -14,7 +14,7 @@
 "label": "Ionotropic · chloride channel",
 "arch": "lgic",
 "means": "A ligand-gated ion channel that passes chloride. When the transmitter binds, chloride flows in and the cell is held down or shunted: inhibition, fast and brief.",
-"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a ligand-gated ion channel\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/><text class=\"rxd-side\" x=\"8\" y=\"97\">outside</text><text class=\"rxd-side\" x=\"8\" y=\"163\">inside</text><path class=\"rxd-body\" d=\"M108 166V62Q108 34 132 34H146Q152 34 152 44V166Z\"/><path class=\"rxd-body\" d=\"M212 166V62Q212 34 188 34H174Q168 34 168 44V166Z\"/><circle class=\"rxd-lig\" cx=\"106\" cy=\"70\" r=\"7\"/><text class=\"rxd-t\" data-slot=\"ligand\" x=\"94\" y=\"74\" text-anchor=\"end\"></text><path class=\"rxd-ion\" d=\"M160 20V176\"/><path class=\"rxd-ion rxd-head\" d=\"M155 169L160 176L165 169\"/><text class=\"rxd-t\" data-slot=\"ion\" x=\"172\" y=\"30\" text-anchor=\"start\"></text></svg>",
+"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a ligand-gated ion channel\"><g class=\"rxd-hot\" data-hot=\"membrane\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/></g><g class=\"rxd-hot\" data-hot=\"outside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"97\">outside the cell</text></g><g class=\"rxd-hot\" data-hot=\"inside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"163\">inside the cell</text></g><g class=\"rxd-hot\" data-hot=\"receptor\" tabindex=\"0\" role=\"button\"><path class=\"rxd-body\" d=\"M108 166V62Q108 34 132 34H146Q152 34 152 44V166Z\"/><path class=\"rxd-body\" d=\"M212 166V62Q212 34 188 34H174Q168 34 168 44V166Z\"/></g><g class=\"rxd-hot\" data-hot=\"ligand\" tabindex=\"0\" role=\"button\"><circle class=\"rxd-hitc\" cx=\"106\" cy=\"70\" r=\"16\"/><circle class=\"rxd-lig\" cx=\"106\" cy=\"70\" r=\"7\"/><text class=\"rxd-t\" data-slot=\"ligand\" x=\"94\" y=\"74\" text-anchor=\"end\"></text></g><g class=\"rxd-hot\" data-hot=\"ion\" tabindex=\"0\" role=\"button\"><path class=\"rxd-hit\" d=\"M160 20V176\"/><path class=\"rxd-ion\" d=\"M160 20V176\"/><path class=\"rxd-ion rxd-head\" d=\"M155 169L160 176L165 169\"/><text class=\"rxd-t\" data-slot=\"ion\" x=\"172\" y=\"30\" text-anchor=\"start\"></text></g></svg>",
 "parts": [
 "Ionotropic",
 "chloride channel"
@@ -24,7 +24,7 @@
 "label": "Ionotropic · glutamate receptor",
 "arch": "iglur",
 "means": "A tetramer whose four clamshell domains each close on a glutamate; the pore opens for cations. Fast excitation, and the machinery of most synaptic plasticity.",
-"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a ionotropic glutamate receptor\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/><text class=\"rxd-side\" x=\"8\" y=\"97\">outside</text><text class=\"rxd-side\" x=\"8\" y=\"163\">inside</text><ellipse class=\"rxd-body\" cx=\"130\" cy=\"38\" rx=\"17\" ry=\"13\"/><path class=\"rxd-body\" d=\"M110 80Q110 58 130 58Q150 58 150 80Z\"/><path class=\"rxd-body\" d=\"M110 84Q110 104 130 104Q150 104 150 84Z\"/><rect class=\"rxd-body\" x=\"110\" y=\"106\" width=\"40\" height=\"60\" rx=\"6\"/><ellipse class=\"rxd-body\" cx=\"190\" cy=\"38\" rx=\"17\" ry=\"13\"/><path class=\"rxd-body\" d=\"M170 80Q170 58 190 58Q210 58 210 80Z\"/><path class=\"rxd-body\" d=\"M170 84Q170 104 190 104Q210 104 210 84Z\"/><rect class=\"rxd-body\" x=\"170\" y=\"106\" width=\"40\" height=\"60\" rx=\"6\"/><circle class=\"rxd-lig\" cx=\"130\" cy=\"82\" r=\"6\"/><circle class=\"rxd-lig\" cx=\"190\" cy=\"82\" r=\"6\"/><text class=\"rxd-t\" data-slot=\"ligand\" x=\"100\" y=\"86\" text-anchor=\"end\"></text><path class=\"rxd-ion\" d=\"M160 96V178\"/><path class=\"rxd-ion rxd-head\" d=\"M155 171L160 178L165 171\"/><text class=\"rxd-t\" data-slot=\"ion\" x=\"216\" y=\"100\" text-anchor=\"start\"></text></svg>",
+"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a ionotropic glutamate receptor\"><g class=\"rxd-hot\" data-hot=\"membrane\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/></g><g class=\"rxd-hot\" data-hot=\"outside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"97\">outside the cell</text></g><g class=\"rxd-hot\" data-hot=\"inside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"163\">inside the cell</text></g><g class=\"rxd-hot\" data-hot=\"receptor\" tabindex=\"0\" role=\"button\"><ellipse class=\"rxd-body\" cx=\"130\" cy=\"38\" rx=\"17\" ry=\"13\"/><path class=\"rxd-body\" d=\"M110 80Q110 58 130 58Q150 58 150 80Z\"/><path class=\"rxd-body\" d=\"M110 84Q110 104 130 104Q150 104 150 84Z\"/><rect class=\"rxd-body\" x=\"110\" y=\"106\" width=\"40\" height=\"60\" rx=\"6\"/><ellipse class=\"rxd-body\" cx=\"190\" cy=\"38\" rx=\"17\" ry=\"13\"/><path class=\"rxd-body\" d=\"M170 80Q170 58 190 58Q210 58 210 80Z\"/><path class=\"rxd-body\" d=\"M170 84Q170 104 190 104Q210 104 210 84Z\"/><rect class=\"rxd-body\" x=\"170\" y=\"106\" width=\"40\" height=\"60\" rx=\"6\"/></g><g class=\"rxd-hot\" data-hot=\"ligand\" tabindex=\"0\" role=\"button\"><circle class=\"rxd-hitc\" cx=\"130\" cy=\"82\" r=\"15\"/><circle class=\"rxd-lig\" cx=\"130\" cy=\"82\" r=\"6\"/><circle class=\"rxd-hitc\" cx=\"190\" cy=\"82\" r=\"15\"/><circle class=\"rxd-lig\" cx=\"190\" cy=\"82\" r=\"6\"/><text class=\"rxd-t\" data-slot=\"ligand\" x=\"100\" y=\"86\" text-anchor=\"end\"></text></g><g class=\"rxd-hot\" data-hot=\"ion\" tabindex=\"0\" role=\"button\"><path class=\"rxd-hit\" d=\"M160 96V178\"/><path class=\"rxd-ion\" d=\"M160 96V178\"/><path class=\"rxd-ion rxd-head\" d=\"M155 171L160 178L165 171\"/><text class=\"rxd-t\" data-slot=\"ion\" x=\"216\" y=\"100\" text-anchor=\"start\"></text></g></svg>",
 "parts": [
 "Ionotropic",
 "glutamate receptor"
@@ -34,7 +34,7 @@
 "label": "Metabotropic · GPCR, Gs",
 "arch": "gpcr",
 "means": "A G-protein-coupled receptor: seven helices through the membrane and no pore. Binding changes its shape and switches on a G protein inside. Gs raises cAMP, which turns on protein kinase A. Slower than a channel, and its effects last.",
-"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a G-protein-coupled receptor\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/><text class=\"rxd-side\" x=\"8\" y=\"97\">outside</text><text class=\"rxd-side\" x=\"8\" y=\"163\">inside</text><rect class=\"rxd-body\" x=\"96\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"116\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"136\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"156\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"176\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"196\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"216\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><path class=\"rxd-hair\" d=\"M103 98Q113 84 123 98\"/><path class=\"rxd-hair\" d=\"M143 98Q153 84 163 98\"/><path class=\"rxd-hair\" d=\"M183 98Q193 84 203 98\"/><path class=\"rxd-hair\" d=\"M123 154Q133 168 143 154\"/><path class=\"rxd-hair\" d=\"M163 154Q173 168 183 154\"/><circle class=\"rxd-lig\" cx=\"156\" cy=\"88\" r=\"7\"/><text class=\"rxd-t\" data-slot=\"ligand\" x=\"156\" y=\"70\" text-anchor=\"middle\"></text><ellipse class=\"rxd-g\" cx=\"140\" cy=\"176\" rx=\"24\" ry=\"13\"/><text class=\"rxd-t rxd-tg\" data-slot=\"g\" x=\"140\" y=\"180\" text-anchor=\"middle\"></text><ellipse class=\"rxd-g\" cx=\"176\" cy=\"182\" rx=\"13\" ry=\"9\"/><text class=\"rxd-t rxd-tg\" x=\"176\" y=\"185\" text-anchor=\"middle\">β</text><ellipse class=\"rxd-g\" cx=\"196\" cy=\"174\" rx=\"9\" ry=\"7\"/><text class=\"rxd-t rxd-tg\" x=\"196\" y=\"177\" text-anchor=\"middle\">γ</text><path class=\"rxd-ion\" d=\"M210 176H244\"/><path class=\"rxd-ion rxd-head\" d=\"M238 171L244 176L238 181\"/><text class=\"rxd-t\" data-slot=\"effect\" x=\"250\" y=\"180\" text-anchor=\"start\"></text></svg>",
+"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a G-protein-coupled receptor\"><g class=\"rxd-hot\" data-hot=\"membrane\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/></g><g class=\"rxd-hot\" data-hot=\"outside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"97\">outside the cell</text></g><g class=\"rxd-hot\" data-hot=\"inside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"163\">inside the cell</text></g><g class=\"rxd-hot\" data-hot=\"receptor\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-body\" x=\"96\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"116\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"136\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"156\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"176\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"196\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"216\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><path class=\"rxd-hair\" d=\"M103 98Q113 84 123 98\"/><path class=\"rxd-hair\" d=\"M143 98Q153 84 163 98\"/><path class=\"rxd-hair\" d=\"M183 98Q193 84 203 98\"/><path class=\"rxd-hair\" d=\"M123 154Q133 168 143 154\"/><path class=\"rxd-hair\" d=\"M163 154Q173 168 183 154\"/></g><g class=\"rxd-hot\" data-hot=\"ligand\" tabindex=\"0\" role=\"button\"><circle class=\"rxd-hitc\" cx=\"156\" cy=\"88\" r=\"16\"/><circle class=\"rxd-lig\" cx=\"156\" cy=\"88\" r=\"7\"/><text class=\"rxd-t\" data-slot=\"ligand\" x=\"156\" y=\"70\" text-anchor=\"middle\"></text></g><g class=\"rxd-hot\" data-hot=\"galpha\" tabindex=\"0\" role=\"button\"><ellipse class=\"rxd-g\" cx=\"140\" cy=\"176\" rx=\"24\" ry=\"13\"/><text class=\"rxd-t rxd-tg\" data-slot=\"g\" x=\"140\" y=\"180\" text-anchor=\"middle\"></text></g><g class=\"rxd-hot\" data-hot=\"gbg\" tabindex=\"0\" role=\"button\"><ellipse class=\"rxd-g\" cx=\"176\" cy=\"182\" rx=\"13\" ry=\"9\"/><text class=\"rxd-t rxd-tg\" x=\"176\" y=\"185\" text-anchor=\"middle\">β</text><ellipse class=\"rxd-g\" cx=\"196\" cy=\"174\" rx=\"9\" ry=\"7\"/><text class=\"rxd-t rxd-tg\" x=\"196\" y=\"177\" text-anchor=\"middle\">γ</text></g><g class=\"rxd-hot\" data-hot=\"arrow\" tabindex=\"0\" role=\"button\"><path class=\"rxd-hit\" d=\"M206 176H246\"/><path class=\"rxd-ion\" d=\"M210 176H244\"/><path class=\"rxd-ion rxd-head\" d=\"M238 171L244 176L238 181\"/></g><g class=\"rxd-hot\" data-hot=\"effect\" tabindex=\"0\" role=\"button\"><text class=\"rxd-t\" data-slot=\"effect\" x=\"250\" y=\"180\" text-anchor=\"start\"></text></g></svg>",
 "parts": [
 "Metabotropic",
 "GPCR",
@@ -45,7 +45,7 @@
 "label": "Metabotropic · GPCR, Gi/o",
 "arch": "gpcr",
 "means": "A G-protein-coupled receptor working through Gi/o: it lowers cAMP, opens K⁺ channels and closes Ca²⁺ channels. The net effect is to quieten the cell or the terminal it sits on.",
-"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a G-protein-coupled receptor\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/><text class=\"rxd-side\" x=\"8\" y=\"97\">outside</text><text class=\"rxd-side\" x=\"8\" y=\"163\">inside</text><rect class=\"rxd-body\" x=\"96\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"116\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"136\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"156\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"176\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"196\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"216\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><path class=\"rxd-hair\" d=\"M103 98Q113 84 123 98\"/><path class=\"rxd-hair\" d=\"M143 98Q153 84 163 98\"/><path class=\"rxd-hair\" d=\"M183 98Q193 84 203 98\"/><path class=\"rxd-hair\" d=\"M123 154Q133 168 143 154\"/><path class=\"rxd-hair\" d=\"M163 154Q173 168 183 154\"/><circle class=\"rxd-lig\" cx=\"156\" cy=\"88\" r=\"7\"/><text class=\"rxd-t\" data-slot=\"ligand\" x=\"156\" y=\"70\" text-anchor=\"middle\"></text><ellipse class=\"rxd-g\" cx=\"140\" cy=\"176\" rx=\"24\" ry=\"13\"/><text class=\"rxd-t rxd-tg\" data-slot=\"g\" x=\"140\" y=\"180\" text-anchor=\"middle\"></text><ellipse class=\"rxd-g\" cx=\"176\" cy=\"182\" rx=\"13\" ry=\"9\"/><text class=\"rxd-t rxd-tg\" x=\"176\" y=\"185\" text-anchor=\"middle\">β</text><ellipse class=\"rxd-g\" cx=\"196\" cy=\"174\" rx=\"9\" ry=\"7\"/><text class=\"rxd-t rxd-tg\" x=\"196\" y=\"177\" text-anchor=\"middle\">γ</text><path class=\"rxd-ion\" d=\"M210 176H244\"/><path class=\"rxd-ion rxd-head\" d=\"M238 171L244 176L238 181\"/><text class=\"rxd-t\" data-slot=\"effect\" x=\"250\" y=\"180\" text-anchor=\"start\"></text></svg>",
+"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a G-protein-coupled receptor\"><g class=\"rxd-hot\" data-hot=\"membrane\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/></g><g class=\"rxd-hot\" data-hot=\"outside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"97\">outside the cell</text></g><g class=\"rxd-hot\" data-hot=\"inside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"163\">inside the cell</text></g><g class=\"rxd-hot\" data-hot=\"receptor\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-body\" x=\"96\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"116\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"136\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"156\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"176\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"196\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"216\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><path class=\"rxd-hair\" d=\"M103 98Q113 84 123 98\"/><path class=\"rxd-hair\" d=\"M143 98Q153 84 163 98\"/><path class=\"rxd-hair\" d=\"M183 98Q193 84 203 98\"/><path class=\"rxd-hair\" d=\"M123 154Q133 168 143 154\"/><path class=\"rxd-hair\" d=\"M163 154Q173 168 183 154\"/></g><g class=\"rxd-hot\" data-hot=\"ligand\" tabindex=\"0\" role=\"button\"><circle class=\"rxd-hitc\" cx=\"156\" cy=\"88\" r=\"16\"/><circle class=\"rxd-lig\" cx=\"156\" cy=\"88\" r=\"7\"/><text class=\"rxd-t\" data-slot=\"ligand\" x=\"156\" y=\"70\" text-anchor=\"middle\"></text></g><g class=\"rxd-hot\" data-hot=\"galpha\" tabindex=\"0\" role=\"button\"><ellipse class=\"rxd-g\" cx=\"140\" cy=\"176\" rx=\"24\" ry=\"13\"/><text class=\"rxd-t rxd-tg\" data-slot=\"g\" x=\"140\" y=\"180\" text-anchor=\"middle\"></text></g><g class=\"rxd-hot\" data-hot=\"gbg\" tabindex=\"0\" role=\"button\"><ellipse class=\"rxd-g\" cx=\"176\" cy=\"182\" rx=\"13\" ry=\"9\"/><text class=\"rxd-t rxd-tg\" x=\"176\" y=\"185\" text-anchor=\"middle\">β</text><ellipse class=\"rxd-g\" cx=\"196\" cy=\"174\" rx=\"9\" ry=\"7\"/><text class=\"rxd-t rxd-tg\" x=\"196\" y=\"177\" text-anchor=\"middle\">γ</text></g><g class=\"rxd-hot\" data-hot=\"arrow\" tabindex=\"0\" role=\"button\"><path class=\"rxd-hit\" d=\"M206 176H246\"/><path class=\"rxd-ion\" d=\"M210 176H244\"/><path class=\"rxd-ion rxd-head\" d=\"M238 171L244 176L238 181\"/></g><g class=\"rxd-hot\" data-hot=\"effect\" tabindex=\"0\" role=\"button\"><text class=\"rxd-t\" data-slot=\"effect\" x=\"250\" y=\"180\" text-anchor=\"start\"></text></g></svg>",
 "parts": [
 "Metabotropic",
 "GPCR",
@@ -56,7 +56,7 @@
 "label": "Metabotropic · GPCR, Gq",
 "arch": "gpcr",
 "means": "A G-protein-coupled receptor working through Gq: it splits a membrane lipid into IP₃ and DAG, releasing Ca²⁺ from stores and turning on protein kinase C. Usually excitatory, and slow.",
-"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a G-protein-coupled receptor\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/><text class=\"rxd-side\" x=\"8\" y=\"97\">outside</text><text class=\"rxd-side\" x=\"8\" y=\"163\">inside</text><rect class=\"rxd-body\" x=\"96\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"116\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"136\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"156\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"176\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"196\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"216\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><path class=\"rxd-hair\" d=\"M103 98Q113 84 123 98\"/><path class=\"rxd-hair\" d=\"M143 98Q153 84 163 98\"/><path class=\"rxd-hair\" d=\"M183 98Q193 84 203 98\"/><path class=\"rxd-hair\" d=\"M123 154Q133 168 143 154\"/><path class=\"rxd-hair\" d=\"M163 154Q173 168 183 154\"/><circle class=\"rxd-lig\" cx=\"156\" cy=\"88\" r=\"7\"/><text class=\"rxd-t\" data-slot=\"ligand\" x=\"156\" y=\"70\" text-anchor=\"middle\"></text><ellipse class=\"rxd-g\" cx=\"140\" cy=\"176\" rx=\"24\" ry=\"13\"/><text class=\"rxd-t rxd-tg\" data-slot=\"g\" x=\"140\" y=\"180\" text-anchor=\"middle\"></text><ellipse class=\"rxd-g\" cx=\"176\" cy=\"182\" rx=\"13\" ry=\"9\"/><text class=\"rxd-t rxd-tg\" x=\"176\" y=\"185\" text-anchor=\"middle\">β</text><ellipse class=\"rxd-g\" cx=\"196\" cy=\"174\" rx=\"9\" ry=\"7\"/><text class=\"rxd-t rxd-tg\" x=\"196\" y=\"177\" text-anchor=\"middle\">γ</text><path class=\"rxd-ion\" d=\"M210 176H244\"/><path class=\"rxd-ion rxd-head\" d=\"M238 171L244 176L238 181\"/><text class=\"rxd-t\" data-slot=\"effect\" x=\"250\" y=\"180\" text-anchor=\"start\"></text></svg>",
+"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a G-protein-coupled receptor\"><g class=\"rxd-hot\" data-hot=\"membrane\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/></g><g class=\"rxd-hot\" data-hot=\"outside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"97\">outside the cell</text></g><g class=\"rxd-hot\" data-hot=\"inside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"163\">inside the cell</text></g><g class=\"rxd-hot\" data-hot=\"receptor\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-body\" x=\"96\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"116\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"136\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"156\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"176\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"196\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><rect class=\"rxd-body\" x=\"216\" y=\"98\" width=\"13\" height=\"56\" rx=\"6\"/><path class=\"rxd-hair\" d=\"M103 98Q113 84 123 98\"/><path class=\"rxd-hair\" d=\"M143 98Q153 84 163 98\"/><path class=\"rxd-hair\" d=\"M183 98Q193 84 203 98\"/><path class=\"rxd-hair\" d=\"M123 154Q133 168 143 154\"/><path class=\"rxd-hair\" d=\"M163 154Q173 168 183 154\"/></g><g class=\"rxd-hot\" data-hot=\"ligand\" tabindex=\"0\" role=\"button\"><circle class=\"rxd-hitc\" cx=\"156\" cy=\"88\" r=\"16\"/><circle class=\"rxd-lig\" cx=\"156\" cy=\"88\" r=\"7\"/><text class=\"rxd-t\" data-slot=\"ligand\" x=\"156\" y=\"70\" text-anchor=\"middle\"></text></g><g class=\"rxd-hot\" data-hot=\"galpha\" tabindex=\"0\" role=\"button\"><ellipse class=\"rxd-g\" cx=\"140\" cy=\"176\" rx=\"24\" ry=\"13\"/><text class=\"rxd-t rxd-tg\" data-slot=\"g\" x=\"140\" y=\"180\" text-anchor=\"middle\"></text></g><g class=\"rxd-hot\" data-hot=\"gbg\" tabindex=\"0\" role=\"button\"><ellipse class=\"rxd-g\" cx=\"176\" cy=\"182\" rx=\"13\" ry=\"9\"/><text class=\"rxd-t rxd-tg\" x=\"176\" y=\"185\" text-anchor=\"middle\">β</text><ellipse class=\"rxd-g\" cx=\"196\" cy=\"174\" rx=\"9\" ry=\"7\"/><text class=\"rxd-t rxd-tg\" x=\"196\" y=\"177\" text-anchor=\"middle\">γ</text></g><g class=\"rxd-hot\" data-hot=\"arrow\" tabindex=\"0\" role=\"button\"><path class=\"rxd-hit\" d=\"M206 176H246\"/><path class=\"rxd-ion\" d=\"M210 176H244\"/><path class=\"rxd-ion rxd-head\" d=\"M238 171L244 176L238 181\"/></g><g class=\"rxd-hot\" data-hot=\"effect\" tabindex=\"0\" role=\"button\"><text class=\"rxd-t\" data-slot=\"effect\" x=\"250\" y=\"180\" text-anchor=\"start\"></text></g></svg>",
 "parts": [
 "Metabotropic",
 "GPCR",
@@ -67,7 +67,7 @@
 "label": "Voltage-gated channel",
 "arch": "vgc",
 "means": "Not a receptor: nothing binds it. A charged helix in each domain senses the membrane potential and pulls the gate open when the cell depolarises. These are what turn a receptor's small voltage change into an action potential, or let Ca²⁺ in to release transmitter.",
-"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a voltage-gated ion channel\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/><text class=\"rxd-side\" x=\"8\" y=\"97\">outside</text><text class=\"rxd-side\" x=\"8\" y=\"163\">inside</text><rect class=\"rxd-body\" x=\"104\" y=\"96\" width=\"46\" height=\"60\" rx=\"8\"/><rect class=\"rxd-body\" x=\"170\" y=\"96\" width=\"46\" height=\"60\" rx=\"8\"/><text class=\"rxd-plus\" x=\"118\" y=\"114\" text-anchor=\"middle\">+</text><text class=\"rxd-plus\" x=\"118\" y=\"128\" text-anchor=\"middle\">+</text><text class=\"rxd-plus\" x=\"118\" y=\"142\" text-anchor=\"middle\">+</text><text class=\"rxd-plus\" x=\"202\" y=\"114\" text-anchor=\"middle\">+</text><text class=\"rxd-plus\" x=\"202\" y=\"128\" text-anchor=\"middle\">+</text><text class=\"rxd-plus\" x=\"202\" y=\"142\" text-anchor=\"middle\">+</text><path class=\"rxd-hair\" d=\"M150 152L143 164\"/><path class=\"rxd-hair\" d=\"M170 152L177 164\"/><path class=\"rxd-ion\" d=\"M22 62H44V40H68\"/><text class=\"rxd-t\" x=\"22\" y=\"32\">ΔV</text><path class=\"rxd-ion\" d=\"M160 56V186\"/><path class=\"rxd-ion rxd-head\" d=\"M155 179L160 186L165 179\"/><text class=\"rxd-t\" data-slot=\"ion\" x=\"172\" y=\"66\" text-anchor=\"start\"></text><text class=\"rxd-side\" x=\"118\" y=\"90\" text-anchor=\"middle\">S4</text><text class=\"rxd-side\" x=\"202\" y=\"90\" text-anchor=\"middle\">S4</text></svg>",
+"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a voltage-gated ion channel\"><g class=\"rxd-hot\" data-hot=\"membrane\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/></g><g class=\"rxd-hot\" data-hot=\"outside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"97\">outside the cell</text></g><g class=\"rxd-hot\" data-hot=\"inside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"163\">inside the cell</text></g><g class=\"rxd-hot\" data-hot=\"trace\" tabindex=\"0\" role=\"button\"><path class=\"rxd-ion\" d=\"M22 62H44V40H68\"/><text class=\"rxd-t\" x=\"22\" y=\"32\">ΔV</text></g><g class=\"rxd-hot\" data-hot=\"sensor\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-body\" x=\"104\" y=\"96\" width=\"46\" height=\"60\" rx=\"8\"/><rect class=\"rxd-body\" x=\"170\" y=\"96\" width=\"46\" height=\"60\" rx=\"8\"/><text class=\"rxd-plus\" x=\"118\" y=\"114\" text-anchor=\"middle\">+</text><text class=\"rxd-plus\" x=\"118\" y=\"128\" text-anchor=\"middle\">+</text><text class=\"rxd-plus\" x=\"118\" y=\"142\" text-anchor=\"middle\">+</text><text class=\"rxd-plus\" x=\"202\" y=\"114\" text-anchor=\"middle\">+</text><text class=\"rxd-plus\" x=\"202\" y=\"128\" text-anchor=\"middle\">+</text><text class=\"rxd-plus\" x=\"202\" y=\"142\" text-anchor=\"middle\">+</text><text class=\"rxd-side\" x=\"118\" y=\"90\" text-anchor=\"middle\">S4</text><text class=\"rxd-side\" x=\"202\" y=\"90\" text-anchor=\"middle\">S4</text></g><g class=\"rxd-hot\" data-hot=\"gate\" tabindex=\"0\" role=\"button\"><path class=\"rxd-hair\" d=\"M150 152L143 164\"/><path class=\"rxd-hair\" d=\"M170 152L177 164\"/></g><g class=\"rxd-hot\" data-hot=\"ion\" tabindex=\"0\" role=\"button\"><path class=\"rxd-hit\" d=\"M160 56V186\"/><path class=\"rxd-ion\" d=\"M160 56V186\"/><path class=\"rxd-ion rxd-head\" d=\"M155 179L160 186L165 179\"/><text class=\"rxd-t\" data-slot=\"ion\" x=\"172\" y=\"66\" text-anchor=\"start\"></text></g></svg>",
 "parts": [
 "Voltage-gated channel"
 ]
@@ -76,7 +76,7 @@
 "label": "Background channel",
 "arch": "pore",
 "means": "A channel open at rest, or gated from inside the cell rather than by a transmitter. These set the resting potential and how easily a cell fires.",
-"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a background ion channel\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/><text class=\"rxd-side\" x=\"8\" y=\"97\">outside</text><text class=\"rxd-side\" x=\"8\" y=\"163\">inside</text><rect class=\"rxd-body\" x=\"112\" y=\"96\" width=\"38\" height=\"60\" rx=\"8\"/><rect class=\"rxd-body\" x=\"170\" y=\"96\" width=\"38\" height=\"60\" rx=\"8\"/><path class=\"rxd-ion\" d=\"M160 190V62\"/><path class=\"rxd-ion rxd-head\" d=\"M155 69L160 62L165 69\"/><text class=\"rxd-t\" data-slot=\"ion\" x=\"172\" y=\"66\" text-anchor=\"start\"></text><text class=\"rxd-t\" data-slot=\"ligand\" x=\"108\" y=\"176\" text-anchor=\"end\"></text></svg>",
+"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a background ion channel\"><g class=\"rxd-hot\" data-hot=\"membrane\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/></g><g class=\"rxd-hot\" data-hot=\"outside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"97\">outside the cell</text></g><g class=\"rxd-hot\" data-hot=\"inside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"163\">inside the cell</text></g><g class=\"rxd-hot\" data-hot=\"receptor\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-body\" x=\"112\" y=\"96\" width=\"38\" height=\"60\" rx=\"8\"/><rect class=\"rxd-body\" x=\"170\" y=\"96\" width=\"38\" height=\"60\" rx=\"8\"/></g><g class=\"rxd-hot\" data-hot=\"ion\" tabindex=\"0\" role=\"button\"><path class=\"rxd-hit\" d=\"M160 190V62\"/><path class=\"rxd-ion\" d=\"M160 190V62\"/><path class=\"rxd-ion rxd-head\" d=\"M155 69L160 62L165 69\"/><text class=\"rxd-t\" data-slot=\"ion\" x=\"172\" y=\"66\" text-anchor=\"start\"></text></g><g class=\"rxd-hot\" data-hot=\"ligand\" tabindex=\"0\" role=\"button\"><text class=\"rxd-t\" data-slot=\"ligand\" x=\"108\" y=\"176\" text-anchor=\"end\"></text></g></svg>",
 "parts": [
 "Background channel"
 ]
@@ -85,7 +85,7 @@
 "label": "Ca²⁺-activated K⁺ channel",
 "arch": "pore",
 "means": "A potassium channel opened by calcium arriving inside the cell. It follows every burst of activity with a pause, and shapes how fast a neuron can fire.",
-"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a background ion channel\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/><text class=\"rxd-side\" x=\"8\" y=\"97\">outside</text><text class=\"rxd-side\" x=\"8\" y=\"163\">inside</text><rect class=\"rxd-body\" x=\"112\" y=\"96\" width=\"38\" height=\"60\" rx=\"8\"/><rect class=\"rxd-body\" x=\"170\" y=\"96\" width=\"38\" height=\"60\" rx=\"8\"/><path class=\"rxd-ion\" d=\"M160 190V62\"/><path class=\"rxd-ion rxd-head\" d=\"M155 69L160 62L165 69\"/><text class=\"rxd-t\" data-slot=\"ion\" x=\"172\" y=\"66\" text-anchor=\"start\"></text><text class=\"rxd-t\" data-slot=\"ligand\" x=\"108\" y=\"176\" text-anchor=\"end\"></text></svg>",
+"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a background ion channel\"><g class=\"rxd-hot\" data-hot=\"membrane\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/></g><g class=\"rxd-hot\" data-hot=\"outside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"97\">outside the cell</text></g><g class=\"rxd-hot\" data-hot=\"inside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"163\">inside the cell</text></g><g class=\"rxd-hot\" data-hot=\"receptor\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-body\" x=\"112\" y=\"96\" width=\"38\" height=\"60\" rx=\"8\"/><rect class=\"rxd-body\" x=\"170\" y=\"96\" width=\"38\" height=\"60\" rx=\"8\"/></g><g class=\"rxd-hot\" data-hot=\"ion\" tabindex=\"0\" role=\"button\"><path class=\"rxd-hit\" d=\"M160 190V62\"/><path class=\"rxd-ion\" d=\"M160 190V62\"/><path class=\"rxd-ion rxd-head\" d=\"M155 69L160 62L165 69\"/><text class=\"rxd-t\" data-slot=\"ion\" x=\"172\" y=\"66\" text-anchor=\"start\"></text></g><g class=\"rxd-hot\" data-hot=\"ligand\" tabindex=\"0\" role=\"button\"><text class=\"rxd-t\" data-slot=\"ligand\" x=\"108\" y=\"176\" text-anchor=\"end\"></text></g></svg>",
 "parts": [
 "Ca²⁺-activated K⁺ channel"
 ]
@@ -94,7 +94,7 @@
 "label": "Transporter",
 "arch": "carrier",
 "means": "Not a receptor: a carrier that binds the transmitter and hauls it across a membrane, one molecule per cycle, driven by an ion gradient. Reuptake transporters end the signal; vesicular ones load the next one.",
-"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a transporter\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/><text class=\"rxd-side\" x=\"8\" y=\"97\">outside</text><text class=\"rxd-side\" x=\"8\" y=\"163\">inside</text><rect class=\"rxd-body\" x=\"118\" y=\"92\" width=\"84\" height=\"68\" rx=\"16\"/><path class=\"rxd-ion\" d=\"M160 60V92\"/><path class=\"rxd-ion\" d=\"M160 160V186\"/><path class=\"rxd-ion rxd-head\" d=\"M155 179L160 186L165 179\"/><path class=\"rxd-hair\" d=\"M140 110Q160 126 140 142\"/><path class=\"rxd-hair\" d=\"M180 110Q160 126 180 142\"/><circle class=\"rxd-lig\" cx=\"160\" cy=\"62\" r=\"7\"/><text class=\"rxd-t\" data-slot=\"ligand\" x=\"176\" y=\"66\" text-anchor=\"start\"></text><circle class=\"rxd-co\" cx=\"142\" cy=\"66\" r=\"4\"/><text class=\"rxd-t\" data-slot=\"co\" x=\"134\" y=\"70\" text-anchor=\"end\"></text></svg>",
+"svg": "<svg class=\"rxd\" viewBox=\"0 0 320 200\" role=\"img\" aria-label=\"Schematic of a transporter\"><g class=\"rxd-hot\" data-hot=\"membrane\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-mem\" x=\"0\" y=\"104\" width=\"320\" height=\"44\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"104\" y2=\"104\"/><line class=\"rxd-hair\" x1=\"0\" x2=\"320\" y1=\"148\" y2=\"148\"/></g><g class=\"rxd-hot\" data-hot=\"outside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"97\">outside the cell</text></g><g class=\"rxd-hot\" data-hot=\"inside\" tabindex=\"0\" role=\"button\"><text class=\"rxd-side\" x=\"8\" y=\"163\">inside the cell</text></g><g class=\"rxd-hot\" data-hot=\"receptor\" tabindex=\"0\" role=\"button\"><rect class=\"rxd-body\" x=\"118\" y=\"92\" width=\"84\" height=\"68\" rx=\"16\"/><path class=\"rxd-ion\" d=\"M160 60V92\"/><path class=\"rxd-ion\" d=\"M160 160V186\"/><path class=\"rxd-ion rxd-head\" d=\"M155 179L160 186L165 179\"/><path class=\"rxd-hair\" d=\"M140 110Q160 126 140 142\"/><path class=\"rxd-hair\" d=\"M180 110Q160 126 180 142\"/></g><g class=\"rxd-hot\" data-hot=\"ligand\" tabindex=\"0\" role=\"button\"><circle class=\"rxd-hitc\" cx=\"160\" cy=\"62\" r=\"16\"/><circle class=\"rxd-lig\" cx=\"160\" cy=\"62\" r=\"7\"/><text class=\"rxd-t\" data-slot=\"ligand\" x=\"176\" y=\"66\" text-anchor=\"start\"></text></g><g class=\"rxd-hot\" data-hot=\"co\" tabindex=\"0\" role=\"button\"><circle class=\"rxd-co\" cx=\"142\" cy=\"66\" r=\"4\"/><text class=\"rxd-t\" data-slot=\"co\" x=\"134\" y=\"70\" text-anchor=\"end\"></text></g></svg>",
 "parts": [
 "Transporter"
 ]
@@ -199,6 +199,409 @@
 "Senses how much is out there",
 "Turns release down: the cell's own volume control"
 ]
+},
+"steps": {
+"lgic": {
+"outside": {
+"title": "Outside the cell",
+"lines": [
+"The synaptic cleft: a gap of about 20 nanometres between two cells",
+"The transmitter is released into it from the terminal opposite",
+"It is cleared again within milliseconds by transporters and enzymes"
+]
+},
+"inside": {
+"title": "Inside the cell",
+"lines": [
+"The cytoplasm of the receiving neuron",
+"Where G proteins, second messengers and the cell's channels do their work",
+"What happens here decides whether the cell fires"
+]
+},
+"membrane": {
+"title": "The cell membrane",
+"lines": [
+"A double layer of lipid, 5 nanometres thick",
+"Ions cannot cross it except through a channel or a carrier",
+"Holds the voltage difference, about −70 mV inside at rest, that signalling plays with"
+]
+},
+"ligand": {
+"n": "1",
+"title": "{lig} arrives and binds",
+"lines": [
+"Released across the cleft, it lands on a site between two subunits",
+"Two or more molecules must bind before the pore opens",
+"Held for a few milliseconds, then it lets go"
+],
+"variants": null
+},
+"receptor": {
+"n": "2",
+"title": "The channel opens",
+"lines": [
+"The subunits twist and the gate in the middle of the pore swings open",
+"Within a millisecond of binding",
+"Each opening lasts about 1 to 10 milliseconds; with the transmitter still there the channel desensitises and shuts anyway"
+],
+"variants": null
+},
+"ion": {
+"n": "3",
+"title": "{ion} flows through",
+"lines": [
+"Ions run down their gradient through the open pore, tens of thousands per millisecond",
+"Cations flowing in push the inside positive: excitation",
+"Chloride flowing in holds it down: inhibition"
+],
+"variants": null
+}
+},
+"iglur": {
+"outside": {
+"title": "Outside the cell",
+"lines": [
+"The synaptic cleft: a gap of about 20 nanometres between two cells",
+"The transmitter is released into it from the terminal opposite",
+"It is cleared again within milliseconds by transporters and enzymes"
+]
+},
+"inside": {
+"title": "Inside the cell",
+"lines": [
+"The cytoplasm of the receiving neuron",
+"Where G proteins, second messengers and the cell's channels do their work",
+"What happens here decides whether the cell fires"
+]
+},
+"membrane": {
+"title": "The cell membrane",
+"lines": [
+"A double layer of lipid, 5 nanometres thick",
+"Ions cannot cross it except through a channel or a carrier",
+"Holds the voltage difference, about −70 mV inside at rest, that signalling plays with"
+]
+},
+"ligand": {
+"n": "1",
+"title": "{lig} binds in the clamshells",
+"lines": [
+"Each of the four subunits has a clamshell that closes on one glutamate",
+"The NMDA receptor also needs glycine or D-serine on two of its subunits",
+"Bound for about a millisecond at AMPA receptors, far longer at NMDA"
+],
+"variants": null
+},
+"receptor": {
+"n": "2",
+"title": "The closed clamshells pull the pore open",
+"lines": [
+"Within a millisecond of binding",
+"AMPA receptors desensitise within a few milliseconds even with glutamate still bound",
+"NMDA receptors open only once the membrane is depolarised enough to expel the Mg²⁺ plugging the pore"
+],
+"variants": null
+},
+"ion": {
+"n": "3",
+"title": "{ion} flows in",
+"lines": [
+"Na⁺ in, K⁺ out: the spine depolarises",
+"NMDA receptors pass Ca²⁺ as well, the trigger for plasticity",
+"Over within a few milliseconds at AMPA, tens to hundreds at NMDA"
+],
+"variants": null
+}
+},
+"gpcr": {
+"outside": {
+"title": "Outside the cell",
+"lines": [
+"The synaptic cleft: a gap of about 20 nanometres between two cells",
+"The transmitter is released into it from the terminal opposite",
+"It is cleared again within milliseconds by transporters and enzymes"
+]
+},
+"inside": {
+"title": "Inside the cell",
+"lines": [
+"The cytoplasm of the receiving neuron",
+"Where G proteins, second messengers and the cell's channels do their work",
+"What happens here decides whether the cell fires"
+]
+},
+"membrane": {
+"title": "The cell membrane",
+"lines": [
+"A double layer of lipid, 5 nanometres thick",
+"Ions cannot cross it except through a channel or a carrier",
+"Holds the voltage difference, about −70 mV inside at rest, that signalling plays with"
+]
+},
+"ligand": {
+"n": "1",
+"title": "{lig} arrives and binds",
+"lines": [
+"Sits in a pocket between the helices, from the outside",
+"Held for milliseconds to seconds, depending on its affinity",
+"Nothing flows: no pore opens"
+],
+"variants": null
+},
+"receptor": {
+"n": "2",
+"title": "The receptor changes shape",
+"lines": [
+"The seven helices shift and the inside face opens",
+"Active for as long as the transmitter is bound, typically tens of milliseconds to seconds",
+"Used for long, it is phosphorylated and pulled inside the cell for minutes"
+],
+"variants": null
+},
+"galpha": {
+"n": "3-a",
+"title": "The α subunit lets go",
+"lines": [
+"{g}: the α subunit swaps its GDP for GTP and breaks away from β and γ",
+"One receptor sets off many G proteins while it is active",
+"It carries the message to its enzyme (step 4)"
+],
+"variants": null
+},
+"gbg": {
+"n": "3-b",
+"title": "The βγ pair goes its own way",
+"lines": [
+"β and γ stay together and leave at the same time as α",
+"They act on channels directly: opening K⁺ channels (GIRK), closing Ca²⁺ channels",
+"For Gi/o receptors this is much of the effect"
+],
+"variants": null
+},
+"arrow": {
+"n": "4",
+"title": "α finds its enzyme",
+"lines": [
+"Adenylyl cyclase for Gs and Gi/o, phospholipase C for Gq",
+"The enzyme makes second messengers by the hundred: the signal is amplified",
+"Ends when α hydrolyses its GTP, seconds later, and rejoins βγ"
+],
+"variants": null
+},
+"effect": {
+"n": "5",
+"title": "{eff}: the second messenger",
+"lines": [
+"What the enzyme makes or stops making",
+"Second messengers switch on kinases that change channels, receptors and, over minutes, gene expression",
+"This is the slow, lasting side of signalling"
+],
+"variants": {
+"↑ cAMP": [
+"Cyclic AMP rises and switches on protein kinase A",
+"PKA phosphorylates channels and receptors, and over minutes reaches the nucleus",
+"Lasts seconds to minutes, until phosphodiesterases clear the cAMP"
+],
+"↓ cAMP": [
+"Cyclic AMP falls: protein kinase A goes quiet",
+"With βγ opening K⁺ channels and closing Ca²⁺ channels, the cell or terminal is damped",
+"Lasts as long as the receptor is active, seconds or more"
+],
+"IP₃ · DAG": [
+"IP₃ opens Ca²⁺ stores inside the cell; Ca²⁺ floods the cytoplasm",
+"DAG switches on protein kinase C",
+"Excitation with a long tail: Ca²⁺ and PKC change channels for seconds to minutes"
+]
+}
+}
+},
+"vgc": {
+"outside": {
+"title": "Outside the cell",
+"lines": [
+"The synaptic cleft: a gap of about 20 nanometres between two cells",
+"The transmitter is released into it from the terminal opposite",
+"It is cleared again within milliseconds by transporters and enzymes"
+]
+},
+"inside": {
+"title": "Inside the cell",
+"lines": [
+"The cytoplasm of the receiving neuron",
+"Where G proteins, second messengers and the cell's channels do their work",
+"What happens here decides whether the cell fires"
+]
+},
+"membrane": {
+"title": "The cell membrane",
+"lines": [
+"A double layer of lipid, 5 nanometres thick",
+"Ions cannot cross it except through a channel or a carrier",
+"Holds the voltage difference, about −70 mV inside at rest, that signalling plays with"
+]
+},
+"trace": {
+"n": "1",
+"title": "The membrane depolarises",
+"lines": [
+"Receptors upstream have let cations in and the inside has turned less negative",
+"Past about −55 mV the channel notices",
+"Nothing binds: the voltage itself is the signal"
+],
+"variants": null
+},
+"sensor": {
+"n": "2",
+"title": "The S4 sensors move",
+"lines": [
+"Each domain carries a helix studded with positive charges, S4",
+"The change in voltage pushes them outward through the membrane",
+"Within a fraction of a millisecond"
+],
+"variants": null
+},
+"gate": {
+"n": "3",
+"title": "The gate opens",
+"lines": [
+"The moving sensors pull the gate at the inner mouth open",
+"Sodium channels stay open about a millisecond, then a plug inactivates them until the cell repolarises",
+"Potassium channels open more slowly and stay open a few milliseconds"
+],
+"variants": null
+},
+"ion": {
+"n": "4",
+"title": "{ion} flows",
+"lines": [
+"Na⁺ in: the rising stroke of the action potential",
+"K⁺ out: the falling stroke, and the pause after",
+"Ca²⁺ in at a terminal: vesicles fuse and transmitter is released"
+],
+"variants": null
+}
+},
+"pore": {
+"outside": {
+"title": "Outside the cell",
+"lines": [
+"The synaptic cleft: a gap of about 20 nanometres between two cells",
+"The transmitter is released into it from the terminal opposite",
+"It is cleared again within milliseconds by transporters and enzymes"
+]
+},
+"inside": {
+"title": "Inside the cell",
+"lines": [
+"The cytoplasm of the receiving neuron",
+"Where G proteins, second messengers and the cell's channels do their work",
+"What happens here decides whether the cell fires"
+]
+},
+"membrane": {
+"title": "The cell membrane",
+"lines": [
+"A double layer of lipid, 5 nanometres thick",
+"Ions cannot cross it except through a channel or a carrier",
+"Holds the voltage difference, about −70 mV inside at rest, that signalling plays with"
+]
+},
+"ligand": {
+"n": "1",
+"title": "Gated from inside, or not at all",
+"lines": [
+"{lig} from inside the cell decides whether it is open",
+"A leak channel is simply open at rest",
+"No transmitter from outside is involved"
+],
+"variants": null
+},
+"receptor": {
+"n": "2",
+"title": "The pore stays open",
+"lines": [
+"Open for as long as the inside signal lasts: hundreds of milliseconds after a burst, or always",
+"The commonest way a Gi/o receptor changes a cell"
+],
+"variants": null
+},
+"ion": {
+"n": "3",
+"title": "K⁺ leaves",
+"lines": [
+"Potassium runs out down its gradient",
+"The inside turns more negative: the cell is held at rest or below it",
+"Harder to fire, or paused after firing"
+],
+"variants": null
+}
+},
+"carrier": {
+"outside": {
+"title": "Outside the cell",
+"lines": [
+"The synaptic cleft: a gap of about 20 nanometres between two cells",
+"The transmitter is released into it from the terminal opposite",
+"It is cleared again within milliseconds by transporters and enzymes"
+]
+},
+"inside": {
+"title": "Inside the cell",
+"lines": [
+"The cytoplasm of the receiving neuron",
+"Where G proteins, second messengers and the cell's channels do their work",
+"What happens here decides whether the cell fires"
+]
+},
+"membrane": {
+"title": "The cell membrane",
+"lines": [
+"A double layer of lipid, 5 nanometres thick",
+"Ions cannot cross it except through a channel or a carrier",
+"Holds the voltage difference, about −70 mV inside at rest, that signalling plays with"
+]
+},
+"ligand": {
+"n": "1",
+"title": "{lig} binds on the outside",
+"lines": [
+"The carrier's binding site faces the cleft",
+"Transmitter still floating there after release lands on it",
+"High affinity: it catches what is left"
+],
+"variants": null
+},
+"co": {
+"n": "1",
+"title": "Na⁺ binds with it",
+"lines": [
+"One or more sodium ions bind alongside the transmitter",
+"The sodium gradient, kept up by the Na⁺/K⁺ pump, is the fuel",
+"The carrier will not flip without them"
+],
+"variants": null
+},
+"receptor": {
+"n": "2",
+"title": "The carrier flips",
+"lines": [
+"The site swings from facing out to facing in: alternating access",
+"One transmitter per cycle, about 10 to 100 cycles a second",
+"Amphetamine runs the cycle backwards"
+],
+"variants": null
+},
+"inside_release": {
+"n": "3",
+"title": "Released inside",
+"lines": [
+"The transmitter and the sodium let go inside the cell",
+"The cleft is emptied: the signal has ended",
+"The transmitter is repacked into a vesicle or broken down"
+],
+"variants": null
+}
+}
 },
 "groups": [
 {
