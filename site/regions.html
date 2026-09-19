@@ -421,8 +421,20 @@ table.dtable td.num{ font-size:.84rem; }
     width: 100%;
     overflow-x: auto;
     margin-top: 6px;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
   }
-#receptor-graph svg { display: block; }
+#receptor-graph svg { display: inline-block; vertical-align: top; }
+/* the value axis is its own drawing, stuck to the left edge of the
+   scroller so it stays put while the bars scroll under it */
+#receptor-graph .y-axis { position: sticky; left: 0; z-index: 1; margin-right: calc(var(--axis-w) * -1); }
+#receptor-graph .y-axis .axis-bg { fill: var(--paper); }
+.chart-scroll-hint {
+    display: none; font-family: var(--font-brand); font-size: .58rem; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--ink-60); margin: .3rem 0 0;
+  }
+#receptor-graph.scrolls + .chart-scroll-hint { display: block; }
 #receptor-graph .axis-label {
     font-family: var(--font-brand);
     font-size: 10px;
@@ -935,6 +947,7 @@ mark{ background:var(--ink); color:var(--paper); }
     <div class="below">
       <div id="chart-pane">
         <div id="receptor-graph"></div>
+        <p class="chart-scroll-hint" aria-hidden="true">Scroll sideways for the rest &rarr;</p>
         <div id="chart-legend" class="legend"></div>
         <div class="rxfig" id="rx-figs" data-for=""></div>
         <div class="rx-cite" id="rx-cite"></div>
@@ -2179,7 +2192,7 @@ function currentReceptor() { return receptors().find(r => r.id === dropdown.valu
 function currentRegion() { return BY_BASE[dropdown.value] || REG[0]; }
 
 /* ── the chart ── */
-const CHART = { height: 380, top: 12, right: 12, bottom: 118, left: 58 };
+const CHART = { height: 380, top: 12, right: 12, bottom: 118, left: 58, slot: 18 };  /* slot: the least width a bar and its label may have */
 function svgEl(tag, attrs) { const e = document.createElementNS(SVG_NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
 function niceCeiling(v) { if (!(v > 0)) return 1; const p = Math.pow(10, Math.floor(Math.log10(v))); const f = v / p; const n = f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10; return n * p; }
 function fmtTick(v) { return v >= 1000 ? (v / 1000).toLocaleString() + "k" : String(+v.toFixed(2)); }
@@ -2231,23 +2244,31 @@ function renderChart() {
   const c = buildChart();
   const host = document.getElementById("receptor-graph");
   host.innerHTML = "";
-  const width = Math.max(host.clientWidth || 900, 320);
   const n = c.bars.length;
-  const plotW = width - CHART.left - CHART.right, plotH = CHART.height - CHART.top - CHART.bottom;
+  const avail = Math.max(host.clientWidth || 900, 320);
+  const scrolls = CHART.left + CHART.right + n * CHART.slot > avail;         /* wider than the screen, it scrolls */
+  const gutter = scrolls ? 80 : 0;                                            /* room for the first labels, which lean left under the pinned axis */
+  const width = scrolls ? CHART.left + gutter + n * CHART.slot + CHART.right : avail;
+  host.classList.toggle("scrolls", scrolls);
+  host.style.setProperty("--axis-w", CHART.left + "px");
+  const x0 = CHART.left + gutter;
+  const plotW = width - x0 - CHART.right, plotH = CHART.height - CHART.top - CHART.bottom;
   const vals = c.bars.map(b => b.value).filter(v => v != null);
   const yMax = c.max != null ? c.max : niceCeiling(Math.max(...vals, 0));
   const svg = svgEl("svg", { viewBox: "0 0 " + width + " " + CHART.height, width: width, height: CHART.height, role: "img", "aria-label": "Receptor density chart" });
   const y = v => CHART.top + plotH - (v / yMax) * plotH;
+  const axis = svgEl("svg", { viewBox: "0 0 " + CHART.left + " " + CHART.height, width: CHART.left, height: CHART.height, class: "y-axis", "aria-hidden": "true" });
+  axis.appendChild(svgEl("rect", { x: 0, y: 0, width: CHART.left - 1, height: CHART.height, class: "axis-bg" }));
   for (let i = 0; i <= 4; i++) {
     const v = yMax * i / 4, yy = y(v);
     svg.appendChild(svgEl("line", { x1: CHART.left, x2: width - CHART.right, y1: yy, y2: yy, class: "grid-line" }));
-    const t = svgEl("text", { x: CHART.left - 8, y: yy + 3, "text-anchor": "end", class: "axis-label y-label" }); t.textContent = fmtTick(v); svg.appendChild(t);
+    const t = svgEl("text", { x: CHART.left - 8, y: yy + 3, "text-anchor": "end", class: "axis-label y-label" }); t.textContent = fmtTick(v); axis.appendChild(t);
   }
-  const yl = svgEl("text", { x: 12, y: CHART.top + plotH / 2, transform: "rotate(-90 12 " + (CHART.top + plotH / 2) + ")", "text-anchor": "middle", class: "axis-label" }); yl.textContent = c.yLabel; svg.appendChild(yl);
+  const yl = svgEl("text", { x: 12, y: CHART.top + plotH / 2, transform: "rotate(-90 12 " + (CHART.top + plotH / 2) + ")", "text-anchor": "middle", class: "axis-label" }); yl.textContent = c.yLabel; axis.appendChild(yl);
   svg.appendChild(svgEl("line", { x1: CHART.left, x2: width - CHART.right, y1: y(0), y2: y(0), class: "axis-line" }));
   const slot = plotW / n, bw = Math.max(3, slot * 0.68);
   c.bars.forEach((b, i) => {
-    const x = CHART.left + slot * i + (slot - bw) / 2;
+    const x = x0 + slot * i + (slot - bw) / 2;
     let rect;
     if (b.value == null) rect = svgEl("rect", { x, y: y(0) - 6, width: bw, height: 6, class: "bar empty" });
     else rect = svgEl("rect", { x, y: y(b.value), width: bw, height: Math.max(0, y(0) - y(b.value)), class: "bar", fill: b.colour });
@@ -2264,6 +2285,7 @@ function renderChart() {
     }
     svg.appendChild(label);
   });
+  host.appendChild(axis);
   host.appendChild(svg);
   document.getElementById("chart-legend").innerHTML = c.legend.map(l => "<span class=\"legend-item\"><span class=\"legend-swatch\" style=\"background:" + l.colour + "\"></span>" + escapeHtml(l.name) + "</span>").join("");
   renderCite();
