@@ -7,19 +7,19 @@ under CC BY-NC-SA 4.0 as CNXML with its images, at
 github.com/openstax/osbooks-neuroscience. This turns that source into the
 site's own pages:
 
-  site/textbook.html                 the contents: every chapter, expandable
-                                     to its sections
-  site/textbook/NN-slug.html         one page per chapter, each section an
-                                     expandable block; preface and appendix
-                                     as pages of their own
+  site/textbook.html                 the whole book on one page: every
+                                     chapter a fold that opens to its
+                                     sections, every section a fold that
+                                     opens to its text; preface and appendix
+                                     folds of their own
   site/assets/textbook/img/*.webp    every image the text uses, recompressed
   site/assets/home/textbook.jpg      the card on the home page, from the cover
 
 The pages keep the book's words, figures, notes, tables, key terms,
-summaries and references. Two things are linked rather than carried: the
-interactive exercises and the videos, which live on OpenStax's own servers
-and are not in the source. Every page carries the attribution the licence
-asks for. The layout, styles and scripts are the site's (assets/textbook.css
+summaries and references. The videos are embedded, each creating its
+player only when its fold is opened; the interactive exercises live on
+OpenStax's own platform and are not in the source, so they are linked. The
+page carries the attribution the licence asks for. The layout, styles and scripts are the site's (assets/textbook.css
 and assets/textbook.js).
 """
 import html, json, os, re, sys
@@ -31,9 +31,8 @@ if not SRC or not os.path.isdir(os.path.join(SRC, "modules")):
     raise SystemExit("usage: python3 build.py /path/to/osbooks-neuroscience   (a clone of github.com/openstax/osbooks-neuroscience)")
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.normpath(os.path.join(HERE, "..", "..", "site"))
-OUT_DIR = os.path.join(SITE, "textbook")
 IMG_DIR = os.path.join(SITE, "assets", "textbook", "img")
-os.makedirs(OUT_DIR, exist_ok=True); os.makedirs(IMG_DIR, exist_ok=True)
+os.makedirs(IMG_DIR, exist_ok=True)
 
 NS = {"c": "http://cnx.rice.edu/cnxml", "md": "http://cnx.rice.edu/mdml", "m": "http://www.w3.org/1998/Math/MathML", "col": "http://cnx.rice.edu/collxml"}
 C = "{http://cnx.rice.edu/cnxml}"; M = "{http://www.w3.org/1998/Math/MathML}"
@@ -127,7 +126,7 @@ def image(src):
             im.save(out, "WEBP", quality=78, method=4)
         sw, sh = (MAX_W, round(h * MAX_W / w)) if w > MAX_W else (w, h)
         SIZES[stem] = (sw, sh)
-    return "../assets/textbook/img/" + stem + ".webp", SIZES[stem]
+    return "assets/textbook/img/" + stem + ".webp", SIZES[stem]
 
 # ── CNXML to HTML ──────────────────────────────────────────────────────────
 NOTE_KIND = {"inthe-lab": "In the lab", "meet-author": "Meet the author", "across-species": "Across species",
@@ -149,10 +148,7 @@ def link_href(ctx, e):
     m = doc or ctx.mod
     if m not in PAGE:
         return None, False
-    f = PAGE[m][0]
-    same = (m == ctx.mod)
-    frag = f"#{m}-{tid}" if tid else f"#{m}"
-    return (("" if same else f) + frag), False
+    return (f"#{m}-{tid}" if tid else f"#{m}"), False
 
 def link_text(ctx, e):
     t = "".join(e.itertext()).strip()
@@ -231,7 +227,10 @@ def render(ctx, e, depth=1):
         if fr is not None:
             url = fr.get("src")
             ctx.videos.append(url)
-            return f'<p class="tb-embed"><a href="{esc(url)}" target="_blank" rel="noopener">Watch this on OpenStax</a><span> — a video that is part of the original; it plays on their site.</span></p>'
+            what = ("the section summary video" if "Summary" in url else "the author introduce this chapter" if "Author" in url else "the video")
+            return (f'<details class="tb-video"><summary>Watch {esc(what)}</summary>'
+                    f'<div class="tb-video-box"><iframe data-src="{esc(url)}" title="Video from OpenStax" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>'
+                    f'<p class="tb-video-note">Streamed from OpenStax; <a href="{esc(url)}" target="_blank" rel="noopener">open it there</a> if it does not play.</p></details>')
         return ""
     if t == "image":
         return ""
@@ -342,7 +341,7 @@ def nav(rel):
 ATTRIB = (f'<p class="tb-attrib">Adapted from <a href="{OS_BOOK}" target="_blank" rel="noopener">{BOOK}</a> by OpenStax, '
           f'licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>. '
           f'Access for free at <a href="{OS_URL}" target="_blank" rel="noopener">openstax.org</a>. '
-          f'Changes: set in this site’s own pages and type, the images recompressed, the interactive exercises and videos linked rather than carried. '
+          f'Changes: set in this site’s own pages and type, the images recompressed, the videos embedded in folds, the interactive exercises linked rather than carried. '
           f'This adaptation is offered under the same licence.</p>')
 
 def page(title, desc, body, rel, extra_head=""):
@@ -405,46 +404,31 @@ def first_para(mod, n=220):
             return (t[:n].rsplit(" ", 1)[0] + "…") if len(t) > n else t
     return ""
 
-written = []
 manifest = []
-for idx, (num, title, mods) in enumerate(chapters):
-    fname = PAGE[mods[0]][0]
-    prev_ = chapters[idx - 1] if idx > 0 else None
-    next_ = chapters[idx + 1] if idx + 1 < len(chapters) else None
-    secs = []
-    body = [f'<div class="title-strip"><h1 class="name">{esc(title)}</h1><span class="anno">Chapter {num} of {len(chapters)}</span></div>']
-    body.append('<div class="tb-tools"><a class="tb-back" href="../textbook.html">&larr; Contents</a><span class="tb-spacer"></span>'
-                '<button type="button" class="tb-btn" data-expand="all">Expand all</button><button type="button" class="tb-btn" data-expand="none">Collapse all</button></div>')
-    for m in mods:
-        _, _, label = PAGE[m]
-        mt = mod_title(m)
-        is_intro = (label == "Introduction")
-        heading = "Introduction" if is_intro else f"{label} {mt}"
-        secs.append(dict(id=m, label=label, title=mt))
-        body.append(f'<details class="tb-sec{" tb-intro" if is_intro else ""}" id="{m}"{" open" if is_intro else ""}>'
-                    f'<summary><span class="tb-num">{"" if is_intro else esc(label)}</span><span class="tb-sec-title">{esc(mt if not is_intro else "Introduction")}</span></summary>'
-                    f'<div class="tb-body">{module_html(m)}</div></details>')
-    pn = '<nav class="tb-pn" aria-label="Chapters">'
-    pn += (f'<a href="{PAGE[prev_[2][0]][0]}"><span class="ck">Previous</span>{esc(prev_[1])}</a>' if prev_ else "<span></span>")
-    pn += (f'<a class="tb-next" href="{PAGE[next_[2][0]][0]}"><span class="ck">Next</span>{esc(next_[1])}</a>' if next_ else "<span></span>")
-    pn += "</nav>"
-    body.append(pn)
-    desc = f"Chapter {num} of OpenStax's Introduction to Behavioral Neuroscience, {title}: {first_para(mods[1] if len(mods) > 1 else mods[0], 150)}"
-    with open(os.path.join(OUT_DIR, fname), "w", encoding="utf-8") as fh:
-        fh.write(page(f"{num} · {title}", desc, "\n".join(body), "../"))
-    written.append(fname)
-    manifest.append(dict(num=num, title=title, file=fname, sections=secs, blurb=first_para(mods[1] if len(mods) > 1 else mods[0])))
+folds = []
 
-# preface and appendix
-for m in loose:
-    fname, _, _ = PAGE[m]
+def section_fold(m, is_intro):
+    _, _, label = PAGE[m]
     mt = mod_title(m)
-    body = [f'<div class="title-strip"><h1 class="name">{esc(mt)}</h1><span class="anno">{BOOK}</span></div>',
-            '<div class="tb-tools"><a class="tb-back" href="../textbook.html">&larr; Contents</a></div>',
-            f'<article class="tb-body tb-loose" id="{m}">{module_html(m)}</article>']
-    with open(os.path.join(OUT_DIR, fname), "w", encoding="utf-8") as fh:
-        fh.write(page(mt, f"{mt} of OpenStax's Introduction to Behavioral Neuroscience.", "\n".join(body), "../"))
-    written.append(fname)
+    return (f'<details class="tb-sec{" tb-intro" if is_intro else ""}" id="{m}"{" open" if is_intro else ""}>'
+            f'<summary><span class="tb-num">{"" if is_intro else esc(label)}</span><span class="tb-sec-title">{esc("Introduction" if is_intro else mt)}</span></summary>'
+            f'<div class="tb-body">{module_html(m)}</div></details>')
+
+for num, title, mods in chapters:
+    secs = [dict(id=m, label=PAGE[m][2], title=mod_title(m)) for m in mods]
+    blurb = first_para(mods[1] if len(mods) > 1 else mods[0])
+    inner_ = "".join(section_fold(m, PAGE[m][2] == "Introduction") for m in mods)
+    folds.append(f'<details class="tb-ch" id="ch{num}"><summary><span class="tb-chn">{num}</span><span class="tb-cht">{esc(title)}</span>'
+                 f'<span class="tb-chc">{len(mods) - 1} sections</span></summary>'
+                 f'<div class="tb-ch-body"><p class="tb-blurb">{esc(blurb)}</p>{inner_}</div></details>')
+    manifest.append(dict(num=num, title=title, sections=secs))
+
+def loose_fold(m):
+    mt = mod_title(m)
+    return (f'<details class="tb-ch tb-loose" id="{m}"><summary><span class="tb-chn"></span><span class="tb-cht">{esc(mt)}</span><span class="tb-chc"></span></summary>'
+            f'<div class="tb-ch-body"><div class="tb-body">{module_html(m)}</div></div></details>')
+pre = [m for m in loose if (MODS[m].get("class") or "") == "preface"]
+post = [m for m in loose if m not in pre]
 
 # the home-page card, from the cover
 cover = os.path.join(SRC, "cover", "introduction-behavioral-neuroscience-cover.jpg")
@@ -456,24 +440,16 @@ if os.path.exists(cover):
     card.paste(cv, ((1100 - cw) // 2, 20))
     card.save(os.path.join(SITE, "assets", "home", "textbook.jpg"), "JPEG", quality=84, optimize=True)
 
-# the contents page
-toc = []
-for ch in manifest:
-    items = "".join(f'<li><a href="textbook/{ch["file"]}#{s["id"]}"><span class="tb-num">{"" if s["label"] == "Introduction" else esc(s["label"])}</span>{esc(s["title"] if s["label"] != "Introduction" else "Introduction")}</a></li>' for s in ch["sections"])
-    toc.append(f'<details class="tb-ch" id="ch{ch["num"]}"><summary><span class="tb-chn">{ch["num"]}</span><span class="tb-cht">{esc(ch["title"])}</span>'
-               f'<span class="tb-chc">{len(ch["sections"]) - 1} sections</span></summary>'
-               f'<div class="tb-ch-body"><p class="tb-blurb">{esc(ch["blurb"])}</p><ol class="tb-secs">{items}</ol>'
-               f'<a class="tb-open" href="textbook/{ch["file"]}">Read chapter {ch["num"]} &rarr;</a></div></details>')
-loose_links = " · ".join(f'<a href="textbook/{PAGE[m][0]}">{esc(mod_title(m))}</a>' for m in loose)
+# the page
 contents = [f'<div class="title-strip"><h1 class="name">{BOOK}</h1><span class="anno">an OpenStax textbook, {len(chapters)} chapters</span></div>',
-            f'<p class="lede">The whole of OpenStax’s <em>{BOOK}</em>, set in this site’s own pages: {len(chapters)} chapters, {sum(len(c["sections"]) - 1 for c in manifest)} sections, {len(SIZES)} figures, from the cells of the nervous system to attention and executive function. '
-            f'Open a chapter below to see its sections, or read it straight through; every section on a chapter page folds open and closed on its own. The book is free and openly licensed, and so is this copy. {loose_links}.</p>',
+            f'<p class="lede">The whole of OpenStax\u2019s <em>{BOOK}</em> on this one page: {len(chapters)} chapters, {sum(len(c["sections"]) - 1 for c in manifest)} sections, {len(SIZES)} figures, from the cells of the nervous system to attention and executive function. '
+            f'Every chapter folds open to its sections and every section to its text, so read one section or the whole book without leaving the page. The book is free and openly licensed, and so is this copy.</p>',
             '<div class="tb-tools"><span class="tb-spacer"></span><button type="button" class="tb-btn" data-expand="all">Expand all</button><button type="button" class="tb-btn" data-expand="none">Collapse all</button></div>',
-            '<div class="tb-toc">' + "".join(toc) + "</div>"]
+            '<div class="tb-toc">' + "".join(loose_fold(m) for m in pre) + "".join(folds) + "".join(loose_fold(m) for m in post) + "</div>"]
 with open(os.path.join(SITE, "textbook.html"), "w", encoding="utf-8") as fh:
-    fh.write(page(BOOK, f"OpenStax's {BOOK}, all {len(chapters)} chapters, set in the site's own pages with every section expandable.", "\n".join(contents), ""))
+    fh.write(page(BOOK, f"OpenStax's {BOOK}, all {len(chapters)} chapters on one page, every chapter and section expandable.", "\n".join(contents), ""))
 with open(os.path.join(SITE, "assets", "textbook", "contents.json"), "w", encoding="utf-8") as fh:
-    json.dump(dict(book=BOOK, chapters=[dict(num=c["num"], title=c["title"], file=c["file"], sections=c["sections"]) for c in manifest]), fh, ensure_ascii=False, indent=1)
+    json.dump(dict(book=BOOK, chapters=manifest), fh, ensure_ascii=False, indent=1)
 
 total = sum(os.path.getsize(os.path.join(IMG_DIR, f)) for f in os.listdir(IMG_DIR))
-print(f"wrote textbook.html and {len(written)} chapter pages, {len(SIZES)} images ({total // 1048576} MB as WebP)")
+print(f"wrote textbook.html ({os.path.getsize(os.path.join(SITE, 'textbook.html')) // 1024} KB) with {len(chapters)} chapters, {len(SIZES)} images ({total // 1048576} MB as WebP)")

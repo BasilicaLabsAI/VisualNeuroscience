@@ -7,8 +7,8 @@ here first.
 
 ## Introduction to Behavioral Neuroscience (OpenStax, CC BY-NC-SA 4.0)
 
-**What.** The whole of the Digital Textbook, `site/textbook.html` and the chapter pages under
-`site/textbook/`, with the figures under `site/assets/textbook/img/`: OpenStax's *Introduction
+**What.** The whole of the Digital Textbook, `site/textbook.html`, with the figures under
+`site/assets/textbook/img/`: OpenStax's *Introduction
 to Behavioral Neuroscience*, converted from its published source
 (<https://github.com/openstax/osbooks-neuroscience>) by `scripts/textbook/build.py`.
 
@@ -20,12 +20,14 @@ the same licence, and say so.
 **Attribution.** Every page ends with the attribution OpenStax asks for: the title and author,
 the licence with its link, and "Access for free at
 <https://openstax.org/books/introduction-behavioral-neuroscience/pages/1-introduction>", with a
-note of what was changed (set in the site's pages and type, images recompressed, exercises and
-videos linked rather than carried). Figures keep the credits the book gives them in their
+note of what was changed (set in the site's pages and type, images recompressed, videos embedded
+in folds, exercises linked rather than carried). Figures keep the credits the book gives them in their
 captions; several are third-party images under their own CC licences, named there.
 
-**Not carried.** The interactive exercises and the videos are served from OpenStax's own
-platform and are not in the source; the pages link to them rather than reproducing them.
+**Not carried.** The interactive exercises are served from OpenStax's own platform and are not
+in the source; the page links to them. The videos are embedded from OpenStax's own addresses,
+each player created only when its fold is opened, so nothing is copied and nothing loads until
+asked for.
 
 ## Brodmann Areas diagram (permission granted)
 

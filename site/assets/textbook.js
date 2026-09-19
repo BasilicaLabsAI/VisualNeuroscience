@@ -18,6 +18,14 @@
   }
   window.addEventListener("hashchange", openTarget);
   openTarget();
+  /* a video's player is only created when its fold is opened, so a page of
+     a hundred sections does not load forty players on arrival */
+  document.addEventListener("toggle", function(e){
+    var d = e.target;
+    if (!d.classList || !d.classList.contains("tb-video") || !d.open) return;
+    var f = d.querySelector("iframe[data-src]");
+    if (f){ f.src = f.getAttribute("data-src"); f.removeAttribute("data-src"); }
+  }, true);
   document.addEventListener("click", function(e){
     var b = e.target.closest && e.target.closest("[data-expand]");
     if (!b) return;

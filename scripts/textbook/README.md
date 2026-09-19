@@ -1,10 +1,9 @@
 # The Digital Textbook: OpenStax's book, built into the site
 
 `build.py` turns OpenStax's *Introduction to Behavioral Neuroscience* from its published source into
-the site's Digital Textbook: `site/textbook.html` (the contents, every chapter folding open to its
-sections) and `site/textbook/NN-slug.html` (a page per chapter, every section folding open to its
-text), plus the preface and appendix as pages of their own, and every figure recompressed to WebP
-under `site/assets/textbook/img/`. The pages' dress is `site/assets/textbook.css` and their folding
+the site's Digital Textbook: `site/textbook.html`, the whole book on one page, every chapter a fold
+that opens to its sections and every section a fold that opens to its text, the preface and appendix
+folds of their own, and every figure recompressed to WebP under `site/assets/textbook/img/`. The pages' dress is `site/assets/textbook.css` and their folding
 `site/assets/textbook.js`.
 
 ## Rebuild

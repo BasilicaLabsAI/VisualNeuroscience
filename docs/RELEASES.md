@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.21 — 19 September 2026 — The whole book on one page
+Commit · Put the whole textbook on one page at full width, and embed its videos
+
+The Digital Textbook no longer opens a chapter on a page of its own: the whole book is one page. A chapter folds open to its sections where it stands, each section folds open to its text, and Expand all lays the entire book out end to end. The text now uses the full width of the screen, with room at the edges, instead of a narrow column down the middle. The book's forty videos, the chapter introductions by their authors and the section summaries, are embedded rather than linked, each in a fold that creates the player only when it is opened.
+
 ## v10.20 — 19 September 2026 — The receptors, for newcomers
-Commit · Give every receptor its plain name, a drugs line and a popup behind each word of its kind
+Commit `d1c870f` · Give every receptor its plain name, a drugs line and a popup behind each word of its kind
 
 The receptor tiles now speak to someone meeting them for the first time. Every code carries its plain name underneath: 5-HT2A is the serotonin-2A receptor, Nav1.6 the voltage-gated sodium channel 1.6, SERT the serotonin reuptake transporter. A new Drugs line names what people have heard of that acts there: nicotine, alcohol, caffeine, the psychedelics, the benzodiazepines, the SSRIs, the antipsychotics, the beta-blockers, morphine and naloxone, ketamine, capsaicin, paracetamol, and the poisons, from strychnine to pufferfish. The section now opens with the point that matters most, that ionotropic receptors are fast and brief and metabotropic ones slow and lasting, and every word in a tile's kind, Ionotropic, Metabotropic, GPCR, Gs, Gi/o, Gq and the rest, is a separate link that opens a plain explanation on a hover on a desk or a tap on a phone, as do affinity, agonist, antagonist and autoreceptor in the introduction.
 

@@ -4,7 +4,6 @@
   {
    "num": 1,
    "title": "Structure and Function of the Nervous System: Cells and Anatomy",
-   "file": "01-structure-and-function-of-the-nervous-system.html",
    "sections": [
     {
      "id": "m00026",
@@ -41,7 +40,6 @@
   {
    "num": 2,
    "title": "Neurophysiology",
-   "file": "02-neurophysiology.html",
    "sections": [
     {
      "id": "m00011",
@@ -78,7 +76,6 @@
   {
    "num": 3,
    "title": "Basic Neurochemistry",
-   "file": "03-basic-neurochemistry.html",
    "sections": [
     {
      "id": "m00027",
@@ -105,7 +102,6 @@
   {
    "num": 4,
    "title": "Comparative Neuroscience",
-   "file": "04-comparative-neuroscience.html",
    "sections": [
     {
      "id": "m00031",
@@ -147,7 +143,6 @@
   {
    "num": 5,
    "title": "Neurodevelopment",
-   "file": "05-neurodevelopment.html",
    "sections": [
     {
      "id": "m00086",
@@ -179,7 +174,6 @@
   {
    "num": 6,
    "title": "Vision",
-   "file": "06-vision.html",
    "sections": [
     {
      "id": "m00087",
@@ -221,7 +215,6 @@
   {
    "num": 7,
    "title": "Hearing and Balance",
-   "file": "07-hearing-and-balance.html",
    "sections": [
     {
      "id": "m00001",
@@ -253,7 +246,6 @@
   {
    "num": 8,
    "title": "The Chemical Senses",
-   "file": "08-the-chemical-senses.html",
    "sections": [
     {
      "id": "m00038",
@@ -290,7 +282,6 @@
   {
    "num": 9,
    "title": "Touch and Pain",
-   "file": "09-touch-and-pain.html",
    "sections": [
     {
      "id": "m00006",
@@ -322,7 +313,6 @@
   {
    "num": 10,
    "title": "Motor Control",
-   "file": "10-motor-control.html",
    "sections": [
     {
      "id": "m00017",
@@ -349,7 +339,6 @@
   {
    "num": 11,
    "title": "Sexual Behavior and Development",
-   "file": "11-sexual-behavior-and-development.html",
    "sections": [
     {
      "id": "m00101",
@@ -381,7 +370,6 @@
   {
    "num": 12,
    "title": "Stress",
-   "file": "12-stress.html",
    "sections": [
     {
      "id": "m00078",
@@ -413,7 +401,6 @@
   {
    "num": 13,
    "title": "Emotion and Mood",
-   "file": "13-emotion-and-mood.html",
    "sections": [
     {
      "id": "m00048",
@@ -445,7 +432,6 @@
   {
    "num": 14,
    "title": "Psychopharmacology",
-   "file": "14-psychopharmacology.html",
    "sections": [
     {
      "id": "m00049",
@@ -477,7 +463,6 @@
   {
    "num": 15,
    "title": "Biological Rhythms and Sleep",
-   "file": "15-biological-rhythms-and-sleep.html",
    "sections": [
     {
      "id": "m00094",
@@ -514,7 +499,6 @@
   {
    "num": 16,
    "title": "Homeostasis",
-   "file": "16-homeostasis.html",
    "sections": [
     {
      "id": "m00054",
@@ -551,7 +535,6 @@
   {
    "num": 17,
    "title": "Neuroimmunology",
-   "file": "17-neuroimmunology.html",
    "sections": [
     {
      "id": "m00072",
@@ -583,7 +566,6 @@
   {
    "num": 18,
    "title": "Learning and Memory",
-   "file": "18-learning-and-memory.html",
    "sections": [
     {
      "id": "m00060",
@@ -615,7 +597,6 @@
   {
    "num": 19,
    "title": "Attention and Executive Function",
-   "file": "19-attention-and-executive-function.html",
    "sections": [
     {
      "id": "m00065",
