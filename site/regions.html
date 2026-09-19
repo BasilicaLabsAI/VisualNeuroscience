@@ -539,6 +539,16 @@ table.dtable td.num{ font-size:.84rem; }
 .rx-sub{ font-family:var(--font-brand); font-weight:600; font-size:.66rem; letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
   border-bottom:1px solid var(--ink); padding:.2rem .1rem .45rem; margin:calc(var(--gap) * 1.5) 0 var(--gap); display:flex; justify-content:space-between; gap:.6rem; }
 .rx-sub small{ font-family:var(--font-serif); font-style:italic; font-weight:400; letter-spacing:0; text-transform:none; color:var(--ink-60); font-size:.82rem; }
+/* the reference table folds under its heading, shut until asked for, so
+   it does not trail beneath the density table */
+.rx-fold > summary{ list-style:none; cursor:pointer; }
+.rx-fold > summary::-webkit-details-marker{ display:none; }
+.rx-fold > summary .rx-sub{ margin-bottom:0; align-items:baseline; }
+.rx-fold[open] > summary .rx-sub{ margin-bottom:var(--gap); }
+.rx-fold > summary .rx-sub small{ margin-right:auto; }
+.rx-fold > summary .rx-sub::after{ content:"+"; font-weight:500; font-size:1.1em; letter-spacing:0; }
+.rx-fold[open] > summary .rx-sub::after{ content:"\2212"; }
+@media (hover: hover){ .rx-fold > summary:hover .rx-sub{ border-bottom-width:2px; padding-bottom:calc(.45rem - 1px); } }
 .rx-sources{ margin-top:calc(var(--gap) * 1.5); border-top:1px solid var(--ink-35); padding-top:1rem; font-family:var(--font-serif); font-size:.88rem; line-height:1.55; color:var(--ink-60); }
 .rx-sources h3{ font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60); margin:.9rem 0 .3rem; }
 .rx-sources h3:first-child{ margin-top:0; }
@@ -968,8 +978,10 @@ mark{ background:var(--ink); color:var(--paper); }
           <span class="heat-legend" aria-hidden="true"><i></i><small>least</small><small>most</small></span>
         </div>
         <div id="types-heat" class="heat"></div>
-        <h3 class="rx-sub">Receptor types <small>a reference of sub-types, families and mechanisms</small></h3>
-        <div id="types-table" class="table-wrap"></div>
+        <details class="rx-fold" id="types-fold">
+          <summary><h3 class="rx-sub">Receptor types <small>a reference of sub-types, families and mechanisms</small></h3></summary>
+          <div id="types-table" class="table-wrap"></div>
+        </details>
       </div>
     </div>
     <p class="rx-note" id="rx-coverage"></p>

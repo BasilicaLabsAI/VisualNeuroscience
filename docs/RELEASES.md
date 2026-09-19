@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.33 — 19 September 2026 — The reference table folds away
+Commit · Fold the receptor-types reference shut beneath the density table
+
+The long reference of sub-units, families and mechanisms trailed beneath the density table on the Receptor types tab, a hundred and sixty rows on a phone. It now folds shut under its heading and opens on a click.
+
 ## v10.32 — 19 September 2026 — A receptor picked from the table
-Commit · Let a receptor's name in the density table pick it for the chart
+Commit `2e1ecd3` · Let a receptor's name in the density table pick it for the chart
 
 The receptor-types table names every receptor down its left edge, and those names are now buttons: click one and the chart comes forward with that receptor picked, its transmitter and its schematic drawn beneath, the section scrolled back to its top. The receptor already charted is underlined in the table, and the table's note says what a click does.
 
