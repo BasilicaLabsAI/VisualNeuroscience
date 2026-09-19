@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.16 — 19 September 2026 — The Network Atlas squares up
+Commit · Set the ring and the render side by side as squares, with the three planes in a band beneath
+
+On a desktop the Network Atlas used to give the ring a square of its own and cram the four scan boxes into whatever was left, which at some widths meant four boxes eighty pixels wide. The ring and the 3D render now sit side by side as two equal squares, and the axial, coronal and sagittal planes run in a band beneath them, each a third of the same width, so the ring, the brain and the three planes are all readable at once.
+
 ## v10.15 — 19 September 2026 — The multipolar neuron's axon gets its sheath
-Commit · Sheathe the multipolar neuron's axon and mark its nodes of Ranvier
+Commit `cca5deb` · Sheathe the multipolar neuron's axon and mark its nodes of Ranvier
 
 The multipolar neuron's axon now leaves the initial segment under a myelin sheath: three lengths of it, each thinning at its paranodes, with a bare node of Ranvier between each pair, so the plate shows where the action potential is made and where it jumps. Both are structures in their own right, with their own colour, description and quiz question, which brings the cell to twenty. The two mitochondria that used to travel down the axon are gone, since past the initial segment the axon is under its sheath and nothing inside it can be seen.
 
