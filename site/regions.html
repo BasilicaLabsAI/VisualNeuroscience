@@ -514,6 +514,22 @@ table.dtable td.num{ font-size:.84rem; }
 .heat{ overflow-x:auto; margin-bottom:var(--gap); }
 .heat.fits{ overflow:visible; }
 :root[data-native] .heat thead th{ top:calc(env(safe-area-inset-top) + 44px); }
+/* ── every receptor in a row beneath the table, slid across by thumb or
+   arrow; a name clicked in the table slides to its card ── */
+.rx-slide.rxfig{ display:block; margin:var(--gap) 0 calc(var(--gap) * 1.5); }
+.rx-slide-head{ display:flex; justify-content:space-between; align-items:center; gap:.6rem; margin-bottom:.5rem;
+  font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60); }
+.rx-slide-nav{ display:inline-flex; gap:.3rem; }
+.rx-slide-nav button{ border:1px solid var(--ink-35); background:var(--paper); color:var(--ink); cursor:pointer; font:inherit; font-size:.8rem; line-height:1; padding:.3rem .6rem; }
+@media (hover: hover){ .rx-slide-nav button:hover{ border-color:var(--ink); } }
+.rx-slide-track{ list-style:none; margin:0; padding:0 0 .5rem; display:flex; align-items:flex-start; gap:var(--gap); overflow-x:auto; scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain; scroll-behavior:smooth; }
+.rx-slide-track > .rxreg-item{ flex:0 0 min(300px, 82vw); scroll-snap-align:start; }
+.rx-slide-track > .rxreg-item.on{ border-color:var(--ink); }
+.rx-slide-fam{ font-family:var(--font-brand); font-weight:500; font-size:.52rem; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60); margin-bottom:.2rem; }
+.rx-slide-links{ display:flex; gap:1rem; margin-top:auto; }
+.rx-slide-links button.rxfig-more{ border:0; border-bottom:1px solid var(--ink); border-radius:0; background:none; padding:0; cursor:pointer; line-height:inherit; }
+.rx-slide-links .rxfig-more{ margin-top:.5rem; }
 .heat table{ border-collapse:separate; border-spacing:0; font-size:.72rem; line-height:1.15; }
 .heat th, .heat td{ padding:0; border-right:1px solid var(--paper); border-bottom:1px solid var(--paper); }
 .heat thead th{ position:sticky; top:0; z-index:2; background:var(--paper); vertical-align:bottom; height:9.5rem; }
@@ -990,6 +1006,16 @@ mark{ background:var(--ink); color:var(--paper); }
           <span class="heat-legend" aria-hidden="true"><i></i><small>least</small><small>most</small></span>
         </div>
         <div id="types-heat" class="heat"></div>
+        <div class="rx-slide rxfig region" id="types-slide" data-for="">
+          <div class="rx-slide-head">
+            <span id="types-slide-count" aria-live="polite"></span>
+            <span class="rx-slide-nav">
+              <button type="button" data-slide="-1" aria-label="Previous receptor">&larr;</button>
+              <button type="button" data-slide="1" aria-label="Next receptor">&rarr;</button>
+            </span>
+          </div>
+          <ul class="rx-slide-track" id="types-slide-track"></ul>
+        </div>
         <details class="rx-fold" id="types-fold">
           <summary><h3 class="rx-sub">Receptor types <small>a reference of sub-types, families and mechanisms</small></h3></summary>
           <div id="types-table" class="table-wrap"></div>
@@ -2435,10 +2461,77 @@ function renderHeat() {
   });
   host.innerHTML = html + "</tbody></table>";
   host.querySelectorAll("th.col button").forEach(b => b.addEventListener("click", () => toggleRegion(BY_BASE[b.dataset.base])));
-  host.querySelectorAll("th.rlabel button").forEach(b => b.addEventListener("click", () => pickReceptor(b.dataset.rx)));
+  host.querySelectorAll("th.rlabel button").forEach(b => b.addEventListener("click", () => pickReceptor(b.dataset.rx, true)));
   fitHeat();
   markPicked();
 }
+/* ── the strip of every receptor beneath the table: each as the schematic
+   of its kind with its plain name, what it does and where it is densest,
+   drawn once per source, the picked one outlined and slid into view ── */
+function renderTypesStrip() {
+  const strip = document.getElementById("types-slide"), track = document.getElementById("types-slide-track"), F = window.VN_RXFIG;
+  if (!strip || !F) return;
+  const key = "strip:" + layer;
+  if (strip.getAttribute("data-for") === key) { markStrip(); return; }
+  strip.setAttribute("data-for", key);
+  F.load().then(data => {
+    if (strip.getAttribute("data-for") !== key) return;
+    track.textContent = "";
+    receptors().slice().sort((a, b) => FAMILIES.indexOf(a.family) - FAMILIES.indexOf(b.family)).forEach(r => {
+      const it = F.entry(data, r.id);
+      const li = document.createElement("li");
+      li.className = "rxreg-item"; li.dataset.rx = r.id;
+      const cap = F.el("div", "rxreg-cap");
+      cap.appendChild(F.el("span", "rx-slide-fam", r.family));
+      if (it) { const kind = data.kinds[it.kind]; li.appendChild(F.diagram(kind, F.fillFor(it))); cap.appendChild(F.kicker(kind)); }
+      cap.appendChild(F.el("span", "cn", shortName(r)));
+      if (it && it.plain) cap.appendChild(F.el("span", "cs", it.plain));
+      if (it) cap.appendChild(F.el("p", "rxfig-does", it.effect));
+      const fact = F.el("p", "rxreg-fact" + (r.data ? "" : " nei"), r.data ? receptorFacts(r) : r.reason);
+      cap.appendChild(fact);
+      const links = F.el("div", "rx-slide-links");
+      const chart = F.el("button", "rxfig-more", "Chart it \u2192"); chart.type = "button";
+      chart.addEventListener("click", () => pickReceptor(r.id));
+      links.appendChild(chart);
+      if (it) { const a = F.el("a", "rxfig-more", "The whole entry \u2192"); a.href = "microanatomy.html#rx-" + it.id; links.appendChild(a); }
+      cap.appendChild(links);
+      li.appendChild(cap);
+      track.appendChild(li);
+    });
+    F.popups(data.rx.glossary, data.rx.steps);
+    markStrip();
+    slideTo(axisMode === "receptor" ? dropdown.value : null, false);
+  }).catch(err => { if (window.console) console.warn(err); });
+}
+function markStrip() {
+  const on = axisMode === "receptor" ? dropdown.value : null;
+  document.querySelectorAll("#types-slide-track > .rxreg-item").forEach(li => li.classList.toggle("on", li.dataset.rx === on));
+  stripCount();
+}
+function stripCount() {
+  const track = document.getElementById("types-slide-track"), out = document.getElementById("types-slide-count");
+  const cards = track.children; if (!cards.length) { out.textContent = ""; return; }
+  const step = cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : cards[0].offsetWidth;
+  if (!step) return;                        /* the pane is hidden; counted when it shows */
+  const i = Math.min(cards.length - 1, Math.max(0, Math.round(track.scrollLeft / step)));
+  out.textContent = "Every receptor \u00B7 " + (i + 1) + " of " + cards.length + " \u00B7 " + shortName(receptors().find(r => r.id === cards[i].dataset.rx) || { name: "" });
+}
+/* slide the strip to a receptor's card; bring the strip into view too when
+   the pick came from the table above */
+function slideTo(id, show) {
+  const track = document.getElementById("types-slide-track");
+  const card = id && track.querySelector("[data-rx=\"" + id + "\"]");
+  if (!card) return;
+  track.scrollTo({ left: card.offsetLeft - track.offsetLeft, behavior: show ? "smooth" : "auto" });
+  if (show) document.getElementById("types-slide").scrollIntoView({ block: "center", behavior: "smooth" });
+}
+document.getElementById("types-slide-track").addEventListener("scroll", () => { clearTimeout(stripCount._t); stripCount._t = setTimeout(stripCount, 80); }, { passive: true });
+document.querySelectorAll("#types-slide [data-slide]").forEach(b => b.addEventListener("click", () => {
+  const track = document.getElementById("types-slide-track"), c = track.children;
+  if (!c.length) return;
+  const step = c[1] ? c[1].offsetLeft - c[0].offsetLeft : c[0].offsetWidth;
+  track.scrollBy({ left: step * Number(b.dataset.slide), behavior: "smooth" });
+}));
 /* the table scrolls sideways only when it must: where it fits the screen it
    is left open, so its column names can stick to the top of the window */
 function fitHeat() {
@@ -2450,7 +2543,7 @@ function fitHeat() {
 /* a receptor named in the table becomes the chart's receptor: the axis
    goes to receptors if it was on regions, the picker takes it, the chart
    tab comes forward and the section scrolls back to the top */
-function pickReceptor(id) {
+function pickReceptor(id, stay) {
   if (!receptors().some(r => r.id === id)) return;
   if (axisMode !== "receptor") {
     axisMode = "receptor";
@@ -2458,6 +2551,11 @@ function pickReceptor(id) {
     fillDropdown(false);
   }
   dropdown.value = id;
+  if (stay) {            /* picked in the table: stay on this tab and slide to its card below */
+    redraw();
+    slideTo(id, true);
+    return;
+  }
   const chartTab = document.querySelector("[data-tab=\"chart\"]");
   if (chartTab && !chartTab.classList.contains("active")) chartTab.click(); else renderChart();
   redraw();
@@ -2497,7 +2595,7 @@ function renderTypesTable() {
   }
   const host = document.getElementById("types-table");
   host.innerHTML = html + "</tbody></table>";
-  host.querySelectorAll("tr.pickable").forEach(tr => tr.addEventListener("click", () => pickReceptor(tr.dataset.rx)));
+  host.querySelectorAll("tr.pickable").forEach(tr => tr.addEventListener("click", () => pickReceptor(tr.dataset.rx, true)));
 }
 function cellOrDash(v) { return v && v.trim() ? escapeHtml(v) : "<span class=\"cell-empty\" title=\"not recorded in the source data\">&mdash;</span>"; }
 
@@ -2533,7 +2631,7 @@ function markPicked() {
 if (window.MN_SEL) MN_SEL.onChange(markPicked);
 
 /* ── controls ── */
-function redraw() { renderChart(); renderDensityTable(); renderHeat(); renderTypesTable(); renderCoverage(); }
+function redraw() { renderChart(); renderDensityTable(); renderHeat(); renderTypesStrip(); renderTypesTable(); renderCoverage(); }
 dropdown.addEventListener("change", redraw);
 document.querySelectorAll("[data-layer]").forEach(btn => {
   btn.addEventListener("click", () => {
@@ -2561,7 +2659,7 @@ document.querySelectorAll("[data-tab]").forEach(btn => {
     dropdown.parentElement.classList.toggle("inapplicable", tab === "types");
     document.getElementById("axis-group").classList.toggle("inapplicable", tab === "types");
     if (tab === "chart") renderChart();
-    if (tab === "types") fitHeat();          /* measured only once it is on show */
+    if (tab === "types") { fitHeat(); renderTypesStrip(); }   /* measured, and slid, only once on show */
   });
 });
 

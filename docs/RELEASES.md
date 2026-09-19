@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.36 — 19 September 2026 — Every receptor in a row beneath the table
+Commit · Slide every receptor across beneath the density table, and let a name picked in it slide to its card
+
+Beneath the receptor-by-region table now runs a row of all sixty-nine receptors, one card each: the schematic of its kind with its transmitter and G protein written in, its plain name, what it does, and where it is densest and sparsest in this source, slid across by a thumb on a phone or by the arrows on a computer, with a count saying which is in view. Picking a receptor's name in the table, or a row of the reference below it, no longer leaves the tab: it outlines that receptor's card and slides the row to it. Each card offers to chart the receptor, or to open its whole entry on the Microanatomy page.
+
 ## v10.35 — 19 September 2026 — The density table sits in the page
-Commit · Take the density table out of its own scrolling box
+Commit `f1d10ce` · Take the density table out of its own scrolling box
 
 The receptor-by-region table was boxed in a window of its own, with its own vertical scroll inside the page's, so a thumb on a phone never knew which it was moving. The box is gone: the table now runs down the page at its full height. Where its columns are wider than the screen it scrolls sideways alone, the receptor names staying put at the left; where it fits, the column names stay at the top of the window as the page scrolls past.
 
