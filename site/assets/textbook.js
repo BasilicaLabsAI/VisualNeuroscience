@@ -26,6 +26,27 @@
     var f = d.querySelector("iframe[data-src]");
     if (f){ f.src = f.getAttribute("data-src"); f.removeAttribute("data-src"); }
   }, true);
+  /* a citation in the text opens the entry it cites right there, under the
+     line, and closes on a second click or the cross */
+  document.addEventListener("click", function(e){
+    var c = e.target.closest && e.target.closest(".tb-cite");
+    if (!c) return;
+    var open = c.getAttribute("aria-expanded") === "true";
+    var next = c.nextElementSibling;
+    if (next && next.classList.contains("tb-cite-pop")) next.parentNode.removeChild(next);
+    c.setAttribute("aria-expanded", open ? "false" : "true");
+    if (open) return;
+    var ref = document.getElementById(c.getAttribute("data-ref"));
+    if (!ref) return;
+    var pop = document.createElement("span");
+    pop.className = "tb-cite-pop";
+    pop.innerHTML = ref.innerHTML;
+    var x = document.createElement("button");
+    x.type = "button"; x.className = "tb-cite-x"; x.setAttribute("aria-label", "Close"); x.textContent = "×";
+    x.addEventListener("click", function(){ pop.parentNode.removeChild(pop); c.setAttribute("aria-expanded", "false"); });
+    pop.appendChild(x);
+    c.parentNode.insertBefore(pop, c.nextSibling);
+  });
   document.addEventListener("click", function(e){
     var b = e.target.closest && e.target.closest("[data-expand]");
     if (!b) return;

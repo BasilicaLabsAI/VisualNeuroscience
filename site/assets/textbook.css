@@ -189,6 +189,24 @@ button{ font:inherit; color:inherit; }
 .tb-refs[open] > summary::after{ content:" \2212"; }
 .tb-refs-body{ margin-top:.6rem; font-size:.88rem; line-height:1.5; color:var(--ink-60); overflow-wrap:anywhere; }
 .tb-refs-body p{ margin-bottom:.55rem; }
+.tb-refs-body p:target, .tb-refs-body p.lit{ color:var(--ink); }
+/* a citation, and the entry it opens under the line */
+.tb-cite{
+  font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer;
+  text-decoration:underline dotted; text-decoration-color:var(--ink-35); text-underline-offset:3px;
+}
+@media (hover: hover){ .tb-cite:hover{ text-decoration-style:solid; text-decoration-color:var(--ink); } }
+.tb-cite[aria-expanded="true"]{ text-decoration-style:solid; text-decoration-color:var(--ink); }
+.tb-cite-pop{
+  display:block; position:relative; margin:.5rem 0 .8rem; padding:.5rem 2rem .55rem .8rem;
+  border:1px solid var(--ink-35); font-size:.86rem; line-height:1.5; color:var(--ink-60); overflow-wrap:anywhere;
+}
+.tb-cite-pop a{ color:inherit; }
+.tb-cite-x{
+  position:absolute; top:.2rem; right:.4rem; font:inherit; font-size:1rem; line-height:1;
+  color:var(--ink-60); background:none; border:0; padding:.2rem .3rem; cursor:pointer;
+}
+@media (hover: hover){ .tb-cite-x:hover{ color:var(--ink); } }
 .tb-practice{ border:1px dashed var(--ink-35); padding:.6rem .9rem; margin-top:1.2rem; font-size:.92rem; }
 .tb-video{ border:1px solid var(--ink-35); margin:.6rem 0 1.2rem; }
 .tb-video > summary{

@@ -28,6 +28,13 @@ skipped on a rebuild, so re-running after a text change takes seconds.
   iframes to OpenStax's own platform and are not in the source. A section that has them ends
   with one line saying so, linking to the book on openstax.org; a video becomes a link where it
   stood.
+- The citations in the text, "(Surname, 2009)", "Surname et al. (2012)", "Surname & Other, 2015",
+  are not marked up in the source. The build numbers each section's reference entries, indexes
+  them by first author and year, finds the citations in the text with a pattern, and wraps each
+  one that has an entry in a button carrying the entry's id; the page opens the entry under the
+  line on a click. Where two entries share an author and a year, "et al." prefers an entry with
+  three or more authors and a pair prefers one whose second author matches. Web addresses in the
+  reference lists become links.
 - Every id in a module is prefixed with the module's id, so nothing collides when several
   sections share a page.
 - Every page ends with the attribution the CC BY-NC-SA 4.0 licence asks for. See

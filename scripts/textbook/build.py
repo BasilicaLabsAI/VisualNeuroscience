@@ -312,10 +312,110 @@ def table(ctx, e, depth):
             (f"<thead>{rows(thead, 'th')}</thead>" if thead is not None else "") +
             (f"<tbody>{rows(tbody, 'td')}</tbody>" if tbody is not None else "") + "</table></div>")
 
-def module_html(mod):
+# ── citations: the "(Surname, 2009)" in the text, tied to the entry it cites ──
+SURNAME = r"[A-Z][\w'’\-]+(?: [A-Z][\w'’\-]+)?"
+REF_AUTHORS = re.compile(r"^(.*?)\s*\((\d{4}[a-z]?)[^)]*\)")
+# a surname's second word, if any, is a word, not a pair of initials
+REF_SURNAMES = re.compile(r"([A-Z][\w'’\-]+(?: [A-Z][a-z'’\-]+)?)\s*,?\s+(?:[A-Z]{1,3}\.?\s?-?)+")
+CITE = re.compile(r"(?<![\w>])(" + SURNAME + r")(\s+et al\.|\s+(?:&amp;|and)\s+(" + SURNAME + r"))?,?\s+\(?(\d{4}[a-z]?)\)?(?![\w<])")
+URL = re.compile(r"(https?://[^\s<>\)\]]+?)([.,;)\]]*)(?=\s|$|<)")
+
+def text_segments(html_):
+    """Alternate (is_tag, text) pieces, so a substitution can leave markup alone."""
+    return re.split(r"(<[^>]+>)", html_)
+
+def linkify(html_):
+    out = []
+    for seg in text_segments(html_):
+        if seg.startswith("<"): out.append(seg); continue
+        out.append(URL.sub(lambda m: f'<a href="{m.group(1)}" target="_blank" rel="noopener">{m.group(1)}</a>{m.group(2)}', seg))
+    return "".join(out)
+
+def ref_index(refs_html, mod):
+    """Number the entries of a references list and index them by first
+    author and year. Returns the list with ids on its entries."""
+    idx = {}
+    n = 0
+    def number(m):
+        nonlocal n
+        n += 1
+        rid = f"{mod}-ref-{n}"
+        text = re.sub(r"<[^>]+>", "", m.group(2))
+        am = REF_AUTHORS.match(text)
+        if am:
+            authors, year = am.group(1), am.group(2)
+            names = REF_SURNAMES.findall(authors)
+            if not names: names = [authors.strip(" .,")]
+            entry = (rid, len(names), names[1].lower() if len(names) > 1 else "")
+            idx.setdefault((names[0].lower(), year), []).append(entry)
+            for nm in names[1:]:
+                idx.setdefault(("~" + nm.lower(), year), []).append(entry)
+        return f'<p id="{rid}"{m.group(1)}>{m.group(2)}</p>'
+    refs_html = re.sub(r'<p( id="[^"]*")?>(.*?)</p>', number, refs_html, flags=re.S)
+    return refs_html, idx
+
+def cite_wrap(html_, chain):
+    """Wrap each citation that an index in the chain can place. A name whose
+    year matches nothing falls back to the one entry of that name, if there
+    is exactly one, since the book itself sometimes cites the wrong year."""
+    if not any(chain): return html_
+    def find(s1, year):
+        for idx in chain:
+            c = idx.get((s1.lower(), year))
+            if c: return c
+        for idx in chain:
+            c = [v for (n, y), vs in idx.items() if n == s1.lower() for v in vs]
+            if len(c) == 1: return c
+        for idx in chain:
+            c = idx.get(("~" + s1.lower(), year))
+            if c: return c
+        return None
+    def pick(m):
+        s1, etal, s2, year = m.group(1), m.group(2), m.group(3), m.group(4)
+        cands = find(s1, year)
+        if not cands: return m.group(0)
+        if etal and "et al" in etal: best = [c for c in cands if c[1] >= 3] or cands
+        elif s2: best = [c for c in cands if c[2] == s2.lower()] or cands
+        else: best = [c for c in cands if c[1] == 1] or cands
+        label, tail = m.group(0), ""
+        if label.endswith(")") and "(" not in label:      # the bracket belongs to the sentence, not the citation
+            label, tail = label[:-1], ")"
+        return f'<button type="button" class="tb-cite" data-ref="{best[0][0]}" aria-expanded="false">{label}</button>{tail}'
+    out = []
+    for seg in text_segments(html_):
+        if seg.startswith("<"): out.append(seg); continue
+        out.append(CITE.sub(pick, seg))
+    return "".join(out)
+
+RENDERED = {}     # mod -> (before the references, the references, after them, the index)
+def render_module(mod):
     ctx = Ctx(mod)
     root = MODS[mod]
     body = render(ctx, root.find("c:content", NS), 1)
+    m = re.search(r'<details class="tb-refs".*?</details>', body, re.S)
+    if m:
+        refs, idx = ref_index(m.group(0), mod)
+        RENDERED[mod] = (body[:m.start()], linkify(refs), body[m.end():], idx, ctx)
+    else:
+        RENDERED[mod] = (body, "", "", {}, ctx)
+
+def merged(idxs):
+    out = {}
+    for idx in idxs:
+        for k, v in idx.items(): out.setdefault(k, []).extend(v)
+    return out
+
+for _m in MODS: render_module(_m)
+BOOK_IDX = merged(r[3] for r in RENDERED.values())
+CHAPTER_IDX = {}
+for _num, _title, _mods in chapters:
+    ci = merged(RENDERED[m][3] for m in _mods)
+    for m in _mods: CHAPTER_IDX[m] = ci
+
+def module_html(mod):
+    before, refs, after, idx, ctx = RENDERED[mod]
+    chain = [idx, CHAPTER_IDX.get(mod, {}), BOOK_IDX]
+    body = cite_wrap(before, chain) + refs + cite_wrap(after, chain)
     if ctx.practice:
         body += (f'<p class="tb-practice"><span class="ck">Practice</span> The multiple-choice and fill-in-the-blank questions for this section are '
                  f'interactive and live on OpenStax, so they are not carried here: <a href="{OS_BOOK}" target="_blank" rel="noopener">open the book on openstax.org</a>.</p>')

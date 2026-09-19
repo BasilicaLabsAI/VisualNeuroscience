@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.22 — 19 September 2026 — Citations that open where they stand
+Commit · Tie each citation in the textbook to its reference, opening under the line it is cited on
+
+A citation in the text, "(Herculano-Houzel, 2009)", now opens the entry it cites right there under the line, with its DOI or address as a link, and closes again on a second click. The book's source ties none of them together, so the build reads each section's reference list, indexes it by first author and year, and finds the citations in the text itself, telling "et al." from a pair from a single author where two entries share a name and a year. The addresses in the reference lists are links now too.
+
 ## v10.21 — 19 September 2026 — The whole book on one page
-Commit · Put the whole textbook on one page at full width, and embed its videos
+Commit `6e7ae72` · Put the whole textbook on one page at full width, and embed its videos
 
 The Digital Textbook no longer opens a chapter on a page of its own: the whole book is one page. A chapter folds open to its sections where it stands, each section folds open to its text, and Expand all lays the entire book out end to end. The text now uses the full width of the screen, with room at the edges, instead of a narrow column down the middle. The book's forty videos, the chapter introductions by their authors and the section summaries, are embedded rather than linked, each in a fold that creates the player only when it is opened.
 
