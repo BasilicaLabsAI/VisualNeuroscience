@@ -492,6 +492,12 @@ table.dtable td.num{ font-size:.84rem; }
     white-space: nowrap; font-variant-numeric: tabular-nums;
   }
 .data-table td.name { font-weight: 600; }
+/* a row of the reference that has a density entry charts it on a click */
+.data-table tr.pickable { cursor: pointer; }
+.data-table tr.pickable td.name button { border: 0; background: none; padding: 0; margin: 0; color: inherit; font: inherit; cursor: pointer; text-align: left; }
+@media (hover: hover) { .data-table tr.pickable:hover td.name button { text-decoration: underline; text-underline-offset: 2px; } }
+.data-table tr.pickable.on td.name button { text-decoration: underline; text-underline-offset: 2px; }
+.data-table tr.pickable td.name button::after { content: "\2192"; margin-left: .35em; color: var(--ink-35); font-weight: 400; }
 .data-table .cell-empty { color: var(--ink-35); font-weight: 400; cursor: help; }
 .table-note { margin-top: 14px; color: var(--ink-60); font-style: italic; }
 .rail .mode-group { display: flex; gap: .4rem; }
@@ -2450,16 +2456,33 @@ document.querySelectorAll("#heat-scale [data-scale]").forEach(btn => {
 });
 
 /* the receptor-types primer: a fixed reference, not density data */
+/* which entry of the density catalogue a row of the reference stands for:
+   a sub-unit of an assembled channel names the channel, a named receptor
+   names itself, and the rest have no density entry to go to */
+const TYPE_TO_RX = { NMDA: "NMDA", AMPA: "AMPA", Kainate: "KAINATE", GABA_A: "GABAA", GABA_B: "GABAB" };
+function rxForRow(row) {
+  const [sub, type] = row;
+  if (TYPE_TO_RX[type]) return TYPE_TO_RX[type];
+  if (type === "Nicotinic") return sub === "α7" ? "A7" : (sub === "α4" || sub === "β2") ? "A4B2" : null;
+  if (type === "Opioid") return { "μ": "MOR", "δ": "DOR", "κ": "KOR" }[sub] || null;
+  const id = sub.replace(/^SSTR/, "SST").replace(/^5-HT/, "5HT").replace(/^α/, "ALPHA").replace(/^β/, "BETA");
+  return RX.catalogue.some(c => c.id === id) ? id : null;
+}
 function renderTypesTable() {
+  const picked = axisMode === "receptor" ? dropdown.value : null;
   let html = "<table class=\"data-table\"><thead><tr>";
   for (const h of TYPES.header) html += "<th>" + escapeHtml(h) + "</th>";
   html += "</tr></thead><tbody>";
   for (const row of TYPES.rows) {
-    html += "<tr><td class=\"name\">" + cellOrDash(row[0]) + "</td>";
+    const id = rxForRow(row), c = id && RX.catalogue.find(x => x.id === id);
+    html += "<tr" + (c ? " class=\"pickable" + (id === picked ? " on" : "") + "\" data-rx=\"" + escapeHtml(id) + "\" title=\"Chart " + escapeHtml(c.name) + "\"" : "") + "><td class=\"name\">"
+      + (c ? "<button type=\"button\" data-rx=\"" + escapeHtml(id) + "\">" + cellOrDash(row[0]) + "</button>" : cellOrDash(row[0])) + "</td>";
     for (const cell of row.slice(1)) html += "<td>" + cellOrDash(cell) + "</td>";
     html += "</tr>";
   }
-  document.getElementById("types-table").innerHTML = html + "</tbody></table>";
+  const host = document.getElementById("types-table");
+  host.innerHTML = html + "</tbody></table>";
+  host.querySelectorAll("tr.pickable").forEach(tr => tr.addEventListener("click", () => pickReceptor(tr.dataset.rx)));
 }
 function cellOrDash(v) { return v && v.trim() ? escapeHtml(v) : "<span class=\"cell-empty\" title=\"not recorded in the source data\">&mdash;</span>"; }
 
@@ -2495,7 +2518,7 @@ function markPicked() {
 if (window.MN_SEL) MN_SEL.onChange(markPicked);
 
 /* ── controls ── */
-function redraw() { renderChart(); renderDensityTable(); renderHeat(); renderCoverage(); }
+function redraw() { renderChart(); renderDensityTable(); renderHeat(); renderTypesTable(); renderCoverage(); }
 dropdown.addEventListener("change", redraw);
 document.querySelectorAll("[data-layer]").forEach(btn => {
   btn.addEventListener("click", () => {

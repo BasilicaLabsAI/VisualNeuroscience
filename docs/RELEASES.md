@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.34 — 19 September 2026 — The reference table charts what it names
+Commit · Let a row of the receptor-types reference pick its receptor for the chart
+
+Where a row of the reference stands for something in the density catalogue, it now charts it on a click: a sub-unit of NMDA, AMPA, kainate or GABA-A names the channel it belongs to, α4, β2 and α7 name the nicotinic receptors that carry them, μ, δ and κ the opioid receptors, and a named receptor names itself, ninety-one rows for sixty entries. Such rows carry an arrow after the name and underline the receptor already charted; the rows with no density entry, the purinergic, TRP and voltage-gated channels among them, stay as they were.
+
 ## v10.33 — 19 September 2026 — The reference table folds away
-Commit · Fold the receptor-types reference shut beneath the density table
+Commit `aed9ead` · Fold the receptor-types reference shut beneath the density table
 
 The long reference of sub-units, families and mechanisms trailed beneath the density table on the Receptor types tab, a hundred and sixty rows on a phone. It now folds shut under its heading and opens on a click.
 
