@@ -26,5 +26,6 @@ If a deploy misbehaves, check the Worker's build settings (**your Worker → Set
 - `docs/atlas-regions.txt` — the full AAL-116 region list the brain map carries, with each region's label number.
 - 3D export (glTF, USDZ, OBJ, STL, PLY, VRML, X3D) and saved models are described in `docs/EXPORT-3D.md`; the geometry is built in the browser by `site/assets/export3d.js`.
 - An MCP server (`mcp-worker/`) lets Claude, ChatGPT and Kimi ask the atlas questions, with deep links back into the pages; see `docs/MCP.md`.
+- The newsletter box (`site/assets/newsletter.js`) posts an address to `newsletter-worker/`, which emails it on and, once Mailchimp's secrets are set, adds it to the list; see `docs/NEWSLETTER.md`.
 
 The Python modules in `backend/` (`BrainMapping.py`, `UniversalTools.py`) and the notebooks alongside the data are the processing and exploration tools the dataset was built with.

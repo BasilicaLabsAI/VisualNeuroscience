@@ -1,0 +1,20 @@
+// The newsletter-worker: takes the email address a reader types into the
+// site's newsletter box and passes it on, deployed separately from the site
+// so the static deployment never changes shape.
+//
+//   cd newsletter-worker
+//   npx wrangler secret put NEWSLETTER_TO      # where signups are sent, for now
+//   npx wrangler deploy
+//
+// docs/NEWSLETTER.md walks through the Email Routing setup the send_email
+// binding needs, and the Mailchimp secrets that switch delivery over later.
+{
+  "name": "visualneuroscience-newsletter",
+  "main": "worker.js",
+  "compatibility_date": "2026-09-01",
+  "send_email": [{ "name": "MAIL" }],
+  "vars": {
+    "MAIL_FROM": "newsletter@visualneuroscience.ai",
+    "ALLOWED_ORIGINS": "https://visualneuroscience.ai,https://www.visualneuroscience.ai,https://midnightneuroscience.cloudflare-passport599.workers.dev,capacitor://localhost,ionic://localhost,https://localhost,http://localhost,http://127.0.0.1:8412"
+  }
+}

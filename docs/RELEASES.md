@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.27 — 19 September 2026 — A newsletter box
+Commit · Add a newsletter box, and the worker that passes the address on
+
+A small card now offers the newsletter once a reader has been on a page for twenty seconds or scrolled half of it: an address, one button, and a line saying where the address goes. Closing it keeps it away for a fortnight, signing up for good, both remembered in the browser alone. The address goes to a new Worker of ours, which emails it to the maker of the site while the mailing-list service is being set up and, once Mailchimp's three secrets are in place, adds it to the list as pending so Mailchimp sends its own confirmation. The privacy page says all of this.
+
 ## v10.26 — 19 September 2026 — The receptor search hides what it filters out
-Commit · Hide the receptor tiles the search filters out
+Commit `db105e8` · Hide the receptor tiles the search filters out
 
 The search box counted correctly but left every tile on the page: the tile's own layout rule overrode the hidden mark. Tiles the search rules out now disappear, and so do groups left empty.
 

@@ -486,6 +486,7 @@ themeBtn.addEventListener("click", () => {{
 </script>
 <script src="{rel}assets/native.js"></script>
 <script src="{rel}assets/navbar.js"></script>
+<script src="{rel}assets/newsletter.js" defer></script>
 <script src="{rel}assets/textbook.js"></script>
 <script src="{rel}assets/firebase-config.js"></script>
 <script type="module" src="{rel}assets/auth-ui.js"></script>
