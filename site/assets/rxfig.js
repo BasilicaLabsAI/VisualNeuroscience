@@ -169,15 +169,18 @@
   function entryFor(data, id){
     return data.byId[id] || data.byId[ALIAS[id] || ""] || null;
   }
+  function moleculeFor(data, family){
+    return data.molecules[MOLECULE[family] || ""] || null;
+  }
 
   /* ── the panel: the transmitter, then the receptor it lands on ─────── */
   function figure(host, opts){
     host.textContent = "";
     if (!opts || !opts.id) return Promise.resolve(false);
     return load().then(function(data){
-      if (host.getAttribute("data-for") !== String(opts.id)) return false;   /* a later pick won the race */
+      if (host.getAttribute("data-for") !== (opts.key || String(opts.id))) return false;   /* a later pick won the race */
       var it = entryFor(data, opts.id);
-      var mol = data.molecules[MOLECULE[opts.family] || ""];
+      var mol = moleculeFor(data, opts.family);
       if (!it && !mol){
         host.appendChild(el("p", "rxfig-none", "No drawing of " + (opts.name || "this receptor") + " yet."));
         return false;
@@ -203,6 +206,7 @@
         c2.appendChild(el("span", "cn", it.name));
         if (it.plain) c2.appendChild(el("span", "cs", it.plain));
         c2.appendChild(el("p", "rxfig-does", it.effect));
+        if (opts.facts) c2.appendChild(el("p", "rxfig-fact", opts.facts));
         var a = el("a", "rxfig-more", "The whole entry →");
         a.href = "microanatomy.html#rx-" + it.id;
         c2.appendChild(a);
@@ -217,5 +221,6 @@
     });
   }
 
-  window.VN_RXFIG = { load: load, diagram: diagram, fillFor: fillFor, kicker: kicker, popups: popups, figure: figure, el: el };
+  window.VN_RXFIG = { load: load, diagram: diagram, fillFor: fillFor, kicker: kicker, popups: popups, figure: figure, el: el,
+                      entry: entryFor, molecule: moleculeFor };
 })();

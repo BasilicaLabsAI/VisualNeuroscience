@@ -2022,6 +2022,133 @@ function fmt(v, d) { return v == null ? "—" : Number(v).toLocaleString(undefin
 function escapeHtml(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
 function regionShort(reg) { return reg.name.replace("Gyrus", "").replace("Cortex", "").replace("Lobule", "").replace(/\s+,/g, ",").replace(/\s+$/, "").trim(); }
 
+/* ── where a region stands for a receptor, against every other region the
+   source has a number for ── */
+function ranking(r, base) {
+  if (!r.data) return null;
+  const rows = REG.map(reg => ({ reg, v: raw(r, reg.base) })).filter(x => x.v != null).sort((a, b) => b.v - a.v);
+  if (!rows.length) return null;
+  const i = rows.findIndex(x => x.reg.base === base);
+  return { n: rows.length, rank: i + 1, v: i < 0 ? null : rows[i].v, rows, top: rows[0], next: rows[1] || null, bottom: rows[rows.length - 1] };
+}
+function ordinal(n) { const s = ["th", "st", "nd", "rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
+function times(a, b) { const x = a / b; return x >= 10 ? Math.round(x) + "\u00D7" : x >= 1.15 ? (Math.round(x * 10) / 10) + "\u00D7" : null; }
+function rankPhrase(k) {
+  if (k.rank === 1) return "The <b>densest</b> of the " + k.n + " regions mapped";
+  if (k.rank === k.n) return "The <b>sparsest</b> of the " + k.n + " regions mapped";
+  const q = k.rank / k.n;
+  return "<b>" + ordinal(k.rank) + " densest</b> of " + k.n + " regions" + (q <= 0.25 ? ", in the top quarter" : q > 0.75 ? ", in the bottom quarter" : "");
+}
+/* the number, and what it is against: the densest region, or the runner-up
+   when this is the densest; a hemisphere that stands out, for PET */
+function valuePhrase(r, k, base) {
+  const unit = layer === "pet" ? r.data.measure : "fmol/mg protein";
+  const d = layer === "pet" ? 2 : 0;
+  let s;
+  if (k.rank === 1) {
+    s = fmt(k.v, d) + " " + unit;
+    const t = k.next && times(k.v, k.next.v);
+    s += t ? ", " + t + " the runner-up, the " + regionShort(k.next.reg) : k.next ? ", just ahead of the " + regionShort(k.next.reg) : "";
+  } else {
+    s = fmt(k.v, d) + " " + unit;
+    if (layer === "pet") s += ", " + Math.round(Math.max(0, k.v / r.data.max) * 100) + "% of the densest region, the " + regionShort(k.top.reg);
+    else s += "; the densest is the " + regionShort(k.top.reg) + " at " + fmt(k.top.v, 0);
+    if (k.rank < k.n) { const t = times(k.v, k.bottom.v); if (t) s += ", " + t + " the sparsest, the " + regionShort(k.bottom.reg); }
+  }
+  if (layer === "pet") {
+    const v = r.data.values[base];
+    if (v && v.l != null && v.r != null && v.m > 0 && Math.abs(v.l - v.r) / v.m >= 0.1)
+      s += ". Noticeably denser on the " + (v.l > v.r ? "left" : "right") + " (L " + fmt(v.l, 2) + " \u00B7 R " + fmt(v.r, 2) + ")";
+  }
+  return s + ".";
+}
+/* why a region has no number for a receptor the source does map */
+function whyNone(r, reg) {
+  if (!r.data) return r.reason;
+  if (layer === "pet") return "The " + r.data.tracer + " map covers less than half of the " + regionShort(reg) + ", so no number is given.";
+  return "Cortex only: the autoradiography series did not reach the " + regionShort(reg) + ".";
+}
+/* for a receptor: where it is densest and sparsest across the regions */
+function receptorFacts(r) {
+  const k = ranking(r, "");
+  if (!k) return "";
+  const top = k.rows.slice(0, 3).map(x => regionShort(x.reg));
+  let s = "Densest in the " + top.join(", ").replace(/, ([^,]*)$/, " and $1") + "; sparsest in the " + regionShort(k.bottom.reg);
+  const t = times(k.top.v, k.bottom.v);
+  return s + (t ? ", about " + t + " less" : "") + ".";
+}
+/* ── a region picked: every family the catalogue carries, its transmitter
+   on the left and its receptors on the right, each placed against the other
+   regions whether or not this source has a number for it here ── */
+function renderRegionPanel(host) {
+  const reg = currentRegion(), F = window.VN_RXFIG;
+  const key = "reg:" + reg.base + ":" + layer;
+  if (host.getAttribute("data-for") === key) return;
+  host.setAttribute("data-for", key);
+  host.textContent = "";
+  F.load().then(data => {
+    if (host.getAttribute("data-for") !== key) return;
+    const rs = receptors();
+    const ranked = rs.map(r => ({ r, k: ranking(r, reg.base) }));
+    const here = ranked.filter(x => x.k && x.k.rank > 0);
+    const src = layer === "pet" ? "an open PET map" : "the autoradiography series";
+    const sum = document.createElement("p"); sum.className = "rxreg-sum";
+    let html = "<b>" + escapeHtml(reg.name) + "</b> \u00B7 " + (here.length ? here.length + " of the " + rs.length + " receptors in the catalogue have a number here from " + src : "none of the " + rs.length + " receptors in the catalogue has a number here from " + src) + ".";
+    const first = here.filter(x => x.k.rank === 1).map(x => shortName(x.r));
+    const podium = here.filter(x => x.k.rank === 2 || x.k.rank === 3).map(x => shortName(x.r) + " (" + ordinal(x.k.rank) + ")");
+    const low = here.filter(x => x.k.n >= 8 && x.k.rank > x.k.n * 0.75).map(x => shortName(x.r));
+    const list = a => a.join(", ").replace(/, ([^,]*)$/, " and $1");
+    if (first.length) html += " It is the <b>densest region</b> mapped for " + list(first) + (podium.length ? ", and near the top for " + list(podium) : "") + ".";
+    else if (podium.length) html += " It stands near the top for " + list(podium) + ".";
+    if (low.length) html += " Among the <b>sparsest</b> regions for " + list(low) + ".";
+    if (!here.length && layer === "ar") html += " The series is cortex only; switch to PET for the subcortex.";
+    sum.innerHTML = html;
+    host.appendChild(sum);
+    FAMILIES.forEach(fam => {
+      const mine = ranked.filter(x => x.r.family === fam);
+      if (!mine.length) return;
+      mine.sort((a, b) => (a.k && a.k.rank > 0 ? a.k.rank : 1e9) - (b.k && b.k.rank > 0 ? b.k.rank : 1e9));
+      const sec = document.createElement("section"); sec.className = "rxreg-fam";
+      const mol = F.molecule(data, fam);
+      const f1 = document.createElement("figure");
+      if (mol) {
+        const box = F.el("div", "rx-draw"); box.innerHTML = mol.svg; f1.appendChild(box);
+      }
+      const c1 = document.createElement("figcaption");
+      c1.appendChild(F.el("span", "ck", mol ? "What binds them" : "Family"));
+      c1.appendChild(F.el("span", "cn", mol ? mol.name : fam));
+      c1.appendChild(F.el("span", "cs", mol ? mol.role : mine.length + " receptor" + (mine.length === 1 ? "" : "s") + " in the catalogue"));
+      f1.appendChild(c1);
+      sec.appendChild(f1);
+      const ul = document.createElement("ul"); ul.className = "rxreg-list";
+      mine.forEach(({ r, k }) => {
+        const it = F.entry(data, r.id);
+        const li = document.createElement("li");
+        li.className = "rxreg-item" + (k && k.rank === 1 ? " top" : "");
+        li.id = "rxreg-" + r.id;
+        const cap = F.el("div", "rxreg-cap");
+        if (it) {
+          const kind = data.kinds[it.kind];
+          li.appendChild(F.diagram(kind, F.fillFor(it)));
+          cap.appendChild(F.kicker(kind));
+        }
+        cap.appendChild(F.el("span", "cn", shortName(r)));
+        if (it && it.plain) cap.appendChild(F.el("span", "cs", it.plain));
+        const fact = document.createElement("p");
+        if (k && k.rank > 0) { fact.className = "rxreg-fact"; fact.innerHTML = rankPhrase(k) + ". " + escapeHtml(valuePhrase(r, k, reg.base)); }
+        else { fact.className = "rxreg-fact nei"; fact.textContent = whyNone(r, reg); }
+        cap.appendChild(fact);
+        if (it) { const a = F.el("a", "rxfig-more", "The whole entry \u2192"); a.href = "microanatomy.html#rx-" + it.id; cap.appendChild(a); }
+        li.appendChild(cap);
+        ul.appendChild(li);
+      });
+      sec.appendChild(ul);
+      host.appendChild(sec);
+    });
+    F.popups(data.rx.glossary, data.rx.steps);
+  }).catch(err => { if (window.console) console.warn(err); });
+}
+
 /* ── the picker holds receptors or regions, per the axis ── */
 const dropdown = document.getElementById("structure-dropdown");
 function fillDropdown(keep) {
@@ -2151,11 +2278,13 @@ window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer
 function renderFigs() {
   const host = document.getElementById("rx-figs");
   if (!host || !window.VN_RXFIG) return;
-  if (axisMode !== "receptor") { host.setAttribute("data-for", ""); host.textContent = ""; return; }
+  host.classList.toggle("region", axisMode !== "receptor");
+  if (axisMode !== "receptor") { renderRegionPanel(host); return; }
   const c = currentReceptor();
-  if (host.getAttribute("data-for") === c.id) return;      /* already drawn */
-  host.setAttribute("data-for", c.id);
-  window.VN_RXFIG.figure(host, { id: c.id, family: c.family, name: c.name });
+  const key = "rx:" + c.id + ":" + layer;
+  if (host.getAttribute("data-for") === key) return;      /* already drawn */
+  host.setAttribute("data-for", key);
+  window.VN_RXFIG.figure(host, { id: c.id, family: c.family, name: c.name, facts: receptorFacts(c), key });
 }
 
 /* ── what the picked receptor is, and where it came from ── */
