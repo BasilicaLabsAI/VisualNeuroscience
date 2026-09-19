@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.23 — 19 September 2026 — Room at the edges of the book
+Commit · Stand the textbook in from the window's edges
+
+The textbook's folds ran almost to the edge of the window. They now stand in by about a twelfth of the width on each side, so the book has room around it at every size; on a phone the margin is a thumb's width, since the screen is small.
+
 ## v10.22 — 19 September 2026 — Citations that open where they stand
-Commit · Tie each citation in the textbook to its reference, opening under the line it is cited on
+Commit `c1bdc38` · Tie each citation in the textbook to its reference, opening under the line it is cited on
 
 A citation in the text, "(Herculano-Houzel, 2009)", now opens the entry it cites right there under the line, with its DOI or address as a link, and closes again on a second click. The book's source ties none of them together, so the build reads each section's reference list, indexes it by first author and year, and finds the citations in the text itself, telling "et al." from a pair from a single author where two entries share a name and a year. The addresses in the reference lists are links now too.
 

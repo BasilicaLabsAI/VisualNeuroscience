@@ -106,7 +106,10 @@ button{ font:inherit; color:inherit; }
 
 
 /* ── the book ── */
-.tb{ padding-bottom:3rem; }
+/* the book stands well in from the edges of the window: about a twelfth
+   of the width each side on a desk, a thumb's width on a phone */
+.tb{ padding:0 clamp(1.5rem, 8vw, 10rem) 3rem; }
+@media (max-width:760px){ .tb{ padding-left:1rem; padding-right:1rem; } }
 .tb .title-strip{
   display:flex; flex-wrap:wrap; align-items:baseline; justify-content:center;
   gap:.5rem 1.3rem; border:1px solid var(--hair); padding:.8rem 1rem;
