@@ -21,7 +21,7 @@
    Nothing cross-origin is touched at all — since the typefaces moved
    in-house there is no outside request left to think about. */
 
-var VERSION = "vn-53";
+var VERSION = "vn-54";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
@@ -29,7 +29,8 @@ var BULK    = VERSION + "-bulk";
 var PRECACHE = [
   "/", "/index.html", "/regions.html", "/tracts.html", "/network-atlas.html", "/studies.html", "/hallucinations.html",
   "/privacy.html", "/about.html", "/practice.html", "/assets/home/practice.jpg",
-  "/textbook.html", "/assets/home/textbook.jpg",
+  "/textbook.html", "/assets/home/textbook.jpg", "/assets/textbook.css", "/assets/textbook.js",
+  "/textbook/01-structure-and-function-of-the-nervous-system.html", "/textbook/02-neurophysiology.html", "/textbook/03-basic-neurochemistry.html", "/textbook/04-comparative-neuroscience.html", "/textbook/05-neurodevelopment.html", "/textbook/06-vision.html", "/textbook/07-hearing-and-balance.html", "/textbook/08-the-chemical-senses.html", "/textbook/09-touch-and-pain.html", "/textbook/10-motor-control.html", "/textbook/11-sexual-behavior-and-development.html", "/textbook/12-stress.html", "/textbook/13-emotion-and-mood.html", "/textbook/14-psychopharmacology.html", "/textbook/15-biological-rhythms-and-sleep.html", "/textbook/16-homeostasis.html", "/textbook/17-neuroimmunology.html", "/textbook/18-learning-and-memory.html", "/textbook/19-attention-and-executive-function.html", "/textbook/appendix.html", "/textbook/preface.html",
   "/microanatomy.html", "/assets/home/cells.jpg", "/assets/cells.js",
   "/assets/cells/multipolar-neuron.svg", "/assets/cells/multipolar-neuron.json",
   "/assets/nt.js", "/assets/nt/molecules.json",

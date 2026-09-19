@@ -1,0 +1,658 @@
+{
+ "book": "Introduction to Behavioral Neuroscience",
+ "chapters": [
+  {
+   "num": 1,
+   "title": "Structure and Function of the Nervous System: Cells and Anatomy",
+   "file": "01-structure-and-function-of-the-nervous-system.html",
+   "sections": [
+    {
+     "id": "m00026",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00021",
+     "label": "1.1",
+     "title": "Building a Nervous System"
+    },
+    {
+     "id": "m00022",
+     "label": "1.2",
+     "title": "Organization of the Nervous System"
+    },
+    {
+     "id": "m00023",
+     "label": "1.3",
+     "title": "The Central Nervous System: CNS"
+    },
+    {
+     "id": "m00024",
+     "label": "1.4",
+     "title": "The Brain: Structure and Function"
+    },
+    {
+     "id": "m00025",
+     "label": "1.5",
+     "title": "The Peripheral Nervous System: PNS"
+    }
+   ]
+  },
+  {
+   "num": 2,
+   "title": "Neurophysiology",
+   "file": "02-neurophysiology.html",
+   "sections": [
+    {
+     "id": "m00011",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00012",
+     "label": "2.1",
+     "title": "Neural Communication"
+    },
+    {
+     "id": "m00013",
+     "label": "2.2",
+     "title": "Neural Circuits"
+    },
+    {
+     "id": "m00014",
+     "label": "2.3",
+     "title": "Principles of Bioelectricity"
+    },
+    {
+     "id": "m00015",
+     "label": "2.4",
+     "title": "Mechanisms of Neural Signaling"
+    },
+    {
+     "id": "m00016",
+     "label": "2.5",
+     "title": "Our Deep but Still Incomplete Understanding of Neural Signaling"
+    }
+   ]
+  },
+  {
+   "num": 3,
+   "title": "Basic Neurochemistry",
+   "file": "03-basic-neurochemistry.html",
+   "sections": [
+    {
+     "id": "m00027",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00028",
+     "label": "3.1",
+     "title": "General Neurochemistry Principles"
+    },
+    {
+     "id": "m00029",
+     "label": "3.2",
+     "title": "Neurotransmitters Made from Amino Acids"
+    },
+    {
+     "id": "m00030",
+     "label": "3.3",
+     "title": "Neurotransmitters Made from Fats"
+    }
+   ]
+  },
+  {
+   "num": 4,
+   "title": "Comparative Neuroscience",
+   "file": "04-comparative-neuroscience.html",
+   "sections": [
+    {
+     "id": "m00031",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00032",
+     "label": "4.1",
+     "title": "How Do We Choose A Model System?"
+    },
+    {
+     "id": "m00033",
+     "label": "4.2",
+     "title": "How Do We Compare Brains?"
+    },
+    {
+     "id": "m00034",
+     "label": "4.3",
+     "title": "How Do Brains Vary in Size?"
+    },
+    {
+     "id": "m00035",
+     "label": "4.4",
+     "title": "How Do Connections Differ Across Species?"
+    },
+    {
+     "id": "m00036",
+     "label": "4.5",
+     "title": "How Can Diverse Species Help Us Make Inferences about Human Neurobiology?"
+    },
+    {
+     "id": "m00037",
+     "label": "4.6",
+     "title": "How Can Brain Organoids Help Us Make Inferences about Brain Evolution?"
+    }
+   ]
+  },
+  {
+   "num": 5,
+   "title": "Neurodevelopment",
+   "file": "05-neurodevelopment.html",
+   "sections": [
+    {
+     "id": "m00086",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00085",
+     "label": "5.1",
+     "title": "Gastrulation and Formation of the Neural Tube (Neurulation)"
+    },
+    {
+     "id": "m00074",
+     "label": "5.2",
+     "title": "Growth and Development of the Early Brain"
+    },
+    {
+     "id": "m00075",
+     "label": "5.3",
+     "title": "Synapse Formation and Maturation"
+    },
+    {
+     "id": "m00076",
+     "label": "5.4",
+     "title": "Experience Dependent Plasticity"
+    }
+   ]
+  },
+  {
+   "num": 6,
+   "title": "Vision",
+   "file": "06-vision.html",
+   "sections": [
+    {
+     "id": "m00087",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00088",
+     "label": "6.1",
+     "title": "An Overview of the Visual System"
+    },
+    {
+     "id": "m00089",
+     "label": "6.2",
+     "title": "The Retina"
+    },
+    {
+     "id": "m00090",
+     "label": "6.3",
+     "title": "Visual Processing Begins in Bipolar, Horizontal, Amacrine and Ganglion Cells"
+    },
+    {
+     "id": "m00091",
+     "label": "6.4",
+     "title": "The Thalamus and Primary Visual Cortex"
+    },
+    {
+     "id": "m00092",
+     "label": "6.5",
+     "title": "Extrastriate Cortex"
+    },
+    {
+     "id": "m00093",
+     "label": "6.6",
+     "title": "Unsolved Questions In Visual Perception"
+    }
+   ]
+  },
+  {
+   "num": 7,
+   "title": "Hearing and Balance",
+   "file": "07-hearing-and-balance.html",
+   "sections": [
+    {
+     "id": "m00001",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00002",
+     "label": "7.1",
+     "title": "Acoustic Cues and Signals"
+    },
+    {
+     "id": "m00003",
+     "label": "7.2",
+     "title": "How Does Acoustic Information Enter the Brain?"
+    },
+    {
+     "id": "m00004",
+     "label": "7.3",
+     "title": "How Does the Brain Process Acoustic Information?"
+    },
+    {
+     "id": "m00005",
+     "label": "7.4",
+     "title": "Balance: A Sense of Where You Are"
+    }
+   ]
+  },
+  {
+   "num": 8,
+   "title": "The Chemical Senses",
+   "file": "08-the-chemical-senses.html",
+   "sections": [
+    {
+     "id": "m00038",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00039",
+     "label": "8.1",
+     "title": "The Chemical Senses are Several Distinct Sensory Systems"
+    },
+    {
+     "id": "m00040",
+     "label": "8.2",
+     "title": "The Gustatory System"
+    },
+    {
+     "id": "m00041",
+     "label": "8.3",
+     "title": "The Olfactory System"
+    },
+    {
+     "id": "m00042",
+     "label": "8.4",
+     "title": "Chemethesis, Spices, and Solitary Chemosensory Cells"
+    },
+    {
+     "id": "m00043",
+     "label": "8.5",
+     "title": "Influences That Shape Perception of Smell and Flavor"
+    }
+   ]
+  },
+  {
+   "num": 9,
+   "title": "Touch and Pain",
+   "file": "09-touch-and-pain.html",
+   "sections": [
+    {
+     "id": "m00006",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00007",
+     "label": "9.1",
+     "title": "Somatosensory Receptors"
+    },
+    {
+     "id": "m00010",
+     "label": "9.2",
+     "title": "Somatosensation in the Central Nervous System"
+    },
+    {
+     "id": "m00008",
+     "label": "9.3",
+     "title": "Pain and Itch"
+    },
+    {
+     "id": "m00009",
+     "label": "9.4",
+     "title": "Pain Relief"
+    }
+   ]
+  },
+  {
+   "num": 10,
+   "title": "Motor Control",
+   "file": "10-motor-control.html",
+   "sections": [
+    {
+     "id": "m00017",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00018",
+     "label": "10.1",
+     "title": "The Physiological Actions Implementing Movement – Contraction of Muscles"
+    },
+    {
+     "id": "m00019",
+     "label": "10.2",
+     "title": "Eliciting Contractions from Lower Levels – Lower Motoneurons and Reflex Arcs"
+    },
+    {
+     "id": "m00020",
+     "label": "10.3",
+     "title": "Our Brain Gets Involved – Responsibilities of Upper Motor Systems"
+    }
+   ]
+  },
+  {
+   "num": 11,
+   "title": "Sexual Behavior and Development",
+   "file": "11-sexual-behavior-and-development.html",
+   "sections": [
+    {
+     "id": "m00101",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00102",
+     "label": "11.1",
+     "title": "Understanding Sexual Reproduction and Sexual Dimorphism"
+    },
+    {
+     "id": "m00103",
+     "label": "11.2",
+     "title": "Mechanisms of Sexual Determination and Differentiation"
+    },
+    {
+     "id": "m00104",
+     "label": "11.3",
+     "title": "Sex Differences in Brain and Behavior: Genetic, Hormonal, and Environmental Mechanisms"
+    },
+    {
+     "id": "m00105",
+     "label": "11.4",
+     "title": "Sex Differences in Brain Circuits and Susceptibility to Psychiatric Disease"
+    }
+   ]
+  },
+  {
+   "num": 12,
+   "title": "Stress",
+   "file": "12-stress.html",
+   "sections": [
+    {
+     "id": "m00078",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00079",
+     "label": "12.1",
+     "title": "What Is Stress?"
+    },
+    {
+     "id": "m00080",
+     "label": "12.2",
+     "title": "Neural Mechanisms and Circuitry of the Stress Response"
+    },
+    {
+     "id": "m00084",
+     "label": "12.3",
+     "title": "Interindividual Variability and Resilience in Response to Stress"
+    },
+    {
+     "id": "m00081",
+     "label": "12.4",
+     "title": "Clinical Implications of Stress"
+    }
+   ]
+  },
+  {
+   "num": 13,
+   "title": "Emotion and Mood",
+   "file": "13-emotion-and-mood.html",
+   "sections": [
+    {
+     "id": "m00048",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00044",
+     "label": "13.1",
+     "title": "Foundational and Contemporary Theories of Emotion"
+    },
+    {
+     "id": "m00045",
+     "label": "13.2",
+     "title": "What Category of Feelings Are Considered as the “Basic Emotions”?"
+    },
+    {
+     "id": "m00046",
+     "label": "13.3",
+     "title": "What Is the Contribution of Brain Structures in Emotional States?"
+    },
+    {
+     "id": "m00047",
+     "label": "13.4",
+     "title": "Mood and Emotional Disorders Associated with Depression"
+    }
+   ]
+  },
+  {
+   "num": 14,
+   "title": "Psychopharmacology",
+   "file": "14-psychopharmacology.html",
+   "sections": [
+    {
+     "id": "m00049",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00050",
+     "label": "14.1",
+     "title": "Basic Principles of Pharmacology"
+    },
+    {
+     "id": "m00051",
+     "label": "14.2",
+     "title": "Psychotherapeutics"
+    },
+    {
+     "id": "m00052",
+     "label": "14.3",
+     "title": "Neural Circuitry of Drug Reward"
+    },
+    {
+     "id": "m00053",
+     "label": "14.4",
+     "title": "Neurobiology of Addiction"
+    }
+   ]
+  },
+  {
+   "num": 15,
+   "title": "Biological Rhythms and Sleep",
+   "file": "15-biological-rhythms-and-sleep.html",
+   "sections": [
+    {
+     "id": "m00094",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00095",
+     "label": "15.1",
+     "title": "What Are Circadian Rhythms?"
+    },
+    {
+     "id": "m00096",
+     "label": "15.2",
+     "title": "Where Are Rhythms in the Brain?"
+    },
+    {
+     "id": "m00097",
+     "label": "15.3",
+     "title": "Regulation of Sleep"
+    },
+    {
+     "id": "m00098",
+     "label": "15.4",
+     "title": "Disorders of Sleep and Circadian Rhythms"
+    },
+    {
+     "id": "m00099",
+     "label": "15.5",
+     "title": "Circadian Rhythms and Society"
+    }
+   ]
+  },
+  {
+   "num": 16,
+   "title": "Homeostasis",
+   "file": "16-homeostasis.html",
+   "sections": [
+    {
+     "id": "m00054",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00055",
+     "label": "16.1",
+     "title": "Principles of Homeostasis"
+    },
+    {
+     "id": "m00056",
+     "label": "16.2",
+     "title": "Neural Control of Blood Oxygenation Levels"
+    },
+    {
+     "id": "m00057",
+     "label": "16.3",
+     "title": "Neural Control of Core Body Temperature"
+    },
+    {
+     "id": "m00058",
+     "label": "16.4",
+     "title": "Neural Control of Feeding Behavior"
+    },
+    {
+     "id": "m00059",
+     "label": "16.5",
+     "title": "Neural Control of Drinking Behavior"
+    }
+   ]
+  },
+  {
+   "num": 17,
+   "title": "Neuroimmunology",
+   "file": "17-neuroimmunology.html",
+   "sections": [
+    {
+     "id": "m00072",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00073",
+     "label": "17.1",
+     "title": "Cells and Messengers of the Immune System"
+    },
+    {
+     "id": "m00077",
+     "label": "17.2",
+     "title": "What Does Your Immune System Have to Do with Your Behavior?"
+    },
+    {
+     "id": "m00082",
+     "label": "17.3",
+     "title": "How Does the Brain Talk to the Immune System?"
+    },
+    {
+     "id": "m00083",
+     "label": "17.4",
+     "title": "What Do Immune System Signals Do Once They Reach the Brain?"
+    }
+   ]
+  },
+  {
+   "num": 18,
+   "title": "Learning and Memory",
+   "file": "18-learning-and-memory.html",
+   "sections": [
+    {
+     "id": "m00060",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00061",
+     "label": "18.1",
+     "title": "Memory is Classified Based on Time Course and Type of Information Stored"
+    },
+    {
+     "id": "m00062",
+     "label": "18.2",
+     "title": "Implicit Memories: Associative vs. Nonassociative Learning"
+    },
+    {
+     "id": "m00063",
+     "label": "18.3",
+     "title": "Explicit Memories: Episodic and Semantic Memories"
+    },
+    {
+     "id": "m00064",
+     "label": "18.4",
+     "title": "Synaptic Mechanisms of Long-Term Memory"
+    }
+   ]
+  },
+  {
+   "num": 19,
+   "title": "Attention and Executive Function",
+   "file": "19-attention-and-executive-function.html",
+   "sections": [
+    {
+     "id": "m00065",
+     "label": "Introduction",
+     "title": "Introduction"
+    },
+    {
+     "id": "m00066",
+     "label": "19.1",
+     "title": "What are the Different Psychological Processes Associated with Attention?"
+    },
+    {
+     "id": "m00067",
+     "label": "19.2",
+     "title": "How is Attention Implemented in the Brain?"
+    },
+    {
+     "id": "m00068",
+     "label": "19.3",
+     "title": "What Happens to Unattended Information?"
+    },
+    {
+     "id": "m00069",
+     "label": "19.4",
+     "title": "What is the Relationship between Attention and Eye Movements?"
+    },
+    {
+     "id": "m00070",
+     "label": "19.5",
+     "title": "How Do Clinical Disorders Affect Attentional Function?"
+    },
+    {
+     "id": "m00071",
+     "label": "19.6",
+     "title": "How Do We Use Executive Functions to Make Decisions and Achieve Goals?"
+    }
+   ]
+  }
+ ]
+}

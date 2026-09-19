@@ -8,8 +8,13 @@ remote does not have yet; run it from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.19 — 19 September 2026 — The Digital Textbook becomes OpenStax's whole book
+Commit · Replace the Digital Textbook with OpenStax's Introduction to Behavioral Neuroscience, built into the site's pages
+
+The Digital Textbook is now OpenStax's *Introduction to Behavioral Neuroscience*, all of it: nineteen chapters and eighty-five sections, from the cells of the nervous system to attention and executive function, with every figure, note, table, key term, summary and reference list, set in the site's own pages and type rather than shown as a PDF. The contents page folds each chapter open to its sections; each chapter page folds each section open to its text, with expand-all and collapse-all buttons and links that open the fold they point into. The five hundred figures are recompressed to WebP. The book is CC BY-NC-SA 4.0 and every page carries OpenStax's attribution; the interactive exercises and videos that live on their servers are linked rather than carried. The site's earlier three-chapter textbook leaves the site and the apps but stays in the repository under archive/.
+
 ## v10.18 — 19 September 2026 — The receptors, drawn
-Commit · List the receptors, channels and transporters under the neurotransmitters, each with its kind of machine drawn
+Commit `2ba7488` · List the receptors, channels and transporters under the neurotransmitters, each with its kind of machine drawn
 
 Under the neurotransmitters, what they land on: a hundred and fifty receptors, ion channels and transporters in fifteen groups, from the AMPA receptor to the vesicular acetylcholine transporter. There are only ten kinds of machine among them, and those are drawn first, each with what the kind means: the ligand-gated channels, the glutamate receptors, the three flavours of G-protein-coupled receptor with their G proteins, the voltage-gated channels that nothing binds, the background channels and the carriers. Every tile then carries its kind's schematic with its own ligand, ion and G protein written in, what binds it and how tightly, what it does when bound, and a line of context. The voltage-gated sodium, calcium and potassium channels are here too, since every receptor on the page acts through them.
 

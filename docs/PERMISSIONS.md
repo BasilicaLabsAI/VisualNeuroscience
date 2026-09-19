@@ -5,6 +5,28 @@ what terms we use it. The store listing, the review notes and the credits
 on each page should agree with this file; when a term changes, change it
 here first.
 
+## Introduction to Behavioral Neuroscience (OpenStax, CC BY-NC-SA 4.0)
+
+**What.** The whole of the Digital Textbook, `site/textbook.html` and the chapter pages under
+`site/textbook/`, with the figures under `site/assets/textbook/img/`: OpenStax's *Introduction
+to Behavioral Neuroscience*, converted from its published source
+(<https://github.com/openstax/osbooks-neuroscience>) by `scripts/textbook/build.py`.
+
+**Licence.** Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International. The book
+may be copied and adapted for non-commercial use with attribution, and any adaptation must carry
+the same licence. This site and the apps are free and non-commercial; the pages are offered under
+the same licence, and say so.
+
+**Attribution.** Every page ends with the attribution OpenStax asks for: the title and author,
+the licence with its link, and "Access for free at
+<https://openstax.org/books/introduction-behavioral-neuroscience/pages/1-introduction>", with a
+note of what was changed (set in the site's pages and type, images recompressed, exercises and
+videos linked rather than carried). Figures keep the credits the book gives them in their
+captions; several are third-party images under their own CC licences, named there.
+
+**Not carried.** The interactive exercises and the videos are served from OpenStax's own
+platform and are not in the source; the pages link to them rather than reproducing them.
+
 ## Brodmann Areas diagram (permission granted)
 
 **What.** The two-face Brodmann map on the Region Atlas, `regions.html`, and
