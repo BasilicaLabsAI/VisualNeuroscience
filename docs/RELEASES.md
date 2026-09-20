@@ -2,14 +2,22 @@
 
 Every push to `main` is a release. This ledger is the record of which
 commit each version points at, with the title and description used on the
-GitHub release. Tags cannot be pushed from the coding environment, so
-`scripts/push_tags.sh` creates and pushes any tag listed here that the
-remote does not have yet; run it from a clone on a machine that can push.
+GitHub release. Tags cannot be pushed from the coding environment, so the
+repository tags itself: the `Release tags` workflow runs on every push to
+`main` that changes this file, `scripts/push_tags.sh` creates and pushes any
+tag listed here that the remote does not have yet, and
+`scripts/make_releases.py` gives each new tag its GitHub release with the
+text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.38 — 20 September 2026 — The repository tags its own releases
+Commit · Tag and release every version in the ledger from a workflow on each push to main
+
+The coding environment can push branches but not tags, so for twenty releases the tags and their GitHub releases waited on a script run by hand. A workflow now does it: on every push to main that changes this ledger it runs the ledger script to tag whatever the remote lacks, then gives each new tag a GitHub release with the title and text recorded here. It can also be run from the Actions tab.
+
 ## v10.37 — 19 September 2026 — The chart's tip goes when it should, and the bars start sooner
-Commit · Show the chart's tip on a tap alone and let it go, and start the bars just past their labels
+Commit `42ca6ef` · Show the chart's tip on a tap alone and let it go, and start the bars just past their labels
 
 On a touch screen the chart's tip came up at the start of any swipe across the bars and then stayed, so it was there before a reader had asked for anything. It now answers a tap and not a swipe, and goes on the next touch anywhere, on any scroll, when the chart is redrawn, or by itself after four seconds. The bars had also been standing a long way in from the axis; the room before them is now only what the leaning labels need to stay clear of the pinned axis, which is about half of what it was.
 

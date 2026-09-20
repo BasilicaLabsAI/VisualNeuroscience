@@ -1,0 +1,32 @@
+# Every push to main is a release, recorded in docs/RELEASES.md. The coding
+# environment can push branches but not tags, so the repository tags itself:
+# this runs the ledger script after each release, tags every version the
+# remote lacks, and gives each tag its GitHub release with the ledger's text.
+# It can also be run by hand from the Actions tab.
+name: Release tags
+on:
+  push:
+    branches: [main]
+    paths: [docs/RELEASES.md]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: release-tags
+  cancel-in-progress: false
+jobs:
+  tags:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Tag every release in the ledger the remote does not have
+        run: |
+          git config user.name Fid
+          git config user.email fid_kk@proton.me
+          sh scripts/push_tags.sh
+      - name: Give every tag its GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/make_releases.py
