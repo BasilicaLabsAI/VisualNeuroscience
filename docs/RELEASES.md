@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.40 — 21 September 2026 — One receptor picked on a region's chart
+Commit · Let a receptor picked on a region's chart isolate it and its transmitter beneath, and a second click bring everything back
+
+On a region's chart the receptor names along the bottom are now buttons. Clicking one keeps only that receptor beneath the chart, with the transmitter that binds it drawn beside it and its rank and numbers for this region, and fades every other bar; a line above says what is showing and offers all sixty-nine back. Clicking the same name again, or that offer, brings the whole panel back. The pick holds across a change of region or source until it is undone.
+
 ## v10.39 — 21 September 2026 — The folded sections show what is inside
-Commit · Give the folded sections a peek of their drawings and a plain Open button
+Commit `0ef0fc3` · Give the folded sections a peek of their drawings and a plain Open button
 
 The two folded sections on Microanatomy were a bare rule with a plus at its end, and it was not obvious they opened. Each now shows four of the drawings inside it under its heading, dopamine, serotonin, GABA and glutamate for the transmitters and an NMDA, GABA-A, D2 and sodium channel for the receptors, with a line on what the section holds and an underlined "Open the section" beneath, and the plus at the right has become an Open button that reads Close once the section is open. The peek folds away with the heading when the section is open.
 

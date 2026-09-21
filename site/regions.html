@@ -586,6 +586,17 @@ table.dtable td.num{ font-size:.84rem; }
 .rx-sources a{ color:var(--ink); }
 #receptor-graph .x-label{ cursor:pointer; }
 #receptor-graph .x-label.picked{ font-weight:600; }
+#receptor-graph .x-label[data-rx]{ cursor:pointer; }
+#receptor-graph .x-label[data-rx].picked{ fill:var(--ink); text-decoration:underline; }
+#receptor-graph .bar.dim{ opacity:.22; }
+/* the panel narrowed to one receptor */
+.rxreg-sum[hidden], .rxreg-fam[hidden], .rxreg-item[hidden]{ display:none; }
+.rxreg-focus{ font-family:var(--font-serif); font-size:.92rem; line-height:1.5; margin:0 0 .3rem; display:flex; flex-wrap:wrap; align-items:baseline; gap:.4rem 1rem; }
+.rxreg-focus b{ font-weight:600; }
+.rxreg-focus button{
+  border:0; border-bottom:1px solid var(--ink); background:none; padding:0 0 .1rem; cursor:pointer; color:var(--ink);
+  font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase;
+}
 #receptor-graph .bar.empty{ fill:none; stroke:var(--ink-35); stroke-dasharray:3 2; }
 .data-table td.nei{ color:var(--ink-60); font-style:italic; font-family:var(--font-serif); white-space:normal; }
 .heat th.rlabel button{
@@ -2214,7 +2225,43 @@ function renderRegionPanel(host) {
       host.appendChild(sec);
     });
     F.popups(data.rx.glossary, data.rx.steps);
+    applyRegionFocus();
   }).catch(err => { if (window.console) console.warn(err); });
+}
+/* ── one receptor picked on a region's chart: the panel beneath keeps only
+   that receptor and the transmitter that binds it, the other bars fade, and
+   picking it again brings everything back ── */
+let regionFocus = null;
+function focusReceptor(id) {
+  regionFocus = regionFocus === id ? null : id;
+  applyRegionFocus();
+  if (regionFocus) document.getElementById("rx-figs").scrollIntoView({ block: "start", behavior: "smooth" });
+}
+function applyRegionFocus() {
+  const on = axisMode !== "receptor" ? regionFocus : null;
+  document.querySelectorAll("#receptor-graph .x-label[data-rx]").forEach(el => el.classList.toggle("picked", el.dataset.rx === on));
+  document.querySelectorAll("#receptor-graph .bar[data-rx]").forEach(el => el.classList.toggle("dim", !!on && el.dataset.rx !== on));
+  const host = document.getElementById("rx-figs");
+  if (!host || !host.classList.contains("region")) return;
+  let bar = host.querySelector(".rxreg-focus");
+  const r = on && receptors().find(x => x.id === on);
+  if (!r) {
+    host.querySelectorAll(".rxreg-sum, .rxreg-fam, .rxreg-item").forEach(e => { e.hidden = false; });
+    if (bar) bar.remove();
+    return;
+  }
+  let molName = "";
+  host.querySelectorAll(".rxreg-fam").forEach(sec => {
+    const mine = sec.querySelector("#rxreg-" + CSS.escape(on));
+    sec.hidden = !mine;
+    if (mine) molName = (sec.querySelector("figure .cn") || {}).textContent || "";
+    sec.querySelectorAll(".rxreg-item").forEach(li => { li.hidden = li.id !== "rxreg-" + on; });
+  });
+  const sum = host.querySelector(".rxreg-sum"); if (sum) sum.hidden = true;
+  if (!bar) { bar = document.createElement("p"); bar.className = "rxreg-focus"; host.insertBefore(bar, host.firstChild); }
+  bar.innerHTML = "<span>Showing <b>" + escapeHtml(shortName(r)) + "</b> alone" + (molName ? ", with <b>" + escapeHtml(molName) + "</b>, which binds it" : "") +
+    ".</span> <button type=\"button\">Show all " + receptors().length + " receptors \u2192</button>";
+  bar.querySelector("button").addEventListener("click", () => focusReceptor(on));
 }
 
 /* ── the picker holds receptors or regions, per the axis ── */
@@ -2362,9 +2409,15 @@ function renderChart() {
       label.dataset.base = b.region.base; label.setAttribute("tabindex", "0"); label.setAttribute("role", "button");
       label.addEventListener("click", () => toggleRegion(b.region));
       label.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleRegion(b.region); } });
+    } else if (b.receptor) {
+      rect.dataset.rx = b.receptor.id;
+      label.dataset.rx = b.receptor.id; label.setAttribute("tabindex", "0"); label.setAttribute("role", "button");
+      label.addEventListener("click", () => focusReceptor(b.receptor.id));
+      label.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); focusReceptor(b.receptor.id); } });
     }
     svg.appendChild(label);
   });
+  applyRegionFocus();
   host.appendChild(axis);
   host.appendChild(svg);
   document.getElementById("chart-legend").innerHTML = c.legend.map(l => "<span class=\"legend-item\"><span class=\"legend-swatch\" style=\"background:" + l.colour + "\"></span>" + escapeHtml(l.name) + "</span>").join("");
