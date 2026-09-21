@@ -66,8 +66,24 @@
       host.appendChild(sec);
     });
     host.classList.add("ready");
+    preview(doc);
     narrow(doc);
     if (window.VN_reveal) window.VN_reveal();
+  }
+
+  /* ── the peek under the closed heading: four of the formulas ─────────── */
+  function preview(doc){
+    var box = document.getElementById("ntPreview");
+    if (!box) return;
+    var all = {};
+    doc.groups.forEach(function(g){ g.items.forEach(function(it){ all[it.id] = it; }); });
+    ["dopamine", "serotonin", "gaba", "glutamate"].forEach(function(id){
+      var it = all[id]; if (!it) return;
+      var t = el("span", "sec-tile");
+      t.innerHTML = it.svg;
+      t.title = it.name;
+      box.appendChild(t);
+    });
   }
 
   /* ── narrowing the list: one transmitter, or one group ─────────────── */

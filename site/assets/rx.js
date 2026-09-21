@@ -72,9 +72,26 @@
       host.appendChild(sec);
     });
     host.classList.add("ready");
+    preview(doc);
     FIG.popups(doc.glossary, doc.steps);
     narrow(doc);
     if (window.VN_reveal) window.VN_reveal();
+  }
+
+  /* ── the peek under the closed heading: four kinds of machine, each drawn
+     for a receptor most people have heard of ── */
+  function preview(doc){
+    var box = document.getElementById("rxPreview");
+    if (!box) return;
+    var all = {};
+    doc.groups.forEach(function(g){ g.items.forEach(function(it){ all[it.id] = it; }); });
+    ["NMDA", "GABAA", "D2", "NAV11"].forEach(function(id){
+      var it = all[id]; if (!it) return;
+      var t = el("span", "sec-tile");
+      t.appendChild(FIG.diagram(doc.kinds[it.kind], FIG.fillFor(it)));
+      t.title = it.name;
+      box.appendChild(t);
+    });
   }
 
   /* ── narrowing the list: a transmitter, and words ─────────────────────

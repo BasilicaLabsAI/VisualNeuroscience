@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.39 — 21 September 2026 — The folded sections show what is inside
+Commit · Give the folded sections a peek of their drawings and a plain Open button
+
+The two folded sections on Microanatomy were a bare rule with a plus at its end, and it was not obvious they opened. Each now shows four of the drawings inside it under its heading, dopamine, serotonin, GABA and glutamate for the transmitters and an NMDA, GABA-A, D2 and sodium channel for the receptors, with a line on what the section holds and an underlined "Open the section" beneath, and the plus at the right has become an Open button that reads Close once the section is open. The peek folds away with the heading when the section is open.
+
 ## v10.38 — 20 September 2026 — The repository tags its own releases
-Commit · Tag and release every version in the ledger from a workflow on each push to main
+Commit `180b768` · Tag and release every version in the ledger from a workflow on each push to main
 
 The coding environment can push branches but not tags, so for twenty releases the tags and their GitHub releases waited on a script run by hand. A workflow now does it: on every push to main that changes this ledger it runs the ledger script to tag whatever the remote lacks, then gives each new tag a GitHub release with the title and text recorded here. It can also be run from the Actions tab.
 

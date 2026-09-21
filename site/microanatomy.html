@@ -291,10 +291,39 @@ li > .cellt{ cursor:pointer; }
 .sec-fold > summary::-webkit-details-marker{ display:none; }
 .sec-fold > summary .sec-h{ margin-bottom:0; }
 .sec-fold[open] > summary .sec-h{ margin-bottom:var(--gap); }
-.sec-fold > summary .sec-h::after{ content:"+"; font-weight:500; font-size:1.1em; letter-spacing:0; margin-left:auto; }
-.sec-fold[open] > summary .sec-h::after{ content:"\2212"; }
+.sec-fold > summary .sec-h::after{
+  content:"Open +"; margin-left:auto; font-size:.58rem; letter-spacing:.2em; font-weight:500;
+  border:1px solid var(--ink); padding:.3rem .55rem; white-space:nowrap; transition:background .15s, color .15s;
+}
+.sec-fold[open] > summary .sec-h::after{ content:"Close \2212"; }
 .sec-fold > summary .sec-h small{ margin-left:0; }
-@media (hover: hover){ .sec-fold > summary:hover .sec-h{ border-bottom-width:2px; padding-bottom:calc(.45rem - 1px); } }
+@media (hover: hover){ .sec-fold > summary:hover .sec-h::after{ background:var(--ink); color:var(--paper); } }
+/* the peek under a closed heading: a few of the drawings inside, a line on
+   what the section holds, and a plain invitation to open it */
+.sec-peek{ display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--gap) calc(var(--gap) * 1.5); align-items:center; padding:.9rem 0 .3rem; }
+.sec-fold[open] > summary .sec-peek{ display:none; }
+.sec-preview{ display:flex; gap:8px; }
+.sec-preview .sec-tile{
+  display:block; width:clamp(84px, 9vw, 120px); aspect-ratio:1; border:1px solid var(--hair); background:var(--paper);
+  padding:6px; box-sizing:border-box; overflow:hidden; pointer-events:none;
+}
+.sec-preview .sec-tile svg{ display:block; width:100%; height:100%; }
+.sec-preview .sec-tile svg.mol{ transform:scale(1.6); }       /* the formulas carry their own margins; fill the tile */
+.sec-preview .sec-tile svg.rxd{ transform:scale(1.15); }
+.sec-preview .sec-tile .rx-draw{ height:100%; display:flex; align-items:center; }
+.sec-preview .sec-tile:empty{ background:color-mix(in srgb, var(--ink) 4%, transparent); }
+.sec-peek-text{ display:flex; flex-direction:column; gap:.45rem; align-items:flex-start; }
+.sec-peek-line{ font-family:var(--font-serif); font-size:.96rem; line-height:1.5; color:var(--ink-60); max-width:62ch; }
+.sec-open{
+  font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink);
+  border-bottom:1px solid var(--ink); padding-bottom:.1rem;
+}
+.sec-open::after{ content:" \2193"; }
+@media (hover: hover){ .sec-fold > summary:hover .sec-open{ border-bottom-width:2px; } }
+@media (max-width:640px){
+  .sec-peek{ grid-template-columns:1fr; gap:.7rem; }
+  .sec-preview .sec-tile{ width:calc((100% - 24px) / 4); }
+}
 .rx-draw{ padding:.5rem .5rem 0; }
 .rx-cap{ padding:.45rem .9rem .35rem; }
 .rx-cap .ck{
@@ -618,7 +647,16 @@ li > .cellt{ cursor:pointer; }
 
 <section class="nt-sec" id="neurotransmitters" aria-labelledby="ntH">
 <details class="sec-fold" id="ntFold">
-  <summary><h2 class="sec-h" id="ntH">Neurotransmitters <small>the messengers, drawn</small></h2></summary>
+  <summary>
+    <h2 class="sec-h" id="ntH">Neurotransmitters <small>the messengers, drawn</small></h2>
+    <span class="sec-peek">
+      <span class="sec-preview" id="ntPreview" aria-hidden="true"></span>
+      <span class="sec-peek-text">
+        <span class="sec-peek-line">Seventeen molecules drawn as skeletal formulas, in seven groups, each with what it does &mdash; and a row of transmitters to look at one alone.</span>
+        <span class="sec-open">Open the section</span>
+      </span>
+    </span>
+  </summary>
   <p class="lede">What crosses the synapse. Each is drawn as a skeletal formula: every corner and line-end a carbon, hydrogens on carbon left out, the other elements named. Most are small, a single amino acid or something made from one in a step or two, which is why the brain can make, release and clear them in milliseconds. Pick a transmitter to see it on its own &mdash; the monoamines first, since they are what most drugs act on &mdash; and open <em>What it does</em> under any of them.</p>
   <div class="rx-filter" id="ntFilter" role="group" aria-label="Isolate one transmitter"></div>
   <div id="ntGroups"></div>
@@ -627,7 +665,16 @@ li > .cellt{ cursor:pointer; }
 
 <section class="nt-sec" id="receptors" aria-labelledby="rxH">
 <details class="sec-fold" id="rxFold">
-  <summary><h2 class="sec-h" id="rxH">Receptors and channels <small>what the messengers land on</small></h2></summary>
+  <summary>
+    <h2 class="sec-h" id="rxH">Receptors and channels <small>what the messengers land on</small></h2>
+    <span class="sec-peek">
+      <span class="sec-preview" id="rxPreview" aria-hidden="true"></span>
+      <span class="sec-peek-text">
+        <span class="sec-peek-line">A hundred and fifty receptors, channels and transporters as ten kinds of machine, every part explaining its step on a hover &mdash; with a transmitter filter and a search box.</span>
+        <span class="sec-open">Open the section</span>
+      </span>
+    </span>
+  </summary>
   <p class="lede">A transmitter does nothing until something binds it. Here is what does: the receptors for the molecules above, with the ion channels and transporters that work alongside them, a hundred and fifty in all. There are only ten kinds of machine among them, drawn first, and the first thing to know is that they come in two speeds. An <button type="button" class="rx-term" data-term="Ionotropic">ionotropic</button> receptor is a channel: the transmitter opens it in under a millisecond and it shuts as soon as the transmitter leaves. A <button type="button" class="rx-term" data-term="Metabotropic">metabotropic</button> receptor has no pore; it works through a G protein and chemical messengers inside the cell, so it is slower to act and keeps acting for seconds or minutes after the transmitter has gone. Most transmitters have both kinds, and most drugs that act on the brain act on one of the machines below. Pick a transmitter below to see only its receptors &mdash; the monoamines first, since they are what most drugs act on &mdash; and search inside it by name, drug or effect. Every word in a tile&rsquo;s small capitals, and <button type="button" class="rx-term" data-term="affinity">affinity</button>, <button type="button" class="rx-term" data-term="agonist">agonist</button>, <button type="button" class="rx-term" data-term="antagonist">antagonist</button> and <button type="button" class="rx-term" data-term="autoreceptor">autoreceptor</button> here, opens a plain explanation on a hover or a tap. Each tile gives the code chemists use with the plain name under it, what binds it and how tightly, the drugs people have heard of that act on it, what happens when it is bound, and under <em>What the kind means</em> the kind&rsquo;s explanation again with a line of context.</p>
   <div class="rx-filter" id="rxFilter" role="group" aria-label="Isolate one transmitter"></div>
   <div class="rx-search">
