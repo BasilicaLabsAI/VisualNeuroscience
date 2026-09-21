@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.42 — 21 September 2026 — The repository carries its own working notes
+Commit · Add the working notes a new session needs, so no handover has to be pasted
+
+A page at the root of the repository now says how work here is done: who signs the commits and what never goes in them, how a release is recorded and tagged, where the site's pieces are built from, how a change is checked before it ships, and what is open on the owner's side. A fresh session reads it before anything else, so nothing has to be handed over by hand.
+
 ## v10.41 — 21 September 2026 — The newsletter box says what went wrong
-Commit · Import the email class plainly in the newsletter worker, and let the box repeat the worker's reason
+Commit `9af0298` · Import the email class plainly in the newsletter worker, and let the box repeat the worker's reason
 
 The newsletter worker now imports Cloudflare's email class the documented way rather than at the moment of sending, and when the send fails it answers with the runtime's own reason instead of a blank apology. The box on the pages repeats that reason, so a refused address or a routing that is not yet switched on is named on the spot; the plain "Could not send just now" is kept for the case where the request never reached the worker at all. The worker's config also states its workers.dev route and turns preview addresses off, which quiets two warnings on deploy.
 
