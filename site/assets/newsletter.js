@@ -90,7 +90,10 @@
       })
       .catch(function(err){
         go.disabled = false;
-        msg.textContent = /look like|set up/.test(String(err.message)) ? err.message : "Could not send just now. Try again in a moment.";
+        /* the worker's own words when it gave any; the plain line when the
+           request never reached it */
+        var m = String(err && err.message || "");
+        msg.textContent = m && m !== "failed" && !/^TypeError|NetworkError|Failed to fetch|Load failed/.test(m) ? m : "Could not send just now. Try again in a moment.";
       });
   });
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && box.parentNode){ save({ until: Date.now() + SNOOZE }); close(); } });

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.41 — 21 September 2026 — The newsletter box says what went wrong
+Commit · Import the email class plainly in the newsletter worker, and let the box repeat the worker's reason
+
+The newsletter worker now imports Cloudflare's email class the documented way rather than at the moment of sending, and when the send fails it answers with the runtime's own reason instead of a blank apology. The box on the pages repeats that reason, so a refused address or a routing that is not yet switched on is named on the spot; the plain "Could not send just now" is kept for the case where the request never reached the worker at all. The worker's config also states its workers.dev route and turns preview addresses off, which quiets two warnings on deploy.
+
 ## v10.40 — 21 September 2026 — One receptor picked on a region's chart
-Commit · Let a receptor picked on a region's chart isolate it and its transmitter beneath, and a second click bring everything back
+Commit `f8867ba` · Let a receptor picked on a region's chart isolate it and its transmitter beneath, and a second click bring everything back
 
 On a region's chart the receptor names along the bottom are now buttons. Clicking one keeps only that receptor beneath the chart, with the transmitter that binds it drawn beside it and its rank and numbers for this region, and fades every other bar; a line above says what is showing and offers all sixty-nine back. Clicking the same name again, or that offer, brings the whole panel back. The pick holds across a change of region or source until it is undone.
 

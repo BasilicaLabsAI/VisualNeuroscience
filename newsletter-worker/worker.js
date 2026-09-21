@@ -24,6 +24,8 @@
    MAILCHIMP_* values. Nothing about the reader is stored here: the address
    goes out and the request ends. */
 
+import { EmailMessage } from "cloudflare:email";
+
 const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
 
 export default {
@@ -37,7 +39,12 @@ export default {
       return await subscribe(req, env);
     } catch (err){
       console.error(err && err.stack || err);
-      return answer(env, req, 502, { ok: false, error: "Could not pass the address on just now." });
+      /* say what went wrong, in the runtime's own words, so the box can show
+         it and the fault can be found without the logs: nothing in these
+         messages is secret, they name the binding or the address that was
+         refused */
+      const why = String(err && err.message || err).replace(/\s+/g, " ").slice(0, 200);
+      return answer(env, req, 502, { ok: false, error: "Could not pass the address on: " + why });
     }
   }
 };
@@ -104,7 +111,6 @@ async function deliverByEmail(env, { email, page, when, country }){
                 `Country:  ${country || "(unknown)"}`, "",
                 "Add them to the list. This message came from the newsletter-worker; nothing was stored."].join("\r\n");
   const raw = mime({ from: env.MAIL_FROM, to: env.NEWSLETTER_TO, subject: `Newsletter signup: ${email}`, text });
-  const EmailMessage = globalThis.__EmailMessage || (await import("cloudflare:email")).EmailMessage;
   await env.MAIL.send(new EmailMessage(env.MAIL_FROM, env.NEWSLETTER_TO, raw));
 }
 
