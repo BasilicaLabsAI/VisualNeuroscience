@@ -47,7 +47,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
 ## Open on the owner's side (update as they close)
 - App Store: a 4.3(a) rejection is under appeal to the App Review Board (submitted 13 September 2026).
   Do not submit a new build while it is open. The native visionOS app is the fallback if it fails.
-- Newsletter worker: deployed; needs Email Routing on visualneuroscience.ai with `fid@ottomanlabs.ai` verified
-  as a destination, and a redeploy after v10.41.
+- Newsletter worker: deployed, and redeployed after v10.41. Sending fails with "could not find account config of
+  sending domain" until visualneuroscience.ai is onboarded to Cloudflare Email Service (Compute → Email Service →
+  Email Routing → Onboard Domain) with `fid@ottomanlabs.ai` verified as a destination address.
 - Two Firebase API keys are flagged by secret scanning: restrict them (bundle ID / Identity Toolkit API) and
   close the alerts as "won't fix"; do not rotate or rewrite history.
