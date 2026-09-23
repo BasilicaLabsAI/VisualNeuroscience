@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.43 — 23 September 2026 — Highlighted regions light up on the receptor chart
+Commit · Light a highlighted region's bar on the receptor chart, Brodmann areas included
+
+A region highlighted in the atlas now lights its own bar on the receptor chart below, in the colour it wears in the viewports, along with its name and its column in the receptor-types table. Until now only a region highlighted on both sides showed there at all, and then only as a tinted name. A region highlighted on one side counts now too, and so does a Brodmann area: the two atlases sit on one grid, so an area lights every chart region that holds at least a fifth of it, which puts area 7 on both the superior parietal lobule and the precuneus. Where a region is also highlighted in its own right, its own colour wins, so clicking a name on the chart still shows.
+
 ## v10.42 — 21 September 2026 — The repository carries its own working notes
-Commit · Add the working notes a new session needs, so no handover has to be pasted
+Commit `1cc815e` · Add the working notes a new session needs, so no handover has to be pasted
 
 A page at the root of the repository now says how work here is done: who signs the commits and what never goes in them, how a release is recorded and tagged, where the site's pieces are built from, how a change is checked before it ships, and what is open on the owner's side. A fresh session reads it before anything else, so nothing has to be handed over by hand.
 

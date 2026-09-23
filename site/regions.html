@@ -979,7 +979,7 @@ mark{ background:var(--ink); color:var(--paper); }
 
   <section class="rxsec" id="receptorSec" aria-labelledby="rx-h">
     <h2 class="sec-h" id="rx-h">Receptor density <small id="rx-unit"></small></h2>
-    <p class="rx-lede">How thickly each receptor sits in each region, from two open sources: in vivo PET, one group-average tracer map per receptor or transporter, averaged over each AAL region; and ex vivo autoradiography, absolute densities in fmol/mg protein from post-mortem cortex, mapped onto the regions area by area. The two measure different things and are never put on one axis. Click a region&rsquo;s name and it lights up in the viewports above as a highlighted region like any other; pick a receptor and what binds it and what it sits in are drawn beneath the chart, with its source, tracer, sample and caveat under those.</p>
+    <p class="rx-lede">How thickly each receptor sits in each region, from two open sources: in vivo PET, one group-average tracer map per receptor or transporter, averaged over each AAL region; and ex vivo autoradiography, absolute densities in fmol/mg protein from post-mortem cortex, mapped onto the regions area by area. The two measure different things and are never put on one axis. Click a region&rsquo;s name and it lights up in the viewports above as a highlighted region like any other; whatever is highlighted above lights its bar here in the same colour, and a Brodmann area lights the regions most of it lies in. Pick a receptor and what binds it and what it sits in are drawn beneath the chart, with its source, tracer, sample and caveat under those.</p>
     <div class="rx-controls">
       <div class="ts-views" role="group" aria-label="Source">
         <button class="ts-btn active" data-layer="pet" type="button">In vivo PET</button>
@@ -1465,6 +1465,67 @@ mark{ background:var(--ink); color:var(--paper); }
     var side = indices[0] === r.L ? "L" : "R";
     return {key: side + ":" + r.base, entry: {name: r.pretty, base: r.base, sideTag: side, indices: [indices[0]]}};
   }
+
+  /* Where a Brodmann area falls on the chart. The chart is drawn region by
+     region in AAL and an area is not an AAL region, so it is placed by
+     overlap: the two label volumes share one grid, and an area lights every
+     region that holds at least a fifth of it, and always the one that holds
+     most. Brodmann's areas are cortex, so the deep nuclei and the
+     cerebellum, which an area's edge reaches only where the two atlases
+     disagree, are left out of the count. Worked out once, the first time an
+     area needs placing. */
+  var NOT_CORTEX = {"Subcortical": 1, "Cerebellum": 1, "Vermis": 1};
+  var baReach = null;
+  function buildBAReach(){
+    var nv = allNV()[0];
+    if (!nv || !nv.volumes || nv.volumes.length < 3) return null;
+    var aal = nv.volumes[1].img, ba = nv.volumes[2].img;
+    if (!aal || !ba || aal.length !== ba.length) return null;
+    var NR = REGIONS.length, row = new Int16Array(N_LABELS).fill(-1);
+    REGIONS.forEach(function(r, k){
+      if (NOT_CORTEX[r.group]) return;
+      [r.L, r.R, r.S].forEach(function(p){ if (p != null && p < N_LABELS) row[p] = k; });
+    });
+    var n = new Uint32Array(N_BA * NR);
+    for (var v = 0; v < ba.length; v++){
+      var b = ba[v];
+      if (b > 0 && b < N_BA){ var k = row[aal[v]]; if (k >= 0) n[b * NR + k]++; }
+    }
+    var reach = {};
+    for (var a = 1; a < N_BA; a++){
+      var tot = 0, top = 0, lit = {};
+      for (var j = 0; j < NR; j++){ tot += n[a * NR + j]; if (n[a * NR + j] > n[a * NR + top]) top = j; }
+      if (!tot) continue;
+      for (var j2 = 0; j2 < NR; j2++){
+        var c = n[a * NR + j2], r = REGIONS[j2];
+        if (!c || (j2 !== top && c * 5 < tot)) continue;
+        if (r.L != null) lit[r.L] = 1;
+        if (r.R != null) lit[r.R] = 1;
+        if (r.S != null) lit[r.S] = 1;
+      }
+      reach[a] = lit;
+    }
+    return reach;
+  }
+  /* The colour the chart lights a structure in, or null. A highlight of its
+     own, both sides or either one, comes before a Brodmann area lying mostly
+     within it, so a name clicked on the chart shows even where an area has
+     already lit it. */
+  function litColour(indices){
+    var want = {}, colour = null;
+    indices.forEach(function(i){ if (i != null) want[i] = 1; });
+    selections.forEach(function(s){
+      if (!colour && !isBA(s) && s.indices.some(function(i){ return want[i]; })) colour = s.color;
+    });
+    selections.forEach(function(s){
+      if (colour || !isBA(s)) return;
+      if (!baReach) baReach = buildBAReach();
+      var lit = baReach && baReach[s.ba];
+      if (lit && indices.some(function(i){ return lit[i]; })) colour = s.color;
+    });
+    return colour;
+  }
+
   window.MN_SEL = {
     toggle: function(indices, ensureOn){
       var k = selKeyFor(indices);
@@ -1484,6 +1545,7 @@ mark{ background:var(--ink); color:var(--paper); }
       var e = k && selections.get(k.key);
       return e ? e.color : null;
     },
+    lit: litColour,
     centre: function(indices){
       var nv = allNV()[0];
       if (!nv || !nv.volumes || nv.volumes.length < 2) return;
@@ -2035,6 +2097,7 @@ mark{ background:var(--ink); color:var(--paper); }
       }
       applyColormap();
       applyHashSelections();
+      notifySel();      /* both label volumes are in, so the chart can place a Brodmann area */
       statusEl.classList.add("hidden");
     } catch(err){
       console.error(err);
@@ -2406,6 +2469,7 @@ function renderChart() {
     const label = svgEl("text", { x: lx, y: ly, transform: "rotate(-52 " + lx + " " + ly + ")", "text-anchor": "end", class: "axis-label x-label", "font-size": n > 30 ? 9 : 10 });
     label.textContent = b.label;
     if (b.region) {
+      rect.dataset.base = b.region.base;
       label.dataset.base = b.region.base; label.setAttribute("tabindex", "0"); label.setAttribute("role", "button");
       label.addEventListener("click", () => toggleRegion(b.region));
       label.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleRegion(b.region); } });
@@ -2696,13 +2760,21 @@ function toggleRegion(reg) {
   if (!reg || !window.MN_SEL) return;
   holdSection(() => { const col = MN_SEL.toggle([reg.L, reg.R]); if (col) MN_SEL.centre([reg.L, reg.R]); });
 }
+/* Whatever is highlighted in the atlas lights the chart in its own colour:
+   the region's name, its bar, and its column in the receptor-types table.
+   MN_SEL.lit decides what counts: the region itself, either side of it, or
+   a Brodmann area lying mostly within it. An empty bar, where the map has
+   no number, takes the colour on its dashed outline. */
 function markPicked() {
   if (!window.MN_SEL) return;
-  document.querySelectorAll("#receptor-graph .x-label[data-base], #types-heat [data-base]").forEach(el => {
+  const litIn = MN_SEL.lit || MN_SEL.colour;
+  document.querySelectorAll("#receptor-graph .x-label[data-base], #receptor-graph .bar[data-base], #types-heat [data-base]").forEach(el => {
     const reg = BY_BASE[el.dataset.base];
-    const col = reg ? MN_SEL.colour([reg.L, reg.R]) : null;
+    const col = reg ? litIn([reg.L, reg.R]) : null;
     el.classList.toggle("picked", !!col);
-    if (el.tagName.toLowerCase() === "text") el.style.fill = col || "";
+    const tag = el.tagName.toLowerCase();
+    if (tag === "text") el.style.fill = col || "";
+    else if (tag === "rect") el.style[el.classList.contains("empty") ? "stroke" : "fill"] = col || "";
     else if (col) el.style.setProperty("--sel", col); else el.style.removeProperty("--sel");
   });
 }
