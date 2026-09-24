@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.46 — 24 September 2026 — The side view shows the brain, not the gap between its halves
+Commit · Start the sagittal plane beside the midline rather than in the gap between the hemispheres
+
+The sagittal view used to open exactly on the midline, which runs down the fluid between the two hemispheres, so it showed the corpus callosum and the brainstem floating in black. It now opens 4 mm into the left hemisphere, on the medial wall of the cortex, and Centre planes goes back there; the Network Atlas, the hallucinations page and the Apple Vision Pro planes open the same way. Centring on a region that has a left and a right half now goes to the left one, so the sagittal plane passes through it rather than between the pair, and lands on the region's own centre, which it could miss by a centimetre or more before because the atlas and the template are drawn on different grids. A region picked from the list now brings the planes to it, as a Brodmann area already did. The picture of the atlas on the home page and the App Store screenshots of the atlas and the Network Atlas are retaken to match.
+
 ## v10.45 — 24 September 2026 — One address to write to
-Commit · Give fkarim@visualneuroscience.ai as the contact address everywhere
+Commit `c01179e` · Give fkarim@visualneuroscience.ai as the contact address everywhere
 
 The About page, the privacy page and the Apple Vision Pro about page now give fkarim@visualneuroscience.ai as the address to write to, in place of the old one, and so do the notes for the App Store listing. The newsletter notes add that the list's emails come from the same address, with how to verify it in Mailchimp, and warn against moving the domain's mail to Cloudflare while another provider holds that mailbox.
 

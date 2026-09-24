@@ -75,6 +75,13 @@ window.VS = (function(){
       {url: A.ATLAS_URL, name: "aal.nii.gz", opacity: 0.9}
     ]);
     nv.setSliceType(niivue.SLICE_TYPE[type.toUpperCase()]);
+    /* the middle of the volume, bar the sagittal plane: the exact midline
+       is the fluid between the hemispheres, so it starts 4 mm into the left
+       one, as the Region Atlas does */
+    try{
+      var mid = nv.frac2mm([0.5, 0.5, 0.5]);
+      nv.scene.crosshairPos = nv.mm2frac([-4, mid[1], mid[2]]);
+    }catch(e){}
     if (window.MN_LIFE) MN_LIFE.register(nv);
     instances.push(nv);
     /* the atlas ships with a rainbow of its own; from the first frame it

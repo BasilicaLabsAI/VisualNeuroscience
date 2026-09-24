@@ -849,19 +849,48 @@ function repaint(){
   centreOnSelection();
 }
 
+/* The exact midline runs down the fissure between the hemispheres, where a
+   sagittal slice finds only fluid and shows the corpus callosum floating in
+   black. So whenever a move would leave the sagittal plane within 4 mm of
+   the midline (at the start, on Centre planes, or centring on a region) it
+   goes 4 mm into the left hemisphere instead, onto the medial wall of the
+   cortex. */
+const OFF_MIDLINE = 4;
+function clearOfMidline(mm){
+  return [Math.abs(mm[0]) < OFF_MIDLINE ? -OFF_MIDLINE : mm[0], mm[1], mm[2]];
+}
+function centrePlanes(){
+  const home = clearOfMidline(scanInstances[0].frac2mm([0.5, 0.5, 0.5]));
+  for (const inst of scanInstances){
+    inst.scene.crosshairPos = inst.mm2frac(home);
+    inst.scene.pan2Dxyzmm = [0, 0, 0, 1];
+    inst.drawScene();
+  }
+}
+
+/* A region that straddles the midline, as a left and right pair does, is
+   centred on its left half, for the reason above. The centre is found in the
+   atlas's own voxels and placed by millimetres, since the template the
+   crosshair is measured against is a different grid. */
 function centreOnSelection(){
   if (!selected || scanState !== "ready") return;
   const region = REGIONS.find(r => r.id === selected);
   const want = new Set(parcelsOf(region));
-  const nv = scanInstances[0], vol = nv.volumes[1], dims = vol.hdr.dims, img = vol.img;
-  let sx = 0, sy = 0, sz = 0, n = 0;
+  const nv = scanInstances[0], vol = nv.volumes[1], dims = vol.hdr.dims, img = vol.img, A = vol.hdr.affine;
+  const all = [0, 0, 0, 0], left = [0, 0, 0, 0];
   for (let k = 0; k < dims[3]; k++)
     for (let j = 0; j < dims[2]; j++)
       for (let i = 0; i < dims[1]; i++)
-        if (want.has(img[i + j*dims[1] + k*dims[1]*dims[2]])){ sx+=i; sy+=j; sz+=k; n++; }
-  if (!n) return;
-  const frac = [sx/n/dims[1], sy/n/dims[2], sz/n/dims[3]];
-  for (const inst of scanInstances){ inst.scene.crosshairPos = frac.slice(); inst.drawScene(); }
+        if (want.has(img[i + j*dims[1] + k*dims[1]*dims[2]])){
+          all[0]+=i; all[1]+=j; all[2]+=k; all[3]++;
+          if (A[0][0]*i + A[0][1]*j + A[0][2]*k + A[0][3] < 0){ left[0]+=i; left[1]+=j; left[2]+=k; left[3]++; }
+        }
+  if (!all[3]) return;
+  const mmOf = s => [0, 1, 2].map(r => (A[r][0]*s[0] + A[r][1]*s[1] + A[r][2]*s[2]) / s[3] + A[r][3]);
+  let mm = mmOf(all);
+  if (Math.abs(mm[0]) < OFF_MIDLINE && left[3]) mm = mmOf(left);
+  mm = clearOfMidline(mm);
+  for (const inst of scanInstances){ inst.scene.crosshairPos = inst.mm2frac(mm); inst.drawScene(); }
 }
 
 /* ── the rail's region list ── */
@@ -1102,14 +1131,9 @@ async function ensureScan(){
     planes.forEach((p, i) => scanInstances[i].setSliceType(p.st));
     scanInstances.forEach(nv => nv.broadcastTo(
       scanInstances.filter(o => o !== nv), {"2d":true, "3d":true}));
+    centrePlanes();
     document.querySelectorAll("[data-centre]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        scanInstances.forEach(inst => {
-          inst.scene.crosshairPos = [0.5, 0.5, 0.5];
-          inst.scene.pan2Dxyzmm = [0, 0, 0, 1];
-          inst.drawScene();
-        });
-      });
+      btn.addEventListener("click", centrePlanes);
     });
     document.querySelectorAll(".mri-stage").forEach(stage => {
       stage.addEventListener("wheel", e => e.preventDefault(), {capture:true, passive:false});

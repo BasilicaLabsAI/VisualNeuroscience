@@ -1209,15 +1209,29 @@ mark{ background:var(--ink); color:var(--paper); }
     finally{ correcting = false; }
   }
 
-  /* Put the crosshair back at the middle of the volume, so every plane shows
-     its central slice again, and undo any panning or zooming with it. */
+  /* The planes start in the middle of the volume, bar one. The exact midline
+     runs down the fissure between the hemispheres, where a sagittal slice
+     finds only fluid and shows the corpus callosum and the brainstem floating
+     in black. So whenever a move would leave the sagittal plane within 4 mm
+     of the midline (at the start, on Centre planes, or centring on a region
+     or a Brodmann area) it goes 4 mm into the left hemisphere instead, onto
+     the medial wall of the cortex. */
+  var OFF_MIDLINE = 4;
+  function clearOfMidline(mm){
+    return [Math.abs(mm[0]) < OFF_MIDLINE ? -OFF_MIDLINE : mm[0], mm[1], mm[2]];
+  }
+  function homeMm(nv){ return clearOfMidline(nv.frac2mm([0.5, 0.5, 0.5])); }
+
+  /* Put the planes back where they started, and undo any panning or zooming
+     with them. */
   function centrePlanes(){
     var nvs = allNV();
     if (!nvs.length) return;
     correcting = true;
     try{
+      var home = homeMm(nvs[0]);
       nvs.forEach(function(inst){
-        inst.scene.crosshairPos = [0.5, 0.5, 0.5];
+        inst.scene.crosshairPos = inst.mm2frac(home);
         inst.scene.pan2Dxyzmm = [0, 0, 0, 1];
         inst.drawScene();
       });
@@ -1546,23 +1560,30 @@ mark{ background:var(--ink); color:var(--paper); }
       return e ? e.color : null;
     },
     lit: litColour,
+    /* A left–right pair is centred on its left member: the middle of a pair
+       is the midline, where the sagittal plane shows neither half. The
+       centre is found in the atlas's own voxels and placed by millimetres,
+       since the template the crosshair is measured against is a different
+       grid. */
     centre: function(indices){
       var nv = allNV()[0];
       if (!nv || !nv.volumes || nv.volumes.length < 2) return;
-      var vol = nv.volumes[1], dims = vol.hdr.dims, img = vol.img;
-      var want = {}; indices.forEach(function(v){ want[v] = 1; });
+      var vol = nv.volumes[1], dims = vol.hdr.dims, img = vol.img, A = vol.hdr.affine;
+      var first = indices.filter(function(v){ return v != null; })[0];
+      if (first == null || !A) return;
       var sx = 0, sy = 0, sz = 0, n = 0;
       for (var k2 = 0; k2 < dims[3]; k2++)
         for (var j = 0; j < dims[2]; j++)
           for (var i2 = 0; i2 < dims[1]; i2++)
-            if (want[img[i2 + j*dims[1] + k2*dims[1]*dims[2]]]){ sx += i2; sy += j; sz += k2; n++; }
+            if (img[i2 + j*dims[1] + k2*dims[1]*dims[2]] === first){ sx += i2; sy += j; sz += k2; n++; }
       if (!n) return;
-      var frac = [sx/n/dims[1], sy/n/dims[2], sz/n/dims[3]];
-      allNV().forEach(function(inst){ inst.scene.crosshairPos = frac.slice(); inst.drawScene(); });
+      var v = [sx/n, sy/n, sz/n];
+      centreMm([0, 1, 2].map(function(r){ return A[r][0]*v[0] + A[r][1]*v[1] + A[r][2]*v[2] + A[r][3]; }));
     },
     onChange: function(cb){ selWatchers.push(cb); }
   };
   function centreMm(mm){
+    mm = clearOfMidline(mm);
     allNV().forEach(function(nv){
       try{ nv.scene.crosshairPos = nv.mm2frac(mm); nv.drawScene(); }catch(e){}
     });
@@ -1584,7 +1605,7 @@ mark{ background:var(--ink); color:var(--paper); }
         else if (mode === "L") entry = {name: r.pretty, base: r.base, sideTag: "L", indices: [r.L], color: nextColor()};
         else if (mode === "R") entry = {name: r.pretty, base: r.base, sideTag: "R", indices: [r.R], color: nextColor()};
         else if (mode === "S") entry = {name: r.pretty, base: r.base, sideTag: "", indices: [r.S], color: nextColor()};
-        if (entry){ selections.set(key, entry); renderChips(); applyColormap(); }
+        if (entry){ selections.set(key, entry); renderChips(); applyColormap(); window.MN_SEL.centre(entry.indices); }
       }
     }
     selectEl.value = "";
@@ -2067,6 +2088,8 @@ mark{ background:var(--ink); color:var(--paper); }
                            .map(function(q){ return INSTANCES[q.key]; });
         INSTANCES[p.key].broadcastTo(others, {"2d": true, "3d": true});
       });
+      var home = homeMm(INSTANCES.axial);
+      allNV().forEach(function(inst){ inst.scene.crosshairPos = inst.mm2frac(home); });
 
       /* The slice tool goes on the 3D box only: a clip plane cuts the volume,
          which is what the render draws. The 2D planes already are slices. */
