@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.45 — 24 September 2026 — One address to write to
+Commit · Give fkarim@visualneuroscience.ai as the contact address everywhere
+
+The About page, the privacy page and the Apple Vision Pro about page now give fkarim@visualneuroscience.ai as the address to write to, in place of the old one, and so do the notes for the App Store listing. The newsletter notes add that the list's emails come from the same address, with how to verify it in Mailchimp, and warn against moving the domain's mail to Cloudflare while another provider holds that mailbox.
+
 ## v10.44 — 24 September 2026 — The newsletter moves to Mailchimp
-Commit · Send newsletter signups to Mailchimp first and say so in the box and the privacy page
+Commit `5657adb` · Send newsletter signups to Mailchimp first and say so in the box and the privacy page
 
 A signup from the newsletter box now goes to the newsletter's list at Mailchimp, which writes to the new reader to confirm the address before adding it, so the box says to look for that email, and tells someone already on the list as much. The box and the privacy page now name Mailchimp, run by Intuit on servers in the United States, as the service that keeps the list and sends the emails, where they used to promise the address went to no one else. An address Mailchimp refuses as made up is answered in its own words, the box no longer leaves its form on show after a signup, and the old email route, which Cloudflare was refusing, can no longer cost a signup that Mailchimp took.
 

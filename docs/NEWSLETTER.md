@@ -43,6 +43,12 @@ Smoke test from a terminal, with a real address:
 
 It answers `{"ok":true,"via":["mailchimp"]}`, or the reason it could not.
 
+## Who the emails come from
+Mailchimp sends the confirmation and every newsletter from the audience's default From address,
+`fkarim@visualneuroscience.ai`, set under Audience → Settings → Audience name and defaults, where
+Mailchimp asks to verify the address by email. Authenticating visualneuroscience.ai in Mailchimp's
+Domains settings, with the records it gives added to Cloudflare DNS, keeps the emails out of spam.
+
 ## How the worker routes an address
 Mailchimp first, whenever its three secrets are set, adding the address as pending so that
 Mailchimp sends its own confirmation (double opt-in, which the privacy page promises). Then, only
@@ -53,11 +59,13 @@ failure goes to the worker's log.
 ## The email route, if it is ever wanted back
 It sends through the worker's `send_email` binding, which needs Cloudflare's Email Service on the
 domain of the From address, `newsletter@visualneuroscience.ai`. Without it the route fails with
-"could not find account config of sending domain".
+"could not find account config of sending domain". Onboarding a domain to Email Routing points its
+MX records at Cloudflare, so if another provider holds the fkarim@visualneuroscience.ai mailbox,
+leave this route off rather than move the domain's mail.
 
 1. Cloudflare dashboard → Compute → Email Service → Email Routing → Onboard Domain →
    visualneuroscience.ai, accepting the records it adds; then Destination Addresses → add
-   `fid@ottomanlabs.ai` and click the link in the verification email that arrives.
+   `fkarim@visualneuroscience.ai` and click the link in the verification email that arrives.
 2. `npx wrangler secret put NEWSLETTER_TO` with that address, and `npx wrangler deploy`.
 3. Change the privacy paragraph to say the maker is also emailed a copy of each signup.
 

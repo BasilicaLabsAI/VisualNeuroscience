@@ -3,7 +3,8 @@
 Read this first in every session. It is the handover; nothing else needs pasting.
 
 ## Who and how
-- Owner: Fid (Fadil Karim), sole developer. Every commit is authored **Fid <fid_kk@proton.me>**:
+- Owner: Fid (Fadil Karim), sole developer. Public contact everywhere (site, listings, Mailchimp): fkarim@visualneuroscience.ai.
+  Every commit is authored **Fid <fid_kk@proton.me>**:
   set `GIT_AUTHOR_NAME=Fid GIT_AUTHOR_EMAIL=fid_kk@proton.me GIT_COMMITTER_NAME=Fid GIT_COMMITTER_EMAIL=fid_kk@proton.me`
   on each commit. No other name ever appears as an author.
 - **Never** put model names, tool names, `Co-Authored-By` or `Claude-Session` trailers, session links or
@@ -47,8 +48,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
 ## Open on the owner's side (update as they close)
 - App Store: a 4.3(a) rejection is under appeal to the App Review Board (submitted 13 September 2026).
   Do not submit a new build while it is open. The native visionOS app is the fallback if it fails.
-- Newsletter: moving to Mailchimp (v10.44). The owner sets `MAILCHIMP_API_KEY`, `MAILCHIMP_LIST_ID` and `MAILCHIMP_DC`
-  as worker secrets, deletes `NEWSLETTER_TO` and redeploys the worker (`docs/NEWSLETTER.md`); until then signups fail.
-  The email route stays off unless visualneuroscience.ai is onboarded to Cloudflare Email Service.
+- Newsletter: on Mailchimp since 24 September 2026; the worker's three Mailchimp secrets are set and it reaches the
+  audience. Still to do in Mailchimp: make fkarim@visualneuroscience.ai the audience's default From address and
+  authenticate the domain (`docs/NEWSLETTER.md`). The email route stays off.
 - Two Firebase API keys are flagged by secret scanning: restrict them (bundle ID / Identity Toolkit API) and
   close the alerts as "won't fix"; do not rotate or rewrite history.

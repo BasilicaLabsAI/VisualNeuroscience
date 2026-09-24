@@ -145,7 +145,7 @@ The anatomy works with the network off: the MNI152 template, the AAL and Brodman
 
 It is not a diagnostic or clinical tool. Every page says so and cites its sources.
 
-Contact: fid@ottomanlabs.ai
+Contact: fkarim@visualneuroscience.ai
 ```
 
 Contact first name, last name, phone and email: yours.

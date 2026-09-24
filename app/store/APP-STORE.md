@@ -185,7 +185,7 @@ and 13" iPad display sizes; App Store Connect derives the smaller ones.
 
 **Support and privacy URLs.** Support URL:
 `https://visualneuroscience.ai/about.html` (the page carries the support
-contact, **fid@ottomanlabs.ai**, and the story). Privacy Policy URL:
+contact, **fkarim@visualneuroscience.ai**, and the story). Privacy Policy URL:
 `https://visualneuroscience.ai/privacy.html`.
 
 **Privacy.** Depends on whether this build ships with accounts active
