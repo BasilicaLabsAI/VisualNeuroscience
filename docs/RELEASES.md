@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.44 — 24 September 2026 — The newsletter moves to Mailchimp
+Commit · Send newsletter signups to Mailchimp first and say so in the box and the privacy page
+
+A signup from the newsletter box now goes to the newsletter's list at Mailchimp, which writes to the new reader to confirm the address before adding it, so the box says to look for that email, and tells someone already on the list as much. The box and the privacy page now name Mailchimp, run by Intuit on servers in the United States, as the service that keeps the list and sends the emails, where they used to promise the address went to no one else. An address Mailchimp refuses as made up is answered in its own words, the box no longer leaves its form on show after a signup, and the old email route, which Cloudflare was refusing, can no longer cost a signup that Mailchimp took.
+
 ## v10.43 — 23 September 2026 — Highlighted regions light up on the receptor chart
-Commit · Light a highlighted region's bar on the receptor chart, Brodmann areas included
+Commit `3fb0d78` · Light a highlighted region's bar on the receptor chart, Brodmann areas included
 
 A region highlighted in the atlas now lights its own bar on the receptor chart below, in the colour it wears in the viewports, along with its name and its column in the receptor-types table. Until now only a region highlighted on both sides showed there at all, and then only as a tinted name. A region highlighted on one side counts now too, and so does a Brodmann area: the two atlases sit on one grid, so an area lights every chart region that holds at least a fifth of it, which puts area 7 on both the superior parietal lobule and the precuneus. Where a region is also highlighted in its own right, its own colour wins, so clicking a name on the chart still shows.
 

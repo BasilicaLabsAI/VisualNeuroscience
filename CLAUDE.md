@@ -47,8 +47,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
 ## Open on the owner's side (update as they close)
 - App Store: a 4.3(a) rejection is under appeal to the App Review Board (submitted 13 September 2026).
   Do not submit a new build while it is open. The native visionOS app is the fallback if it fails.
-- Newsletter worker: deployed, and redeployed after v10.41. Sending fails with "could not find account config of
-  sending domain" until visualneuroscience.ai is onboarded to Cloudflare Email Service (Compute → Email Service →
-  Email Routing → Onboard Domain) with `fid@ottomanlabs.ai` verified as a destination address.
+- Newsletter: moving to Mailchimp (v10.44). The owner sets `MAILCHIMP_API_KEY`, `MAILCHIMP_LIST_ID` and `MAILCHIMP_DC`
+  as worker secrets, deletes `NEWSLETTER_TO` and redeploys the worker (`docs/NEWSLETTER.md`); until then signups fail.
+  The email route stays off unless visualneuroscience.ai is onboarded to Cloudflare Email Service.
 - Two Firebase API keys are flagged by secret scanning: restrict them (bundle ID / Identity Toolkit API) and
   close the alerts as "won't fix"; do not rotate or rewrite history.

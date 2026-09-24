@@ -25,7 +25,7 @@
     ".vn-news .ck{display:block;font-family:var(--font-brand,sans-serif);font-weight:500;font-size:.52rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-60,#aaa)}" +
     ".vn-news h2{font-family:var(--font-display,Georgia,serif);font-weight:400;font-size:1.15rem;line-height:1.2;margin:.3rem 1.6rem .4rem 0}" +
     ".vn-news p{font-family:var(--font-serif,Georgia,serif);font-size:.9rem;line-height:1.5;margin:0 0 .7rem}" +
-    ".vn-news form{display:flex;gap:.45rem}" +
+    ".vn-news form{display:flex;gap:.45rem}.vn-news form[hidden]{display:none}" +
     ".vn-news input[type=email]{flex:1;min-width:0;font:inherit;font-family:var(--font-serif,Georgia,serif);font-size:.95rem;color:var(--ink,#fff);background:transparent;border:1px solid var(--hair,#fff);padding:.5rem .65rem}" +
     ".vn-news input[type=email]:focus{outline:2px solid var(--ink,#fff);outline-offset:1px}" +
     ".vn-news button{font-family:var(--font-brand,sans-serif);font-weight:500;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer}" +
@@ -52,7 +52,7 @@
     '<label class="hp" aria-hidden="true">Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label>' +
     '<button type="submit" class="go">Keep me posted</button></form>' +
     '<p class="msg" role="status" aria-live="polite"></p>' +
-    '<p class="fine">Your address goes to the maker of this site and to no one else, to send the newsletter and nothing more. <a href="privacy.html#newsletter">How it is kept</a>.</p>';
+    '<p class="fine">Your address goes on this site&rsquo;s list at Mailchimp, which sends the newsletter, and is used for that and nothing more. Mailchimp emails you once to confirm. <a href="privacy.html#newsletter">How it is kept</a>.</p>';
 
   var shown = false, timer = null;
   function save(s){ try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e){} }
@@ -81,12 +81,17 @@
     fetch(ENDPOINT, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: email, page: location.pathname, website: box.querySelector("input[name=website]").value })
-    }).then(function(r){ return r.json().catch(function(){ return { ok: r.ok }; }).then(function(j){ if (!r.ok || !j.ok) throw new Error(j.error || "failed"); }); })
-      .then(function(){
+    }).then(function(r){ return r.json().catch(function(){ return { ok: r.ok }; }).then(function(j){ if (!r.ok || !j.ok) throw new Error(j.error || "failed"); return j; }); })
+      .then(function(j){
         save({ done: true });
         box.querySelector("form").hidden = true;
-        msg.textContent = "Thank you. You are on the list; the first email will say what is new.";
-        setTimeout(close, 6000);
+        /* Mailchimp holds a new address until its owner confirms it from the
+           email Mailchimp sends, so the box says to look for that email */
+        var via = String((j && j.via || []).join(" "));
+        msg.textContent = /already on the list/.test(via) ? "That address is signed up already. If it was never confirmed, look for Mailchimp\u2019s email."
+          : /mailchimp/.test(via) ? "Thank you. Mailchimp has sent you an email: confirm your address from it and you are on the list."
+          : "Thank you. You are on the list; the first email will say what is new.";
+        setTimeout(close, /mailchimp/.test(via) ? 10000 : 6000);
       })
       .catch(function(err){
         go.disabled = false;
