@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.48 — 25 September 2026 — The App Store name becomes Visual Neuroscience
+Commit · Name the app Visual Neuroscience in the App Store listing notes
+
+The listing notes now give the app's App Store name as Visual Neuroscience, in two words, in place of VisualNeuroscience.AI. Apple lets the name change only with a new version, so it goes in with 1.1 and shows once that update is released; the notes say so, and add that another listing's name is close to it, which is reason to keep the subtitle specific.
+
 ## v10.47 — 25 September 2026 — On the App Store
-Commit · Link the App Store listing from the site and move the app to version 1.1
+Commit `ef5bf59` · Link the App Store listing from the site and move the app to version 1.1
 
 VisualNeuroscience.AI is on the App Store for iPhone and iPad. The home page's top line now says so beside "Free, nothing to install", with a link to the listing, and Safari on an iPhone or iPad offers the app in its own banner there; inside the app the line keeps naming the template and the atlas instead. The About page links to the listing too, and no longer describes the Digital Textbook as three chapters: it has been OpenStax's whole book, nineteen chapters, since v10.19. The app's version moves to 1.1, the number the next submission needs now that 1.0 is approved, and the App Store notes carry that update's What's New text and the privacy answer the newsletter box needs.
 

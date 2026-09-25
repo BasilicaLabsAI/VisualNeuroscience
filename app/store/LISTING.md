@@ -8,11 +8,18 @@ headings.
 
 ## App Information
 
-**Name** (21/30)
+**Name** (19/30)
 
 ```
-VisualNeuroscience.AI
+Visual Neuroscience
 ```
+
+Was VisualNeuroscience.AI for 1.0. The name can only be changed while a new
+version is being prepared, so this goes in with 1.1 and shows once 1.1 is
+released. With the space, "neuroscience" is a word of its own for search.
+NOURAKU – Visual Neuroscience is on the store too, and the 4.3(a) notes
+name that likeness as a possible trigger, so the subtitle should say what
+no other listing could.
 
 **Subtitle** (23/30)
 
