@@ -118,13 +118,33 @@ Routing App Coverage File, App Clip and iMessage App: leave alone.
 
 ## Next update: what's new (1.1)
 
-For the *What's New in This Version* field when the next build is
-submitted. 4,000 characters allowed; this is well under.
+Version 1.0 was approved and released on 25 September 2026. The project is
+at 1.1 for the next submission: create version 1.1 in App Store Connect,
+pick the new build, upload the screenshots in `app/store/screenshots/`,
+paste the text below into *What's New in This Version*, and update App
+Privacy as the section below says, since 1.1 is the first version with the
+newsletter box.
+
+Check the build number on the 1.0 page first. If 1.0 went out as build 14
+rather than 15, the second block is new to App Store users as well and goes
+above the first. 4,000 characters allowed; both together are well under.
 
 ```
-• Export the brain in 3D. Every 3D view now saves as a model file: glTF (.glb), USDZ for Apple Quick Look, OBJ, STL for printing, PLY, VRML and X3D. Highlighted regions export as surfaces in their own colours, with the brain's outer surface for context; the Brodmann page exports its border graph; the Network Atlas exports the couplings of the state showing; the tractogram exports as coloured streamlines. Open a USDZ from Files to see the brain in your room.
-• Saved models. Name a Region Atlas view — the regions, their colours, the camera, the cuts — and open it again later. Signed in, models follow your account to every device.
-• The Brodmann map is now a line drawing, credited to IFEN, whose diagram it is adapted from.
+• Microanatomy: a neuron drawn part by part, with twenty structures to click and a quiz to learn them, seventeen neurotransmitters drawn the way chemists draw them, and a hundred and fifty receptors, channels and transporters, each with the drugs that act on it.
+• Receptor densities now come from published PET and autoradiography, with a source behind every number. Pick a region to see its receptors ranked against the rest of the brain, or pick a receptor to see where it is densest and light those regions up on the scan.
+• The Brodmann areas light up in the Region Atlas too, searchable by number, name or what they do.
+• The Digital Textbook is now OpenStax's Introduction to Behavioral Neuroscience in full, nineteen chapters, with its citations opening where they stand.
+• The side view opens on the brain itself rather than the gap between its halves, and picking a region brings every view to it.
+• A highlighted region lights up on the receptor chart in its own colour.
+• A newsletter to sign up to, and a new contact address: fkarim@visualneuroscience.ai.
+```
+
+Only if 1.0 went out as build 14:
+
+```
+• Export the brain in 3D. Every 3D view now saves as a model file: glTF (.glb), USDZ for Apple Quick Look, OBJ, STL for printing, PLY, VRML and X3D. Open a USDZ from Files to see the brain in your room.
+• Saved models. Name a Region Atlas view, with its regions, colours, camera and cuts, and open it again later. Signed in, models follow your account to every device.
+• An About page says who made the app and why, and the Brodmann map is now a line drawing, credited to IFEN, whose diagram it is adapted from.
 ```
 
 ## App Review Information
@@ -156,6 +176,11 @@ With accounts on, as they are: Contact Info (name, email address) and
 User Content (other user content: saved files and practice progress),
 both **linked to the user's identity**, used for **App Functionality** and
 **Analytics**, and **not** used to track. Everything else: not collected.
+
+From 1.1 the newsletter box is in the app, and an address typed into it
+goes to the newsletter's list at Mailchimp. Add **Developer's Advertising
+or Marketing** to the purposes of Contact Info → Email Address before
+submitting 1.1; it stays linked to the user and not used to track.
 
 ## Age Rating
 

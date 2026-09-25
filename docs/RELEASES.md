@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.47 — 25 September 2026 — On the App Store
+Commit · Link the App Store listing from the site and move the app to version 1.1
+
+VisualNeuroscience.AI is on the App Store for iPhone and iPad. The home page's top line now says so beside "Free, nothing to install", with a link to the listing, and Safari on an iPhone or iPad offers the app in its own banner there; inside the app the line keeps naming the template and the atlas instead. The About page links to the listing too, and no longer describes the Digital Textbook as three chapters: it has been OpenStax's whole book, nineteen chapters, since v10.19. The app's version moves to 1.1, the number the next submission needs now that 1.0 is approved, and the App Store notes carry that update's What's New text and the privacy answer the newsletter box needs.
+
 ## v10.46 — 24 September 2026 — The side view shows the brain, not the gap between its halves
-Commit · Start the sagittal plane beside the midline rather than in the gap between the hemispheres
+Commit `13d67a8` · Start the sagittal plane beside the midline rather than in the gap between the hemispheres
 
 The sagittal view used to open exactly on the midline, which runs down the fluid between the two hemispheres, so it showed the corpus callosum and the brainstem floating in black. It now opens 4 mm into the left hemisphere, on the medial wall of the cortex, and Centre planes goes back there; the Network Atlas, the hallucinations page and the Apple Vision Pro planes open the same way. Centring on a region that has a left and a right half now goes to the left one, so the sagittal plane passes through it rather than between the pair, and lands on the region's own centre, which it could miss by a centimetre or more before because the atlas and the template are drawn on different grids. A region picked from the list now brings the planes to it, as a Brodmann area already did. The picture of the atlas on the home page and the App Store screenshots of the atlas and the Network Atlas are retaken to match.
 

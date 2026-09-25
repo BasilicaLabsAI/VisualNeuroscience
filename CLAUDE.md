@@ -46,8 +46,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
 - Licences and permissions are recorded in `docs/PERMISSIONS.md`; keep it in step with any new data source.
 
 ## Open on the owner's side (update as they close)
-- App Store: a 4.3(a) rejection is under appeal to the App Review Board (submitted 13 September 2026).
-  Do not submit a new build while it is open. The native visionOS app is the fallback if it fails.
+- App Store: version 1.0 was approved and released on 25 September 2026 (https://apps.apple.com/app/id6805618686)
+  after an expedited review. The project is at 1.1 for the next submission; its What's New text, the App Privacy
+  change the newsletter needs, and the steps are in `app/store/LISTING.md`, the screenshots in `app/store/screenshots/`.
 - Newsletter: on Mailchimp since 24 September 2026; the worker's three Mailchimp secrets are set and it reaches the
   audience. Still to do in Mailchimp: make fkarim@visualneuroscience.ai the audience's default From address and
   authenticate the domain (`docs/NEWSLETTER.md`). The email route stays off.

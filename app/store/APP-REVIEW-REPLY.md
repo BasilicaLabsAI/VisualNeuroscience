@@ -104,6 +104,12 @@ thread and the review continues.
 
 # Answering the 4.3(a) rejection — Design — Spam (12 September 2026)
 
+**Outcome, 25 September 2026.** Approved. Developer Support (case
+102973563781) found no appeal on record, so the 13 September appeal never
+reached the Board; it put the submission that had waited since 13 September
+through an expedited review instead, and version 1.0 was approved and
+released on 25 September. The rest of this section is kept as the record.
+
 Build 1.0 (14), submission 979d790e-caea-4eee-a37a-b8a2d201a044, reviewed
 on an iPad Air 11-inch (M3). The finding: "the app shares a similar binary,
 metadata, and/or concept as apps submitted to the App Store by other

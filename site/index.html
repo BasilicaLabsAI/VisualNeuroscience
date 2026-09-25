@@ -27,13 +27,17 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-itunes-app" content="app-id=6805618686">
 <link rel="stylesheet" href="assets/viewer.css">
 <link rel="stylesheet" href="fonts/fonts.css">
 <meta name="color-scheme" content="dark light">
 <script>/* Dark is the default; only an explicit choice of light overrides it.
    Set before first paint so no page flashes white on its way in. */
 (function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
-if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();
+/* The native shells inject Capacitor before any page script runs, so the app
+   can be told apart here too, before the top line is drawn. */
+(function(){try{var c=window.Capacitor;if(c&&c.isNativePlatform&&c.isNativePlatform())document.documentElement.setAttribute("data-native","");}catch(e){}})();</script>
 <style>
 @font-face{
   font-family:'Flux';
@@ -137,6 +141,11 @@ img{ max-width:100%; height:auto; display:block; }
   font-family:var(--font-serif); font-style:italic; font-weight:400;
   font-size:.95rem; letter-spacing:0; text-transform:none; color:var(--ink);
 }
+/* the web points to the App Store; the app, already installed, names its scans instead */
+.dateline .dl-app{ color:var(--ink); text-decoration:none; border-bottom:1px solid var(--hair); }
+.dateline .dl-app:hover{ border-bottom-color:var(--ink); }
+:root:not([data-native]) .dateline .dl-scan,
+:root[data-native] .dateline .dl-app{ display:none; }
 
 /* ── the mosaic ─────────────────────────────────────────────────────────
    Twelve columns on desktop, so the boxes can take unequal widths the way
@@ -300,7 +309,8 @@ img{ max-width:100%; height:auto; display:block; }
   <div class="dateline">
     <span>Free &middot; nothing to install</span>
     <span class="mid">Mapping the brain in the browser</span>
-    <span>MNI152 &middot; AAL-116</span>
+    <span class="dl-scan">MNI152 &middot; AAL-116</span>
+    <a class="dl-app" href="https://apps.apple.com/app/id6805618686" target="_blank" rel="noopener">Also on the App Store &rarr;</a>
   </div>
 
   <div class="mosaic">
