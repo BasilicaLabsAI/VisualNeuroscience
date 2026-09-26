@@ -17,15 +17,17 @@ struct ConsoleView: View {
                 ConsoleButton(title: "The brain",
                               detail: "The MNI152 brain in the room, with its own console for slicing it and highlighting regions.",
                               symbol: "brain") {
-                    openWindow(id: "brain")
-                    openWindow(id: "brain-console")
+                    /* the brain opens its console itself; if both are in
+                       the room already there is nothing to open */
+                    if !Atlas.shared.isOpen("brain") { openWindow(id: "brain") }
+                    else if !Atlas.shared.isOpen("brain-console") { openWindow(id: "brain-console") }
                 }
                 ConsoleButton(title: "Brodmann areas",
                               detail: "The 41 areas searchable by what they do, and drawn on the brain when you ask.",
-                              symbol: "square.grid.3x3") { openWindow(id: "brodmann") }
+                              symbol: "square.grid.3x3") { if !Atlas.shared.isOpen("brodmann") { openWindow(id: "brodmann") } }
                 ConsoleButton(title: "Tractography",
                               detail: "The HCP1065 white-matter tracts in the room, coloured by direction.",
-                              symbol: "point.3.connected.trianglepath.dotted") { openWindow(id: "tracts") }
+                              symbol: "point.3.connected.trianglepath.dotted") { if !Atlas.shared.isOpen("tracts") { openWindow(id: "tracts") } }
             }
         }
         .padding(44)

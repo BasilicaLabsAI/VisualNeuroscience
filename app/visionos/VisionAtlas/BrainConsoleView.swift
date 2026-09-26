@@ -126,10 +126,11 @@ struct BrainConsoleView: View {
         }
     }
 
-    /// Adding a region also opens the window that says what it does.
+    /// Adding a region also opens the window that says what it does, unless
+    /// that window is in the room already, in which case it simply updates.
     private func add(_ region: AtlasRegion, _ side: Atlas.Side) {
         atlas.add(region, side: side)
-        openWindow(id: "notes")
+        if !atlas.isOpen("notes") { openWindow(id: "notes") }
     }
 }
 

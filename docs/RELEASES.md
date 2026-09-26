@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.50 — 26 September 2026 — The Vision Pro windows go back to how they were, and still open once each
+Commit · Restore the Vision Pro app's window groups and have each window open once by keeping track of which are in the room
+
+After v10.49 the brain came up cut along one side and would not turn, and picking a region did nothing, on the owner's headset. That release had changed what kind of scene three of the windows are, and nothing else had changed, so the change is undone: every window is declared as it was before. The What they do window is still only ever one, done another way: the app now keeps track of which windows are in the room, and a picked region opens that window only when it is not there already, otherwise it simply appears in it, wherever the window has been moved. The console's buttons and the Brodmann checkbox open the brain, its console and the tractogram in the same way, once each.
+
 ## v10.49 — 26 September 2026 — One What they do window on Vision Pro
-Commit · Make the Vision Pro app's flat windows single, so a picked region joins the What they do window already open
+Commit `b16d6f8` · Make the Vision Pro app's flat windows single, so a picked region joins the What they do window already open
 
 In the Apple Vision Pro app, picking a region used to open a fresh What they do window once the first had been moved, leaving copies of it around the room that all showed the same list. There is now only ever one: a new region joins the window already open, wherever it stands, and brings it forward. The brain console and the Brodmann window work the same way, so their buttons no longer stack up copies either.
 

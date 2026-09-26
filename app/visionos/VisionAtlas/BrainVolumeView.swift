@@ -14,7 +14,7 @@ struct BrainVolumeView: View {
             await scene.load()
         }
         .turnable(scene.root)
-        .onAppear { openWindow(id: "brain-console") }
+        .onAppear { if !Atlas.shared.isOpen("brain-console") { openWindow(id: "brain-console") } }
         .onChange(of: Atlas.shared.version) { _, _ in scene.selectionsChanged() }
         .onChange(of: Atlas.shared.cutLo) { _, _ in scene.cutsChanged() }
         .onChange(of: Atlas.shared.cutHi) { _, _ in scene.cutsChanged() }

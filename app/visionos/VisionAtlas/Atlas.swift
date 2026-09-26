@@ -35,6 +35,14 @@ final class Atlas {
     /// Bumps on every change to what is highlighted, for anyone caching work per set.
     private(set) var version = 0
 
+    /// The windows in the room now, by scene id. A console opens a window
+    /// only when it is not here already, so picking a second region adds to
+    /// the What they do window wherever it stands instead of opening another.
+    private(set) var openWindows: Set<String> = []
+    func windowAppeared(_ id: String) { openWindows.insert(id) }
+    func windowDisappeared(_ id: String) { openWindows.remove(id) }
+    func isOpen(_ id: String) -> Bool { openWindows.contains(id) }
+
     /// The cuts, as fractions of each MNI axis: `cutLo` is where the kept
     /// part starts (0 = nothing cut from the left, back or bottom) and
     /// `cutHi` where it ends (1 = nothing cut from the right, front or top).

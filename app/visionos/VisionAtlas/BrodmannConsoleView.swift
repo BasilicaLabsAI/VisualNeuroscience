@@ -30,7 +30,10 @@ struct BrodmannConsoleView: View {
                         .textFieldStyle(.roundedBorder)
                     Toggle(isOn: Binding(get: { atlas.showBrodmann }, set: { on in
                         atlas.setShowBrodmann(on)
-                        if on { openWindow(id: "brain"); openWindow(id: "notes") }
+                        if on {
+                            if !atlas.isOpen("brain") { openWindow(id: "brain") }
+                            if !atlas.isOpen("notes") { openWindow(id: "notes") }
+                        }
                     })) {
                         Text("Show on the brain")
                     }
