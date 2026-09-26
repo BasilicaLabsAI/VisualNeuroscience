@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.49 — 26 September 2026 — One What they do window on Vision Pro
+Commit · Make the Vision Pro app's flat windows single, so a picked region joins the What they do window already open
+
+In the Apple Vision Pro app, picking a region used to open a fresh What they do window once the first had been moved, leaving copies of it around the room that all showed the same list. There is now only ever one: a new region joins the window already open, wherever it stands, and brings it forward. The brain console and the Brodmann window work the same way, so their buttons no longer stack up copies either.
+
 ## v10.48 — 25 September 2026 — The App Store name becomes Visual Neuroscience
-Commit · Name the app Visual Neuroscience in the App Store listing notes
+Commit `0b772f5` · Name the app Visual Neuroscience in the App Store listing notes
 
 The listing notes now give the app's App Store name as Visual Neuroscience, in two words, in place of VisualNeuroscience.AI. Apple lets the name change only with a new version, so it goes in with 1.1 and shows once that update is released; the notes say so, and add that another listing's name is close to it, which is reason to keep the subtitle specific.
 

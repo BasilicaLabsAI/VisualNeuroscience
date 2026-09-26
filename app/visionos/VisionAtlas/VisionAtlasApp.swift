@@ -14,17 +14,20 @@ struct VisionAtlasApp: App {
         .windowStyle(.volumetric)
         .defaultSize(width: 0.7, height: 0.7, depth: 0.7, in: .meters)
 
-        WindowGroup(id: "brain-console") {
+        // The flat windows are single Window scenes, not groups: opening one
+        // that is already in the room brings that window forward, wherever it
+        // has been moved, instead of adding another copy of it.
+        Window("Brain console", id: "brain-console") {
             BrainConsoleView()
         }
         .defaultSize(width: 640, height: 720)
 
-        WindowGroup(id: "notes") {
+        Window("What they do", id: "notes") {
             RegionNotesView()
         }
         .defaultSize(width: 560, height: 720)
 
-        WindowGroup(id: "brodmann") {
+        Window("Brodmann areas", id: "brodmann") {
             BrodmannConsoleView()
         }
         .defaultSize(width: 720, height: 860)
