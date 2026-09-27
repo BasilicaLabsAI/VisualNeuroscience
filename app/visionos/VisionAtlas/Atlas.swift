@@ -41,15 +41,15 @@ final class Atlas {
     private(set) var openWindows: Set<String> = []
     func windowAppeared(_ id: String) {
         openWindows.insert(id)
-        print("[windows] appeared \(id); open now: \(openWindows.sorted())")
+        NSLog("%@", "[windows] appeared \(id); open now: \(openWindows.sorted())")
     }
     func windowDisappeared(_ id: String) {
         openWindows.remove(id)
-        print("[windows] disappeared \(id); open now: \(openWindows.sorted())")
+        NSLog("%@", "[windows] disappeared \(id); open now: \(openWindows.sorted())")
     }
     func isOpen(_ id: String) -> Bool {
         let open = openWindows.contains(id)
-        print("[windows] asked whether \(id) is open: \(open ? "yes, not opening again" : "no, opening it")")
+        NSLog("%@", "[windows] asked whether \(id) is open: \(open ? "yes, not opening again" : "no, opening it")")
         return open
     }
 

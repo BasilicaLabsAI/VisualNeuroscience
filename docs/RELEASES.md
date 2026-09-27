@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.55 — 27 September 2026 — The Vision Pro app no longer brings its windows back on relaunch
+Commit · Stop visionOS restoring the Vision Pro app's windows, which filled the room with copies and crashed RealityKit on a restored brain
+
+The log from the headset showed what all the copies were. visionOS brings an app's windows back from its previous run when it relaunches, and every build from Xcode is a relaunch, so each run added the last run's consoles and notes windows to the room; and RealityKit crashed with a bad memory access while setting up a brain window brought back that way, which left the app paused in the debugger with the brain loading forever and every button dead. The app's own rule, one window per kind, was never at fault. Every window but the launch console now opts out of being restored, so the app opens on its console alone and the brain, its console, the notes, the Brodmann window and the tractogram are opened afresh from it. The log lines added in v10.54 now reach Xcode at once rather than sitting in a buffer.
+
 ## v10.54 — 27 September 2026 — The Vision Pro app goes back to v10.50 and says which build it is
-Commit · Restore the Vision Pro app as it was in v10.50, with a build number on the console and a log of every window
+Commit `f9dfb79` · Restore the Vision Pro app as it was in v10.50, with a build number on the console and a log of every window
 
 Three attempts at the duplicate windows since v10.50 have each left the headset worse, with the brain loading forever and the consoles dead, and none could be watched from here. The app is now exactly what it was in v10.50, the last build that loaded the brain and added regions, with two additions that change nothing in its behaviour: the console shows the build number, so the build on the headset can be told from the one before it, and the app prints a line to Xcode's log each time a window appears, disappears or is asked for, and when the brain starts and finishes loading. One run with that log will show where the extra windows come from, and the fix will follow from it rather than from another guess.
 

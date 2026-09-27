@@ -66,8 +66,8 @@ final class BrainScene {
 
     func load() async {
         let started = Date()
-        print("[brain] load started")
-        defer { print("[brain] load finished in \(Int(Date().timeIntervalSince(started)))s, error: \(errorText ?? "none")") }
+        NSLog("%@", "[brain] load started")
+        defer { NSLog("%@", "[brain] load finished in \(Int(Date().timeIntervalSince(started)))s, error: \(errorText ?? "none")") }
         do {
             let loaded = try await Task.detached(priority: .userInitiated) { () throws -> (BrainMesh, Volume, Volume, RegionMeshes, Volume, RegionMeshes) in
                 let m = try BrainMesh.load(named: "brain")

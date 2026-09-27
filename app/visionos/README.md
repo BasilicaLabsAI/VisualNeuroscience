@@ -29,7 +29,10 @@ can show:
   the room, so picking another region adds to the window already open,
   wherever it has been moved, rather than opening another. The console's
   buttons and the Brodmann checkbox open the brain, its console and the
-  tractogram the same way, once each.
+  tractogram the same way, once each. No window but the console is brought
+  back when the app relaunches: visionOS otherwise restores them all, which
+  filled the room with copies at every run from Xcode, and RealityKit
+  crashed setting up a brain window restored that way.
 - **Brodmann areas.** The 41 areas as the site lists them, searchable by
   function, name or number and grouped by lobe. Tapping an area opens its
   function and caveat; ticking it picks it. With **Show on the brain** on,
