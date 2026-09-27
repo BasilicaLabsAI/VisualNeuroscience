@@ -25,11 +25,13 @@ can show:
   it, and the cut faces tint the region's voxels the same colour. Picking a
   region opens **What they do**, a window that lists every highlighted
   region in its colour with its function, stacked by layer as the page does.
-  There is only ever one: the atlas keeps track of which windows are in
-  the room, so picking another region adds to the window already open,
-  wherever it has been moved, rather than opening another. The console's
-  buttons and the Brodmann checkbox open the brain, its console and the
-  tractogram the same way, once each.
+  There is only ever one: every window is keyed by its own id and always
+  opened with that key, which the system answers with the window already
+  in the room rather than a copy, and the atlas also keeps track of which
+  windows are open so the consoles ask only when one is not. Picking
+  another region adds to the window wherever it has been moved. The
+  console's buttons and the Brodmann checkbox open the brain, its console
+  and the tractogram the same way, once each.
 - **Brodmann areas.** The 41 areas as the site lists them, searchable by
   function, name or number and grouped by lobe. Tapping an area opens its
   function and caveat; ticking it picks it. With **Show on the brain** on,

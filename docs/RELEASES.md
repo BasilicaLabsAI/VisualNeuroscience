@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.52 — 27 September 2026 — One window per id on Vision Pro
+Commit · Key every Vision Pro window by its own id, so a repeated request reaches the window already open
+
+Copies of the What they do window and of the brain console were still appearing on the headset after v10.50. Every window other than the launch console is now keyed by its own id and always opened with that key, which the system answers with the window already in the room rather than a new one, on top of the app's own record of which windows are open. Picking a region, pressing The brain twice or ticking Show on the brain again therefore adds to what is there, wherever it has been moved.
+
 ## v10.51 — 27 September 2026 — The planes start on the midline again
-Commit · Put the start point and Centre planes back on the middle of the volume, and keep the off-midline slice for the screenshots only
+Commit `2b5f730` · Put the start point and Centre planes back on the middle of the volume, and keep the off-midline slice for the screenshots only
 
 v10.46 moved every tool's starting point 4 mm off the midline so the side view would open on the brain rather than the fissure, and made Centre planes and region centring keep that distance too. That was meant for the pictures, not the tools: the Region Atlas, the Network Atlas, the hallucinations page and the Apple Vision Pro planes now open on the exact middle of the volume as they always did, Centre planes returns there, a left and right pair is centred between its halves, a Brodmann area at its own point, and picking a region from the list no longer moves the planes. The home page picture and the App Store screenshots keep the off-midline slice they were taken with. One repair from v10.46 stays: centring on a region is placed in millimetres from the atlas's own voxels, so it lands on the region rather than up to a centimetre off.
 
