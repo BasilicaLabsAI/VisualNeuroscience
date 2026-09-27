@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.53 — 27 September 2026 — A second copy of a Vision Pro window closes itself
+Commit · Return the Vision Pro windows to plain groups and have a window whose id is already held close itself
+
+Keying the windows by a value in v10.52 left the brain loading forever and the consoles unresponsive on the headset, as changing their scene kind had in v10.49, so every window is a plain group again, as in v10.50, which ran. The copies come from somewhere else: visionOS brings an app's windows back from its previous run at every relaunch, and every build from Xcode is a relaunch, so the room filled with windows the app never opened. Each window now claims its id as it appears, and a second window for the same id closes itself, whether brought back or opened by mistake; the consoles open a window only when nobody holds its id, so picking a region adds to the What they do window wherever it stands.
+
 ## v10.52 — 27 September 2026 — One window per id on Vision Pro
-Commit · Key every Vision Pro window by its own id, so a repeated request reaches the window already open
+Commit `e2926ce` · Key every Vision Pro window by its own id, so a repeated request reaches the window already open
 
 Copies of the What they do window and of the brain console were still appearing on the headset after v10.50. Every window other than the launch console is now keyed by its own id and always opened with that key, which the system answers with the window already in the room rather than a new one, on top of the app's own record of which windows are open. Picking a region, pressing The brain twice or ticking Show on the brain again therefore adds to what is there, wherever it has been moved.
 
