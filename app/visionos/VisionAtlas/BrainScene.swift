@@ -64,6 +64,11 @@ final class BrainScene {
 
     // MARK: loading
 
+    /// Decodes the data and readies the material; the surface itself is
+    /// first drawn by the rebuild that `selectionsChanged()` queues, so the
+    /// brain's model is written once per load. Writing it here and again a
+    /// moment later, when the first cut mesh arrives, crashes RealityKit on
+    /// visionOS 27 if the window is closing between the two writes.
     func load() async {
         let started = Date()
         NSLog("%@", "[brain] load started")
@@ -90,8 +95,6 @@ final class BrainScene {
             skin.roughness = 0.78
             skin.metallic = 0.0
             skin.faceCulling = .none
-            let whole = try await MeshResource(from: [descriptor(positions: loaded.0.positions, normals: loaded.0.normals, indices: loaded.0.indices)])
-            brain.model = ModelComponent(mesh: whole, materials: [skin])
 
             root.makeGrabbable(scale: k)
 
@@ -182,7 +185,12 @@ final class BrainScene {
             }
         }
         do {
-            brain.model?.mesh = try await MeshResource(from: [descriptor(positions: clipped.positions, normals: clipped.normals, indices: clipped.indices)])
+            let cut = try await MeshResource(from: [descriptor(positions: clipped.positions, normals: clipped.normals, indices: clipped.indices)])
+            if brain.model == nil {
+                brain.model = ModelComponent(mesh: cut, materials: [skin])
+            } else {
+                brain.model?.mesh = cut
+            }
         } catch {
             errorText = error.localizedDescription
         }

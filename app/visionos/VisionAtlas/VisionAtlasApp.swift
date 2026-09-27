@@ -4,7 +4,7 @@ import SwiftUI
 struct VisionAtlasApp: App {
     /// Shown on the console, so the build running on the headset can be told
     /// from the one before it. Bump it with every change to this app.
-    static let build = "55"
+    static let build = "56"
 
     var body: some Scene {
         WindowGroup(id: "console") {

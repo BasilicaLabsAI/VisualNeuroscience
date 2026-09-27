@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.56 — 27 September 2026 — The brain's model is written once, and visionOS 27 stops crashing on it
+Commit · Write the brain's model once per load, since a second write while the window closes crashes RealityKit on visionOS 27
+
+The crash on the headset is a RealityKit defect in visionOS 27, and the app was tripping it. The brain's model used to be written when its data finished loading and again a fraction of a second later, when the first cut of the surface arrived; if the window was closing between the two writes, RealityKit went on to use a material block it had already released, and the app died with a bad memory access. The model is now written once, by that first cut, so the gap no longer exists. Found by opening and closing the brain window in a loop on the visionOS 27 simulator, where the old code crashed within four cycles every time and the new one ran forty clean; the brain now first appears a fraction of a second later than before. The build number on the console moves to 56.
+
 ## v10.55 — 27 September 2026 — The Vision Pro app no longer brings its windows back on relaunch
-Commit · Stop visionOS restoring the Vision Pro app's windows, which filled the room with copies and crashed RealityKit on a restored brain
+Commit `d3c3388` · Stop visionOS restoring the Vision Pro app's windows, which filled the room with copies and crashed RealityKit on a restored brain
 
 The log from the headset showed what all the copies were. visionOS brings an app's windows back from its previous run when it relaunches, and every build from Xcode is a relaunch, so each run added the last run's consoles and notes windows to the room; and RealityKit crashed with a bad memory access while setting up a brain window brought back that way, which left the app paused in the debugger with the brain loading forever and every button dead. The app's own rule, one window per kind, was never at fault. Every window but the launch console now opts out of being restored, so the app opens on its console alone and the brain, its console, the notes, the Brodmann window and the tractogram are opened afresh from it. The log lines added in v10.54 now reach Xcode at once rather than sitting in a buffer.
 
