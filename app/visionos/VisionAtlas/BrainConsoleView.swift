@@ -130,7 +130,7 @@ struct BrainConsoleView: View {
     /// that window is in the room already, in which case it simply updates.
     private func add(_ region: AtlasRegion, _ side: Atlas.Side) {
         atlas.add(region, side: side)
-        openWindow.once("notes")
+        if !atlas.isOpen("notes") { openWindow(id: "notes") }
     }
 }
 

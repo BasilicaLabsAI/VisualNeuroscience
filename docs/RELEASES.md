@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.54 — 27 September 2026 — The Vision Pro app goes back to v10.50 and says which build it is
+Commit · Restore the Vision Pro app as it was in v10.50, with a build number on the console and a log of every window
+
+Three attempts at the duplicate windows since v10.50 have each left the headset worse, with the brain loading forever and the consoles dead, and none could be watched from here. The app is now exactly what it was in v10.50, the last build that loaded the brain and added regions, with two additions that change nothing in its behaviour: the console shows the build number, so the build on the headset can be told from the one before it, and the app prints a line to Xcode's log each time a window appears, disappears or is asked for, and when the brain starts and finishes loading. One run with that log will show where the extra windows come from, and the fix will follow from it rather than from another guess.
+
 ## v10.53 — 27 September 2026 — A second copy of a Vision Pro window closes itself
-Commit · Return the Vision Pro windows to plain groups and have a window whose id is already held close itself
+Commit `36c4c02` · Return the Vision Pro windows to plain groups and have a window whose id is already held close itself
 
 Keying the windows by a value in v10.52 left the brain loading forever and the consoles unresponsive on the headset, as changing their scene kind had in v10.49, so every window is a plain group again, as in v10.50, which ran. The copies come from somewhere else: visionOS brings an app's windows back from its previous run at every relaunch, and every build from Xcode is a relaunch, so the room filled with windows the app never opened. Each window now claims its id as it appears, and a second window for the same id closes itself, whether brought back or opened by mistake; the consoles open a window only when nobody holds its id, so picking a region adds to the What they do window wherever it stands.
 

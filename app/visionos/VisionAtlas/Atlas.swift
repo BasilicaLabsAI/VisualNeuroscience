@@ -35,32 +35,22 @@ final class Atlas {
     /// Bumps on every change to what is highlighted, for anyone caching work per set.
     private(set) var version = 0
 
-    /// Which window holds each scene id, by a token its content view keeps,
-    /// so that there is one window per id. visionOS brings an app's windows
-    /// back from its previous run when it relaunches, so a second window for
-    /// an id can exist without the app ever opening it: the first to appear
-    /// claims the id and any other closes itself. A console opens a window
-    /// only when nobody holds its id, so picking a second region adds to the
-    /// What they do window wherever it stands.
-    private var windowOwners: [String: UUID] = [:]
-    private static let pending = UUID()
-    func isOpen(_ id: String) -> Bool { windowOwners[id] != nil }
-    /// Marks the id as spoken for while its window is on the way; false when
-    /// a window holds it already, or one is already on the way.
-    func reserveWindow(_ id: String) -> Bool {
-        guard windowOwners[id] == nil else { return false }
-        windowOwners[id] = Atlas.pending
-        return true
+    /// The windows in the room now, by scene id. A console opens a window
+    /// only when it is not here already, so picking a second region adds to
+    /// the What they do window wherever it stands instead of opening another.
+    private(set) var openWindows: Set<String> = []
+    func windowAppeared(_ id: String) {
+        openWindows.insert(id)
+        print("[windows] appeared \(id); open now: \(openWindows.sorted())")
     }
-    /// The window with this token takes the id if it is free or reserved,
-    /// or holds it already; false means another window has it.
-    func claimWindow(_ id: String, _ token: UUID) -> Bool {
-        let owner = windowOwners[id]
-        if owner == nil || owner == Atlas.pending { windowOwners[id] = token; return true }
-        return owner == token
+    func windowDisappeared(_ id: String) {
+        openWindows.remove(id)
+        print("[windows] disappeared \(id); open now: \(openWindows.sorted())")
     }
-    func releaseWindow(_ id: String, _ token: UUID) {
-        if windowOwners[id] == token { windowOwners[id] = nil }
+    func isOpen(_ id: String) -> Bool {
+        let open = openWindows.contains(id)
+        print("[windows] asked whether \(id) is open: \(open ? "yes, not opening again" : "no, opening it")")
+        return open
     }
 
     /// The cuts, as fractions of each MNI axis: `cutLo` is where the kept
