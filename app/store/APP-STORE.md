@@ -183,6 +183,12 @@ Apple asks for and scales the rest from:
 Both sets are required for a universal app. Upload them under the 6.9" iPhone
 and 13" iPad display sizes; App Store Connect derives the smaller ones.
 
+The shots of the four-view map are taken with the crosshair 4 mm left of
+the midline (x = −4 mm in MNI space), so the sagittal view shows the medial
+wall of the cortex rather than the fissure between the hemispheres. The
+pages themselves open on the exact midline; set the crosshair before the
+capture when retaking them.
+
 **Support and privacy URLs.** Support URL:
 `https://visualneuroscience.ai/about.html` (the page carries the support
 contact, **fkarim@visualneuroscience.ai**, and the story). Privacy Policy URL:

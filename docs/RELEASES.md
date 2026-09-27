@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.51 — 27 September 2026 — The planes start on the midline again
+Commit · Put the start point and Centre planes back on the middle of the volume, and keep the off-midline slice for the screenshots only
+
+v10.46 moved every tool's starting point 4 mm off the midline so the side view would open on the brain rather than the fissure, and made Centre planes and region centring keep that distance too. That was meant for the pictures, not the tools: the Region Atlas, the Network Atlas, the hallucinations page and the Apple Vision Pro planes now open on the exact middle of the volume as they always did, Centre planes returns there, a left and right pair is centred between its halves, a Brodmann area at its own point, and picking a region from the list no longer moves the planes. The home page picture and the App Store screenshots keep the off-midline slice they were taken with. One repair from v10.46 stays: centring on a region is placed in millimetres from the atlas's own voxels, so it lands on the region rather than up to a centimetre off.
+
 ## v10.50 — 26 September 2026 — The Vision Pro windows go back to how they were, and still open once each
-Commit · Restore the Vision Pro app's window groups and have each window open once by keeping track of which are in the room
+Commit `f10cd12` · Restore the Vision Pro app's window groups and have each window open once by keeping track of which are in the room
 
 After v10.49 the brain came up cut along one side and would not turn, and picking a region did nothing, on the owner's headset. That release had changed what kind of scene three of the windows are, and nothing else had changed, so the change is undone: every window is declared as it was before. The What they do window is still only ever one, done another way: the app now keeps track of which windows are in the room, and a picked region opens that window only when it is not there already, otherwise it simply appears in it, wherever the window has been moved. The console's buttons and the Brodmann checkbox open the brain, its console and the tractogram in the same way, once each.
 
