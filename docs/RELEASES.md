@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.58 — 27 September 2026 — The cut sliders lose their white fill
+Commit · Draw the Vision Pro cut sliders as a track and a knob with no fill, so a cut at rest no longer shows as a white bar
+
+The right, front and top sliders on the brain's console looked full when nothing was cut: the system slider paints white from its left end to the knob, and those three knobs start at the right end. All six sliders are now the app's own, a grey track and a white knob and nothing else, so every one looks the same at rest and as it moves, and where the knob sits is the only sign of how far a cut has gone. Each still travels inwards from its own edge and stops short of its partner; drag the knob, or pinch the track where the knob should go. The build number on the console moves to 58.
+
 ## v10.57 — 27 September 2026 — The Vision Pro app builds again, for visionOS 26 and newer
-Commit · Raise the Vision Pro app's minimum to visionOS 26, which the switch that stops window restoration needs
+Commit `9888a8d` · Raise the Vision Pro app's minimum to visionOS 26, which the switch that stops window restoration needs
 
 The fix in v10.55 for the duplicate windows would not build. The switch that stops visionOS bringing an app's windows back on relaunch exists only from visionOS 26, and the project still allowed the app to be installed on visionOS 2, so Xcode refused all five uses of it. The app's minimum is now visionOS 26; the simulator and the headset this is built for run 27, and nothing older would have run the fix anyway. Nothing else changes, and the build number on the console moves to 57.
 
