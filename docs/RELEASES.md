@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.57 — 27 September 2026 — The Vision Pro app builds again, for visionOS 26 and newer
+Commit · Raise the Vision Pro app's minimum to visionOS 26, which the switch that stops window restoration needs
+
+The fix in v10.55 for the duplicate windows would not build. The switch that stops visionOS bringing an app's windows back on relaunch exists only from visionOS 26, and the project still allowed the app to be installed on visionOS 2, so Xcode refused all five uses of it. The app's minimum is now visionOS 26; the simulator and the headset this is built for run 27, and nothing older would have run the fix anyway. Nothing else changes, and the build number on the console moves to 57.
+
 ## v10.56 — 27 September 2026 — The brain's model is written once, and visionOS 27 stops crashing on it
-Commit · Write the brain's model once per load, since a second write while the window closes crashes RealityKit on visionOS 27
+Commit `a45067d` · Write the brain's model once per load, since a second write while the window closes crashes RealityKit on visionOS 27
 
 The crash on the headset is a RealityKit defect in visionOS 27, and the app was tripping it. The brain's model used to be written when its data finished loading and again a fraction of a second later, when the first cut of the surface arrived; if the window was closing between the two writes, RealityKit went on to use a material block it had already released, and the app died with a bad memory access. The model is now written once, by that first cut, so the gap no longer exists. Found by opening and closing the brain window in a loop on the visionOS 27 simulator, where the old code crashed within four cycles every time and the new one ran forty clean; the brain now first appears a fraction of a second later than before. The build number on the console moves to 56.
 

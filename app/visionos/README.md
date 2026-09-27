@@ -88,6 +88,9 @@ cd app && npm run vision
 or open `visionos/VisionAtlas.xcodeproj` in Xcode. Pick the **Apple Vision
 Pro** simulator as the destination and run. Xcode will ask for a signing team
 the first time; automatic signing with the same team as the iOS app is right.
+The app needs visionOS 26 or newer, which is the project's minimum: the
+switch that keeps its windows from being restored on relaunch is not in
+earlier versions.
 
 The bundle identifier is `ai.visualneuroscience.app`, the same as the iPhone
 and iPad app on purpose: in App Store Connect a native visionOS build joins
