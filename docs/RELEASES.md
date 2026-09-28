@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.60 — 28 September 2026 — The nav runs from the atlas down to the molecule, then out to the systems
+Commit · Reorder the site nav so the scales run atlas, cell, molecule, then networks, tracts, studies, book, practice, about
+
+The row of headings at the top of every page is in a new order. It opens with the Region Atlas as before, then steps down the scales, Microanatomy and Molecular, before stepping out to the Network Atlas and Tractography; the Visualizing Studies, the Digital Textbook, Practice and About follow. Nothing on the pages themselves moves.
+
 ## v10.59 — 28 September 2026 — A Molecular section: the dopamine and serotonin receptors in 3D
-Commit · Add the Molecular section, a 3D viewer of seventeen dopamine and serotonin receptors set in the site's typefaces
+Commit `1aeb5e9` · Add the Molecular section, a 3D viewer of seventeen dopamine and serotonin receptors set in the site's typefaces
 
 The site gains a section on the scale below the cell. Molecular is an interactive viewer of the five human dopamine receptors and the twelve serotonin receptors that signal through G proteins, built from thirty-nine experimental structures: pick a receptor and follow its neurotransmitter in as it docks and switches the receptor on, with the G protein docking after; put antipsychotics, Parkinson's agonists, triptans, LSD and psilocin into the same pocket and see which block and which mimic; compare every subtype of a family on one pocket table; and read the citation behind every structure. It is one self-contained page framed by the new section page, which opens it on the site's dark or light theme, passes a deep link through, and keeps the reader's place in the address bar so a copied link comes back to the same receptor, tab and drug. Its colours and layout are the viewer's own; its typefaces are now the site's three, Prata, Newsreader and Flux, served from here like everything else, and three.js is served from here too, so the page makes no outside request. The section has its entry in the nav of every page, its box on the front page, and its source and rebuild script under scripts/molecular.
 

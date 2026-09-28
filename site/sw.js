@@ -21,7 +21,7 @@
    Nothing cross-origin is touched at all — since the typefaces moved
    in-house there is no outside request left to think about. */
 
-var VERSION = "vn-82";
+var VERSION = "vn-83";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
