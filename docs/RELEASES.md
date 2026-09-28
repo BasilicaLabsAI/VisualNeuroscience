@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.61 — 28 September 2026 — The text under the tools runs the full width of the page
+Commit · Let the prose under the viewers run the width of its page instead of stopping at a column
+
+On the Molecular and Tractography pages the paragraphs under the viewer, and the credits under them, stopped at a column a little over half the page wide, leaving the right-hand side empty under a frame that ran edge to edge. The same cap sat on the notes above the neurotransmitters and the previews on the Microanatomy page, on the receptor introduction in the Region Atlas, and on the summary of a region's receptors. All of them now run the width of the page, as the tools above them do. The About and Privacy pages keep their centred reading column, which is a different thing.
+
 ## v10.60 — 28 September 2026 — The nav runs from the atlas down to the molecule, then out to the systems
-Commit · Reorder the site nav so the scales run atlas, cell, molecule, then networks, tracts, studies, book, practice, about
+Commit `524e97c` · Reorder the site nav so the scales run atlas, cell, molecule, then networks, tracts, studies, book, practice, about
 
 The row of headings at the top of every page is in a new order. It opens with the Region Atlas as before, then steps down the scales, Microanatomy and Molecular, before stepping out to the Network Atlas and Tractography; the Visualizing Studies, the Digital Textbook, Practice and About follow. Nothing on the pages themselves moves.
 

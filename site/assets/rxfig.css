@@ -83,7 +83,7 @@
 /* ── the Region Atlas, region picked: every family, its transmitter and its
    receptors, each placed against the other regions ── */
 .rxfig.region{ display:block; }
-.rxreg-sum{ font-family:var(--font-serif); font-size:.92rem; line-height:1.5; margin:0 0 .3rem; max-width:70ch; }
+.rxreg-sum{ font-family:var(--font-serif); font-size:.92rem; line-height:1.5; margin:0 0 .3rem; }
 .rxreg-sum b{ font-weight:600; }
 .rxreg-fam{ display:grid; grid-template-columns:minmax(220px, 260px) 1fr; gap:var(--gap,14px); align-items:start; margin-top:var(--gap,14px); }
 .rxreg-fam > figure{ position:sticky; top:.5rem; }
