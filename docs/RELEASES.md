@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.65 — 28 September 2026 — The header stays in view, and folds its sections into a menu on a phone
+Commit · Pin the header to the top of every page, compact it once the page scrolls, and fold the sections into a menu under 960 pixels
+
+The masthead no longer scrolls away. At the top of a page it is the centred masthead as before; as soon as the page moves it draws in to a compact bar, the wordmark small and the sections on one line, so it keeps little of the screen while the map or the text is being read. Under 960 pixels wide, tablets held upright and every phone, the nine section links fold into a panel behind a Menu button, and the Log in and theme buttons stay in view beside it, so an account and the theme are always one tap away. The app has the same menu in its bar, at the right beside those two buttons, listing every section with the current one marked. Escape, a tap outside or a wider window closes either.
+
 ## v10.64 — 28 September 2026 — Two textbook figures answer the pointer: every base, organelle and arrow says what it is
-Commit · Name every part of the central dogma figure on hover, and draw the eukaryotic cell in code with a panel that opens on a click
+Commit `3242d82` · Name every part of the central dogma figure on hover, and draw the eukaryotic cell in code with a panel that opens on a click
 
 The central dogma figure now explains itself piece by piece. Point at any base and a label names it, adenine or uracil, with a line on what it pairs with; point at a strand, the arrows, an amino acid, the free amino acids or a folded protein and the same happens, the template and coding strands included. The second figure of the section, the typical eukaryotic cell, is now drawn by the site as well: membrane, cytoplasm, nucleus with its envelope, DNA and nucleolus, rough and smooth endoplasmic reticulum, ribosomes, mitochondria, lysosomes, the Golgi apparatus and vesicles. Hovering a part names it; a click or a tap, or a name from the list beside the drawing, puts its subtitle and description in the panel and lights every copy of that part, so all three mitochondria glow together. Both follow the theme and both are kept in the textbook's build.
 

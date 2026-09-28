@@ -490,3 +490,85 @@ button, .ts-btn, .seg-btn, .barow{ touch-action:manipulation; }
 .models .mdel.armed{ width:auto; padding:0 .45rem; font-family:var(--font-brand); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; background:var(--ink); color:var(--paper); border-color:var(--ink); }
 @media (hover: hover){ .models .mdel:hover{ background:var(--ink); color:var(--paper); } }
 @media (pointer: coarse){ .models .mdel{ min-width:36px; min-height:36px; } }
+
+/* ── the header stays ────────────────────────────────────────────────────
+   The masthead is pinned to the top of every page. At the top of a page it
+   is the full centred masthead as before; once the page scrolls it draws in
+   to a compact bar (navbar.js sets .stuck) so it keeps little of the screen.
+   Under 960px the section links fold into a menu behind a button, while the
+   Log in and theme buttons stay in view beside it. Classes are doubled to
+   outrank each page's own single-class rules whichever order the sheets
+   land in. */
+.masthead-sentinel{ height:1px; margin-bottom:-1px; }
+.masthead.masthead{ position:sticky; top:0; z-index:80; background:var(--paper); }
+.masthead.masthead.stuck{ padding-top:.45rem; }
+.masthead.masthead.stuck .brand{ font-size:1.35rem; }
+.masthead.masthead.stuck .nav-row{ padding:.3rem 0 .45rem; }
+html{ scroll-padding-top:5.2rem; }
+/* the links keep their place in the row on wide screens; the wrapper is
+   invisible to the layout until the narrow rules turn it into a panel */
+.nav-menu{ display:contents; }
+.nav-menu-btn{ display:none; }
+@media (max-width:960px){
+  .masthead.masthead{
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+    gap:.35rem .8rem; padding-top:.55rem; padding-bottom:.55rem; text-align:left;
+  }
+  .masthead.masthead .brand{ font-size:1.25rem; }
+  .masthead.masthead.stuck{ padding-top:.55rem; }
+  .masthead.masthead.stuck .brand{ font-size:1.25rem; }
+  .nav-row.nav-row{ flex-direction:row; flex-wrap:nowrap; align-items:center; justify-content:flex-end; gap:.5rem; padding:0; flex:0 0 auto; margin-left:auto; }
+  .masthead.masthead.stuck .nav-row{ padding:0; }
+  .nav-row .nav-tools{ display:inline-flex; align-items:center; gap:.5rem; }
+  .nav-menu-btn{
+    display:inline-flex; align-items:center; gap:.45rem;
+    font-family:var(--font-brand); font-weight:500; font-size:.66rem; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--ink); background:none; border:1px solid var(--hair); cursor:pointer; padding:.28rem .6rem;
+  }
+  .nav-menu-btn .bars{ width:.9rem; height:.7rem; position:relative; }
+  .nav-menu-btn .bars::before, .nav-menu-btn .bars::after, .nav-menu-btn .bars i{
+    content:""; position:absolute; left:0; right:0; height:1.5px; background:currentColor;
+  }
+  .nav-menu-btn .bars::before{ top:0; } .nav-menu-btn .bars i{ top:50%; margin-top:-.75px; } .nav-menu-btn .bars::after{ bottom:0; }
+  .nav-menu-btn[aria-expanded="true"]{ background:var(--ink); color:var(--paper); }
+  /* the folded sections: a panel under the bar, one link to a line */
+  .nav-menu.nav-menu{
+    display:none; position:absolute; left:0; right:0; top:100%;
+    flex-direction:column; align-items:stretch; padding:.4rem 0 .6rem;
+    background:var(--paper); border-top:1px solid var(--hair); border-bottom:1px solid var(--hair);
+    box-shadow:0 14px 30px rgba(0,0,0,.22);
+  }
+  .masthead.menu-open .nav-menu.nav-menu{ display:flex; }
+  .nav-menu.nav-menu a{ display:block; padding:.7rem clamp(14px,2.5vw,48px); border-bottom:1px solid color-mix(in srgb, var(--ink) 14%, transparent); }
+  .nav-menu.nav-menu a:last-child{ border-bottom:0; }
+  .nav-menu.nav-menu a[aria-current]{ border-bottom:1px solid color-mix(in srgb, var(--ink) 14%, transparent); padding-bottom:.7rem; font-weight:600; }
+  .nav-row.nav-row .nav-menu a{ display:block; }
+}
+@media (max-width:480px){
+  .masthead.masthead .theme-toggle #themeLbl{ display:none; }
+  .masthead.masthead .theme-toggle{ padding:.34rem .5rem; }
+}
+/* the same menu inside the app: a button in the bar opens the sections under it */
+.vn-menu-btn{
+  display:inline-flex; align-items:center; justify-content:center; width:40px; height:36px;
+  background:none; border:0; color:var(--ink); cursor:pointer; padding:0;
+}
+.vn-menu-btn .bars{ width:18px; height:13px; position:relative; }
+.vn-menu-btn .bars::before, .vn-menu-btn .bars::after, .vn-menu-btn .bars i{
+  content:""; position:absolute; left:0; right:0; height:1.6px; background:currentColor;
+}
+.vn-menu-btn .bars::before{ top:0; } .vn-menu-btn .bars i{ top:50%; margin-top:-.8px; } .vn-menu-btn .bars::after{ bottom:0; }
+.vn-menu{
+  position:fixed; z-index:59; left:0; right:0; top:calc(var(--vn-top-inset, env(safe-area-inset-top)) + 44px);
+  display:none; flex-direction:column; background:var(--paper);
+  border-bottom:1px solid var(--ink); box-shadow:0 14px 30px rgba(0,0,0,.25);
+  padding:.2rem 0 .4rem; max-height:calc(100vh - 44px - var(--vn-top-inset, env(safe-area-inset-top))); overflow:auto;
+}
+.vn-menu.open{ display:flex; }
+.vn-menu a{
+  display:block; padding:.85rem 1rem; text-decoration:none; color:var(--ink);
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem; letter-spacing:.3em; text-transform:uppercase;
+  border-bottom:1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+}
+.vn-menu a[aria-current]{ font-weight:600; }
+.vn-menu a:last-child{ border-bottom:0; }
