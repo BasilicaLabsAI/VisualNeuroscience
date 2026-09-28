@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.68 — 28 September 2026 — The cell figure is now the book's own drawing, traced and made interactive
+Commit · Replace the drawn cell figure with a vector trace of the book's, every shape tagged with its part and the labels reset in the page's type
+
+The cell figure in Building a Nervous System is no longer a drawing made to resemble the book's picture: it is the book's picture, traced to vector shapes, so the nucleus with its tangle of DNA, the studded arcs of rough endoplasmic reticulum, the mitochondria, the lysosomes, the Golgi and its vesicles are the illustrator's own lines and colours. Each of the six hundred or so shapes is tagged with the part it belongs to, so the figure answers the pointer as before: hovering an organelle or its label names it, and a click, or a name in the list beside the drawing, opens its subtitle and description in the panel and lights every copy of that part while the rest fades. The trace carries no text, so the eight labels and their leader lines are set again in the page's type, on the book's routes to the dot, in ink outside the cell and dark inside it so they read on the dark theme too. A disc and a ring in the cell's own colours sit under the trace to fill the notches its leader lines had cut in the fills.
+
 ## v10.67 — 28 September 2026 — The cell figure is redrawn to the book's, with its labels on their lines
-Commit · Redraw the eukaryotic cell to the book's figure, organelle for organelle, with the book's labels and leader lines
+Commit `ea86cb8` · Redraw the eukaryotic cell to the book's figure, organelle for organelle, with the book's labels and leader lines
 
 The cell figure in Building a Nervous System is drawn again, this time to the book's picture rather than freely: the same cell with the same organelles in the same places and the book's own colours, the nucleus with its tangle of DNA and its nucleolus, the studded arcs of rough endoplasmic reticulum around it, the smooth reticulum beneath, the three mitochondria, the two lysosomes with their enzymes, the Golgi with its vesicles, the free ribosomes with their bracket, and the eight labels on their leader lines exactly where the book puts them. The labels take the page's ink so they read on the dark theme. Everything still answers the pointer: hovering an organelle or its label names it, and a click, or a name in the list beside the drawing, opens its subtitle and description in the panel.
 

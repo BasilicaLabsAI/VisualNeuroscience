@@ -24,6 +24,11 @@ note of what was changed (set in the site's pages and type, images recompressed,
 in folds, exercises linked rather than carried). Figures keep the credits the book gives them in their
 captions; several are third-party images under their own CC licences, named there.
 
+**Figures made for the site.** Two figures in section 1.1 are the site's own: the central dogma is drawn
+afresh to the book's, and the eukaryotic cell is the book's drawing, traced to vector shapes and made
+interactive, with the book's labels reset in the page's type. Both are adaptations of the book's figures
+and carry the same licence.
+
 **Not carried.** The interactive exercises are served from OpenStax's own platform and are not
 in the source; the page links to them. The videos are embedded from OpenStax's own addresses,
 each player created only when its fold is opened, so nothing is copied and nothing loads until
