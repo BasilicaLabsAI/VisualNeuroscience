@@ -53,6 +53,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
 - App Store: version 1.0 was approved and released on 25 September 2026 (https://apps.apple.com/app/id6805618686)
   after an expedited review. The project is at 1.1 for the next submission; its What's New text, the App Privacy
   change the newsletter needs, and the steps are in `app/store/LISTING.md`, the screenshots in `app/store/screenshots/`.
+- Google Play: the Android build, listing text, graphics and declarations are ready in `app/store/PLAY-STORE.md`
+  (screenshots in `app/store/screenshots/`, `android-*`); still to do on the owner's Mac: the developer account, the
+  upload key (`app/android/keystore.properties.example`), the Firebase fingerprints, the closed test a personal
+  account must run, then the bundle.
 - Newsletter: on Mailchimp since 24 September 2026; the worker's three Mailchimp secrets are set and it reaches the
   audience. Still to do in Mailchimp: make fkarim@visualneuroscience.ai the audience's default From address and
   authenticate the domain (`docs/NEWSLETTER.md`). The email route stays off.

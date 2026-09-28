@@ -138,6 +138,7 @@ above the first. 4,000 characters allowed; both together are well under.
 
 ```
 • Microanatomy: a neuron drawn part by part, with twenty structures to click and a quiz to learn them, seventeen neurotransmitters drawn the way chemists draw them, and a hundred and fifty receptors, channels and transporters, each with the drugs that act on it.
+• Molecular: the dopamine and serotonin receptors themselves in 3D, built from thirty-nine experimental structures. Watch the neurotransmitter dock and switch the receptor on, see where antipsychotics, triptans, LSD and psilocin sit in the same pocket, and compare the subtypes.
 • Receptor densities now come from published PET and autoradiography, with a source behind every number. Pick a region to see its receptors ranked against the rest of the brain, or pick a receptor to see where it is densest and light those regions up on the scan.
 • The Brodmann areas light up in the Region Atlas too, searchable by number, name or what they do.
 • The Digital Textbook is now OpenStax's Introduction to Behavioral Neuroscience in full, nineteen chapters, with its citations opening where they stand.
@@ -153,6 +154,8 @@ Only if 1.0 went out as build 14:
 • Saved models. Name a Region Atlas view, with its regions, colours, camera and cuts, and open it again later. Signed in, models follow your account to every device.
 • An About page says who made the app and why, and the Brodmann map is now a line drawing, credited to IFEN, whose diagram it is adapted from.
 ```
+
+The description on the version page is 1.0's. Its WHAT IS INSIDE list predates Microanatomy and Molecular; the Play listing in `PLAY-STORE.md` carries the current list with an Apple-worded account line (Sign in with Apple or email), so paste its bullets into the App Store description with 1.1.
 
 ## App Review Information
 

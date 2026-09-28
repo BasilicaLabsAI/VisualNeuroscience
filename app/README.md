@@ -45,10 +45,14 @@ npm run android:apk    # a debug APK, for a device on a cable
 npm run android:bundle # a release AAB, for Play — needs signing configured
 ```
 
-Signing for release: create a keystore, then put `storeFile`, `storePassword`,
-`keyAlias` and `keyPassword` in `android/keystore.properties` (git-ignored) and
-reference it from `android/app/build.gradle`. Play's own App Signing then takes
-over from the upload key.
+Signing for release: make the upload key once (`keytool`, see
+`android/keystore.properties.example`), copy the example to
+`android/keystore.properties` and fill in the passwords. Both files are
+git-ignored; `android/app/build.gradle` signs the release build with the key
+when the file is present and leaves it unsigned when it is not. Play's own App
+Signing then takes over from the upload key. `store/PLAY-STORE.md` has the
+listing, the declarations and the route from account to production, and
+`scripts/shoot-store.js` takes every store's screenshots from the live pages.
 
 **iOS and macOS** — needs macOS and Xcode. Capacitor 8 wires its plugins with
 Swift Package Manager, so there is no CocoaPods step and no workspace: `cap
@@ -100,10 +104,15 @@ here that a browser tab is not:
   the home indicator, no rubber-band scrolling, no long-press callout on a
   canvas being dragged.
 
-The remaining honest gap is that the pages still ask Google for three
-webfonts. Self-hosting them alongside `fonts/Flux-Regular.woff2` would let the
-`INTERNET` permission come out of `AndroidManifest.xml` entirely and make
-"works with no network" literally true rather than nearly true.
+The typefaces are self-hosted now, so the pages ask nothing of the network
+for themselves; the `INTERNET` permission stays for the optional account, the
+newsletter box and the links out.
+
+On Android 15 and later the system draws the app edge to edge, so
+Capacitor's SystemBars plugin is asked (in `capacitor.config.json`) to inject
+the real insets as `--safe-area-inset-*` variables, and `site/assets/viewer.css`
+takes the larger of those and the browser's own `env()` values when it pads the
+app bar and the body. The website never sees either.
 
 ## Version numbers
 

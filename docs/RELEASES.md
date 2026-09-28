@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.63 — 28 September 2026 — The Android app is ready for Google Play, on phones and tablets
+Commit · Ready the Android app for Google Play: signed bundle, listing, declarations, graphics and screenshots for phone and tablet
+
+Everything Google Play asks for is now in the repository. The Android project signs its release bundle with an upload key kept outside the repository, carries version 1.1, and asks Capacitor for the real screen insets so the app bar clears the status bar on Android 15 and later, which draws apps edge to edge. The listing text, the app content declarations (data safety, content rating, target audience, app access), the account and testing route and the build steps are written out in app/store/PLAY-STORE.md, with the 512 pixel icon and a 1024 by 500 feature graphic drawn from the share card beside it. The store screenshots are retaken from the live pages for every family, Google's phone and 7 and 10 inch tablet shapes and Apple's iPhone and iPad shapes alike, nine pages each, the Microanatomy and Molecular pages among them, by one script kept in app/scripts; the old iPhone and iPad shots of the tractography, practice and textbook pages, which showed the site as it was months ago, go with them. The privacy page gains a section on deleting an account, which the Play listing has to point at, and the App Store notes carry the Molecular section in the next version's What's New.
+
 ## v10.62 — 28 September 2026 — The textbook's central dogma is drawn in code, and lights up note by note
-Commit · Draw the central dogma figure for the textbook in place of the book's image, with its four notes lighting the drawing
+Commit `bed86c7` · Draw the central dogma figure for the textbook in place of the book's image, with its four notes lighting the drawing
 
 The first figure of the textbook's Building a Nervous System section, the one that takes a gene to a protein, is now drawn by the site rather than shown as the book's picture: DNA base by base in the nucleus, transcribed into mRNA, the mRNA carried out to be translated into a chain of amino acids, and the chain folded into proteins. The book's four notes sit beside it, and hovering or tapping a note lights its part of the drawing and dims the rest; a second tap lets go. The drawing is set in the site's own inks and typefaces, so it follows the light and dark themes, and it is kept in the textbook's build so a rebuild from the OpenStax source keeps it. Two small things on phones came with it: a wide table in the book now scrolls inside its column instead of pushing the page out sideways, and a long web address in a caption breaks rather than doing the same.
 

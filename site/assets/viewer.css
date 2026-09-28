@@ -255,10 +255,10 @@ select{
    off on the chrome for the same reason — but not on the prose, which is
    there to be read and quoted. */
 body{
-  padding-top:env(safe-area-inset-top);
-  padding-bottom:env(safe-area-inset-bottom);
-  padding-left:env(safe-area-inset-left);
-  padding-right:env(safe-area-inset-right);
+  padding-top:max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px));
+  padding-bottom:max(env(safe-area-inset-bottom, 0px), var(--safe-area-inset-bottom, 0px));
+  padding-left:max(env(safe-area-inset-left, 0px), var(--safe-area-inset-left, 0px));
+  padding-right:max(env(safe-area-inset-right, 0px), var(--safe-area-inset-right, 0px));
 }
 :root[data-native] body{
   overscroll-behavior:none;
@@ -284,11 +284,15 @@ body{
    title in the middle, theme and account on the right. The website never
    sees any of this. */
 :root[data-native] .masthead{ display:none; }
-:root[data-native] body{ padding-top:calc(env(safe-area-inset-top) + 44px); }
+/* the inset comes from the browser where it reports one and from Capacitor's
+   SystemBars plugin on Android, which writes the real value into these
+   variables since Android 15 draws the app under the bars either way */
+:root[data-native]{ --vn-top-inset:max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px)); }
+:root[data-native] body{ padding-top:calc(var(--vn-top-inset) + 44px); }
 .vn-bar{
   position:fixed; top:0; left:0; right:0; z-index:60;
-  box-sizing:border-box; height:calc(env(safe-area-inset-top) + 44px);
-  padding:env(safe-area-inset-top) 6px 0 6px;
+  box-sizing:border-box; height:calc(var(--vn-top-inset, env(safe-area-inset-top)) + 44px);
+  padding:var(--vn-top-inset, env(safe-area-inset-top)) 6px 0 6px;
   display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
   background:color-mix(in srgb, var(--paper) 84%, transparent);
   -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
