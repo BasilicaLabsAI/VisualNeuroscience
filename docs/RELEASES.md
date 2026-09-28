@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.64 — 28 September 2026 — Two textbook figures answer the pointer: every base, organelle and arrow says what it is
+Commit · Name every part of the central dogma figure on hover, and draw the eukaryotic cell in code with a panel that opens on a click
+
+The central dogma figure now explains itself piece by piece. Point at any base and a label names it, adenine or uracil, with a line on what it pairs with; point at a strand, the arrows, an amino acid, the free amino acids or a folded protein and the same happens, the template and coding strands included. The second figure of the section, the typical eukaryotic cell, is now drawn by the site as well: membrane, cytoplasm, nucleus with its envelope, DNA and nucleolus, rough and smooth endoplasmic reticulum, ribosomes, mitochondria, lysosomes, the Golgi apparatus and vesicles. Hovering a part names it; a click or a tap, or a name from the list beside the drawing, puts its subtitle and description in the panel and lights every copy of that part, so all three mitochondria glow together. Both follow the theme and both are kept in the textbook's build.
+
 ## v10.63 — 28 September 2026 — The Android app is ready for Google Play, on phones and tablets
-Commit · Ready the Android app for Google Play: signed bundle, listing, declarations, graphics and screenshots for phone and tablet
+Commit `faac8ab` · Ready the Android app for Google Play: signed bundle, listing, declarations, graphics and screenshots for phone and tablet
 
 Everything Google Play asks for is now in the repository. The Android project signs its release bundle with an upload key kept outside the repository, carries version 1.1, and asks Capacitor for the real screen insets so the app bar clears the status bar on Android 15 and later, which draws apps edge to edge. The listing text, the app content declarations (data safety, content rating, target audience, app access), the account and testing route and the build steps are written out in app/store/PLAY-STORE.md, with the 512 pixel icon and a 1024 by 500 feature graphic drawn from the share card beside it. The store screenshots are retaken from the live pages for every family, Google's phone and 7 and 10 inch tablet shapes and Apple's iPhone and iPad shapes alike, nine pages each, the Microanatomy and Molecular pages among them, by one script kept in app/scripts; the old iPhone and iPad shots of the tractography, practice and textbook pages, which showed the site as it was months ago, go with them. The privacy page gains a section on deleting an account, which the Play listing has to point at, and the App Store notes carry the Molecular section in the next version's What's New.
 

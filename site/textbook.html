@@ -282,6 +282,11 @@ if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</
      chain of amino acids, the chain folded into proteins. The four notes
      are the book's; each lights its part of the drawing on hover or a tap.
      Colours follow the page's theme through its custom properties. -->
+<!-- The central dogma, drawn for the site in place of the book's raster
+     figure: DNA transcribed to mRNA in the nucleus, mRNA translated to a
+     chain of amino acids, the chain folded into proteins. The four notes
+     are the book's; each lights its part of the drawing on hover or a tap.
+     Colours follow the page's theme through its custom properties. -->
 <div class="tb-dogma" data-lit="">
   <svg class="tb-dogma-svg" viewBox="0 0 1000 620" role="img" aria-labelledby="dogma-title" xmlns="http://www.w3.org/2000/svg">
     <title id="dogma-title">From gene to protein: DNA is transcribed into mRNA in the nucleus, mRNA is translated into a chain of amino acids in the cytoplasm, and the chain folds into a protein.</title>
@@ -290,15 +295,15 @@ if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</
       <marker id="dogma-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="dg-arrowhead"/></marker>
     </defs>
     <!-- the patch of cell we are looking into -->
-    <rect class="dg-cell" x="24" y="24" width="952" height="572" rx="18"/>
+    <rect class="dg-cell" x="24" y="24" width="952" height="572" rx="18" data-name="Cytoplasm" data-sub="Everything inside the cell membrane but outside the nucleus. Translation happens here, on ribosomes."/>
     <g clip-path="url(#dogma-cell)">
       <!-- endoplasmic reticulum, folded around the nucleus -->
-      <g class="dg-er">
+      <g class="dg-er" data-name="Endoplasmic reticulum" data-sub="Folded membranes around the nucleus. Ribosomes on its rough part read mRNA into proteins bound for membranes or for export.">
         <path d="M430,30 C420,80 470,110 450,170 M400,26 C380,90 440,130 410,200 C395,235 430,260 420,300 M370,40 C340,110 410,150 380,230 C365,270 400,300 385,345 M340,70 C300,150 370,200 350,290 C340,330 380,360 360,400"/>
         <path d="M820,320 C860,300 900,350 950,330 M800,360 C850,340 890,400 960,380 M790,400 C840,380 880,440 950,430 M810,450 C860,430 900,480 940,470 M780,500 C830,480 880,540 950,530"/>
       </g>
       <!-- the nucleus, with its double envelope and pores -->
-      <g data-step="2" class="dg-step">
+      <g data-step="2" class="dg-step" data-name="Nucleus" data-sub="Holds the cell&rsquo;s DNA inside a double membrane. The gene is copied here, and the mRNA leaves through the pores in the envelope.">
         <circle class="dg-nucleus" cx="640" cy="150" r="200"/>
         <circle class="dg-envelope" cx="640" cy="150" r="200"/>
         <circle class="dg-envelope dg-pores" cx="640" cy="150" r="191"/>
@@ -307,8 +312,8 @@ if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</
     </g>
     <!-- DNA: the two strands, base by base -->
     <g data-step="1" class="dg-step">
-      <text class="dg-label" x="640" y="66" text-anchor="middle">DNA</text>
-      <g class="dg-strand" transform="translate(514,78)">
+      <text class="dg-label" x="640" y="66" text-anchor="middle" data-name="DNA" data-sub="Deoxyribonucleic acid: two strands of nucleotides, each base paired with its partner on the other strand. A gene is a stretch of this sequence.">DNA</text>
+      <g class="dg-strand" transform="translate(514,78)" data-name="Template strand" data-sub="The strand RNA polymerase reads. The mRNA below is its complement, base for base, with U in place of T.">
         <g class="b-A"><rect x="0"   y="0" width="20" height="22" rx="3"/><text x="10"  y="16">A</text></g>
         <g class="b-T"><rect x="21"  y="0" width="20" height="22" rx="3"/><text x="31"  y="16">T</text></g>
         <g class="b-G"><rect x="42"  y="0" width="20" height="22" rx="3"/><text x="52"  y="16">G</text></g>
@@ -322,7 +327,7 @@ if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</
         <g class="b-G"><rect x="210" y="0" width="20" height="22" rx="3"/><text x="220" y="16">G</text></g>
         <g class="b-T"><rect x="231" y="0" width="20" height="22" rx="3"/><text x="241" y="16">T</text></g>
       </g>
-      <g class="dg-strand" transform="translate(514,104)">
+      <g class="dg-strand" transform="translate(514,104)" data-name="Coding strand" data-sub="The other strand of the double helix. Its sequence is the mRNA&rsquo;s, with T where the mRNA has U, which is why a gene is usually written this way round.">
         <g class="b-T"><rect x="0"   y="0" width="20" height="22" rx="3"/><text x="10"  y="16">T</text></g>
         <g class="b-A"><rect x="21"  y="0" width="20" height="22" rx="3"/><text x="31"  y="16">A</text></g>
         <g class="b-C"><rect x="42"  y="0" width="20" height="22" rx="3"/><text x="52"  y="16">C</text></g>
@@ -337,16 +342,16 @@ if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</
         <g class="b-A"><rect x="231" y="0" width="20" height="22" rx="3"/><text x="241" y="16">A</text></g>
       </g>
       <!-- the pairing, drawn between the strands -->
-      <g class="dg-rungs">
+      <g class="dg-rungs" data-name="Base pairs" data-sub="Hydrogen bonds hold each base to its partner on the other strand: A with T, G with C. Either strand can be rebuilt from the other.">
         <path d="M524,100 v4 M545,100 v4 M566,100 v4 M587,100 v4 M608,100 v4 M629,100 v4 M650,100 v4 M671,100 v4 M692,100 v4 M713,100 v4 M734,100 v4 M755,100 v4"/>
       </g>
     </g>
     <!-- transcription: DNA to mRNA, in the nucleus -->
     <g data-step="2" class="dg-step">
-      <path class="dg-flow" d="M640,132 V168" marker-end="url(#dogma-arrow)"/>
-      <text class="dg-verb" x="654" y="156">Transcription</text>
-      <text class="dg-end" x="500" y="199">5′</text>
-      <g class="dg-strand" transform="translate(514,182)">
+      <path class="dg-flow" d="M640,132 V168" marker-end="url(#dogma-arrow)" data-name="Transcription" data-sub="RNA polymerase unwinds the gene, reads the template strand and builds a matching strand of RNA one base at a time. It happens in the nucleus."/>
+      <text class="dg-verb" x="654" y="156" data-name="Transcription" data-sub="RNA polymerase unwinds the gene, reads the template strand and builds a matching strand of RNA one base at a time. It happens in the nucleus.">Transcription</text>
+      <text class="dg-end" x="500" y="199" data-name="5&prime; end" data-sub="Where the mRNA begins. The ribosome starts reading from this end.">5′</text>
+      <g class="dg-strand" transform="translate(514,182)" data-name="Messenger RNA (mRNA)" data-sub="A single-stranded copy of the gene, made in the nucleus and carried into the cytoplasm. It is read three bases at a time; each triplet, a codon, names one amino acid.">
         <g class="b-U"><rect x="0"   y="0" width="20" height="22" rx="3"/><text x="10"  y="16">U</text></g>
         <g class="b-A"><rect x="21"  y="0" width="20" height="22" rx="3"/><text x="31"  y="16">A</text></g>
         <g class="b-C"><rect x="42"  y="0" width="20" height="22" rx="3"/><text x="52"  y="16">C</text></g>
@@ -360,21 +365,21 @@ if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</
         <g class="b-C"><rect x="210" y="0" width="20" height="22" rx="3"/><text x="220" y="16">C</text></g>
         <g class="b-A"><rect x="231" y="0" width="20" height="22" rx="3"/><text x="241" y="16">A</text></g>
       </g>
-      <text class="dg-end" x="770" y="199">3′</text>
-      <text class="dg-label" x="640" y="236" text-anchor="middle">mRNA</text>
+      <text class="dg-end" x="770" y="199" data-name="3&prime; end" data-sub="Where the mRNA ends, with a tail of A bases that protects it in the cytoplasm.">3′</text>
+      <text class="dg-label" x="640" y="236" text-anchor="middle" data-name="Messenger RNA (mRNA)" data-sub="A single-stranded copy of the gene, made in the nucleus and carried into the cytoplasm. It is read three bases at a time; each triplet, a codon, names one amino acid.">mRNA</text>
     </g>
     <!-- translation: the mRNA leaves the nucleus and is read into a chain -->
     <g data-step="3" class="dg-step">
-      <path class="dg-flow" d="M600,250 C560,300 520,300 460,320 C400,340 350,330 300,350" marker-end="url(#dogma-arrow)"/>
-      <text class="dg-verb" x="372" y="318">Translation</text>
-      <text class="dg-label" x="60" y="352">Protein</text>
-      <path class="dg-chain" d="M60,392 H470"/>
-      <g class="dg-aa"><circle cx="130" cy="392" r="24"/><text x="130" y="397">Asn</text></g>
-      <g class="dg-aa"><circle cx="230" cy="392" r="24"/><text x="230" y="397">Pro</text></g>
-      <g class="dg-aa"><circle cx="330" cy="392" r="24"/><text x="330" y="397">Gly</text></g>
-      <g class="dg-aa"><circle cx="430" cy="392" r="24"/><text x="430" y="397">Thr</text></g>
-      <text class="dg-note" x="484" y="420">Amino acids</text>
-      <g class="dg-free">
+      <path class="dg-flow" d="M600,250 C560,300 520,300 460,320 C400,340 350,330 300,350" marker-end="url(#dogma-arrow)" data-name="Translation" data-sub="A ribosome moves along the mRNA codon by codon; transfer RNAs bring the amino acid each codon names, and the ribosome joins them into a chain. It happens in the cytoplasm."/>
+      <text class="dg-verb" x="372" y="318" data-name="Translation" data-sub="A ribosome moves along the mRNA codon by codon; transfer RNAs bring the amino acid each codon names, and the ribosome joins them into a chain. It happens in the cytoplasm.">Translation</text>
+      <text class="dg-label" x="60" y="352" data-name="Protein" data-sub="A chain of amino acids in the order the gene set, folded into a shape. Enzymes, receptors, channels and the cell&rsquo;s scaffolding are all proteins.">Protein</text>
+      <path class="dg-chain" d="M60,392 H470" data-name="Polypeptide chain" data-sub="Amino acids joined end to end by peptide bonds, in the order the mRNA&rsquo;s codons named them."/>
+      <g class="dg-aa" data-name="Asparagine (Asn)" data-sub="One of the twenty amino acids proteins are built from. Polar, so it tends to sit on a protein&rsquo;s surface, in contact with water."><circle cx="130" cy="392" r="24"/><text x="130" y="397">Asn</text></g>
+      <g class="dg-aa" data-name="Proline (Pro)" data-sub="An amino acid whose side chain loops back onto its own backbone. It puts a kink in the chain and breaks up helices."><circle cx="230" cy="392" r="24"/><text x="230" y="397">Pro</text></g>
+      <g class="dg-aa" data-name="Glycine (Gly)" data-sub="The smallest amino acid, with a single hydrogen for a side chain. It lets the chain bend where nothing else could."><circle cx="330" cy="392" r="24"/><text x="330" y="397">Gly</text></g>
+      <g class="dg-aa" data-name="Threonine (Thr)" data-sub="An amino acid with a hydroxyl group on its side chain. Kinases can add a phosphate to it, a switch that turns many proteins on or off."><circle cx="430" cy="392" r="24"/><text x="430" y="397">Thr</text></g>
+      <text class="dg-note" x="484" y="420" data-name="Amino acids" data-sub="The twenty building blocks of proteins. Each has the same backbone and a different side chain, which gives it its character.">Amino acids</text>
+      <g class="dg-free" data-name="Free amino acids" data-sub="The cell&rsquo;s pool of building blocks, waiting to be picked up by transfer RNAs and added to a growing chain.">
         <circle cx="628" cy="372" r="4"/><circle cx="660" cy="392" r="5"/><circle cx="639" cy="416" r="4"/><circle cx="680" cy="430" r="5"/>
         <circle cx="616" cy="446" r="4"/><circle cx="658" cy="458" r="5"/><circle cx="700" cy="472" r="4"/><circle cx="624" cy="492" r="5"/>
         <circle cx="680" cy="514" r="4"/><circle cx="636" cy="536" r="4"/>
@@ -382,12 +387,12 @@ if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</
     </g>
     <!-- folding: the chain becomes a shape, and the shapes make the cell what it is -->
     <g data-step="4" class="dg-step">
-      <path class="dg-flow" d="M230,424 V468" marker-end="url(#dogma-arrow)"/>
-      <text class="dg-note" x="60" y="480">Proteins folded</text>
-      <text class="dg-note" x="60" y="504">into their 3D shape</text>
-      <path class="dg-fold dg-fold-1" d="M248,548 c-14,-22 -6,-46 18,-52 c16,-4 26,4 34,14 c12,-10 30,-6 36,8 c8,16 -4,30 -16,34 c6,14 -2,30 -16,32 c-12,2 -22,-6 -26,-14 c-10,10 -30,8 -34,-4 c-4,-10 2,-16 4,-18 z"/>
-      <path class="dg-fold dg-fold-2" d="M330,566 c-18,-20 -12,-50 12,-58 c14,-4 28,2 34,12 c14,-12 36,-4 40,12 c4,14 -4,24 -12,30 c8,10 4,28 -8,34 c-10,6 -22,2 -28,-6 c-4,14 -22,20 -32,12 c-8,-6 -10,-16 -6,-24 z"/>
-      <path class="dg-fold dg-fold-3" d="M424,556 c-10,-24 8,-48 32,-46 c14,2 24,10 28,20 c14,-6 30,4 30,18 c0,12 -8,20 -16,24 c4,14 -8,26 -22,24 c-8,-2 -14,-8 -18,-14 c-8,8 -24,6 -30,-4 c-6,-10 -2,-18 -4,-22 z"/>
+      <path class="dg-flow" d="M230,424 V468" marker-end="url(#dogma-arrow)" data-name="Folding" data-sub="As the chain grows it folds up, driven by which parts attract water and which shun it. The sequence sets the shape, and the shape sets the job."/>
+      <text class="dg-note" x="60" y="480" data-name="Folding" data-sub="As the chain grows it folds up, driven by which parts attract water and which shun it. The sequence sets the shape, and the shape sets the job.">Proteins folded</text>
+      <text class="dg-note" x="60" y="504" data-name="Folding" data-sub="As the chain grows it folds up, driven by which parts attract water and which shun it. The sequence sets the shape, and the shape sets the job.">into their 3D shape</text>
+      <path class="dg-fold dg-fold-1" data-name="A folded protein: an enzyme" data-sub="Its shape leaves a pocket that fits one molecule, and the reaction happens there. A cell&rsquo;s enzymes decide which chemistry it does." d="M248,548 c-14,-22 -6,-46 18,-52 c16,-4 26,4 34,14 c12,-10 30,-6 36,8 c8,16 -4,30 -16,34 c6,14 -2,30 -16,32 c-12,2 -22,-6 -26,-14 c-10,10 -30,8 -34,-4 c-4,-10 2,-16 4,-18 z"/>
+      <path class="dg-fold dg-fold-2" data-name="A folded protein: a receptor" data-sub="Sits in the membrane with a pocket facing outwards; when its signal binds, its shape shifts and the cell hears about it." d="M330,566 c-18,-20 -12,-50 12,-58 c14,-4 28,2 34,12 c14,-12 36,-4 40,12 c4,14 -4,24 -12,30 c8,10 4,28 -8,34 c-10,6 -22,2 -28,-6 c-4,14 -22,20 -32,12 c-8,-6 -10,-16 -6,-24 z"/>
+      <path class="dg-fold dg-fold-3" data-name="A folded protein: a structural protein" data-sub="Rod- and sheet-shaped proteins that build the cell&rsquo;s scaffolding, from the fibres that hold its shape to the tracks things move along." d="M424,556 c-10,-24 8,-48 32,-46 c14,2 24,10 28,20 c14,-6 30,4 30,18 c0,12 -8,20 -16,24 c4,14 -8,26 -22,24 c-8,-2 -14,-8 -18,-14 c-8,8 -24,6 -30,-4 c-6,-10 -2,-18 -4,-22 z"/>
     </g>
   </svg>
   <ol class="tb-dogma-notes">
@@ -396,7 +401,8 @@ if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</
     <li><button type="button" class="tb-dogma-note" data-step="3"><span class="n">3</span><span class="t">mRNA is <b>translated</b> into a sequence of amino acids, making a protein.</span></button></li>
     <li><button type="button" class="tb-dogma-note" data-step="4"><span class="n">4</span><span class="t">The unique collection of proteins in a cell helps determine what kind of cell it is, or its <b>phenotype</b>.</span></button></li>
   </ol>
-  <p class="tb-dogma-credit">Drawn for this edition after the book&rsquo;s figure. Hover or tap a note to light its part of the picture.</p>
+  <div class="tb-dogma-tip tb-tip" hidden aria-live="polite"><b></b><span></span></div>
+  <p class="tb-dogma-credit">Drawn for this edition after the book&rsquo;s figure. Hover or tap anything in the picture for what it is; a note lights its step.</p>
 </div><figcaption><b>The Central Dogma</b> </figcaption></figure>
       <p id="m00021-para-00004">Brain cells, neurons and glia, also adhere to the characteristics specified above and are fundamentally just eukaryotic cells. However, neurons have additional features that make them uniquely specialized for communication, a feature which defines nervous systems. Before we get into the specifics of neurons and glia, let us establish a few fundamentals of eukaryotic cells.</p>
     </section>
@@ -408,7 +414,153 @@ if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</
     <section id="m00021-sect-00003"><h3>Organelles: carry out functions of cells</h3>
       
       <p id="m00021-para-00008">Brain cells, like all eukaryotic cells contain a complement of organelles necessary for the proper cell function. This includes a <b class="tb-term">nucleus</b> (houses the DNA), endoplasmic reticulum, <b class="tb-term">Golgi apparatus</b>, <b class="tb-term">lysosomes</b>, <b class="tb-term">mitochondria</b> (singular is mitochondrion) and a few others (<a href="#m00021-Image-1.02">Typical eukaryotic cell</a>). Cells store genetic material in their nucleus, transport materials across the cell membrane and within the cell, produce energy in the form of ATP, breakdown and build macromolecules, and communicate and interact with other cells. Organelles serve in these multiple functional roles. Of notable importance are the mitochondria, which facilitate most of the processes of cellular respiration that produce ATP. While the human brain only takes up about 2% of body mass, it uses about ~25% of daily energy production. Neurons can have up to 2 million mitochondria each and thus have the capability to produce a large amount of ATP. This high ATP demand is needed for the basic function of neurons and the communication between neurons (see <a href="#m00011">Introduction</a>). </p>
-      <figure class="tb-fig" id="m00021-Image-1.02"><img src="assets/textbook/img/Image-1.02_Eukaryotic-cell.webp" alt="Diagram of a typical eukaryotic cell showing the organelles: mitochondrion, lysosome, plasma membrane, DNA, nucleus, ribosome, endoplasmic reticulum, Golgi apparatus." width="1400" height="738" loading="lazy" decoding="async"><figcaption><b>Typical eukaryotic cell</b> </figcaption></figure>
+      <figure class="tb-fig" id="m00021-Image-1.02"><!-- A typical eukaryotic cell, drawn for the site in place of the book's
+     raster figure. Every organelle is a part with an id: hovering names it,
+     a click or a tap opens its subtitle and description in the panel beside
+     the drawing, and the list under the panel reaches every part by name.
+     Colours follow the page's theme through its custom properties. -->
+<div class="tb-cell">
+  <svg class="tb-cell-svg" viewBox="0 0 1000 640" role="img" aria-labelledby="cell-title" xmlns="http://www.w3.org/2000/svg">
+    <title id="cell-title">A eukaryotic cell: plasma membrane, cytoplasm, nucleus with its envelope, DNA and nucleolus, rough and smooth endoplasmic reticulum, ribosomes, mitochondria, lysosomes, the Golgi apparatus and vesicles.</title>
+    <circle class="c-cyto" data-part="cytoplasm" cx="500" cy="320" r="294"/>
+    <g class="c-ser" data-part="ser">
+      <path d="M392.0,392.0 Q431.0,404.0 470.0,404.0"/>
+      <path d="M420.0,418.0 Q462.5,429.0 505.0,428.0"/>
+      <path d="M455.0,440.0 Q487.5,452.0 520.0,452.0"/>
+      <path d="M380.0,430.0 Q397.5,448.5 415.0,455.0"/>
+      <path d="M500.0,470.0 Q530.0,472.0 560.0,462.0"/>
+      <path d="M545.0,405.0 Q572.5,414.5 600.0,412.0"/>
+    </g>
+    <g class="c-rer" data-part="rer">
+      <path class="c-rer-m" d="M583.8,129.7 A128,128 0 0 1 528.8,377.5"/><path class="c-rer-s" d="M583.8,129.7 A128,128 0 0 1 528.8,377.5"/>
+      <path class="c-rer-m" d="M620.5,121.1 A152,152 0 0 1 500.7,396.8"/><path class="c-rer-s" d="M620.5,121.1 A152,152 0 0 1 500.7,396.8"/>
+      <path class="c-rer-m" d="M664.5,125.5 A176,176 0 0 1 474.1,413.2"/><path class="c-rer-s" d="M664.5,125.5 A176,176 0 0 1 474.1,413.2"/>
+      <path class="c-rer-m" d="M713.2,150.0 A200,200 0 0 1 446.1,426.6"/><path class="c-rer-s" d="M713.2,150.0 A200,200 0 0 1 446.1,426.6"/>
+      <path class="c-rer-m" d="M476.0,360.9 A128,128 0 0 1 429.1,186.0"/><path class="c-rer-s" d="M476.0,360.9 A128,128 0 0 1 429.1,186.0"/>
+      <path class="c-rer-m" d="M446.4,369.8 A152,152 0 0 1 427.0,148.3"/><path class="c-rer-s" d="M446.4,369.8 A152,152 0 0 1 427.0,148.3"/>
+      <path class="c-rer-m" d="M405.2,363.1 A176,176 0 0 1 431.6,111.3"/><path class="c-rer-s" d="M405.2,363.1 A176,176 0 0 1 431.6,111.3"/>
+    </g>
+    <g class="c-ribo" data-part="ribosomes">
+      <circle cx="722.2" cy="375.8" r="2.3"/>
+      <circle cx="761.5" cy="329.1" r="2.6"/>
+      <circle cx="763.7" cy="387.4" r="2.7"/>
+      <circle cx="754.4" cy="350.1" r="3.1"/>
+      <circle cx="589.9" cy="464.5" r="3.0"/>
+      <circle cx="650.2" cy="453.7" r="3.1"/>
+      <circle cx="737.4" cy="378.5" r="2.5"/>
+      <circle cx="746.0" cy="329.9" r="2.6"/>
+      <circle cx="726.5" cy="398.1" r="2.6"/>
+      <circle cx="769.3" cy="286.0" r="3.1"/>
+      <circle cx="690.0" cy="451.0" r="3.2"/>
+      <circle cx="704.2" cy="413.2" r="2.4"/>
+      <circle cx="588.7" cy="468.2" r="2.4"/>
+      <circle cx="699.4" cy="436.0" r="2.4"/>
+      <circle cx="642.7" cy="458.9" r="2.4"/>
+      <circle cx="727.3" cy="409.4" r="2.7"/>
+      <circle cx="756.3" cy="352.7" r="2.8"/>
+      <circle cx="674.4" cy="475.4" r="2.5"/>
+      <circle cx="316.9" cy="399.8" r="2.2"/>
+      <circle cx="267.3" cy="402.1" r="2.6"/>
+      <circle cx="337.7" cy="419.6" r="2.6"/>
+      <circle cx="358.6" cy="377.1" r="2.8"/>
+      <circle cx="306.3" cy="400.1" r="3.2"/>
+      <circle cx="262.7" cy="387.7" r="2.9"/>
+      <circle cx="280.2" cy="367.0" r="2.7"/>
+      <circle cx="267.1" cy="406.1" r="2.8"/>
+      <circle cx="275.5" cy="374.9" r="2.9"/>
+      <circle cx="306.9" cy="412.3" r="2.3"/>
+    </g>
+    <circle class="c-nuc" data-part="nucleus" cx="540" cy="250" r="100"/>
+    <g class="c-dna" data-part="dna">
+      <path d="M585.9,216.5 Q607.5,194.7 599.6,190.8 Q583.8,202.5 568.4,205.8 Q586.0,213.1 599.3,205.4 Q611.5,225.4 619.1,221.8 Q639.6,221.9 617.5,217.7 Q605.5,231.6 591.5,227.0"/>
+      <path d="M525.7,237.6 Q525.4,261.1 533.0,278.4 Q555.6,300.4 538.4,318.9 Q513.2,324.4 516.3,330.6 Q535.1,344.6 552.3,333.1 Q562.1,315.0 548.2,306.1 Q573.5,298.1 576.7,277.2"/>
+      <path d="M528.8,246.9 Q495.7,241.0 488.9,214.9 Q481.6,194.0 479.9,191.3 Q495.0,217.6 504.9,239.8 Q509.1,216.9 497.3,202.5 Q510.0,171.3 536.9,169.2 Q547.7,140.0 560.1,168.4"/>
+      <path d="M546.0,290.6 Q534.6,305.2 545.4,315.2 Q541.3,337.0 530.6,333.5 Q554.8,326.7 560.6,331.4 Q593.8,328.9 603.8,304.7 Q607.7,325.9 599.5,309.3 Q607.4,336.1 577.3,325.3"/>
+      <path d="M560.9,217.3 Q543.2,192.1 520.0,200.4 Q502.7,172.8 517.0,169.2 Q517.0,143.6 512.7,170.6 Q518.4,147.9 536.7,166.1 Q560.6,161.8 570.4,171.7 Q598.4,162.0 581.4,176.9"/>
+      <path d="M553.3,263.7 Q578.9,246.3 575.4,221.8 Q591.0,191.9 599.4,190.6 Q583.6,212.3 594.4,230.8 Q627.8,233.8 624.0,248.5 Q591.5,243.0 565.2,244.1 Q586.8,221.6 583.2,196.8"/>
+      <path d="M539.7,277.6 Q541.3,304.9 557.3,319.9 Q539.7,329.7 528.3,318.4 Q512.9,338.6 507.0,327.2 Q527.4,313.2 542.4,326.2 Q515.9,325.9 496.2,321.7 Q521.1,324.6 533.9,309.2"/>
+    </g>
+    <circle class="c-nucleolus" data-part="nucleolus" cx="518" cy="238" r="22"/>
+    <g class="c-env" data-part="envelope"><circle cx="540" cy="250" r="100"/><circle class="c-env-pores" cx="540" cy="250" r="92"/></g>
+    <g class="c-mito" data-part="mito" transform="translate(300,165) rotate(-28)">
+      <ellipse rx="44" ry="22"/>
+      <path class="c-crista" d="M-26,-14 q4,7 0,14 q-4,6 0,13"/>
+      <path class="c-crista" d="M-9,14 q-4,-7 0,-14 q4,-6 0,-13"/>
+      <path class="c-crista" d="M8,-14 q4,7 0,14 q-4,6 0,13"/>
+      <path class="c-crista" d="M25,14 q-4,-7 0,-14 q4,-6 0,-13"/>
+    </g>
+    <g class="c-mito" data-part="mito" transform="translate(690,335) rotate(22)">
+      <ellipse rx="44" ry="22"/>
+      <path class="c-crista" d="M-26,-14 q4,7 0,14 q-4,6 0,13"/>
+      <path class="c-crista" d="M-9,14 q-4,-7 0,-14 q4,-6 0,-13"/>
+      <path class="c-crista" d="M8,-14 q4,7 0,14 q-4,6 0,13"/>
+      <path class="c-crista" d="M25,14 q-4,-7 0,-14 q4,-6 0,-13"/>
+    </g>
+    <g class="c-mito" data-part="mito" transform="translate(355,480) rotate(12)">
+      <ellipse rx="44" ry="22"/>
+      <path class="c-crista" d="M-26,-14 q4,7 0,14 q-4,6 0,13"/>
+      <path class="c-crista" d="M-9,14 q-4,-7 0,-14 q4,-6 0,-13"/>
+      <path class="c-crista" d="M8,-14 q4,7 0,14 q-4,6 0,13"/>
+      <path class="c-crista" d="M25,14 q-4,-7 0,-14 q4,-6 0,-13"/>
+    </g>
+    <g class="c-lyso" data-part="lysosome" transform="translate(255,325)">
+      <circle r="27"/>
+      <circle class="c-lyso-dot" cx="-9" cy="-8" r="4.6"/>
+      <circle class="c-lyso-dot" cx="8" cy="-9" r="4.6"/>
+      <circle class="c-lyso-dot" cx="-7" cy="9" r="4.6"/>
+      <circle class="c-lyso-dot" cx="9" cy="7" r="4.6"/>
+      <circle class="c-lyso-dot" cx="0" cy="0" r="4.6"/>
+    </g>
+    <g class="c-lyso" data-part="lysosome" transform="translate(430,560)">
+      <circle r="27"/>
+      <circle class="c-lyso-dot" cx="-9" cy="-8" r="4.6"/>
+      <circle class="c-lyso-dot" cx="8" cy="-9" r="4.6"/>
+      <circle class="c-lyso-dot" cx="-7" cy="9" r="4.6"/>
+      <circle class="c-lyso-dot" cx="9" cy="7" r="4.6"/>
+      <circle class="c-lyso-dot" cx="0" cy="0" r="4.6"/>
+    </g>
+    <g class="c-golgi" data-part="golgi">
+      <path d="M602.0,440.0 q38,-16 76,0"/>
+      <path d="M592.0,454.0 q48,-14 96,0"/>
+      <path d="M584.0,468.0 q56,-13 112,0"/>
+      <path d="M590.0,482.0 q50,-12 100,0"/>
+      <path d="M599.0,496.0 q41,-10 82,0"/>
+    </g>
+    <g class="c-ves" data-part="vesicles">
+      <circle cx="586" cy="428" r="6"/>
+      <circle cx="700" cy="452" r="6.5"/>
+      <circle cx="712" cy="500" r="5"/>
+      <circle cx="606" cy="522" r="6"/>
+      <circle cx="668" cy="530" r="5.5"/>
+      <circle cx="560" cy="500" r="5"/>
+    </g>
+    <g class="c-mem" data-part="membrane"><circle cx="500" cy="320" r="300"/><circle class="c-mem-in" cx="500" cy="320" r="291"/></g>
+  </svg>
+  <aside class="tb-cell-side">
+    <p class="tb-cell-kicker" id="tb-cell-kicker">A typical eukaryotic cell</p>
+    <h4 class="tb-cell-name" id="tb-cell-name">The cell</h4>
+    <p class="tb-cell-sub" id="tb-cell-sub">Hover for a name, click for the rest</p>
+    <p class="tb-cell-desc" id="tb-cell-desc">Every organelle here is in a neuron too. Point at any part of the drawing for its name; click or tap it, or a name below, for what it does.</p>
+    <ul class="tb-cell-parts" aria-label="Parts of the cell">
+      <li><button type="button" data-part="membrane">Plasma membrane</button></li>
+      <li><button type="button" data-part="cytoplasm">Cytoplasm</button></li>
+      <li><button type="button" data-part="nucleus">Nucleus</button></li>
+      <li><button type="button" data-part="dna">DNA</button></li>
+      <li><button type="button" data-part="nucleolus">Nucleolus</button></li>
+      <li><button type="button" data-part="envelope">Nuclear envelope</button></li>
+      <li><button type="button" data-part="rer">Rough endoplasmic reticulum</button></li>
+      <li><button type="button" data-part="ser">Smooth endoplasmic reticulum</button></li>
+      <li><button type="button" data-part="ribosomes">Ribosomes</button></li>
+      <li><button type="button" data-part="mito">Mitochondrion</button></li>
+      <li><button type="button" data-part="lysosome">Lysosome</button></li>
+      <li><button type="button" data-part="golgi">Golgi apparatus</button></li>
+      <li><button type="button" data-part="vesicles">Vesicles</button></li>
+    </ul>
+  </aside>
+  <div class="tb-cell-tip tb-tip" hidden></div>
+  <script type="application/json" class="tb-cell-data">{"membrane": {"name": "Plasma membrane", "sub": "The cell&rsquo;s boundary", "desc": "A double layer of phospholipids studded with proteins, separating the inside of the cell from the outside. It decides what passes: ions through channels, signals through receptors. In a neuron it is where the electrical signal runs."}, "cytoplasm": {"name": "Cytoplasm", "sub": "Everything between membrane and nucleus", "desc": "The water, salts and proteins that fill the cell and hold its organelles. Most of the cell&rsquo;s chemistry happens dissolved in it, and translation takes place here, on ribosomes."}, "nucleus": {"name": "Nucleus", "sub": "The cell&rsquo;s library", "desc": "Holds the DNA behind a double membrane pierced by pores. Genes are copied into mRNA here, and the mRNA leaves through the pores to be read outside. The dense spot is the nucleolus."}, "dna": {"name": "DNA", "sub": "The genome, coiled", "desc": "About two metres of it in every nucleus, wound around histone proteins into chromatin. Its sequence holds every gene the cell could express; which genes it does express is what makes a neuron a neuron."}, "nucleolus": {"name": "Nucleolus", "sub": "Where ribosomes are made", "desc": "The dense region of the nucleus where ribosomal RNA is transcribed and the two halves of each ribosome are assembled, before they leave for the cytoplasm."}, "envelope": {"name": "Nuclear envelope", "sub": "Two membranes and their pores", "desc": "The double membrane around the nucleus, continuous with the endoplasmic reticulum. Its pores are gates that let mRNA out and finished proteins in, under control."}, "rer": {"name": "Rough endoplasmic reticulum", "sub": "Membrane studded with ribosomes", "desc": "Flattened sacs wrapped around the nucleus, continuous with its envelope. The ribosomes on its surface thread new proteins into it, where they fold and are checked before going on to the Golgi, bound for a membrane or for release, receptors and peptide transmitters among them."}, "ser": {"name": "Smooth endoplasmic reticulum", "sub": "Membrane without ribosomes", "desc": "Tubes of membrane that make lipids, store calcium and break down drugs and toxins. In a neuron its calcium stores reach into the dendrites and help shape their signals."}, "ribosomes": {"name": "Ribosomes", "sub": "The protein factories", "desc": "Two-part machines of RNA and protein that read an mRNA three bases at a time and join the amino acids it names into a chain. Free in the cytoplasm they make the cell&rsquo;s own proteins; on the rough ER, the ones bound for membranes or export."}, "mito": {"name": "Mitochondrion", "sub": "The cell&rsquo;s power plant", "desc": "Two membranes, the inner one folded into cristae, where sugar and fat are burned with oxygen to make ATP, the cell&rsquo;s energy currency. It keeps a small genome of its own, a relic of the bacterium it once was. Neurons are hungry for ATP and ship mitochondria far out along their axons."}, "lysosome": {"name": "Lysosome", "sub": "The recycling centre", "desc": "A membrane bag of acid and digestive enzymes that breaks down worn-out organelles, misfolded proteins and whatever the cell takes in, and hands the parts back for reuse."}, "golgi": {"name": "Golgi apparatus", "sub": "The sorting office", "desc": "A stack of flattened sacs that receives proteins from the ER, finishes them, adds sugars, sorts them and packs them into vesicles addressed to the membrane, to the outside or to lysosomes."}, "vesicles": {"name": "Vesicles", "sub": "Membrane bubbles on the move", "desc": "Small packets of membrane that carry cargo between the ER, the Golgi, the plasma membrane and beyond. A synaptic vesicle is one of these, filled with neurotransmitter and waiting at the terminal."}}</script>
+  <p class="tb-cell-credit">Drawn for this edition after the book&rsquo;s figure.</p>
+</div><figcaption><b>Typical eukaryotic cell</b> </figcaption></figure>
     </section>
     <section id="m00021-sect-00004"><h3>Neurons</h3>
       

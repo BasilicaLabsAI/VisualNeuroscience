@@ -144,6 +144,7 @@ class Ctx:
 FIGURES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "figures")
 FIGURES = {
     "m00021-Image-1.01": "central-dogma.html",   # 1.1 Building a Nervous System: the central dogma
+    "m00021-Image-1.02": "eukaryotic-cell.html", # 1.1 Building a Nervous System: a typical eukaryotic cell
 }
 
 def aid(ctx, i):

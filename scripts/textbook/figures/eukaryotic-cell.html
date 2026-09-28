@@ -1,0 +1,147 @@
+<!-- A typical eukaryotic cell, drawn for the site in place of the book's
+     raster figure. Every organelle is a part with an id: hovering names it,
+     a click or a tap opens its subtitle and description in the panel beside
+     the drawing, and the list under the panel reaches every part by name.
+     Colours follow the page's theme through its custom properties. -->
+<div class="tb-cell">
+  <svg class="tb-cell-svg" viewBox="0 0 1000 640" role="img" aria-labelledby="cell-title" xmlns="http://www.w3.org/2000/svg">
+    <title id="cell-title">A eukaryotic cell: plasma membrane, cytoplasm, nucleus with its envelope, DNA and nucleolus, rough and smooth endoplasmic reticulum, ribosomes, mitochondria, lysosomes, the Golgi apparatus and vesicles.</title>
+    <circle class="c-cyto" data-part="cytoplasm" cx="500" cy="320" r="294"/>
+    <g class="c-ser" data-part="ser">
+      <path d="M392.0,392.0 Q431.0,404.0 470.0,404.0"/>
+      <path d="M420.0,418.0 Q462.5,429.0 505.0,428.0"/>
+      <path d="M455.0,440.0 Q487.5,452.0 520.0,452.0"/>
+      <path d="M380.0,430.0 Q397.5,448.5 415.0,455.0"/>
+      <path d="M500.0,470.0 Q530.0,472.0 560.0,462.0"/>
+      <path d="M545.0,405.0 Q572.5,414.5 600.0,412.0"/>
+    </g>
+    <g class="c-rer" data-part="rer">
+      <path class="c-rer-m" d="M583.8,129.7 A128,128 0 0 1 528.8,377.5"/><path class="c-rer-s" d="M583.8,129.7 A128,128 0 0 1 528.8,377.5"/>
+      <path class="c-rer-m" d="M620.5,121.1 A152,152 0 0 1 500.7,396.8"/><path class="c-rer-s" d="M620.5,121.1 A152,152 0 0 1 500.7,396.8"/>
+      <path class="c-rer-m" d="M664.5,125.5 A176,176 0 0 1 474.1,413.2"/><path class="c-rer-s" d="M664.5,125.5 A176,176 0 0 1 474.1,413.2"/>
+      <path class="c-rer-m" d="M713.2,150.0 A200,200 0 0 1 446.1,426.6"/><path class="c-rer-s" d="M713.2,150.0 A200,200 0 0 1 446.1,426.6"/>
+      <path class="c-rer-m" d="M476.0,360.9 A128,128 0 0 1 429.1,186.0"/><path class="c-rer-s" d="M476.0,360.9 A128,128 0 0 1 429.1,186.0"/>
+      <path class="c-rer-m" d="M446.4,369.8 A152,152 0 0 1 427.0,148.3"/><path class="c-rer-s" d="M446.4,369.8 A152,152 0 0 1 427.0,148.3"/>
+      <path class="c-rer-m" d="M405.2,363.1 A176,176 0 0 1 431.6,111.3"/><path class="c-rer-s" d="M405.2,363.1 A176,176 0 0 1 431.6,111.3"/>
+    </g>
+    <g class="c-ribo" data-part="ribosomes">
+      <circle cx="722.2" cy="375.8" r="2.3"/>
+      <circle cx="761.5" cy="329.1" r="2.6"/>
+      <circle cx="763.7" cy="387.4" r="2.7"/>
+      <circle cx="754.4" cy="350.1" r="3.1"/>
+      <circle cx="589.9" cy="464.5" r="3.0"/>
+      <circle cx="650.2" cy="453.7" r="3.1"/>
+      <circle cx="737.4" cy="378.5" r="2.5"/>
+      <circle cx="746.0" cy="329.9" r="2.6"/>
+      <circle cx="726.5" cy="398.1" r="2.6"/>
+      <circle cx="769.3" cy="286.0" r="3.1"/>
+      <circle cx="690.0" cy="451.0" r="3.2"/>
+      <circle cx="704.2" cy="413.2" r="2.4"/>
+      <circle cx="588.7" cy="468.2" r="2.4"/>
+      <circle cx="699.4" cy="436.0" r="2.4"/>
+      <circle cx="642.7" cy="458.9" r="2.4"/>
+      <circle cx="727.3" cy="409.4" r="2.7"/>
+      <circle cx="756.3" cy="352.7" r="2.8"/>
+      <circle cx="674.4" cy="475.4" r="2.5"/>
+      <circle cx="316.9" cy="399.8" r="2.2"/>
+      <circle cx="267.3" cy="402.1" r="2.6"/>
+      <circle cx="337.7" cy="419.6" r="2.6"/>
+      <circle cx="358.6" cy="377.1" r="2.8"/>
+      <circle cx="306.3" cy="400.1" r="3.2"/>
+      <circle cx="262.7" cy="387.7" r="2.9"/>
+      <circle cx="280.2" cy="367.0" r="2.7"/>
+      <circle cx="267.1" cy="406.1" r="2.8"/>
+      <circle cx="275.5" cy="374.9" r="2.9"/>
+      <circle cx="306.9" cy="412.3" r="2.3"/>
+    </g>
+    <circle class="c-nuc" data-part="nucleus" cx="540" cy="250" r="100"/>
+    <g class="c-dna" data-part="dna">
+      <path d="M585.9,216.5 Q607.5,194.7 599.6,190.8 Q583.8,202.5 568.4,205.8 Q586.0,213.1 599.3,205.4 Q611.5,225.4 619.1,221.8 Q639.6,221.9 617.5,217.7 Q605.5,231.6 591.5,227.0"/>
+      <path d="M525.7,237.6 Q525.4,261.1 533.0,278.4 Q555.6,300.4 538.4,318.9 Q513.2,324.4 516.3,330.6 Q535.1,344.6 552.3,333.1 Q562.1,315.0 548.2,306.1 Q573.5,298.1 576.7,277.2"/>
+      <path d="M528.8,246.9 Q495.7,241.0 488.9,214.9 Q481.6,194.0 479.9,191.3 Q495.0,217.6 504.9,239.8 Q509.1,216.9 497.3,202.5 Q510.0,171.3 536.9,169.2 Q547.7,140.0 560.1,168.4"/>
+      <path d="M546.0,290.6 Q534.6,305.2 545.4,315.2 Q541.3,337.0 530.6,333.5 Q554.8,326.7 560.6,331.4 Q593.8,328.9 603.8,304.7 Q607.7,325.9 599.5,309.3 Q607.4,336.1 577.3,325.3"/>
+      <path d="M560.9,217.3 Q543.2,192.1 520.0,200.4 Q502.7,172.8 517.0,169.2 Q517.0,143.6 512.7,170.6 Q518.4,147.9 536.7,166.1 Q560.6,161.8 570.4,171.7 Q598.4,162.0 581.4,176.9"/>
+      <path d="M553.3,263.7 Q578.9,246.3 575.4,221.8 Q591.0,191.9 599.4,190.6 Q583.6,212.3 594.4,230.8 Q627.8,233.8 624.0,248.5 Q591.5,243.0 565.2,244.1 Q586.8,221.6 583.2,196.8"/>
+      <path d="M539.7,277.6 Q541.3,304.9 557.3,319.9 Q539.7,329.7 528.3,318.4 Q512.9,338.6 507.0,327.2 Q527.4,313.2 542.4,326.2 Q515.9,325.9 496.2,321.7 Q521.1,324.6 533.9,309.2"/>
+    </g>
+    <circle class="c-nucleolus" data-part="nucleolus" cx="518" cy="238" r="22"/>
+    <g class="c-env" data-part="envelope"><circle cx="540" cy="250" r="100"/><circle class="c-env-pores" cx="540" cy="250" r="92"/></g>
+    <g class="c-mito" data-part="mito" transform="translate(300,165) rotate(-28)">
+      <ellipse rx="44" ry="22"/>
+      <path class="c-crista" d="M-26,-14 q4,7 0,14 q-4,6 0,13"/>
+      <path class="c-crista" d="M-9,14 q-4,-7 0,-14 q4,-6 0,-13"/>
+      <path class="c-crista" d="M8,-14 q4,7 0,14 q-4,6 0,13"/>
+      <path class="c-crista" d="M25,14 q-4,-7 0,-14 q4,-6 0,-13"/>
+    </g>
+    <g class="c-mito" data-part="mito" transform="translate(690,335) rotate(22)">
+      <ellipse rx="44" ry="22"/>
+      <path class="c-crista" d="M-26,-14 q4,7 0,14 q-4,6 0,13"/>
+      <path class="c-crista" d="M-9,14 q-4,-7 0,-14 q4,-6 0,-13"/>
+      <path class="c-crista" d="M8,-14 q4,7 0,14 q-4,6 0,13"/>
+      <path class="c-crista" d="M25,14 q-4,-7 0,-14 q4,-6 0,-13"/>
+    </g>
+    <g class="c-mito" data-part="mito" transform="translate(355,480) rotate(12)">
+      <ellipse rx="44" ry="22"/>
+      <path class="c-crista" d="M-26,-14 q4,7 0,14 q-4,6 0,13"/>
+      <path class="c-crista" d="M-9,14 q-4,-7 0,-14 q4,-6 0,-13"/>
+      <path class="c-crista" d="M8,-14 q4,7 0,14 q-4,6 0,13"/>
+      <path class="c-crista" d="M25,14 q-4,-7 0,-14 q4,-6 0,-13"/>
+    </g>
+    <g class="c-lyso" data-part="lysosome" transform="translate(255,325)">
+      <circle r="27"/>
+      <circle class="c-lyso-dot" cx="-9" cy="-8" r="4.6"/>
+      <circle class="c-lyso-dot" cx="8" cy="-9" r="4.6"/>
+      <circle class="c-lyso-dot" cx="-7" cy="9" r="4.6"/>
+      <circle class="c-lyso-dot" cx="9" cy="7" r="4.6"/>
+      <circle class="c-lyso-dot" cx="0" cy="0" r="4.6"/>
+    </g>
+    <g class="c-lyso" data-part="lysosome" transform="translate(430,560)">
+      <circle r="27"/>
+      <circle class="c-lyso-dot" cx="-9" cy="-8" r="4.6"/>
+      <circle class="c-lyso-dot" cx="8" cy="-9" r="4.6"/>
+      <circle class="c-lyso-dot" cx="-7" cy="9" r="4.6"/>
+      <circle class="c-lyso-dot" cx="9" cy="7" r="4.6"/>
+      <circle class="c-lyso-dot" cx="0" cy="0" r="4.6"/>
+    </g>
+    <g class="c-golgi" data-part="golgi">
+      <path d="M602.0,440.0 q38,-16 76,0"/>
+      <path d="M592.0,454.0 q48,-14 96,0"/>
+      <path d="M584.0,468.0 q56,-13 112,0"/>
+      <path d="M590.0,482.0 q50,-12 100,0"/>
+      <path d="M599.0,496.0 q41,-10 82,0"/>
+    </g>
+    <g class="c-ves" data-part="vesicles">
+      <circle cx="586" cy="428" r="6"/>
+      <circle cx="700" cy="452" r="6.5"/>
+      <circle cx="712" cy="500" r="5"/>
+      <circle cx="606" cy="522" r="6"/>
+      <circle cx="668" cy="530" r="5.5"/>
+      <circle cx="560" cy="500" r="5"/>
+    </g>
+    <g class="c-mem" data-part="membrane"><circle cx="500" cy="320" r="300"/><circle class="c-mem-in" cx="500" cy="320" r="291"/></g>
+  </svg>
+  <aside class="tb-cell-side">
+    <p class="tb-cell-kicker" id="tb-cell-kicker">A typical eukaryotic cell</p>
+    <h4 class="tb-cell-name" id="tb-cell-name">The cell</h4>
+    <p class="tb-cell-sub" id="tb-cell-sub">Hover for a name, click for the rest</p>
+    <p class="tb-cell-desc" id="tb-cell-desc">Every organelle here is in a neuron too. Point at any part of the drawing for its name; click or tap it, or a name below, for what it does.</p>
+    <ul class="tb-cell-parts" aria-label="Parts of the cell">
+      <li><button type="button" data-part="membrane">Plasma membrane</button></li>
+      <li><button type="button" data-part="cytoplasm">Cytoplasm</button></li>
+      <li><button type="button" data-part="nucleus">Nucleus</button></li>
+      <li><button type="button" data-part="dna">DNA</button></li>
+      <li><button type="button" data-part="nucleolus">Nucleolus</button></li>
+      <li><button type="button" data-part="envelope">Nuclear envelope</button></li>
+      <li><button type="button" data-part="rer">Rough endoplasmic reticulum</button></li>
+      <li><button type="button" data-part="ser">Smooth endoplasmic reticulum</button></li>
+      <li><button type="button" data-part="ribosomes">Ribosomes</button></li>
+      <li><button type="button" data-part="mito">Mitochondrion</button></li>
+      <li><button type="button" data-part="lysosome">Lysosome</button></li>
+      <li><button type="button" data-part="golgi">Golgi apparatus</button></li>
+      <li><button type="button" data-part="vesicles">Vesicles</button></li>
+    </ul>
+  </aside>
+  <div class="tb-cell-tip tb-tip" hidden></div>
+  <script type="application/json" class="tb-cell-data">{"membrane": {"name": "Plasma membrane", "sub": "The cell&rsquo;s boundary", "desc": "A double layer of phospholipids studded with proteins, separating the inside of the cell from the outside. It decides what passes: ions through channels, signals through receptors. In a neuron it is where the electrical signal runs."}, "cytoplasm": {"name": "Cytoplasm", "sub": "Everything between membrane and nucleus", "desc": "The water, salts and proteins that fill the cell and hold its organelles. Most of the cell&rsquo;s chemistry happens dissolved in it, and translation takes place here, on ribosomes."}, "nucleus": {"name": "Nucleus", "sub": "The cell&rsquo;s library", "desc": "Holds the DNA behind a double membrane pierced by pores. Genes are copied into mRNA here, and the mRNA leaves through the pores to be read outside. The dense spot is the nucleolus."}, "dna": {"name": "DNA", "sub": "The genome, coiled", "desc": "About two metres of it in every nucleus, wound around histone proteins into chromatin. Its sequence holds every gene the cell could express; which genes it does express is what makes a neuron a neuron."}, "nucleolus": {"name": "Nucleolus", "sub": "Where ribosomes are made", "desc": "The dense region of the nucleus where ribosomal RNA is transcribed and the two halves of each ribosome are assembled, before they leave for the cytoplasm."}, "envelope": {"name": "Nuclear envelope", "sub": "Two membranes and their pores", "desc": "The double membrane around the nucleus, continuous with the endoplasmic reticulum. Its pores are gates that let mRNA out and finished proteins in, under control."}, "rer": {"name": "Rough endoplasmic reticulum", "sub": "Membrane studded with ribosomes", "desc": "Flattened sacs wrapped around the nucleus, continuous with its envelope. The ribosomes on its surface thread new proteins into it, where they fold and are checked before going on to the Golgi, bound for a membrane or for release, receptors and peptide transmitters among them."}, "ser": {"name": "Smooth endoplasmic reticulum", "sub": "Membrane without ribosomes", "desc": "Tubes of membrane that make lipids, store calcium and break down drugs and toxins. In a neuron its calcium stores reach into the dendrites and help shape their signals."}, "ribosomes": {"name": "Ribosomes", "sub": "The protein factories", "desc": "Two-part machines of RNA and protein that read an mRNA three bases at a time and join the amino acids it names into a chain. Free in the cytoplasm they make the cell&rsquo;s own proteins; on the rough ER, the ones bound for membranes or export."}, "mito": {"name": "Mitochondrion", "sub": "The cell&rsquo;s power plant", "desc": "Two membranes, the inner one folded into cristae, where sugar and fat are burned with oxygen to make ATP, the cell&rsquo;s energy currency. It keeps a small genome of its own, a relic of the bacterium it once was. Neurons are hungry for ATP and ship mitochondria far out along their axons."}, "lysosome": {"name": "Lysosome", "sub": "The recycling centre", "desc": "A membrane bag of acid and digestive enzymes that breaks down worn-out organelles, misfolded proteins and whatever the cell takes in, and hands the parts back for reuse."}, "golgi": {"name": "Golgi apparatus", "sub": "The sorting office", "desc": "A stack of flattened sacs that receives proteins from the ER, finishes them, adds sugars, sorts them and packs them into vesicles addressed to the membrane, to the outside or to lysosomes."}, "vesicles": {"name": "Vesicles", "sub": "Membrane bubbles on the move", "desc": "Small packets of membrane that carry cargo between the ER, the Golgi, the plasma membrane and beyond. A synaptic vesicle is one of these, filled with neurotransmitter and waiting at the terminal."}}</script>
+  <p class="tb-cell-credit">Drawn for this edition after the book&rsquo;s figure.</p>
+</div>

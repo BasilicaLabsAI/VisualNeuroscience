@@ -270,6 +270,7 @@ button{ font:inherit; color:inherit; }
    part of the drawing lights its step and dims the rest. Every ink is the
    page's own, so the figure follows the theme. */
 .tb-dogma{
+  position:relative;
   display:grid; grid-template-columns:minmax(0,1fr) minmax(220px,300px); gap:var(--gap);
   align-items:start; border:1px solid var(--ink-35); padding:var(--gap); background:var(--paper);
 }
@@ -320,3 +321,66 @@ button{ font:inherit; color:inherit; }
 .tb-dogma:not([data-lit=""]) .dg-step{ opacity:.28; }
 .tb-dogma[data-lit="1"] [data-step="1"], .tb-dogma[data-lit="2"] [data-step="2"],
 .tb-dogma[data-lit="3"] [data-step="3"], .tb-dogma[data-lit="4"] [data-step="4"]{ opacity:1; }
+/* the label that follows the pointer over a drawn figure: what the thing
+   under it is called and, where there is one, a line on what it does */
+.tb-tip{
+  position:absolute; z-index:5; pointer-events:none; max-width:270px;
+  padding:.5rem .7rem .55rem; background:var(--paper); color:var(--ink);
+  border:1px solid var(--ink); box-shadow:0 10px 28px rgba(0,0,0,.28);
+  font-family:var(--font-display); font-size:1rem; line-height:1.2;
+}
+.tb-tip[hidden]{ display:none; }
+.tb-tip b{ display:block; font-family:var(--font-display); font-weight:400; font-size:1rem; line-height:1.2; margin-bottom:.25rem; }
+.tb-tip span{ display:block; font-family:var(--font-serif); font-size:.86rem; line-height:1.42; color:var(--ink-60); }
+.tb-dogma [data-name], .tb-dogma .dg-strand > g{ cursor:help; }
+.tb-dogma .dg-hot{ filter:drop-shadow(0 0 3px var(--ink)); }
+.tb-dogma .dg-hot rect, .tb-dogma .dg-hot circle{ stroke:var(--ink); stroke-width:1.5; }
+
+/* ── a typical eukaryotic cell, drawn in code (scripts/textbook/figures) ──
+   The drawing on the left, a panel on the right. Hovering a part names it
+   in a label; a click, or a name in the list, puts its subtitle and
+   description in the panel and lights every copy of that part. */
+.tb-cell{
+  position:relative;
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(240px,320px); gap:var(--gap);
+  align-items:start; border:1px solid var(--ink-35); padding:var(--gap); background:var(--paper);
+}
+.tb-cell-svg{ width:100%; height:auto; display:block; }
+.tb-cell-side{ min-width:0; }
+.tb-cell-kicker{ font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60); margin:0 0 .35rem; }
+.tb-cell-name{ font-family:var(--font-display); font-weight:400; font-size:1.3rem; line-height:1.15; margin:0 0 .3rem; }
+.tb-cell-sub{ font-family:var(--font-serif); font-style:italic; font-size:.92rem; color:var(--ink-60); margin:0 0 .6rem; }
+.tb-cell-desc{ font-family:var(--font-serif); font-size:.93rem; line-height:1.5; margin:0 0 .9rem; }
+.tb-cell-parts{ list-style:none; margin:0; padding:.7rem 0 0; border-top:1px solid var(--ink-35); display:flex; flex-wrap:wrap; gap:.3rem .35rem; }
+.tb-cell-parts button{
+  font-family:var(--font-brand); font-weight:500; font-size:.56rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink); background:none; border:1px solid var(--ink-35); padding:.32rem .5rem; cursor:pointer;
+}
+.tb-cell-parts button:hover, .tb-cell-parts button.sel{ border-color:var(--ink); background:color-mix(in srgb, var(--ink) 8%, transparent); }
+.tb-cell-parts button.sel{ background:var(--ink); color:var(--paper); }
+.tb-cell-credit{ grid-column:1 / -1; font-family:var(--font-serif); font-style:italic; font-size:.82rem; color:var(--ink-60); margin:0; }
+@media (max-width:760px){ .tb-cell{ grid-template-columns:minmax(0,1fr); } }
+/* the drawing's inks */
+.tb-cell [data-part]{ cursor:pointer; transition:opacity .2s; }
+.tb-cell .c-cyto{ fill:color-mix(in srgb, #8E82C9 9%, var(--paper)); }
+.tb-cell .c-mem circle{ fill:none; stroke:#8E82C9; stroke-width:7; }
+.tb-cell .c-mem .c-mem-in{ stroke:color-mix(in srgb, #8E82C9 45%, var(--paper)); stroke-width:2.5; }
+.tb-cell .c-nuc{ fill:color-mix(in srgb, #6C5FA8 38%, var(--paper)); }
+.tb-cell .c-env circle{ fill:none; stroke:#8E82C9; stroke-width:4; }
+.tb-cell .c-env .c-env-pores{ stroke:color-mix(in srgb, var(--paper) 55%, #8E82C9); stroke-width:2.2; stroke-dasharray:9 7; }
+.tb-cell .c-dna path{ fill:none; stroke:#6C5FA8; stroke-width:1.7; opacity:.85; }
+.tb-cell .c-nucleolus{ fill:#6C5FA8; opacity:.92; }
+.tb-cell .c-rer .c-rer-m{ fill:none; stroke:#7A6DB8; stroke-width:5; stroke-linecap:round; }
+.tb-cell .c-rer .c-rer-s{ fill:none; stroke:#4E4290; stroke-width:9; stroke-linecap:round; stroke-dasharray:0.1 8; }
+.tb-cell .c-ser path{ fill:none; stroke:#9C8FD0; stroke-width:9; stroke-linecap:round; opacity:.9; }
+.tb-cell .c-ribo circle{ fill:var(--ink-60); }
+.tb-cell .c-mito ellipse{ fill:color-mix(in srgb, #E9A3B4 55%, var(--paper)); stroke:#D2607E; stroke-width:3; }
+.tb-cell .c-mito .c-crista{ fill:none; stroke:#D2607E; stroke-width:2.2; stroke-linecap:round; }
+.tb-cell .c-lyso > circle{ fill:color-mix(in srgb, #8E82C9 14%, var(--paper)); stroke:#8E82C9; stroke-width:3; }
+.tb-cell .c-lyso .c-lyso-dot{ fill:#C8508A; stroke:none; }
+.tb-cell .c-golgi path{ fill:none; stroke:#A08BD0; stroke-width:10; stroke-linecap:round; }
+.tb-cell .c-ves circle{ fill:#A08BD0; }
+.tb-cell .hot{ filter:drop-shadow(0 0 3px var(--ink)); }
+.tb-cell.has-sel [data-part]:not(.sel):not(.c-cyto):not(.c-mem){ opacity:.4; }
+.tb-cell.has-sel .c-cyto:not(.sel), .tb-cell.has-sel .c-mem:not(.sel){ opacity:.7; }
+.tb-cell .sel{ filter:drop-shadow(0 0 4px var(--ink)) drop-shadow(0 0 10px var(--ink)); }
