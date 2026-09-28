@@ -8,7 +8,7 @@
    moment it lands rather than whenever a cache happens to expire; offline
    they get the last one they saw.
 
-   The volumes, the tractogram and the viewer are cache-first. They are
+   The volumes, the tractogram, the viewer and three.js are cache-first. They are
    megabytes each and they do not change between releases — mni152.nii.gz is
    the same file it was in the first commit — so fetching them again is pure
    waste. A release that does change them changes VERSION, which drops the
@@ -21,7 +21,7 @@
    Nothing cross-origin is touched at all — since the typefaces moved
    in-house there is no outside request left to think about. */
 
-var VERSION = "vn-81";
+var VERSION = "vn-82";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
@@ -31,6 +31,7 @@ var PRECACHE = [
   "/privacy.html", "/about.html", "/practice.html", "/assets/home/practice.jpg",
   "/textbook.html", "/assets/home/textbook.jpg", "/assets/textbook.css", "/assets/textbook.js",
   "/microanatomy.html", "/assets/home/cells.jpg", "/assets/cells.js",
+  "/molecular.html", "/assets/home/molecular.jpg",
   "/assets/cells/multipolar-neuron.svg", "/assets/cells/multipolar-neuron.json",
   "/assets/nt.js", "/assets/nt/molecules.json",
   "/assets/rx.js", "/assets/rxfig.js", "/assets/rxfig.css", "/assets/rx/receptors.json",
@@ -59,7 +60,7 @@ var PRECACHE = [
 ];
 
 /* the megabytes: fetched once, then read off disk forever */
-var IS_BULK = /\.(nii\.gz|trx)$|niivue\.js$|^\/vendor\/d3\//;
+var IS_BULK = /\.(nii\.gz|trx)$|niivue\.js$|^\/vendor\/d3\/|^\/vendor\/three\//;
 
 self.addEventListener("install", function(e){
   e.waitUntil(

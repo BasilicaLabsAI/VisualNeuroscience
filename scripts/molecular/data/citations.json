@@ -1,0 +1,218 @@
+{
+ "7E2Y": {
+  "authors": "Xu P, Huang S, Zhang H, et al.",
+  "journal": "Nature",
+  "vol": "592",
+  "page": "469",
+  "year": "2021",
+  "method": "cryo-EM",
+  "res": "3.00"
+ },
+ "7E2Z": {
+  "authors": "Xu P, Huang S, Zhang H, et al.",
+  "journal": "Nature",
+  "vol": "592",
+  "page": "469",
+  "year": "2021",
+  "method": "cryo-EM",
+  "res": "3.10"
+ },
+ "4IAR": {
+  "authors": "Wang C, Jiang Y, Ma J, et al.",
+  "journal": "Science",
+  "vol": "340",
+  "page": "610",
+  "year": "2013",
+  "method": "X-ray",
+  "res": "2.70"
+ },
+ "4IAQ": {
+  "authors": "Wang C, Jiang Y, Ma J, et al.",
+  "journal": "Science",
+  "vol": "340",
+  "page": "610",
+  "year": "2013",
+  "method": "X-ray",
+  "res": "2.80"
+ },
+ "6G79": {
+  "authors": "Garc\u00eda-Nafr\u00eda J, Nehm\u00e9 R, Edwards PC, et al.",
+  "journal": "Nature",
+  "vol": "558",
+  "page": "620",
+  "year": "2018",
+  "method": "cryo-EM",
+  "res": "3.78"
+ },
+ "7E32": {
+  "authors": "Xu P, Huang S, Zhang H, et al.",
+  "journal": "Nature",
+  "vol": "592",
+  "page": "469",
+  "year": "2021",
+  "method": "cryo-EM",
+  "res": "2.90"
+ },
+ "7E33": {
+  "authors": "Xu P, Huang S, Zhang H, et al.",
+  "journal": "Nature",
+  "vol": "592",
+  "page": "469",
+  "year": "2021",
+  "method": "cryo-EM",
+  "res": "2.90"
+ },
+ "7EXD": {
+  "authors": "Huang S, Xu P, Tan Y, et al.",
+  "journal": "Cell Res",
+  "vol": "31",
+  "page": "1036",
+  "year": "2021",
+  "method": "cryo-EM",
+  "res": "3.40"
+ },
+ "6A93": {
+  "authors": "Kimura KT, Asada H, Inoue A, et al.",
+  "journal": "Nat Struct Mol Biol",
+  "vol": "26",
+  "page": "121",
+  "year": "2019",
+  "method": "X-ray",
+  "res": "3.00"
+ },
+ "7WC4": {
+  "authors": "Cao D, Yu J, Wang H, et al.",
+  "journal": "Science",
+  "vol": "375",
+  "page": "403",
+  "year": "2022",
+  "method": "X-ray",
+  "res": "3.20"
+ },
+ "7WC6": {
+  "authors": "Cao D, Yu J, Wang H, et al.",
+  "journal": "Science",
+  "vol": "375",
+  "page": "403",
+  "year": "2022",
+  "method": "X-ray",
+  "res": "2.60"
+ },
+ "7WC5": {
+  "authors": "Cao D, Yu J, Wang H, et al.",
+  "journal": "Science",
+  "vol": "375",
+  "page": "403",
+  "year": "2022",
+  "method": "X-ray",
+  "res": "3.20"
+ },
+ "7VOE": {
+  "authors": "Chen Z, Fan L, Wang H, et al.",
+  "journal": "Nat Neurosci",
+  "vol": "25",
+  "page": "39",
+  "year": "2022",
+  "method": "X-ray",
+  "res": "2.90"
+ },
+ "6WHA": {
+  "authors": "Kim K, Che T, Panova O, et al.",
+  "journal": "Cell",
+  "vol": "182",
+  "page": "1574",
+  "year": "2020",
+  "method": "cryo-EM",
+  "res": "3.36"
+ },
+ "4IB4": {
+  "authors": "Wacker D, Wang C, Katritch V, et al.",
+  "journal": "Science",
+  "vol": "340",
+  "page": "615",
+  "year": "2013",
+  "method": "X-ray",
+  "res": "2.70"
+ },
+ "7SRR": {
+  "authors": "Cao C, Barros-Alvarez X, Zhang S, et al.",
+  "journal": "Neuron",
+  "vol": "110",
+  "page": "3154",
+  "year": "2022",
+  "method": "cryo-EM",
+  "res": "2.90"
+ },
+ "6DRY": {
+  "authors": "Mccorvy JD, Wacker D, Wang S, et al.",
+  "journal": "Nat Struct Mol Biol",
+  "vol": "25",
+  "page": "787",
+  "year": "2018",
+  "method": "X-ray",
+  "res": "2.92"
+ },
+ "6BQH": {
+  "authors": "Peng Y, Mccorvy JD, Harpsoe K, et al.",
+  "journal": "Cell",
+  "vol": "172",
+  "page": "719",
+  "year": "2018",
+  "method": "X-ray",
+  "res": "2.70"
+ },
+ "6BQG": {
+  "authors": "Peng Y, Mccorvy JD, Harpsoe K, et al.",
+  "journal": "Cell",
+  "vol": "172",
+  "page": "719",
+  "year": "2018",
+  "method": "X-ray",
+  "res": "3.00"
+ },
+ "7XT8": {
+  "authors": "Huang S, Xu P, Shen DD, et al.",
+  "journal": "Mol Cell",
+  "vol": "82",
+  "page": "2681",
+  "year": "2022",
+  "method": "cryo-EM",
+  "res": "3.10"
+ },
+ "7UM4": {
+  "authors": "Zhang S, Chen H, Zhang C, et al.",
+  "journal": "Nat Struct Mol Biol",
+  "vol": "29",
+  "page": "677",
+  "year": "2022",
+  "method": "X-ray",
+  "res": "2.80"
+ },
+ "7UM5": {
+  "authors": "Zhang S, Chen H, Zhang C, et al.",
+  "journal": "Nat Struct Mol Biol",
+  "vol": "29",
+  "page": "677",
+  "year": "2022",
+  "method": "cryo-EM",
+  "res": "2.73"
+ },
+ "7XTB": {
+  "authors": "Huang S, Xu P, Shen DD, et al.",
+  "journal": "Mol Cell",
+  "vol": "82",
+  "page": "2681",
+  "year": "2022",
+  "method": "cryo-EM",
+  "res": "3.30"
+ },
+ "7XTC": {
+  "authors": "Huang S, Xu P, Shen DD, et al.",
+  "journal": "Mol Cell",
+  "vol": "82",
+  "page": "2681",
+  "year": "2022",
+  "method": "cryo-EM",
+  "res": "3.20"
+ }
+}

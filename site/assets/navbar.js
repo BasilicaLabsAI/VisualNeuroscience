@@ -27,6 +27,7 @@
     "regions.html": "Region Atlas",
     "tracts.html": "Tractography", "network-atlas.html": "Network Atlas",
     "microanatomy.html": "Microanatomy",
+    "molecular.html": "Molecular",
     "studies.html": "Visualizing Studies", "hallucinations.html": "Hallucinations",
     "practice.html": "Practice", "textbook.html": "Digital Textbook",
     "about.html": "About", "privacy.html": "Privacy & Support"

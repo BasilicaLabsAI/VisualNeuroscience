@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dopamine and serotonin receptors in 3D — VisualNeuroscience.AI</title>
+<meta name="description" content="Interactive 3D models of the human dopamine receptors D1 to D5 and the twelve serotonin (5-HT) GPCRs: pick a receptor, watch dopamine or serotonin bind and switch it on, see how antipsychotics, psychedelics, migraine and Parkinson's drugs block or mimic it, and compare the subtypes. Built from __NSTRUCT__ experimental structures.">
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<script>/* The site's theme: dark unless the reader chose light, read from the
+   same key the rest of the site keeps, and set before first paint. The page
+   that frames this viewer keeps it in step when the reader switches. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+document.documentElement.setAttribute("data-theme",t);})();</script>
+<style>
+__CSS__
+</style>
+</head>
+<body>
+<canvas id="gl" tabindex="0" aria-label="3D model of the selected receptor. Drag to rotate, scroll or pinch to zoom. Arrow keys rotate; plus and minus zoom."></canvas>
+<div id="labels" aria-hidden="true"></div>
+
+<main id="panel">
+  <header class="head">
+    <div class="head-row">
+      <h1>Dopamine and serotonin receptors</h1>
+      <button id="collapse" type="button" aria-expanded="true" aria-controls="panel-body">Hide</button>
+    </div>
+    <p class="lede">Pick a family and a receptor, then watch its neurotransmitter switch it on, see which drugs block or mimic it, and compare it with its siblings. Built from __NSTRUCT__ experimental structures.</p>
+    <div class="famtabs" role="tablist" aria-label="Receptor family">
+      <button role="tab" type="button" id="fam-dopamine" data-fam="dopamine" aria-selected="true">Dopamine</button>
+      <button role="tab" type="button" id="fam-serotonin" data-fam="serotonin" aria-selected="false" tabindex="-1">Serotonin</button>
+    </div>
+    <div class="rxpick" id="rxpick" role="group" aria-label="Receptor"></div>
+    <p class="rx-cap" id="rx-cap" aria-live="polite"></p>
+  </header>
+
+  <div id="panel-body">
+    <div class="tabs" role="tablist" aria-label="Panel sections">
+      <button role="tab" type="button" id="tab-da" aria-selected="true" aria-controls="pane-da">Dopamine</button>
+      <button role="tab" type="button" id="tab-drugs" aria-selected="false" aria-controls="pane-drugs" tabindex="-1">Drugs</button>
+      <button role="tab" type="button" id="tab-cmp" aria-selected="false" aria-controls="pane-cmp" tabindex="-1">Compare</button>
+      <button role="tab" type="button" id="tab-show" aria-selected="false" aria-controls="pane-show" tabindex="-1">Display</button>
+      <button role="tab" type="button" id="tab-about" aria-selected="false" aria-controls="pane-about" tabindex="-1">About</button>
+    </div>
+    <div class="panes">
+      <section role="tabpanel" id="pane-da" aria-labelledby="tab-da">
+        <div class="state">
+          <div class="ends">
+            <button class="end" id="toRest" type="button" aria-pressed="true"><span class="e1">Resting</span><span class="e2">dopamine outside</span></button>
+            <button class="end right" id="toSig" type="button" aria-pressed="false"><span class="e1">Signalling</span><span class="e2">bound, G protein docked</span></button>
+          </div>
+          <input id="morph" type="range" min="0" max="1000" step="1" value="0" aria-label="Agonist binding and receptor activation">
+          <div class="fnrow"><button id="bind" type="button" class="pill primary">Bind dopamine</button><p id="cap" class="cap" aria-live="polite"></p></div>
+        </div>
+        <div class="steps" id="steps"></div>
+        <h2 id="stop-title"></h2>
+        <div id="stop-body" class="prose"></div>
+        <div class="stop-nav">
+          <button id="prev" type="button" class="pill">Previous</button>
+          <span id="stop-count"></span>
+          <button id="next" type="button" class="pill primary">Next</button>
+        </div>
+      </section>
+
+      <section role="tabpanel" id="pane-drugs" aria-labelledby="tab-drugs" hidden>
+        <p class="intro" id="drug-intro"></p>
+        <div class="drug-list" id="drug-list" role="radiogroup" aria-label="Choose a drug"></div>
+        <div id="drug-detail">
+        <h2 id="drug-title"></h2>
+        <p class="meta" id="drug-meta"></p>
+        <div id="drug-body" class="prose"></div>
+        <p class="mini">Residues within 4 Å of the drug</p>
+        <div class="chips" id="drug-chips"></div>
+        <label class="tog cmp" id="cmp-wrap"><span><i class="sw"></i><span id="cmp-text">Show dopamine’s position</span></span><input type="checkbox" id="t-cmp"></label>
+        <p class="small" id="drug-src"></p>
+        </div>
+      </section>
+
+      <section role="tabpanel" id="pane-cmp" aria-labelledby="tab-cmp" hidden>
+        <p class="intro" id="cmp-intro"></p>
+        <h2 id="sub-title"></h2>
+        <p class="meta" id="sub-meta"></p>
+        <div id="sub-body" class="prose"></div>
+        <dl class="facts" id="sub-facts"></dl>
+        <div class="btns">
+          <button type="button" class="pill toggle" id="f-whole" aria-pressed="true">Whole complex</button>
+          <button type="button" class="pill toggle" id="f-pocket" aria-pressed="false">Binding pocket</button>
+        </div>
+        <h3>The pocket, position by position</h3>
+        <div class="tbl"><table class="pocket" id="pocket"></table></div>
+        <p class="small" id="table-note"></p>
+      </section>
+
+      <section role="tabpanel" id="pane-show" aria-labelledby="tab-show" hidden>
+        <fieldset>
+          <legend>Show</legend>
+          <label class="tog"><span>Membrane</span><input type="checkbox" id="t-mem" checked></label>
+          <label class="tog"><span>Dopamine or serotonin (or its stand-in)</span><input type="checkbox" id="t-mono" checked></label>
+          <label class="tog"><span>Drugs</span><input type="checkbox" id="t-drug" checked></label>
+          <label class="tog"><span>Unresolved parts, as beads</span><input type="checkbox" id="t-ghost" checked></label>
+          <label class="tog"><span>Labels</span><input type="checkbox" id="t-lab" checked></label>
+          <label class="tog"><span>Slow spin</span><input type="checkbox" id="t-spin"></label>
+        </fieldset>
+        <fieldset>
+          <legend>Side chains</legend>
+          <div class="seg">
+            <label><input type="radio" name="sc" value="off"><span>None</span></label>
+            <label><input type="radio" name="sc" value="key" checked><span>Highlights</span></label>
+            <label><input type="radio" name="sc" value="all"><span>All</span></label>
+          </div>
+          <p class="small">Hovering or tapping a residue shows its side chain.</p>
+        </fieldset>
+        <fieldset class="d2only">
+          <legend>D2 isoform</legend>
+          <div class="seg">
+            <label><input type="radio" name="iso" value="L" checked><span>D2L, long</span></label>
+            <label><input type="radio" name="iso" value="S"><span>D2S, short</span></label>
+          </div>
+          <p class="small">D2S lacks 29 residues of the third intracellular loop. Residue numbers follow D2L.</p>
+        </fieldset>
+        <fieldset>
+          <legend>View</legend>
+          <div class="btns">
+            <button type="button" class="pill" id="v-reset">Reset view</button>
+            <button type="button" class="pill" id="v-top">From outside the cell</button>
+            <button type="button" class="pill" id="v-bot">From inside the cell</button>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Colour key</legend>
+          <div class="key" id="key"></div>
+        </fieldset>
+      </section>
+
+      <section role="tabpanel" id="pane-about" aria-labelledby="tab-about" class="prose refs" hidden>
+        <p>The helices, loops, side chains, neurotransmitters and drugs come from __NSTRUCT__ published structures of the human receptors. Each resting receptor is an antagonist- or inverse-agonist-bound structure with the ligand removed, since no structure of an empty receptor exists; where no resting structure has been solved, the receptor is shown only in its active shape. Where no structure with the neurotransmitter itself exists, an agonist stands in for it, as noted in the Binding tab.</p>
+        <h3 class="famh">Dopamine receptors</h3>
+        <h3>D1</h3>
+        <p class="ref"><strong>Dopamine and fenoldopam, with Gs:</strong> <a href="https://www.rcsb.org/structure/7CKZ" target="_blank" rel="noopener">7CKZ</a> (3.1 Å) and <a href="https://www.rcsb.org/structure/7CKW" target="_blank" rel="noopener">7CKW</a> (3.2 Å), cryo-EM. Xiao P, Yan W, Gou L, et al. <i>Cell</i> 184, 943–956 (2021). 7CKZ also contains the allosteric modulator LY3154207, which is left out.</p>
+        <p class="ref"><strong>Apomorphine with Gs:</strong> <a href="https://www.rcsb.org/structure/7JVQ" target="_blank" rel="noopener">7JVQ</a>, cryo-EM at 3.0 Å. Zhuang Y, Xu P, Mao C, et al. <i>Cell</i> 184, 931–942 (2021).</p>
+        <h3>D2</h3>
+        <p class="ref"><strong>Dopamine with Go:</strong> <a href="https://www.rcsb.org/structure/8U02" target="_blank" rel="noopener">8U02</a>, cryo-EM at 3.28 Å. Knight KM, Krumm BE, Kapolka NJ, et al. <i>Nat Commun</i> 15, 6643 (2024). Its Gαo carries K46E, a GNAO1 disease mutation that holds the complex in its nucleotide-free state.</p>
+        <p class="ref"><strong>Risperidone:</strong> <a href="https://www.rcsb.org/structure/6CM4" target="_blank" rel="noopener">6CM4</a>, X-ray at 2.87 Å. Wang S, Che T, Levit A, Shoichet BK, Wacker D, Roth BL. <i>Nature</i> 555, 269–273 (2018). Also the resting D2.</p>
+        <p class="ref"><strong>Haloperidol:</strong> <a href="https://www.rcsb.org/structure/6LUQ" target="_blank" rel="noopener">6LUQ</a>, X-ray at 3.1 Å. Fan L, Tan L, Chen Z, et al. <i>Nat Commun</i> 11, 1074 (2020).</p>
+        <p class="ref"><strong>Bromocriptine with Gi:</strong> <a href="https://www.rcsb.org/structure/7JVR" target="_blank" rel="noopener">7JVR</a>, cryo-EM at 2.8 Å. Zhuang Y, et al. <i>Cell</i> 184, 931–942 (2021).</p>
+        <h3>D3</h3>
+        <p class="ref"><strong>Eticlopride:</strong> <a href="https://www.rcsb.org/structure/3PBL" target="_blank" rel="noopener">3PBL</a>, X-ray at 2.89 Å. Chien EYT, Liu W, Zhao Q, et al. <i>Science</i> 330, 1091–1095 (2010). Also the resting D3.</p>
+        <p class="ref"><strong>Pramipexole with Gi:</strong> <a href="https://www.rcsb.org/structure/7CMU" target="_blank" rel="noopener">7CMU</a>, cryo-EM at 3.0 Å. Xu P, Huang S, Mao C, et al. <i>Mol Cell</i> 81, 1147–1159 (2021).</p>
+        <h3>D4</h3>
+        <p class="ref"><strong>Nemonapride:</strong> <a href="https://www.rcsb.org/structure/5WIU" target="_blank" rel="noopener">5WIU</a>, X-ray at 1.96 Å. Wang S, Wacker D, Levit A, et al. <i>Science</i> 358, 381–386 (2017). Also the resting D4.</p>
+        <h3>All five</h3>
+        <p class="ref"><strong>Rotigotine with D1 to D5:</strong> <a href="https://www.rcsb.org/structure/8IRR" target="_blank" rel="noopener">8IRR</a> (D1), <a href="https://www.rcsb.org/structure/8IRS" target="_blank" rel="noopener">8IRS</a> (D2), <a href="https://www.rcsb.org/structure/8IRT" target="_blank" rel="noopener">8IRT</a> (D3), <a href="https://www.rcsb.org/structure/8IRU" target="_blank" rel="noopener">8IRU</a> (D4) and <a href="https://www.rcsb.org/structure/8IRV" target="_blank" rel="noopener">8IRV</a> (D5), cryo-EM at 2.7–3.2 Å, with Gs (D1, D5) or Gi (D2–D4). Xu P, Huang S, Krumm BE, et al. <i>Cell Res</i> 33, 604–616 (2023). These are the Compare tab, the rotigotine entries in the Drugs tab, and the active D3, D4 and D5.</p>
+__SEROREFS__
+        <h3>How it was assembled</h3>
+        <p>Coordinates come from <a href="https://gpcrdb.org" target="_blank" rel="noopener">GPCRdb</a>. Each receptor’s structures are superposed on one another using their transmembrane helices (0.5–1.0 Å RMSD), and every receptor is placed in the membrane by matching its helix positions to D2’s (0.5–1.0 Å RMSD), where D2 itself sits with its most hydrophobic 30 Å band in the lipid tails. In the Compare tab only resolved residues are drawn.</p>
+        <p>Residues missing from every structure of a receptor (the N-terminus, most of loop 3, the tails) are drawn as beads on illustrative paths, not predictions. Short loops missing from one structure but present in another are borrowed and drawn pale. Sugars, the palmitoyl chain and the lipids are schematic. Fusion proteins, stabilising antibodies, nanobodies and modulators are left out; many constructs also carried thermostabilising point mutations, which are noted on hover.</p>
+        <p>The agonist’s path into the pocket and the morph between structures are straight interpolations for illustration, not simulations. Superscripts are Ballesteros–Weinstein numbers. D2 residues follow the long isoform, D2L, D4 residues the common 4-repeat form, and 5-HT4 and 5-HT7 the isoforms used in their structures (388 and 479 residues). 5-HT3, a ligand-gated ion channel rather than a GPCR, is not included.</p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<div id="info" hidden></div>
+<p id="hint"></p>
+<div id="fail" hidden><p></p></div>
+
+<script type="application/json" id="d2data">__D2DATA__</script>
+<script src="../../vendor/three/three.min.js"></script>
+<script>
+__JS__
+</script>
+</body>
+</html>

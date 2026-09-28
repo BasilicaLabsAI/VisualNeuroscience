@@ -37,6 +37,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
 - Shared receptor drawings live in `site/assets/rxfig.js` + `rxfig.css`, built from `site/assets/rx/receptors.json`
   (`scripts/receptors/build.py`) and `site/assets/nt/molecules.json` (`scripts/neurotransmitters/build.py`).
   The textbook is built by `scripts/textbook/build.py` from the OpenStax source (not in the repo; CC BY-NC-SA 4.0).
+- The molecular viewer, `site/assets/molecular/receptors.html`, framed by `site/molecular.html`, is built by
+  `scripts/molecular/build.sh` from the sources in `scripts/molecular/` (viewer JS and CSS, pipeline, data; numpy and
+  scipy). Edit the source and rebuild rather than the built page; its typefaces are the site's, mapped at the end of
+  `viewer/extra.css`. It draws with three.js, vendored in `site/vendor/three/`.
 - Verify changes headlessly before releasing: serve `site/` on port 8412
   (`setsid nohup python3 -m http.server 8412 --bind 127.0.0.1 --directory site &`; it dies often, restart it)
   and run Playwright from `app/` with `executablePath: '/opt/pw-browsers/chromium'`. Check phone (390px) and

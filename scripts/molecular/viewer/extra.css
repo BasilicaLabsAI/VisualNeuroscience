@@ -1,0 +1,109 @@
+:root { --hb: #0E9AAE; --da: #D38F1F; --inact-bg: rgba(88, 120, 159, 0.14); --act-bg: rgba(200, 103, 122, 0.14); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hb: #62DCEA; --da: #F0B04C; --inact-bg: rgba(126, 157, 196, 0.18); --act-bg: rgba(224, 138, 155, 0.18); } }
+:root[data-theme="dark"] { --hb: #62DCEA; --da: #F0B04C; --inact-bg: rgba(126, 157, 196, 0.18); --act-bg: rgba(224, 138, 155, 0.18); }
+.tabs { gap: 18px; }
+.state { padding: 0 0 12px; margin: 0 0 12px; border-bottom: 1px solid var(--line); }
+#toRest[aria-pressed="true"] .e1 { color: var(--inact); }
+#toSig[aria-pressed="true"] .e1 { color: var(--act); }
+.intro { font-size: 14.5px; color: var(--ink-soft); margin: 0 0 12px; line-height: 1.5; }
+.drug-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 14px; }
+.drug { position: relative; display: block; cursor: pointer; }
+.drug input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; margin: 0; cursor: pointer; }
+.drug .card { display: block; height: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 9px 11px 10px; transition: border-color 0.15s, box-shadow 0.15s; }
+.drug .nm { display: block; font-family: var(--serif); font-weight: 600; font-size: 16.5px; line-height: 1.2; }
+.drug .cl { display: block; font-size: 12.5px; color: var(--ink-soft); line-height: 1.3; margin-top: 1px; }
+.badge { display: inline-block; font-size: 11.5px; font-weight: 700; padding: 1px 8px 2px; border-radius: 999px; margin-top: 6px; }
+.badge.block { color: var(--inact); background: var(--inact-bg); }
+.badge.act { color: var(--act); background: var(--act-bg); }
+.drug input:checked + .card { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.drug input:focus-visible + .card { outline: 2px solid var(--accent); outline-offset: 2px; }
+.meta { font-size: 13px; color: var(--ink-soft); margin: -2px 0 10px; line-height: 1.45; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px 6px; margin: 4px 0 10px; }
+.chips span { font-size: 12.5px; font-weight: 600; padding: 1px 8px 2px; border-radius: 999px; border: 1px solid var(--line); line-height: 1.5; }
+.chips sup { font-size: 0.72em; color: var(--ink-soft); margin-left: 1px; }
+.mini { font-size: 13px; color: var(--ink-soft); margin: 10px 0 0; }
+.cmp { border-top: 1px solid var(--line); margin-top: 8px; padding-top: 9px; }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--da); margin-right: 6px; vertical-align: 0; }
+.refs .ref { font-size: 14px; }
+@media (max-width: 760px) {
+  .tabs { gap: 14px; }
+  .drug .nm { font-size: 15.5px; }
+}
+
+.tabs { gap: 14px; }
+.tabs button { font-size: 14px; }
+.subpick { display: flex; flex-wrap: wrap; gap: 10px 14px; margin: 0 0 14px; }
+.subpick .grp { display: flex; flex-direction: column; gap: 5px; }
+.subpick .gl { font-size: 12px; color: var(--ink-soft); }
+.subpick .row { display: flex; gap: 3px; padding: 3px; border: 1px solid var(--line); border-radius: 10px; }
+.sub { border: 0; background: transparent; border-radius: 7px; padding: 5px 13px 6px; font-family: var(--serif); font-weight: 600; font-size: 16px; color: var(--ink-soft); cursor: pointer; }
+.sub[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 2px 0 12px; font-size: 13.5px; line-height: 1.4; }
+.facts dt { color: var(--ink-soft); }
+.facts dd { margin: 0; font-weight: 600; }
+.pill.toggle[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+.tbl { overflow-x: auto; margin: 0 0 4px; }
+table.pocket { border-collapse: collapse; width: 100%; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+table.pocket th, table.pocket td { padding: 3px 5px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.pocket thead th { font-weight: 700; color: var(--ink-soft); }
+table.pocket tbody th { font-weight: 600; color: var(--ink-soft); }
+table.pocket tr.diff td, table.pocket tr.diff th { background: var(--act-bg); }
+table.pocket .cur { font-weight: 700; color: var(--ink); box-shadow: inset 2px 0 0 var(--accent), inset -2px 0 0 var(--accent); }
+@media (max-width: 760px) { .tabs { gap: 11px; } .tabs button { font-size: 13.5px; } }
+
+.tabs button { white-space: nowrap; }
+table.pocket th, table.pocket td { padding: 3px 4px; }
+
+.fnrow { display: flex; align-items: flex-start; gap: 12px; margin-top: 2px; }
+.fnrow .pill { flex: none; }
+.fnrow .cap { margin: 4px 0 0; }
+.rxpick { display: flex; gap: 3px; padding: 3px; border: 1px solid var(--line); border-radius: 10px; margin: 12px 0 6px; }
+.rxpick button { flex: 1; border: 0; background: transparent; border-radius: 7px; padding: 6px 0 7px; font-family: var(--serif); font-weight: 600; font-size: 17px; color: var(--ink-soft); cursor: pointer; }
+.rxpick button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.rxpick button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rx-cap { margin: 0; font-size: 13px; color: var(--ink-soft); }
+/* generation 4: two families */
+.famtabs { display: flex; gap: 16px; margin: 12px 0 0; border-bottom: 1px solid var(--line); }
+.famtabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 6px 0 6px; font-family: var(--serif); font-weight: 700; font-size: 16px; color: var(--ink-soft); cursor: pointer; margin-bottom: -1px; }
+.famtabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.famtabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rxpick { margin-top: 8px; flex-wrap: wrap; align-items: center; }
+.rxpick.many { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; }
+.rxpick.many button { padding: 5px 2px 6px; font-size: 15px; }
+table.pocket.wide { font-size: 11.5px; }
+table.pocket.wide th, table.pocket.wide td { padding: 3px 2px; }
+table.pocket.wide thead th { font-size: 11px; }
+.refs .famh { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 15px; }
+
+/* ── the site's typefaces ──────────────────────────────────────────────
+   The viewer was drawn in Spectral and Source Sans 3; on the site it is set
+   in the three faces every other page uses, served from site/fonts: Prata
+   for the headings and the names, Newsreader for everything that is read,
+   and Flux (Afacad Flux where Flux is missing) for the controls, the table
+   and the labels on the model, which is how the rest of the site divides
+   them. Newsreader stops at weight 500 and Prata has one weight, so the
+   bolds are set to what exists rather than synthesised, and the sans sizes
+   grow by a point because Flux runs small. Colours and layout are untouched. */
+@font-face { font-family: 'Flux'; src: url('../../fonts/Flux-Regular.woff2') format('woff2'); font-weight: 400 700; font-display: swap; }
+:root { --serif: 'Newsreader', Georgia, serif; --sans: 'Flux', 'Afacad Flux', system-ui, -apple-system, sans-serif; --display: 'Prata', Georgia, serif; }
+body { font-family: var(--serif); font-size: 15.5px; }
+.prose p { font-size: 15.5px; }
+h1 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01em; }
+h2, h3, legend, #info .t, .drug .nm, .end .e1 { font-family: var(--display); font-weight: 400; }
+.famtabs button, .rxpick button, .sub { font-weight: 500; }
+.lab.lig { font-weight: 400; }
+.tabs button, .pill, .seg span, .badge, .chips span, #collapse, #stop-count, .end .e2,
+.lab, table.pocket, .facts, .key, #hint { font-family: var(--sans); }
+.tabs button { font-size: 15.5px; }
+.pill { font-size: 15px; }
+.seg span { font-size: 14.5px; }
+.badge { font-size: 12.5px; }
+.chips span { font-size: 13.5px; }
+#collapse { font-size: 14px; }
+#stop-count, .end .e2, .key, #hint { font-size: 14px; }
+.facts { font-size: 14.5px; }
+.lab { font-size: 14px; }
+.lab.res { font-size: 13.5px; }
+table.pocket { font-size: 13.5px; }
+table.pocket.wide { font-size: 12.5px; }
+@media (max-width: 760px) { .tabs button { font-size: 14.5px; } }

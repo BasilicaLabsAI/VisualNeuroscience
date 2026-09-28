@@ -7,3 +7,6 @@ __pycache__/
 # local tooling
 node_modules/
 .wrangler/
+
+# the molecular viewer is built from scripts/molecular into site/assets/molecular
+scripts/molecular/work/

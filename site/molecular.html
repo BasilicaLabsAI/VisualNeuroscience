@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Molecular — VisualNeuroscience.AI</title>
+<meta name="description" content="The dopamine and serotonin receptors themselves, in three dimensions: seventeen receptors built from thirty-nine experimental structures. Watch the neurotransmitter dock and switch each one on, see where antipsychotics, triptans, LSD and psilocin sit in the same pocket, and compare the subtypes of a family.">
+<!-- link previews. The card is built by site/share.html and rendered to
+     assets/social-card.jpg; og:image has to be absolute, so this origin is
+     the one thing to change if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="Molecular — VisualNeuroscience.AI">
+<meta property="og:description" content="The dopamine and serotonin receptors themselves, in three dimensions: seventeen receptors built from thirty-nine experimental structures. Watch the neurotransmitter dock and switch each one on, see where antipsychotics, triptans, LSD and psilocin sit in the same pocket, and compare the subtypes of a family.">
+<meta property="og:url" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/molecular.html">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The flow-state network ring over orange-tinted MNI152 brain slices, with the VisualNeuroscience.AI wordmark at its centre.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="fonts/fonts.css">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+/* the brand face, served as a file */
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+
+/* dark mode — exact inverse of the default palette, site-wide */
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  padding-bottom:2rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+a{ color:var(--ink); text-decoration:none; }
+@media (hover: hover){ a:hover{ text-decoration:underline; text-underline-offset:3px; } }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+svg{ display:block; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* ── masthead ── */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink);
+}
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:.65em; height:.65em; flex:none; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase;
+}
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+/* ── title strip, as on the other pages ── */
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{
+  font-family:var(--font-display); font-size:1.35rem;
+  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+}
+.title-strip .anno{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60);
+}
+/* ── the viewer's frame ──────────────────────────────────────────────────
+   The receptor viewer is a page of its own (assets/molecular/receptors.html):
+   it lays itself out against its window, so it sits here in a frame that is
+   given the rest of the viewport under the title strip, never less than a
+   phone's worth, and re-measured whenever the window changes. The frame's
+   hairline is the site's; everything inside it is the viewer's. */
+.frame{
+  border:1px solid var(--hair); background:#DCE9EC;   /* the viewer's own light and dark grounds, until it paints */
+  margin-bottom:var(--gap);
+}
+:root[data-theme="dark"] .frame{ background:#0F222B; }
+.frame iframe{
+  display:block; width:100%; height:70vh; height:70dvh; min-height:560px; border:0;
+}
+/* ── the caption and credits below ── */
+.below{ margin-top:var(--gap); }
+.prose{ max-width:44rem; }
+.prose h2{
+  font-family:var(--font-brand); font-weight:600; font-size:.66rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
+  border-bottom:1px solid var(--ink); padding:.2rem .1rem .45rem; margin:0 0 .8rem;
+}
+.prose p{ margin:0 0 .8rem; }
+.prose a{ text-decoration:underline; text-underline-offset:3px; }
+.credits{
+  border-top:1px solid var(--hair); margin-top:2rem; padding-top:1rem;
+  font-family:var(--font-serif); font-size:.82rem; color:var(--ink-60);
+  max-width:52rem;
+}
+.credits p{ margin:0 0 .5rem; }
+</style>
+</head>
+<body>
+<header class="masthead wrap">
+  <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="Site">
+    <a href="regions.html">Region Atlas</a>
+    <a href="tracts.html">Tractography</a>
+    <a href="network-atlas.html">Network Atlas</a>
+    <a href="microanatomy.html">Microanatomy</a>
+    <a href="molecular.html" aria-current="page">Molecular</a>
+    <a href="studies.html">Visualizing Studies</a>
+    <a href="practice.html">Practice</a>
+    <a href="textbook.html">Digital Textbook</a>
+    <a href="about.html">About</a>
+    <span class="nav-tools"><button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button></span>
+  </nav>
+</header>
+<main class="wrap">
+  <div class="title-strip">
+    <h1 class="name">Molecular</h1>
+    <span class="anno">Dopamine and serotonin receptors in 3D &middot; 17 receptors from 39 experimental structures</span>
+  </div>
+  <div class="frame">
+    <iframe id="viewer" data-src="assets/molecular/receptors.html" title="Dopamine and serotonin receptors in 3D" allow="fullscreen"></iframe>
+    <script>/* The viewer needs scripting anyway, so its address is set from
+       here rather than in the markup: this page's own query and hash go
+       straight through, molecular.html?receptor=5-HT2A&tab=drugs&drug=LSD or
+       the short form molecular.html#5-HT2A/drugs/LSD, and the frame loads
+       once rather than starting on the plain address and being turned. */
+    (function(){ var f = document.getElementById("viewer"); f.src = f.getAttribute("data-src") + location.search + location.hash; })();</script>
+  </div>
+  <section class="below">
+  <section class="prose">
+    <h2>What you are looking at</h2>
+    <p>Every receptor here is a real molecule, drawn from the coordinates that crystallography and cryo-electron microscopy have measured: the five human dopamine receptors, D1 to D5, and the twelve serotonin receptors that signal through G proteins, from 5-HT<sub>1A</sub> to 5-HT<sub>7</sub>. Each sits in a patch of membrane with the outside of the cell above and the cytoplasm below. Pick a family and a receptor in the panel, then follow the tour on the Binding tab: the neurotransmitter arrives, finds the pocket between the helices, the receptor changes shape as it switches on, and the G protein docks beneath it. Drag to turn the molecule, scroll or pinch to zoom, and hover a residue for what it is doing.</p>
+    <p>The Drugs tab puts other molecules in the same pocket, each from its own structure: the antipsychotics that block D2, the agonists given in Parkinson&rsquo;s disease, the triptans and ergots of migraine, and LSD and psilocin at 5-HT<sub>2A</sub>, with a note on whether each blocks the receptor or mimics its transmitter. Compare lays every subtype of a family side by side in the same state, with the residues of the binding pocket in a table, and About cites every structure. Where no structure of a receptor bound to its own transmitter exists, a stand-in agonist is used and named; the entry path of the ligand and the unresolved loops are drawn as illustration, and the change of shape between resting and active is an interpolation between the two measured states.</p>
+    <p>The <a href="microanatomy.html">Microanatomy</a> page draws these receptors as schematics beside the transmitters that act on them, and the <a href="regions.html#receptors">Region Atlas</a> maps where in the brain each is dense.</p>
+  </section>
+  <section class="credits">
+    <p>Structures: Protein Data Bank entries, obtained through GPCRdb (gpcrdb.org); each is cited with its paper on the viewer&rsquo;s About tab. Coordinates are public domain (CC0). Rendered with <a href="https://threejs.org/" target="_blank" rel="noopener">three.js</a> (MIT).</p>
+  </section>
+  </section>
+<p class="credits">&copy; 2026 VisualNeuroscience.AI &middot; <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a></p>
+</main>
+<script src="assets/native.js"></script>
+<script src="assets/navbar.js"></script>
+<script src="assets/newsletter.js" defer></script>
+<script>
+(function(){
+  "use strict";
+  var root = document.documentElement;
+  var frame = document.getElementById("viewer");
+
+  /* ── theme, shared with the rest of the site, and passed into the viewer ── */
+  var themeBtn = document.getElementById("themeBtn");
+  var themeLbl = document.getElementById("themeLbl");
+  function syncTheme(){
+    var dark = root.getAttribute("data-theme") === "dark";
+    try { frame.contentDocument.documentElement.setAttribute("data-theme", dark ? "dark" : "light"); } catch (e){}
+  }
+  if (root.getAttribute("data-theme") === "dark"){
+    themeLbl.textContent = "Light";
+    themeBtn.setAttribute("aria-pressed", "true");
+  }
+  themeBtn.addEventListener("click", function(){
+    var dark = root.getAttribute("data-theme") === "dark";
+    if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+    else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+    themeBtn.setAttribute("aria-pressed", String(!dark));
+    try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+    syncTheme();
+  });
+  frame.addEventListener("load", syncTheme);
+
+  /* ── deep links ──
+     The frame was given this page's query and hash as it was parsed. As the
+     reader moves about, the viewer reports where it is and this page keeps
+     the short form in its own address, so the link in the bar can be copied
+     and comes back to the same receptor, tab and drug. */
+  window.addEventListener("message", function(e){
+    var d = e.data;
+    if (!d || d.type !== "receptor-viewer" || e.source !== frame.contentWindow) return;
+    if (!d.receptor) return;
+    var h = "#" + d.receptor + "/" + (d.tab || "binding") + (d.drug ? "/" + encodeURIComponent(d.drug) : "");
+    if (location.hash !== h){ try { history.replaceState(history.state, "", location.pathname + h); } catch (err){} }
+  });
+
+  /* ── the frame takes the rest of the viewport under the title strip ── */
+  function fit(){
+    var top = frame.getBoundingClientRect().top + window.scrollY;
+    var h = window.innerHeight - top - 14;
+    frame.style.height = Math.max(560, Math.round(h)) + "px";
+  }
+  fit();
+  window.addEventListener("resize", fit);
+  window.addEventListener("load", fit);
+})();
+</script>
+<script src="assets/firebase-config.js"></script>
+<script type="module" src="assets/auth-ui.js"></script>
+</body>
+</html>
