@@ -193,4 +193,15 @@
   box.querySelectorAll(".tb-cell-parts button").forEach(function(b){
     b.addEventListener("click", function(){ select(b.getAttribute("data-part")); });
   });
+  /* the book's labels on their lines, off until asked for; the choice is remembered */
+  var sw = box.querySelector(".tb-cell-labels-switch");
+  if (sw){
+    var KEY = "vn-cell-labels";
+    function showLabels(on){ box.classList.toggle("show-labels", on); sw.checked = on; }
+    try { showLabels(localStorage.getItem(KEY) === "on"); } catch (e) {}
+    sw.addEventListener("change", function(){
+      showLabels(sw.checked);
+      try { localStorage.setItem(KEY, sw.checked ? "on" : "off"); } catch (e) {}
+    });
+  }
 })();

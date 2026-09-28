@@ -345,7 +345,19 @@ button{ font:inherit; color:inherit; }
   display:grid; grid-template-columns:minmax(0,1fr) minmax(220px,270px); gap:var(--gap);
   align-items:start; border:1px solid var(--ink-35); padding:var(--gap); background:var(--paper);
 }
+.tb-cell-fig{ min-width:0; }
 .tb-cell-svg{ width:100%; height:auto; display:block; }
+.tb-cell-tools{ display:flex; justify-content:flex-end; padding:.5rem 0 0; }
+/* the switch: a track and a knob in the page's ink, its box hidden but still focusable */
+.tb-switch{ position:relative; display:inline-flex; align-items:center; gap:.55rem; cursor:pointer; user-select:none;
+  font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); }
+.tb-switch input{ position:absolute; opacity:0; width:1px; height:1px; margin:0; pointer-events:none; }
+.tb-switch-track{ position:relative; flex:none; width:2rem; height:1.1rem; border:1px solid var(--ink-35); border-radius:1rem; transition:background .2s, border-color .2s; }
+.tb-switch-track::after{ content:""; position:absolute; top:2px; left:2px; width:calc(1.1rem - 6px); height:calc(1.1rem - 6px); border-radius:50%; background:var(--ink-60); transition:transform .2s, background .2s; }
+.tb-switch input:checked + .tb-switch-track{ background:var(--ink); border-color:var(--ink); }
+.tb-switch input:checked + .tb-switch-track::after{ transform:translateX(.9rem); background:var(--paper); }
+.tb-switch input:focus-visible + .tb-switch-track{ outline:2px solid var(--ink); outline-offset:2px; }
+.tb-switch input:checked ~ .tb-switch-text{ color:var(--ink); }
 .tb-cell-side{ min-width:0; }
 .tb-cell-kicker{ font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60); margin:0 0 .35rem; }
 .tb-cell-name{ font-family:var(--font-display); font-weight:400; font-size:1.3rem; line-height:1.15; margin:0 0 .3rem; }
@@ -362,7 +374,10 @@ button{ font:inherit; color:inherit; }
 @media (max-width:760px){ .tb-cell{ grid-template-columns:minmax(0,1fr); } }
 .tb-cell [data-part]{ cursor:pointer; transition:opacity .2s; }
 /* The drawing is the book's figure, traced, with its colours inline; the labels and their
-   leader lines are set here, in the page's ink outside the cell and dark inside it. */
+   leader lines are set here, in the page's ink outside the cell and dark inside it, and stay
+   hidden until the switch under the drawing turns them on. */
+.tb-cell .c-labels{ opacity:0; pointer-events:none; transition:opacity .25s; }
+.tb-cell.show-labels .c-labels{ opacity:1; pointer-events:auto; }
 .tb-cell .c-label path{ fill:none; stroke:var(--ink); stroke-width:1.6; }
 .tb-cell .c-label .c-lead-in{ stroke:#3B3452; stroke-width:2; }
 .tb-cell .c-label circle{ fill:#3B3452; }

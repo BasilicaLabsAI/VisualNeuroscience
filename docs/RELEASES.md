@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.69 — 28 September 2026 — The cell figure names its parts on hover, and its labels wait behind a switch
+Commit · Take the labels and leader lines off the cell figure, name its parts at the pointer instead, and put the book's labels behind a switch that is off by default
+
+The cell in Building a Nervous System now shows the drawing alone: no text, no leader lines. Point at any organelle and its name appears at the pointer; click or tap it, or a name in the list beside the drawing, for its subtitle and description. A switch under the drawing, Labels on lines, puts the book's eight labels back on their leader lines for anyone who wants them; it is off to begin with, and the page remembers the choice. The two leader lines the tracer had merged into the drawing itself, from the nucleus out to the edge of the cell, have been cut out of the traced shapes and the shapes healed across the cut, so the drawing is clean with the labels off.
+
 ## v10.68 — 28 September 2026 — The cell figure is now the book's own drawing, traced and made interactive
-Commit · Replace the drawn cell figure with a vector trace of the book's, every shape tagged with its part and the labels reset in the page's type
+Commit `acbe91d` · Replace the drawn cell figure with a vector trace of the book's, every shape tagged with its part and the labels reset in the page's type
 
 The cell figure in Building a Nervous System is no longer a drawing made to resemble the book's picture: it is the book's picture, traced to vector shapes, so the nucleus with its tangle of DNA, the studded arcs of rough endoplasmic reticulum, the mitochondria, the lysosomes, the Golgi and its vesicles are the illustrator's own lines and colours. Each of the six hundred or so shapes is tagged with the part it belongs to, so the figure answers the pointer as before: hovering an organelle or its label names it, and a click, or a name in the list beside the drawing, opens its subtitle and description in the panel and lights every copy of that part while the rest fades. The trace carries no text, so the eight labels and their leader lines are set again in the page's type, on the book's routes to the dot, in ink outside the cell and dark inside it so they read on the dark theme too. A disc and a ring in the cell's own colours sit under the trace to fill the notches its leader lines had cut in the fills.
 
