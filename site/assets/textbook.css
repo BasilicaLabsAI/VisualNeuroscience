@@ -342,7 +342,7 @@ button{ font:inherit; color:inherit; }
    description in the panel and lights every copy of that part. */
 .tb-cell{
   position:relative;
-  display:grid; grid-template-columns:minmax(0,1fr) minmax(240px,320px); gap:var(--gap);
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(220px,270px); gap:var(--gap);
   align-items:start; border:1px solid var(--ink-35); padding:var(--gap); background:var(--paper);
 }
 .tb-cell-svg{ width:100%; height:auto; display:block; }
@@ -360,27 +360,35 @@ button{ font:inherit; color:inherit; }
 .tb-cell-parts button.sel{ background:var(--ink); color:var(--paper); }
 .tb-cell-credit{ grid-column:1 / -1; font-family:var(--font-serif); font-style:italic; font-size:.82rem; color:var(--ink-60); margin:0; }
 @media (max-width:760px){ .tb-cell{ grid-template-columns:minmax(0,1fr); } }
-/* the drawing's inks */
+/* the drawing's inks: the book's palette for the organelles, the page's ink for the labels */
 .tb-cell [data-part]{ cursor:pointer; transition:opacity .2s; }
-.tb-cell .c-cyto{ fill:color-mix(in srgb, #8E82C9 9%, var(--paper)); }
-.tb-cell .c-mem circle{ fill:none; stroke:#8E82C9; stroke-width:7; }
-.tb-cell .c-mem .c-mem-in{ stroke:color-mix(in srgb, #8E82C9 45%, var(--paper)); stroke-width:2.5; }
-.tb-cell .c-nuc{ fill:color-mix(in srgb, #6C5FA8 38%, var(--paper)); }
-.tb-cell .c-env circle{ fill:none; stroke:#8E82C9; stroke-width:4; }
-.tb-cell .c-env .c-env-pores{ stroke:color-mix(in srgb, var(--paper) 55%, #8E82C9); stroke-width:2.2; stroke-dasharray:9 7; }
-.tb-cell .c-dna path{ fill:none; stroke:#6C5FA8; stroke-width:1.7; opacity:.85; }
-.tb-cell .c-nucleolus{ fill:#6C5FA8; opacity:.92; }
-.tb-cell .c-rer .c-rer-m{ fill:none; stroke:#7A6DB8; stroke-width:5; stroke-linecap:round; }
-.tb-cell .c-rer .c-rer-s{ fill:none; stroke:#4E4290; stroke-width:9; stroke-linecap:round; stroke-dasharray:0.1 8; }
-.tb-cell .c-ser path{ fill:none; stroke:#9C8FD0; stroke-width:9; stroke-linecap:round; opacity:.9; }
-.tb-cell .c-ribo circle{ fill:var(--ink-60); }
-.tb-cell .c-mito ellipse{ fill:color-mix(in srgb, #E9A3B4 55%, var(--paper)); stroke:#D2607E; stroke-width:3; }
-.tb-cell .c-mito .c-crista{ fill:none; stroke:#D2607E; stroke-width:2.2; stroke-linecap:round; }
-.tb-cell .c-lyso > circle{ fill:color-mix(in srgb, #8E82C9 14%, var(--paper)); stroke:#8E82C9; stroke-width:3; }
-.tb-cell .c-lyso .c-lyso-dot{ fill:#C8508A; stroke:none; }
-.tb-cell .c-golgi path{ fill:none; stroke:#A08BD0; stroke-width:10; stroke-linecap:round; }
-.tb-cell .c-ves circle{ fill:#A08BD0; }
+.tb-cell .c-cyto{ fill:#F4F1FA; }
+.tb-cell .c-thread path{ fill:none; stroke:#D6CFEA; stroke-width:1.4; }
+.tb-cell .c-mem circle{ fill:none; stroke:#B9AFE0; stroke-width:8; }
+.tb-cell .c-mem .c-mem-in{ stroke:#DCD5F0; stroke-width:2; }
+.tb-cell .c-nuc{ fill:#C5BBE4; }
+.tb-cell .c-env circle{ fill:none; stroke:#8A7FC4; stroke-width:4; }
+.tb-cell .c-env .c-env-in{ stroke:#D9D1EF; stroke-width:1.6; }
+.tb-cell .c-dna path{ fill:none; stroke:#A99CD6; stroke-width:1.6; }
+.tb-cell .c-nucleolus{ fill:#8C7CC4; }
+.tb-cell .c-rer .c-rer-m{ fill:none; stroke:#6C60B0; stroke-width:6.5; stroke-linecap:round; }
+.tb-cell .c-rer .c-rer-s{ fill:none; stroke:#6C60B0; stroke-width:3.4; stroke-linecap:round; stroke-dasharray:0.1 6.5; }
+.tb-cell .c-ser rect{ fill:#B7A9DF; stroke:#8F81C8; stroke-width:1.6; }
+.tb-cell .c-ribo circle{ fill:#5A4E9E; }
+.tb-cell .c-mito ellipse{ fill:#F6D6DE; stroke:#E28BA1; stroke-width:3; }
+.tb-cell .c-mito .c-crista{ fill:none; stroke:#E28BA1; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+.tb-cell .c-lyso > circle{ fill:#EFEAF8; stroke:#A79BD3; stroke-width:3; }
+.tb-cell .c-lyso .c-lyso-in{ fill:none; stroke:#D7CFEC; stroke-width:1.5; }
+.tb-cell .c-lyso .c-lyso-e{ fill:#C74E8B; stroke:none; }
+.tb-cell .c-lyso .c-lyso-d{ fill:#C74E8B; stroke:none; }
+.tb-cell .c-golgi .c-golgi-o{ fill:none; stroke:#A18ED2; stroke-width:17; stroke-linecap:round; }
+.tb-cell .c-golgi .c-golgi-f{ fill:none; stroke:#C7B5E6; stroke-width:13; stroke-linecap:round; }
+.tb-cell .c-ves circle{ fill:#C7B5E6; stroke:#A18ED2; stroke-width:1.6; }
+.tb-cell .c-ves .c-ves-p{ fill:#F2A9B6; stroke:#E28BA1; }
+.tb-cell .c-label path{ fill:none; stroke:var(--ink); stroke-width:1.6; }
+.tb-cell .c-label circle{ fill:var(--ink); }
+.tb-cell .c-label text{ font-family:var(--font-serif); font-size:27px; fill:var(--ink); }
 .tb-cell .hot{ filter:drop-shadow(0 0 3px var(--ink)); }
-.tb-cell.has-sel [data-part]:not(.sel):not(.c-cyto):not(.c-mem){ opacity:.4; }
-.tb-cell.has-sel .c-cyto:not(.sel), .tb-cell.has-sel .c-mem:not(.sel){ opacity:.7; }
+.tb-cell.has-sel [data-part]:not(.sel):not(.c-cyto):not(.c-mem){ opacity:.35; }
+.tb-cell.has-sel .c-cyto:not(.sel), .tb-cell.has-sel .c-mem:not(.sel){ opacity:.75; }
 .tb-cell .sel{ filter:drop-shadow(0 0 4px var(--ink)) drop-shadow(0 0 10px var(--ink)); }

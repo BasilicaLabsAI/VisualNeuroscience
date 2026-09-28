@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.67 — 28 September 2026 — The cell figure is redrawn to the book's, with its labels on their lines
+Commit · Redraw the eukaryotic cell to the book's figure, organelle for organelle, with the book's labels and leader lines
+
+The cell figure in Building a Nervous System is drawn again, this time to the book's picture rather than freely: the same cell with the same organelles in the same places and the book's own colours, the nucleus with its tangle of DNA and its nucleolus, the studded arcs of rough endoplasmic reticulum around it, the smooth reticulum beneath, the three mitochondria, the two lysosomes with their enzymes, the Golgi with its vesicles, the free ribosomes with their bracket, and the eight labels on their leader lines exactly where the book puts them. The labels take the page's ink so they read on the dark theme. Everything still answers the pointer: hovering an organelle or its label names it, and a click, or a name in the list beside the drawing, opens its subtitle and description in the panel.
+
 ## v10.66 — 28 September 2026 — Accounts get a username, shown in place of the name, and a university if you want to give one
-Commit · Give every account a username that no one else can take, shown in place of the name, and an optional university field
+Commit `39176c8` · Give every account a username that no one else can take, shown in place of the name, and an optional university field
 
 Creating an account now asks for a username along with the name, and the nav and the account card show that username from then on instead of the person's name. It is three to twenty letters, numbers and underscores, and it is unique: the form checks it before the account is made, and the database itself refuses a second claim on the same name, so two people who choose it at the same moment cannot both have it. Someone who signs in with Google, Apple or LinkedIn has no form to type it on, so the nav says Pick a username until they open the account card and choose one there, where the username and the university can be changed later too. A university is an optional field on both forms. Deleting the account releases the username. The narrow header from v10.65 also keeps the page's side gutters now, so the wordmark no longer touches the edge of a phone.
 
