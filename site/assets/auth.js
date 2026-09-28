@@ -68,6 +68,9 @@ const ERRORS = {
   "auth/provider-already-linked":  "That sign-in method is already connected to this account.",
   "auth/web-storage-unsupported":  "The browser is blocking site storage, which sign-in needs — private-browsing modes often do this.",
   "vn/passwords-differ":           "The two passwords don't match.",
+  "vn/username-missing":           "Choose a username first.",
+  "vn/username-format":            "A username is 3 to 20 characters: letters, numbers and underscores.",
+  "vn/username-taken":             "That username is taken — try another.",
   "vn/disabled":                   "Accounts are switched off in this copy of the app.",
   "vn/link-cancelled":             "Sign-in was cancelled."
 };
@@ -92,6 +95,7 @@ function dormant(){
     signUpWithEmail: off, signInWithEmail: off, sendReset: off,
     sendSignInLink: off, completeSignInLink: off,
     linkProvider: off, deleteAccount: off, signOut: () => Promise.resolve(),
+    usernameFree: off, setUsername: off, setUniversity: off, loadProfile: () => Promise.resolve(null), profile: () => null,
     pendingEmailLink: false, pendingLink: null, db: null, sdk: null,
     ready: Promise.resolve(null)
   };
@@ -142,11 +146,87 @@ async function build(){
   const listeners = new Set();
   let user = null, readyResolve;
   const ready = new Promise(r => { readyResolve = r; });
+  function notify(){ listeners.forEach(cb => { try{ cb(user); }catch(e){ console.error(e); } }); }
   sdk.onAuthStateChanged(auth, u => {
     user = u || null;
     if (readyResolve){ readyResolve(user); readyResolve = null; }
-    listeners.forEach(cb => { try{ cb(user); }catch(e){ console.error(e); } });
+    notify();
+    /* the profile carries the username the nav shows; once it is read the
+       listeners hear again, so a name drawn from the email is corrected */
+    if (user) loadProfile(user).then(notify, () => {});
+    else profileCache = null;
   });
+
+  /* ── the profile document and the username ────────────────────────────
+     The profile is the one document the auth system keeps: name, email,
+     the username the person chose and, if they gave it, their university.
+     A username is shown in place of the name everywhere. Each one is also
+     a document in usernames/{name}, keyed by its lower-case form and
+     holding the uid; the rules let a signed-in person create one only
+     where none exists, so two people cannot end up with the same name
+     however close together they try, and only its owner can delete it. */
+  let profileCache = null;
+  async function loadProfile(u){
+    u = u || auth.currentUser;
+    if (!u) return null;
+    try{
+      const snap = await sdk.getDoc(sdk.doc(db, "users", u.uid, "meta", "profile"));
+      profileCache = Object.assign({ uid: u.uid }, snap.exists() ? snap.data() : {});
+    }catch(e){ profileCache = profileCache || { uid: u.uid }; }
+    return profileCache;
+  }
+  function profile(){ return profileCache; }
+  const USERNAME_RE = /^[a-z0-9_]{3,20}$/;
+  function usernameKey(name){ return String(name || "").trim().toLowerCase(); }
+  function checkUsername(name){
+    const key = usernameKey(name);
+    if (!key) throw friendly({ code: "vn/username-missing" });
+    if (!USERNAME_RE.test(key)) throw friendly({ code: "vn/username-format" });
+    return key;
+  }
+  async function usernameFree(name){
+    const key = checkUsername(name);
+    let snap;
+    try{ snap = await sdk.getDoc(sdk.doc(db, "usernames", key)); }
+    catch(err){ throw friendly({ code: "auth/network-request-failed" }); }
+    return !snap.exists();
+  }
+  async function claimUsername(u, name){
+    const key = checkUsername(name);
+    try{ await sdk.setDoc(sdk.doc(db, "usernames", key), { uid: u.uid }); }
+    catch(err){
+      const code = err && err.code || "";
+      if (/permission|denied/i.test(code) || /permission/i.test(err && err.message || "")) throw friendly({ code: "vn/username-taken" });
+      throw friendly({ code: "auth/network-request-failed" });
+    }
+    return key;
+  }
+  async function releaseUsername(name){
+    const key = usernameKey(name);
+    if (!key) return;
+    try{ await sdk.deleteDoc(sdk.doc(db, "usernames", key)); }catch(_){}
+  }
+  async function setUsername(name){
+    const u = auth.currentUser;
+    if (!u) throw friendly({ code: "auth/requires-recent-login" });
+    const wanted = String(name || "").trim();
+    const key = checkUsername(wanted);
+    const cur = profileCache || await loadProfile(u) || {};
+    if (usernameKey(cur.username) === key){
+      if (cur.username !== wanted) await saveProfile(u, { username: wanted });
+      return wanted;
+    }
+    await claimUsername(u, wanted);
+    await saveProfile(u, { username: wanted });
+    if (cur.username) await releaseUsername(cur.username);
+    return wanted;
+  }
+  async function setUniversity(text){
+    const u = auth.currentUser;
+    if (!u) throw friendly({ code: "auth/requires-recent-login" });
+    await saveProfile(u, { university: String(text || "").trim() });
+    return profileCache && profileCache.university;
+  }
 
   /* the profile document — the one piece of user data the auth system
      itself keeps, because two providers are forgetful: Apple sends the
@@ -163,8 +243,11 @@ async function build(){
       };
       if (extra && extra.firstName) data.firstName = extra.firstName;
       if (extra && extra.lastName)  data.lastName  = extra.lastName;
+      if (extra && typeof extra.username === "string") data.username = extra.username;
+      if (extra && typeof extra.university === "string") data.university = extra.university;
       if (u.photoURL || (extra && extra.picture)) data.photoURL = u.photoURL || extra.picture;
       await sdk.setDoc(refDoc, data, { merge: true });
+      profileCache = Object.assign({ uid: u.uid }, profileCache || {}, data, { updatedAt: null });
     }catch(e){ console.warn("profile save skipped:", e && e.message); }
   }
 
@@ -377,15 +460,24 @@ async function build(){
   }
 
   /* ── email + password ────────────────────────────────────────────────── */
-  async function signUpWithEmail({ firstName, lastName, email, password, confirm }){
+  async function signUpWithEmail({ firstName, lastName, username, university, email, password, confirm }){
     if (password !== confirm) throw friendly({ code: "vn/passwords-differ" });
+    /* the username is checked before the account exists, so a taken name
+       costs nothing but a second try; the claim after creation is what
+       makes it certain */
+    const wanted = String(username || "").trim();
+    checkUsername(wanted);
+    if (!(await usernameFree(wanted))) throw friendly({ code: "vn/username-taken" });
     let res;
     try{ res = await sdk.createUserWithEmailAndPassword(auth, email, password); }
     catch(err){ throw friendly(err); }
     const name = [firstName, lastName].map(s => (s || "").trim()).filter(Boolean).join(" ");
     if (name) await adoptName(res.user, name);
-    await saveProfile(res.user, { firstName, lastName, name });
+    let claimed = null;
+    try{ claimed = await claimUsername(res.user, wanted); }catch(_){}
+    await saveProfile(res.user, { firstName, lastName, name, username: claimed ? wanted : "", university: String(university || "").trim() });
     await finishPendingLink(res.user);
+    if (!claimed) throw Object.assign(friendly({ code: "vn/username-taken" }), { keepOpen: true, user: res.user });
     return res.user;
   }
 
@@ -477,7 +569,10 @@ async function build(){
         await Promise.all(gone);
       }
       await sdk.deleteDoc(idxRef).catch(() => {});
+      const prof = profileCache || await loadProfile(u);
+      if (prof && prof.username) await releaseUsername(prof.username);
       await sdk.deleteDoc(sdk.doc(db, "users", u.uid, "meta", "profile")).catch(() => {});
+      profileCache = null;
     }catch(e){ console.warn("data cleanup incomplete:", e && e.message); }
     try{ await u.delete(); }
     catch(err){ throw friendly(err); }
@@ -497,6 +592,7 @@ async function build(){
     linkProvider,
     signOut: doSignOut,
     deleteAccount,
+    usernameFree, setUsername, setUniversity, loadProfile, profile,
     ready, db, sdk
   };
 }

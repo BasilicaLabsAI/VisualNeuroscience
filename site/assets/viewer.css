@@ -512,7 +512,7 @@ html{ scroll-padding-top:5.2rem; }
 @media (max-width:960px){
   .masthead.masthead{
     display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
-    gap:.35rem .8rem; padding-top:.55rem; padding-bottom:.55rem; text-align:left;
+    gap:.35rem .8rem; padding:.55rem clamp(14px,2.5vw,48px); text-align:left;
   }
   .masthead.masthead .brand{ font-size:1.25rem; }
   .masthead.masthead.stuck{ padding-top:.55rem; }

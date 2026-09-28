@@ -267,6 +267,25 @@ the iOS plist and Android manifest in this repo. The round trip needs the
 then `npm run sync`. (Without it the LinkedIn button hides itself in the
 apps and everything else still works.)
 
+## 7b · Usernames
+
+Every account carries a username, chosen on the Create account form
+(required) or, for a Google, Apple or LinkedIn sign-in, on the account card
+the first time it opens: until one is chosen the nav says "Pick a username".
+The nav and the account card show the username in place of the name. A
+university is an optional field on both forms.
+
+Uniqueness is enforced by the database, not the page: each name is a
+document in `usernames/{name}` (lower-case key, `{uid}` inside), and
+`firestore.rules` lets a signed-in person *create* one only where none
+exists, so a race between two people ends with one winner. The form looks
+the name up before the account is created, so a taken name costs one more
+try and no account. Changing a username claims the new document, then
+releases the old; deleting the account releases it. **After pulling this
+change, paste `firestore.rules` into the console again** (or
+`firebase deploy --only firestore:rules`), or every claim is refused and
+every account reads as "Pick a username".
+
 ## 8 · When you switch it on, say so
 
 **site/privacy.html** already describes accounts (and reserves a spot for

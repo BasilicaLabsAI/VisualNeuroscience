@@ -38,6 +38,7 @@ function mount(){
     text-decoration:underline; text-underline-offset:3px; text-decoration-color:transparent;
   }
   @media (hover:hover){ .vn-auth-name:hover{ text-decoration-color:currentColor; } }
+  .vn-auth-pick{ border:1px solid var(--hair,#111); padding:.28rem .6rem; text-decoration:none; }
   .vn-who{ font-size:.9rem; color:var(--ink-60,#5a5a5a); margin:-.4rem 0 1rem; }
   .vn-danger{
     font-family:var(--font-brand,sans-serif); font-weight:500; font-size:.68rem;
@@ -124,13 +125,23 @@ function mount(){
   if (theme && theme.parentNode) theme.parentNode.insertBefore(slot, theme);
   else nav.appendChild(slot);
 
+  /* what the nav calls the person: the username they chose; until they
+     have one, an invitation to pick it, which opens the account card */
+  function handle(user){
+    const p = auth.profile();
+    if (p && p.username) return p.username;
+    if (p) return "";
+    return user.displayName || user.email || "Signed in";
+  }
   function drawSlot(user){
     slot.textContent = "";
     if (user){
       const name = document.createElement("button");
       name.type = "button";
       name.className = "vn-auth-name";
-      name.textContent = user.displayName || user.email || "Signed in";
+      const h = handle(user);
+      name.textContent = h || "Pick a username";
+      if (!h) name.classList.add("vn-auth-pick");
       name.title = (user.email || "") + " — account";
       name.addEventListener("click", () => openAccountModal(user));
       const out = document.createElement("button");
@@ -162,11 +173,39 @@ function mount(){
     close.type = "button"; close.className = "vn-close"; close.innerHTML = "&#215;";
     close.setAttribute("aria-label", "Close");
     close.addEventListener("click", closeModal);
+    const prof = auth.profile() || {};
     const h = document.createElement("h2");
-    h.textContent = user.displayName || "Your account";
+    h.textContent = prof.username || "Your account";
     const who = document.createElement("p");
     who.className = "vn-who";
-    who.textContent = user.email || "";
+    who.textContent = [user.displayName, user.email].filter(Boolean).join(" · ");
+
+    /* the username and the university, changeable here; the username is
+       checked against everyone else's the moment it is saved */
+    const fProf = document.createElement("form");
+    fProf.className = "vn-form active";
+    const inUser = field("text", "username", "Username", "username");
+    inUser.value = prof.username || "";
+    inUser.maxLength = 20; inUser.autocapitalize = "none"; inUser.spellcheck = false;
+    const inUni = field("text", "organization", "University (optional)", "organization");
+    inUni.required = false; inUni.value = prof.university || "";
+    const noteU = document.createElement("p");
+    noteU.className = "vn-who";
+    noteU.textContent = prof.username ? "Shown in place of your name. Letters, numbers and underscores, 3 to 20 of them." : "Choose a username: it is shown in place of your name. Letters, numbers and underscores, 3 to 20 of them.";
+    const save = document.createElement("button");
+    save.type = "submit"; save.className = "vn-submit"; save.textContent = "Save";
+    fProf.append(inUser, inUni, noteU, save);
+    fProf.addEventListener("submit", e => {
+      e.preventDefault();
+      run(fProf, async () => {
+        const name = await auth.setUsername(inUser.value);
+        await auth.setUniversity(inUni.value);
+        h.textContent = name;
+        drawSlot(user);
+        throw Object.assign(new Error("Saved."), { keepOpen: true });
+      });
+    });
+
     const out = document.createElement("button");
     out.type = "button"; out.className = "vn-submit"; out.textContent = "Log out";
     out.addEventListener("click", () => run(out, () => auth.signOut()));
@@ -194,10 +233,11 @@ function mount(){
     statusEl = document.createElement("p");
     statusEl.className = "vn-status";
     statusEl.setAttribute("aria-live", "polite");
-    box.append(close, h, who, out, warn, del, statusEl);
+    box.append(close, h, who, fProf, out, warn, del, statusEl);
     wrap.appendChild(box);
     document.body.appendChild(wrap);
     document.addEventListener("keydown", onEsc);
+    if (!prof.username) setTimeout(() => inUser.focus(), 50);
   }
 
   /* ── modal ───────────────────────────────────────────────────────────── */
@@ -346,17 +386,25 @@ function mount(){
     const upLast  = field("text", "family-name", "Surname", "family-name");
     const row = document.createElement("div"); row.className = "row2";
     row.append(upFirst, upLast);
+    const upUser  = field("text", "username", "Username", "username");
+    upUser.maxLength = 20; upUser.autocapitalize = "none"; upUser.spellcheck = false;
+    const upUni   = field("text", "organization", "University (optional)", "organization");
+    upUni.required = false;
     const upEmail = field("email", "email", "Email", "email");
     const upPass  = field("password", "new-password", "Password", "new-password");
     const upPass2 = field("password", "confirm-password", "Confirm password", "new-password");
+    const upNote = document.createElement("p");
+    upNote.className = "vn-who";
+    upNote.textContent = "The username is shown in place of your name. Letters, numbers and underscores, 3 to 20 of them, and no two people can share one.";
     const upGo = document.createElement("button");
     upGo.type = "submit"; upGo.className = "vn-submit"; upGo.textContent = "Create account";
-    fUp.append(row, upEmail, upPass, upPass2, upGo);
+    fUp.append(row, upUser, upUni, upEmail, upPass, upPass2, upNote, upGo);
     fUp.addEventListener("submit", e => {
       e.preventDefault();
       if (upPass.value !== upPass2.value){ status("The two passwords don't match.", true); return; }
       run(fUp, () => auth.signUpWithEmail({
         firstName: upFirst.value, lastName: upLast.value,
+        username: upUser.value, university: upUni.value,
         email: upEmail.value.trim(), password: upPass.value, confirm: upPass2.value
       }));
     });

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.66 — 28 September 2026 — Accounts get a username, shown in place of the name, and a university if you want to give one
+Commit · Give every account a username that no one else can take, shown in place of the name, and an optional university field
+
+Creating an account now asks for a username along with the name, and the nav and the account card show that username from then on instead of the person's name. It is three to twenty letters, numbers and underscores, and it is unique: the form checks it before the account is made, and the database itself refuses a second claim on the same name, so two people who choose it at the same moment cannot both have it. Someone who signs in with Google, Apple or LinkedIn has no form to type it on, so the nav says Pick a username until they open the account card and choose one there, where the username and the university can be changed later too. A university is an optional field on both forms. Deleting the account releases the username. The narrow header from v10.65 also keeps the page's side gutters now, so the wordmark no longer touches the edge of a phone.
+
 ## v10.65 — 28 September 2026 — The header stays in view, and folds its sections into a menu on a phone
-Commit · Pin the header to the top of every page, compact it once the page scrolls, and fold the sections into a menu under 960 pixels
+Commit `eb00bd1` · Pin the header to the top of every page, compact it once the page scrolls, and fold the sections into a menu under 960 pixels
 
 The masthead no longer scrolls away. At the top of a page it is the centred masthead as before; as soon as the page moves it draws in to a compact bar, the wordmark small and the sections on one line, so it keeps little of the screen while the map or the text is being read. Under 960 pixels wide, tablets held upright and every phone, the nine section links fold into a panel behind a Menu button, and the Log in and theme buttons stay in view beside it, so an account and the theme are always one tap away. The app has the same menu in its bar, at the right beside those two buttons, listing every section with the current one marked. Escape, a tap outside or a wider window closes either.
 

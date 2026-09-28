@@ -16,6 +16,26 @@ service cloud.firestore {
                          && request.auth.uid == uid;
     }
 
+    // Usernames. One document per name, keyed by its lower-case form and
+    // holding the owner's uid. Anyone may look one up, which is how the
+    // registration form says "taken" before an account exists; a signed-in
+    // person may create one, and since a create only succeeds where no
+    // document exists, two people can never claim the same name however
+    // close together they try. Only the owner may delete theirs, when they
+    // change it or delete the account. Nothing is ever updated in place.
+    match /usernames/{name} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if request.auth != null
+                    && request.resource.data.keys().hasOnly(['uid'])
+                    && request.resource.data.uid == request.auth.uid
+                    && name == name.lower()
+                    && name.matches('^[a-z0-9_]{3,20}$');
+      allow update: if false;
+      allow delete: if request.auth != null
+                    && resource.data.uid == request.auth.uid;
+    }
+
     // The LinkedIn sub → Firebase uid mapping is written and read only by
     // the auth-worker, which uses service-account credentials that bypass
     // these rules entirely. No client touches it, so no client may.
