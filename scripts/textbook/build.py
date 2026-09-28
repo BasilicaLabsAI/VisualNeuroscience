@@ -138,6 +138,14 @@ class Ctx:
         self.practice = False        # the module has interactive exercises on OpenStax
         self.videos = []
 
+# Figures drawn for the site in place of the book's raster art, by figure id:
+# each file in figures/ is dropped into the <figure> where the image was, so
+# the caption and the id stay the book's. Their styles live in textbook.css.
+FIGURES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "figures")
+FIGURES = {
+    "m00021-Image-1.01": "central-dogma.html",   # 1.1 Building a Nervous System: the central dogma
+}
+
 def aid(ctx, i):
     return f"{ctx.mod}-{i}" if i else ""
 
@@ -213,6 +221,10 @@ def render(ctx, e, depth=1):
         title = e.find("c:title", NS); cap = e.find("c:caption", NS)
         ttext = "".join(title.itertext()).strip() if title is not None else ""
         parts = "".join(render(ctx, ch, depth) for ch in e if tag(ch) in ("media", "figure", "para", "list"))
+        fid = aid(ctx, e.get("id"))
+        if fid in FIGURES:   # a figure drawn for the site takes the place of the book's image
+            with open(os.path.join(FIGURES_DIR, FIGURES[fid]), encoding="utf-8") as fh:
+                parts = fh.read()
         caption = ""
         if ttext or (cap is not None and "".join(cap.itertext()).strip()):
             caption = "<figcaption>" + (f"<b>{esc(ttext)}</b> " if ttext else "") + (inner(ctx, cap, depth) if cap is not None else "") + "</figcaption>"

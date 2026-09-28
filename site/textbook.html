@@ -272,7 +272,132 @@ if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</
     <section id="m00021-sect-00002"><h3>Brain cells are eukaryotic cells</h3>
       
       <p id="m00021-para-00003">The first cell is thought to have arisen on earth at least 3.8 billion years ago. Today we classify cellular life into three domains: Bacteria, Archaea and Eukarya. All cells on this planet contain a barrier to the outside world called a cell membrane and genetic material (<b class="tb-term">DNA</b>). However, unlike prokaryotic cells, which are members of the Bacteria and Archaea domains, eukaryotic cells belong to the Eukarya domain which has as its major cellular feature membrane-bound organelles. Membrane-bound organelles allow for functional compartmentalization and specialization. DNA is segregated in the nucleus where it is copied (via a process called replication) and/or converted into <b class="tb-term">mRNA</b> (messenger RNA). Once converted (transcribed) into mRNA, this material exits the nucleus. It is outside of the nucleus that the translation of mRNA to protein occurs in eukaryotic cells <a href="#m00021-Image-1.01">The Central Dogma</a>.</p>
-      <figure class="tb-fig" id="m00021-Image-1.01"><img src="assets/textbook/img/Image-1.01_Central-dogma.webp" alt="Diagram of intracellular compartment showing steps of transduction and translation described in the main text." width="1400" height="862" loading="lazy" decoding="async"><figcaption><b>The Central Dogma</b> </figcaption></figure>
+      <figure class="tb-fig" id="m00021-Image-1.01"><!-- The central dogma, drawn for the site in place of the book's raster
+     figure: DNA transcribed to mRNA in the nucleus, mRNA translated to a
+     chain of amino acids, the chain folded into proteins. The four notes
+     are the book's; each lights its part of the drawing on hover or a tap.
+     Colours follow the page's theme through its custom properties. -->
+<!-- The central dogma, drawn for the site in place of the book's raster
+     figure: DNA transcribed to mRNA in the nucleus, mRNA translated to a
+     chain of amino acids, the chain folded into proteins. The four notes
+     are the book's; each lights its part of the drawing on hover or a tap.
+     Colours follow the page's theme through its custom properties. -->
+<div class="tb-dogma" data-lit="">
+  <svg class="tb-dogma-svg" viewBox="0 0 1000 620" role="img" aria-labelledby="dogma-title" xmlns="http://www.w3.org/2000/svg">
+    <title id="dogma-title">From gene to protein: DNA is transcribed into mRNA in the nucleus, mRNA is translated into a chain of amino acids in the cytoplasm, and the chain folds into a protein.</title>
+    <defs>
+      <clipPath id="dogma-cell"><rect x="24" y="24" width="952" height="572" rx="18"/></clipPath>
+      <marker id="dogma-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="dg-arrowhead"/></marker>
+    </defs>
+    <!-- the patch of cell we are looking into -->
+    <rect class="dg-cell" x="24" y="24" width="952" height="572" rx="18"/>
+    <g clip-path="url(#dogma-cell)">
+      <!-- endoplasmic reticulum, folded around the nucleus -->
+      <g class="dg-er">
+        <path d="M430,30 C420,80 470,110 450,170 M400,26 C380,90 440,130 410,200 C395,235 430,260 420,300 M370,40 C340,110 410,150 380,230 C365,270 400,300 385,345 M340,70 C300,150 370,200 350,290 C340,330 380,360 360,400"/>
+        <path d="M820,320 C860,300 900,350 950,330 M800,360 C850,340 890,400 960,380 M790,400 C840,380 880,440 950,430 M810,450 C860,430 900,480 940,470 M780,500 C830,480 880,540 950,530"/>
+      </g>
+      <!-- the nucleus, with its double envelope and pores -->
+      <g data-step="2" class="dg-step">
+        <circle class="dg-nucleus" cx="640" cy="150" r="200"/>
+        <circle class="dg-envelope" cx="640" cy="150" r="200"/>
+        <circle class="dg-envelope dg-pores" cx="640" cy="150" r="191"/>
+        <text class="dg-tag" x="690" y="318">Nucleus</text>
+      </g>
+    </g>
+    <!-- DNA: the two strands, base by base -->
+    <g data-step="1" class="dg-step">
+      <text class="dg-label" x="640" y="66" text-anchor="middle">DNA</text>
+      <g class="dg-strand" transform="translate(514,78)">
+        <g class="b-A"><rect x="0"   y="0" width="20" height="22" rx="3"/><text x="10"  y="16">A</text></g>
+        <g class="b-T"><rect x="21"  y="0" width="20" height="22" rx="3"/><text x="31"  y="16">T</text></g>
+        <g class="b-G"><rect x="42"  y="0" width="20" height="22" rx="3"/><text x="52"  y="16">G</text></g>
+        <g class="b-A"><rect x="63"  y="0" width="20" height="22" rx="3"/><text x="73"  y="16">A</text></g>
+        <g class="b-G"><rect x="84"  y="0" width="20" height="22" rx="3"/><text x="94"  y="16">G</text></g>
+        <g class="b-T"><rect x="105" y="0" width="20" height="22" rx="3"/><text x="115" y="16">T</text></g>
+        <g class="b-C"><rect x="126" y="0" width="20" height="22" rx="3"/><text x="136" y="16">C</text></g>
+        <g class="b-C"><rect x="147" y="0" width="20" height="22" rx="3"/><text x="157" y="16">C</text></g>
+        <g class="b-A"><rect x="168" y="0" width="20" height="22" rx="3"/><text x="178" y="16">A</text></g>
+        <g class="b-A"><rect x="189" y="0" width="20" height="22" rx="3"/><text x="199" y="16">A</text></g>
+        <g class="b-G"><rect x="210" y="0" width="20" height="22" rx="3"/><text x="220" y="16">G</text></g>
+        <g class="b-T"><rect x="231" y="0" width="20" height="22" rx="3"/><text x="241" y="16">T</text></g>
+      </g>
+      <g class="dg-strand" transform="translate(514,104)">
+        <g class="b-T"><rect x="0"   y="0" width="20" height="22" rx="3"/><text x="10"  y="16">T</text></g>
+        <g class="b-A"><rect x="21"  y="0" width="20" height="22" rx="3"/><text x="31"  y="16">A</text></g>
+        <g class="b-C"><rect x="42"  y="0" width="20" height="22" rx="3"/><text x="52"  y="16">C</text></g>
+        <g class="b-T"><rect x="63"  y="0" width="20" height="22" rx="3"/><text x="73"  y="16">T</text></g>
+        <g class="b-C"><rect x="84"  y="0" width="20" height="22" rx="3"/><text x="94"  y="16">C</text></g>
+        <g class="b-A"><rect x="105" y="0" width="20" height="22" rx="3"/><text x="115" y="16">A</text></g>
+        <g class="b-G"><rect x="126" y="0" width="20" height="22" rx="3"/><text x="136" y="16">G</text></g>
+        <g class="b-G"><rect x="147" y="0" width="20" height="22" rx="3"/><text x="157" y="16">G</text></g>
+        <g class="b-T"><rect x="168" y="0" width="20" height="22" rx="3"/><text x="178" y="16">T</text></g>
+        <g class="b-T"><rect x="189" y="0" width="20" height="22" rx="3"/><text x="199" y="16">T</text></g>
+        <g class="b-C"><rect x="210" y="0" width="20" height="22" rx="3"/><text x="220" y="16">C</text></g>
+        <g class="b-A"><rect x="231" y="0" width="20" height="22" rx="3"/><text x="241" y="16">A</text></g>
+      </g>
+      <!-- the pairing, drawn between the strands -->
+      <g class="dg-rungs">
+        <path d="M524,100 v4 M545,100 v4 M566,100 v4 M587,100 v4 M608,100 v4 M629,100 v4 M650,100 v4 M671,100 v4 M692,100 v4 M713,100 v4 M734,100 v4 M755,100 v4"/>
+      </g>
+    </g>
+    <!-- transcription: DNA to mRNA, in the nucleus -->
+    <g data-step="2" class="dg-step">
+      <path class="dg-flow" d="M640,132 V168" marker-end="url(#dogma-arrow)"/>
+      <text class="dg-verb" x="654" y="156">Transcription</text>
+      <text class="dg-end" x="500" y="199">5′</text>
+      <g class="dg-strand" transform="translate(514,182)">
+        <g class="b-U"><rect x="0"   y="0" width="20" height="22" rx="3"/><text x="10"  y="16">U</text></g>
+        <g class="b-A"><rect x="21"  y="0" width="20" height="22" rx="3"/><text x="31"  y="16">A</text></g>
+        <g class="b-C"><rect x="42"  y="0" width="20" height="22" rx="3"/><text x="52"  y="16">C</text></g>
+        <g class="b-U"><rect x="63"  y="0" width="20" height="22" rx="3"/><text x="73"  y="16">U</text></g>
+        <g class="b-C"><rect x="84"  y="0" width="20" height="22" rx="3"/><text x="94"  y="16">C</text></g>
+        <g class="b-A"><rect x="105" y="0" width="20" height="22" rx="3"/><text x="115" y="16">A</text></g>
+        <g class="b-G"><rect x="126" y="0" width="20" height="22" rx="3"/><text x="136" y="16">G</text></g>
+        <g class="b-G"><rect x="147" y="0" width="20" height="22" rx="3"/><text x="157" y="16">G</text></g>
+        <g class="b-U"><rect x="168" y="0" width="20" height="22" rx="3"/><text x="178" y="16">U</text></g>
+        <g class="b-U"><rect x="189" y="0" width="20" height="22" rx="3"/><text x="199" y="16">U</text></g>
+        <g class="b-C"><rect x="210" y="0" width="20" height="22" rx="3"/><text x="220" y="16">C</text></g>
+        <g class="b-A"><rect x="231" y="0" width="20" height="22" rx="3"/><text x="241" y="16">A</text></g>
+      </g>
+      <text class="dg-end" x="770" y="199">3′</text>
+      <text class="dg-label" x="640" y="236" text-anchor="middle">mRNA</text>
+    </g>
+    <!-- translation: the mRNA leaves the nucleus and is read into a chain -->
+    <g data-step="3" class="dg-step">
+      <path class="dg-flow" d="M600,250 C560,300 520,300 460,320 C400,340 350,330 300,350" marker-end="url(#dogma-arrow)"/>
+      <text class="dg-verb" x="372" y="318">Translation</text>
+      <text class="dg-label" x="60" y="352">Protein</text>
+      <path class="dg-chain" d="M60,392 H470"/>
+      <g class="dg-aa"><circle cx="130" cy="392" r="24"/><text x="130" y="397">Asn</text></g>
+      <g class="dg-aa"><circle cx="230" cy="392" r="24"/><text x="230" y="397">Pro</text></g>
+      <g class="dg-aa"><circle cx="330" cy="392" r="24"/><text x="330" y="397">Gly</text></g>
+      <g class="dg-aa"><circle cx="430" cy="392" r="24"/><text x="430" y="397">Thr</text></g>
+      <text class="dg-note" x="484" y="420">Amino acids</text>
+      <g class="dg-free">
+        <circle cx="628" cy="372" r="4"/><circle cx="660" cy="392" r="5"/><circle cx="639" cy="416" r="4"/><circle cx="680" cy="430" r="5"/>
+        <circle cx="616" cy="446" r="4"/><circle cx="658" cy="458" r="5"/><circle cx="700" cy="472" r="4"/><circle cx="624" cy="492" r="5"/>
+        <circle cx="680" cy="514" r="4"/><circle cx="636" cy="536" r="4"/>
+      </g>
+    </g>
+    <!-- folding: the chain becomes a shape, and the shapes make the cell what it is -->
+    <g data-step="4" class="dg-step">
+      <path class="dg-flow" d="M230,424 V468" marker-end="url(#dogma-arrow)"/>
+      <text class="dg-note" x="60" y="480">Proteins folded</text>
+      <text class="dg-note" x="60" y="504">into their 3D shape</text>
+      <path class="dg-fold dg-fold-1" d="M248,548 c-14,-22 -6,-46 18,-52 c16,-4 26,4 34,14 c12,-10 30,-6 36,8 c8,16 -4,30 -16,34 c6,14 -2,30 -16,32 c-12,2 -22,-6 -26,-14 c-10,10 -30,8 -34,-4 c-4,-10 2,-16 4,-18 z"/>
+      <path class="dg-fold dg-fold-2" d="M330,566 c-18,-20 -12,-50 12,-58 c14,-4 28,2 34,12 c14,-12 36,-4 40,12 c4,14 -4,24 -12,30 c8,10 4,28 -8,34 c-10,6 -22,2 -28,-6 c-4,14 -22,20 -32,12 c-8,-6 -10,-16 -6,-24 z"/>
+      <path class="dg-fold dg-fold-3" d="M424,556 c-10,-24 8,-48 32,-46 c14,2 24,10 28,20 c14,-6 30,4 30,18 c0,12 -8,20 -16,24 c4,14 -8,26 -22,24 c-8,-2 -14,-8 -18,-14 c-8,8 -24,6 -30,-4 c-6,-10 -2,-18 -4,-22 z"/>
+    </g>
+  </svg>
+  <ol class="tb-dogma-notes">
+    <li><button type="button" class="tb-dogma-note" data-step="1"><span class="n">1</span><span class="t">Genes are sequences of nucleotides in DNA.</span></button></li>
+    <li><button type="button" class="tb-dogma-note" data-step="2"><span class="n">2</span><span class="t">DNA is <b>transcribed</b> into mRNA. This happens in the nucleus.</span></button></li>
+    <li><button type="button" class="tb-dogma-note" data-step="3"><span class="n">3</span><span class="t">mRNA is <b>translated</b> into a sequence of amino acids, making a protein.</span></button></li>
+    <li><button type="button" class="tb-dogma-note" data-step="4"><span class="n">4</span><span class="t">The unique collection of proteins in a cell helps determine what kind of cell it is, or its <b>phenotype</b>.</span></button></li>
+  </ol>
+  <p class="tb-dogma-credit">Drawn for this edition after the book&rsquo;s figure. Hover or tap a note to light its part of the picture.</p>
+</div><figcaption><b>The Central Dogma</b> </figcaption></figure>
       <p id="m00021-para-00004">Brain cells, neurons and glia, also adhere to the characteristics specified above and are fundamentally just eukaryotic cells. However, neurons have additional features that make them uniquely specialized for communication, a feature which defines nervous systems. Before we get into the specifics of neurons and glia, let us establish a few fundamentals of eukaryotic cells.</p>
     </section>
     <section id="m00021-sect-00023"><h3>Introduction to the central dogma: cell identity is determined by gene expression</h3>

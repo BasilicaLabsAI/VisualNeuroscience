@@ -259,3 +259,64 @@ button{ font:inherit; color:inherit; }
   .tb-pn a.tb-next{ text-align:left; }
 }
 @media (prefers-reduced-motion:reduce){ .tb :target{ animation:none; } }
+
+/* a wide table scrolls inside its column rather than pushing the page out sideways */
+.tb .tb-body table{ display:block; max-width:100%; overflow-x:auto; }
+/* a long address in a caption or a reference breaks rather than widening the page on a phone */
+.tb .tb-body, .tb-fig figcaption, .tb-refs-body{ overflow-wrap:anywhere; }
+
+/* ── the central dogma, drawn in code (scripts/textbook/figures) ────────
+   The drawing on the left, the book's four notes on the right; a note or a
+   part of the drawing lights its step and dims the rest. Every ink is the
+   page's own, so the figure follows the theme. */
+.tb-dogma{
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(220px,300px); gap:var(--gap);
+  align-items:start; border:1px solid var(--ink-35); padding:var(--gap); background:var(--paper);
+}
+.tb-dogma-svg{ width:100%; height:auto; display:block; }
+.tb-dogma-notes{ list-style:none; margin:0; padding:0; display:grid; gap:.6rem; }
+.tb-dogma-note{
+  display:grid; grid-template-columns:1.6rem 1fr; gap:.6rem; align-items:start; width:100%; text-align:left;
+  background:none; border:1px solid var(--ink-35); padding:.55rem .65rem; color:var(--ink);
+  font-family:var(--font-serif); font-size:.93rem; line-height:1.45; cursor:pointer;
+  transition:border-color .15s, background .15s;
+}
+.tb-dogma-note .n{
+  font-family:var(--font-brand); font-weight:600; font-size:.72rem; width:1.6rem; height:1.6rem;
+  border:1px solid var(--ink); border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
+}
+.tb-dogma-note b{ font-weight:600; color:var(--ink); }
+.tb-dogma-note.lit, .tb-dogma-note:hover{ border-color:var(--ink); background:color-mix(in srgb, var(--ink) 7%, transparent); }
+.tb-dogma-credit{ grid-column:1 / -1; font-family:var(--font-serif); font-style:italic; font-size:.82rem; color:var(--ink-60); margin:0; }
+@media (max-width:760px){ .tb-dogma{ grid-template-columns:minmax(0,1fr); } }
+.tb-dogma .dg-cell{ fill:color-mix(in srgb, var(--ink) 4%, transparent); stroke:var(--ink-35); stroke-width:1.2; }
+.tb-dogma .dg-er path{ fill:none; stroke:var(--ink-35); stroke-width:6; stroke-linecap:round; opacity:.45; }
+.tb-dogma .dg-nucleus{ fill:color-mix(in srgb, var(--ink) 7%, transparent); }
+.tb-dogma .dg-envelope{ fill:none; stroke:var(--ink-60); stroke-width:2.2; }
+.tb-dogma .dg-pores{ stroke-dasharray:18 7; stroke-width:1.6; }
+.tb-dogma .dg-tag{ font-family:var(--font-serif); font-style:italic; font-size:15px; fill:var(--ink-60); }
+.tb-dogma .dg-label{ font-family:var(--font-brand); font-weight:600; font-size:20px; letter-spacing:.04em; fill:var(--ink); }
+.tb-dogma .dg-verb{ font-family:var(--font-brand); font-weight:500; font-size:17px; fill:var(--ink-60); }
+.tb-dogma .dg-end{ font-family:var(--font-brand); font-size:11px; fill:var(--ink-60); }
+.tb-dogma .dg-strand text{ font-family:var(--font-brand); font-weight:600; font-size:13px; fill:#FFFFFF; text-anchor:middle; }
+.tb-dogma .b-A rect{ fill:#3E9E4F; }
+.tb-dogma .b-T rect{ fill:#D9486E; }
+.tb-dogma .b-G rect{ fill:#E0912A; }
+.tb-dogma .b-C rect{ fill:#3B7DD8; }
+.tb-dogma .b-U rect{ fill:#8B5BC9; }
+.tb-dogma .dg-rungs path{ stroke:var(--ink-35); stroke-width:1.5; }
+.tb-dogma .dg-flow{ fill:none; stroke:var(--ink); stroke-width:2.6; }
+.tb-dogma .dg-arrowhead{ fill:var(--ink); }
+.tb-dogma .dg-chain{ stroke:var(--ink-60); stroke-width:3; }
+.tb-dogma .dg-aa circle{ fill:var(--paper); stroke:var(--ink); stroke-width:1.6; }
+.tb-dogma .dg-aa text{ font-family:var(--font-brand); font-weight:500; font-size:14px; fill:var(--ink); text-anchor:middle; }
+.tb-dogma .dg-note{ font-family:var(--font-serif); font-style:italic; font-size:17px; fill:var(--ink-60); }
+.tb-dogma .dg-free circle{ fill:var(--ink-60); opacity:.7; }
+.tb-dogma .dg-fold{ stroke:none; opacity:.92; }
+.tb-dogma .dg-fold-1{ fill:#7DB44B; }
+.tb-dogma .dg-fold-2{ fill:#8A4FA8; }
+.tb-dogma .dg-fold-3{ fill:#4C7FC2; }
+.tb-dogma .dg-step{ transition:opacity .2s; cursor:pointer; }
+.tb-dogma:not([data-lit=""]) .dg-step{ opacity:.28; }
+.tb-dogma[data-lit="1"] [data-step="1"], .tb-dogma[data-lit="2"] [data-step="2"],
+.tb-dogma[data-lit="3"] [data-step="3"], .tb-dogma[data-lit="4"] [data-step="4"]{ opacity:1; }

@@ -54,3 +54,26 @@
     document.querySelectorAll("details.tb-sec, details.tb-ch").forEach(function(d){ d.open = open; });
   });
 })();
+
+/* The central dogma figure: a note, or a part of the drawing, lights its
+   step while the pointer is on it; a tap holds it and a second tap lets
+   go. Without this the figure is simply a drawing with four notes. */
+(function(){
+  "use strict";
+  var box = document.querySelector(".tb-dogma");
+  if (!box) return;
+  var held = "";
+  function lit(v){
+    box.setAttribute("data-lit", v);
+    box.querySelectorAll(".tb-dogma-note").forEach(function(n){
+      n.classList.toggle("lit", v !== "" && n.getAttribute("data-step") === v);
+    });
+  }
+  function wire(el){
+    var s = el.getAttribute("data-step");
+    el.addEventListener("mouseenter", function(){ if (!held) lit(s); });
+    el.addEventListener("mouseleave", function(){ if (!held) lit(""); });
+    el.addEventListener("click", function(){ held = held === s ? "" : s; lit(held); });
+  }
+  box.querySelectorAll(".tb-dogma-note, .tb-dogma-svg [data-step]").forEach(wire);
+})();

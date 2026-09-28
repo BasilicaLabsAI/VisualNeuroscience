@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.62 — 28 September 2026 — The textbook's central dogma is drawn in code, and lights up note by note
+Commit · Draw the central dogma figure for the textbook in place of the book's image, with its four notes lighting the drawing
+
+The first figure of the textbook's Building a Nervous System section, the one that takes a gene to a protein, is now drawn by the site rather than shown as the book's picture: DNA base by base in the nucleus, transcribed into mRNA, the mRNA carried out to be translated into a chain of amino acids, and the chain folded into proteins. The book's four notes sit beside it, and hovering or tapping a note lights its part of the drawing and dims the rest; a second tap lets go. The drawing is set in the site's own inks and typefaces, so it follows the light and dark themes, and it is kept in the textbook's build so a rebuild from the OpenStax source keeps it. Two small things on phones came with it: a wide table in the book now scrolls inside its column instead of pushing the page out sideways, and a long web address in a caption breaks rather than doing the same.
+
 ## v10.61 — 28 September 2026 — The text under the tools runs the full width of the page
-Commit · Let the prose under the viewers run the width of its page instead of stopping at a column
+Commit `9804f07` · Let the prose under the viewers run the width of its page instead of stopping at a column
 
 On the Molecular and Tractography pages the paragraphs under the viewer, and the credits under them, stopped at a column a little over half the page wide, leaving the right-hand side empty under a frame that ran edge to edge. The same cap sat on the notes above the neurotransmitters and the previews on the Microanatomy page, on the receptor introduction in the Region Atlas, and on the summary of a region's receptors. All of them now run the width of the page, as the tools above them do. The About and Privacy pages keep their centred reading column, which is a different thing.
 
