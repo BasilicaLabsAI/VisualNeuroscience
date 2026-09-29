@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.70 — 29 September 2026 — The account card lines up its buttons, and says when the database refuses a username
+Commit · Set Save and Log out side by side on the account card, and tell a refused username claim apart from a taken name
+
+On the account card, Save and Log out now sit side by side under the username and university fields, Save solid and Log out outlined, and any message about the save appears directly beneath them rather than under the delete button. Saving a username also reports what happened more honestly: until the site's Firestore rules are published, the database refuses every claim, and the card used to read that refusal as the name being taken. It now looks the name up after a refusal and says the database refused it and why, and only calls a name taken when someone else holds it. A name the same person already holds is simply adopted. The same distinction reaches the Create account form.
+
 ## v10.69 — 28 September 2026 — The cell figure names its parts on hover, and its labels wait behind a switch
-Commit · Take the labels and leader lines off the cell figure, name its parts at the pointer instead, and put the book's labels behind a switch that is off by default
+Commit `f75b42b` · Take the labels and leader lines off the cell figure, name its parts at the pointer instead, and put the book's labels behind a switch that is off by default
 
 The cell in Building a Nervous System now shows the drawing alone: no text, no leader lines. Point at any organelle and its name appears at the pointer; click or tap it, or a name in the list beside the drawing, for its subtitle and description. A switch under the drawing, Labels on lines, puts the book's eight labels back on their leader lines for anyone who wants them; it is off to begin with, and the page remembers the choice. The two leader lines the tracer had merged into the drawing itself, from the nucleus out to the edge of the cell, have been cut out of the traced shapes and the shapes healed across the cut, so the drawing is clean with the labels off.
 

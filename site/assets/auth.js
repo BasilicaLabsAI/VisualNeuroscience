@@ -71,6 +71,7 @@ const ERRORS = {
   "vn/username-missing":           "Choose a username first.",
   "vn/username-format":            "A username is 3 to 20 characters: letters, numbers and underscores.",
   "vn/username-taken":             "That username is taken — try another.",
+  "vn/username-refused":           "The database refused the username, and not because it is taken: its rules do not allow usernames yet. The site's Firestore rules need publishing.",
   "vn/disabled":                   "Accounts are switched off in this copy of the app.",
   "vn/link-cancelled":             "Sign-in was cancelled."
 };
@@ -196,7 +197,19 @@ async function build(){
     try{ await sdk.setDoc(sdk.doc(db, "usernames", key), { uid: u.uid }); }
     catch(err){
       const code = err && err.code || "";
-      if (/permission|denied/i.test(code) || /permission/i.test(err && err.message || "")) throw friendly({ code: "vn/username-taken" });
+      if (/permission|denied/i.test(code) || /permission/i.test(err && err.message || "")){
+        /* refused: because someone holds the name (a create where a document
+           exists is an update, which the rules forbid), because this person
+           already holds it, or because the rules published in the console do
+           not allow claims at all — which is not "taken", and says so */
+        let snap = null;
+        try{ snap = await sdk.getDoc(sdk.doc(db, "usernames", key)); }catch(_){}
+        if (snap && snap.exists()){
+          if ((snap.data() || {}).uid === u.uid) return key;
+          throw friendly({ code: "vn/username-taken" });
+        }
+        throw friendly({ code: "vn/username-refused" });
+      }
       throw friendly({ code: "auth/network-request-failed" });
     }
     return key;
@@ -473,11 +486,11 @@ async function build(){
     catch(err){ throw friendly(err); }
     const name = [firstName, lastName].map(s => (s || "").trim()).filter(Boolean).join(" ");
     if (name) await adoptName(res.user, name);
-    let claimed = null;
-    try{ claimed = await claimUsername(res.user, wanted); }catch(_){}
+    let claimed = null, refusal = null;
+    try{ claimed = await claimUsername(res.user, wanted); }catch(err){ refusal = err; }
     await saveProfile(res.user, { firstName, lastName, name, username: claimed ? wanted : "", university: String(university || "").trim() });
     await finishPendingLink(res.user);
-    if (!claimed) throw Object.assign(friendly({ code: "vn/username-taken" }), { keepOpen: true, user: res.user });
+    if (!claimed) throw Object.assign(refusal || friendly({ code: "vn/username-taken" }), { keepOpen: true, user: res.user });
     return res.user;
   }
 

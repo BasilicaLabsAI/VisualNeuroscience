@@ -1,7 +1,8 @@
 /* The login UI: one Log in button in the site's nav, a modal with the
    provider buttons above the three email tabs (Sign in / Create account /
-   Reset), the signed-in state showing the person's name and a Log out
-   button. All behaviour lives in assets/auth.js; this file only draws.
+   Reset), the signed-in state showing the person's username, and an account card
+   with the username and university, Save and Log out side by side, and
+   the door marked deletion. All behaviour lives in assets/auth.js; this file only draws.
 
    Styling leans on the site's own custom properties (--paper, --ink,
    --hair, --font-brand …) with plain fallbacks, so the modal already wears
@@ -102,6 +103,8 @@ function mount(){
     background:var(--ink,#111); border:1px solid var(--ink,#111);
     padding:.65rem .8rem; cursor:pointer; min-height:44px;
   }
+  .vn-submit.vn-secondary{ background:none; color:var(--ink,#111); border-color:var(--hair,#111); }
+  @media (hover:hover){ .vn-submit.vn-secondary:hover{ background:var(--ink,#111); color:var(--paper,#fff); } }
   .vn-alt{ background:none; border:0; color:var(--ink-60,#5a5a5a); font:inherit;
     font-size:.85rem; font-style:italic; cursor:pointer; text-decoration:underline;
     text-underline-offset:3px; padding:.2rem 0; }
@@ -194,7 +197,13 @@ function mount(){
     noteU.textContent = prof.username ? "Shown in place of your name. Letters, numbers and underscores, 3 to 20 of them." : "Choose a username: it is shown in place of your name. Letters, numbers and underscores, 3 to 20 of them.";
     const save = document.createElement("button");
     save.type = "submit"; save.className = "vn-submit"; save.textContent = "Save";
-    fProf.append(inUser, inUni, noteU, save);
+    const out = document.createElement("button");
+    out.type = "button"; out.className = "vn-submit vn-secondary"; out.textContent = "Log out";
+    out.addEventListener("click", () => run(out, () => auth.signOut()));
+    const row = document.createElement("div");
+    row.className = "row2";
+    row.append(save, out);
+    fProf.append(inUser, inUni, noteU, row);
     fProf.addEventListener("submit", e => {
       e.preventDefault();
       run(fProf, async () => {
@@ -206,9 +215,6 @@ function mount(){
       });
     });
 
-    const out = document.createElement("button");
-    out.type = "button"; out.className = "vn-submit"; out.textContent = "Log out";
-    out.addEventListener("click", () => run(out, () => auth.signOut()));
     const warn = document.createElement("p");
     warn.className = "vn-who";
     warn.textContent = "Deleting the account removes it for good, along with the profile and every saved file. There is no undo.";
@@ -233,7 +239,7 @@ function mount(){
     statusEl = document.createElement("p");
     statusEl.className = "vn-status";
     statusEl.setAttribute("aria-live", "polite");
-    box.append(close, h, who, fProf, out, warn, del, statusEl);
+    box.append(close, h, who, fProf, statusEl, warn, del);
     wrap.appendChild(box);
     document.body.appendChild(wrap);
     document.addEventListener("keydown", onEsc);
