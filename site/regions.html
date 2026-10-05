@@ -317,6 +317,10 @@ input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); height:3px; }
   font-family:var(--font-brand); font-size:.76rem; letter-spacing:.05em; color:var(--ink-60);
 }
 .toggle input{ width:14px; height:14px; accent-color:var(--ink); }
+/* which atlas the picker offers: the AAL parcels, or the Brodmann areas
+   with their map beneath the viewports; what is highlighted stays either way */
+.atlas-mode{ display:grid; grid-template-columns:1fr; gap:.35rem; margin:.15rem 0 .75rem; }
+.atlas-mode .ts-btn{ text-align:left; line-height:1.3; padding:.5rem .7rem .44rem; white-space:normal; }
 .btns{ display:flex; gap:.6rem; margin-top:.6rem; }
 .btns .btn{ flex:1; padding:.55rem .4rem .48rem; letter-spacing:.18em; font-size:.66rem; }
 
@@ -859,13 +863,30 @@ mark{ background:var(--ink); color:var(--paper); }
 
       <div class="card">
         <h2>Regions</h2>
-        <div class="selwrap">
-          <select id="regionSelect" aria-label="Add a region to highlight">
-            <option value="">Add a region…</option>
-          </select>
+        <div class="atlas-mode" role="group" aria-label="Which atlas to pick from">
+          <button class="ts-btn active" type="button" id="atlasAAL" data-atlas="aal" aria-pressed="true">Automated Anatomical Labelling (AAL)</button>
+          <button class="ts-btn" type="button" id="atlasBA" data-atlas="ba" aria-pressed="false">Brodmann areas</button>
         </div>
-        <div class="toggles" style="grid-template-columns:1fr">
-          <label class="toggle"><input type="checkbox" id="mirrorToggle" checked> Mirror left / right pairs</label>
+        <div class="atlas-pane" id="aalPane">
+          <div class="selwrap">
+            <select id="regionSelect" aria-label="Add a region to highlight">
+              <option value="">Add a region…</option>
+            </select>
+          </div>
+          <div class="toggles" style="grid-template-columns:1fr">
+            <label class="toggle"><input type="checkbox" id="mirrorToggle" checked> Mirror left / right pairs</label>
+          </div>
+        </div>
+        <div class="atlas-pane hidden" id="baPane">
+          <div class="searchwrap">
+            <input type="search" id="baq" autocomplete="off" spellcheck="false"
+                   placeholder="number, name, or what it does&hellip;"
+                   aria-label="Search Brodmann areas by number, anatomical name, or function"
+                   aria-describedby="baqcount">
+            <button class="clear hidden" id="baqclear" type="button" aria-label="Clear search">&times;</button>
+          </div>
+          <p class="search-count" id="baqcount">All 41 areas.</p>
+          <div class="balist" id="balist" role="group" aria-label="Brodmann areas"></div>
         </div>
       </div>
 
@@ -875,19 +896,6 @@ mark{ background:var(--ink); color:var(--paper); }
           <div class="empty-note" id="emptyMsg">Nothing highlighted yet — pick a region or a Brodmann area above.</div>
         </div>
         <div class="btns"><button class="btn" id="clearBtn" type="button">Clear all</button></div>
-      </div>
-
-      <div class="card">
-        <h2>Brodmann areas</h2>
-        <div class="searchwrap">
-          <input type="search" id="baq" autocomplete="off" spellcheck="false"
-                 placeholder="number, name, or what it does&hellip;"
-                 aria-label="Search Brodmann areas by number, anatomical name, or function"
-                 aria-describedby="baqcount">
-          <button class="clear hidden" id="baqclear" type="button" aria-label="Clear search">&times;</button>
-        </div>
-        <p class="search-count" id="baqcount">All 41 areas.</p>
-        <div class="balist" id="balist" role="group" aria-label="Brodmann areas"></div>
       </div>
 
       <div class="card">
@@ -1173,9 +1181,10 @@ mark{ background:var(--ink); color:var(--paper); }
     });
   });
 
-  /* Over a viewport the wheel zooms it, and the page stays where it is:
-       cancelling the scroll is what keeps the two from fighting. */
-  document.querySelectorAll(".mri-stage").forEach(function(stage){
+  /* Over the 3D box the wheel zooms it, and the page stays where it is:
+     cancelling the scroll is what keeps the two from fighting. Over a slice
+     the wheel does nothing to the scan, so the page scrolls past as usual. */
+  document.querySelectorAll('.view[data-box="render"] .mri-stage').forEach(function(stage){
     stage.addEventListener("wheel", function(e){ e.preventDefault(); },
       {capture: true, passive: false});
   });
@@ -1596,6 +1605,39 @@ mark{ background:var(--ink); color:var(--paper); }
   });
 
   mirrorEl.addEventListener("change", renderDropdown);
+
+  /* ── which atlas the picker offers ────────────────────────────────────
+     The AAL parcels, or the Brodmann areas with their map beneath the
+     viewports. The choice only changes what can be picked next: whatever
+     is already highlighted, from either atlas, stays in the one list. The
+     last choice is kept, and a link that lands on a Brodmann area opens on
+     that side. */
+  var atlasBtns = Array.prototype.slice.call(document.querySelectorAll(".atlas-mode [data-atlas]"));
+  var aalPane = document.getElementById("aalPane"), baPane = document.getElementById("baPane");
+  var baMapSec = document.getElementById("baMapSec");
+  function setAtlasMode(mode, quiet){
+    if (mode !== "ba" || !B) mode = "aal";
+    atlasBtns.forEach(function(b){
+      var on = b.getAttribute("data-atlas") === mode;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-pressed", String(on));
+    });
+    aalPane.classList.toggle("hidden", mode !== "aal");
+    baPane.classList.toggle("hidden", mode !== "ba");
+    if (baMapSec) baMapSec.classList.toggle("hidden", mode !== "ba");
+    if (!quiet){ try{ localStorage.setItem("mn-atlas-mode", mode); }catch(e){} }
+  }
+  atlasBtns.forEach(function(b){
+    b.addEventListener("click", function(){ setAtlasMode(b.getAttribute("data-atlas")); });
+  });
+  if (!B) document.getElementById("atlasBA").classList.add("hidden");
+  (function(){
+    var mode = null, m = location.hash.match(/^#sel=(.+)$/), toks = [];
+    if (m){ try{ toks = decodeURIComponent(m[1]).split(/[|,]/); }catch(e){} }
+    if (/^#ba=?\d{1,2}$/i.test(location.hash) || toks.some(function(t){ return /^B:/i.test(t); })) mode = "ba";
+    if (!mode){ try{ mode = localStorage.getItem("mn-atlas-mode"); }catch(e){} }
+    setAtlasMode(mode, true);
+  })();
 
   document.getElementById("clearBtn").addEventListener("click", function(){
     selections.clear(); renderChips(); applyColormap();
@@ -2091,12 +2133,13 @@ mark{ background:var(--ink); color:var(--paper); }
           stage: wheelBox.querySelector(".mri-stage"),
           nv: INSTANCES.render
         });
-        /* the slices speak the same gestures: pinch zooms, two fingers pan */
+        /* the slices answer to drag and touch alone: pinch zooms, two
+           fingers pan, and the wheel does nothing to them */
         PLANES.forEach(function(p){
           if (p.key === "render") return;
           var box = document.querySelector('.view[data-box="' + p.key + '"]');
           if (box) MN_WHEEL.attach({
-            stage: box.querySelector(".mri-stage"), nv: INSTANCES[p.key], mode: "slice"
+            stage: box.querySelector(".mri-stage"), nv: INSTANCES[p.key], mode: "slice", wheel: "none"
           });
         });
       }

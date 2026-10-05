@@ -13,6 +13,8 @@
 
      MN_ZOOM.attach({ stage, nv, onZoom })                — a 3D render
      MN_ZOOM.attach({ stage, nv, mode: "slice" })         — a 2D slice
+     MN_ZOOM.attach({ stage, nv, mode: "slice", wheel: "none" })
+                              — a slice that answers to drag and touch alone
 
    A render zooms by the scene's volume scale and pans by the viewer's
    model offset, which slides the model across the screen whatever way it
@@ -20,10 +22,14 @@
    is screen ∝ pan + zoom·mm — keeping a gripped point under the fingers is
    then one linear correction through canvasPos2frac.
 
-   Desktop speaks the same language: the wheel zooms a render (as it always
-   has here), ctrl+wheel zooms a slice about the pointer (a trackpad pinch
-   arrives exactly so; Safari's arrives as gesturechange, also handled),
-   and shift+drag pans either. Double-tap or double-click puts a view back.
+   Desktop speaks the same language: the wheel zooms a render about the
+   pointer, a tenth per notch the way a CAD viewer does, with a trackpad's
+   many small deltas adding up to the same; ctrl+wheel zooms a slice about
+   the pointer (a trackpad pinch arrives exactly so; Safari's arrives as
+   gesturechange, also handled), unless the slice was attached with
+   wheel: "none", when the wheel does nothing to it and the page scrolls
+   past; and shift+drag pans either. Double-tap or double-click puts a view
+   back.
 
    Both listeners sit on the capture phase: the viewer stops these events
    propagating from its own canvas, so a listener waiting for the bubble
@@ -31,7 +37,7 @@
    handled the wheel, kept so the pages calling it need not all change. */
 window.MN_ZOOM = (function(){
 
-var MIN = 0.3, MAX = 4, STEP = 1.12;      /* 3D volume scale */
+var MIN = 0.3, MAX = 4, WHEEL = 1.1;      /* 3D volume scale, and one wheel notch's step */
 var MIN2 = 1, MAX2 = 8;                   /* 2D slice zoom   */
 
 function attach(o){
@@ -121,9 +127,18 @@ function attach(o){
 
   /* ── wheel ────────────────────────────────────────────────────────────── */
 
+  /* A wheel's delta in pixels, whatever unit the browser reports it in. */
+  function wheelPx(e){
+    if (e.deltaMode === 1) return e.deltaY * 16;
+    if (e.deltaMode === 2) return e.deltaY * (window.innerHeight || 800);
+    return e.deltaY;
+  }
   stage.addEventListener("wheel", function(e){
     if (!nv.scene) return;
     if (slice){
+      /* a slice that answers to drag alone: the wheel neither walks the
+         slices nor zooms, and the page scrolls past as it would anywhere */
+      if (o.wheel === "none"){ e.stopPropagation(); return; }
       /* the plain wheel walks through the slices, which the viewer owns;
          ctrl+wheel — a deliberate zoom, or a trackpad pinch — is ours */
       if (!e.ctrlKey && !e.metaKey) return;
@@ -133,9 +148,23 @@ function attach(o){
       zoom2To(a, a, pan2()[3] * Math.exp(-e.deltaY * 0.003));
       settle2();
     } else {
+      /* One notch of a mouse wheel, 100 pixels of delta, is one step of a
+         tenth; a trackpad's smaller deltas add up to the same, and no single
+         event may jump more than a third. The viewer's own handler never
+         hears the wheel: it would zoom a second time, or shift the clip
+         plane when one is set. The zoom is about the pointer, so the point
+         under it stays put, which is one pan of the model after the scale:
+         a point d pixels from the centre lands at d·g, and d·(1 − g) brings
+         it back. */
       e.preventDefault();
+      e.stopPropagation();
+      var f = Math.pow(WHEEL, -wheelPx(e) / 100);
+      f = Math.max(1 / 1.35, Math.min(1.35, f));
       var now = Number(nv.scene.volScaleMultiplier) || 1;
-      scale(e.deltaY > 0 ? now / STEP : now * STEP);
+      var next = scale(now * f);
+      if (next == null || next === now) return;
+      var g = next / now, r = stage.getBoundingClientRect();
+      pan3d((e.clientX - r.left - r.width / 2) * (1 - g), (e.clientY - r.top - r.height / 2) * (1 - g));
     }
   }, {capture: true, passive: false});
 

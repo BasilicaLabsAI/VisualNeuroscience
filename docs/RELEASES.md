@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.71 — 5 October 2026 — The Region Atlas picks from one atlas at a time, and the wheel zooms the 3D brain gently about the pointer
+Commit · Make the Region Atlas pick from AAL or the Brodmann areas with one switch, keep both kinds in one highlighted list, and tame the wheel on the 3D brain while taking it off the slices
+
+The Regions card now opens with a choice of atlas: Automated Anatomical Labelling (AAL), which offers the region dropdown and the mirror switch, or Brodmann areas, which offers the searchable list of areas and brings the Brodmann map up beneath the viewports. Only what can be picked next changes: whatever is already highlighted, a region or an area, stays in the one Highlighted list whichever side is showing, and the page remembers the last choice. A link to a Brodmann area opens on that side. On the 3D brain the wheel used to zoom twice over, once in the page and once in the viewer underneath, by nearly a quarter at every click of the wheel and at every tick of a trackpad; it now zooms a tenth per notch, about the point under the pointer, with a trackpad's small movements adding up the same way, as a CAD viewer does. The three slices no longer answer to the wheel at all: drag moves the crosshair, pinch zooms, and the page scrolls past them as it does anywhere else.
+
 ## v10.70 — 29 September 2026 — The account card lines up its buttons, and says when the database refuses a username
-Commit · Set Save and Log out side by side on the account card, and tell a refused username claim apart from a taken name
+Commit `c0c6303` · Set Save and Log out side by side on the account card, and tell a refused username claim apart from a taken name
 
 On the account card, Save and Log out now sit side by side under the username and university fields, Save solid and Log out outlined, and any message about the save appears directly beneath them rather than under the delete button. Saving a username also reports what happened more honestly: until the site's Firestore rules are published, the database refuses every claim, and the card used to read that refusal as the name being taken. It now looks the name up after a refusal and says the database refused it and why, and only calls a name taken when someone else holds it. A name the same person already holds is simply adopted. The same distinction reaches the Create account form.
 
