@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.72 — 10 October 2026 — The app's top bar keeps its title clear of the buttons on a phone
+Commit · Keep the app bar's title clear of the account and theme buttons on a phone, and let the back label give way before the title
+
+On an iPhone the bar at the top of the app had come apart once you were signed in: the account button and Log out sat over the brand, Log out broke onto two lines and the menu button landed in the middle of the name. The bar is now laid out so that the buttons at either end take exactly the room they need and the title has the rest, cut with an ellipsis rather than covered; where the bar is wide enough, as on an iPad or a Mac, the title stays in the centre as before. Signed in, the bar shows the account button alone, with its label whole, and Log out lives on the account card it opens. When a page has a long back label, Visualizing Studies say, and the title would not fit beside it, the back button keeps its chevron and drops the label, as an iPhone's own bars do. The invitation to choose a username now reads Set username.
+
 ## v10.71 — 5 October 2026 — The Region Atlas picks from one atlas at a time, and the wheel zooms the 3D brain gently about the pointer
-Commit · Make the Region Atlas pick from AAL or the Brodmann areas with one switch, keep both kinds in one highlighted list, and tame the wheel on the 3D brain while taking it off the slices
+Commit `af6495d` · Make the Region Atlas pick from AAL or the Brodmann areas with one switch, keep both kinds in one highlighted list, and tame the wheel on the 3D brain while taking it off the slices
 
 The Regions card now opens with a choice of atlas: Automated Anatomical Labelling (AAL), which offers the region dropdown and the mirror switch, or Brodmann areas, which offers the searchable list of areas and brings the Brodmann map up beneath the viewports. Only what can be picked next changes: whatever is already highlighted, a region or an area, stays in the one Highlighted list whichever side is showing, and the page remembers the last choice. A link to a Brodmann area opens on that side. On the 3D brain the wheel used to zoom twice over, once in the page and once in the viewer underneath, by nearly a quarter at every click of the wheel and at every tick of a trackpad; it now zooms a tenth per notch, about the point under the pointer, with a trackpad's small movements adding up the same way, as a CAD viewer does. The three slices no longer answer to the wheel at all: drag moves the crosshair, pinch zooms, and the page scrolls past them as it does anywhere else.
 

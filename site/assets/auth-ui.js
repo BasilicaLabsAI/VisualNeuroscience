@@ -28,7 +28,7 @@ function mount(){
     font-family:var(--font-brand,sans-serif); font-weight:500; font-size:.66rem;
     letter-spacing:.22em; text-transform:uppercase; color:var(--ink,#111);
     background:none; border:1px solid var(--hair,#111); cursor:pointer;
-    padding:.28rem .6rem;
+    padding:.28rem .6rem; white-space:nowrap;
   }
   @media (hover:hover){ .vn-auth-btn:hover{ background:var(--ink,#111); color:var(--paper,#fff); } }
   .vn-auth-name{
@@ -129,7 +129,7 @@ function mount(){
   else nav.appendChild(slot);
 
   /* what the nav calls the person: the username they chose; until they
-     have one, an invitation to pick it, which opens the account card */
+     have one, an invitation to set it, which opens the account card */
   function handle(user){
     const p = auth.profile();
     if (p && p.username) return p.username;
@@ -143,7 +143,7 @@ function mount(){
       name.type = "button";
       name.className = "vn-auth-name";
       const h = handle(user);
-      name.textContent = h || "Pick a username";
+      name.textContent = h || "Set username";
       if (!h) name.classList.add("vn-auth-pick");
       name.title = (user.email || "") + " — account";
       name.addEventListener("click", () => openAccountModal(user));

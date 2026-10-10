@@ -171,6 +171,18 @@
   document.body.insertBefore(bar, document.body.firstChild);
   document.body.insertBefore(menu, bar.nextSibling);
 
+  /* On a phone the title comes first: if it is being cut short, the back
+     button gives up its label and keeps the chevron. Measured again when
+     the account button arrives, the typeface loads or the window turns. */
+  function fit(){
+    bar.classList.remove("vn-bar-tight");
+    if (back && mid.scrollWidth > mid.clientWidth + 1) bar.classList.add("vn-bar-tight");
+  }
+  fit();
+  window.addEventListener("resize", fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  if (window.MutationObserver) new MutationObserver(fit).observe(right, { childList: true, subtree: true, characterData: true });
+
   /* the slide, only where the engine can do it */
   var css = document.createElement("style");
   css.textContent = "@view-transition{ navigation:auto; }";

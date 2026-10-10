@@ -271,7 +271,7 @@ apps and everything else still works.)
 
 Every account carries a username, chosen on the Create account form
 (required) or, for a Google, Apple or LinkedIn sign-in, on the account card
-the first time it opens: until one is chosen the nav says "Pick a username".
+the first time it opens: until one is chosen the nav says "Set username".
 The nav and the account card show the username in place of the name. A
 university is an optional field on both forms.
 
@@ -284,7 +284,7 @@ try and no account. Changing a username claims the new document, then
 releases the old; deleting the account releases it. **After pulling this
 change, paste `firestore.rules` into the console again** (or
 `firebase deploy --only firestore:rules`), or every claim is refused and
-every account reads as "Pick a username".
+every account reads as "Set username".
 
 ## 8 · When you switch it on, say so
 
