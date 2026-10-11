@@ -590,7 +590,7 @@ html{ scroll-padding-top:5.2rem; }
 .vn-menu a[aria-current]{ font-weight:600; }
 .vn-menu a:last-child{ border-bottom:0; }
 
-/* ── where to follow the project ─────────────────────────────────────────
+/* ── where to reach the maker ────────────────────────────────────────────
    navbar.js builds the same links twice for each place they can sit and
    these rules show one of the two: on the website, on the brand's line up
    to 960px and among the section links above it; in the app, in the top

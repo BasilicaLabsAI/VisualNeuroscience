@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.74 — 11 October 2026 — Instagram, LinkedIn and email at the top, and every profile on the About page
+Commit · Put Instagram, LinkedIn and email at the top of every page, and list YouTube, Instagram, LinkedIn and GitHub on the About page
+
+The links at the top of every page are now Instagram, LinkedIn and email, the three ways to reach the person who built this. They sit where the last release put them: in the masthead on the website, in the top bar on an iPad or a Mac, and at the foot of the sections menu on an iPhone. The About page now lists every profile under the signature, one to a line with its handle: the YouTube channel, @VisualNeuroscienceAI, Instagram, LinkedIn and GitHub.
+
 ## v10.73 — 11 October 2026 — YouTube and Instagram links at the top of every page
-Commit · Put YouTube and Instagram links at the top of every page, in the website's masthead and in the app's top bar or its menu
+Commit `52e869e` · Put YouTube and Instagram links at the top of every page, in the website's masthead and in the app's top bar or its menu
 
 The top of every page now links to the project's YouTube channel, @visualneuroscience, and to Instagram, where it is fid_900. On the website the two icons sit in the masthead: on the brand's line on a phone or a tablet, and beside the Log in button on a wider screen, and the header is no taller for carrying them. In the app they sit in the top bar on an iPad or a Mac. On an iPhone, where the bar is already full, they sit at the foot of the sections menu that opens from it, with their names beside them. Each one opens the profile in a new tab.
 
