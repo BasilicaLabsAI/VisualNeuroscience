@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.73 — 11 October 2026 — YouTube and Instagram links at the top of every page
+Commit · Put YouTube and Instagram links at the top of every page, in the website's masthead and in the app's top bar or its menu
+
+The top of every page now links to the project's YouTube channel, @visualneuroscience, and to Instagram, where it is fid_900. On the website the two icons sit in the masthead: on the brand's line on a phone or a tablet, and beside the Log in button on a wider screen, and the header is no taller for carrying them. In the app they sit in the top bar on an iPad or a Mac. On an iPhone, where the bar is already full, they sit at the foot of the sections menu that opens from it, with their names beside them. Each one opens the profile in a new tab.
+
 ## v10.72 — 10 October 2026 — The app's top bar keeps its title clear of the buttons on a phone
-Commit · Keep the app bar's title clear of the account and theme buttons on a phone, and let the back label give way before the title
+Commit `65ac41b` · Keep the app bar's title clear of the account and theme buttons on a phone, and let the back label give way before the title
 
 On an iPhone the bar at the top of the app had come apart once you were signed in: the account button and Log out sat over the brand, Log out broke onto two lines and the menu button landed in the middle of the name. The bar is now laid out so that the buttons at either end take exactly the room they need and the title has the rest, cut with an ellipsis rather than covered; where the bar is wide enough, as on an iPad or a Mac, the title stays in the centre as before. Signed in, the bar shows the account button alone, with its label whole, and Log out lives on the account card it opens. When a page has a long back label, Visualizing Studies say, and the title would not fit beside it, the back button keeps its chevron and drops the label, as an iPhone's own bars do. The invitation to choose a username now reads Set username.
 

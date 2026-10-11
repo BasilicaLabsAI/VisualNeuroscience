@@ -199,3 +199,48 @@
     root.setAttribute("data-vn-dir", (backwards || tapped) ? "back" : "push");
   });
 })();
+
+/* Where to follow the project. On the website the links sit in the
+   masthead: on the brand's line on a phone or tablet, and among the section
+   links on a wide screen. In the app they sit in the top bar where it has
+   room, and at the foot of the sections menu on a phone, where it has none. */
+(function(){
+  var LINKS = [
+    { name: "YouTube", handle: "@visualneuroscience", href: "https://www.youtube.com/@visualneuroscience",
+      icon: '<path fill-rule="evenodd" d="M6.2 5h11.6A4.2 4.2 0 0 1 22 9.2v5.6a4.2 4.2 0 0 1-4.2 4.2H6.2A4.2 4.2 0 0 1 2 14.8V9.2A4.2 4.2 0 0 1 6.2 5zM10 8.9v6.2l5.4-3.1z"/>' },
+    { name: "Instagram", handle: "fid_900", href: "https://www.instagram.com/fid_900/",
+      icon: '<rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5" fill="none" stroke="currentColor" stroke-width="1.9"/>' +
+            '<circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.9"/>' +
+            '<circle cx="17.2" cy="6.8" r="1.15"/>' }
+  ];
+  function group(cls, labelled){
+    var g = document.createElement("span");
+    g.className = "vn-social " + cls;
+    LINKS.forEach(function(l){
+      var a = document.createElement("a");
+      a.href = l.href; a.target = "_blank"; a.rel = "noopener";
+      a.title = l.name + " " + l.handle;
+      a.setAttribute("aria-label", l.name + ", " + l.handle);
+      a.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">' + l.icon + '</svg>' +
+        (labelled ? '<span>' + l.name + '</span>' : '');
+      g.appendChild(a);
+    });
+    return g;
+  }
+
+  if (document.documentElement.hasAttribute("data-native")){
+    var right = document.querySelector(".vn-bar-right");
+    if (right) right.insertBefore(group("vn-social-bar"), right.querySelector(".vn-menu-btn") || right.firstChild);
+    var menu = document.getElementById("vn-menu");
+    if (menu) menu.appendChild(group("vn-social-menu", true));
+    return;
+  }
+  var head = document.querySelector(".masthead");
+  var brand = head && head.querySelector(".brand");
+  if (brand && brand.parentNode === head) head.insertBefore(group("vn-social-head"), brand.nextSibling);
+  var tools = head && head.querySelector(".nav-tools");
+  if (tools){
+    var menuBtn = tools.querySelector(".nav-menu-btn");
+    tools.insertBefore(group("vn-social-nav"), menuBtn ? menuBtn.nextSibling : tools.firstChild);
+  }
+})();

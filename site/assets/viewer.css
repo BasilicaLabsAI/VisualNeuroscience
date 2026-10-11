@@ -524,14 +524,17 @@ html{ scroll-padding-top:5.2rem; }
 .nav-menu{ display:contents; }
 .nav-menu-btn{ display:none; }
 @media (max-width:960px){
+  /* the brand holds the left and everything else packs to the right: on a
+     phone the follow links share the brand's line and the buttons take the
+     line below, on a tablet all of it is one line */
   .masthead.masthead{
-    display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end;
     gap:.35rem .8rem; padding:.55rem clamp(14px,2.5vw,48px); text-align:left;
   }
-  .masthead.masthead .brand{ font-size:1.25rem; }
+  .masthead.masthead .brand{ font-size:1.25rem; margin-right:auto; }
   .masthead.masthead.stuck{ padding-top:.55rem; }
   .masthead.masthead.stuck .brand{ font-size:1.25rem; }
-  .nav-row.nav-row{ flex-direction:row; flex-wrap:nowrap; align-items:center; justify-content:flex-end; gap:.5rem; padding:0; flex:0 0 auto; margin-left:auto; }
+  .nav-row.nav-row{ flex-direction:row; flex-wrap:nowrap; align-items:center; justify-content:flex-end; gap:.5rem; padding:0; flex:0 0 auto; margin-left:0; }
   .masthead.masthead.stuck .nav-row{ padding:0; }
   .nav-row .nav-tools{ display:inline-flex; align-items:center; gap:.5rem; }
   .nav-menu-btn{
@@ -586,3 +589,39 @@ html{ scroll-padding-top:5.2rem; }
 }
 .vn-menu a[aria-current]{ font-weight:600; }
 .vn-menu a:last-child{ border-bottom:0; }
+
+/* ── where to follow the project ─────────────────────────────────────────
+   navbar.js builds the same links twice for each place they can sit and
+   these rules show one of the two: on the website, on the brand's line up
+   to 960px and among the section links above it; in the app, in the top
+   bar from 700px and at the foot of the sections menu below it. */
+.vn-social{ display:inline-flex; align-items:center; gap:2px; }
+/* each link keeps a 32px target but takes no more height in its line than
+   the buttons beside it, so the masthead is no taller for carrying them */
+.masthead .vn-social{ margin:-4px 0; }
+.vn-social a{
+  display:inline-flex; align-items:center; justify-content:center; flex:none;
+  width:32px; height:32px; color:var(--ink); text-decoration:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.vn-social svg{ width:19px; height:19px; display:block; flex:none; }
+@media (hover:hover){ .vn-social a:hover{ opacity:.55; } }
+.vn-social a:focus-visible{ outline:1px solid var(--ink); outline-offset:1px; }
+.masthead .vn-social-head{ display:none; }
+@media (max-width:960px){
+  .masthead .vn-social-head{ display:inline-flex; margin:-6px 0; }
+  .nav-row .vn-social-nav{ display:none; }
+}
+@media (max-width:340px){ .masthead .vn-social a{ width:28px; } }
+.vn-bar .vn-social-bar{ display:none; }
+.vn-menu .vn-social-menu{ display:flex; flex-wrap:wrap; gap:0 1.6rem; padding:.2rem 1rem; }
+.vn-menu .vn-social-menu a{
+  width:auto; height:auto; min-height:44px; padding:0; gap:.6rem; border-bottom:0;
+  font-family:var(--font-brand); font-weight:500; font-size:.68rem; letter-spacing:.24em; text-transform:uppercase;
+}
+.vn-menu .vn-social-menu svg{ width:18px; height:18px; }
+@media (min-width:700px){
+  .vn-bar .vn-social-bar{ display:inline-flex; }
+  .vn-menu .vn-social-menu{ display:none; }
+  .vn-menu > a:last-of-type{ border-bottom:0; }
+}
