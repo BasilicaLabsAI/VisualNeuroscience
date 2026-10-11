@@ -524,25 +524,41 @@ html{ scroll-padding-top:5.2rem; }
 .nav-menu{ display:contents; }
 .nav-menu-btn{ display:none; }
 @media (max-width:960px){
-  /* the brand holds the left and everything else packs to the right: on a
-     phone the follow links share the brand's line and the buttons take the
-     line below, on a tablet all of it is one line */
+  /* Two lines. The brand has the first to itself, centred; the second
+     carries the menu, Log in and theme buttons on the left and the follow
+     links on the right. Where the second line cannot hold both, the links
+     drop to a line of their own, still on the right. The break after the
+     brand is the ::after, a full-width item of no height ordered between
+     the brand and the rest, so the brand keeps its own width as a link. */
   .masthead.masthead{
-    display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end;
-    gap:.35rem .8rem; padding:.55rem clamp(14px,2.5vw,48px); text-align:left;
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+    column-gap:.6rem; row-gap:0; padding:.6rem clamp(14px,2.5vw,48px) .65rem; text-align:left;
   }
-  .masthead.masthead .brand{ font-size:1.25rem; margin-right:auto; }
-  .masthead.masthead.stuck{ padding-top:.55rem; }
-  .masthead.masthead.stuck .brand{ font-size:1.25rem; }
-  .nav-row.nav-row{ flex-direction:row; flex-wrap:nowrap; align-items:center; justify-content:flex-end; gap:.5rem; padding:0; flex:0 0 auto; margin-left:0; }
+  .masthead.masthead::after{ content:""; order:-1; flex:0 0 100%; height:0; }
+  .masthead.masthead .brand{ order:-2; margin:0 auto; font-size:1.45rem; }
+  .masthead.masthead.stuck{ padding-top:.6rem; }
+  .masthead.masthead.stuck .brand{ font-size:1.45rem; }
+  .nav-row.nav-row{ order:1; flex-direction:row; flex-wrap:nowrap; align-items:center; justify-content:flex-start; gap:.45rem; padding:0; flex:0 0 auto; margin:.6rem 0 0; }
   .masthead.masthead.stuck .nav-row{ padding:0; }
-  .nav-row .nav-tools{ display:inline-flex; align-items:center; gap:.5rem; }
+  .nav-row .nav-tools{ display:inline-flex; align-items:center; gap:.45rem; }
+  /* the buttons at a size a thumb finds at once, all four 40px tall */
+  .masthead.masthead .nav-menu-btn, .masthead.masthead .vn-auth-btn,
+  .masthead.masthead .vn-auth-name, .masthead.masthead .theme-toggle{
+    box-sizing:border-box; height:40px; min-height:0; font-size:.72rem; letter-spacing:.18em;
+  }
+  .masthead.masthead .nav-menu-btn, .masthead.masthead .theme-toggle{ padding:0 .65rem; }
+  .masthead.masthead .vn-auth-btn, .masthead.masthead .vn-auth-name{ padding-top:0; padding-bottom:0; line-height:38px; }
+  .masthead.masthead .vn-auth-btn, .masthead.masthead .vn-auth-pick{ padding-left:.65rem; padding-right:.65rem; }
+  .masthead.masthead .theme-toggle .th-dot{ width:.8rem; height:.8rem; }
+  /* signed in, the account button stands alone: it opens the account card,
+     which carries Log out */
+  .masthead.masthead .vn-auth-name + .vn-auth-btn{ display:none; }
   .nav-menu-btn{
     display:inline-flex; align-items:center; gap:.45rem;
     font-family:var(--font-brand); font-weight:500; font-size:.66rem; letter-spacing:.22em; text-transform:uppercase;
     color:var(--ink); background:none; border:1px solid var(--hair); cursor:pointer; padding:.28rem .6rem;
   }
-  .nav-menu-btn .bars{ width:.9rem; height:.7rem; position:relative; }
+  .nav-menu-btn .bars{ width:1rem; height:.75rem; position:relative; }
   .nav-menu-btn .bars::before, .nav-menu-btn .bars::after, .nav-menu-btn .bars i{
     content:""; position:absolute; left:0; right:0; height:1.5px; background:currentColor;
   }
@@ -563,7 +579,7 @@ html{ scroll-padding-top:5.2rem; }
 }
 @media (max-width:480px){
   .masthead.masthead .theme-toggle #themeLbl{ display:none; }
-  .masthead.masthead .theme-toggle{ padding:.34rem .5rem; }
+  .masthead.masthead .theme-toggle{ width:40px; padding:0; justify-content:center; }
 }
 /* the same menu inside the app: a button in the bar opens the sections under it */
 .vn-menu-btn{
@@ -609,14 +625,17 @@ html{ scroll-padding-top:5.2rem; }
 .vn-social a:focus-visible{ outline:1px solid var(--ink); outline-offset:1px; }
 .masthead .vn-social-head{ display:none; }
 @media (max-width:960px){
-  .masthead .vn-social-head{ display:inline-flex; margin:-6px 0; }
+  .masthead .vn-social-head{ display:inline-flex; order:2; margin:.6rem 0 0 auto; }
+  .masthead .vn-social-head a{ width:30px; height:40px; }
+  .masthead .vn-social-head svg{ width:21px; height:21px; }
   .nav-row .vn-social-nav{ display:none; }
 }
+.nav-row .vn-social-nav a{ width:28px; }
 @media (max-width:340px){ .masthead .vn-social a{ width:28px; } }
 .vn-bar .vn-social-bar{ display:none; }
-.vn-menu .vn-social-menu{ display:flex; flex-wrap:wrap; gap:0 1.6rem; padding:.2rem 1rem; }
+.vn-menu .vn-social-menu{ display:grid; grid-template-columns:repeat(2, max-content); gap:0 2.2rem; padding:.3rem 1rem .2rem; }
 .vn-menu .vn-social-menu a{
-  width:auto; height:auto; min-height:44px; padding:0; gap:.6rem; border-bottom:0;
+  width:auto; height:auto; min-height:44px; padding:0; gap:.6rem; border-bottom:0; justify-content:flex-start;
   font-family:var(--font-brand); font-weight:500; font-size:.68rem; letter-spacing:.24em; text-transform:uppercase;
 }
 .vn-menu .vn-social-menu svg{ width:18px; height:18px; }

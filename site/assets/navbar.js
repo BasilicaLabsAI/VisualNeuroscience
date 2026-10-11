@@ -200,14 +200,16 @@
   });
 })();
 
-/* Where to reach the maker, at the top of every page: Instagram, LinkedIn
-   and email. On the website the links sit in the masthead: on the brand's
-   line on a phone or tablet, and among the section links on a wide screen.
-   In the app they sit in the top bar where it has room, and at the foot of
-   the sections menu on a phone, where it has none. The About page lists
-   the rest, YouTube and GitHub among them. */
+/* Where to follow and reach the maker, at the top of every page: YouTube,
+   Instagram, LinkedIn and email. On the website the links sit in the
+   masthead: at the right of the buttons' line on a phone or tablet, and
+   among the section links on a wide screen. In the app they sit in the top
+   bar where it has room, and at the foot of the sections menu on a phone,
+   where it has none. The About page lists them again, with GitHub. */
 (function(){
   var LINKS = [
+    { name: "YouTube", handle: "@VisualNeuroscienceAI", href: "https://www.youtube.com/@VisualNeuroscienceAI",
+      icon: '<path fill-rule="evenodd" d="M6.2 5h11.6A4.2 4.2 0 0 1 22 9.2v5.6a4.2 4.2 0 0 1-4.2 4.2H6.2A4.2 4.2 0 0 1 2 14.8V9.2A4.2 4.2 0 0 1 6.2 5zM10 8.9v6.2l5.4-3.1z"/>' },
     { name: "Instagram", handle: "fid_900", href: "https://www.instagram.com/fid_900/",
       icon: '<rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5" fill="none" stroke="currentColor" stroke-width="1.9"/>' +
             '<circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.9"/>' +

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.75 — 11 October 2026 — The phone header gives the brand its own line and the buttons room to be pressed
+Commit · Give the phone header the brand on a line of its own, bigger buttons on the left and the links on the right, and add YouTube to the links
+
+On a phone or a tablet the website's header now has two lines. The brand has the first to itself, centred, and the second carries the Menu, Log in and theme buttons on the left, each now 40 pixels tall, with the links to YouTube, Instagram, LinkedIn and email on the right. YouTube, at @VisualNeuroscienceAI, joins the links everywhere they appear: in the masthead on a wide screen, in the app's top bar on an iPad or a Mac, and in the iPhone's sections menu, which now sets them in two rows. Signed in, the account button stands alone and Log out lives on the account card it opens, as it already did in the app. On the narrowest phones, and while an account has no username yet, the links take a third line of their own.
+
 ## v10.74 — 11 October 2026 — Instagram, LinkedIn and email at the top, and every profile on the About page
-Commit · Put Instagram, LinkedIn and email at the top of every page, and list YouTube, Instagram, LinkedIn and GitHub on the About page
+Commit `9eaba41` · Put Instagram, LinkedIn and email at the top of every page, and list YouTube, Instagram, LinkedIn and GitHub on the About page
 
 The links at the top of every page are now Instagram, LinkedIn and email, the three ways to reach the person who built this. They sit where the last release put them: in the masthead on the website, in the top bar on an iPad or a Mac, and at the foot of the sections menu on an iPhone. The About page now lists every profile under the signature, one to a line with its handle: the YouTube channel, @VisualNeuroscienceAI, Instagram, LinkedIn and GitHub.
 
