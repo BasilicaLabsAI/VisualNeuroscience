@@ -15,7 +15,7 @@ import simd
 //                 is 0; inside, the T1 intensity clamped to at least 1, so a
 //                 zero byte always means "not brain".
 
-enum BrainDataError: LocalizedError {
+nonisolated enum BrainDataError: LocalizedError {
     case missing(String)
     case corrupt(String)
 
@@ -27,7 +27,7 @@ enum BrainDataError: LocalizedError {
     }
 }
 
-enum Gzip {
+nonisolated enum Gzip {
     /// Inflates a single-member gzip stream. Apple's Compression framework
     /// speaks raw DEFLATE under the name COMPRESSION_ZLIB, so the gzip header
     /// and the eight-byte trailer are stepped over by hand.
@@ -54,7 +54,7 @@ enum Gzip {
     }
 }
 
-private extension Array where Element == UInt8 {
+private nonisolated extension Array where Element == UInt8 {
     func u32(at o: Int) -> UInt32 {
         UInt32(self[o]) | UInt32(self[o + 1]) << 8 | UInt32(self[o + 2]) << 16 | UInt32(self[o + 3]) << 24
     }
@@ -63,7 +63,7 @@ private extension Array where Element == UInt8 {
 }
 
 /// The template's voxels and the millimetre frame they sit in.
-struct Volume {
+nonisolated struct Volume {
     let dims: SIMD3<Int>
     let spacing: Float
     let origin: SIMD3<Float>
@@ -91,7 +91,7 @@ struct Volume {
 }
 
 /// The brain's outer surface in MNI millimetres.
-struct BrainMesh {
+nonisolated struct BrainMesh {
     var positions: [SIMD3<Float>]
     var normals: [SIMD3<Float>]
     var indices: [UInt32]
@@ -134,7 +134,9 @@ struct BrainMesh {
 
 /// A surface for every AAL label, decoded one label at a time as they are
 /// asked for. Same packing as the brain, under a small table of contents.
-final class RegionMeshes: @unchecked Sendable {
+/// Nothing in it changes after init, which is what lets the compiler
+/// check that it may be shared, rather than being told so.
+nonisolated final class RegionMeshes: Sendable {
     private let bytes: [UInt8]
     private let offsets: [Int: (offset: Int, verts: Int, indices: Int)]
 
@@ -165,7 +167,7 @@ final class RegionMeshes: @unchecked Sendable {
     }
 }
 
-extension Volume {
+nonisolated extension Volume {
     /// The byte at the voxel nearest a millimetre position, 0 outside.
     func value(atMm p: SIMD3<Float>) -> UInt8 {
         let i = Int(((p.x - origin.x) / spacing).rounded())
@@ -177,7 +179,7 @@ extension Volume {
 }
 
 /// The tractogram as tubes, one mesh per direction colour.
-struct TractMeshes {
+nonisolated struct TractMeshes {
     struct Bin {
         let colour: SIMD3<UInt8>
         let mesh: BrainMesh
@@ -205,7 +207,7 @@ struct TractMeshes {
     }
 }
 
-extension BrainMesh {
+nonisolated extension BrainMesh {
     /// Decodes the packed form: int16 hundredths of a millimetre, int8 normals, uint32 indices.
     static func unpack(_ bytes: [UInt8], at offset: Int, verts v: Int, indices n: Int) -> BrainMesh? {
         var positions = [SIMD3<Float>](); positions.reserveCapacity(v)
@@ -231,5 +233,44 @@ extension BrainMesh {
         }
         guard indices.allSatisfy({ Int($0) < v }) else { return nil }
         return BrainMesh(positions: positions, normals: normals, indices: indices)
+    }
+}
+
+/// Everything the brain window draws from, decoded together. The decoding
+/// is the one job in the app worth taking off the main actor: six files
+/// inflated and unpacked take seconds, and the console must stay live
+/// through them. `@concurrent` is what moves it: with the project's
+/// approachable-concurrency settings a plain async function would run on
+/// whichever actor called it.
+nonisolated struct BrainAssets: Sendable {
+    let mesh: BrainMesh
+    let volume: Volume
+    let labels: Volume
+    let regions: RegionMeshes
+    let brodmannLabels: Volume
+    let brodmannMeshes: RegionMeshes
+
+    @concurrent
+    static func decode() async throws -> BrainAssets {
+        try Task.checkCancellation()
+        return BrainAssets(mesh: try BrainMesh.load(named: "brain"),
+                           volume: try Volume.load(named: "brain"),
+                           labels: try Volume.load(named: "aal"),
+                           regions: try RegionMeshes(named: "regions"),
+                           brodmannLabels: try Volume.load(named: "brodmann"),
+                           brodmannMeshes: try RegionMeshes(named: "brodmann"))
+    }
+}
+
+/// The tractogram and the surface drawn faintly around it, decoded together
+/// off the main actor for the same reason.
+nonisolated struct TractAssets: Sendable {
+    let tracts: TractMeshes
+    let shell: BrainMesh
+
+    @concurrent
+    static func decode() async throws -> TractAssets {
+        try Task.checkCancellation()
+        return TractAssets(tracts: try TractMeshes.load(named: "tracts"), shell: try BrainMesh.load(named: "brain"))
     }
 }

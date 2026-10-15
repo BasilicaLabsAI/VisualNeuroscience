@@ -55,12 +55,28 @@ function mount(){
     position:fixed; inset:0; z-index:220; display:flex;
     align-items:center; justify-content:center; padding:1rem;
     background:color-mix(in srgb, var(--ink,#111) 32%, transparent);
+    -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+    opacity:0; transition:opacity .2s ease;
   }
+  .vn-modal-wrap.vn-in{ opacity:1; }
   .vn-modal{
     background:var(--paper,#fff); color:var(--ink,#111);
     border:1px solid var(--hair,#111); width:min(30rem,100%);
     max-height:calc(100vh - 2rem); overflow:auto; padding:1.3rem 1.4rem 1.5rem;
     font-family:var(--font-serif,Georgia,serif);
+    /* it comes down from the bar that holds the account button, and goes
+       back up the same way */
+    transform:translateY(-14px) scale(.98); transform-origin:top center;
+    transition:transform .26s cubic-bezier(.32,.72,0,1);
+  }
+  .vn-modal-wrap.vn-in .vn-modal{ transform:none; }
+  @media (prefers-reduced-motion: reduce){
+    .vn-modal{ transform:none; transition:none; }
+    .vn-modal-wrap{ transition:opacity .15s ease; }
+  }
+  @media (prefers-reduced-transparency: reduce){
+    .vn-modal-wrap{ -webkit-backdrop-filter:none; backdrop-filter:none;
+      background:color-mix(in srgb, var(--ink,#111) 55%, transparent); }
   }
   .vn-modal h2{
     font-family:var(--font-display,Georgia,serif); font-weight:400;
@@ -246,6 +262,9 @@ function mount(){
     box.append(close, h, who, fProf, statusEl, warn, del);
     wrap.appendChild(box);
     document.body.appendChild(wrap);
+    if (fading){ fading.remove(); fading = null; }
+    void wrap.offsetWidth;   /* the closed state is laid out, so the open one can be reached from it */
+    wrap.classList.add("vn-in");
     document.addEventListener("keydown", onEsc);
     if (!prof.username) setTimeout(() => inUser.focus(), 50);
   }
@@ -257,7 +276,7 @@ function mount(){
     linkedin: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5A2.49 2.49 0 1 1 5 8.48a2.49 2.49 0 0 1 0-4.98zM3 9.9h4V21H3zM9.5 9.9h3.8v1.5h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-4.9c0-1.2 0-2.7-1.7-2.7s-1.9 1.3-1.9 2.6V21h-4V9.9z"/></svg>'
   };
 
-  let wrap = null, statusEl = null;
+  let wrap = null, fading = null, statusEl = null;
   /* what was typed into the sign-in box survives its closing, until a
      sign-in succeeds or the page is left: the box closes only on its own
      cross (or Escape), never on a stray click beside it */
@@ -450,6 +469,9 @@ function mount(){
 
     wrap.appendChild(box);
     document.body.appendChild(wrap);
+    if (fading){ fading.remove(); fading = null; }
+    void wrap.offsetWidth;   /* the closed state is laid out, so the open one can be reached from it */
+    wrap.classList.add("vn-in");
     document.addEventListener("keydown", onEsc);
     if (draft){
       Object.keys(forms).forEach(k => forms[k].querySelectorAll("input").forEach(i => {
@@ -474,7 +496,15 @@ function mount(){
       }
     }
     document.removeEventListener("keydown", onEsc);
-    wrap.remove(); wrap = null; statusEl = null;
+    /* it leaves along the path it arrived by, and is taken out of the
+       tree once it has gone; opening again meanwhile removes it at once */
+    const w = wrap; wrap = null; statusEl = null;
+    w.classList.remove("vn-in");
+    fading = w;
+    let gone = false;
+    const away = () => { if (gone) return; gone = true; if (fading === w) fading = null; w.remove(); };
+    w.addEventListener("transitionend", away, { once: true });
+    setTimeout(away, 320);
   }
 
   /* ── boot ────────────────────────────────────────────────────────────── */

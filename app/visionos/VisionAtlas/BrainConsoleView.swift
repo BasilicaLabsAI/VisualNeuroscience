@@ -137,13 +137,18 @@ struct BrainConsoleView: View {
 /// A slider that is a track and a knob and nothing else. The system slider
 /// paints white from its left end to the knob, so the right, front and top
 /// cuts, whose knobs start at the right end, looked full when nothing was
-/// cut. Drag the knob, or pinch the track where the knob should go.
+/// cut. Drag the knob, or pinch the track where the knob should go. A knob
+/// taken hold of keeps the finger where it landed on it rather than jumping
+/// to the finger's centre, so the cut moves exactly as far as the hand.
 struct CutSlider: View {
     @Binding var value: Float
     var label: String
 
     private let knob: CGFloat = 24
     private let inset: CGFloat = 2
+    /// Where on the knob the drag began, in points from its centre; nil
+    /// between drags.
+    @State private var grab: CGFloat?
 
     var body: some View {
         GeometryReader { geo in
@@ -163,8 +168,13 @@ struct CutSlider: View {
             .gesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { drag in
-                        value = Float(min(max((drag.location.x - inset - knob / 2) / travel, 0), 1))
+                        if grab == nil {
+                            let offset = drag.startLocation.x - (x + knob / 2)
+                            grab = abs(offset) <= knob / 2 + 6 ? offset : 0   // on the knob, keep the offset; on the track, go there
+                        }
+                        value = Float(min(max((drag.location.x - (grab ?? 0) - inset - knob / 2) / travel, 0), 1))
                     }
+                    .onEnded { _ in grab = nil }
             )
         }
         .frame(height: 28)
@@ -181,8 +191,9 @@ struct CutSlider: View {
     }
 }
 
-/// Lays its children out in rows, wrapping like words.
-struct FlowLayout: Layout {
+/// Lays its children out in rows, wrapping like words. Layout code is
+/// called wherever SwiftUI measures, so it belongs to no actor.
+nonisolated struct FlowLayout: Layout {
     var spacing: CGFloat = 8
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {

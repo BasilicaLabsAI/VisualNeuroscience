@@ -325,6 +325,61 @@ function attach(o){
     reset();
   }, {capture: true});
 
+  /* ── momentum: a released turn keeps turning ──────────────────────────
+     The viewer turns the render 1:1 under a drag and stops dead when the
+     finger lifts. Here the turn carries on at the speed it had and slows
+     as a scroll does — 0.998 per millisecond, the deceleration Apple ships
+     for ordinary scrolling — and the next touch, wheel or button takes
+     over at once, so nothing is ever waited for. A drag slower than a
+     throw leaves the brain where it was put. Anyone who has asked their
+     device for less motion gets the dead stop. */
+  if (!slice){
+    var reduce = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+    var hist = [], coasting = null, turning = false;
+    function angles(){ return [Number(nv.scene && nv.scene.renderAzimuth) || 0, Number(nv.scene && nv.scene.renderElevation) || 0]; }
+    function wrapDeg(d){ return ((d + 180) % 360 + 360) % 360 - 180; }
+    function stopCoast(){ if (coasting){ cancelAnimationFrame(coasting); coasting = null; } }
+    stage.addEventListener("pointerdown", function(e){
+      stopCoast();
+      /* a plain press with one finger or the main mouse button starts a turn;
+         a second finger, shift or another button is something else */
+      turning = down.size <= 1 && !(e.pointerType === "mouse" && (e.button !== 0 || e.shiftKey));
+      hist = turning ? [[performance.now()].concat(angles())] : [];
+    }, {capture: true});
+    stage.addEventListener("pointermove", function(e){
+      if (!turning || !(e.buttons & 1)) return;
+      if (down.size >= 2){ turning = false; hist = []; return; }
+      var now = performance.now();
+      hist.push([now].concat(angles()));
+      while (hist.length > 2 && now - hist[0][0] > 120) hist.shift();
+    });
+    function release(){
+      if (!turning) return;
+      turning = false;
+      if (reduce || hist.length < 2 || !nv.scene) return;
+      var a = hist[0], b = hist[hist.length - 1], dt = b[0] - a[0];
+      if (dt < 16) return;
+      var vAz = wrapDeg(b[1] - a[1]) / dt, vEl = (b[2] - a[2]) / dt;   /* degrees per millisecond */
+      if (Math.abs(vAz) < 0.05 && Math.abs(vEl) < 0.05) return;        /* under 50°/s: placed, not thrown */
+      var last = performance.now();
+      function step(now){
+        var d = Math.min(now - last, 50); last = now;
+        var k = Math.pow(0.998, d);
+        vAz *= k; vEl *= k;
+        nv.scene.renderAzimuth = (Number(nv.scene.renderAzimuth) || 0) + vAz * d;
+        nv.scene.renderElevation = Math.max(-90, Math.min(90, (Number(nv.scene.renderElevation) || 0) + vEl * d));
+        nv.drawScene();
+        coasting = (Math.abs(vAz) > 0.003 || Math.abs(vEl) > 0.003) ? requestAnimationFrame(step) : null;
+      }
+      coasting = requestAnimationFrame(step);
+    }
+    stage.addEventListener("pointerup", release);
+    stage.addEventListener("pointercancel", release);
+    window.addEventListener("pointerup", release, {capture: true});
+    window.addEventListener("pointercancel", release, {capture: true});
+    stage.addEventListener("wheel", stopCoast, {capture: true});
+  }
+
   /* the browser must not claim the gesture for page scroll or page zoom */
   stage.style.touchAction = "none";
 

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.92 — 15 October 2026 — The interface answers like an Apple one
+Commit · Give the interface Apple's fluid feel and the Swift its modern concurrency
+
+Every button now answers on the press itself, not on the release. The account box comes down from the bar that holds its button and goes back up the same way, and the section menus, in the app and on the website, open from their button and close the way they came; a second press mid-flight simply reverses them. The bars and menus are materials the page shows faintly through. Throw a 3D view and it keeps turning at the speed you gave it, slowing as a scroll does, until you touch it again; a slow drag leaves it where you put it. Anyone who has asked their device for less motion gets plain fades and dead stops instead, and a tractogram that holds still until asked, and anyone who has asked for less transparency or more contrast gets solid chrome. On Apple Vision Pro the brain and the tractogram coast the same way after a throw, resist a pinch past their limits and settle back, and the cut sliders keep the finger where it took hold of the knob. Under the hood both native projects adopt Swift's approachable concurrency with main-actor isolation by default, and the Vision Pro app decodes its files and cuts its meshes in concurrent functions awaited by the scene rather than in detached tasks.
+
 ## v10.91 — 15 October 2026 — The Brodmann areas get their mention
-Commit · Name the Brodmann areas in the Region Atlas line on the home page
+Commit `2e160a6` · Name the Brodmann areas in the Region Atlas line on the home page
 
 The line under Region Atlas on the home page now names the Brodmann areas alongside the receptor density maps and the functional breakdown. Nothing else on the site changes.
 

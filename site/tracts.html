@@ -451,7 +451,10 @@ svg{ display:block; }
 
 
   /* ── idle rotation of the 3D box ── */
-  var spinning = true, lastTouch = 0;
+  /* anyone who has asked their device for less motion gets a brain that
+     holds still until they turn it, with Revolve there to switch on */
+  var spinning = !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  var lastTouch = 0;
   var spinBtn = null;
   var IDLE_MS = 2500, DEG_PER_SEC = 14;
 
@@ -468,6 +471,8 @@ svg{ display:block; }
   }
   function touched(){ lastTouch = performance.now(); tick.prev = undefined; }
   spinBtn = document.getElementById("spinBtn");
+  spinBtn.classList.toggle("active", spinning);
+  spinBtn.setAttribute("aria-pressed", String(spinning));
   spinBtn.addEventListener("click", function(){
     spinning = !spinning;
     spinBtn.classList.toggle("active", spinning);

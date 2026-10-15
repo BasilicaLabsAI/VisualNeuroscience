@@ -36,7 +36,8 @@ final class BrainScene {
     private let brain = ModelEntity()
     private var skin = PhysicallyBasedMaterial()
     /// An AAL label or a Brodmann area, whichever atlas a highlight comes from.
-    enum RegionKey: Hashable { case aal(Int), brodmann(Int) }
+    /// A plain value, so it can key the cut work off the main actor.
+    nonisolated enum RegionKey: Hashable, Sendable { case aal(Int), brodmann(Int) }
     /// One entity per highlighted label, in its selection's colour.
     private var regionEntities: [RegionKey: ModelEntity] = [:]
     private var regionMeshes: [RegionKey: BrainMesh] = [:]
@@ -74,22 +75,17 @@ final class BrainScene {
         NSLog("%@", "[brain] load started")
         defer { NSLog("%@", "[brain] load finished in \(Int(Date().timeIntervalSince(started)))s, error: \(errorText ?? "none")") }
         do {
-            let loaded = try await Task.detached(priority: .userInitiated) { () throws -> (BrainMesh, Volume, Volume, RegionMeshes, Volume, RegionMeshes) in
-                let m = try BrainMesh.load(named: "brain")
-                let v = try Volume.load(named: "brain")
-                let a = try Volume.load(named: "aal")
-                let r = try RegionMeshes(named: "regions")
-                let bl = try Volume.load(named: "brodmann")
-                let bm = try RegionMeshes(named: "brodmann")
-                return (m, v, a, r, bl, bm)
-            }.value
-            mesh = loaded.0
-            volume = loaded.1
-            labels = loaded.2
-            regions = loaded.3
-            brodmannLabels = loaded.4
-            brodmannMeshes = loaded.5
-            centre = (loaded.1.minMm + loaded.1.maxMm) / 2
+            /* decoded off the main actor, awaited here as part of this task
+               rather than detached from it, so closing the window cancels
+               the work with the view that asked for it */
+            let loaded = try await BrainAssets.decode()
+            mesh = loaded.mesh
+            volume = loaded.volume
+            labels = loaded.labels
+            regions = loaded.regions
+            brodmannLabels = loaded.brodmannLabels
+            brodmannMeshes = loaded.brodmannMeshes
+            centre = (loaded.volume.minMm + loaded.volume.maxMm) / 2
 
             skin.baseColor = .init(tint: UIColor(white: 0.80, alpha: 1))
             skin.roughness = 0.78
@@ -169,11 +165,7 @@ final class BrainScene {
         let cutHi = lo + (hi - lo) * Atlas.shared.cutHi
 
         let regionInputs = regionEntities.keys.compactMap { key in regionMeshes[key].map { (key, $0) } }
-        let (clipped, clippedRegions) = await Task.detached(priority: .userInitiated) { () -> (MeshClipper.Output, [RegionKey: MeshClipper.Output]) in
-            var out: [RegionKey: MeshClipper.Output] = [:]
-            for (key, m) in regionInputs { out[key] = MeshClipper.clip(m, lo: cutLo, hi: cutHi, limitLo: lo, limitHi: hi) }
-            return (MeshClipper.clip(mesh, lo: cutLo, hi: cutHi, limitLo: lo, limitHi: hi), out)
-        }.value
+        let (clipped, clippedRegions) = await MeshClipper.clipAll(mesh, regions: regionInputs, lo: cutLo, hi: cutHi, limitLo: lo, limitHi: hi)
         for (key, part) in clippedRegions {
             guard let entity = regionEntities[key] else { continue }
             if part.indices.isEmpty { entity.isEnabled = false; continue }
@@ -280,7 +272,7 @@ final class BrainScene {
     }
 }
 
-extension Volume {
+nonisolated extension Volume {
     /// A label volume and the colours of the labels to paint.
     struct Overlay {
         let labels: Volume

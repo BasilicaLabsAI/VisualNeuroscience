@@ -53,6 +53,15 @@ Read this first in every session. It is the handover; nothing else needs pasting
   sign-in (`mcp-worker/oauth.js`, consent page `site/connect.html`) needs the `OAUTH_SECRET` worker secret, set once
   by the owner; `node mcp-worker/tests/oauth.test.mjs` runs the whole flow offline and must pass before a deploy.
 - Licences and permissions are recorded in `docs/PERMISSIONS.md`; keep it in step with any new data source.
+- The interface follows Apple's fluid-interface guidance (v10.92): controls answer on the press (`viewer.css`, the
+  last section), the account box and both section menus arrive from their button and leave the same way, the bars
+  and menus are translucent materials with `prefers-reduced-transparency` and `prefers-contrast` fallbacks, a thrown
+  3D view coasts and the next touch takes over (`zoom.js`, momentum), and `prefers-reduced-motion` turns all of it
+  into plain fades and dead stops. Keep new controls and panels to those rules.
+- Swift: both Xcode projects build with Approachable Concurrency, main-actor isolation by default and complete
+  concurrency checking in the Swift 5 language mode; the visionOS data layer is `nonisolated` and its slow work is
+  `@concurrent`, never a detached task. Nothing here can compile Swift, so a Swift change is verified by the owner's
+  build (Xcode Cloud for iOS on every push to `main`; the Mac for visionOS); say so when handing one over.
 
 ## Open on the owner's side (update as they close)
 - App Store: version 1.0 was approved and released on 25 September 2026 (https://apps.apple.com/app/id6805618686)

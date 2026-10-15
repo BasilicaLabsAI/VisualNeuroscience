@@ -19,10 +19,8 @@ final class TractScene {
 
     func load() async {
         do {
-            let loaded = try await Task.detached(priority: .userInitiated) { () throws -> (TractMeshes, BrainMesh) in
-                (try TractMeshes.load(named: "tracts"), try BrainMesh.load(named: "brain"))
-            }.value
-            for bin in loaded.0.bins {
+            let loaded = try await TractAssets.decode()
+            for bin in loaded.tracts.bins {
                 var paint = PhysicallyBasedMaterial()
                 paint.baseColor = .init(tint: UIColor(red: CGFloat(bin.colour.x) / 255, green: CGFloat(bin.colour.y) / 255, blue: CGFloat(bin.colour.z) / 255, alpha: 1))
                 paint.roughness = 0.5
@@ -36,7 +34,7 @@ final class TractScene {
             shell.metallic = 0.0
             shell.blending = .transparent(opacity: 0.12)
             shell.faceCulling = .none
-            root.addChild(ModelEntity(mesh: try await MeshResource(from: [descriptor(loaded.1)]), materials: [shell]))
+            root.addChild(ModelEntity(mesh: try await MeshResource(from: [descriptor(loaded.shell)]), materials: [shell]))
             root.makeGrabbable(scale: k)
             isLoading = false
         } catch {

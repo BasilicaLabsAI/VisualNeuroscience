@@ -42,6 +42,30 @@ can show:
   streamlines as thin tubes coloured by direction, the brain's surface
   faintly around them, turning and sizing like the brain.
 
+## How it moves
+
+The gestures follow Apple's fluid-interface guidance. An object tracks the
+hand 1:1 while it is held; let go of a turn and it carries on at the speed
+the hand gave it, slowing by 0.998 every millisecond, the deceleration of an
+ordinary scroll, until the next touch takes over. Pinch it past its smallest
+or largest size and it resists rather than stopping dead, then settles back
+to the limit in a quarter of a second when released. The cut sliders keep the
+finger where it landed on the knob rather than jumping the knob to the
+finger's centre. With Reduce Motion on, a released object simply stops and
+the opened Brodmann card fades rather than springs.
+
+## Swift settings
+
+The target builds with Approachable Concurrency, main-actor isolation by
+default and complete concurrency checking, in the Swift 5 language mode so
+that what the checker finds is a warning rather than a stop. The data layer
+(`BrainData.swift`, `MeshClipper.swift`) is marked `nonisolated`, and the
+two slow jobs, decoding the bundle's files and cutting the meshes, are
+`@concurrent` functions awaited from the scene rather than detached tasks,
+so closing a window cancels the work with it. When a build shows no
+concurrency warnings, set the target's Swift Language Version to 6 to lock
+that in.
+
 ## Files
 
 | File | Holds |

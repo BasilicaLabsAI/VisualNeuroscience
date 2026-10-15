@@ -7,7 +7,7 @@ import simd
 /// shared vertices; triangles a plane crosses are clipped exactly
 /// (Sutherland–Hodgman, one plane after another) and fan-triangulated, with
 /// normals interpolated along the cut edges.
-enum MeshClipper {
+nonisolated enum MeshClipper {
     struct Output {
         var positions: [SIMD3<Float>]
         var normals: [SIMD3<Float>]
@@ -105,5 +105,17 @@ enum MeshClipper {
             }
         }
         return out
+    }
+
+    /// The brain and every highlighted region cut at the same planes, as
+    /// one job off the main actor: the surface has a few hundred thousand
+    /// triangles, and the sliders must keep moving while it is cut.
+    @concurrent
+    static func clipAll<Key: Hashable & Sendable>(_ mesh: BrainMesh, regions: [(Key, BrainMesh)],
+                                                   lo: SIMD3<Float>, hi: SIMD3<Float>,
+                                                   limitLo: SIMD3<Float>, limitHi: SIMD3<Float>) async -> (Output, [Key: Output]) {
+        var out: [Key: Output] = [:]
+        for (key, m) in regions { out[key] = clip(m, lo: lo, hi: hi, limitLo: limitLo, limitHi: limitHi) }
+        return (clip(mesh, lo: lo, hi: hi, limitLo: limitLo, limitHi: limitHi), out)
     }
 }

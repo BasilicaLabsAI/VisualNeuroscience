@@ -515,7 +515,13 @@ button, .ts-btn, .seg-btn, .barow{ touch-action:manipulation; }
    land in. */
 .masthead-sentinel{ height:1px; margin-bottom:-1px; }
 .masthead.masthead{ position:sticky; top:0; z-index:80; background:var(--paper); }
-.masthead.masthead.stuck{ padding-top:.45rem; }
+/* once the page scrolls under it the bar is a material, not a wall: the
+   page shows faintly through, as the app's own bar lets it */
+.masthead.masthead.stuck{
+  padding-top:.45rem;
+  background:color-mix(in srgb, var(--paper) 84%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
+}
 .masthead.masthead.stuck .brand{ font-size:1.35rem; }
 .masthead.masthead.stuck .nav-row{ padding:.3rem 0 .45rem; }
 html{ scroll-padding-top:5.2rem; }
@@ -643,4 +649,73 @@ html{ scroll-padding-top:5.2rem; }
   .vn-bar .vn-social-bar{ display:inline-flex; }
   .vn-menu .vn-social-menu{ display:none; }
   .vn-menu > a:last-of-type{ border-bottom:0; }
+}
+
+/* ── the feel of a press, a menu and a sheet ────────────────────────────
+   After Apple's fluid-interface guidance. A control answers on the press
+   itself, not on the release, so nothing feels dead under the finger. A
+   menu arrives from the button that opened it and leaves the way it came,
+   fast enough to be felt and short enough never to be waited for, and a
+   second press mid-flight simply reverses it. The bars and menus are
+   materials the page shows through. Anyone who has asked their device for
+   less motion gets a plain fade and no scaling; anyone who has asked for
+   less transparency or more contrast gets solid chrome. */
+.ts-btn, .btn, .seg-btn, .nav-menu-btn, .vn-menu-btn, .theme-toggle, .vn-auth-btn,
+.vn-auth-name, .x3d .btn, .models .btn, .models .mdel, .zoom-btn, .cube .ts-btn{
+  transition:transform .1s ease-out, background-color .15s ease, color .15s ease, opacity .15s ease;
+}
+.ts-btn:active, .btn:active, .seg-btn:active, .nav-menu-btn:active, .vn-menu-btn:active,
+.theme-toggle:active, .vn-auth-btn:active, .vn-auth-name:active, .x3d .btn:not(:disabled):active,
+.models .btn:active, .models .mdel:active, .zoom-btn:active{ transform:scale(.96); }
+a.box{ transition:transform .12s ease-out, background .18s ease; }
+a.box:active{ transform:scale(.992); }
+/* fingers have no hover, so the press also inks the control, as the
+   pointer's hover does on a desk */
+@media (hover: none){
+  .ts-btn:active, .btn:active, .seg-btn:active, .x3d .btn:not(:disabled):active, .models .btn:active{
+    background:var(--ink); color:var(--paper);
+  }
+}
+
+/* the app's section menu: hung from its button at the right of the bar,
+   kept in the tree while closed so a press mid-flight reverses the motion
+   rather than restarting it, and kept out of reach with visibility */
+.vn-menu.vn-menu{
+  display:flex; visibility:hidden; opacity:0;
+  transform:translateY(-8px) scale(.985); transform-origin:top right;
+  background:color-mix(in srgb, var(--paper) 88%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
+  transition:opacity .18s cubic-bezier(.32,.72,0,1), transform .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .22s;
+}
+.vn-menu.vn-menu.open{ visibility:visible; opacity:1; transform:none; transition-delay:0s, 0s, 0s; }
+/* the website's folded sections, hung from the menu button at the left */
+@media (max-width:960px){
+  .nav-menu.nav-menu{
+    display:flex; visibility:hidden; opacity:0;
+    transform:translateY(-8px) scale(.985); transform-origin:top left;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
+    transition:opacity .18s cubic-bezier(.32,.72,0,1), transform .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .22s;
+  }
+  .masthead.menu-open .nav-menu.nav-menu{ visibility:visible; opacity:1; transform:none; transition-delay:0s, 0s, 0s; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .ts-btn:active, .btn:active, .seg-btn:active, .nav-menu-btn:active, .vn-menu-btn:active,
+  .theme-toggle:active, .vn-auth-btn:active, .vn-auth-name:active, .x3d .btn:active,
+  .models .btn:active, .models .mdel:active, .zoom-btn:active, a.box:active{ transform:none; }
+  .ts-btn:active, .btn:active, .seg-btn:active{ background:var(--ink); color:var(--paper); }
+  .vn-menu.vn-menu, .nav-menu.nav-menu{ transform:none; transition:opacity .15s ease, visibility 0s linear .15s; }
+  .vn-menu.vn-menu.open, .masthead.menu-open .nav-menu.nav-menu{ transition-delay:0s, 0s; }
+}
+@media (prefers-reduced-transparency: reduce){
+  .vn-bar, .masthead.masthead.stuck, .vn-menu.vn-menu, .nav-menu.nav-menu{
+    background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none;
+  }
+}
+@media (prefers-contrast: more){
+  .vn-bar, .masthead.masthead.stuck, .vn-menu.vn-menu, .nav-menu.nav-menu{
+    background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none;
+    border-bottom:1px solid var(--ink);
+  }
 }

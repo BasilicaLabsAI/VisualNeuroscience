@@ -5,9 +5,16 @@ import SwiftUI
 /// the checkbox on, the picked areas are drawn on the brain as well.
 struct BrodmannConsoleView: View {
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var atlas = Atlas.shared
     @State private var search = ""
     @State private var open: Int?
+
+    /// The card below the search arrives with a short spring, no overshoot;
+    /// a plain fade for anyone who has asked for less motion.
+    private var reveal: Animation {
+        reduceMotion ? .easeInOut(duration: 0.2) : .spring(response: 0.3, dampingFraction: 1)
+    }
 
     private var matches: [BrodmannArea] {
         let q = search.trimmingCharacters(in: .whitespaces).lowercased()
@@ -74,14 +81,14 @@ struct BrodmannConsoleView: View {
                                 HStack(spacing: 12) {
                                     Button {
                                         atlas.togglePick(area.ba)
-                                        open = area.ba
+                                        withAnimation(reveal) { open = area.ba }
                                     } label: {
                                         Image(systemName: atlas.isPicked(area.ba) ? "checkmark.circle.fill" : "circle")
                                             .foregroundStyle(atlas.brodmann.first { $0.id == area.ba }.map { Color(UIColor(hex: $0.colour)) } ?? .secondary)
                                     }
                                     .buttonStyle(.plain)
                                     Button {
-                                        open = area.ba
+                                        withAnimation(reveal) { open = area.ba }
                                     } label: {
                                         HStack {
                                             Text("BA \(area.ba)").font(.body.monospacedDigit()).frame(width: 56, alignment: .leading)
