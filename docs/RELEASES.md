@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.77 — 15 October 2026 — Each MCP tool carries its title where the Connectors Directory reads it
+Commit · Put each MCP tool's title in its annotations as well, where the Connectors Directory looks for it
+
+Submitting the MCP server to Claude's Connectors Directory flagged all five tools as missing a title, because the server gave each its title at the top of the tool while the directory reads it from the tool's annotations. Each tool now carries its title in both places, so the listing shows the names the tools were given, Search the brain atlas, About one brain region and the rest. Nothing on the site changes; the server takes effect when it is next deployed.
+
 ## v10.76 — 15 October 2026 — The MCP server answers at mcp.visualneuroscience.ai
-Commit · Give the MCP worker its custom domain in its config, so a deploy creates the DNS record
+Commit `782cb71` · Give the MCP worker its custom domain in its config, so a deploy creates the DNS record
 
 The server that lets Claude, ChatGPT and Kimi ask the atlas questions was deployed for the first time today, at its workers.dev address, and the short address the privacy page has named all along, mcp.visualneuroscience.ai, had no DNS record behind it. The worker's config now carries that address as a custom domain, so deploying the worker creates the record and the certificate itself. Nothing on the site changes.
 

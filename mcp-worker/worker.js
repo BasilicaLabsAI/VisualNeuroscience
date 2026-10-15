@@ -38,7 +38,7 @@ const TOOLS = [
       "Search everything at once — AAL regions, Brodmann areas, network nodes and receptor " +
       "structures — by name, number or function ('faces', 'working memory', 'BA17', 'hippocampus'). " +
       "Returns matches with what each one does and a link that opens it in the atlas.",
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    annotations: { title: "Search the brain atlas", readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     inputSchema: {
       type: "object",
       properties: { query: { type: "string", description: "Name, Brodmann number, or a function to look for" } },
@@ -51,7 +51,7 @@ const TOOLS = [
     description:
       "What one AAL region does, which layer of the brain it belongs to, and how to see it. " +
       "Accepts the region's name, loosely ('hippocampus', 'inferior frontal gyrus').",
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    annotations: { title: "About one brain region", readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     inputSchema: {
       type: "object",
       properties: { name: { type: "string", description: "The region's name, or enough of it" } },
@@ -64,7 +64,7 @@ const TOOLS = [
     description:
       "One Brodmann area by number (1–48): its anatomical name, lobe, what it does, the caveat " +
       "that belongs with it, and which areas it actually borders, measured off the atlas volume.",
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    annotations: { title: "About one Brodmann area", readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     inputSchema: {
       type: "object",
       properties: { area: { type: "integer", minimum: 1, maximum: 52, description: "The Brodmann number" } },
@@ -79,7 +79,7 @@ const TOOLS = [
       "from two open sources kept apart: in vivo PET (19 receptors and transporters, Hansen et al. 2022 compilation, " +
       "reported as the tracer's measure and as a share of the receptor's densest region) and ex vivo autoradiography " +
       "(15 receptors, Zilles & Palomero-Gallagher 2017, fmol/mg protein). Give a region, a receptor, or both.",
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    annotations: { title: "Receptor density in a structure", readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     inputSchema: {
       type: "object",
       properties: {
@@ -96,7 +96,7 @@ const TOOLS = [
       "How the brain's large-scale networks reconfigure in one state — flow, meditation and " +
       "others — which couplings strengthen, which fall quiet, and the literature the composite " +
       "is read from. Call without a state to list the states.",
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    annotations: { title: "A brain state as a network story", readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     inputSchema: {
       type: "object",
       properties: { state: { type: "string", description: "A state id or name, e.g. 'flow' (optional)" } }
