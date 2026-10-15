@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.91 — 15 October 2026 — The Brodmann areas get their mention
+Commit · Name the Brodmann areas in the Region Atlas line on the home page
+
+The line under Region Atlas on the home page now names the Brodmann areas alongside the receptor density maps and the functional breakdown. Nothing else on the site changes.
+
 ## v10.90 — 15 October 2026 — One line under each title
-Commit · Give each home page box a single line that says what it is
+Commit `cd880c9` · Give each home page box a single line that says what it is
 
 Each box on the home page now carries one sentence under its title that says what the thing is, in place of the two that told you what to click. Nothing else on the site changes.
 
