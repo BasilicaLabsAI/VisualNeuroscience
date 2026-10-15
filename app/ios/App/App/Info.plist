@@ -84,6 +84,16 @@
 				<string>visualneuroscience</string>
 			</array>
 		</dict>
+		<!-- the reversed client id from GoogleService-Info.plist: the native
+		     Google sign-in sheet comes back to the app on this scheme -->
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>google-sign-in</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.1020711830190-7svobitko590q5tinokmvk207n03q5n4</string>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

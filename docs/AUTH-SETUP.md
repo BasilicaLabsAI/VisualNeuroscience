@@ -111,6 +111,8 @@ log out; reset the password; send yourself a sign-in link and complete it.
 2. Set the public-facing name (shown on Google's consent screen) and a
    support email → Save. That's the whole web part.
 3. Flip `google: true` in `firebase-config.js` (and bump the sw VERSION).
+   Done, 15 October 2026 (v10.84): Google is enabled in the console and
+   on in the config.
 
 ### The apps (iPhone/iPad, Mac, Android)
 
@@ -143,6 +145,11 @@ the plugin at runtime.
    open GoogleService-Info.plist, copy `REVERSED_CLIENT_ID`, and in Xcode →
    App target → Info → URL Types → add a URL scheme with that value
    (keep the existing `visualneuroscience` one too).
+   **Done on 15 October 2026**: the plist in `app/ios/App/App/` is the one
+   downloaded after Google was enabled, with its `CLIENT_ID`, and
+   `Info.plist` carries the reversed id as a second URL type. If the
+   client is ever recreated in the console, download the plist again and
+   update that scheme to match.
 6. **The Mac network entitlement is already in the repo** —
    `com.apple.security.network.client` sits in `App.entitlements` alongside
    the Sign in with Apple entitlement, so the sandboxed Mac build can reach

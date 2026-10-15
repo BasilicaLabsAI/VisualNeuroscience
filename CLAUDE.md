@@ -66,6 +66,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   from the repository root (`firebase.json` and `.firebaserc` are there; the owner is logged in to firebase-tools as
   fkarim@basilicalabs.ai), or paste it into the Firebase console. Until then every username claim and check is
   refused, so no account can be created, and signed-in people see "Set username".
+- Sign-in providers: Google is on (web popup, native sheet in the apps; the iOS config and URL scheme are in the
+  repo as of v10.85). Apple is on inside the apps only; the web button waits on the Services ID, key and Team ID of
+  `docs/AUTH-SETUP.md` §6, after which `apple` flips from "app" to true in `site/assets/firebase-config.js`.
 - Newsletter: on Mailchimp since 24 September 2026; the worker's three Mailchimp secrets are set and it reaches the
   audience. Still to do in Mailchimp: make fkarim@visualneuroscience.ai the audience's default From address and
   authenticate the domain (`docs/NEWSLETTER.md`). The email route stays off.
