@@ -62,10 +62,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (screenshots in `app/store/screenshots/`, `android-*`); still to do on the owner's Mac: the developer account, the
   upload key (`app/android/keystore.properties.example`), the Firebase fingerprints, the closed test a personal
   account must run, then the bundle.
-- Usernames (v10.66) need the new `firestore.rules` published: `npx firebase-tools deploy --only firestore:rules`
-  from the repository root (`firebase.json` and `.firebaserc` are there; the owner is logged in to firebase-tools as
-  fkarim@basilicalabs.ai), or paste it into the Firebase console. Until then every username claim and check is
-  refused, so no account can be created, and signed-in people see "Set username".
+- Firestore rules: published from the owner's Mac on 15 October 2026 (`npx firebase-tools deploy --only
+  firestore:rules` from the repository root; `firebase.json` and `.firebaserc` are there, and the owner is logged in to
+  firebase-tools as fkarim@basilicalabs.ai). Accounts and usernames work; the owner holds `fid_kk`. Any change to
+  `firestore.rules` needs that command run again.
 - Sign-in providers: Google and Apple are on, on the web and in the apps (the iOS Google config and URL scheme are
   in the repo as of v10.85; Apple's Services ID, key and Team ID went into the Firebase console for v10.86). LinkedIn
   stays off until `docs/AUTH-SETUP.md` §7 is done.
