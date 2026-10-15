@@ -47,6 +47,11 @@ Smoke test either URL:
 
 ## Connecting it yourself
 
+The public page for all of this is `site/mcp.html`
+(visualneuroscience.ai/mcp.html): the address, the steps for each
+assistant, the five tools with a question each, the sources and what the
+server keeps. It is the documentation URL a directory listing asks for.
+
 - **Claude** (web, desktop, mobile): Settings → Connectors → *Add custom
   connector* → paste the URL. No authentication to configure; the tools
   appear in the composer's search-and-tools menu.
@@ -59,13 +64,16 @@ Smoke test either URL:
 
 ## Getting listed in the directories
 
-- **Claude connectors directory**: submission happens inside claude.ai
-  under **organization admin settings**, which requires a Team or
-  Enterprise plan. The portal connects to the production server, reads
-  the tools and their annotations, and wants a public privacy policy —
-  ours is visualneuroscience.ai/privacy.html, which names the MCP server.
-  The tools already carry `readOnlyHint` annotations, which their review
-  checks. Escalations: mcp-review@anthropic.com.
+- **Claude connectors directory**: the developer portal at
+  claude.ai/directory/manage (*Submit new* → *MCP connector*), open to any
+  paid plan. It connects to the production server and reads the tools: each
+  needs a `title` **inside its annotations** and a `readOnlyHint`, which all
+  five carry. The listing wants a documentation URL
+  (visualneuroscience.ai/mcp.html), a privacy policy URL
+  (visualneuroscience.ai/privacy.html, which names the server), a support
+  contact and an icon; authentication is *none*, and no test account is
+  needed. After an automatic scan it is listed as a Community connector.
+  Escalations: mcp-review@anthropic.com.
 - **ChatGPT app directory**: submissions are open through the OpenAI
   Developer Platform — the app needs MCP connectivity details, testing
   guidance, directory metadata and country availability. A plain

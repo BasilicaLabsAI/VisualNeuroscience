@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Ask the atlas from an AI assistant — VisualNeuroscience.AI</title>
+<meta name="description" content="How to connect VisualNeuroscience.AI to Claude, ChatGPT, Kimi or any assistant that speaks the Model Context Protocol, what its five tools answer, and where the answers come from.">
+<!-- link previews. The card is built by site/share.html and rendered to
+     assets/social-card.jpg; og:image has to be absolute, so this origin is
+     the one thing to change if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="Ask the atlas from an AI assistant — VisualNeuroscience.AI">
+<meta property="og:description" content="Connect the brain atlas to Claude, ChatGPT or Kimi and ask it what a region does, where a receptor is densest, or how the brain changes in a state.">
+<meta property="og:url" content="https://visualneuroscience.ai/mcp.html">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The flow-state network ring over orange-tinted MNI152 brain slices, with the VisualNeuroscience.AI wordmark at its centre.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="fonts/fonts.css">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+  --quiet:#8A8A8A;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+  --quiet:#8A8A8A;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  margin:0 0 3rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+a{ color:var(--ink); }
+svg{ display:block; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* masthead, shared with the rest of the site */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:.65em; height:.65em; flex:none; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{
+  font-family:var(--font-display); font-size:1.35rem;
+  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+}
+.title-strip .anno{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60);
+}
+
+.lede{
+  font-family:var(--font-serif); font-size:1.02rem; line-height:1.6;
+  margin:0 0 calc(var(--gap) * 1.6);
+}
+
+/* ── the shelf of studies ───────────────────────────────────────────────
+   A grid that reads correctly with one card and with a dozen: the columns
+   are sized, not divided, so a lone study sits at its natural width rather
+   than stretching across the page. */
+.shelf{
+  display:grid; gap:var(--gap);
+  grid-template-columns:repeat(auto-fill, minmax(330px, 420px));
+}
+.study{
+  border:1px solid var(--hair); background:var(--paper);
+  display:flex; flex-direction:column; text-decoration:none; color:var(--ink);
+}
+@media (hover: hover){ .study:hover{ text-decoration:none; } }
+@media (hover: hover){ .study:hover .study-body{ background:color-mix(in srgb, var(--ink) 6%, transparent); } }
+.study-fig{
+  border-bottom:1px solid var(--hair); background:#000000;
+  aspect-ratio:902 / 409; overflow:hidden; position:relative;
+}
+.study-fig img{ width:100%; height:100%; object-fit:cover; display:block; }
+.study-body{ padding:1rem 1.05rem 1.15rem; transition:background .2s ease; }
+.study-kicker{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+}
+.study h2{
+  font-family:var(--font-display); font-weight:400;
+  font-size:1.24rem; line-height:1.15; letter-spacing:.01em; margin:.35rem 0 .45rem;
+}
+.study p{ font-size:.94rem; line-height:1.55; color:var(--ink-60); }
+.study .cite{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.82rem; color:var(--ink-35); margin-top:.7rem;
+}
+.study .go{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.24em; text-transform:uppercase; margin-top:.85rem;
+  display:inline-flex; align-items:center; gap:.45rem;
+}
+@media (hover: hover){ .study:hover .go{ text-decoration:underline; text-underline-offset:3px; } }
+
+/* a slot for what is not built yet, so the shelf reads as a shelf */
+.study.soon{ border-style:dashed; cursor:default; }
+.study.soon .study-fig{ background:none; display:flex; align-items:center; justify-content:center; }
+.study.soon .study-body{ background:none; }
+.study.soon h2, .study.soon p{ color:var(--ink-35); }
+
+.attrib{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.85rem; color:var(--ink-60);
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2rem;
+}
+
+/* ── what is planned but not built ──────────────────────────────────────
+   Small tiles rather than the full study card: thirteen empty cards at
+   that size would be a wall of dashed boxes pretending to be content.
+   Each says what the drug acts on, which is enough to show the section
+   has a shape without claiming any of it is written yet. */
+.drugs-sec{ margin-top:calc(var(--gap) * 3); }
+.drug-grid{
+  display:grid; gap:var(--gap); list-style:none; margin:0; padding:0;
+  grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));
+}
+.drug{
+  border:1px dashed var(--ink-35); padding:.85rem .9rem 1rem;
+  display:flex; flex-direction:column; min-width:0;
+}
+.drug-name{
+  font-family:var(--font-display); font-weight:400;
+  font-size:1.12rem; line-height:1.15; color:var(--ink);
+}
+.drug-sub{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.8rem; color:var(--ink-35); margin-top:.15rem; overflow-wrap:anywhere;
+}
+.drug-target{
+  font-family:var(--font-serif); font-size:.88rem; line-height:1.45;
+  color:var(--ink-60); margin-top:.5rem;
+}
+.drug-target sub{ font-size:.72em; }
+.drug-soon{
+  font-family:var(--font-brand); font-weight:500; font-size:.52rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-35);
+  margin-top:auto; padding-top:.85rem;
+}
+
+/* ── the policy ─────────────────────────────────────────────────────── */
+.policy{ max-width:72ch; margin:0 auto; }
+.policy h2{
+  font-family:var(--font-brand); font-weight:600; font-size:.66rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
+  border-bottom:1px solid var(--ink); padding:.2rem .1rem .45rem;
+  margin:calc(var(--gap) * 2.4) 0 var(--gap);
+}
+.policy h2:first-of-type{ margin-top:var(--gap); }
+.policy p{ font-size:1rem; line-height:1.65; margin-bottom:.9rem; }
+.policy ul{ margin:0 0 1rem 1.1rem; }
+.policy li{ font-size:1rem; line-height:1.6; margin-bottom:.45rem; }
+.policy b{ font-weight:400; color:var(--ink); }
+.policy .note{
+  font-family:var(--font-serif); font-style:italic; font-size:.9rem;
+  color:var(--ink-60); border-left:2px solid var(--ink-35);
+  padding-left:.8rem; margin:1rem 0;
+}
+.policy .stamp{
+  font-family:var(--font-brand); font-size:.55rem; letter-spacing:.24em;
+  text-transform:uppercase; color:var(--ink-35);
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2.4rem;
+}
+.policy code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.9em;
+  background:color-mix(in srgb, var(--ink) 8%, transparent); padding:.08em .3em;
+  overflow-wrap:anywhere;
+}
+.policy pre{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.86rem; line-height:1.5;
+  border:1px solid var(--ink-35); padding:.7rem .9rem; margin:0 0 1rem; overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.policy pre code{ background:none; padding:0; font-size:inherit; }
+.policy dl{ margin:0 0 1rem; }
+.policy dt{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.92rem; margin-top:.9rem; }
+.policy dd{ margin:.2rem 0 0; font-size:1rem; line-height:1.6; }
+.policy dd .ask{ font-style:italic; color:var(--ink-60); }
+</style>
+</head>
+<body>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="Site">
+    <a href="regions.html">Region Atlas</a>
+    <a href="microanatomy.html">Microanatomy</a>
+    <a href="molecular.html">Molecular</a>
+    <a href="network-atlas.html">Network Atlas</a>
+    <a href="tracts.html">Tractography</a>
+    <a href="studies.html">Visualizing Studies</a>
+    <a href="textbook.html">Digital Textbook</a>
+    <a href="practice.html">Practice</a>
+    <a href="about.html">About</a>
+    <span class="nav-tools"><button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button></span>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<div class="title-strip">
+  <h1 class="name">Ask the atlas from an AI assistant</h1>
+  <span class="anno">the MCP server, and how to connect it</span>
+</div>
+
+<div class="policy">
+
+<p class="lede">VisualNeuroscience.AI answers questions inside Claude, ChatGPT, Kimi and any other assistant that speaks the Model Context Protocol, through a small server of its own. Ask what a region does, where a Brodmann area sits and what borders it, how dense a receptor is, or how the brain&rsquo;s networks reconfigure in a state, and the answer comes from the same data as these pages, with a link that opens the same view here. No account, no key, nothing to sign in to.</p>
+
+<h2>The address</h2>
+<pre><code>https://mcp.visualneuroscience.ai/</code></pre>
+<p>That is the whole of it: the server speaks MCP over its streamable HTTP transport at that address, with no path after the slash. Opening it in a browser lists the tools; <code>/health</code> answers <code>ok</code>.</p>
+
+<h2>Connecting it</h2>
+<ul>
+  <li><b>Claude</b> on the web, desktop or phone. Go to <i>Customize</i>, then <i>Connectors</i>, choose <i>Add custom connector</i>, paste the address and press <i>Add</i>. Leave authentication at <i>No sign-in</i>. In a chat, press <b>+</b>, open <i>Connectors</i> and switch it on.</li>
+  <li><b>Claude on a Team or Enterprise plan.</b> An owner adds it once under <i>Organization settings</i>, then <i>Connectors</i>, with <i>Add</i>, then <i>Custom</i>. Everyone else finds it under <i>Customize</i>, then <i>Connectors</i>, and presses <i>Connect</i>.</li>
+  <li><b>Claude Code.</b> <code>claude mcp add --transport http visualneuroscience https://mcp.visualneuroscience.ai/</code></li>
+  <li><b>ChatGPT.</b> In <i>Settings</i>, then <i>Apps &amp; Connectors</i>, turn on <i>Developer mode</i> under <i>Advanced</i>, then <i>Add MCP server</i> with the address.</li>
+  <li><b>Kimi.</b> <code>kimi mcp add --transport http visualneuroscience https://mcp.visualneuroscience.ai/</code>, or the same entry in <code>~/.kimi-code/mcp.json</code>.</li>
+</ul>
+<p>Every tool is read-only and says so in its annotations, so an assistant can call them without asking you to approve each one; nothing an assistant does through them changes anything, here or anywhere.</p>
+
+<h2>The five tools</h2>
+<dl>
+  <dt>search_brain</dt>
+  <dd>Searches everything at once, AAL regions, Brodmann areas, network nodes and receptor structures, by name, number or function, and returns what each match does with a link into the atlas. <span class="ask">&ldquo;Which parts of the brain recognise faces?&rdquo;</span></dd>
+  <dt>region_info</dt>
+  <dd>What one AAL region does, which layer of the brain it belongs to, whether receptor densities are charted for it, and a link that opens it highlighted on the scan in three planes and 3D. <span class="ask">&ldquo;What does the anterior cingulate do?&rdquo;</span></dd>
+  <dt>brodmann_area</dt>
+  <dd>One Brodmann area by number: its anatomical name, lobe and function, the caveat that belongs with it, and which areas it borders, measured off the atlas volume. <span class="ask">&ldquo;What is Brodmann area 44, and what borders it?&rdquo;</span></dd>
+  <dt>receptor_density</dt>
+  <dd>Receptor density in one region, or where one receptor is densest across the 45 cerebral regions, from two sources kept apart: in vivo PET, as each receptor&rsquo;s share of its own densest region, and ex vivo autoradiography, in fmol/mg protein. Each answer carries its tracer, sample and citation. <span class="ask">&ldquo;Where are D2 receptors densest?&rdquo; &ldquo;Which receptors are densest in the hippocampus?&rdquo;</span></dd>
+  <dt>brain_state</dt>
+  <dd>How the brain&rsquo;s large-scale networks reconfigure in one of six states, flow, rest, focused attention, threat, reward pursuit and meditation: which couplings strengthen, which fall quiet, and the literature each composite is read from. Called without a state, it lists the six. <span class="ask">&ldquo;How does the brain change in the flow state?&rdquo;</span></dd>
+</dl>
+
+<h2>Where the answers come from</h2>
+<p>The server&rsquo;s data is generated from the same files these pages draw, so it cannot disagree with them: the AAL-116 parcellation on the MNI152 template, the 41 Brodmann areas of the MRIcron atlas with their measured borders, receptor densities from the PET maps compiled by Hansen et al. 2022 (CC BY-NC-SA 4.0) and the autoradiography of Zilles and Palomero-Gallagher 2017 (CC BY 4.0), and the six network states with their sources. It is educational reference material, as the pages are, and not medical advice; every answer about a receptor says which tracer and sample it rests on.</p>
+
+<h2>What it keeps</h2>
+<p>Nothing. The server holds no accounts and no state, and keeps no record of your questions beyond the short-lived operational logs of the platform it runs on, which the <a href="privacy.html">privacy page</a> sets out. What you type to the assistant itself is governed by that assistant&rsquo;s own privacy policy.</p>
+
+<h2>For developers</h2>
+<p>It is one Cloudflare Worker with no dependencies, speaking JSON-RPC 2.0 over POST. The tools can be exercised without an assistant:</p>
+<pre><code>curl -s https://mcp.visualneuroscience.ai/ -X POST \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'</code></pre>
+<p>Questions, corrections and requests for a tool that is missing go to <a href="mailto:fkarim@visualneuroscience.ai"><b>fkarim@visualneuroscience.ai</b></a>, and a person reads them.</p>
+
+<p class="stamp">VisualNeuroscience.AI &middot; the MCP server &middot; OttomanLabs</p>
+
+</div>
+
+</main>
+
+<script src="assets/native.js"></script>
+<script src="assets/navbar.js"></script>
+<script>
+"use strict";
+(function(){
+  var themeBtn = document.getElementById("themeBtn");
+  var themeLbl = document.getElementById("themeLbl");
+  if (document.documentElement.getAttribute("data-theme") === "dark"){
+    themeLbl.textContent = "Light"; themeBtn.setAttribute("aria-pressed", "true");
+  }
+  themeBtn.addEventListener("click", function(){
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark";
+    if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+    else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+    themeBtn.setAttribute("aria-pressed", String(!dark));
+    try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+  });
+})();
+</script>
+
+<script src="assets/firebase-config.js"></script>
+<script type="module" src="assets/auth-ui.js"></script>
+</body>
+</html>

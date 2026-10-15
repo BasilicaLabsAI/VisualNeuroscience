@@ -168,6 +168,7 @@ function doSearch({ query }){
 }
 
 function doRegion({ name }){
+  if (!norm(name).trim()) return toolError("Give me a region name: hippocampus, say, or inferior frontal gyrus. search_brain finds names from a function.");
   const r = findRegion(name);
   if (!r){
     const near = DATA.regions.filter(x => norm(x.name).includes(norm(name).split(" ")[0])).slice(0, 5);
@@ -187,8 +188,11 @@ function doRegion({ name }){
 }
 
 function doBrodmann({ area }){
-  const a = DATA.brodmann.find(x => x.ba === Number(area));
-  if (!a) return toolError("The atlas volume carries 41 of Brodmann's 52 areas; " + area + " is not one of them (12–16, 31, 33 and 49–52 have no agreed human counterpart).");
+  const n = Number(String(area == null ? "" : area).replace(/^\s*ba\s*/i, "").trim());
+  if (area == null || String(area).trim() === "" || !Number.isInteger(n) || n < 1 || n > 52)
+    return toolError("Give me a Brodmann area as its number, 1 to 52 (17 for the primary visual cortex, say). search_brain finds the number from a name or a function.");
+  const a = DATA.brodmann.find(x => x.ba === n);
+  if (!a) return toolError("The atlas volume carries 41 of Brodmann's 52 areas; " + n + " is not one of them (12–16, 31, 33 and 49–52 have no agreed human counterpart).");
   const nb = a.neighbours.slice(0, 8).map(n => {
     const x = DATA.brodmann.find(y => y.ba === n);
     return "BA" + n + (x ? " (" + x.name + ")" : "");
@@ -213,7 +217,11 @@ function allReceptors(){
 }
 function doReceptor({ structure, receptor, source }){
   const R = DATA.receptors;
-  const sQ = norm(structure), rQ = norm(receptor), which = source || "both";
+  const sQ = norm(structure).trim(), rQ = norm(receptor).trim();
+  const SOURCES = { "": "both", both: "both", pet: "pet", autoradiography: "autoradiography", ar: "autoradiography" };
+  const which = SOURCES[norm(source).trim()];
+  if (!which) return toolError("source must be \"pet\", \"autoradiography\" or left out for both; “" + source + "” is neither.");
+  if (!sQ && !rQ) return toolError("Name a structure, a receptor, or both. A structure is one of the 45 cerebral AAL regions (hippocampus, say); a receptor is one of the " + R.pet.receptors.length + " PET receptors and transporters or the " + R.autoradiography.receptors.length + " autoradiography receptors (D2, 5-HT2A, GABA-A, NMDA, SERT), or a family (dopamine, serotonin, GABA).");
   const reg = sQ ? (R.regions.find(x => norm(x.name) === sQ) || R.regions.find(x => norm(x.name).includes(sQ) || norm(x.base).includes(sQ.replace(/ /g, "_")))) : null;
   if (sQ && !reg) return toolError("No receptor data for “" + structure + "”. The regions carried are the 45 cerebral AAL regions; the cerebellum is left out because it is the reference tissue for most tracers.");
   const layers = [];

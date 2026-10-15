@@ -46,7 +46,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   and run Playwright from `app/` with `executablePath: '/opt/pw-browsers/chromium'`. Check phone (390px) and
   desktop widths, console errors and 404s.
 - Secrets live only in Worker secrets; nothing secret in the repo. Workers: `mcp-worker/`, `auth-worker/`,
-  `newsletter-worker/` (see `docs/NEWSLETTER.md`); the owner deploys them from their Mac with wrangler.
+  `newsletter-worker/` (see `docs/NEWSLETTER.md`); the owner deploys them from their Mac with wrangler, so a push
+  changes none of them until they do. The MCP server (`docs/MCP.md`, public page `site/mcp.html`) answers from
+  `mcp-worker/data.js`: run `node scripts/build_mcp_data.mjs` and commit the result whenever the atlas data, region
+  notes, Brodmann areas, network states or the receptor table in `regions.html` change, then ask for a deploy.
 - Licences and permissions are recorded in `docs/PERMISSIONS.md`; keep it in step with any new data source.
 
 ## Open on the owner's side (update as they close)
