@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.88 — 15 October 2026 — The Network Atlas takes the Region Atlas's shape
+Commit · Lay the Network Atlas out like the Region Atlas, the ring beneath the four views, and drop the layout buttons
+
+The Network Atlas now reads like the Region Atlas: the four views in the same two-by-two grid with the same direction locks and Centre planes on each, the network ring in its own frame beneath them, and the rail on the left holding the network's own controls, the brain state, the reading, the scan and the key. The Region Atlas loses the Grid, Axial, Coronal, Sagittal and 3D buttons from its title strip, since the grid is the only layout it has used for a while; saved models still open as before. Nothing else on the site changes.
+
 ## v10.87 — 15 October 2026 — The tractogram's reset, revolve and zoom put right
-Commit · Give the tractogram one working reset, a revolve that shows, an Iso face and no zoom slider
+Commit `d0cc23d` · Give the tractogram one working reset, a revolve that shows, an Iso face and no zoom slider
 
 Both Reset view buttons on the Tractography page now work, and they put everything back: the opening angle, the zoom and any pan. The one in the rail had been doing nothing at all, and the one in the title strip reset the angle and then failed on a function the page never had. Revolve turns the brain at a pace that can be seen, starts the moment it is switched on, and is paused only by taking hold of the brain or scrolling over it, not by the mouse merely crossing the view. The orientation cube gains Iso, the three-quarter view the page opens with. The zoom slider is gone; the + and − on the box, the wheel and a pinch zoom instead, and the pinch and two-finger pan now actually reach the tractogram, which they had not. Nothing else on the site changes.
 

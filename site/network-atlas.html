@@ -193,6 +193,7 @@ svg{ display:block; }
 .ring-stage{
   border:1px solid var(--hair); padding:.6rem; background:var(--paper);
   margin-top:var(--gap);
+  display:flex; align-items:center; justify-content:center;
 }
 #ring{ width:100%; height:auto; max-width:780px; margin:0 auto; }
 .regionarc{ fill:none; stroke-width:11; stroke-linecap:butt; cursor:pointer; }
@@ -224,39 +225,6 @@ svg{ display:block; }
   border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:1.4rem;
 }
 
-/* Wide enough for two columns: the ring and the 3D render sit side by side
-   as two equal squares, and the three planes run in a band beneath them,
-   each a third of the same width. Seeing the ring and the brain at once is
-   the whole point of the page, and this keeps the planes readable instead
-   of squeezing four boxes into whatever the ring leaves over. */
-@media (min-width:1000px){
-  .centre{
-    display:grid; gap:var(--gap); align-items:stretch;
-    grid-template-columns:repeat(6, minmax(0,1fr));
-  }
-  /* the four boxes join the same grid as the ring rather than living in a
-     grid of their own */
-  .views{ display:contents; }
-  /* The square must be sized by the column, never by the row. Stretched to
-     the row's height, aspect-ratio derives the width from that height, and
-     the box grows wider than the column it sits in — which it did once the
-     scans loaded and the other column got taller. Sizing from the start
-     edge keeps width the input and height the result; the render beside it
-     then stretches to the height the ring decided, so both are squares. */
-  .ring-stage{
-    grid-column:1 / 4; grid-row:1; margin-top:0; aspect-ratio:1;
-    align-self:start; max-width:100%; min-width:0;
-    display:flex; align-items:center; justify-content:center;
-  }
-  #ring{ max-width:100%; }
-  .view{ min-height:0; }
-  .view[data-box="Ren"]{ grid-column:4 / 7; grid-row:1; }
-  .view[data-box="Ax"]{ grid-column:1 / 3; grid-row:2; }
-  .view[data-box="Cor"]{ grid-column:3 / 5; grid-row:2; }
-  .view[data-box="Sag"]{ grid-column:5 / 7; grid-row:2; }
-  .centre .view[data-box="Ren"] .mri-stage{ height:auto; flex:1 1 0; min-height:180px; }
-  .centre .view:not([data-box="Ren"]) .mri-stage{ height:auto; flex:none; aspect-ratio:1; }
-}
 /* the ring scales with the column, so the lettering has to grow back */
 @media (max-width:1100px){
   .nodelabel{ font-size:13px; }
@@ -368,22 +336,22 @@ svg{ display:block; }
     <div class="views" id="scan-views">
       <div class="view" data-box="Ren">
         <div class="view-cap"><b>3D</b><span>volume render</span></div>
-        <div class="view-tools"><span class="tool-label"><span class="tl-mouse">Drag to turn · wheel to zoom · shift-drag to pan</span><span class="tl-touch">Drag to turn · pinch to zoom · two fingers pan</span></span><button class="ts-btn centre-btn" data-centre="Ren" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Ren" role="group" aria-label="3D rotation lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free rotation" aria-label="Free rotation">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Spin left&ndash;right only" aria-label="Spin left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Tilt up&ndash;down only" aria-label="Tilt up and down only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Ren" type="button">Centre planes</button></div>
         <div class="mri-stage"><canvas id="naRen"></canvas></div>
       </div>
       <div class="view" data-box="Ax">
         <div class="view-cap"><b>Axial</b><span>transverse plane</span></div>
-        <div class="view-tools"><span class="tool-label"><span class="tl-mouse">Drag to move · ctrl+wheel to zoom · shift-drag to pan</span><span class="tl-touch">Drag to move · pinch to zoom · two fingers pan</span></span><button class="ts-btn centre-btn" data-centre="Ax" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Ax" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Ax" type="button">Centre planes</button></div>
         <div class="mri-stage"><canvas id="naAx"></canvas></div>
       </div>
       <div class="view" data-box="Cor">
         <div class="view-cap"><b>Coronal</b><span>frontal plane</span></div>
-        <div class="view-tools"><span class="tool-label"><span class="tl-mouse">Drag to move · ctrl+wheel to zoom · shift-drag to pan</span><span class="tl-touch">Drag to move · pinch to zoom · two fingers pan</span></span><button class="ts-btn centre-btn" data-centre="Cor" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Cor" role="group" aria-label="Coronal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Cor" type="button">Centre planes</button></div>
         <div class="mri-stage"><canvas id="naCor"></canvas></div>
       </div>
       <div class="view" data-box="Sag">
         <div class="view-cap"><b>Sagittal</b><span>median plane</span></div>
-        <div class="view-tools"><span class="tool-label"><span class="tl-mouse">Drag to move · ctrl+wheel to zoom · shift-drag to pan</span><span class="tl-touch">Drag to move · pinch to zoom · two fingers pan</span></span><button class="ts-btn centre-btn" data-centre="Sag" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Sag" role="group" aria-label="Sagittal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Sag" type="button">Centre planes</button></div>
         <div class="mri-stage"><canvas id="naSag"></canvas></div>
       </div>
     </div>
@@ -466,6 +434,73 @@ const EMPH = { full: 1, mid: 0.52, faint: 0.2 };
 
 /* ── the scan ──────────────────────────────────────────────────────────── */
 let scanState = "idle", scanInstances = [], byKey = {}, parcelToNode = {};
+
+/* ── direction locks, as on the Region Atlas ────────────────────────────
+   Each viewport can confine a drag to one direction. The stored value is
+   the axis left FREE to move: "x" left–right, "y" anterior–posterior,
+   "z" superior–inferior — also the index into a crosshair position, which
+   the viewer holds as fractions of the volume. In the 3D box the same
+   switch confines the camera to azimuth or elevation. */
+const LOCK_AXIS = {x:0, y:1, z:2};
+const locks = {Ren:"free", Ax:"free", Cor:"free", Sag:"free"};
+let anchor = null;        /* crosshair position when the drag began */
+let camAnchor = null;     /* camera angles when the 3D drag began */
+let dragBox = null;       /* which viewport the drag started in */
+let correcting = false;   /* guards the re-entry from our own redraw */
+
+document.querySelectorAll(".seg[data-lock-for]").forEach(seg => {
+  const key = seg.getAttribute("data-lock-for");
+  seg.querySelectorAll("[data-lock]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      seg.querySelectorAll("[data-lock]").forEach(b => b.classList.toggle("active", b === btn));
+      locks[key] = btn.getAttribute("data-lock");
+    });
+  });
+});
+/* a drag starts from wherever the crosshair, or the camera, sits now */
+document.querySelectorAll(".view[data-box]").forEach(box => {
+  const key = box.getAttribute("data-box"), stage = box.querySelector(".mri-stage");
+  if (!stage) return;
+  stage.addEventListener("pointerdown", () => {
+    const nv = byKey[key];
+    if (!nv) return;
+    dragBox = key;
+    anchor = nv.scene.crosshairPos.slice();
+    camAnchor = {az: nv.scene.renderAzimuth, el: nv.scene.renderElevation};
+  });
+});
+["pointerup", "pointercancel"].forEach(evt => {
+  window.addEventListener(evt, () => { anchor = null; camAnchor = null; dragBox = null; });
+});
+/* Put the frozen axes back after the viewer has moved the crosshair, then
+   let it report where the crosshair actually landed. The boxes broadcast
+   crosshair moves to one another, so only the box the drag started in may
+   impose its lock. */
+function applyLock(key, loc){
+  const free = locks[key], nv = byKey[key];
+  if (correcting || key !== dragBox || free === "free" || !nv || !anchor){ crosshairMoved(loc); return; }
+  const pos = nv.scene.crosshairPos, held = [anchor[0], anchor[1], anchor[2]];
+  held[LOCK_AXIS[free]] = pos[LOCK_AXIS[free]];
+  if (held[0] === pos[0] && held[1] === pos[1] && held[2] === pos[2]){ crosshairMoved(loc); return; }
+  correcting = true;
+  try{
+    for (const inst of scanInstances){ inst.scene.crosshairPos = held.slice(); inst.drawScene(); }
+    nv.createOnLocationChange();
+  } catch(e){ crosshairMoved(loc); }
+  finally{ correcting = false; }
+}
+/* the 3D box rotates rather than points, so its lock holds one angle */
+function lockCamera(){
+  const free = locks.Ren, nv = byKey.Ren;
+  if (correcting || dragBox !== "Ren" || free === "free" || !nv || !camAnchor) return;
+  correcting = true;
+  try{
+    if (free === "x") nv.scene.renderElevation = camAnchor.el;
+    else nv.scene.renderAzimuth = camAnchor.az;
+    nv.drawScene();
+  } catch(e){}
+  finally{ correcting = false; }
+}
 
 function loadScript(src){
   return new Promise((res, rej) => {
@@ -552,11 +587,17 @@ function repaint(){
 /* Put the crosshair back at the middle of the volume, so every plane shows
    its central slice again, and undo any panning or zooming with it. */
 function centrePlanes(){
-  for (const inst of scanInstances){
-    inst.scene.crosshairPos = [0.5, 0.5, 0.5];
-    inst.scene.pan2Dxyzmm = [0, 0, 0, 1];
-    inst.drawScene();
-  }
+  if (!scanInstances.length) return;
+  correcting = true;
+  try{
+    for (const inst of scanInstances){
+      inst.scene.crosshairPos = [0.5, 0.5, 0.5];
+      inst.scene.pan2Dxyzmm = [0, 0, 0, 1];
+      inst.drawScene();
+    }
+    scanInstances[0].createOnLocationChange();
+  } catch(e){}
+  finally{ correcting = false; }
 }
 
 /* Put the planes through the region that was picked, so the highlight is
@@ -628,7 +669,11 @@ async function ensureScan(){
     for (const n of DATA.NODES){
       for (const idx of parcelsOf(n)) parcelToNode[idx] = n.id;
     }
-    scanInstances.forEach(nv => { nv.onLocationChange = crosshairMoved; });
+    planes.forEach(p => {
+      const nv = byKey[p.key];
+      nv.onLocationChange = loc => applyLock(p.key, loc);
+      if (p.key === "Ren") nv.onAzimuthElevationChange = lockCamera;
+    });
 
     document.querySelectorAll("[data-centre]").forEach(btn => {
       btn.addEventListener("click", centrePlanes);
