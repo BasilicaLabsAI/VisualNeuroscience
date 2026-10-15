@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.79 — 15 October 2026 — The home page points to the MCP server beside the App Store
+Commit · Put a link to the MCP server page in the home page's dateline, beside the App Store link
+
+The line under the home page's masthead, which already points to the App Store, now carries a second link beside it, MCP server, to the page that explains how to ask the atlas questions from Claude, ChatGPT or Kimi. In the app, where the App Store link gives way to the names of the scans, the server link stays.
+
 ## v10.78 — 15 October 2026 — A page on asking the atlas from an AI assistant, and MCP tools that refuse a bad question plainly
-Commit · Add a public page on the MCP server and have its tools refuse an empty, wrong or unknown input with a plain message
+Commit `f09ef7b` · Add a public page on the MCP server and have its tools refuse an empty, wrong or unknown input with a plain message
 
 A new page, Ask the atlas from an AI assistant, is the public documentation of the MCP server: its address, the steps for connecting it from Claude, a Claude Team or Enterprise organisation, Claude Code, ChatGPT and Kimi, the five tools with a question to try on each, where the answers come from and the fact that the server keeps nothing. The privacy page and the About page link to it. On the server, three inputs that used to slip through are now refused with a message that says what to send instead: a region request with no name no longer answers with the first region in the list, a Brodmann request with no number or a word in its place no longer talks about "undefined", and a receptor request with a misspelt source or with neither a structure nor a receptor no longer guesses. The server takes effect when it is next deployed.
 

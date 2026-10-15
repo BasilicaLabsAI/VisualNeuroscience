@@ -141,9 +141,12 @@ img{ max-width:100%; height:auto; display:block; }
   font-family:var(--font-serif); font-style:italic; font-weight:400;
   font-size:.95rem; letter-spacing:0; text-transform:none; color:var(--ink);
 }
-/* the web points to the App Store; the app, already installed, names its scans instead */
-.dateline .dl-app{ color:var(--ink); text-decoration:none; border-bottom:1px solid var(--hair); }
-.dateline .dl-app:hover{ border-bottom-color:var(--ink); }
+/* the web points to the App Store and to the MCP server, which lets an AI
+   assistant ask the atlas questions; the app, already installed, names its
+   scans in place of the store and keeps the server link */
+.dateline .dl-links{ display:inline-flex; flex-wrap:wrap; gap:.4rem 1.2rem; }
+.dateline .dl-app, .dateline .dl-mcp{ color:var(--ink); text-decoration:none; border-bottom:1px solid var(--hair); }
+.dateline .dl-app:hover, .dateline .dl-mcp:hover{ border-bottom-color:var(--ink); }
 :root:not([data-native]) .dateline .dl-scan,
 :root[data-native] .dateline .dl-app{ display:none; }
 
@@ -313,7 +316,10 @@ img{ max-width:100%; height:auto; display:block; }
     <span>Free &middot; nothing to install</span>
     <span class="mid">Mapping the brain in the browser</span>
     <span class="dl-scan">MNI152 &middot; AAL-116</span>
-    <a class="dl-app" href="https://apps.apple.com/app/id6805618686" target="_blank" rel="noopener">Also on the App Store &rarr;</a>
+    <span class="dl-links">
+      <a class="dl-app" href="https://apps.apple.com/app/id6805618686" target="_blank" rel="noopener">Also on the App Store &rarr;</a>
+      <a class="dl-mcp" href="mcp.html">MCP server &rarr;</a>
+    </span>
   </div>
 
   <div class="mosaic">
