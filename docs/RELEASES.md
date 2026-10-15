@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.90 — 15 October 2026 — One line under each title
+Commit · Give each home page box a single line that says what it is
+
+Each box on the home page now carries one sentence under its title that says what the thing is, in place of the two that told you what to click. Nothing else on the site changes.
+
 ## v10.89 — 15 October 2026 — The home page says less
-Commit · Cut each home page box to its title and a line or two
+Commit `34a3a59` · Cut each home page box to its title and a line or two
 
 Each of the eight boxes on the home page now carries its title and one or two sentences, where several had grown into paragraphs that ran most of a phone screen. The facts line and the link under each are unchanged, and so is everything the boxes open. Nothing else on the site changes.
 
