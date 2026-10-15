@@ -72,6 +72,7 @@ const ERRORS = {
   "vn/username-format":            "A username is 3 to 20 characters: letters, numbers and underscores.",
   "vn/username-taken":             "That username is taken — try another.",
   "vn/username-refused":           "The database refused the username, and not because it is taken: its rules do not allow usernames yet. The site's Firestore rules need publishing.",
+  "vn/username-check-refused":     "The database refused the username check, and not because of your connection: its rules do not allow usernames yet. The site's Firestore rules need publishing.",
   "vn/disabled":                   "Accounts are switched off in this copy of the app.",
   "vn/link-cancelled":             "Sign-in was cancelled."
 };
@@ -189,7 +190,13 @@ async function build(){
     const key = checkUsername(name);
     let snap;
     try{ snap = await sdk.getDoc(sdk.doc(db, "usernames", key)); }
-    catch(err){ throw friendly({ code: "auth/network-request-failed" }); }
+    catch(err){
+      /* a refusal is the rules, not the network: say which */
+      const code = err && err.code || "";
+      if (/permission|denied/i.test(code) || /permission/i.test(err && err.message || ""))
+        throw friendly({ code: "vn/username-check-refused" });
+      throw friendly({ code: "auth/network-request-failed" });
+    }
     return !snap.exists();
   }
   async function claimUsername(u, name){

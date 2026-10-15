@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.80 — 15 October 2026 — The sign-in box stays open until its cross is pressed, and remembers what was typed
+Commit · Close the sign-in box only from its cross, keep what was typed in it, and name a refused username check for what it is
+
+The account box used to vanish at a click beside it, taking a half-filled form with it. It now closes only from its cross, which is bigger and sits in a box of its own, or from the Escape key, and whatever was typed, the tab that was open included, is there again when the box is reopened, until a sign-in succeeds. Creating an account also stops blaming the connection when the database has refused to look a username up: that refusal comes from the Firestore rules not yet being published, and the message now says so.
+
 ## v10.79 — 15 October 2026 — The home page points to the MCP server beside the App Store
-Commit · Put a link to the MCP server page in the home page's dateline, beside the App Store link
+Commit `f09f5e1` · Put a link to the MCP server page in the home page's dateline, beside the App Store link
 
 The line under the home page's masthead, which already points to the App Store, now carries a second link beside it, MCP server, to the page that explains how to ask the atlas questions from Claude, ChatGPT or Kimi. In the app, where the App Store link gives way to the names of the scans, the server link stays.
 

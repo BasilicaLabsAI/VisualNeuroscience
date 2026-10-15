@@ -66,8 +66,13 @@ function mount(){
     font-family:var(--font-display,Georgia,serif); font-weight:400;
     font-size:1.25rem; margin:0 0 .9rem;
   }
-  .vn-close{ float:right; background:none; border:0; color:var(--ink,#111);
-    font-size:1.15rem; line-height:1; cursor:pointer; padding:.2rem .4rem; }
+  .vn-close{
+    float:right; width:2.3rem; height:2.3rem; margin:-.25rem -.3rem 0 .6rem;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--ink,#111); color:var(--paper,#fff); border:1px solid var(--ink,#111);
+    font-size:1.45rem; line-height:1; cursor:pointer; padding:0;
+  }
+  .vn-close:focus-visible{ outline:2px solid var(--ink,#111); outline-offset:2px; }
   .vn-prov{ display:flex; flex-direction:column; gap:.55rem; margin-bottom:1rem; }
   .vn-prov button{
     display:flex; align-items:center; justify-content:center; gap:.6rem;
@@ -167,7 +172,6 @@ function mount(){
     closeModal();
     wrap = document.createElement("div");
     wrap.className = "vn-modal-wrap";
-    wrap.addEventListener("click", e => { if (e.target === wrap) closeModal(); });
     const box = document.createElement("div");
     box.className = "vn-modal";
     box.setAttribute("role", "dialog");
@@ -254,6 +258,10 @@ function mount(){
   };
 
   let wrap = null, statusEl = null;
+  /* what was typed into the sign-in box survives its closing, until a
+     sign-in succeeds or the page is left: the box closes only on its own
+     cross (or Escape), never on a stray click beside it */
+  let draft = null, currentTab = "in";
 
   function status(text, isErr){
     if (!statusEl) return;
@@ -281,7 +289,7 @@ function mount(){
     status("");
     try{
       await patient(fn());
-      closeModal();
+      closeModal({ keep: false });
     }catch(err){
       if (err && err.keepOpen) status(err.message, false);
       else status(err && err.message ? err.message : "Something went wrong. Try again.", true);
@@ -302,7 +310,6 @@ function mount(){
     closeModal();
     wrap = document.createElement("div");
     wrap.className = "vn-modal-wrap";
-    wrap.addEventListener("click", e => { if (e.target === wrap) closeModal(); });
 
     const box = document.createElement("div");
     box.className = "vn-modal";
@@ -357,6 +364,7 @@ function mount(){
     box.appendChild(tabs);
 
     function setTab(key){
+      currentTab = key;
       tabs.querySelectorAll("button").forEach(b => b.classList.toggle("active", b.dataset.tab === key));
       Object.keys(forms).forEach(k => forms[k].classList.toggle("active", k === key));
       status("");
@@ -433,6 +441,7 @@ function mount(){
     forms["reset"] = fRe;
 
     box.append(fIn, fUp, fRe);
+    Object.keys(forms).forEach(k => { forms[k].dataset.key = k; });
 
     statusEl = document.createElement("p");
     statusEl.className = "vn-status";
@@ -442,14 +451,28 @@ function mount(){
     wrap.appendChild(box);
     document.body.appendChild(wrap);
     document.addEventListener("keydown", onEsc);
-    setTab("in");
+    if (draft){
+      Object.keys(forms).forEach(k => forms[k].querySelectorAll("input").forEach(i => {
+        const v = draft.fields[k + "." + i.name];
+        if (v != null) i.value = v;
+      }));
+    }
+    setTab(draft && draft.tab || "in");
     if (prefill && prefill.status) status(prefill.status, prefill.err);
     if (prefill && prefill.email) inEmail.value = prefill.email;
   }
 
   function onEsc(e){ if (e.key === "Escape") closeModal(); }
-  function closeModal(){
+  function closeModal(opts){
     if (!wrap) return;
+    const forms = wrap.querySelectorAll(".vn-form");
+    if (forms.length){
+      if (opts && opts.keep === false) draft = null;
+      else {
+        draft = { tab: currentTab, fields: {} };
+        forms.forEach(f => f.querySelectorAll("input").forEach(i => { draft.fields[f.dataset.key + "." + i.name] = i.value; }));
+      }
+    }
     document.removeEventListener("keydown", onEsc);
     wrap.remove(); wrap = null; statusEl = null;
   }
