@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.86 — 15 October 2026 — Continue with Apple on the website
+Commit · Switch Sign in with Apple on for the website now its Services ID and key are in Firebase
+
+The account box on the website now offers Continue with Apple next to Continue with Google, above the email form. It opens Apple's own sign-in page in a popup and brings the person back signed in; a Hide My Email address works like any other. The apps have offered the Apple button natively for a while, and that is unchanged. Nothing else on the site changes.
+
 ## v10.85 — 15 October 2026 — The iPhone app can sign in with Google
-Commit · Carry the iOS Google client in the app's Firebase config and register its return scheme
+Commit `26b704b` · Carry the iOS Google client in the app's Firebase config and register its return scheme
 
 Nothing on the website changes. The iPhone and iPad app's Firebase configuration is now the one issued after Google sign-in was switched on, which carries the client the phone's Google sheet signs in with, and the app registers that client's return address, so the sheet can hand the person back to the app signed in. The next App Store build carries both; the website had Google from the previous release.
 

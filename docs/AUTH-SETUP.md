@@ -174,6 +174,9 @@ use them); and the **Sign in with Apple capability ticked on the App ID**
 in the developer portal (the entitlement is already in
 `app/ios/App/App/App.entitlements`). The steps below are only for the
 **web** button; when they're done, change `"app"` to `true`.
+Done, 15 October 2026 (v10.86): the Services ID, key and Team ID are in
+the Firebase console's Apple provider and the config has `apple: true`,
+so the button shows on the website as well as in the apps.
 
 ### Apple Developer console (for web sign-in)
 
@@ -184,11 +187,11 @@ in the developer portal (the entitlement is already in
    `ai.visualneuroscience.web`, description "VisualNeuroscience web" →
    register, then open it → enable **Sign in with Apple** → **Configure**:
    - Primary App ID: `ai.visualneuroscience.app`
-   - Domains: your `authDomain` (e.g. `visualneuroscience.firebaseapp.com`,
-     or your custom auth domain once you have one)
+   - Domains: the `authDomain`, `visualneuroscience-4315d.firebaseapp.com`
+     (a custom auth domain, if one is ever set up, is added here too)
    - Return URLs: `https://<authDomain>/__/auth/handler`
-3. **Keys → +** → name "Firebase Apple sign-in" → tick **Sign in with
-   Apple** → Configure → choose the primary App ID → register → **download
+3. **Keys → +** → name "Firebase Apple Sign In" (letters, digits and
+   spaces only; Apple refuses hyphens) → tick **Sign in with Apple** → Configure → choose the primary App ID → register → **download
    the .p8 file** (one chance only) and note the **Key ID** and your **Team
    ID** (top right of the developer site).
 

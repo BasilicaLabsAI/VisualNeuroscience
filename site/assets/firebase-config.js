@@ -51,9 +51,11 @@ window.VN_FIREBASE = {
      section in docs/AUTH-SETUP.md is done. Google is on: the web button
      needs the provider enabled in the Firebase console (§5), the app's
      native sheet needs the GoogleService-Info.plist that carries a
-     CLIENT_ID and its REVERSED_CLIENT_ID as a URL scheme. "app" means
-     offered only inside the wrapped store apps: Sign in with Apple runs
-     natively there (no Services ID needed), and stays hidden on the web
-     until §6's Apple Developer steps are done and this becomes true. */
-  providers: { google: true, apple: "app", linkedin: false, emailLink: true }
+     CLIENT_ID and its REVERSED_CLIENT_ID as a URL scheme. Apple is on:
+     the web button needs §6's Services ID, key and Team ID entered in
+     the console's Apple provider; the apps run Sign in with Apple
+     natively and need only the provider enabled. A flag may also be the
+     string "app": offered only inside the wrapped store apps, the shape
+     Apple had before the web setup was done. */
+  providers: { google: true, apple: true, linkedin: false, emailLink: true }
 };
