@@ -44,7 +44,10 @@ const regions = ATLAS.REGIONS.map(r => {
     base: r.base, name: r.pretty, group: r.group,
     sides: r.S != null ? "single" : "paired",
     tier: note.tier || null, fn: note.fn || null,
-    sel: (r.S != null ? "S:" : "P:") + r.base
+    sel: (r.S != null ? "S:" : "P:") + r.base,
+    /* the AAL label numbers, so a model saved from a chat carries the same
+       indices the Region Atlas keeps for a selection */
+    L: r.L ?? null, R: r.R ?? null, S: r.S ?? null
   };
 });
 const tiers = Object.fromEntries(NOTES.TIERS.map(t => [t.id, t.label.replace(/&middot;/g, "·")]));

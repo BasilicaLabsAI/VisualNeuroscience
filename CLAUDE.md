@@ -49,7 +49,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `newsletter-worker/` (see `docs/NEWSLETTER.md`); the owner deploys them from their Mac with wrangler, so a push
   changes none of them until they do. The MCP server (`docs/MCP.md`, public page `site/mcp.html`) answers from
   `mcp-worker/data.js`: run `node scripts/build_mcp_data.mjs` and commit the result whenever the atlas data, region
-  notes, Brodmann areas, network states or the receptor table in `regions.html` change, then ask for a deploy.
+  notes, Brodmann areas, network states or the receptor table in `regions.html` change, then ask for a deploy. Its
+  sign-in (`mcp-worker/oauth.js`, consent page `site/connect.html`) needs the `OAUTH_SECRET` worker secret, set once
+  by the owner; `node mcp-worker/tests/oauth.test.mjs` runs the whole flow offline and must pass before a deploy.
 - Licences and permissions are recorded in `docs/PERMISSIONS.md`; keep it in step with any new data source.
 
 ## Open on the owner's side (update as they close)

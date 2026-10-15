@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Connect an assistant — VisualNeuroscience.AI</title>
+<meta name="description" content="Let an AI assistant use your VisualNeuroscience.AI account to read and save your Region Atlas models.">
+<!-- link previews. The card is built by site/share.html and rendered to
+     assets/social-card.jpg; og:image has to be absolute, so this origin is
+     the one thing to change if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="Connect an assistant — VisualNeuroscience.AI">
+<meta property="og:description" content="Let an AI assistant use your VisualNeuroscience.AI account to read and save your Region Atlas models.">
+<meta property="og:url" content="https://visualneuroscience.ai/connect.html">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The flow-state network ring over orange-tinted MNI152 brain slices, with the VisualNeuroscience.AI wordmark at its centre.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="robots" content="noindex">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="fonts/fonts.css">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+  --quiet:#8A8A8A;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+  --quiet:#8A8A8A;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  margin:0 0 3rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+a{ color:var(--ink); }
+svg{ display:block; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* masthead, shared with the rest of the site */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:.65em; height:.65em; flex:none; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{
+  font-family:var(--font-display); font-size:1.35rem;
+  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+}
+.title-strip .anno{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60);
+}
+
+.lede{
+  font-family:var(--font-serif); font-size:1.02rem; line-height:1.6;
+  margin:0 0 calc(var(--gap) * 1.6);
+}
+
+/* ── the shelf of studies ───────────────────────────────────────────────
+   A grid that reads correctly with one card and with a dozen: the columns
+   are sized, not divided, so a lone study sits at its natural width rather
+   than stretching across the page. */
+.shelf{
+  display:grid; gap:var(--gap);
+  grid-template-columns:repeat(auto-fill, minmax(330px, 420px));
+}
+.study{
+  border:1px solid var(--hair); background:var(--paper);
+  display:flex; flex-direction:column; text-decoration:none; color:var(--ink);
+}
+@media (hover: hover){ .study:hover{ text-decoration:none; } }
+@media (hover: hover){ .study:hover .study-body{ background:color-mix(in srgb, var(--ink) 6%, transparent); } }
+.study-fig{
+  border-bottom:1px solid var(--hair); background:#000000;
+  aspect-ratio:902 / 409; overflow:hidden; position:relative;
+}
+.study-fig img{ width:100%; height:100%; object-fit:cover; display:block; }
+.study-body{ padding:1rem 1.05rem 1.15rem; transition:background .2s ease; }
+.study-kicker{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+}
+.study h2{
+  font-family:var(--font-display); font-weight:400;
+  font-size:1.24rem; line-height:1.15; letter-spacing:.01em; margin:.35rem 0 .45rem;
+}
+.study p{ font-size:.94rem; line-height:1.55; color:var(--ink-60); }
+.study .cite{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.82rem; color:var(--ink-35); margin-top:.7rem;
+}
+.study .go{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.24em; text-transform:uppercase; margin-top:.85rem;
+  display:inline-flex; align-items:center; gap:.45rem;
+}
+@media (hover: hover){ .study:hover .go{ text-decoration:underline; text-underline-offset:3px; } }
+
+/* a slot for what is not built yet, so the shelf reads as a shelf */
+.study.soon{ border-style:dashed; cursor:default; }
+.study.soon .study-fig{ background:none; display:flex; align-items:center; justify-content:center; }
+.study.soon .study-body{ background:none; }
+.study.soon h2, .study.soon p{ color:var(--ink-35); }
+
+.attrib{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.85rem; color:var(--ink-60);
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2rem;
+}
+
+/* ── what is planned but not built ──────────────────────────────────────
+   Small tiles rather than the full study card: thirteen empty cards at
+   that size would be a wall of dashed boxes pretending to be content.
+   Each says what the drug acts on, which is enough to show the section
+   has a shape without claiming any of it is written yet. */
+.drugs-sec{ margin-top:calc(var(--gap) * 3); }
+.drug-grid{
+  display:grid; gap:var(--gap); list-style:none; margin:0; padding:0;
+  grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));
+}
+.drug{
+  border:1px dashed var(--ink-35); padding:.85rem .9rem 1rem;
+  display:flex; flex-direction:column; min-width:0;
+}
+.drug-name{
+  font-family:var(--font-display); font-weight:400;
+  font-size:1.12rem; line-height:1.15; color:var(--ink);
+}
+.drug-sub{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.8rem; color:var(--ink-35); margin-top:.15rem; overflow-wrap:anywhere;
+}
+.drug-target{
+  font-family:var(--font-serif); font-size:.88rem; line-height:1.45;
+  color:var(--ink-60); margin-top:.5rem;
+}
+.drug-target sub{ font-size:.72em; }
+.drug-soon{
+  font-family:var(--font-brand); font-weight:500; font-size:.52rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-35);
+  margin-top:auto; padding-top:.85rem;
+}
+
+/* ── the policy ─────────────────────────────────────────────────────── */
+.policy{ max-width:72ch; margin:0 auto; }
+.policy h2{
+  font-family:var(--font-brand); font-weight:600; font-size:.66rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
+  border-bottom:1px solid var(--ink); padding:.2rem .1rem .45rem;
+  margin:calc(var(--gap) * 2.4) 0 var(--gap);
+}
+.policy h2:first-of-type{ margin-top:var(--gap); }
+.policy p{ font-size:1rem; line-height:1.65; margin-bottom:.9rem; }
+.policy ul{ margin:0 0 1rem 1.1rem; }
+.policy li{ font-size:1rem; line-height:1.6; margin-bottom:.45rem; }
+.policy b{ font-weight:400; color:var(--ink); }
+.policy .note{
+  font-family:var(--font-serif); font-style:italic; font-size:.9rem;
+  color:var(--ink-60); border-left:2px solid var(--ink-35);
+  padding-left:.8rem; margin:1rem 0;
+}
+.policy .stamp{
+  font-family:var(--font-brand); font-size:.55rem; letter-spacing:.24em;
+  text-transform:uppercase; color:var(--ink-35);
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2.4rem;
+}
+/* the consent card: one question, two answers */
+.consent{ max-width:40rem; margin:0 auto; }
+.consent .who{ font-family:var(--font-display); font-size:1.35rem; line-height:1.3; margin:.4rem 0 1rem; }
+.consent .who b{ font-weight:400; border-bottom:1px solid var(--ink); }
+.consent ul{ margin:0 0 1.2rem 1.1rem; }
+.consent li{ font-size:1rem; line-height:1.6; margin-bottom:.4rem; }
+.consent .acts{ display:flex; flex-wrap:wrap; gap:.7rem; margin:1.2rem 0 .8rem; }
+.consent .btn{
+  font-family:var(--font-brand); font-weight:500; font-size:.72rem; letter-spacing:.2em; text-transform:uppercase;
+  min-height:44px; padding:.65rem 1.2rem; cursor:pointer; border:1px solid var(--ink);
+  background:var(--ink); color:var(--paper);
+}
+.consent .btn.quiet{ background:none; color:var(--ink); border-color:var(--hair); }
+@media (hover:hover){ .consent .btn.quiet:hover{ background:var(--ink); color:var(--paper); } }
+.consent .btn[disabled]{ opacity:.5; cursor:default; }
+.consent .signed{ font-size:.95rem; color:var(--ink-60); margin:0 0 .4rem; }
+.consent .signed b{ font-weight:400; color:var(--ink); }
+.consent .warn{
+  font-family:var(--font-serif); font-style:italic; font-size:.92rem; color:var(--ink-60);
+  border-left:2px solid var(--ink-35); padding-left:.8rem; margin:1rem 0;
+}
+.consent .state{ font-size:.95rem; font-style:italic; color:var(--ink-60); min-height:1.4em; margin:.6rem 0 0; }
+.consent .state.err{ color:#b3261e; font-style:normal; }
+:root[data-theme="dark"] .consent .state.err{ color:#ff8a80; }
+.consent .fine{ font-size:.86rem; color:var(--ink-60); margin-top:1.6rem; }
+</style>
+</head>
+<body>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="Site">
+    <a href="regions.html">Region Atlas</a>
+    <a href="microanatomy.html">Microanatomy</a>
+    <a href="molecular.html">Molecular</a>
+    <a href="network-atlas.html">Network Atlas</a>
+    <a href="tracts.html">Tractography</a>
+    <a href="studies.html">Visualizing Studies</a>
+    <a href="textbook.html">Digital Textbook</a>
+    <a href="practice.html">Practice</a>
+    <a href="about.html">About</a>
+    <span class="nav-tools"><button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button></span>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<div class="title-strip">
+  <h1 class="name">Connect an assistant</h1>
+  <span class="anno">let it use your account</span>
+</div>
+
+<section class="consent" id="consent" aria-live="polite">
+  <p class="who" id="who">Checking the request&hellip;</p>
+  <div id="detail" hidden>
+    <p>If you allow it, the assistant can, in your name:</p>
+    <ul>
+      <li>read your username, university and email;</li>
+      <li>list and open the Region Atlas models saved to your account;</li>
+      <li>save new models to it, which then appear in the app&rsquo;s Saved models. It can never replace or delete one.</li>
+    </ul>
+    <p class="warn" id="loopback" hidden>The assistant is running on your own computer: the address it gave for the return is a local one. Only allow this if you started the connection yourself a moment ago.</p>
+    <p class="signed" id="signed" hidden></p>
+    <div class="acts">
+      <button type="button" class="btn" id="login" hidden>Log in to continue</button>
+      <button type="button" class="btn" id="allow" hidden>Allow</button>
+      <button type="button" class="btn quiet" id="deny" hidden>Cancel</button>
+    </div>
+    <p class="state" id="state"></p>
+    <p class="fine">You will be sent back to <b id="back"></b>. The assistant receives a key to your account that works until you log out of it in the assistant, delete the account, or reset your password; it never sees your password. What it does with what it reads is governed by the assistant&rsquo;s own privacy policy; ours is <a href="privacy.html">here</a>.</p>
+  </div>
+</section>
+
+</main>
+
+<script src="assets/native.js"></script>
+<script src="assets/navbar.js"></script>
+<script>
+"use strict";
+(function(){
+  var themeBtn = document.getElementById("themeBtn");
+  var themeLbl = document.getElementById("themeLbl");
+  if (document.documentElement.getAttribute("data-theme") === "dark"){
+    themeLbl.textContent = "Light"; themeBtn.setAttribute("aria-pressed", "true");
+  }
+  themeBtn.addEventListener("click", function(){
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark";
+    if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+    else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+    themeBtn.setAttribute("aria-pressed", String(!dark));
+    try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+  });
+})();
+</script>
+
+<script src="assets/firebase-config.js"></script>
+<script type="module" src="assets/auth-ui.js"></script>
+<script type="module">
+/* The consent page for the MCP server's sign-in. The server sends an
+   assistant here with a sealed request in the fragment; this page asks the
+   server what to show, lets the person log in with the site's own box,
+   and on Allow hands the server the Firebase tokens of the session, which
+   the server turns into a code for the assistant. Nothing here talks to
+   the assistant directly: the server answers with where to send the
+   person back, and that is the only thing this page does with it. */
+import auth from "./assets/auth.js";
+const ISSUER = "https://mcp.visualneuroscience.ai";
+const $ = id => document.getElementById(id);
+const req = new URLSearchParams(location.hash.slice(1)).get("req");
+const who = $("who"), state = $("state");
+function say(t, err){ state.textContent = t || ""; state.classList.toggle("err", !!err); }
+function fail(t){ who.textContent = t; $("detail").hidden = true; }
+
+if (!req){ fail("This page is where an assistant sends you to connect your account. Open it from the assistant, not on its own."); }
+else if (!auth.enabled){ fail("Accounts are switched off in this copy of the app, so nothing can be connected."); }
+else {
+  fetch(ISSUER + "/oauth/request?req=" + encodeURIComponent(req), { headers: { accept: "application/json" } })
+    .then(r => r.json().then(j => ({ ok: r.ok, j })))
+    .then(({ ok, j }) => {
+      if (!ok) throw new Error(j && j.error_description || "This request is no longer valid.");
+      who.innerHTML = "<b></b> wants to use your VisualNeuroscience.AI account.";
+      who.querySelector("b").textContent = j.client || "An assistant";
+      $("back").textContent = j.redirect_host || j.client || "the assistant";
+      $("loopback").hidden = !j.loopback;
+      $("detail").hidden = false;
+      auth.onUser(u => {
+        $("login").hidden = !!u; $("allow").hidden = !u; $("deny").hidden = false;
+        if (u){
+          const p = auth.profile();
+          $("signed").hidden = false;
+          $("signed").innerHTML = "Signed in as <b></b>. ";
+          $("signed").querySelector("b").textContent = (p && p.username) || u.email || "you";
+          const sw = document.createElement("button"); sw.type = "button"; sw.className = "vn-alt"; sw.textContent = "Not you? Log out";
+          sw.style.cssText = "background:none;border:0;font:inherit;font-style:italic;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0";
+          sw.addEventListener("click", () => auth.signOut());
+          $("signed").appendChild(sw);
+        } else $("signed").hidden = true;
+      });
+    })
+    .catch(e => fail(e.message || "This request is no longer valid. Start again from the assistant."));
+
+  $("login").addEventListener("click", () => {
+    const b = document.querySelector(".vn-auth-btn");
+    if (b) b.click(); else say("The sign-in box is still loading; try again in a moment.", true);
+  });
+  async function answer(decision){
+    const u = auth.currentUser();
+    const body = { req, decision };
+    if (decision === "allow"){
+      if (!u){ say("Log in first.", true); return; }
+      try{ body.id_token = await u.getIdToken(true); body.refresh_token = u.refreshToken; }
+      catch(e){ say("Could not read your sign-in: " + (e.message || e), true); return; }
+    }
+    ["allow", "deny", "login"].forEach(id => { $(id).disabled = true; });
+    say(decision === "allow" ? "Connecting\u2026" : "Cancelling\u2026");
+    try{
+      const r = await fetch(ISSUER + "/oauth/approve", { method: "POST", headers: { "content-type": "application/json", accept: "application/json" }, body: JSON.stringify(body) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok || !j.redirect) throw new Error(j.error_description || "The server did not answer.");
+      say(decision === "allow" ? "Connected. Sending you back\u2026" : "Sending you back\u2026");
+      location.replace(j.redirect);
+    }catch(e){
+      say(e.message || "Something went wrong. Try again.", true);
+      ["allow", "deny", "login"].forEach(id => { $(id).disabled = false; });
+    }
+  }
+  $("allow").addEventListener("click", () => answer("allow"));
+  $("deny").addEventListener("click", () => answer("deny"));
+}
+</script>
+</body>
+</html>

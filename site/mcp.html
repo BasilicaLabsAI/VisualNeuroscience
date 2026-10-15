@@ -302,7 +302,7 @@ svg{ display:block; }
   <li><b>ChatGPT.</b> In <i>Settings</i>, then <i>Apps &amp; Connectors</i>, turn on <i>Developer mode</i> under <i>Advanced</i>, then <i>Add MCP server</i> with the address.</li>
   <li><b>Kimi.</b> <code>kimi mcp add --transport http visualneuroscience https://mcp.visualneuroscience.ai/</code>, or the same entry in <code>~/.kimi-code/mcp.json</code>.</li>
 </ul>
-<p>Every tool is read-only and says so in its annotations, so an assistant can call them without asking you to approve each one; nothing an assistant does through them changes anything, here or anywhere.</p>
+<p>The five atlas tools are read-only and say so in their annotations, so an assistant can call them without asking you to approve each one; nothing an assistant does through them changes anything, here or anywhere. Four more tools work on your own account, and ask you to sign in the first time one is reached: on a Team or Enterprise plan, the owner should add the connector with authentication set to <i>Sign in when needed</i>.</p>
 
 <h2>The five tools</h2>
 <dl>
@@ -318,14 +318,28 @@ svg{ display:block; }
   <dd>How the brain&rsquo;s large-scale networks reconfigure in one of six states, flow, rest, focused attention, threat, reward pursuit and meditation: which couplings strengthen, which fall quiet, and the literature each composite is read from. Called without a state, it lists the six. <span class="ask">&ldquo;How does the brain change in the flow state?&rdquo;</span></dd>
 </dl>
 
+<h2>With your account</h2>
+<p>If you have a VisualNeuroscience.AI account, an assistant can use it once you have allowed it to. The first time it reaches one of these four tools, the assistant shows a Connect button; that opens a page on this site where you log in as you would in the app and press Allow, and the assistant carries on where it left off. It never sees your password, and the key it is given stops working when you log out of it in the assistant, change your password or delete the account.</p>
+<dl>
+  <dt>my_account</dt>
+  <dd>Who is signed in: your username, university and email. <span class="ask">&ldquo;Which account am I connected as?&rdquo;</span></dd>
+  <dt>list_models</dt>
+  <dd>The Region Atlas models saved to your account, each with what it highlights and a link that opens it. <span class="ask">&ldquo;What models have I saved?&rdquo;</span></dd>
+  <dt>load_model</dt>
+  <dd>One saved model by name: its regions and areas, and the link that opens it highlighted on the scan. <span class="ask">&ldquo;Open my memory circuit model.&rdquo;</span></dd>
+  <dt>save_model</dt>
+  <dd>Saves a new model from a list of regions and Brodmann areas, which then appears in the app&rsquo;s Saved models on every device signed in to the account. It only ever creates: a name already in use is refused, so an assistant can never replace or delete your work. <span class="ask">&ldquo;Save the hippocampus, the left amygdala and BA17 as a model called memory circuit.&rdquo;</span></dd>
+</dl>
+<p>To take the access away, remove the connector or disconnect it in the assistant. Nothing about the connection is kept on this server: the assistant holds the key, and the key is Firebase&rsquo;s, the same service that signs you in to the app.</p>
+
 <h2>Where the answers come from</h2>
 <p>The server&rsquo;s data is generated from the same files these pages draw, so it cannot disagree with them: the AAL-116 parcellation on the MNI152 template, the 41 Brodmann areas of the MRIcron atlas with their measured borders, receptor densities from the PET maps compiled by Hansen et al. 2022 (CC BY-NC-SA 4.0) and the autoradiography of Zilles and Palomero-Gallagher 2017 (CC BY 4.0), and the six network states with their sources. It is educational reference material, as the pages are, and not medical advice; every answer about a receptor says which tracer and sample it rests on.</p>
 
 <h2>What it keeps</h2>
-<p>Nothing. The server holds no accounts and no state, and keeps no record of your questions beyond the short-lived operational logs of the platform it runs on, which the <a href="privacy.html">privacy page</a> sets out. What you type to the assistant itself is governed by that assistant&rsquo;s own privacy policy.</p>
+<p>Nothing. The server holds no accounts of its own and no state, and keeps no record of your questions beyond the short-lived operational logs of the platform it runs on, which the <a href="privacy.html">privacy page</a> sets out. When you connect your account, the saved models an assistant reads or writes live in the same place the app keeps them, under your account, and the server passes them through without keeping a copy. What you type to the assistant itself is governed by that assistant&rsquo;s own privacy policy.</p>
 
 <h2>For developers</h2>
-<p>It is one Cloudflare Worker with no dependencies, speaking JSON-RPC 2.0 over POST. The tools can be exercised without an assistant:</p>
+<p>It is one Cloudflare Worker with no dependencies, speaking JSON-RPC 2.0 over POST. Sign-in is OAuth 2.1 with PKCE, discovered the standard way (<code>/.well-known/oauth-protected-resource</code> and <code>/.well-known/oauth-authorization-server</code>), with clients registering themselves dynamically or by a client ID metadata document; a call to an account tool without a token answers 401 with the challenge that starts it. The tools can be exercised without an assistant:</p>
 <pre><code>curl -s https://mcp.visualneuroscience.ai/ -X POST \
   -H 'content-type: application/json' \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'</code></pre>

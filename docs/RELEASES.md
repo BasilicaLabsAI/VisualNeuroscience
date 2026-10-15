@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.81 — 15 October 2026 — An assistant can sign in to your account, and save a Region Atlas model from a chat
+Commit · Give the MCP server a sign-in in front of the site's accounts, four account tools, and a consent page on the site
+
+Claude and the other assistants can now use your VisualNeuroscience.AI account, if you let them. The five atlas tools stay open to everyone; four new ones ask you to sign in the first time one is reached: who is signed in, the Region Atlas models saved to the account, one of them by name with the link that opens it, and saving a new model from a list of regions and Brodmann areas, which then appears in the app's Saved models on every device. The sign-in is the standard one assistants expect, done on a new page of the site where you log in as you would in the app and press Allow; the assistant never sees your password, is given a key that stops working when you disconnect it, change your password or delete the account, and can only ever add a model, never replace or delete one. The privacy page and the MCP page say all of this. The server keeps nothing: the key is Firebase's own, and the models live where the app keeps them.
+
 ## v10.80 — 15 October 2026 — The sign-in box stays open until its cross is pressed, and remembers what was typed
-Commit · Close the sign-in box only from its cross, keep what was typed in it, and name a refused username check for what it is
+Commit `3cd4744` · Close the sign-in box only from its cross, keep what was typed in it, and name a refused username check for what it is
 
 The account box used to vanish at a click beside it, taking a half-filled form with it. It now closes only from its cross, which is bigger and sits in a box of its own, or from the Escape key, and whatever was typed, the tab that was open included, is there again when the box is reopened, until a sign-in succeeds. Creating an account also stops blaming the connection when the database has refused to look a username up: that refusal comes from the Firestore rules not yet being published, and the message now says so.
 

@@ -16,6 +16,8 @@
      npx wrangler deploy        (from mcp-worker/; see docs/MCP.md)
 */
 import DATA from "./data.js";
+import { handleOAuth, unauthorized, verifyIdToken } from "./oauth.js";
+import { ACCOUNT_TOOLS, PROTECTED, runAccountTool } from "./account.js";
 
 const SITE = "https://visualneuroscience.ai";
 const PROTOCOL_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"];
@@ -26,7 +28,9 @@ const INSTRUCTIONS =
   "functions, the 41 Brodmann areas with their measured borders, sourced receptor densities across 45 " +
   "structures, and six brain states as network reconfigurations. Answers include links that open " +
   "the same view in the app or on the web. The data is educational reference material with its " +
-  "sources cited on the site; it is not medical advice.";
+  "sources cited on the site; it is not medical advice. Four more tools work on the person's own " +
+  "VisualNeuroscience.AI account once they have signed in: my_account, list_models, load_model and " +
+  "save_model, which saves a Region Atlas model that then appears in the app's Saved models.";
 
 /* ── the tools ──────────────────────────────────────────────────────────── */
 
@@ -305,7 +309,7 @@ const HANDLERS = {
 function rpcResult(id, result){ return { jsonrpc: "2.0", id, result }; }
 function rpcError(id, code, message){ return { jsonrpc: "2.0", id, error: { code, message } }; }
 
-function handleRpc(msg){
+async function handleRpc(msg, ctx){
   const { id, method, params } = msg || {};
   if (method === "initialize"){
     const asked = params && params.protocolVersion;
@@ -317,9 +321,15 @@ function handleRpc(msg){
     });
   }
   if (method === "ping") return rpcResult(id, {});
-  if (method === "tools/list") return rpcResult(id, { tools: TOOLS });
+  if (method === "tools/list") return rpcResult(id, { tools: TOOLS.concat(ACCOUNT_TOOLS) });
   if (method === "tools/call"){
     const name = params && params.name;
+    /* the account tools run as the signed-in person the request carried;
+       the fetch handler has already turned away a call without one */
+    if (PROTECTED.has(name)){
+      if (!ctx || !ctx.who) return rpcError(id, -32001, "Sign in to use " + name);
+      return rpcResult(id, await runAccountTool(ctx.env, ctx.who, ctx.idToken, name, params && params.arguments));
+    }
     const fn = HANDLERS[name];
     if (!fn) return rpcError(id, -32602, "Unknown tool: " + name);
     try { return rpcResult(id, fn(params.arguments || {})); }
@@ -335,19 +345,25 @@ const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Accept, Authorization, Mcp-Session-Id, MCP-Protocol-Version",
-  "Access-Control-Expose-Headers": "Mcp-Session-Id"
+  "Access-Control-Expose-Headers": "Mcp-Session-Id, WWW-Authenticate"
 };
 
 export default {
-  async fetch(request){
+  async fetch(request, env){
+    env = env || {};
     const url = new URL(request.url);
+    /* sign-in: discovery, registration, the consent hand-off and tokens */
+    const oauth = await handleOAuth(request, env);
+    if (oauth) return oauth;
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
     if (request.method === "GET"){
       if (url.pathname === "/health") return new Response("ok", { headers: CORS });
       return new Response(JSON.stringify({
         name: "VisualNeuroscience.AI MCP server",
         message: "POST Model Context Protocol JSON-RPC here. The atlas itself lives at " + SITE + ".",
-        tools: TOOLS.map(t => t.name)
+        tools: TOOLS.map(t => t.name),
+        account_tools: ACCOUNT_TOOLS.map(t => t.name),
+        sign_in: "Optional, and asked for only by the account tools; how it works is at " + SITE + "/mcp.html"
       }, null, 2), { status: 405, headers: { ...CORS, "Content-Type": "application/json" } });
     }
     if (request.method !== "POST") return new Response("method not allowed", { status: 405, headers: CORS });
@@ -357,7 +373,22 @@ export default {
     catch { return new Response(JSON.stringify(rpcError(null, -32700, "Parse error")), { status: 400, headers: { ...CORS, "Content-Type": "application/json" } }); }
 
     const messages = Array.isArray(body) ? body : [body];
-    const replies = messages.map(handleRpc).filter(Boolean);
+    /* a call to an account tool needs the person's token, and without one
+       the whole request is turned away with 401 and the challenge that
+       starts the sign-in; everything else passes with or without a token */
+    const ctx = { env, who: null, idToken: null };
+    const needsAuth = messages.some(m => m && m.method === "tools/call" && m.params && PROTECTED.has(m.params.name));
+    if (needsAuth){
+      const m = (request.headers.get("Authorization") || "").match(/^Bearer\s+(.+)$/i);
+      ctx.idToken = m ? m[1].trim() : null;
+      ctx.who = ctx.idToken ? await verifyIdToken(env, ctx.idToken) : null;
+      if (!ctx.who){
+        const r = unauthorized(env, ctx.idToken ? "The sign-in has expired or is not valid; sign in again" : undefined);
+        Object.entries(CORS).forEach(([k, v]) => r.headers.set(k, v));
+        return r;
+      }
+    }
+    const replies = (await Promise.all(messages.map(m => handleRpc(m, ctx)))).filter(Boolean);
     if (!replies.length) return new Response(null, { status: 202, headers: CORS });
     const payload = Array.isArray(body) ? replies : replies[0];
     return new Response(JSON.stringify(payload), { headers: { ...CORS, "Content-Type": "application/json" } });

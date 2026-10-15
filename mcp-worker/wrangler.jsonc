@@ -1,5 +1,14 @@
 // The MCP server: deploy from this directory with `npx wrangler deploy`.
 // See docs/MCP.md for the account steps and the custom domain.
+//
+// The account tools need one secret, a random string the server signs and
+// seals its OAuth codes and tokens with. Set it once, before the first
+// deploy that carries them:
+//
+//     openssl rand -base64 48 | npx wrangler secret put OAUTH_SECRET
+//
+// Everything in "vars" is public: Firebase's web configuration is meant to
+// ship in clients, and the rest are addresses.
 {
   "name": "visualneuroscience-mcp",
   "main": "worker.js",
@@ -8,5 +17,12 @@
   // and certificate in the visualneuroscience.ai zone, which lives in the
   // same Cloudflare account as the website; the workers.dev address keeps
   // working beside it.
-  "routes": [{ "pattern": "mcp.visualneuroscience.ai", "custom_domain": true }]
+  "routes": [{ "pattern": "mcp.visualneuroscience.ai", "custom_domain": true }],
+  "vars": {
+    "ISSUER": "https://mcp.visualneuroscience.ai",
+    "SITE_ORIGIN": "https://visualneuroscience.ai",
+    "ALLOWED_ORIGINS": "https://visualneuroscience.ai,https://midnightneuroscience.cloudflare-passport599.workers.dev",
+    "FIREBASE_PROJECT_ID": "visualneuroscience-4315d",
+    "FIREBASE_API_KEY": "AIzaSyBWhQXs2C9RhKfOxMNo0gvSv-YeUVXBG24"
+  }
 }
