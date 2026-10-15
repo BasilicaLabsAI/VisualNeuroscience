@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.84 — 15 October 2026 — Continue with Google
+Commit · Switch Google sign-in on in the account box, on the web and in the apps
+
+The account box now offers Continue with Google above the email form, on the website and in the apps, where it opens the phone's own Google sheet rather than a web page. Sign in with Apple is offered inside the apps as before. Both depend on the providers being switched on in the Firebase console, which is the owner's next step; until Google is, its button says so.
+
 ## v10.83 — 15 October 2026 — A sign-in failure names its cause in brackets
-Commit · Carry the underlying error code in the sign-in box's messages, so a failure says what refused it
+Commit `c3cbcda` · Carry the underlying error code in the sign-in box's messages, so a failure says what refused it
 
 When signing in or creating an account fails for a reason the box has no plain words for, the message now ends with the underlying code in brackets: "(permission-denied)" means the database's rules refused the request, "(unavailable)" that it could not be reached, and an "auth/…" code is Firebase's own verdict. The messages it does have words for are unchanged. Nothing else on the site changes.
 
