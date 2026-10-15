@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.87 — 15 October 2026 — The tractogram's reset, revolve and zoom put right
+Commit · Give the tractogram one working reset, a revolve that shows, an Iso face and no zoom slider
+
+Both Reset view buttons on the Tractography page now work, and they put everything back: the opening angle, the zoom and any pan. The one in the rail had been doing nothing at all, and the one in the title strip reset the angle and then failed on a function the page never had. Revolve turns the brain at a pace that can be seen, starts the moment it is switched on, and is paused only by taking hold of the brain or scrolling over it, not by the mouse merely crossing the view. The orientation cube gains Iso, the three-quarter view the page opens with. The zoom slider is gone; the + and − on the box, the wheel and a pinch zoom instead, and the pinch and two-finger pan now actually reach the tractogram, which they had not. Nothing else on the site changes.
+
 ## v10.86 — 15 October 2026 — Continue with Apple on the website
-Commit · Switch Sign in with Apple on for the website now its Services ID and key are in Firebase
+Commit `102935b` · Switch Sign in with Apple on for the website now its Services ID and key are in Firebase
 
 The account box on the website now offers Continue with Apple next to Continue with Google, above the email form. It opens Apple's own sign-in page in a popup and brings the person back signed in; a Hide My Email address works like any other. The apps have offered the Apple button natively for a while, and that is unchanged. Nothing else on the site changes.
 

@@ -146,6 +146,7 @@ svg{ display:block; }
 .cube-r{ grid-area:2/3; }
 .cube-k{ grid-area:3/2; }
 .cube-b{ grid-area:3/1; }
+.cube-i{ grid-area:3/3; }
 /* one view, so it takes the whole frame rather than half a two-up grid */
 .views{ grid-template-columns:1fr; }
 /* no frame around it: the tractogram sits on the page, unboxed */
@@ -239,7 +240,7 @@ svg{ display:block; }
     <h1 class="name">Tractography</h1>
     <span class="anno">HCP1065 population average &middot; direction-coloured streamlines</span>
     <div class="ts-views" role="group" aria-label="View">
-      <button class="ts-btn" id="resetBtn" type="button">Reset view</button>
+      <button class="ts-btn" id="resetBtn" data-reset type="button">Reset view</button>
     </div>
   </div>
 
@@ -259,11 +260,6 @@ svg{ display:block; }
           <input type="range" id="radius" min="0.05" max="0.9" step="0.05" value="0.3" aria-label="Streamline thickness">
           <span class="slider-val" id="radiusVal">0.30</span>
         </div>
-        <div class="rail-row">
-          <span class="tool-label">Zoom</span>
-          <input type="range" id="zoom" min="0.4" max="2.4" step="0.05" value="1.4" aria-label="Zoom">
-          <span class="slider-val" id="zoomVal">1.40&times;</span>
-        </div>
       </div>
 
       <div class="card">
@@ -275,8 +271,9 @@ svg{ display:block; }
           <button class="ts-btn cube-r" data-face="right" type="button">Right</button>
           <button class="ts-btn cube-k" data-face="post" type="button">Post</button>
           <button class="ts-btn cube-b" data-face="inf" type="button">Inf</button>
+          <button class="ts-btn cube-i" data-face="iso" type="button" title="The three-quarter view the page opens with">Iso</button>
         </div>
-        <button class="btn-wide ts-btn" id="resetBtn" type="button">Reset view</button>
+        <button class="btn-wide ts-btn" id="resetRail" data-reset type="button">Reset view</button>
         <button class="btn-wide ts-btn active" id="spinBtn" type="button" aria-pressed="true">Revolve</button>
       </div>
 
@@ -321,7 +318,7 @@ svg{ display:block; }
       <span class="key-item"><span class="key-swatch" style="background:#4FB06A"></span>front &ndash; back</span>
       <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
     </div>
-    <p>Drag to turn the brain; use the zoom slider, or scroll over the view. It rotates on its own until you touch it. This is a population average rather than any one person's brain, so it shows the pathways people generally share.</p>
+    <p>Drag to turn the brain; zoom with the + and &minus; above it, or scroll over the view. It revolves on its own until you take hold of it, and Reset view puts it back where it started. This is a population average rather than any one person's brain, so it shows the pathways people generally share.</p>
   </section>
 
   <section class="credits">
@@ -421,10 +418,12 @@ svg{ display:block; }
 
   /* Where the camera stands to look at each face of the brain. NiiVue reads
      azimuth around the vertical axis and elevation above the horizon. */
+  var HOME = [120, 15];        /* the three-quarter view the page opens with */
   var FACES = {
     left:  [ 90,   0], right: [270,   0],
     ant:   [180,   0], post:  [  0,   0],
-    sup:   [180,  89], inf:   [180, -89]
+    sup:   [180,  89], inf:   [180, -89],
+    iso:   HOME
   };
   var byKey = {}, instances = [], meshIds = {};
   var colourMode = "Local";
@@ -454,7 +453,7 @@ svg{ display:block; }
   /* ── idle rotation of the 3D box ── */
   var spinning = true, lastTouch = 0;
   var spinBtn = null;
-  var IDLE_MS = 2500, DEG_PER_SEC = 6;
+  var IDLE_MS = 2500, DEG_PER_SEC = 14;
 
   function tick(now){
     requestAnimationFrame(tick);
@@ -474,42 +473,25 @@ svg{ display:block; }
     spinBtn.classList.toggle("active", spinning);
     spinBtn.setAttribute("aria-pressed", String(spinning));
     tick.prev = undefined;
+    /* switched on, it turns at once rather than after the idle wait */
+    if (spinning) lastTouch = 0;
   });
 
-  /* the 3D box also zooms from its header, for anyone without a wheel */
+  /* ── zoom: the + and − on the box, the wheel, or a pinch ── */
+  var HOME_ZOOM = 1.4, zoom = HOME_ZOOM;
+  function applyZoom(v){
+    zoom = Math.min(4, Math.max(0.3, Number(v) || HOME_ZOOM));
+    if (!byKey.Ren) return;
+    byKey.Ren.scene.volScaleMultiplier = zoom;
+    byKey.Ren.drawScene();
+  }
   document.querySelectorAll("[data-zoom]").forEach(function(btn){
     btn.addEventListener("click", function(){
       var step = btn.getAttribute("data-zoom") === "in" ? 1.18 : 1 / 1.18;
-      var next = Math.min(4, Math.max(0.3, Number(zoomEl.value) * step));
-      zoomEl.value = next;
-      applyZoom(next);
+      applyZoom(zoom * step);
       touched();
     });
   });
-
-  /* ── the rail's controls ── */
-  var zoomEl = document.getElementById("zoom");
-  var zoomVal = document.getElementById("zoomVal");
-  function applyZoom(v){
-    zoomVal.textContent = Number(v).toFixed(2) + "×";
-    if (!byKey.Ren) return;
-    byKey.Ren.scene.volScaleMultiplier = Number(v);
-    byKey.Ren.drawScene();
-  }
-  zoomEl.addEventListener("input", function(){ applyZoom(zoomEl.value); });
-
-  /* the wheel zooms the tractogram, and the slider follows it */
-  if (window.MN_WHEEL && byKey.Ren){
-    var renBox = document.querySelector('.view[data-box="Ren"]');
-    if (renBox) MN_WHEEL.attach({
-      stage: renBox.querySelector(".mri-stage"),
-      nv: byKey.Ren,
-      onZoom: function(v){
-        zoomEl.value = String(v);
-        zoomVal.textContent = Number(v).toFixed(2) + "\u00D7";
-      }
-    });
-  }
 
   var radiusEl = document.getElementById("radius");
   var radiusVal = document.getElementById("radiusVal");
@@ -571,13 +553,18 @@ svg{ display:block; }
     });
   }
 
-  document.getElementById("resetBtn").addEventListener("click", function(){
-    if (!byKey.Ren) return;
-    byKey.Ren.scene.renderAzimuth = 120;
-    byKey.Ren.scene.renderElevation = 15;
-    zoomEl.value = 1.4;
-    applyZoom(1.4);
-    centrePlanes();
+  function resetView(){
+    var nv = byKey.Ren;
+    if (!nv) return;
+    nv.scene.renderAzimuth = HOME[0];
+    nv.scene.renderElevation = HOME[1];
+    nv.scene.pan2Dxyzmm = [0, 0, 0, 1];
+    if (nv.position) nv.position = [0, 0, 0];
+    applyZoom(HOME_ZOOM);
+    touched();
+  }
+  document.querySelectorAll("[data-reset]").forEach(function(btn){
+    btn.addEventListener("click", resetView);
   });
 
   async function boot(){
@@ -631,15 +618,28 @@ svg{ display:block; }
 
       wireViewControls();
       document.querySelectorAll(".mri-stage").forEach(function(stage){
-        ["pointerdown", "pointermove", "wheel"].forEach(function(evt){
+        /* a press, a drag or the wheel holds the brain still for a moment;
+           the mouse merely crossing the view does not */
+        ["pointerdown", "wheel"].forEach(function(evt){
           stage.addEventListener(evt, touched, {passive: true});
         });
+        stage.addEventListener("pointermove", function(e){ if (e.buttons) touched(); }, {passive: true});
       });
 
+      /* the wheel and a pinch zoom the tractogram, two fingers pan it */
+      if (window.MN_WHEEL){
+        var renBox = document.querySelector('.view[data-box="Ren"]');
+        if (renBox) MN_WHEEL.attach({
+          stage: renBox.querySelector(".mri-stage"),
+          nv: byKey.Ren,
+          onZoom: function(v){ zoom = v; }
+        });
+      }
+
       applyRadius(radiusEl.value);
-      byKey.Ren.scene.renderAzimuth = 120;
-      byKey.Ren.scene.renderElevation = 15;
-      applyZoom(zoomEl.value);
+      byKey.Ren.scene.renderAzimuth = HOME[0];
+      byKey.Ren.scene.renderElevation = HOME[1];
+      applyZoom(zoom);
       instances.forEach(function(nv){ nv.drawScene(); });
 
       hideMessage();
