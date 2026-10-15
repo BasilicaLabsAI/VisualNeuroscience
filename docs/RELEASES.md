@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.89 — 15 October 2026 — The home page says less
+Commit · Cut each home page box to its title and a line or two
+
+Each of the eight boxes on the home page now carries its title and one or two sentences, where several had grown into paragraphs that ran most of a phone screen. The facts line and the link under each are unchanged, and so is everything the boxes open. Nothing else on the site changes.
+
 ## v10.88 — 15 October 2026 — The Network Atlas takes the Region Atlas's shape
-Commit · Lay the Network Atlas out like the Region Atlas, the ring beneath the four views, and drop the layout buttons
+Commit `66ab60a` · Lay the Network Atlas out like the Region Atlas, the ring beneath the four views, and drop the layout buttons
 
 The Network Atlas now reads like the Region Atlas: the four views in the same two-by-two grid with the same direction locks and Centre planes on each, the network ring in its own frame beneath them, and the rail on the left holding the network's own controls, the brain state, the reading, the scan and the key. The Region Atlas loses the Grid, Axial, Coronal, Sagittal and 3D buttons from its title strip, since the grid is the only layout it has used for a while; saved models still open as before. Nothing else on the site changes.
 
