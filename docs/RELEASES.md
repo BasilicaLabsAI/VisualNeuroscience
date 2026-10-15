@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.83 — 15 October 2026 — A sign-in failure names its cause in brackets
+Commit · Carry the underlying error code in the sign-in box's messages, so a failure says what refused it
+
+When signing in or creating an account fails for a reason the box has no plain words for, the message now ends with the underlying code in brackets: "(permission-denied)" means the database's rules refused the request, "(unavailable)" that it could not be reached, and an "auth/…" code is Firebase's own verdict. The messages it does have words for are unchanged. Nothing else on the site changes.
+
 ## v10.82 — 15 October 2026 — The Firestore rules deploy from the terminal
-Commit · Add the Firebase project files so the Firestore rules deploy with one command
+Commit `4cb839c` · Add the Firebase project files so the Firestore rules deploy with one command
 
 Nothing on the site changes. The repository now carries the two small files the Firebase command-line tool wants, naming the rules file and the project, so the security rules publish with one command from the repository root instead of being pasted into the console. The account setup guide and the handover say so.
 

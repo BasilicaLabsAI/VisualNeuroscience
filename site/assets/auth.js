@@ -79,7 +79,12 @@ const ERRORS = {
 
 function friendly(err){
   const code = err && (err.code || err.vnCode);
-  const e = new Error((code && ERRORS[code]) || "Something went wrong signing in. Try again.");
+  const known = code && ERRORS[code];
+  /* the underlying code rides along in brackets, so a message that cannot
+     name the cause at least shows it: "(permission-denied)" is the rules,
+     "(unavailable)" the network, "auth/…" Firebase's own verdict */
+  const detail = (err && err.detail) || (!known && code && code !== "unknown" ? code : null);
+  const e = new Error((known || "Something went wrong signing in. Try again.") + (detail ? " (" + detail + ")" : ""));
   e.code = code || "unknown";
   e.cause = err;
   return e;
@@ -195,7 +200,7 @@ async function build(){
       const code = err && err.code || "";
       if (/permission|denied/i.test(code) || /permission/i.test(err && err.message || ""))
         throw friendly({ code: "vn/username-check-refused" });
-      throw friendly({ code: "auth/network-request-failed" });
+      throw friendly({ code: "auth/network-request-failed", detail: "firestore: " + (code || (err && err.message) || "no answer") });
     }
     return !snap.exists();
   }
@@ -217,7 +222,7 @@ async function build(){
         }
         throw friendly({ code: "vn/username-refused" });
       }
-      throw friendly({ code: "auth/network-request-failed" });
+      throw friendly({ code: "auth/network-request-failed", detail: "firestore: " + (code || (err && err.message) || "no answer") });
     }
     return key;
   }
