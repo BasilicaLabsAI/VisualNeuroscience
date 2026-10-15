@@ -4,6 +4,9 @@
   "name": "visualneuroscience-mcp",
   "main": "worker.js",
   "compatibility_date": "2026-09-01",
-  // Uncomment once the DNS record exists in the Cloudflare zone:
-  // "routes": [{ "pattern": "mcp.visualneuroscience.ai", "custom_domain": true }]
+  // The public address. Deploying creates the custom domain, its DNS record
+  // and certificate in the visualneuroscience.ai zone, which lives in the
+  // same Cloudflare account as the website; the workers.dev address keeps
+  // working beside it.
+  "routes": [{ "pattern": "mcp.visualneuroscience.ai", "custom_domain": true }]
 }

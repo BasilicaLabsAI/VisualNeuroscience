@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.76 — 15 October 2026 — The MCP server answers at mcp.visualneuroscience.ai
+Commit · Give the MCP worker its custom domain in its config, so a deploy creates the DNS record
+
+The server that lets Claude, ChatGPT and Kimi ask the atlas questions was deployed for the first time today, at its workers.dev address, and the short address the privacy page has named all along, mcp.visualneuroscience.ai, had no DNS record behind it. The worker's config now carries that address as a custom domain, so deploying the worker creates the record and the certificate itself. Nothing on the site changes.
+
 ## v10.75 — 11 October 2026 — The phone header gives the brand its own line and the buttons room to be pressed
-Commit · Give the phone header the brand on a line of its own, bigger buttons on the left and the links on the right, and add YouTube to the links
+Commit `14e3262` · Give the phone header the brand on a line of its own, bigger buttons on the left and the links on the right, and add YouTube to the links
 
 On a phone or a tablet the website's header now has two lines. The brand has the first to itself, centred, and the second carries the Menu, Log in and theme buttons on the left, each now 40 pixels tall, with the links to YouTube, Instagram, LinkedIn and email on the right. YouTube, at @VisualNeuroscienceAI, joins the links everywhere they appear: in the masthead on a wide screen, in the app's top bar on an iPad or a Mac, and in the iPhone's sections menu, which now sets them in two rows. Signed in, the account button stands alone and Log out lives on the account card it opens, as it already did in the app. On the narrowest phones, and while an account has no username yet, the links take a third line of their own.
 

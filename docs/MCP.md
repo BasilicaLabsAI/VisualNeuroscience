@@ -30,13 +30,13 @@ whenever those change, and redeploy.
 
 First time: `npx wrangler login` opens the browser for the Cloudflare
 account. The worker deploys to `visualneuroscience-mcp.<account>.workers.dev`,
-which already works as a connector URL. For the proper address:
-
-1. Cloudflare dash → Workers & Pages → visualneuroscience-mcp →
-   Settings → Domains & Routes → **Add custom domain** →
-   `mcp.visualneuroscience.ai`. Cloudflare creates the DNS record itself.
-2. Uncomment the `routes` line in `wrangler.jsonc` so the config says
-   what production does.
+which works as a connector URL on its own, and to the proper address,
+`mcp.visualneuroscience.ai`: the `routes` entry in `wrangler.jsonc` is a
+custom domain, so the deploy creates the DNS record and the certificate in
+the zone itself, with nothing to add in the dashboard. (The dashboard route
+is Workers & Pages → visualneuroscience-mcp → Settings → Domains & Routes,
+should it ever need checking.) A browser may hold the name's absence in its
+cache for a minute or two after the first deploy.
 
 Smoke test either URL:
 
