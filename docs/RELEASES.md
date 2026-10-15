@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.82 — 15 October 2026 — The Firestore rules deploy from the terminal
+Commit · Add the Firebase project files so the Firestore rules deploy with one command
+
+Nothing on the site changes. The repository now carries the two small files the Firebase command-line tool wants, naming the rules file and the project, so the security rules publish with one command from the repository root instead of being pasted into the console. The account setup guide and the handover say so.
+
 ## v10.81 — 15 October 2026 — An assistant can sign in to your account, and save a Region Atlas model from a chat
-Commit · Give the MCP server a sign-in in front of the site's accounts, four account tools, and a consent page on the site
+Commit `c2376f6` · Give the MCP server a sign-in in front of the site's accounts, four account tools, and a consent page on the site
 
 Claude and the other assistants can now use your VisualNeuroscience.AI account, if you let them. The five atlas tools stay open to everyone; four new ones ask you to sign in the first time one is reached: who is signed in, the Region Atlas models saved to the account, one of them by name with the link that opens it, and saving a new model from a list of regions and Brodmann areas, which then appears in the app's Saved models on every device. The sign-in is the standard one assistants expect, done on a new page of the site where you log in as you would in the app and press Allow; the assistant never sees your password, is given a key that stops working when you disconnect it, change your password or delete the account, and can only ever add a model, never replace or delete one. The privacy page and the MCP page say all of this. The server keeps nothing: the key is Firebase's own, and the models live where the app keeps them.
 

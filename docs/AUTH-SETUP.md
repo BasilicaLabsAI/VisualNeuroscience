@@ -68,6 +68,13 @@ skip any you don't want (its button simply never appears).
    [`firestore.rules`](../firestore.rules) in this repo → **Publish**.
    The rules give each signed-in person exactly their own
    `users/{uid}/…` tree and nothing else; everything unnamed is closed.
+   From the terminal instead, from the repository root, where
+   `firebase.json` names the rules file and `.firebaserc` the project:
+
+       npx firebase-tools login              # once; opens the browser
+       npx firebase-tools deploy --only firestore:rules
+
+   Do this again whenever `firestore.rules` changes.
 
 ## 4 · Authorise your domains
 

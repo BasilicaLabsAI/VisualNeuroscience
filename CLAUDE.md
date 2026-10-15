@@ -62,8 +62,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (screenshots in `app/store/screenshots/`, `android-*`); still to do on the owner's Mac: the developer account, the
   upload key (`app/android/keystore.properties.example`), the Firebase fingerprints, the closed test a personal
   account must run, then the bundle.
-- Usernames (v10.66) need the new `firestore.rules` pasted into the Firebase console (or `firebase deploy --only
-  firestore:rules`); until then every username claim is refused and signed-in people see "Set username".
+- Usernames (v10.66) need the new `firestore.rules` published: `npx firebase-tools deploy --only firestore:rules`
+  from the repository root (`firebase.json` and `.firebaserc` are there; the owner is logged in to firebase-tools as
+  fkarim@basilicalabs.ai), or paste it into the Firebase console. Until then every username claim and check is
+  refused, so no account can be created, and signed-in people see "Set username".
 - Newsletter: on Mailchimp since 24 September 2026; the worker's three Mailchimp secrets are set and it reaches the
   audience. Still to do in Mailchimp: make fkarim@visualneuroscience.ai the audience's default From address and
   authenticate the domain (`docs/NEWSLETTER.md`). The email route stays off.
