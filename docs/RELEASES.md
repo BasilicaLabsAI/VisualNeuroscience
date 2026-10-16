@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.96 — 16 October 2026 — The reptilian core leads the chart
+Commit · Run the receptor chart's layers from the bottom of the brain up
+
+The receptor chart and its table now run from the bottom of the brain up: the cerebellum where a source has it, then the reptilian core on the left, the limbic midbrain, and the cortex on the right. Nothing else on the site changes.
+
 ## v10.95 — 16 October 2026 — The receptor chart runs by brain layer
-Commit · Run the receptor chart's regions by brain layer and name each layer under the bars
+Commit `e104665` · Run the receptor chart's regions by brain layer and name each layer under the bars
 
 The receptor density chart now runs its regions cortex first, then the limbic midbrain, then the reptilian core, then the cerebellum where a source has it, with the atlas's own order kept inside each layer. Each layer's name sits under its run of bars on a rule of its own, and a hairline parts one layer from the next. The density table runs the same way, with the layer named above its rows. Nothing else on the site changes.
 

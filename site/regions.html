@@ -2476,11 +2476,12 @@ document.addEventListener("touchstart", e => { if (tooltip.style.display === "bl
 window.addEventListener("scroll", hideTip, { passive: true });
 
 /* ── the regions by brain layer ────────────────────────────────────────
-   The chart and the table run cortex, then the limbic midbrain, then the
-   reptilian core, then the cerebellum, with the atlas's own order kept
-   inside each. The layers are the ones the region notes stack the
-   highlighted regions by, with the cerebellum given its own band. */
-const TIER_ORDER = ["cortex", "midbrain", "reptilian", "cerebellar"];
+   The chart and the table run from the bottom of the brain up: the
+   cerebellum, then the reptilian core, then the limbic midbrain, then the
+   cortex, with the atlas's own order kept inside each. The layers are the
+   ones the region notes stack the highlighted regions by, with the
+   cerebellum given its own band. */
+const TIER_ORDER = ["cerebellar", "reptilian", "midbrain", "cortex"];
 const TIER_LABEL = { cortex: "Cortex", midbrain: "Midbrain · limbic", reptilian: "Reptilian core", cerebellar: "Cerebellar" };
 function tierOf(reg) {
   if (/^(Cerebelum|Vermis)/.test(reg.base)) return "cerebellar";
