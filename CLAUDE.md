@@ -83,8 +83,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
 - Sign-in providers: Google and Apple are on, on the web and in the apps (the iOS Google config and URL scheme are
   in the repo as of v10.85; Apple's Services ID, key and Team ID went into the Firebase console for v10.86). LinkedIn
   stays off until `docs/AUTH-SETUP.md` §7 is done.
-- MCP worker: its deep links point at `regions.html#network=…` since v10.93; deploy it (`npx wrangler deploy` from
-  `mcp-worker/`) so the live server stops sending people through the redirect.
+- MCP worker: deployed from the owner's Mac on 16 October 2026 with the v10.93 deep links (`regions.html#network=…`),
+  the sign-in and the account tools. Still to do in Claude: remove the organisation's connector and add it again with
+  authentication "Sign in when needed", then test `save_model` from a chat; then the directory submission.
 - Newsletter: on Mailchimp since 24 September 2026; the worker's three Mailchimp secrets are set and it reaches the
   audience. Still to do in Mailchimp: make fkarim@visualneuroscience.ai the audience's default From address and
   authenticate the domain (`docs/NEWSLETTER.md`). The email route stays off.
