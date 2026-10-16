@@ -79,7 +79,9 @@
 .net-body{
   display:grid; gap:var(--gap); margin-top:var(--gap); align-items:start;
   grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);
-  grid-template-areas:"state ring" "reading ring" "key ring";
+  /* the state and the key down the left, the ring with its reading
+     beneath it on the right */
+  grid-template-areas:"state ring" "key ring" "key reading";
   opacity:0; transform:translateY(-6px);
   transition:opacity .2s ease, transform .22s cubic-bezier(.32,.72,0,1);
 }

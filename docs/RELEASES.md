@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.94 — 16 October 2026 — The reading sits under the ring
+Commit · Move the network reading card beneath the ring
+
+In the Network Atlas section the Reading card now sits under the ring, where the space was, with the state and the key down the left. Nothing else on the site changes.
+
 ## v10.93 — 16 October 2026 — The Network Atlas moves into the Region Atlas
-Commit · Fold the Network Atlas into the Region Atlas behind a switch and drop its tab
+Commit `dca9cc3` · Fold the Network Atlas into the Region Atlas behind a switch and drop its tab
 
 The chord ring of brain states now lives under the Region Atlas's viewports, in a section with a switch and a circled i that says what it is. Switched on, it offers the states with None chosen; pick one and every region with a parcel lights up on the scan in its ring colour, beside whatever you have highlighted yourself, which keeps its own colour. The state shows as a line in the Highlighted card, and Clear all puts it back to None. Click a region or a whole network on the ring and the planes centre on it; move the crosshair over a lit region and the ring reads it back. The Network Atlas tab is gone from every page; the old page sends its links, state and all, to the right place, and saved models remember the mode.
 
