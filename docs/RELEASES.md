@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.97 — 16 October 2026 — Hover a bar and read what the region does
+Commit · Put each region's function into the chart's hover and strip the notes of where things sit
+
+Hover a bar on the receptor chart, or the name under it, and the tip now ends with what that region does. The region notes themselves no longer open by saying where a region sits or what it is called, since the maps show that; each now says what the region does and nothing else, in the Highlighted regions stack, in the chart's hover, in the MCP server's answers and in the Vision Pro app's notes window. Nothing else on the site changes.
+
 ## v10.96 — 16 October 2026 — The reptilian core leads the chart
-Commit · Run the receptor chart's layers from the bottom of the brain up
+Commit `c71ca1f` · Run the receptor chart's layers from the bottom of the brain up
 
 The receptor chart and its table now run from the bottom of the brain up: the cerebellum where a source has it, then the reptilian core on the left, the limbic midbrain, and the cortex on the right. Nothing else on the site changes.
 

@@ -484,10 +484,11 @@ table.dtable td.num{ font-size:.84rem; }
     font-size: .72rem;
     line-height: 1.4;
     padding: 6px 9px;
-    max-width: 260px;
+    max-width: 300px;
     display: none;
   }
 .chart-tooltip .tt-series { opacity: .7; }
+.chart-tooltip .tt-note { font-family: var(--font-serif); font-size: .84rem; line-height: 1.45; margin-top: .4rem; padding-top: .4rem; border-top: 1px solid color-mix(in srgb, var(--paper) 30%, transparent); }
 .chart-tooltip .tt-value { font-weight: 600; }
 /* Data tables */
   .table-wrap { overflow-x: auto; margin-top: 14px; }
@@ -2454,7 +2455,7 @@ function niceCeiling(v) { if (!(v > 0)) return 1; const p = Math.pow(10, Math.fl
 function fmtTick(v) { return v >= 1000 ? (v / 1000).toLocaleString() + "k" : String(+v.toFixed(2)); }
 const tooltip = document.getElementById("chart-tooltip");
 function showTip(e, html) { tooltip.innerHTML = html; tooltip.style.display = "block"; moveTip(e); }
-function moveTip(e) { const x = e.clientX != null ? e.clientX : (e.touches && e.touches[0].clientX), y = e.clientY != null ? e.clientY : (e.touches && e.touches[0].clientY); tooltip.style.left = Math.min(x + 14, innerWidth - 270) + "px"; tooltip.style.top = (y + 16) + "px"; }
+function moveTip(e) { const x = e.clientX != null ? e.clientX : (e.touches && e.touches[0].clientX), y = e.clientY != null ? e.clientY : (e.touches && e.touches[0].clientY); tooltip.style.left = Math.max(4, Math.min(x + 14, innerWidth - 310)) + "px"; tooltip.style.top = (y + 16) + "px"; }
 function hideTip() { tooltip.style.display = "none"; clearTimeout(hideTip._t); }
 /* on a touch screen a bar answers a tap, not the start of a swipe across
    the chart, and the tip goes on the next touch anywhere, on any scroll, or
@@ -2518,20 +2519,26 @@ function buildChart() {
     max: layer === "pet" ? 100 : null
   };
 }
+/* what the region does, from the notes, under a region's own bar */
+function noteFor(reg) {
+  if (axisMode !== "receptor" || typeof MN_NOTES === "undefined") return "";
+  const n = MN_NOTES.NOTES[reg.base];
+  return n && n.fn ? "<div class=\"tt-note\">" + escapeHtml(n.fn) + "</div>" : "";
+}
 function tipFor(r, reg) {
-  if (!r.data) return "<div class=\"tt-series\">" + escapeHtml(r.name + " · " + reg.name) + "</div>" + escapeHtml(r.reason);
+  if (!r.data) return "<div class=\"tt-series\">" + escapeHtml(r.name + " · " + reg.name) + "</div>" + escapeHtml(r.reason) + noteFor(reg);
   const v = r.data.values[reg.base];
-  if (v == null) return "<div class=\"tt-series\">" + escapeHtml(r.name + " · " + reg.name) + "</div>" + NEI + ": this map does not cover the region";
+  if (v == null) return "<div class=\"tt-series\">" + escapeHtml(r.name + " · " + reg.name) + "</div>" + NEI + ": this map does not cover the region" + noteFor(reg);
   if (layer === "pet") {
     return "<div class=\"tt-series\">" + escapeHtml(r.name + " · " + reg.name) + "</div>" +
       "<div class=\"tt-value\">" + fmt(Math.max(0, v.m / r.data.max) * 100, 0) + "% of densest region</div>" +
       escapeHtml(r.data.measure) + " " + fmt(v.m, 3) + " (L " + fmt(v.l, 3) + " · R " + fmt(v.r, 3) + ")<br>" +
-      escapeHtml(r.data.tracer) + " · covered " + Math.round(v.cov * 100) + "% of the region";
+      escapeHtml(r.data.tracer) + " · covered " + Math.round(v.cov * 100) + "% of the region" + noteFor(reg);
   }
   const a = r.data.areas[reg.base];
   return "<div class=\"tt-series\">" + escapeHtml(r.name + " · " + reg.name) + "</div>" +
     "<div class=\"tt-value\">" + fmt(v, 0) + " fmol/mg protein</div>" +
-    "from area" + (a.areas.length > 1 ? "s " : " ") + escapeHtml(a.areas.join(", ")) + " · " + (a.fit === "exact" ? "exact match" : "approximate match");
+    "from area" + (a.areas.length > 1 ? "s " : " ") + escapeHtml(a.areas.join(", ")) + " · " + (a.fit === "exact" ? "exact match" : "approximate match") + noteFor(reg);
 }
 function renderChart() {
   const c = buildChart();
@@ -2583,6 +2590,8 @@ function renderChart() {
       label.dataset.base = b.region.base; label.setAttribute("tabindex", "0"); label.setAttribute("role", "button");
       label.addEventListener("click", () => toggleRegion(b.region));
       label.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleRegion(b.region); } });
+      /* the name answers a hover as its bar does, with what the region does */
+      label.addEventListener("mouseenter", e => showTip(e, b.tip)); label.addEventListener("mousemove", moveTip); label.addEventListener("mouseleave", hideTip);
     } else if (b.receptor) {
       rect.dataset.rx = b.receptor.id;
       label.dataset.rx = b.receptor.id; label.setAttribute("tabindex", "0"); label.setAttribute("role", "button");
