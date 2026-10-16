@@ -456,6 +456,11 @@ table.dtable td.num{ font-size:.84rem; }
   }
 @media (hover: hover){ #receptor-graph .bar:hover{ stroke-width: 3; } }
 #receptor-graph .bar-total { fill: var(--total-fill); }
+/* the brain layers the bars run by, named under the names */
+#receptor-graph .tier-line{ stroke: var(--ink); stroke-width: 1; shape-rendering: crispEdges; }
+#receptor-graph .tier-sep{ stroke: var(--ink-35); stroke-dasharray: 2 3; }
+#receptor-graph .tier-label{ font-family: var(--font-brand); font-weight: 600; font-size: 8.5px; letter-spacing: .22em; text-transform: uppercase; fill: var(--ink); }
+.data-table tr.tier-row th{ text-align: left; font-family: var(--font-brand); font-weight: 600; font-size: .58rem; letter-spacing: .22em; text-transform: uppercase; color: var(--ink); padding-top: .8rem; border-bottom: 1px solid var(--ink); }
 .legend {
     display: flex;
     flex-wrap: wrap;
@@ -2443,7 +2448,7 @@ function currentReceptor() { return receptors().find(r => r.id === dropdown.valu
 function currentRegion() { return BY_BASE[dropdown.value] || REG[0]; }
 
 /* ── the chart ── */
-const CHART = { height: 380, top: 12, right: 12, bottom: 118, left: 58, slot: 18 };  /* slot: the least width a bar and its label may have */
+const CHART = { height: 410, top: 12, right: 12, bottom: 148, left: 58, slot: 18 };  /* slot: the least width a bar and its label may have */
 function svgEl(tag, attrs) { const e = document.createElementNS(SVG_NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
 function niceCeiling(v) { if (!(v > 0)) return 1; const p = Math.pow(10, Math.floor(Math.log10(v))); const f = v / p; const n = f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10; return n * p; }
 function fmtTick(v) { return v >= 1000 ? (v / 1000).toLocaleString() + "k" : String(+v.toFixed(2)); }
@@ -2470,14 +2475,32 @@ function touchTip(rect, tip) {
 document.addEventListener("touchstart", e => { if (tooltip.style.display === "block" && !(e.target.closest && e.target.closest("#receptor-graph .bar"))) hideTip(); }, { passive: true });
 window.addEventListener("scroll", hideTip, { passive: true });
 
+/* ── the regions by brain layer ────────────────────────────────────────
+   The chart and the table run cortex, then the limbic midbrain, then the
+   reptilian core, then the cerebellum, with the atlas's own order kept
+   inside each. The layers are the ones the region notes stack the
+   highlighted regions by, with the cerebellum given its own band. */
+const TIER_ORDER = ["cortex", "midbrain", "reptilian", "cerebellar"];
+const TIER_LABEL = { cortex: "Cortex", midbrain: "Midbrain · limbic", reptilian: "Reptilian core", cerebellar: "Cerebellar" };
+function tierOf(reg) {
+  if (/^(Cerebelum|Vermis)/.test(reg.base)) return "cerebellar";
+  const n = window.MN_NOTES && MN_NOTES.NOTES[reg.base];
+  const t = n && n.tier;
+  return t === "reptilian" ? "reptilian" : t === "midbrain" ? "midbrain" : "cortex";
+}
+function regionsByTier() {
+  const out = [];
+  TIER_ORDER.forEach(tier => GROUP_ORDER.forEach(g => REG.filter(x => x.group === g && tierOf(x) === tier).forEach(reg => out.push(reg))));
+  REG.forEach(reg => { if (!out.includes(reg)) out.push(reg); });
+  return out;
+}
 function buildChart() {
   if (axisMode === "receptor") {
     const r = currentReceptor();
-    const cats = [];
-    GROUP_ORDER.forEach(g => REG.filter(x => x.group === g).forEach(reg => cats.push(reg)));
+    const cats = regionsByTier();
     return {
       yLabel: layer === "pet" ? "% of the receptor's densest region" : "fmol/mg protein",
-      bars: cats.map(reg => ({ key: reg.base, label: regionShort(reg), region: reg, value: shown(r, reg.base), colour: FAMILY_COLOR[r.family],
+      bars: cats.map(reg => ({ key: reg.base, label: regionShort(reg), region: reg, tier: tierOf(reg), value: shown(r, reg.base), colour: FAMILY_COLOR[r.family],
         tip: tipFor(r, reg) })),
       legend: [{ name: r.name + (r.data ? (layer === "pet" ? " · " + r.data.tracer + " · " + r.data.measure : " · autoradiography") : " · " + NEI.toLowerCase()), colour: FAMILY_COLOR[r.family] }],
       max: layer === "pet" ? 100 : null
@@ -2567,6 +2590,28 @@ function renderChart() {
     }
     svg.appendChild(label);
   });
+  /* the layer each run of bars belongs to, named under the names */
+  if (c.bars.some(b => b.tier)) {
+    const runs = [];
+    c.bars.forEach((b, i) => {
+      const last = runs[runs.length - 1];
+      if (last && last.tier === b.tier) last.to = i; else runs.push({ tier: b.tier, from: i, to: i });
+    });
+    const yBand = CHART.height - 24;
+    runs.forEach((run, k) => {
+      const xa = x0 + slot * run.from + (slot - bw) / 2, xb = x0 + slot * run.to + (slot + bw) / 2;
+      svg.appendChild(svgEl("line", { x1: xa, x2: xb, y1: yBand, y2: yBand, class: "tier-line" }));
+      svg.appendChild(svgEl("line", { x1: xa, x2: xa, y1: yBand - 4, y2: yBand, class: "tier-line" }));
+      svg.appendChild(svgEl("line", { x1: xb, x2: xb, y1: yBand - 4, y2: yBand, class: "tier-line" }));
+      const t = svgEl("text", { x: (xa + xb) / 2, y: yBand + 13, "text-anchor": "middle", class: "tier-label" });
+      t.textContent = TIER_LABEL[run.tier] || run.tier;
+      svg.appendChild(t);
+      if (k > 0) {
+        const xs = x0 + slot * run.from;
+        svg.appendChild(svgEl("line", { x1: xs, x2: xs, y1: CHART.top, y2: y(0), class: "tier-sep" }));
+      }
+    });
+  }
   applyRegionFocus();
   host.appendChild(axis);
   host.appendChild(svg);
@@ -2633,10 +2678,18 @@ function renderDensityTable() {
       html = "<table class=\"data-table\"><thead><tr><th>Receptor</th><th>Status</th></tr></thead><tbody><tr><td class=\"name\">" + escapeHtml(c.name) + "</td><td class=\"nei\">" + escapeHtml(c.reason) + "</td></tr>";
     } else if (layer === "pet") {
       html = "<table class=\"data-table\"><thead><tr><th>Region</th><th>Left</th><th>Right</th><th>Mean (" + escapeHtml(r.measure) + ")</th><th>Share of densest</th><th>Covered</th></tr></thead><tbody>";
-      REG.forEach(reg => { const v = r.values[reg.base]; html += "<tr><td class=\"name\">" + escapeHtml(reg.name) + "</td>" + (v && v.m != null ? "<td>" + fmt(v.l, 3) + "</td><td>" + fmt(v.r, 3) + "</td><td>" + fmt(v.m, 3) + "</td><td>" + fmt(Math.max(0, v.m / r.max) * 100, 0) + "%</td><td>" + Math.round(v.cov * 100) + "%</td>" : nei(5)) + "</tr>"; });
+      let tier = null;
+      regionsByTier().forEach(reg => {
+        if (tierOf(reg) !== tier) { tier = tierOf(reg); html += "<tr class=\"tier-row\"><th colspan=\"6\">" + escapeHtml(TIER_LABEL[tier]) + "</th></tr>"; }
+        const v = r.values[reg.base]; html += "<tr><td class=\"name\">" + escapeHtml(reg.name) + "</td>" + (v && v.m != null ? "<td>" + fmt(v.l, 3) + "</td><td>" + fmt(v.r, 3) + "</td><td>" + fmt(v.m, 3) + "</td><td>" + fmt(Math.max(0, v.m / r.max) * 100, 0) + "%</td><td>" + Math.round(v.cov * 100) + "%</td>" : nei(5)) + "</tr>";
+      });
     } else {
       html = "<table class=\"data-table\"><thead><tr><th>Region</th><th>fmol/mg protein</th><th>From areas</th><th>Match</th></tr></thead><tbody>";
-      REG.forEach(reg => { const v = r.values[reg.base]; const a = r.areas[reg.base]; html += "<tr><td class=\"name\">" + escapeHtml(reg.name) + "</td>" + (v != null ? "<td>" + fmt(v, 0) + "</td><td>" + escapeHtml(a.areas.join(", ")) + "</td><td>" + a.fit + "</td>" : nei(3)) + "</tr>"; });
+      let tier = null;
+      regionsByTier().forEach(reg => {
+        if (tierOf(reg) !== tier) { tier = tierOf(reg); html += "<tr class=\"tier-row\"><th colspan=\"4\">" + escapeHtml(TIER_LABEL[tier]) + "</th></tr>"; }
+        const v = r.values[reg.base]; const a = r.areas[reg.base]; html += "<tr><td class=\"name\">" + escapeHtml(reg.name) + "</td>" + (v != null ? "<td>" + fmt(v, 0) + "</td><td>" + escapeHtml(a.areas.join(", ")) + "</td><td>" + a.fit + "</td>" : nei(3)) + "</tr>";
+      });
     }
   } else {
     const reg = currentRegion();

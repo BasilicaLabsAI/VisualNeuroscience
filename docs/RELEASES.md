@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.95 — 16 October 2026 — The receptor chart runs by brain layer
+Commit · Run the receptor chart's regions by brain layer and name each layer under the bars
+
+The receptor density chart now runs its regions cortex first, then the limbic midbrain, then the reptilian core, then the cerebellum where a source has it, with the atlas's own order kept inside each layer. Each layer's name sits under its run of bars on a rule of its own, and a hairline parts one layer from the next. The density table runs the same way, with the layer named above its rows. Nothing else on the site changes.
+
 ## v10.94 — 16 October 2026 — The reading sits under the ring
-Commit · Move the network reading card beneath the ring
+Commit `be340e8` · Move the network reading card beneath the ring
 
 In the Network Atlas section the Reading card now sits under the ring, where the space was, with the state and the key down the left. Nothing else on the site changes.
 
