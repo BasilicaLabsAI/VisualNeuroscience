@@ -29,6 +29,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="assets/viewer.css">
 <link rel="stylesheet" href="assets/rxfig.css">
+<link rel="stylesheet" href="assets/network.css">
 <link rel="stylesheet" href="fonts/fonts.css">
 <meta name="color-scheme" content="dark light">
 <script>/* Dark is the default; only an explicit choice of light overrides it.
@@ -825,7 +826,6 @@ mark{ background:var(--ink); color:var(--paper); }
     <a href="regions.html" aria-current="page">Region Atlas</a>
     <a href="microanatomy.html">Microanatomy</a>
     <a href="molecular.html">Molecular</a>
-    <a href="network-atlas.html">Network Atlas</a>
     <a href="tracts.html">Tractography</a>
     <a href="studies.html">Visualizing Studies</a>
     <a href="textbook.html">Digital Textbook</a>
@@ -943,6 +943,50 @@ mark{ background:var(--ink); color:var(--paper); }
         <div class="stat"><div class="k">Probe</div><div class="v probe-v"><span id="cursorRegion">—</span><small id="cursorCoords">hover a view · drag = crosshair</small></div></div>
       </div>
 
+      <!-- ── the Network Atlas, behind its switch (assets/network-mode.js) ── -->
+      <section class="netsec" id="networkSec" aria-labelledby="net-h">
+        <div class="net-head">
+          <h2 id="net-h">Network Atlas <small>brain states on the scan</small></h2>
+          <div class="net-tools">
+            <button class="net-info-btn" id="netInfoBtn" type="button" aria-expanded="false" aria-controls="netInfo" aria-label="What the Network Atlas is" title="What the Network Atlas is">i</button>
+            <span class="net-switch"><span class="lbl" id="netSwitchLbl">Off</span><button class="switch-btn" id="netSwitch" type="button" role="switch" aria-checked="false" aria-label="Network mode"><span class="knob" aria-hidden="true"></span></button></span>
+          </div>
+        </div>
+        <div class="net-info" id="netInfo" hidden>
+          <b>What this is</b>
+          <p>Six brain states &mdash; flow, rest, focused attention, threat, reward pursuit and meditation &mdash; each drawn as a ring of fourteen regions in seven networks, with the couplings that strengthen in that state as coloured threads and the ones that fall quiet as grey dashes. Switch it on and pick a state: every region that has a parcel in the atlas lights up on the scan in its ring colour, with the ones the state powers down held at half strength. Click a region, or a whole network, and it comes forward on the ring and the planes centre on it; move the crosshair over a lit region and the ring reads it back.</p>
+          <p>The couplings are composites read off the imaging literature, not measured connectomes, and each state names its sources beneath the ring. Three of the fourteen regions have no parcel in AAL-116 and wear a dashed arc: picking one parks the crosshair at a published coordinate instead. Anything you highlight yourself keeps its own colour over the network&rsquo;s, and Clear all puts the state back to None.</p>
+        </div>
+        <div class="net-body" id="netBody" hidden>
+          <div class="card net-state">
+            <h2>Brain state</h2>
+            <div class="selwrap"><select id="netState" aria-label="Brain state"><option value="none">None</option></select></div>
+            <p class="rail-note" id="netBlurb"></p>
+          </div>
+          <div class="card net-reading">
+            <h2>Reading</h2>
+            <div class="panel-kicker" id="netKicker">The ring</div>
+            <div class="panel-title" id="netName">Pick a state</div>
+            <p id="netNote">Choose a state above, then click a region or a whole network on the ring.</p>
+            <div class="where" id="netWhere" hidden><b>On the scan</b><span id="netWhereText"></span></div>
+          </div>
+          <div class="card net-key">
+            <h2>Key</h2>
+            <div class="key-list">
+              <span><i class="key grad"></i>Strengthens in this state</span>
+              <span><i class="key quiet"></i>Falls quiet in this state</span>
+              <span><i class="key dot"></i>More active</span>
+              <span><i class="key hollow"></i>Less active</span>
+              <span><i class="key solidarc"></i>Drawn on the atlas</span>
+              <span><i class="key dasharc"></i>No atlas parcel</span>
+            </div>
+            <div class="rail-row"><span class="tool-label">Thread</span><input type="range" id="netWt" min="0.28" max="1" step="0.04" value="1" aria-label="Thread weight"></div>
+          </div>
+          <div class="ring-stage"><svg id="ring" viewBox="0 0 720 720" role="img" aria-label="Circular graph of how brain regions couple in the chosen state, linked to the scan"></svg></div>
+        </div>
+        <p class="net-source" id="netSource" hidden></p>
+      </section>
+
     <section class="bamap" id="baMapSec" aria-labelledby="bamap-h">
       <h2 class="sec-h" id="bamap-h">Brodmann map <small>both faces of the hemisphere &middot; click an area to highlight it</small></h2>
       <div class="cartoons">
@@ -1052,6 +1096,8 @@ mark{ background:var(--ink); color:var(--paper); }
 <script src="assets/zoom.js"></script>
 <script src="assets/export3d.js"></script>
 <script src="assets/models.js"></script>
+<script src="assets/network-states.js"></script>
+<script src="assets/network-ring.js"></script>
 <script src="assets/rxfig.js"></script>
 <script src="assets/receptor-data.js"></script>
 <script>
@@ -1257,10 +1303,22 @@ mark{ background:var(--ink); color:var(--paper); }
   }
 
   function isBA(s){ return s.atlas === "ba"; }
+  /* the network mode's colours, laid first so an explicit highlight wins
+     where the two meet; and the hooks it listens on */
+  var layerFn = null, locWatchers = [], clearWatchers = [];
   function labelMap(n, labels, which){
     var R = new Array(n).fill(0), G = new Array(n).fill(0),
         Bl = new Array(n).fill(0), A = new Array(n).fill(0), I = [];
     for (var i = 0; i < n; i++) I.push(i);
+    if (!which && layerFn){
+      var layer = null;
+      try{ layer = layerFn(); }catch(e){}
+      if (layer) Object.keys(layer).forEach(function(k){
+        var idx = Number(k), rgb = layer[k];
+        if (!(idx >= 0 && idx < n)) return;
+        R[idx] = rgb[0]; G[idx] = rgb[1]; Bl[idx] = rgb[2]; A[idx] = 255;
+      });
+    }
     selections.forEach(function(s){
       if (isBA(s) !== which) return;
       var rgb = hexToRgb(s.color);
@@ -1560,7 +1618,13 @@ mark{ background:var(--ink); color:var(--paper); }
       var v = [sx/n, sy/n, sz/n];
       centreMm([0, 1, 2].map(function(r){ return A[r][0]*v[0] + A[r][1]*v[1] + A[r][2]*v[2] + A[r][3]; }));
     },
-    onChange: function(cb){ selWatchers.push(cb); }
+    onChange: function(cb){ selWatchers.push(cb); },
+    /* the network mode's door */
+    setLayer: function(fn){ layerFn = fn; },
+    repaint: function(){ applyColormap(); },
+    centreMm: function(mm){ centreMm(mm); },
+    onLocation: function(cb){ locWatchers.push(cb); },
+    onClear: function(cb){ clearWatchers.push(cb); }
   };
   function centreMm(mm){
     allNV().forEach(function(nv){
@@ -1627,6 +1691,7 @@ mark{ background:var(--ink); color:var(--paper); }
 
   document.getElementById("clearBtn").addEventListener("click", function(){
     selections.clear(); renderChips(); applyColormap();
+    clearWatchers.forEach(function(cb){ try{ cb(); }catch(e){} });
   });
 
   var opacityEl = document.getElementById("opacity");
@@ -1714,6 +1779,7 @@ mark{ background:var(--ink); color:var(--paper); }
       if (ba > 0 && B && B.BY_BA[ba]) bits.push("BA" + ba);
       regionOut.textContent = bits.length ? bits.join(" \u00B7 ") : "\u2014";
     } catch(e){}
+    locWatchers.forEach(function(cb){ try{ cb(loc); }catch(e){} });
   }
 
   /* ── the Brodmann areas ───────────────────────────────────────────────
@@ -2020,7 +2086,8 @@ mark{ background:var(--ink); color:var(--paper); }
           camera: ren ? { azimuth: ren.scene.renderAzimuth, elevation: ren.scene.renderElevation,
                           zoom: Number(ren.scene.volScaleMultiplier) || 1 } : null,
           crosshair: ren && ren.scene.crosshairPos ? Array.prototype.slice.call(ren.scene.crosshairPos) : null,
-          cuts: sliceTool && sliceTool.state ? sliceTool.state() : null
+          cuts: sliceTool && sliceTool.state ? sliceTool.state() : null,
+          network: window.MN_NETMODE ? MN_NETMODE.get() : null
         };
       },
       restore: function(m){
@@ -2038,6 +2105,7 @@ mark{ background:var(--ink); color:var(--paper); }
                                   indices: s.indices.map(Number), color: colour });
         });
         renderChips(); applyColormap();
+        if (window.MN_NETMODE) MN_NETMODE.set(m.network || null);
         if (m.opacity){ opacityEl.value = String(m.opacity); opacityEl.dispatchEvent(new Event("input")); }
         if (typeof m.mirror === "boolean" && mirrorEl.checked !== m.mirror){ mirrorEl.checked = m.mirror; renderDropdown(); }
         var ren = INSTANCES.render;
@@ -2125,6 +2193,7 @@ mark{ background:var(--ink); color:var(--paper); }
   boot();
 })();
 </script>
+<script src="assets/network-mode.js"></script>
 <script>
 /* ── receptor density ─────────────────────────────────────────────────────
    Drawn from assets/receptor-data.js, which scripts/build_receptor_data.mjs

@@ -53,6 +53,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   sign-in (`mcp-worker/oauth.js`, consent page `site/connect.html`) needs the `OAUTH_SECRET` worker secret, set once
   by the owner; `node mcp-worker/tests/oauth.test.mjs` runs the whole flow offline and must pass before a deploy.
 - Licences and permissions are recorded in `docs/PERMISSIONS.md`; keep it in step with any new data source.
+- The Network Atlas is a mode of the Region Atlas since v10.93: the section under the viewports in `regions.html`,
+  run by `site/assets/network-mode.js` with `network.css`, behind a switch, with None as the default state and
+  Clear all returning to it. `regions.html#network` opens it and `#network=<state>` opens it on a state; the old
+  `site/network-atlas.html` only redirects there. There is no Network Atlas tab. The main script opens the door the
+  mode uses (`MN_SEL.setLayer`, `repaint`, `centreMm`, `onLocation`, `onClear`).
 - The interface follows Apple's fluid-interface guidance (v10.92): controls answer on the press (`viewer.css`, the
   last section), the account box and both section menus arrive from their button and leave the same way, the bars
   and menus are translucent materials with `prefers-reduced-transparency` and `prefers-contrast` fallbacks, a thrown
@@ -78,6 +83,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
 - Sign-in providers: Google and Apple are on, on the web and in the apps (the iOS Google config and URL scheme are
   in the repo as of v10.85; Apple's Services ID, key and Team ID went into the Firebase console for v10.86). LinkedIn
   stays off until `docs/AUTH-SETUP.md` §7 is done.
+- MCP worker: its deep links point at `regions.html#network=…` since v10.93; deploy it (`npx wrangler deploy` from
+  `mcp-worker/`) so the live server stops sending people through the redirect.
 - Newsletter: on Mailchimp since 24 September 2026; the worker's three Mailchimp secrets are set and it reaches the
   audience. Still to do in Mailchimp: make fkarim@visualneuroscience.ai the audience's default From address and
   authenticate the domain (`docs/NEWSLETTER.md`). The email route stays off.

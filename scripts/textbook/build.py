@@ -441,7 +441,6 @@ def nav(rel):
   <nav class="nav-row" aria-label="Site">
     <a href="{rel}regions.html">Region Atlas</a>
     <a href="{rel}tracts.html">Tractography</a>
-    <a href="{rel}network-atlas.html">Network Atlas</a>
     <a href="{rel}microanatomy.html">Microanatomy</a>
     <a href="{rel}studies.html">Visualizing Studies</a>
     <a href="{rel}practice.html">Practice</a>
