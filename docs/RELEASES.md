@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.98 — 16 October 2026 — By Region opens with the region's card
+Commit · Draw the chosen region's function card at the head of the By Region panel
+
+Choose By Region on the receptor chart and the panel beneath now opens with the region's own card, drawn as the Highlighted regions stack draws one: its layer, its name and what it does, the dot taking the region's colour when it is highlighted above. The receptor families and their numbers follow as before. Nothing else on the site changes.
+
 ## v10.97 — 16 October 2026 — Hover a bar and read what the region does
-Commit · Put each region's function into the chart's hover and strip the notes of where things sit
+Commit `d88ca35` · Put each region's function into the chart's hover and strip the notes of where things sit
 
 Hover a bar on the receptor chart, or the name under it, and the tip now ends with what that region does. The region notes themselves no longer open by saying where a region sits or what it is called, since the maps show that; each now says what the region does and nothing else, in the Highlighted regions stack, in the chart's hover, in the MCP server's answers and in the Vision Pro app's notes window. Nothing else on the site changes.
 

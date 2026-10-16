@@ -624,6 +624,11 @@ table.dtable td.num{ font-size:.84rem; }
   #receptor-graph .x-label.pickable { cursor: pointer; }
 @media (hover: hover){ #receptor-graph .x-label.pickable:hover{ fill: var(--ink); text-decoration: underline; } }
 #receptor-graph .x-label.picked { fill: var(--ink); font-weight: 600; }
+/* the region's card at the head of the By Region panel */
+.rx-regcard{ margin:.9rem 0 1rem; }
+.rx-regcard .tier-body{ grid-template-columns:1fr; }
+.rx-regcard .rnote{ border-right:0; border-bottom:0; }
+.rx-regcard .dot.off{ background:transparent; border-color:var(--ink-35); }
 /* keeps a control's space while it does not apply, so nothing shifts */
   .inapplicable { visibility: hidden; }
 .rxsec{ margin-top:calc(var(--gap) * 2.5); }
@@ -2314,12 +2319,44 @@ function receptorFacts(r) {
 /* ── a region picked: every family the catalogue carries, its transmitter
    on the left and its receptors on the right, each placed against the other
    regions whether or not this source has a number for it here ── */
+/* the region's own card, drawn as the Highlighted regions stack draws one:
+   its layer, its name, and what it does; the dot takes the region's colour
+   when it is highlighted above */
+function regionCard(reg) {
+  if (typeof MN_NOTES === "undefined") return null;
+  const note = MN_NOTES.NOTES[reg.base];
+  if (!note) return null;
+  const tier = MN_NOTES.TIERS.find(t => t.id === note.tier);
+  const box = document.createElement("div"); box.className = "tier rx-regcard";
+  const head = document.createElement("div"); head.className = "tier-head";
+  head.innerHTML = "<b>" + (tier ? tier.label : "") + "</b><span>" + (tier ? tier.sub : "") + "</span>";
+  const body = document.createElement("div"); body.className = "tier-body";
+  const cell = document.createElement("div"); cell.className = "rnote";
+  const h = document.createElement("h3");
+  const dot = document.createElement("span"); dot.className = "dot"; dot.dataset.base = reg.base;
+  h.appendChild(dot); h.appendChild(document.createTextNode(reg.name));
+  if (reg.S == null) { const side = document.createElement("span"); side.className = "side"; side.textContent = "L+R"; h.appendChild(side); }
+  const para = document.createElement("p"); para.textContent = note.fn;
+  cell.appendChild(h); cell.appendChild(para); body.appendChild(cell);
+  box.appendChild(head); box.appendChild(body);
+  return box;
+}
+function paintCardDot() {
+  document.querySelectorAll(".rx-regcard .dot[data-base]").forEach(d => {
+    const reg = BY_BASE[d.dataset.base];
+    const col = reg && window.MN_SEL ? MN_SEL.colour(reg.S != null ? [reg.S] : [reg.L, reg.R]) : null;
+    d.style.background = col || "";
+    d.classList.toggle("off", !col);
+  });
+}
 function renderRegionPanel(host) {
   const reg = currentRegion(), F = window.VN_RXFIG;
   const key = "reg:" + reg.base + ":" + layer;
   if (host.getAttribute("data-for") === key) return;
   host.setAttribute("data-for", key);
   host.textContent = "";
+  const card = regionCard(reg);
+  if (card) { host.appendChild(card); paintCardDot(); }
   F.load().then(data => {
     if (host.getAttribute("data-for") !== key) return;
     const rs = receptors();
@@ -2915,6 +2952,7 @@ function toggleRegion(reg) {
    a Brodmann area lying mostly within it. An empty bar, where the map has
    no number, takes the colour on its dashed outline. */
 function markPicked() {
+  paintCardDot();
   if (!window.MN_SEL) return;
   const litIn = MN_SEL.lit || MN_SEL.colour;
   document.querySelectorAll("#receptor-graph .x-label[data-base], #receptor-graph .bar[data-base], #types-heat [data-base]").forEach(el => {
