@@ -99,6 +99,7 @@ original drawing could be restored under the same permission if wanted.
 | three.js r128 | three.js authors | MIT | `site/vendor/three/LICENSE` |
 | Firebase JS SDK | Google | Apache 2.0 | `site/vendor/firebase/NOTICE.md` |
 | Afacad Flux, Newsreader, Prata | Their authors; the files are self-hosted in `site/fonts/` | SIL Open Font License 1.1 | `site/fonts/LICENSE-*.txt` |
+| Noto Serif, Noto Sans (Greek, embedded in the print posters only) | Google, via Fontsource on npm, fetched at build time | SIL Open Font License 1.1 | `scripts/posters/README.md` |
 | Studies drawn on the scan | Open-access papers, cited on each page | As published | The page itself |
 
 The receptor PET compilation is the one CC BY-NC-SA item: its ShareAlike

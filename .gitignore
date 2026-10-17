@@ -10,3 +10,7 @@ node_modules/
 
 # the molecular viewer is built from scripts/molecular into site/assets/molecular
 scripts/molecular/work/
+
+# the print posters are built and their fonts and data fetched into scripts/posters/out
+scripts/posters/out/
+scripts/posters/.venv/
