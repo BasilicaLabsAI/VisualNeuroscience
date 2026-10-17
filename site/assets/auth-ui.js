@@ -143,6 +143,25 @@ function mount(){
   .vn-check small{ display:block; font-size:.8rem; line-height:1.45; color:var(--ink-60,#5a5a5a); margin-top:.15rem; }
   .vn-page{ display:inline-block; margin-top:1.1rem; font-size:.9rem; color:var(--ink,#111);
     text-underline-offset:3px; }
+  .vn-submit:disabled{ opacity:.45; cursor:default; }
+  .vn-human{ display:flex; align-items:center; gap:.8rem; position:relative; cursor:pointer;
+    border:1px solid var(--hair,#111); padding:.75rem .85rem; font-size:.95rem; line-height:1.35;
+    -webkit-user-select:none; user-select:none; }
+  .vn-human[hidden]{ display:none; }
+  .vn-form .vn-human input{ position:absolute; opacity:0; width:1px; height:1px; min-height:0;
+    padding:0; margin:0; border:0; }
+  .vn-human .tick{ flex:none; width:1.55rem; height:1.55rem; position:relative;
+    border:2px solid var(--ink-60,#5a5a5a); transition:border-color .15s ease; }
+  .vn-human input:checked + .tick{ border-color:var(--ink,#111); }
+  .vn-human input:checked + .tick::after{
+    content:""; position:absolute; left:.44rem; top:.12rem; width:.42rem; height:.82rem;
+    border:solid var(--ink,#111); border-width:0 3px 3px 0; transform:rotate(45deg);
+    animation:vn-tick .22s cubic-bezier(.32,.72,0,1);
+  }
+  .vn-human input:focus-visible + .tick{ outline:2px solid var(--ink,#111); outline-offset:2px; }
+  .vn-human small{ display:block; font-size:.78rem; color:var(--ink-60,#5a5a5a); margin-top:.1rem; }
+  @keyframes vn-tick{ from{ opacity:0; transform:rotate(45deg) scale(.4); } }
+  @media (prefers-reduced-motion: reduce){ .vn-human input:checked + .tick::after{ animation:none; } }
   `;
   const style = document.createElement("style");
   style.textContent = css;
@@ -187,6 +206,55 @@ function mount(){
   /* set once the Create account form has gone in this visit, so the
      account card does not ask a second time */
   let newsAsked = false;
+
+  /* ── failed sign-ins ────────────────────────────────────────────────────
+     A refused password is cleared from its field, ready to be typed again.
+     After three refusals in a row, each further try waits behind a tick
+     box, which slows guessing before Firebase's own count is reached. Past
+     that count Firebase pauses sign-in to the account for a while, which
+     nothing on this side can lift, so that answer offers the two ways in
+     that work at once: a reset email and a sign-in link. The count lives
+     in this browser for a quarter of an hour and clears on a sign-in. */
+  const FAILS_KEY = "vn-auth-fails", FAILS_GATE = 3, FAILS_FOR = 15 * 60 * 1000;
+  const REFUSED = { "auth/wrong-password": 1, "auth/invalid-credential": 1,
+                    "auth/invalid-login-credentials": 1, "auth/user-not-found": 1 };
+  function failCount(){
+    try{
+      const v = JSON.parse(localStorage.getItem(FAILS_KEY) || "{}") || {};
+      return v.at && Date.now() - v.at < FAILS_FOR ? (v.n || 0) : 0;
+    }catch(_){ return 0; }
+  }
+  function setFails(n){
+    try{
+      if (n > 0) localStorage.setItem(FAILS_KEY, JSON.stringify({ n, at: Date.now() }));
+      else localStorage.removeItem(FAILS_KEY);
+    }catch(_){}
+  }
+  /* the check: a real press on it, and not in the first moments after it
+     appears, which is all a script driving the page would need to fake */
+  function humanCheck(){
+    const label = document.createElement("label");
+    label.className = "vn-human"; label.hidden = true;
+    const box = document.createElement("input");
+    box.type = "checkbox"; box.name = "human";
+    const tick = document.createElement("span"); tick.className = "tick"; tick.setAttribute("aria-hidden", "true");
+    const text = document.createElement("span");
+    text.textContent = "I'm not a robot";
+    const fine = document.createElement("small");
+    fine.textContent = "Three wrong tries in a row. Tick this before the next.";
+    text.appendChild(fine);
+    label.append(box, tick, text);
+    let shownAt = 0;
+    box.addEventListener("change", e => {
+      if (box.checked && (!e.isTrusted || Date.now() - shownAt < 800)) box.checked = false;
+      label.dispatchEvent(new Event("vn-human"));
+    });
+    return {
+      label, box,
+      show(on){ if (on && label.hidden !== false) shownAt = Date.now(); label.hidden = !on; if (!on) box.checked = false; },
+      get passed(){ return !label.hidden && box.checked; }
+    };
+  }
 
   /* ── nav slot ────────────────────────────────────────────────────────── */
   const nav = document.querySelector(".nav-row") || document.querySelector("header") || document.body;
@@ -472,11 +540,61 @@ function mount(){
       await auth.sendSignInLink(inEmail.value.trim());
       throw Object.assign(new Error("Sign-in link sent — check your inbox on this device."), { keepOpen: true });
     }));
-    fIn.append(inEmail, inPass, inGo);
+    const human = humanCheck();
+    const inReset = document.createElement("button");
+    inReset.type = "button"; inReset.className = "vn-alt"; inReset.hidden = true;
+    inReset.textContent = "Email me a password reset";
+    inReset.addEventListener("click", () => run(inReset, async () => {
+      if (!inEmail.value) throw new Error("Enter your email address first.");
+      await auth.sendReset(inEmail.value.trim());
+      throw Object.assign(new Error("Reset email sent — check your inbox."), { keepOpen: true });
+    }));
+    /* the button waits while the check is showing and unticked */
+    function gate(){
+      const on = failCount() >= FAILS_GATE;
+      human.show(on);
+      inGo.disabled = on && !human.passed;
+    }
+    human.label.addEventListener("vn-human", () => { gate(); if (human.passed) status(""); });
+    /* Enter cannot submit past a waiting button, so it says why instead */
+    fIn.addEventListener("keydown", e => {
+      if (e.key === "Enter" && inGo.disabled && e.target !== human.box){
+        e.preventDefault();
+        status("Tick the box first, then sign in.", true);
+      }
+    });
+    fIn.append(inEmail, inPass, human.label, inGo);
     if (auth.providers.emailLink) fIn.append(inLink);
+    fIn.append(inReset);
+    gate();
     fIn.addEventListener("submit", e => {
       e.preventDefault();
-      run(fIn, () => auth.signInWithEmail(inEmail.value.trim(), inPass.value));
+      if (failCount() >= FAILS_GATE && !human.passed){
+        status("Tick the box first, then sign in.", true);
+        return;
+      }
+      run(fIn, async () => {
+        try{
+          await auth.signInWithEmail(inEmail.value.trim(), inPass.value);
+        }catch(err){
+          inPass.value = "";
+          setTimeout(() => inPass.focus(), 0);
+          const code = err && err.code;
+          if (code === "auth/too-many-requests"){
+            setFails(Math.max(failCount(), FAILS_GATE));
+            inReset.hidden = false;
+            err = Object.assign(new Error("Too many wrong tries, so sign-in to this account is paused for a while. "
+              + (auth.providers.emailLink ? "To get in now, have a password reset or a sign-in link emailed to you."
+                                          : "To get in now, have a password reset emailed to you.")), { code });
+          } else if (REFUSED[code]){
+            setFails(failCount() + 1);
+          }
+          human.box.checked = false;
+          gate();
+          throw err;
+        }
+        setFails(0);
+      });
     });
     forms["in"] = fIn;
 
@@ -557,7 +675,7 @@ function mount(){
     if (draft){
       Object.keys(forms).forEach(k => forms[k].querySelectorAll("input").forEach(i => {
         const v = draft.fields[k + "." + i.name];
-        if (v != null){ if (i.type === "checkbox") i.checked = !!v; else i.value = v; }
+        if (v != null && i.name !== "human"){ if (i.type === "checkbox") i.checked = !!v; else i.value = v; }
       }));
     }
     setTab(draft && draft.tab || "in");
@@ -592,6 +710,7 @@ function mount(){
 
   /* ── boot ────────────────────────────────────────────────────────────── */
   auth.onUser(drawSlot);
+  auth.onUser(u => { if (u) setFails(0); });
   /* the account page opens the same two boxes from its own buttons */
   window.VN_ACCOUNT_UI = {
     openLogin: () => openModal(),

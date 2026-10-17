@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.106 — 17 October 2026 — A wrong password clears, and repeated ones ask for a tick
+Commit · Clear a refused password and ask for a tick after three in a row
+
+When a sign-in is refused, the password field now empties and takes the cursor, ready for another go. After three wrong passwords in a row, each further try waits behind an "I'm not a robot" box that has to be ticked by hand first. If Firebase, which runs the accounts, pauses sign-in to an account after too many wrong tries, the box now says so plainly and offers the two ways in that work at once: a password reset by email, or a sign-in link. The count lives in your browser for a quarter of an hour and clears when you sign in.
+
 ## v10.105 — 17 October 2026 — White scans in the light theme, and an MCP box on the home page
-Commit · Make the Region Atlas scans white in the light theme
+Commit `bf03bc7` · Make the Region Atlas scans white in the light theme
 
 In the light theme the Region Atlas's four views are now white rather than black. The 3D brain sits on white, and the slices clear only the empty space around the brain, so the scan itself, ventricles and all, looks as it does on black; the crosshair and the slice tool's edges turn to ink, and the theme switch reaches the scans at once. That switch now matches the Log in button beside it, the same height and type with its Dark or Light label, on the website and in the apps' bar. The home page has two new boxes above its figures, one for the MCP server with the address and tools an assistant uses, and one for the About page, a message from the developer. The About page writes the name as Visual Neuroscience and no longer uses long dashes.
 
