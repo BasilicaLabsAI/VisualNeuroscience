@@ -54,9 +54,10 @@ The public page for all of this is `site/mcp.html`
 assistant, the five tools with a question each, the sources and what the
 server keeps. It is the documentation URL a directory listing asks for.
 
-- **Claude** (web, desktop, mobile): Settings → Connectors → *Add custom
-  connector* → paste the URL. No authentication to configure; the tools
-  appear in the composer's search-and-tools menu.
+- **Claude** (web, desktop, mobile): Customize → Connectors → *Add custom
+  connector* → paste the URL, authentication *Sign in when needed* (the atlas
+  tools work without signing in; the account tools ask for it when first
+  used); the tools appear in the composer's search-and-tools menu.
 - **ChatGPT**: Settings → Apps & Connectors → enable *Developer mode*
   (Advanced), then *Add MCP server* with the URL. Works in conversation
   once enabled.

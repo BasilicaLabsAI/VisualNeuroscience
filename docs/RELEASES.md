@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.99 — 17 October 2026 — The MCP page says when to sign in
+Commit · Tell people on the MCP page to add the connector with sign in when needed
+
+The page that explains how to ask the atlas from an AI assistant still said there was nothing to sign in to, and told people adding it to Claude to choose No sign-in, which would leave the four account tools unable to reach their account. It now says that asking the atlas needs no account, that signing in is only for reading or saving your own models, and that the connector is added with Sign in when needed, so the atlas tools work at once and the account tools ask for a sign-in the first time one is used. Nothing else on the site changes.
+
 ## v10.98 — 16 October 2026 — By Region opens with the region's card
-Commit · Draw the chosen region's function card at the head of the By Region panel
+Commit `7631e16` · Draw the chosen region's function card at the head of the By Region panel
 
 Choose By Region on the receptor chart and the panel beneath now opens with the region's own card, drawn as the Highlighted regions stack draws one: its layer, its name and what it does, the dot taking the region's colour when it is highlighted above. The receptor families and their numbers follow as before. Nothing else on the site changes.
 
