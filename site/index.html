@@ -169,6 +169,8 @@ img{ max-width:100%; height:auto; display:block; }
 .m-molecular{ grid-column:span 12; }
 .m-practice{ grid-column:span 6; }
 .m-textbook{ grid-column:span 6; }
+.m-mcp    { grid-column:span 12; }
+.m-about  { grid-column:span 12; }
 .m-ledger { grid-column:span 12; }
 
 /* ── a box ──────────────────────────────────────────────────────────────
@@ -236,6 +238,22 @@ img{ max-width:100%; height:auto; display:block; }
 }
 .box-h .plate img{ width:100%; height:100%; object-fit:contain; }
 
+/* the server has no picture to show, so its plate shows what an assistant
+   is handed: the address to add and the nine tools behind it */
+.m-mcp .mcp-plate{
+  aspect-ratio:auto; display:flex; flex-direction:column; justify-content:center; gap:.85rem;
+  padding:clamp(16px,2.2vw,30px); color:#FFFFFF;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.8rem; line-height:1.55;
+}
+.m-mcp .mcp-url{ font-size:clamp(.78rem,.6rem + .6vw,1.2rem); overflow-wrap:anywhere; }
+.m-mcp .mcp-tools{ color:#A9A9A9; overflow-wrap:anywhere; }
+/* the maker, cut out, standing on the foot of his box */
+.m-about .about-face{
+  align-self:end; justify-self:center; width:min(250px, 70%);
+  margin-bottom:calc(-1 * clamp(16px,1.7vw,24px));
+}
+.m-about .about-face img{ width:100%; height:auto; display:block; }
+
 /* ── the ledger ─────────────────────────────────────────────────────────
    The strip of figures across the foot of the mosaic. */
 .ledger{
@@ -279,13 +297,15 @@ img{ max-width:100%; height:auto; display:block; }
   .m-molecular{ grid-column:span 6; }
   .m-practice{ grid-column:span 3; }
   .m-textbook{ grid-column:span 3; }
+  .m-mcp    { grid-column:span 6; }
+  .m-about  { grid-column:span 6; }
   .m-ledger { grid-column:span 6; }
 }
 
 /* ── phone: one box on each line, and the wide box stacks ── */
 @media (max-width:760px){
   .mosaic{ grid-template-columns:minmax(0,1fr); }
-  .m-atlas, .m-network, .m-tracts, .m-studies, .m-cells, .m-molecular, .m-practice, .m-textbook, .m-ledger{
+  .m-atlas, .m-network, .m-tracts, .m-studies, .m-cells, .m-molecular, .m-practice, .m-textbook, .m-mcp, .m-about, .m-ledger{
     grid-column:1 / -1; grid-row:auto;
   }
   .ledger{ grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -422,6 +442,33 @@ img{ max-width:100%; height:auto; display:block; }
       </div>
       <div class="meta">19 chapters &middot; 85 sections &middot; 506 figures &middot; CC BY-NC-SA</div>
       <div class="go">Open the book &rarr;</div>
+    </a>
+
+    <!-- ── the assistants ─────────────────────────────────────────── -->
+    <a class="box m-mcp box-h" href="mcp.html">
+      <div class="side">
+        <div class="kicker">For AI assistants</div>
+        <h2>MCP Server</h2>
+        <p>Ask the atlas from Claude, ChatGPT or any assistant that speaks the Model Context Protocol: what a region does, where a receptor is densest, how the brain changes in a state. Each answer links to the view it describes.</p>
+        <div class="meta">9 tools &middot; no key needed &middot; sign in only for your own models</div>
+        <div class="go">How to connect &rarr;</div>
+      </div>
+      <div class="plate mcp-plate" aria-hidden="true">
+        <span class="mcp-url">https://mcp.visualneuroscience.ai/</span>
+        <span class="mcp-tools">search_brain &middot; region_info &middot; brodmann_area &middot; receptor_density &middot; brain_state &middot; my_account &middot; list_models &middot; load_model &middot; save_model</span>
+      </div>
+    </a>
+
+    <!-- ── the maker ──────────────────────────────────────────────── -->
+    <a class="box m-about box-h" href="about.html">
+      <div class="side">
+        <div class="kicker">From the developer</div>
+        <h2>About</h2>
+        <p>A message from the Developer about this Visual Neuroscience</p>
+        <div class="meta">Fadil Karim &middot; built by one engineer &middot; free to use</div>
+        <div class="go">Read the message &rarr;</div>
+      </div>
+      <div class="about-face"><img src="assets/portrait/portrait.webp" alt="" loading="lazy" decoding="async" width="454" height="545"></div>
     </a>
 
     <!-- ── the figures ────────────────────────────────────────────── -->
