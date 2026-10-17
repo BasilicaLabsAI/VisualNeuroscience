@@ -53,6 +53,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   sign-in (`mcp-worker/oauth.js`, consent page `site/connect.html`) needs the `OAUTH_SECRET` worker secret, set once
   by the owner; `node mcp-worker/tests/oauth.test.mjs` runs the whole flow offline and must pass before a deploy.
 - Licences and permissions are recorded in `docs/PERMISSIONS.md`; keep it in step with any new data source.
+- The owner's research documents on single regions are kept as supplied in `backend/data/regions/` (see its README).
+  Detailed region function descriptions are to be written from them only when the owner asks; until then, store new
+  ones there unchanged.
 - The Network Atlas is a mode of the Region Atlas since v10.93: the section under the viewports in `regions.html`,
   run by `site/assets/network-mode.js` with `network.css`, behind a switch, with None as the default state and
   Clear all returning to it. `regions.html#network` opens it and `#network=<state>` opens it on a state; the old
