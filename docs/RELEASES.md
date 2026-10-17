@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.104 — 17 October 2026 — The region list scrolls on iPhone, and the apps drop the newsletter box
+Commit · Take the closed region picker out of the layout so its list scrolls on iOS
+
+On iPhone and iPad the Add a region list stopped at the Rolandic operculum and would not scroll. It is now taken out of the page while it is closed rather than only hidden, which iOS needs before it will scroll a list that appears, and it still drops from its button and goes back the same way. Inside the apps the newsletter box no longer comes up on the pages: a new account can still ask for feature announcements with the box on the account form, and the website keeps its newsletter box.
+
 ## v10.103 — 17 October 2026 — Your account has a page of its own
-Commit · Add an account page with your details, saved work, a copy, support and deletion
+Commit `7af58e0` · Add an account page with your details, saved work, a copy, support and deletion
 
 An account now has a page of its own, reached from the account box. Logged in, it shows your details, every model you have saved in the Region Atlas with a link that opens it, and your practice progress, and one button downloads all of it as a single file. It is also where an account is deleted: two presses delete it at once, and anyone who cannot log in is told to write from the account's address, with the account then deleted by hand within 30 days. The support address is on it, and the privacy page and the account box point to it.
 
