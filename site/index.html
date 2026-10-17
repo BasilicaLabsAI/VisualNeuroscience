@@ -141,10 +141,12 @@ img{ max-width:100%; height:auto; display:block; }
   font-family:var(--font-serif); font-style:italic; font-weight:400;
   font-size:.95rem; letter-spacing:0; text-transform:none; color:var(--ink);
 }
-/* the web points to the App Store and to the MCP server, which lets an AI
-   assistant ask the atlas questions; the app, already installed, names its
-   scans in place of the store and keeps the server link */
-.dateline .dl-links{ display:inline-flex; flex-wrap:wrap; gap:.4rem 1.2rem; }
+/* the web points to the App Store and, under it, to the MCP server, which
+   lets Claude and other AI assistants ask the atlas questions; the app,
+   already installed, names its scans in place of the store and keeps the
+   server line */
+.dateline .dl-links{ display:inline-flex; flex-direction:column; align-items:flex-end; gap:.35rem; }
+@media (max-width:640px){ .dateline .dl-links{ align-items:center; } }
 .dateline .dl-app, .dateline .dl-mcp{ color:var(--ink); text-decoration:none; border-bottom:1px solid var(--hair); }
 .dateline .dl-app:hover, .dateline .dl-mcp:hover{ border-bottom-color:var(--ink); }
 :root:not([data-native]) .dateline .dl-scan,
@@ -319,7 +321,7 @@ img{ max-width:100%; height:auto; display:block; }
     <span class="dl-scan">MNI152 &middot; AAL-116</span>
     <span class="dl-links">
       <a class="dl-app" href="https://apps.apple.com/app/id6805618686" target="_blank" rel="noopener">Also on the App Store &rarr;</a>
-      <a class="dl-mcp" href="mcp.html">MCP server &rarr;</a>
+      <a class="dl-mcp" href="mcp.html">Also in Claude, as an MCP server &rarr;</a>
     </span>
   </div>
 

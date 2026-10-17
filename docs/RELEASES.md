@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.100 — 17 October 2026 — The atlas says it is in Claude
+Commit · State the MCP server under the App Store link and on both About pages
+
+The line under the home page's masthead now carries the server under the App Store link, as Also in Claude, as an MCP server, instead of the bare words MCP server beside it; inside the app, where the store link gives way to the names of the scans, the same line stays. The About page says it in the paragraph that points to the App Store, that Claude, ChatGPT and other assistants can ask the atlas questions directly, and the Vision Pro app's own about window says so too, with the server's address. Nothing else changes.
+
 ## v10.99 — 17 October 2026 — The MCP page says when to sign in
-Commit · Tell people on the MCP page to add the connector with sign in when needed
+Commit `dee1f2c` · Tell people on the MCP page to add the connector with sign in when needed
 
 The page that explains how to ask the atlas from an AI assistant still said there was nothing to sign in to, and told people adding it to Claude to choose No sign-in, which would leave the four account tools unable to reach their account. It now says that asking the atlas needs no account, that signing in is only for reading or saving your own models, and that the connector is added with Sign in when needed, so the atlas tools work at once and the account tools ask for a sign-in the first time one is used. Nothing else on the site changes.
 
