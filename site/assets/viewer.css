@@ -329,14 +329,20 @@ body{
    drops its label, as an iPhone's bar does (navbar.js measures) */
 .vn-bar.vn-bar-tight .vn-back-label{ display:none; }
 .vn-bar.vn-bar-tight .vn-back{ padding-right:.2rem; }
-.vn-bar .theme-toggle{ padding:.22rem .5rem; }
 .vn-bar .vn-auth-slot{ display:inline-flex; align-items:center; gap:.4rem; }
+/* the theme switch is the Log in button's twin: the same height, type and
+   padding, as wide as its word needs. Both stay that size to the eye and
+   take the bar's whole height under a finger. */
+.vn-bar .theme-toggle{ padding:.28rem .6rem; min-height:0; }
+.vn-bar .theme-toggle, .vn-bar .vn-auth-btn, .vn-bar .vn-auth-name{ position:relative; }
+.vn-bar .theme-toggle::after, .vn-bar .vn-auth-btn::after, .vn-bar .vn-auth-name::after{
+  content:""; position:absolute; left:0; right:0; top:-10px; bottom:-10px;
+}
 .vn-bar .vn-auth-btn, .vn-bar .vn-auth-name{ white-space:nowrap; }
 .vn-bar .vn-auth-name{ max-width:9.6em; letter-spacing:.1em; }
 /* signed in, the bar shows the account button alone: it opens the account
    card, and Log out lives there, so the bar keeps to one line on a phone */
 .vn-bar .vn-auth-name + .vn-auth-btn{ display:none; }
-@media (max-width:480px){ .vn-bar .theme-toggle #themeLbl{ display:none; } }
 
 /* pages slide like screens: in from the right going forward, out again
    coming back. Only the app opts in (navbar.js adds the @view-transition
@@ -583,7 +589,9 @@ html{ scroll-padding-top:5.2rem; }
   .nav-menu.nav-menu a[aria-current]{ border-bottom:1px solid color-mix(in srgb, var(--ink) 14%, transparent); padding-bottom:.7rem; font-weight:600; }
   .nav-row.nav-row .nav-menu a{ display:block; }
 }
-@media (max-width:480px){
+/* only where even the word would push the row over does the theme
+   switch keep its dot alone */
+@media (max-width:340px){
   .masthead.masthead .theme-toggle #themeLbl{ display:none; }
   .masthead.masthead .theme-toggle{ width:40px; padding:0; justify-content:center; }
 }
