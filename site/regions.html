@@ -756,6 +756,18 @@ mark{ background:var(--ink); color:var(--paper); }
 .barow[aria-pressed="true"] mark{ background:var(--paper); color:var(--ink); }
 @media (max-width:1100px){ .balist{ max-height:min(40vh,360px); } }
 
+/* ── the scans in the light theme ──────────────────────────────────────
+   Light, the viewports are white rather than black (the viewers clear to
+   white, makeNV below), and the cutting controls along the 3D box's
+   edges, drawn for a black stage, take ink where they took light. */
+/* NiiVue paints its canvas's parent black, inline, as it attaches */
+:root:not([data-theme="dark"]) .mri-stage{ background:#FFFFFF !important; }
+:root:not([data-theme="dark"]) .slice-edge .ax{ color:#5A5A5A; text-shadow:0 0 4px #FFFFFF, 0 0 4px #FFFFFF; }
+:root:not([data-theme="dark"]) .slice-edge.cutting .ax{ color:#111111; }
+:root:not([data-theme="dark"]) .slice-range::-webkit-slider-runnable-track{ background:rgba(0,0,0,.28); }
+:root:not([data-theme="dark"]) .slice-range::-moz-range-track{ background:rgba(0,0,0,.28); }
+:root:not([data-theme="dark"]) .slice-range:focus-visible{ outline-color:#111111; }
+
 /* ── the region picker ─────────────────────────────────────────────────
    The AAL list runs to a hundred and sixteen names with the pairs split,
    too many to scroll a native menu for, so the dropdown carries a search
@@ -1249,10 +1261,20 @@ mark{ background:var(--ink); color:var(--paper); }
   ];
   var INSTANCES = {};
   var sliceTool = null;      /* the clip-plane panel on the 3D box, once attached */
+  /* The scans follow the theme. Dark, the viewports are pure black, the
+     scan's own background, so the two blend. Light, they are white and the
+     crosshair is ink (paintScene, below, does the rest once the scans are
+     in). */
+  function sceneColours(){
+    var dark = document.documentElement.getAttribute("data-theme") === "dark";
+    return dark ? {back: [0, 0, 0, 1], cross: [1, 1, 1, 1], clear: false}
+                : {back: [1, 1, 1, 1], cross: [0.067, 0.067, 0.067, 1], clear: true};
+  }
   function makeNV(sliceType){
+    var c = sceneColours();
     return new niivue.Niivue({
-      backColor: [0, 0, 0, 1],   /* pure black, matching the scan's own background so the two blend */
-      crosshairColor: [1, 1, 1, 1],
+      backColor: c.back,
+      crosshairColor: c.cross,
       show3Dcrosshair: true,
       sliceType: sliceType,
       invertScrollDirection: true,
@@ -1261,6 +1283,41 @@ mark{ background:var(--ink); color:var(--paper); }
     });
   }
   function allNV(){ return PLANES.map(function(p){ return INSTANCES[p.key]; }).filter(Boolean); }
+
+  /* On white, the slices clear only what is truly empty. The template is
+     zero outside the brain and at least one inside it, so in the light
+     theme its grey scale is clear at zero and opaque above it, running
+     from black to white over the same window as the plain one: the white
+     shows through the empty space while the brain, its ventricles
+     included, looks exactly as it does on black. The 3D render keeps the
+     plain scale, which already draws the brain alone. */
+  function paintScene(){
+    var c = sceneColours();
+    PLANES.forEach(function(p){
+      var nv = INSTANCES[p.key];
+      if (!nv) return;
+      nv.opts.backColor = c.back;
+      nv.opts.crosshairColor = c.cross;
+      var slice = p.key !== "render", vol = nv.volumes && nv.volumes[0];
+      nv.opts.isAlphaClipDark = c.clear && slice;
+      if (slice && vol){
+        if (!vol.vnWindow) vol.vnWindow = {min: vol.cal_min, max: vol.cal_max};
+        var w = vol.vnWindow;
+        if (c.clear && w.max > 0){
+          var k = Math.max(2, Math.min(254, Math.round(255 * w.min / w.max)));
+          nv.addColormap("vn-gray-clear", {R: [0, 0, 0, 255], G: [0, 0, 0, 255], B: [0, 0, 0, 255],
+                                           A: [0, 255, 255, 255], I: [0, 1, k, 255]});
+          vol.colormap = "vn-gray-clear"; vol.cal_min = 0; vol.cal_max = w.max;
+        } else {
+          vol.colormap = "gray"; vol.cal_min = w.min; vol.cal_max = w.max;
+        }
+        try{ nv.updateGLVolume(); }catch(e){}
+      }
+      try{ nv.drawScene(); }catch(e){}
+    });
+  }
+  /* a press on the theme switch reaches the scans at once */
+  new MutationObserver(paintScene).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
 
   /* ── direction locks ────────────────────────────────────────────────
      Each viewport can confine a drag to one direction. The stored value is
@@ -2438,6 +2495,7 @@ mark{ background:var(--ink); color:var(--paper); }
         ]);
       }));
       PLANES.forEach(function(p){ INSTANCES[p.key].setSliceType(p.st); });
+      paintScene();
       /* bidirectional crosshair + camera sync between all boxes */
       PLANES.forEach(function(p){
         var others = PLANES.filter(function(q){ return q.key !== p.key; })

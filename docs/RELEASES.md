@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.105 — 17 October 2026 — White scans in the light theme, and an MCP box on the home page
+Commit · Make the Region Atlas scans white in the light theme
+
+In the light theme the Region Atlas's four views are now white rather than black. The 3D brain sits on white, and the slices clear only the empty space around the brain, so the scan itself, ventricles and all, looks as it does on black; the crosshair and the slice tool's edges turn to ink, and the theme switch reaches the scans at once. That switch now matches the Log in button beside it, the same height and type with its Dark or Light label, on the website and in the apps' bar. The home page has two new boxes above its figures, one for the MCP server with the address and tools an assistant uses, and one for the About page, a message from the developer. The About page writes the name as Visual Neuroscience and no longer uses long dashes.
+
 ## v10.104 — 17 October 2026 — The region list scrolls on iPhone, and the apps drop the newsletter box
-Commit · Take the closed region picker out of the layout so its list scrolls on iOS
+Commit `5591efc` · Take the closed region picker out of the layout so its list scrolls on iOS
 
 On iPhone and iPad the Add a region list stopped at the Rolandic operculum and would not scroll. It is now taken out of the page while it is closed rather than only hidden, which iOS needs before it will scroll a list that appears, and it still drops from its button and goes back the same way. Inside the apps the newsletter box no longer comes up on the pages: a new account can still ask for feature announcements with the box on the account form, and the website keeps its newsletter box.
 
