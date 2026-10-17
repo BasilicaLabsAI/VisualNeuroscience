@@ -2,7 +2,9 @@
    provider buttons above the three email tabs (Sign in / Create account /
    Reset), the signed-in state showing the person's username, and an account card
    with the username and university, Save and Log out side by side, and
-   the door marked deletion. All behaviour lives in assets/auth.js; this file only draws.
+   the door marked deletion. All behaviour lives in assets/auth.js; this file only draws,
+   and passes the address of a new account that keeps the feature-announcements
+   box ticked to the newsletter's worker.
 
    Styling leans on the site's own custom properties (--paper, --ink,
    --hair, --font-brand …) with plain fallbacks, so the modal already wears
@@ -134,10 +136,55 @@ function mount(){
   .vn-status.err{ color:#b3261e; font-style:normal; }
   :root[data-theme="dark"] .vn-status.err{ color:#ff8a80; }
   .vn-busy{ opacity:.55; pointer-events:none; }
+  .vn-check{ display:flex; gap:.65rem; align-items:flex-start; cursor:pointer;
+    font-size:.92rem; line-height:1.4; padding:.15rem 0; }
+  .vn-form .vn-check input{ flex:none; width:1.15rem; height:1.15rem; min-height:0; padding:0;
+    margin:.12rem 0 0; accent-color:var(--ink,#111); cursor:pointer; }
+  .vn-check small{ display:block; font-size:.8rem; line-height:1.45; color:var(--ink-60,#5a5a5a); margin-top:.15rem; }
   `;
   const style = document.createElement("style");
   style.textContent = css;
   document.head.appendChild(style);
+
+  /* ── feature announcements, offered as an account is made ──────────────
+     The box starts ticked. Left ticked, the account's address goes to the
+     newsletter's worker, the one the newsletter box posts to (its address
+     is also the constant at the top of assets/newsletter.js), which adds it
+     to Mailchimp as pending: the address is on the list only once its owner
+     confirms Mailchimp's email. A failure here never costs the account. */
+  const NEWSLETTER = "https://visualneuroscience-newsletter.cloudflare-passport599.workers.dev/subscribe";
+  const NEWS_KEY = "vn-news";
+  function newsDone(){
+    try{ return !!(JSON.parse(localStorage.getItem(NEWS_KEY) || "{}") || {}).done; }catch(_){ return false; }
+  }
+  function joinNewsletter(email){
+    if (!email) return Promise.resolve(false);
+    return fetch(NEWSLETTER, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, page: "account", website: "" })
+    }).then(r => r.json().catch(() => ({ ok: r.ok })).then(j => {
+      if (!r.ok || !j || !j.ok) throw new Error(j && j.error || "failed");
+      /* the newsletter box need not ask this browser again */
+      try{ localStorage.setItem(NEWS_KEY, JSON.stringify({ done: true })); }catch(_){}
+      return true;
+    })).catch(err => { console.warn("newsletter:", err && err.message || err); return false; });
+  }
+  function newsCheck(){
+    const label = document.createElement("label");
+    label.className = "vn-check";
+    const box = document.createElement("input");
+    box.type = "checkbox"; box.name = "newsletter"; box.checked = true;
+    const text = document.createElement("span");
+    text.textContent = "Email me when a new feature lands";
+    const fine = document.createElement("small");
+    fine.textContent = "Feature announcements only, nothing else. Mailchimp emails you once to confirm, and every email has a link to leave.";
+    text.appendChild(fine);
+    label.append(box, text);
+    return { label, box };
+  }
+  /* set once the Create account form has gone in this visit, so the
+     account card does not ask a second time */
+  let newsAsked = false;
 
   /* ── nav slot ────────────────────────────────────────────────────────── */
   const nav = document.querySelector(".nav-row") || document.querySelector("header") || document.body;
@@ -223,7 +270,12 @@ function mount(){
     const row = document.createElement("div");
     row.className = "row2";
     row.append(save, out);
-    fProf.append(inUser, inUni, noteU, row);
+    /* an account made with Google, Apple or a sign-in link meets no form,
+       so the box is offered here, the first time, beside the username */
+    const news = !prof.username && !newsAsked && !newsDone() && user.email ? newsCheck() : null;
+    fProf.append(inUser, inUni, noteU);
+    if (news) fProf.append(news.label);
+    fProf.append(row);
     fProf.addEventListener("submit", e => {
       e.preventDefault();
       run(fProf, async () => {
@@ -231,7 +283,13 @@ function mount(){
         await auth.setUniversity(inUni.value);
         h.textContent = name;
         drawSlot(user);
-        throw Object.assign(new Error("Saved."), { keepOpen: true });
+        let said = "Saved.";
+        if (news && news.label.isConnected){
+          const joined = news.box.checked && await joinNewsletter(user.email);
+          news.label.remove(); newsAsked = true;
+          if (joined) said = "Saved. Mailchimp has sent you an email: confirm from it and the feature announcements will come.";
+        }
+        throw Object.assign(new Error(said), { keepOpen: true });
       });
     });
 
@@ -429,17 +487,30 @@ function mount(){
     const upNote = document.createElement("p");
     upNote.className = "vn-who";
     upNote.textContent = "The username is shown in place of your name. Letters, numbers and underscores, 3 to 20 of them, and no two people can share one.";
+    const upNews = newsCheck();
     const upGo = document.createElement("button");
     upGo.type = "submit"; upGo.className = "vn-submit"; upGo.textContent = "Create account";
-    fUp.append(row, upUser, upUni, upEmail, upPass, upPass2, upNote, upGo);
+    fUp.append(row, upUser, upUni, upEmail, upPass, upPass2, upNote, upNews.label, upGo);
     fUp.addEventListener("submit", e => {
       e.preventDefault();
       if (upPass.value !== upPass2.value){ status("The two passwords don't match.", true); return; }
-      run(fUp, () => auth.signUpWithEmail({
-        firstName: upFirst.value, lastName: upLast.value,
-        username: upUser.value, university: upUni.value,
-        email: upEmail.value.trim(), password: upPass.value, confirm: upPass2.value
-      }));
+      const email = upEmail.value.trim(), wants = upNews.box.checked;
+      run(fUp, async () => {
+        try{
+          await auth.signUpWithEmail({
+            firstName: upFirst.value, lastName: upLast.value,
+            username: upUser.value, university: upUni.value,
+            email, password: upPass.value, confirm: upPass2.value
+          });
+        }catch(err){
+          /* a username refused after the account was made still leaves
+             the account made, and the choice in the box stands */
+          if (err && err.user){ newsAsked = true; if (wants) joinNewsletter(email); }
+          throw err;
+        }
+        newsAsked = true;
+        if (wants) joinNewsletter(email);
+      });
     });
     forms["up"] = fUp;
 
@@ -476,7 +547,7 @@ function mount(){
     if (draft){
       Object.keys(forms).forEach(k => forms[k].querySelectorAll("input").forEach(i => {
         const v = draft.fields[k + "." + i.name];
-        if (v != null) i.value = v;
+        if (v != null){ if (i.type === "checkbox") i.checked = !!v; else i.value = v; }
       }));
     }
     setTab(draft && draft.tab || "in");
@@ -492,7 +563,9 @@ function mount(){
       if (opts && opts.keep === false) draft = null;
       else {
         draft = { tab: currentTab, fields: {} };
-        forms.forEach(f => f.querySelectorAll("input").forEach(i => { draft.fields[f.dataset.key + "." + i.name] = i.value; }));
+        forms.forEach(f => f.querySelectorAll("input").forEach(i => {
+          draft.fields[f.dataset.key + "." + i.name] = i.type === "checkbox" ? i.checked : i.value;
+        }));
       }
     }
     document.removeEventListener("keydown", onEsc);

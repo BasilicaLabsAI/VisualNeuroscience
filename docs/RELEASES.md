@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.102 — 17 October 2026 — New accounts are offered feature announcements
+Commit · Offer feature announcements by email when an account is made
+
+Making an account now offers feature announcements by email, in a box that starts ticked and says what it is for: news of new features and nothing else. On the Create account form it sits above the button, and an account made with Google, Apple or a sign-in link meets it beside the username the first time the account opens. Left ticked, the address goes to the same list as the newsletter box on the pages, and Mailchimp writes once to confirm, so it joins the list only when its owner says yes; unticked, nothing is sent. The privacy page says so where it describes accounts and the newsletter.
+
 ## v10.101 — 17 October 2026 — The region menu has a search field
-Commit · Put a search field at the top of the Region Atlas's Add a region menu
+Commit `614a6e6` · Put a search field at the top of the Region Atlas's Add a region menu
 
 Adding a region in the Region Atlas no longer means scrolling through sixty-two names, or a hundred and sixteen with the pairs split. The Add a region menu now opens with a search field at its top, ready for typing: part of a name, a lobe, or what you want a region to do narrows the list as you type, with the match marked, and a region found by what it does shows the line that says so under its name. The arrow keys walk the list, Enter adds the highlighted region, which is the first one named by what you typed, and regions already on the scan show the colour they wear. Closed, the menu looks as it did; open, it drops from its button as the section menus do, and on a phone it keeps above the keyboard. The Brodmann search beside it no longer shows a second clear button, and neither field makes a phone zoom in when it is tapped.
 

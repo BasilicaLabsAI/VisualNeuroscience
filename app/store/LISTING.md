@@ -188,7 +188,8 @@ both **linked to the user's identity**, used for **App Functionality** and
 **Analytics**, and **not** used to track. Everything else: not collected.
 
 From 1.1 the newsletter box is in the app, and an address typed into it
-goes to the newsletter's list at Mailchimp. Add **Developer's Advertising
+goes to the newsletter's list at Mailchimp, as does a new account's
+address when the feature-announcements box is left ticked. Add **Developer's Advertising
 or Marketing** to the purposes of Contact Info → Email Address before
 submitting 1.1; it stays linked to the user and not used to track.
 
