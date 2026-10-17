@@ -5,9 +5,13 @@
    fortnight; signing up keeps it away for good; both are remembered in the
    browser and nowhere else. The address goes to the newsletter-worker,
    which passes it on (docs/NEWSLETTER.md) and stores nothing. Add
-   ?newsletter=1 to a page's address to see the box at once. */
+   ?newsletter=1 to a page's address to see the box at once.
+   The website alone shows it: inside the apps the list is offered only by
+   the tick box on a new account (assets/auth-ui.js). */
 (function(){
   "use strict";
+  var cap = window.Capacitor;
+  if (cap && typeof cap.isNativePlatform === "function" && cap.isNativePlatform()) return;
   var ENDPOINT = "https://visualneuroscience-newsletter.cloudflare-passport599.workers.dev/subscribe";
   var KEY = "vn-news", DELAY = 20000, SCROLL = 0.5, SNOOZE = 14 * 86400000;
   var now = Date.now(), force = /[?&]newsletter=1/.test(location.search);

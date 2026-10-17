@@ -193,7 +193,7 @@ No. **Financial features**: none. **Health**: none of the listed
 categories (it is education, not a health service).
 
 **Data safety**. Does the app collect or share user data: Yes (only when
-someone signs in or asks for the newsletter). Encrypted in transit: Yes.
+someone signs in). Encrypted in transit: Yes.
 Users can request deletion: Yes, and the deletion link is
 https://visualneuroscience.ai/account.html#delete, the account page, whose
 deletion section reads the same logged in or out. Then the types:
@@ -201,7 +201,7 @@ deletion section reads the same logged in or out. Then the types:
 | Data type | Collected | Shared | Optional | Purpose |
 |---|---|---|---|---|
 | Personal info → Name | Yes | No | Yes, only with an account | Account management |
-| Personal info → Email address | Yes | No | Yes, with an account or the newsletter | Account management; for the newsletter, Developer communications |
+| Personal info → Email address | Yes | No | Yes, only with an account | Account management; Developer communications when the feature-announcements box is left ticked |
 | Personal info → User IDs | Yes | No | Yes, only with an account | Account management, App functionality |
 | App activity → Other user-generated content | Yes | No | Yes, only with an account | App functionality (saved models and practice progress, so the account works on every device) |
 

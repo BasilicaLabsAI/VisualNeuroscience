@@ -129,8 +129,8 @@ Version 1.0 was approved and released on 25 September 2026. The project is
 at 1.1 for the next submission: create version 1.1 in App Store Connect,
 pick the new build, upload the screenshots in `app/store/screenshots/`,
 paste the text below into *What's New in This Version*, and update App
-Privacy as the section below says, since 1.1 is the first version with the
-newsletter box.
+Privacy as the section below says, since 1.1 is the first version that can
+put an address on the newsletter's list.
 
 Check the build number on the 1.0 page first. If 1.0 went out as build 14
 rather than 15, the second block is new to App Store users as well and goes
@@ -144,7 +144,7 @@ above the first. 4,000 characters allowed; both together are well under.
 • The Digital Textbook is now OpenStax's Introduction to Behavioral Neuroscience in full, nineteen chapters, with its citations opening where they stand.
 • The side view opens on the brain itself rather than the gap between its halves, and picking a region brings every view to it.
 • A highlighted region lights up on the receptor chart in its own colour.
-• A newsletter to sign up to, and a new contact address: fkarim@visualneuroscience.ai.
+• Your account has a page of its own: everything it holds, a copy to download, and deletion. A new account can ask for feature announcements by email, and there is a new contact address: fkarim@visualneuroscience.ai.
 ```
 
 Only if 1.0 went out as build 14:
@@ -187,9 +187,9 @@ User Content (other user content: saved files and practice progress),
 both **linked to the user's identity**, used for **App Functionality** and
 **Analytics**, and **not** used to track. Everything else: not collected.
 
-From 1.1 the newsletter box is in the app, and an address typed into it
-goes to the newsletter's list at Mailchimp, as does a new account's
-address when the feature-announcements box is left ticked. Add **Developer's Advertising
+The newsletter box stays on the website, but from 1.1 a new account's
+address goes to the newsletter's list at Mailchimp when the
+feature-announcements box is left ticked. Add **Developer's Advertising
 or Marketing** to the purposes of Contact Info → Email Address before
 submitting 1.1; it stays linked to the user and not used to track.
 
