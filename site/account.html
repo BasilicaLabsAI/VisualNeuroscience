@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Your account — VisualNeuroscience.AI</title>
+<meta name="description" content="Everything a VisualNeuroscience.AI account holds, a copy of it to download, how to reach a person, and how to delete the account.">
+<!-- link previews. The card is built by site/share.html and rendered to
+     assets/social-card.jpg; og:image has to be absolute, so this origin is
+     the one thing to change if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="Your account — VisualNeuroscience.AI">
+<meta property="og:description" content="Everything a VisualNeuroscience.AI account holds, a copy of it to download, how to reach a person, and how to delete the account.">
+<meta property="og:url" content="https://visualneuroscience.ai/account.html">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The flow-state network ring over orange-tinted MNI152 brain slices, with the VisualNeuroscience.AI wordmark at its centre.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="fonts/fonts.css">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+  --quiet:#8A8A8A;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+  --quiet:#8A8A8A;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  margin:0 0 3rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+a{ color:var(--ink); }
+svg{ display:block; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* masthead, shared with the rest of the site */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:.65em; height:.65em; flex:none; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{
+  font-family:var(--font-display); font-size:1.35rem;
+  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+}
+.title-strip .anno{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60);
+}
+
+.lede{
+  font-family:var(--font-serif); font-size:1.02rem; line-height:1.6;
+  margin:0 0 calc(var(--gap) * 1.6);
+}
+
+
+/* ── the policy ─────────────────────────────────────────────────────── */
+.policy{ max-width:72ch; margin:0 auto; }
+.policy h2{
+  font-family:var(--font-brand); font-weight:600; font-size:.66rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
+  border-bottom:1px solid var(--ink); padding:.2rem .1rem .45rem;
+  margin:calc(var(--gap) * 2.4) 0 var(--gap);
+}
+.policy h2:first-of-type{ margin-top:var(--gap); }
+.policy p{ font-size:1rem; line-height:1.65; margin-bottom:.9rem; }
+.policy ul{ margin:0 0 1rem 1.1rem; }
+.policy li{ font-size:1rem; line-height:1.6; margin-bottom:.45rem; }
+.policy b{ font-weight:400; color:var(--ink); }
+.policy .note{
+  font-family:var(--font-serif); font-style:italic; font-size:.9rem;
+  color:var(--ink-60); border-left:2px solid var(--ink-35);
+  padding-left:.8rem; margin:1rem 0;
+}
+.policy .stamp{
+  font-family:var(--font-brand); font-size:.55rem; letter-spacing:.24em;
+  text-transform:uppercase; color:var(--ink-35);
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2.4rem;
+}
+
+/* ── the account ──────────────────────────────────────────────────────
+   One column in the policy's measure: what the account holds, read from
+   it as the page opens, a copy of all of it, and deletion, which is also
+   the page the store listings point to, so its steps read the same signed
+   in or out. The buttons answer on the press, as every control does. */
+.policy.acct > h2{ margin-top:calc(var(--gap) * 2.4); }
+.acct section > h2:first-child{ margin-top:var(--gap); }
+.acct-facts{ display:grid; grid-template-columns:max-content 1fr; gap:.5rem 1.4rem; margin:0 0 1.1rem; }
+.acct-facts dt{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--ink-60); padding-top:.32rem;
+}
+.acct-facts dd{ margin:0; overflow-wrap:anywhere; }
+.acct-facts dd.quiet{ font-style:italic; color:var(--ink-60); }
+@media (max-width:520px){
+  .acct-facts{ grid-template-columns:1fr; gap:0; }
+  .acct-facts dd{ margin-bottom:.7rem; }
+}
+.acct-row{ display:flex; flex-wrap:wrap; gap:.6rem; margin:0 0 1rem; }
+.acct-btn, .acct-danger{
+  font-family:var(--font-brand); font-weight:500; font-size:.64rem; letter-spacing:.2em;
+  text-transform:uppercase; padding:.72rem 1rem .66rem; min-height:44px; cursor:pointer;
+  transition:transform .1s ease-out, background-color .15s ease, color .15s ease;
+}
+.acct-btn{ color:var(--paper); background:var(--ink); border:1px solid var(--ink); }
+.acct-btn.quiet{ color:var(--ink); background:none; border-color:var(--hair); }
+@media (hover:hover){ .acct-btn.quiet:hover{ background:var(--ink); color:var(--paper); } }
+.acct-danger{ color:#b3261e; background:none; border:1px solid #b3261e; }
+.acct-danger.armed{ background:#b3261e; color:#fff; }
+:root[data-theme="dark"] .acct-danger{ color:#ff8a80; border-color:#ff8a80; }
+:root[data-theme="dark"] .acct-danger.armed{ background:#b3261e; border-color:#b3261e; color:#fff; }
+.acct-btn:not(:disabled):active, .acct-danger:not(:disabled):active{ transform:scale(.96); }
+.acct-btn:disabled, .acct-danger:disabled{ opacity:.55; cursor:default; }
+@media (prefers-reduced-motion: reduce){
+  .acct-btn:not(:disabled):active, .acct-danger:not(:disabled):active{ transform:none; }
+}
+.policy .acct-tool{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--ink-60); margin:1rem 0 .4rem;
+}
+.policy .acct-list{ list-style:none; margin:0 0 1rem; border-top:1px solid var(--ink-35); }
+.policy .acct-list li{
+  display:flex; align-items:baseline; gap:.9rem; margin:0;
+  padding:.6rem .1rem; border-bottom:1px solid var(--ink-35);
+}
+.acct-list .nm{ flex:1; min-width:0; overflow-wrap:anywhere; }
+.acct-list .when{ font-style:italic; font-size:.86rem; color:var(--ink-60); white-space:nowrap; }
+.acct-list a, .acct-go{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem; letter-spacing:.2em;
+  text-transform:uppercase; white-space:nowrap; text-underline-offset:3px;
+}
+.acct-stats{ display:flex; flex-wrap:wrap; gap:1rem 2rem; margin:0 0 1rem; }
+.acct-stats .num{ font-family:var(--font-display); font-size:1.7rem; line-height:1; }
+.acct-stats .lbl{
+  font-family:var(--font-brand); font-weight:500; font-size:.56rem; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--ink-60); margin-top:.35rem;
+}
+.acct-quiet{ font-style:italic; color:var(--ink-60); }
+.acct-status{ font-style:italic; font-size:.92rem; color:var(--ink-60); min-height:1.3em; }
+.acct-status.err{ color:#b3261e; font-style:normal; }
+:root[data-theme="dark"] .acct-status.err{ color:#ff8a80; }
+@media (max-width:520px){
+  .acct-list li{ flex-wrap:wrap; gap:.2rem .9rem; }
+  .acct-list .nm{ flex-basis:100%; }
+}
+</style>
+</head>
+<body>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="Site">
+    <a href="regions.html">Region Atlas</a>
+    <a href="microanatomy.html">Microanatomy</a>
+    <a href="molecular.html">Molecular</a>
+    <a href="tracts.html">Tractography</a>
+    <a href="studies.html">Visualizing Studies</a>
+    <a href="textbook.html">Digital Textbook</a>
+    <a href="practice.html">Practice</a>
+    <a href="about.html">About</a>
+    <span class="nav-tools"><button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button></span>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<div class="title-strip">
+  <h1 class="name">Your account</h1>
+  <span class="anno">what it holds, a person to write to, and how to delete it</span>
+</div>
+
+<div class="policy acct">
+
+<p class="lede">An account keeps your saved models and your practice progress, so the same work is there on the web and in the apps. Nothing on the site needs one. This page shows everything the account holds, gives you a copy of it, and deletes it.</p>
+
+<p class="acct-quiet" id="acctWait">Checking whether you are logged in&hellip;</p>
+
+<section id="acctOff" hidden>
+  <p class="note">Accounts are switched off in this copy of the app, so nothing about you is stored here.</p>
+</section>
+
+<section id="acctOut" hidden>
+  <h2>Logged out</h2>
+  <p class="note" id="acctGone" hidden>Your account has been deleted, with its profile, username, saved models and practice progress. Nothing of it is kept.</p>
+  <p>Log in to see what your account holds, download a copy of it, or delete it.</p>
+  <div class="acct-row"><button class="acct-btn" id="acctLogin" type="button">Log in</button></div>
+</section>
+
+<section id="acctIn" hidden>
+  <h2>Your details</h2>
+  <dl class="acct-facts" id="acctFacts"></dl>
+  <div class="acct-row">
+    <button class="acct-btn quiet" id="acctEdit" type="button">Change username or university</button>
+    <button class="acct-btn quiet" id="acctLogout" type="button">Log out</button>
+  </div>
+
+  <h2>Saved models</h2>
+  <div id="acctModels"><p class="acct-quiet">Reading the account&hellip;</p></div>
+
+  <h2>Practice progress</h2>
+  <div id="acctPractice"><p class="acct-quiet">Reading the account&hellip;</p></div>
+
+  <h2>A copy of everything</h2>
+  <p>One file holding your details, every saved model and your practice progress, as JSON: plain text that any program can open.</p>
+  <div class="acct-row"><button class="acct-btn" id="acctCopy" type="button">Download a copy</button></div>
+  <p class="acct-status" id="acctCopyStatus" aria-live="polite"></p>
+</section>
+
+<h2 id="delete">Deleting your account</h2>
+<p>Deleting removes the account at once: your sign-in, profile, username, saved models and practice progress. Nothing of them is kept, and there is no undo. The newsletter is a separate list: if you joined it, leave from the link at the foot of any of its emails.</p>
+<div id="acctDelWrap" hidden>
+  <div class="acct-row"><button class="acct-danger" id="acctDelete" type="button">Delete account&hellip;</button></div>
+  <p class="acct-status" id="acctDeleteStatus" aria-live="polite"></p>
+</div>
+<p id="acctDelSteps">Log in on this page, then press <b>Delete account</b> here, or open <b>Log in</b> on any page of the site or the app and press <b>Delete account</b> in the account box.</p>
+<p>Cannot log in? Write to <a href="mailto:fkarim@visualneuroscience.ai?subject=Delete%20my%20account&amp;body=Please%20delete%20the%20VisualNeuroscience.AI%20account%20that%20uses%20this%20email%20address."><b>fkarim@visualneuroscience.ai</b></a> from the address on the account, with the subject <i>Delete my account</i>. The account is deleted by hand within 30 days, with the same result, and the reply says when it is done.</p>
+
+<h2 id="support">Support</h2>
+<p>Questions, corrections and bug reports are welcome. Write to <a href="mailto:fkarim@visualneuroscience.ai"><b>fkarim@visualneuroscience.ai</b></a> and a person reads it. Saying which page you were on, and on what device, helps.</p>
+<p>What the site collects, and what it never will, is on the <a href="privacy.html">privacy page</a>.</p>
+
+</div>
+
+</main>
+
+<script src="assets/native.js"></script>
+<script src="assets/navbar.js"></script>
+<script>
+"use strict";
+(function(){
+  var themeBtn = document.getElementById("themeBtn");
+  var themeLbl = document.getElementById("themeLbl");
+  if (document.documentElement.getAttribute("data-theme") === "dark"){
+    themeLbl.textContent = "Light"; themeBtn.setAttribute("aria-pressed", "true");
+  }
+  themeBtn.addEventListener("click", function(){
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark";
+    if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+    else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+    themeBtn.setAttribute("aria-pressed", String(!dark));
+    try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+  });
+})();
+</script>
+
+<script src="assets/firebase-config.js"></script>
+<script type="module" src="assets/auth-ui.js"></script>
+<script type="module">
+/* The account page. It reads the account through the same two modules as
+   the account box (auth.js, userdata.js), shows what it finds, writes all
+   of it into one file on request, and deletes the account with the box's
+   own call. Every name shown is the person's own text, so it goes in as
+   text, never as markup. */
+import auth from "./assets/auth.js";
+import files from "./assets/userdata.js";
+
+const $ = id => document.getElementById(id);
+const TOOL_NAMES = { regions: "Region Atlas" };
+const SIGN_INS = { "google.com": "Google", "apple.com": "Apple", "password": "Email", "emailLink": "Email" };
+/* set before the account goes, since the sign-out it brings can arrive
+   before the call that caused it returns */
+let deleting = false;
+
+function toDate(v){
+  if (!v) return null;
+  if (typeof v.toDate === "function") return v.toDate();
+  if (typeof v === "number") return new Date(v);
+  if (v.seconds) return new Date(v.seconds * 1000);
+  const d = new Date(v);
+  return isNaN(d.getTime()) ? null : d;
+}
+function when(v){
+  const d = toDate(v);
+  return d ? d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : "";
+}
+/* Firestore's timestamps, made plain for the copy */
+function plain(v){
+  if (v && typeof v.toDate === "function") return v.toDate().toISOString();
+  if (Array.isArray(v)) return v.map(plain);
+  if (v && typeof v === "object"){ const o = {}; Object.keys(v).forEach(k => { o[k] = plain(v[k]); }); return o; }
+  return v;
+}
+function el(tag, cls, text){
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+function signIns(u){
+  const names = (u.providerData || []).map(p => SIGN_INS[p.providerId] || p.providerId).filter(Boolean);
+  return [...new Set(names)].join(", ");
+}
+
+async function details(u){
+  let p = null;
+  try{ p = await auth.loadProfile(u); }catch(_){}
+  p = p || auth.profile() || {};
+  const dl = $("acctFacts"); dl.textContent = "";
+  const fact = (label, value, empty) => {
+    dl.append(el("dt", null, label), el("dd", value ? null : "quiet", value || empty));
+  };
+  fact("Name", p.name || p.displayName || u.displayName, "not given");
+  fact("Email", u.email || p.email, "none");
+  fact("Username", p.username, "not chosen yet");
+  fact("University", p.university, "not given");
+  fact("Logged in with", signIns(u), "unknown");
+  fact("Account made", when(u.metadata && u.metadata.creationTime), "unknown");
+  fact("Last logged in", when(u.metadata && u.metadata.lastSignInTime), "unknown");
+  return p;
+}
+
+/* every tool that ever saved is listed in the account's index; the two
+   the site has are asked for whether or not it lists them */
+async function tools(u){
+  const out = new Set(["regions", "practice"]);
+  try{
+    const s = auth.sdk, snap = await s.getDoc(s.doc(auth.db, "users", u.uid, "meta", "toolindex"));
+    if (snap.exists()) Object.keys(snap.data() || {}).forEach(t => out.add(t));
+  }catch(_){}
+  return [...out];
+}
+
+function regionLink(data){
+  const keys = (data && Array.isArray(data.selections) ? data.selections : []).map(s => s && s.key).filter(Boolean);
+  return keys.length ? "regions.html#sel=" + encodeURIComponent(keys.join("|")) : "regions.html";
+}
+
+async function models(list){
+  const host = $("acctModels"); host.textContent = "";
+  let any = false;
+  for (const tool of list.filter(t => t !== "practice")){
+    let saved = [];
+    try{ saved = await files.list(tool); }catch(_){ continue; }
+    if (!saved.length) continue;
+    any = true;
+    host.append(el("p", "acct-tool", (TOOL_NAMES[tool] || tool) + " · " + saved.length + (saved.length === 1 ? " model" : " models")));
+    const ul = el("ul", "acct-list");
+    for (const f of saved){
+      const li = el("li");
+      li.append(el("span", "nm", f.name), el("span", "when", when(f.updatedAt)));
+      if (tool === "regions"){
+        const a = el("a", null, "Open");
+        a.href = "regions.html";
+        a.setAttribute("aria-label", "Open " + f.name + " in the Region Atlas");
+        files.load(tool, f.name).then(d => { a.href = regionLink(d); }).catch(() => {});
+        li.append(a);
+      }
+      ul.append(li);
+    }
+    host.append(ul);
+  }
+  if (!any) host.append(el("p", "acct-quiet", "No saved models yet. Save one in the Region Atlas, under Saved models, and it is listed here."));
+}
+
+async function practice(){
+  const host = $("acctPractice"); host.textContent = "";
+  let st = null;
+  try{ st = await files.load("practice", "progress"); }catch(_){}
+  if (!st || !st.answered){
+    host.append(el("p", "acct-quiet", "No practice progress yet. Answer a question on the Practice page and it is kept here."));
+    return;
+  }
+  const stats = el("div", "acct-stats");
+  const stat = (num, lbl) => { const d = el("div"); d.append(el("div", "num", num), el("div", "lbl", lbl)); stats.append(d); };
+  stat(String(st.answered), st.answered === 1 ? "question answered" : "questions answered");
+  stat(Math.round((st.correct || 0) / st.answered * 100) + "%", "answered right");
+  const topics = Object.keys(st.topics || {}).length;
+  if (topics) stat(String(topics), topics === 1 ? "topic practised" : "topics practised");
+  host.append(stats);
+  const last = when(st.updated);
+  const p = el("p", null, last ? "Last practised " + last + ". " : "");
+  const a = el("a", "acct-go", "Go to Practice"); a.href = "practice.html";
+  p.append(a);
+  host.append(p);
+}
+
+async function copy(u){
+  const btn = $("acctCopy"), st = $("acctCopyStatus");
+  btn.disabled = true; st.classList.remove("err"); st.textContent = "Gathering everything…";
+  try{
+    const prof = await auth.loadProfile(u).catch(() => null) || auth.profile() || {};
+    const out = {
+      what: "Everything the VisualNeuroscience.AI account holds",
+      exported: new Date().toISOString(),
+      account: {
+        id: u.uid, email: u.email || "", name: u.displayName || "",
+        loggedInWith: signIns(u),
+        made: toDate(u.metadata && u.metadata.creationTime) ? toDate(u.metadata.creationTime).toISOString() : null,
+        lastLoggedIn: toDate(u.metadata && u.metadata.lastSignInTime) ? toDate(u.metadata.lastSignInTime).toISOString() : null
+      },
+      profile: plain(prof),
+      saved: {}
+    };
+    for (const tool of await tools(u)){
+      let saved = [];
+      try{ saved = await files.list(tool); }catch(_){ continue; }
+      if (!saved.length) continue;
+      out.saved[tool] = [];
+      for (const f of saved){
+        out.saved[tool].push({ name: f.name, updated: toDate(f.updatedAt) ? toDate(f.updatedAt).toISOString() : null,
+                               data: plain(await files.load(tool, f.name)) });
+      }
+    }
+    const blob = new Blob([JSON.stringify(out, null, 2)], { type: "application/json" });
+    const name = "visualneuroscience-account-" + new Date().toISOString().slice(0, 10) + ".json";
+    if (window.MN && MN.saveFile) await MN.saveFile(blob, name);
+    else {
+      const a = document.createElement("a"), href = URL.createObjectURL(blob);
+      a.href = href; a.download = name; document.body.append(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(href), 1500);
+    }
+    st.textContent = "Saved as " + name + ".";
+  }catch(err){
+    st.classList.add("err");
+    st.textContent = (err && err.message) || "Could not make the copy. Try again.";
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+/* two presses, as in the account box: the first arms it, the second
+   deletes, and an armed button that is left alone disarms itself */
+let armed = false, disarm = null;
+function resetDelete(){
+  const b = $("acctDelete");
+  armed = false; clearTimeout(disarm);
+  b.classList.remove("armed"); b.textContent = "Delete account…";
+}
+async function del(){
+  const b = $("acctDelete"), st = $("acctDeleteStatus");
+  if (!armed){
+    armed = true;
+    b.textContent = "Press again to delete for ever";
+    b.classList.add("armed");
+    disarm = setTimeout(resetDelete, 6000);
+    return;
+  }
+  resetDelete();
+  b.disabled = true; st.classList.remove("err"); st.textContent = "Deleting…";
+  deleting = true;
+  try{
+    await auth.deleteAccount();
+    st.textContent = "";
+    draw(auth.currentUser());
+  }catch(err){
+    deleting = false;
+    st.classList.add("err");
+    st.textContent = (err && err.message) || "The account could not be deleted. Try again.";
+  }finally{
+    b.disabled = false;
+  }
+}
+
+function draw(u){
+  $("acctWait").hidden = true;
+  $("acctIn").hidden = !u;
+  $("acctOut").hidden = !!u;
+  $("acctGone").hidden = !(deleting && !u);
+  $("acctDelWrap").hidden = !u;
+  $("acctDelSteps").hidden = !!u;
+  if (!u) return;
+  details(u);
+  tools(u).then(list => { models(list); practice(); });
+}
+
+if (!auth.enabled){
+  $("acctWait").hidden = true;
+  $("acctOff").hidden = false;
+  $("acctDelSteps").hidden = true;
+} else {
+  $("acctLogin").addEventListener("click", () => window.VN_ACCOUNT_UI && VN_ACCOUNT_UI.openLogin());
+  $("acctEdit").addEventListener("click", () => window.VN_ACCOUNT_UI && VN_ACCOUNT_UI.openAccount());
+  $("acctLogout").addEventListener("click", () => auth.signOut());
+  $("acctCopy").addEventListener("click", () => { const u = auth.currentUser(); if (u) copy(u); });
+  $("acctDelete").addEventListener("click", del);
+  /* the account box saved a new username or university */
+  window.addEventListener("vn-profile", () => { const u = auth.currentUser(); if (u) details(u); });
+  auth.onUser(draw);
+}
+</script>
+</body>
+</html>

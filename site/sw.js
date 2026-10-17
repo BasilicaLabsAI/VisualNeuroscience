@@ -21,14 +21,14 @@
    Nothing cross-origin is touched at all — since the typefaces moved
    in-house there is no outside request left to think about. */
 
-var VERSION = "vn-121";
+var VERSION = "vn-122";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
 /* the pages and the small files they need to draw at all */
 var PRECACHE = [
   "/", "/index.html", "/regions.html", "/tracts.html", "/studies.html", "/hallucinations.html",
-  "/privacy.html", "/about.html", "/mcp.html", "/connect.html", "/practice.html", "/assets/home/practice.jpg",
+  "/privacy.html", "/account.html", "/about.html", "/mcp.html", "/connect.html", "/practice.html", "/assets/home/practice.jpg",
   "/textbook.html", "/assets/home/textbook.jpg", "/assets/textbook.css", "/assets/textbook.js",
   "/microanatomy.html", "/assets/home/cells.jpg", "/assets/cells.js",
   "/molecular.html", "/assets/home/molecular.jpg",

@@ -195,7 +195,8 @@ categories (it is education, not a health service).
 **Data safety**. Does the app collect or share user data: Yes (only when
 someone signs in or asks for the newsletter). Encrypted in transit: Yes.
 Users can request deletion: Yes, and the deletion link is
-https://visualneuroscience.ai/privacy.html#delete-account. Then the types:
+https://visualneuroscience.ai/account.html#delete, the account page, whose
+deletion section reads the same logged in or out. Then the types:
 
 | Data type | Collected | Shared | Optional | Purpose |
 |---|---|---|---|---|

@@ -141,6 +141,8 @@ function mount(){
   .vn-form .vn-check input{ flex:none; width:1.15rem; height:1.15rem; min-height:0; padding:0;
     margin:.12rem 0 0; accent-color:var(--ink,#111); cursor:pointer; }
   .vn-check small{ display:block; font-size:.8rem; line-height:1.45; color:var(--ink-60,#5a5a5a); margin-top:.15rem; }
+  .vn-page{ display:inline-block; margin-top:1.1rem; font-size:.9rem; color:var(--ink,#111);
+    text-underline-offset:3px; }
   `;
   const style = document.createElement("style");
   style.textContent = css;
@@ -283,6 +285,8 @@ function mount(){
         await auth.setUniversity(inUni.value);
         h.textContent = name;
         drawSlot(user);
+        /* the account page, if it is the page behind the box, redraws */
+        window.dispatchEvent(new CustomEvent("vn-profile"));
         let said = "Saved.";
         if (news && news.label.isConnected){
           const joined = news.box.checked && await joinNewsletter(user.email);
@@ -293,6 +297,10 @@ function mount(){
       });
     });
 
+    /* the whole account, a copy of it and support live on a page of their own */
+    const page = document.createElement("a");
+    page.className = "vn-page"; page.href = "account.html";
+    page.textContent = "Everything your account holds, a copy of it, and support";
     const warn = document.createElement("p");
     warn.className = "vn-who";
     warn.textContent = "Deleting the account removes it for good, along with the profile and every saved file. There is no undo.";
@@ -317,7 +325,9 @@ function mount(){
     statusEl = document.createElement("p");
     statusEl.className = "vn-status";
     statusEl.setAttribute("aria-live", "polite");
-    box.append(close, h, who, fProf, statusEl, warn, del);
+    box.append(close, h, who, fProf, statusEl);
+    if (!/(^|\/)account\.html$/.test(location.pathname)) box.append(page);
+    box.append(warn, del);
     wrap.appendChild(box);
     document.body.appendChild(wrap);
     if (fading){ fading.remove(); fading = null; }
@@ -582,6 +592,11 @@ function mount(){
 
   /* ── boot ────────────────────────────────────────────────────────────── */
   auth.onUser(drawSlot);
+  /* the account page opens the same two boxes from its own buttons */
+  window.VN_ACCOUNT_UI = {
+    openLogin: () => openModal(),
+    openAccount: () => { const u = auth.currentUser(); if (u) openAccountModal(u); else openModal(); }
+  };
 
   /* arriving on a passwordless sign-in link: finish it, asking for the
      email only if this browser never stored it */

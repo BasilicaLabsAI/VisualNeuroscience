@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.103 — 17 October 2026 — Your account has a page of its own
+Commit · Add an account page with your details, saved work, a copy, support and deletion
+
+An account now has a page of its own, reached from the account box. Logged in, it shows your details, every model you have saved in the Region Atlas with a link that opens it, and your practice progress, and one button downloads all of it as a single file. It is also where an account is deleted: two presses delete it at once, and anyone who cannot log in is told to write from the account's address, with the account then deleted by hand within 30 days. The support address is on it, and the privacy page and the account box point to it.
+
 ## v10.102 — 17 October 2026 — New accounts are offered feature announcements
-Commit · Offer feature announcements by email when an account is made
+Commit `ebf1a89` · Offer feature announcements by email when an account is made
 
 Making an account now offers feature announcements by email, in a box that starts ticked and says what it is for: news of new features and nothing else. On the Create account form it sits above the button, and an account made with Google, Apple or a sign-in link meets it beside the username the first time the account opens. Left ticked, the address goes to the same list as the newsletter box on the pages, and Mailchimp writes once to confirm, so it joins the list only when its owner says yes; unticked, nothing is sent. The privacy page says so where it describes accounts and the newsletter.
 
