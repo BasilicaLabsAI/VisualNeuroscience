@@ -84,8 +84,13 @@ Read this first in every session. It is the handover; nothing else needs pasting
   in the repo as of v10.85; Apple's Services ID, key and Team ID went into the Firebase console for v10.86). LinkedIn
   stays off until `docs/AUTH-SETUP.md` §7 is done.
 - MCP worker: deployed from the owner's Mac on 16 October 2026 with the v10.93 deep links (`regions.html#network=…`),
-  the sign-in and the account tools. Still to do in Claude: remove the organisation's connector and add it again with
-  authentication "Sign in when needed", then test `save_model` from a chat; then the directory submission.
+  the sign-in and the account tools. The organisation's connector uses "Sign in when needed" with Claude's client
+  metadata document, and all nine tools were run through it on 17 October 2026. Submitted to the Connectors Directory
+  the same day (slug `visualneuroscience`, OAuth by client metadata document, required when the server asks; reviewer
+  credentials are in the portal only); awaiting review at claude.ai/directory/manage. The portal's summary calls the
+  server "authless" because its check only lists tools; if the listing comes out without sign-in, write to
+  mcp-review@anthropic.com. Keep tool names and the address unchanged until it is approved; tool changes later need
+  only a deploy, plus a reviewed listing edit when the tool names shown on the listing change.
 - Newsletter: on Mailchimp since 24 September 2026; the worker's three Mailchimp secrets are set and it reaches the
   audience. Still to do in Mailchimp: make fkarim@visualneuroscience.ai the audience's default From address and
   authenticate the domain (`docs/NEWSLETTER.md`). The email route stays off.
