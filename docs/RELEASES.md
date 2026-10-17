@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.101 — 17 October 2026 — The region menu has a search field
+Commit · Put a search field at the top of the Region Atlas's Add a region menu
+
+Adding a region in the Region Atlas no longer means scrolling through sixty-two names, or a hundred and sixteen with the pairs split. The Add a region menu now opens with a search field at its top, ready for typing: part of a name, a lobe, or what you want a region to do narrows the list as you type, with the match marked, and a region found by what it does shows the line that says so under its name. The arrow keys walk the list, Enter adds the highlighted region, which is the first one named by what you typed, and regions already on the scan show the colour they wear. Closed, the menu looks as it did; open, it drops from its button as the section menus do, and on a phone it keeps above the keyboard. The Brodmann search beside it no longer shows a second clear button, and neither field makes a phone zoom in when it is tapped.
+
 ## v10.100 — 17 October 2026 — The atlas says it is in Claude
-Commit · State the MCP server under the App Store link and on both About pages
+Commit `865ac73` · State the MCP server under the App Store link and on both About pages
 
 The line under the home page's masthead now carries the server under the App Store link, as Also in Claude, as an MCP server, instead of the bare words MCP server beside it; inside the app, where the store link gives way to the names of the scans, the same line stays. The About page says it in the paragraph that points to the App Store, that Claude, ChatGPT and other assistants can ask the atlas questions directly, and the Vision Pro app's own about window says so too, with the server's address. Nothing else changes.
 

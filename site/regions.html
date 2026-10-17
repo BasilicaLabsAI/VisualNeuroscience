@@ -756,6 +756,72 @@ mark{ background:var(--ink); color:var(--paper); }
 .barow[aria-pressed="true"] mark{ background:var(--paper); color:var(--ink); }
 @media (max-width:1100px){ .balist{ max-height:min(40vh,360px); } }
 
+/* ── the region picker ─────────────────────────────────────────────────
+   The AAL list runs to a hundred and sixteen names with the pairs split,
+   too many to scroll a native menu for, so the dropdown carries a search
+   field at its top. Closed it looks and sits as the menu it replaced; a
+   press opens it listening for the keyboard, typing narrows the list by
+   name, lobe or what a region does, and Enter or a press adds the region.
+   Open, it is a material hung from its button, and it arrives and leaves
+   as the section menus do. */
+.rpick-btn{
+  display:block; width:100%; text-align:left; cursor:pointer;
+  border:1px solid var(--hair); border-radius:0; background:var(--paper); color:var(--ink);
+  font-family:var(--font-brand); font-size:.92rem; padding:.55rem 1.8rem .5rem .6rem;
+  transition:box-shadow .12s ease;
+}
+@media (hover: hover){ .rpick-btn:hover{ box-shadow:0 0 0 1px var(--ink) inset; } }
+.rpick-btn:active, .rpick-btn[aria-expanded="true"]{ box-shadow:0 0 0 1px var(--ink) inset; }
+.rpick::after{ transition:transform .22s cubic-bezier(.32,.72,0,1); }
+.rpick.open::after{ transform:translateY(-35%) rotate(180deg); }
+.rpick-pop{
+  position:absolute; z-index:40; left:0; right:0; top:calc(100% + 4px);
+  padding:.6rem .6rem .35rem; border:1px solid var(--hair);
+  background:color-mix(in srgb, var(--paper) 94%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
+  box-shadow:0 14px 30px rgba(0,0,0,.25);
+  visibility:hidden; opacity:0; transform:translateY(-8px) scale(.985); transform-origin:top left;
+  transition:opacity .18s cubic-bezier(.32,.72,0,1), transform .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .22s;
+}
+/* beside the scans the rail is narrow, so the open list is let out past
+   its edge, where the names and the line of what each does have room */
+@media (min-width:1101px), (min-width:901px) and (orientation:landscape){
+  .rpick-pop{ right:auto; width:21rem; }
+}
+.rpick.open .rpick-pop{ visibility:visible; opacity:1; transform:none; transition-delay:0s, 0s, 0s; }
+.rpick-list{
+  max-height:min(46vh,420px); max-height:min(46dvh,420px); overflow-y:auto; overscroll-behavior:contain;
+  margin:0 -.2rem; padding:0 .2rem;
+}
+.rpick-list .balobe{ margin-top:.5rem; }
+.rpick-list [role="group"]:first-child .balobe{ margin-top:0; }
+.rpick-opt{ -webkit-user-select:none; user-select:none; }
+.rpick-opt .nm{ flex:1 1 auto; overflow:hidden; }
+.rpick-opt .why{
+  display:block; font-style:italic; font-size:.78rem; color:var(--ink-60);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:.1rem;
+}
+.rpick-opt.active{ background:color-mix(in srgb, var(--ink) 9%, transparent); }
+.rpick-opt .swatch{ border-color:var(--ink-60); }
+.searchwrap input::-webkit-search-cancel-button{ -webkit-appearance:none; appearance:none; }
+/* under a finger the field is set at 16px, the size below which a phone
+   zooms the page to read what is typed */
+@media (pointer:coarse){
+  .rpick-btn{ min-height:44px; }
+  .searchwrap input{ font-size:16px; }
+}
+@media (prefers-reduced-motion: reduce){
+  .rpick-pop{ transform:none; transition:opacity .15s ease, visibility 0s linear .15s; }
+  .rpick.open .rpick-pop{ transition-delay:0s, 0s; }
+  .rpick::after{ transition:none; }
+}
+@media (prefers-reduced-transparency: reduce){
+  .rpick-pop{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
+}
+@media (prefers-contrast: more){
+  .rpick-pop{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; border-color:var(--ink); }
+}
+
 /* the Brodmann block among the notes: one tier of its own, below the
    three layers, with the caveat that belongs with each area */
 .rnote .caveat{
@@ -865,8 +931,20 @@ mark{ background:var(--ink); color:var(--paper); }
           <button class="ts-btn" type="button" id="atlasBA" data-atlas="ba" aria-pressed="false">Brodmann areas</button>
         </div>
         <div class="atlas-pane" id="aalPane">
-          <div class="selwrap">
-            <select id="regionSelect" aria-label="Add a region to highlight">
+          <div class="selwrap rpick" id="rpick">
+            <button class="rpick-btn" id="rpickBtn" type="button" aria-haspopup="listbox" aria-expanded="false"
+                    aria-controls="rpickPop">Add a region&hellip;</button>
+            <div class="rpick-pop" id="rpickPop">
+              <div class="searchwrap">
+                <input type="search" id="rpickQ" role="combobox" aria-expanded="true" aria-controls="rpickList"
+                       aria-autocomplete="list" aria-describedby="rpickCount" autocomplete="off" spellcheck="false"
+                       placeholder="name, lobe, or what it does&hellip;" aria-label="Search the regions">
+                <button class="clear hidden" id="rpickClear" type="button" aria-label="Clear search">&times;</button>
+              </div>
+              <p class="search-count" id="rpickCount" aria-live="polite"></p>
+              <div class="rpick-list" id="rpickList" role="listbox" aria-label="Regions"></div>
+            </div>
+            <select id="regionSelect" hidden aria-hidden="true" tabindex="-1">
               <option value="">Add a region…</option>
             </select>
           </div>
@@ -1506,7 +1584,201 @@ mark{ background:var(--ink); color:var(--paper); }
         og.appendChild(oR);
       }
     });
+    if (rpick && rpick.classList.contains("open")) buildRegionList();
   }
+
+  /* ── the region picker ────────────────────────────────────────────────
+     The select stays the record of what can be picked: renderDropdown fills
+     it and its change handler adds whatever it is set to. The picker is the
+     face it shows, a list built from the select's own groups and options
+     each time it opens, so the mirror switch and a loaded model reach it
+     with no second copy of the rules. Focus stays in the search field while
+     the arrow keys walk the list, as a combobox's does. */
+  var rpick = document.getElementById("rpick");
+  var rpickBtn = document.getElementById("rpickBtn");
+  var rpickQ = document.getElementById("rpickQ");
+  var rpickClear = document.getElementById("rpickClear");
+  var rpickCount = document.getElementById("rpickCount");
+  var rpickList = document.getElementById("rpickList");
+  var rpickOpts = [], rpickActive = -1;
+
+  /* A name is matched anywhere in it, so "hippo" finds the parahippocampal
+     gyrus too; what a region does is matched only from the start of a
+     word, so "vision" is not found inside "supervision". */
+  function words(s){ return " " + norm(s).replace(/[^a-z0-9\u00c0-\u024f]+/g, " ").trim(); }
+  function regionHay(o, group){
+    var base = o.value.slice(2), note = window.MN_NOTES && MN_NOTES.NOTES[base];
+    return {name: norm(o.textContent + " " + group + " " + base.replace(/_/g, " ")), fn: note ? words(note.fn) : ""};
+  }
+  function regionHas(hay, t){
+    return hay.name.indexOf(t) !== -1 || (!!hay.fn && hay.fn.indexOf(words(t)) !== -1);
+  }
+  /* a row whose name does not carry the match says where it was found:
+     the stretch of what the region does that holds it */
+  function whyLine(base, marks){
+    var note = window.MN_NOTES && MN_NOTES.NOTES[base];
+    if (!note || !marks.length) return null;
+    var low = norm(note.fn), at = -1;
+    marks.forEach(function(m){
+      var re = new RegExp("(^|[^a-z0-9\u00c0-\u024f])" + m.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+      var hit = re.exec(low), i = hit ? hit.index + hit[1].length : -1;
+      if (i !== -1 && (at === -1 || i < at)) at = i;
+    });
+    if (at === -1) return null;
+    var from = at > 28 ? note.fn.lastIndexOf(" ", at - 20) + 1 : 0;
+    var span = document.createElement("span"); span.className = "why";
+    span.appendChild(highlightText((from > 0 ? "…" : "") + note.fn.slice(from), marks));
+    return span;
+  }
+  function buildRegionList(){
+    var raw = rpickQ.value;
+    var terms = norm(raw).split(/\s+/).filter(Boolean);
+    var items = [];
+    [].forEach.call(selectEl.getElementsByTagName("optgroup"), function(og){
+      [].forEach.call(og.getElementsByTagName("option"), function(o){
+        items.push({value: o.value, text: o.textContent, group: og.label, hay: regionHay(o, og.label)});
+      });
+    });
+    /* as in the Brodmann search: several words are tried as a phrase first */
+    var whole = norm(raw).trim().replace(/\s+/g, " ");
+    var phrase = terms.length > 1 && items.some(function(it){ return regionHas(it.hay, whole); }) ? whole : null;
+    var marks = phrase ? [phrase] : terms;
+    rpickList.innerHTML = "";
+    rpickOpts = []; rpickActive = -1;
+    rpickQ.removeAttribute("aria-activedescendant");
+    var group = null, groupEl = null, named = -1;
+    items.forEach(function(it){
+      if (terms.length && !(phrase ? regionHas(it.hay, phrase)
+                                   : terms.every(function(t){ return regionHas(it.hay, t); }))) return;
+      if (it.group !== group){
+        group = it.group;
+        groupEl = document.createElement("div");
+        groupEl.setAttribute("role", "group");
+        var h = document.createElement("div");
+        h.className = "balobe"; h.id = "rpick-g" + rpickOpts.length;
+        h.appendChild(highlightText(group, marks));
+        groupEl.setAttribute("aria-labelledby", h.id);
+        groupEl.appendChild(h);
+        rpickList.appendChild(groupEl);
+      }
+      var k = rpickOpts.length;
+      var row = document.createElement("div");
+      row.className = "barow rpick-opt"; row.id = "rpick-o" + k;
+      row.setAttribute("role", "option"); row.setAttribute("aria-selected", "false");
+      var nm = document.createElement("span"); nm.className = "nm";
+      nm.appendChild(highlightText(it.text, marks));
+      if (marks.length && !marks.some(function(m){ return norm(it.text + " " + group).indexOf(m) !== -1; })){
+        var why = whyLine(it.value.slice(2), marks);
+        if (why) nm.appendChild(why);
+      }
+      row.appendChild(nm);
+      var on = selections.get(it.value);
+      if (on){
+        var sw = document.createElement("span"); sw.className = "swatch";
+        sw.style.background = on.color; sw.title = "Highlighted";
+        row.appendChild(sw);
+        row.setAttribute("aria-label", it.text + ", highlighted");
+      }
+      if (named === -1 && marks.length && marks.every(function(m){ return norm(it.text).indexOf(m) !== -1; })) named = k;
+      row.addEventListener("click", function(){ pickRegion(it.value); });
+      groupEl.appendChild(row);
+      rpickOpts.push({el: row, value: it.value});
+    });
+    if (!rpickOpts.length){
+      var e = document.createElement("p");
+      e.className = "balist-empty";
+      e.textContent = "Nothing matches “" + raw.trim() + "”. Try part of a name, a lobe, or what you want the region to do.";
+      rpickList.appendChild(e);
+    }
+    rpickCount.textContent = terms.length
+      ? rpickOpts.length + (rpickOpts.length === 1 ? " region matches" : " regions match")
+      : "All " + items.length + " regions.";
+    rpickClear.classList.toggle("hidden", !raw);
+    /* Enter takes the first region named by what was typed, and failing
+       that the first found by its lobe or by what it does */
+    if (terms.length && rpickOpts.length) setRegionActive(named !== -1 ? named : 0);
+  }
+  function setRegionActive(i){
+    var was = rpickOpts[rpickActive];
+    if (was){ was.el.classList.remove("active"); was.el.setAttribute("aria-selected", "false"); }
+    rpickActive = i;
+    var o = rpickOpts[i];
+    if (!o){ rpickQ.removeAttribute("aria-activedescendant"); return; }
+    o.el.classList.add("active"); o.el.setAttribute("aria-selected", "true");
+    rpickQ.setAttribute("aria-activedescendant", o.el.id);
+    var top = o.el.offsetTop - rpickList.offsetTop, bottom = top + o.el.offsetHeight;
+    if (top < rpickList.scrollTop) rpickList.scrollTop = top;
+    else if (bottom > rpickList.scrollTop + rpickList.clientHeight) rpickList.scrollTop = bottom - rpickList.clientHeight;
+  }
+  /* the list is kept above a phone's keyboard: it ends where the visible
+     part of the screen does, and on a touch screen a picker low on the
+     page is first brought up under the bar */
+  function fitRegionList(){
+    if (!rpick.classList.contains("open")) return;
+    var vv = window.visualViewport;
+    var room = (vv ? vv.height + vv.offsetTop : window.innerHeight) - rpickList.getBoundingClientRect().top - 14;
+    rpickList.style.maxHeight = Math.round(Math.max(176, Math.min(420, room))) + "px";
+  }
+  function openRegionPicker(seed){
+    if (rpick.classList.contains("open")) return;
+    rpickQ.value = seed || "";
+    buildRegionList();
+    rpickList.scrollTop = 0;
+    if (window.matchMedia && matchMedia("(pointer:coarse)").matches){
+      var bar = document.querySelector(".vn-bar") || document.querySelector(".masthead");
+      var under = bar ? Math.max(0, bar.getBoundingClientRect().bottom) : 0;
+      var at = rpickBtn.getBoundingClientRect().top;
+      if (at > (window.innerHeight || 0) * 0.4) window.scrollBy(0, at - under - 10);
+    }
+    rpick.classList.add("open");
+    rpickBtn.setAttribute("aria-expanded", "true");
+    fitRegionList();
+    try{ rpickQ.focus({preventScroll: true}); }catch(e){ rpickQ.focus(); }
+  }
+  function closeRegionPicker(refocus){
+    if (!rpick.classList.contains("open")) return;
+    rpick.classList.remove("open");
+    rpickBtn.setAttribute("aria-expanded", "false");
+    rpickQ.removeAttribute("aria-activedescendant");
+    if (refocus){ try{ rpickBtn.focus({preventScroll: true}); }catch(e){ rpickBtn.focus(); } }
+  }
+  function pickRegion(v){
+    selectEl.value = v;
+    selectEl.dispatchEvent(new Event("change"));
+    closeRegionPicker(true);
+  }
+  rpickBtn.addEventListener("click", function(){
+    if (rpick.classList.contains("open")) closeRegionPicker(false); else openRegionPicker();
+  });
+  rpickBtn.addEventListener("keydown", function(e){
+    if (e.key === "ArrowDown" || e.key === "ArrowUp"){ e.preventDefault(); openRegionPicker(); }
+    /* typing on the closed button starts the search, as a select jumps */
+    else if (e.key.length === 1 && e.key !== " " && !e.ctrlKey && !e.metaKey && !e.altKey){
+      e.preventDefault(); openRegionPicker(e.key);
+    }
+  });
+  rpickQ.addEventListener("input", buildRegionList);
+  rpickQ.addEventListener("keydown", function(e){
+    if (e.key === "ArrowDown"){ e.preventDefault(); setRegionActive(Math.min(rpickActive + 1, rpickOpts.length - 1)); }
+    else if (e.key === "ArrowUp"){ e.preventDefault(); setRegionActive(Math.max(rpickActive - 1, 0)); }
+    else if (e.key === "Enter"){
+      e.preventDefault();
+      var o = rpickOpts[rpickActive];
+      if (o) pickRegion(o.value);
+    }
+    else if (e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); closeRegionPicker(true); }
+  });
+  rpickClear.addEventListener("click", function(){ rpickQ.value = ""; buildRegionList(); rpickQ.focus(); });
+  /* a press on a row must not take the focus out of the field */
+  rpickList.addEventListener("mousedown", function(e){ e.preventDefault(); });
+  document.addEventListener("pointerdown", function(e){
+    if (rpick.classList.contains("open") && !rpick.contains(e.target)) closeRegionPicker(false);
+  });
+  rpick.addEventListener("focusout", function(e){
+    if (rpick.classList.contains("open") && e.relatedTarget && !rpick.contains(e.relatedTarget)) closeRegionPicker(false);
+  });
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", fitRegionList);
+  window.addEventListener("resize", fitRegionList);
 
 
   /* ── a door for the receptor section below ────────────────────────────
