@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.18 — 18 October 2026 — The tractogram on the page's own black
+Commit · Draw the tractogram on the page's own black instead of a deeper one
+
+In the dark theme the Tractography view now clears to the same near-black as the page around it, so the tractogram floats on the page instead of sitting in a box of a deeper black. The loading message was already drawn on that black, so the view no longer darkens as the streamlines appear. In the light theme the view keeps its dark ground.
+
 ## v11.17 — 18 October 2026 — The Hallucinations scans match the 3D Region Atlas
-Commit · Give the Hallucinations study the atlases' four views and pad the region colour tables so no region turns black
+Commit `53640e8` · Give the Hallucinations study the atlases' four views and pad the region colour tables so no region turns black
 
 The four scans on the Hallucinations study, in the Library, now look and work as the 3D Region Atlas's do. Each view has a single bar, with its tools on the left, its name in the middle, and Centre and the button that opens it over the other three on the right. The slices can be held to one direction of drag, the stages are square, on an iPad the four fit the screen two to a row, and in the light theme the stages are white. The 3D view's Slice cuts through the highlighted regions as well as the brain, the wheel over a slice scrolls the page, and the opacity slider keeps up under a finger. On every page that draws the atlas's regions over the scan, a region no longer turns black when the one numbered after it is highlighted: picking the left anterior cingulate in the 3D Region Atlas used to blacken the right insula, and the Hallucinations study showed the same black patch.
 

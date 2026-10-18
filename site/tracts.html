@@ -152,6 +152,11 @@ svg{ display:block; }
 /* no frame around it: the tractogram sits on the page, unboxed */
 .views .view{ border:0; }
 .views .view[data-box="Ren"] .mri-stage{ height:clamp(420px,68vh,900px); height:clamp(420px,68dvh,900px); }
+/* and on the page's own black, the dark theme's paper, rather than the
+   pure black of a scan, so view and page are one ground (the viewer clears
+   to the same, and the loading message is drawn on it too). NiiVue paints
+   its canvas's parent black, inline, as it attaches. */
+.views .view[data-box="Ren"] .mri-stage{ background:#111111 !important; }
 
 /* ── the rail's inputs ── */
 .rail-row{ display:flex; align-items:center; gap:.5rem; margin:.5rem 0; }
@@ -591,7 +596,7 @@ svg{ display:block; }
       for (var p = 0; p < PLANES.length; p++){
         var plane = PLANES[p];
         var nv = new niivue.Niivue({
-          backColor: [0, 0, 0, 1],
+          backColor: [17/255, 17/255, 17/255, 1],   /* #111111, the page's black */
           crosshairColor: [1, 1, 1, 1],
           show3Dcrosshair: false,
           isColorbar: false,
