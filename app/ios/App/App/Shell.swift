@@ -181,8 +181,7 @@ struct AboutTab: View {
         TabPage {
             PageHeader(kicker: "From the developer", title: "About",
                        meta: "Fadil Karim · built by one engineer · free to use")
-            PageBox(page: .about, kicker: "From the developer", title: "About",
-                    text: "A message from the developer of Visual Neuroscience",
+            PageBox(page: .about, kicker: "From the developer", title: "Message from the Developer",
                     shot: Shot("assets/portrait/portrait.webp", framed: true),
                     meta: "Fadil Karim · built by one engineer · free to use",
                     go: "Read the message")

@@ -106,10 +106,13 @@ function attach(o){
   btn.textContent = "Slice";
   btn.setAttribute("aria-pressed", "false");
 
+  /* where a bar is short of room the pages show the first word alone
+     (.lbl-more is hidden there); the full name stays the button's name */
   var resetBtn = document.createElement("button");
   resetBtn.type = "button";
   resetBtn.className = "ts-btn slice-reset";
-  resetBtn.textContent = "Reset cuts";
+  resetBtn.innerHTML = 'Reset<span class="lbl-more"> cuts</span>';
+  resetBtn.setAttribute("aria-label", "Reset cuts");
   resetBtn.hidden = true;
 
   /* the cuts through the painted regions too, or through the scan alone:
@@ -120,7 +123,17 @@ function attach(o){
     regionsBtn = document.createElement("button");
     regionsBtn.type = "button";
     regionsBtn.className = "ts-btn slice-regions";
-    regionsBtn.textContent = typeof o.regions === "string" ? o.regions : "Slice regions";
+    /* short of room, the last word alone: "Regions" beside Slice */
+    var label = typeof o.regions === "string" ? o.regions : "Slice regions";
+    var cut = label.lastIndexOf(" ");
+    if (cut > 0){
+      var more = document.createElement("span");
+      more.className = "lbl-more";
+      more.textContent = label.slice(0, cut + 1);
+      regionsBtn.appendChild(more);
+      regionsBtn.appendChild(document.createTextNode(label.slice(cut + 1)));
+    } else regionsBtn.textContent = label;
+    regionsBtn.setAttribute("aria-label", label);
     regionsBtn.title = "Cut the highlighted regions with the brain";
     regionsBtn.setAttribute("aria-pressed", "false");
     regionsBtn.hidden = true;

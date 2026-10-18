@@ -16,14 +16,16 @@
 :root:not([data-theme="dark"]) .slice-range:focus-visible{ outline-color:#111111; }
 
 /* ── one bar over each view ────────────────────────────────────────────
-   A view's caption and its tools share one rule: the tools to the left,
+   A view's caption and its tools share one line: the tools to the left,
    the plane's name in the middle, and Centre planes and the button that
-   opens the view over the grid to the right. The name holds the middle
-   while both sides fit either side of it and gives way to the wider side
-   when they do not. A view too narrow for one line (a phone, a small
-   tablet, a browser without container queries) keeps the name, Centre
-   planes and that button on the first line and gives its tools the
-   whole of a second. */
+   opens the view over the grid to the right, every control the same
+   height. The name holds the middle while both sides fit either side of
+   it and gives way to the wider side when they do not. Short of room (an
+   iPad's views, a laptop's narrower ones) the line tightens and its
+   buttons keep one word each, Centre, Slice, Regions, Reset, the full
+   name staying the button's name; only a view too narrow even for that (a
+   phone two to a row, a browser without container queries) puts its
+   tools on a second line under the name. */
 .views .view{ container:view / inline-size; }
 .views .view-cap{
   display:flex; flex-wrap:wrap; justify-content:normal; align-items:center;
@@ -41,12 +43,20 @@
 /* the drag-lock cells, border and all, as tall as the buttons beside them,
    so every bar is the same height */
 .views .view-cap .seg-btn{ width:calc(1.8rem - 2px); height:calc(1.8rem - 2px); }
-/* one line from the width the 3D view's tools need while slicing, so the
-   four bars always match: the tools take the start, as wide as the end */
-@container view (min-width:490px){
+/* one line wherever the 3D view's tools fit while slicing, so the four
+   bars always match: the tools take the start, as wide as the end */
+@container view (min-width:340px){
   .views .view-cap{ flex-wrap:nowrap; }
   .views .view-cap::before{ display:none; }
   .views .view-cap .view-tools{ order:0; flex:1 1 0; flex-wrap:nowrap; }
+}
+/* short of room: a word to a button, and the line drawn tighter */
+@container view (max-width:489px){
+  .views .view-cap .lbl-more{ display:none; }
+  .views .view-cap{ gap:.3rem .4rem; padding-left:.55rem; padding-right:.55rem; }
+  .views .view-cap .view-tools, .views .view-cap .view-end{ gap:.4rem; }
+  .views .view-cap b{ letter-spacing:.16em; margin-right:-.16em; }
+  .views .view-cap .ts-btn{ padding-left:.5rem; padding-right:.5rem; letter-spacing:.14em; }
 }
 /* the words before the drag-lock cells go where the bar is short of room */
 @container view (max-width:559px){ .views .view-cap .tool-label{ display:none; } }
@@ -55,28 +65,42 @@
   .views .view-cap .view-end{ gap:.45rem; }
   .views .view-cap .seg-btn{ width:calc(1.6rem - 2px); height:calc(1.6rem - 2px); }
 }
-@media (pointer:coarse){ .views .view-cap .seg-btn{ width:42px; height:42px; } }
+/* under a finger the controls are 44 points tall, so the bar keeps little
+   room around them */
+@media (pointer:coarse){
+  .views .view-cap{ padding-top:.3rem; padding-bottom:.3rem; }
+  .views .view-cap .seg-btn{ width:42px; height:42px; }
+}
 
 /* square scans: every stage as tall as it is wide */
 .views-wrap .views .view .mri-stage{ height:auto; aspect-ratio:1 / 1; }
+/* On a tablet the four views fit the screen together: square where the
+   screen has the room, flatter where it is short (an iPad held sideways).
+   The allowance is the two bars, the gap between the rows and a margin. */
+@media (pointer:coarse) and (min-width:761px){
+  .views-wrap .views .view .mri-stage{ max-height:calc((100vh - 10rem) / 2); max-height:calc((100dvh - 10rem) / 2); }
+}
 
 /* ── a view opened over the grid ── the button at the end of each bar
    lays its view over all four; the opened view covers the grid exactly,
    its scan taking the height the bar leaves */
+/* the button stands as tall as the buttons beside it, and as wide */
 .view-expand{
   position:relative; flex:none; align-self:center;
-  width:1.55rem; height:1.55rem; padding:0;
+  width:1.8rem; height:1.8rem; padding:0;
   display:inline-flex; align-items:center; justify-content:center;
   border:1px solid var(--hair); background:var(--paper); color:var(--ink); cursor:pointer;
   -webkit-tap-highlight-color:transparent;
 }
 .view-expand::after{ content:""; position:absolute; inset:-9px; }
 .view-expand svg{ width:.78rem; height:.78rem; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:square; }
+@media (max-width:760px){ .view-expand{ width:1.6rem; height:1.6rem; } }
+@media (pointer:coarse){ .view-expand{ width:44px; height:44px; } .view-expand::after{ inset:0; } }
 @media (hover: hover){ .view-expand:hover{ background:var(--ink); color:var(--paper); } }
 .view-expand:active{ background:var(--ink); color:var(--paper); }
 .views-wrap .views .view.open{
   position:absolute; inset:0; z-index:12; background:var(--paper);
 }
-.views-wrap .views .view.open .mri-stage{ flex:1 1 auto; height:auto; min-height:0; aspect-ratio:auto; }
+.views-wrap .views .view.open .mri-stage{ flex:1 1 auto; height:auto; min-height:0; max-height:none; aspect-ratio:auto; }
 .views-wrap .views .view.closing{ position:relative; z-index:12; background:var(--paper); }
 .views .view-hold{ visibility:hidden; }

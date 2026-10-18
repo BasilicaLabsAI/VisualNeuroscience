@@ -312,19 +312,19 @@ svg{ display:block; }
       <div class="views-wrap">
         <div class="views" id="viewsGrid">
           <div class="view" data-box="axial">
-            <div class="view-cap"><b>Axial</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="axial" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="axial" type="button">Centre planes</button></div></div>
+            <div class="view-cap"><b>Axial</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="axial" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="axial" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
             <div class="mri-stage"><canvas id="naAx"></canvas></div>
           </div>
           <div class="view" data-box="coronal">
-            <div class="view-cap"><b>Coronal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="coronal" role="group" aria-label="Coronal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="coronal" type="button">Centre planes</button></div></div>
+            <div class="view-cap"><b>Coronal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="coronal" role="group" aria-label="Coronal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="coronal" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
             <div class="mri-stage"><canvas id="naCor"></canvas></div>
           </div>
           <div class="view" data-box="sagittal">
-            <div class="view-cap"><b>Sagittal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="sagittal" role="group" aria-label="Sagittal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="sagittal" type="button">Centre planes</button></div></div>
+            <div class="view-cap"><b>Sagittal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="sagittal" role="group" aria-label="Sagittal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="sagittal" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
             <div class="mri-stage"><canvas id="naSag"></canvas></div>
           </div>
           <div class="view" data-box="render">
-            <div class="view-cap"><b>3D</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="render" type="button">Centre planes</button></div></div>
+            <div class="view-cap"><b>3D</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="render" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
             <div class="mri-stage"><canvas id="naRen"></canvas></div>
           </div>
         </div>
@@ -582,9 +582,24 @@ svg{ display:block; }
 
   /* how strongly the regions cover the scan */
   var opacityEl = document.getElementById("opacity"), opacityVal = document.getElementById("opacityVal");
+  /* the newest value at most every tenth of a second, with one rebuild
+     per view, so a drag is not held up by the viewer rebuilding its layers
+     for every step; the last value always lands */
+  var opacityTimer = 0, opacityLast = 0;
+  function applyOpacity(){
+    opacityTimer = 0; opacityLast = performance.now();
+    var v = opacityEl.value / 100;
+    allNV().forEach(function(nv){
+      if (!nv.volumes || nv.volumes.length < 2) return;
+      nv.volumes[1].opacity = v;
+      try{ nv.updateGLVolume(); }catch(e){}
+    });
+  }
   opacityEl.addEventListener("input", function(){
     opacityVal.textContent = opacityEl.value + "%";
-    allNV().forEach(function(nv){ if (nv.volumes && nv.volumes.length > 1) nv.setOpacity(1, opacityEl.value / 100); });
+    if (opacityTimer) return;
+    opacityTimer = setTimeout(function(){ requestAnimationFrame(applyOpacity); },
+                              Math.max(0, 100 - (performance.now() - opacityLast)));
   });
 
   /* a PNG of the four views, laid out as they are on the page */

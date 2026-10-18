@@ -781,8 +781,6 @@ mark{ background:var(--ink); color:var(--paper); }
 .rpick-pop{
   position:absolute; z-index:40; left:0; right:0; top:calc(100% + 4px);
   padding:.6rem .6rem .35rem; border:1px solid var(--hair);
-  background:color-mix(in srgb, var(--paper) 94%, transparent);
-  -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
   box-shadow:0 14px 30px rgba(0,0,0,.25);
   opacity:0; transform:translateY(-8px) scale(.985); transform-origin:top left;
   transition:opacity .18s cubic-bezier(.32,.72,0,1), transform .22s cubic-bezier(.32,.72,0,1);
@@ -792,10 +790,19 @@ mark{ background:var(--ink); color:var(--paper); }
 @media (min-width:1101px), (min-width:901px) and (orientation:landscape){
   .rpick-pop{ right:auto; width:21rem; }
 }
+/* The material is a layer behind the panel's contents rather than the
+   panel itself: iOS can leave a list unscrollable inside an element that
+   carries a backdrop filter, so the filter sits on a layer the list is
+   not inside. */
+.rpick-pop::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:color-mix(in srgb, var(--paper) 94%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
+}
 .rpick.open .rpick-pop{ opacity:1; transform:none; }
 .rpick-list{
   max-height:min(46vh,420px); max-height:min(46dvh,420px); overflow-y:auto; overscroll-behavior:contain;
-  margin:0 -.2rem; padding:0 .2rem;
+  touch-action:pan-y; margin:0 -.2rem; padding:0 .2rem;
 }
 .rpick-list .balobe{ margin-top:.5rem; }
 .rpick-list [role="group"]:first-child .balobe{ margin-top:0; }
@@ -819,10 +826,11 @@ mark{ background:var(--ink); color:var(--paper); }
   .rpick::after{ transition:none; }
 }
 @media (prefers-reduced-transparency: reduce){
-  .rpick-pop{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
+  .rpick-pop::before{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
 }
 @media (prefers-contrast: more){
-  .rpick-pop{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; border-color:var(--ink); }
+  .rpick-pop{ border-color:var(--ink); }
+  .rpick-pop::before{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
 }
 
 /* the Brodmann block among the notes: one tier of its own, below the
@@ -1029,19 +1037,19 @@ mark{ background:var(--ink); color:var(--paper); }
       <div class="views-wrap">
         <div class="views" id="viewsGrid">
           <div class="view" data-box="axial">
-            <div class="view-cap"><b>Axial</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="axial" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="axial" type="button">Centre planes</button></div></div>
+            <div class="view-cap"><b>Axial</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="axial" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="axial" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
             <div class="mri-stage"><canvas id="glAx"></canvas></div>
           </div>
           <div class="view" data-box="coronal">
-            <div class="view-cap"><b>Coronal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="coronal" role="group" aria-label="Coronal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="coronal" type="button">Centre planes</button></div></div>
+            <div class="view-cap"><b>Coronal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="coronal" role="group" aria-label="Coronal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="coronal" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
             <div class="mri-stage"><canvas id="glCor"></canvas></div>
           </div>
           <div class="view" data-box="sagittal">
-            <div class="view-cap"><b>Sagittal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="sagittal" role="group" aria-label="Sagittal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="sagittal" type="button">Centre planes</button></div></div>
+            <div class="view-cap"><b>Sagittal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="sagittal" role="group" aria-label="Sagittal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="sagittal" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
             <div class="mri-stage"><canvas id="glSag"></canvas></div>
           </div>
           <div class="view" data-box="render">
-            <div class="view-cap"><b>3D</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="render" type="button">Centre planes</button></div></div>
+            <div class="view-cap"><b>3D</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="render" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
             <div class="mri-stage"><canvas id="glRen"></canvas></div>
           </div>
         </div>
@@ -1710,6 +1718,17 @@ mark{ background:var(--ink); color:var(--paper); }
     rpickBtn.setAttribute("aria-expanded", "true");
     fitRegionList();
     try{ rpickQ.focus({preventScroll: true}); }catch(e){ rpickQ.focus(); }
+    /* iOS can still hand back a list that has just appeared without its
+       scrolling; taking the overflow away and giving it back once the
+       panel has arrived makes it build the scroller afresh */
+    if (window.matchMedia && matchMedia("(pointer:coarse)").matches){
+      setTimeout(function(){
+        if (!rpick.classList.contains("open")) return;
+        rpickList.style.overflowY = "hidden";
+        void rpickList.offsetHeight;
+        rpickList.style.overflowY = "";
+      }, 260);
+    }
   }
   function closeRegionPicker(refocus){
     if (!rpick.classList.contains("open")) return;
@@ -1950,12 +1969,26 @@ mark{ background:var(--ink); color:var(--paper); }
 
   var opacityEl = document.getElementById("opacity");
   var opacityVal = document.getElementById("opacityVal");
+  /* A drag sends many values a frame, and the viewer rebuilds every layer
+     of a view each time an opacity is set. The overlays take the newest
+     value at most every tenth of a second instead, with one rebuild per
+     view, which leaves the frames between for the thumb to follow the
+     finger; the last value always lands. */
+  var opacityTimer = 0, opacityLast = 0;
+  function applyOpacity(){
+    opacityTimer = 0; opacityLast = performance.now();
+    var v = opacityEl.value / 100;
+    allNV().forEach(function(nv){
+      if (!nv.volumes || nv.volumes.length < 2) return;
+      for (var i = 1; i < nv.volumes.length; i++) nv.volumes[i].opacity = v;
+      try{ nv.updateGLVolume(); }catch(e){}
+    });
+  }
   opacityEl.addEventListener("input", function(){
     opacityVal.textContent = opacityEl.value + "%";
-    allNV().forEach(function(nv){
-      if (nv.volumes && nv.volumes.length > 1) nv.setOpacity(1, opacityEl.value / 100);
-      if (nv.volumes && nv.volumes.length > 2) nv.setOpacity(2, opacityEl.value / 100);
-    });
+    if (opacityTimer) return;
+    opacityTimer = setTimeout(function(){ requestAnimationFrame(applyOpacity); },
+                              Math.max(0, 100 - (performance.now() - opacityLast)));
   });
 
   /* the four boxes are the one layout: the grid */
