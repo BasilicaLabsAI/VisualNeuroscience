@@ -146,6 +146,8 @@ svg{ display:block; }
 .frame iframe{
   display:block; width:100%; height:70vh; height:70dvh; min-height:560px; border:0;
 }
+/* on an iPad in the app, with the title strip gone, the viewer takes the screen */
+:root[data-shell-pad] .frame iframe{ height:calc(100vh - 2.5rem); height:calc(100dvh - 2.5rem); }
 /* ── the caption and credits below ── */
 .below{ margin-top:var(--gap); }
 .prose{ max-width:none; }   /* the text runs the width of the frame above it */

@@ -93,7 +93,10 @@ struct WebPage: View {
             .background {
                 Palette.paper.ignoresSafeArea()
             }
-            .navigationTitle(page.title)
+            // on an iPad the title would take a row of its own under the tab
+            // bar, so the page has that room instead; the tab bar names the
+            // section and the page its own contents
+            .navigationTitle(UIDevice.current.userInterfaceIdiom == .pad ? "" : page.title)
             .navigationBarTitleDisplayMode(.inline)
             .systemBar(hidden: false)
             // the page's own fields lower the keyboard as its scroll is
@@ -188,13 +191,15 @@ final class PageBridgeController: CAPBridgeViewController {
     }
 
     /// Runs before anything on the page: marks the page as one of the
-    /// shell's (as soon as its root element exists, which WebKit makes
-    /// before this runs), writes the shell's theme where the page reads its
-    /// own, opens it on its fragment, and once it is built has it say which
-    /// theme it came up in.
+    /// shell's, and on an iPad as one that fills the screen (as soon as its
+    /// root element exists, which WebKit makes before this runs), writes the
+    /// shell's theme where the page reads its own, opens it on its fragment,
+    /// and once it is built has it say which theme it came up in.
     private var startScript: String {
+        let pad = UIDevice.current.userInterfaceIdiom == .pad
         var lines = [
-            "var mark = function () { var root = document.documentElement; if (root) root.setAttribute('data-shell', 'tabs'); return !!root; };",
+            "var pad = \(pad);",
+            "var mark = function () { var root = document.documentElement; if (root) { root.setAttribute('data-shell', 'tabs'); if (pad) root.setAttribute('data-shell-pad', ''); } return !!root; };",
             "if (!mark()) new MutationObserver(function (records, watch) { if (mark()) watch.disconnect(); }).observe(document, { childList: true });"
         ]
         if let theme = startTheme {

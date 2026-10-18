@@ -297,6 +297,12 @@ body{
 /* in the iOS app's tabs the system bar stands where this one would, outside
    the page, so the page keeps only the inset (navbar.js draws no bar there) */
 :root[data-native][data-shell] body{ padding-top:max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px)); }
+/* On an iPad in the app's tabs the page fills the screen: the tab bar names
+   the section, so the page's own title strip steps aside, keeping only any
+   buttons it carries (the shell marks the page data-shell-pad) */
+:root[data-shell-pad] .title-strip .name, :root[data-shell-pad] .title-strip .anno{ display:none; }
+:root[data-shell-pad] .title-strip:not(:has(.ts-views)){ display:none; }
+:root[data-shell][data-shell-pad] body{ padding-top:max(var(--gap, 14px), env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px)); }
 .vn-bar{
   position:fixed; top:0; left:0; right:0; z-index:60;
   box-sizing:border-box; height:calc(var(--vn-top-inset, env(safe-area-inset-top)) + 44px);

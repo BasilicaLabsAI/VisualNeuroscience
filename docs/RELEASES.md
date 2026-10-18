@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.6 — 18 October 2026 — The iPad gets the whole screen, and the view bars tighten
+Commit · Let the app's pages fill an iPad's screen without their title strip or the system bar's title
+
+On an iPad, pages in the app now fill the screen. The title strip at the top of each page and the title under the tab bar are gone, so the Region Atlas, the Network Atlas and the Molecular viewer start right under the tab bar, and the Molecular viewer takes the screen's height. On an iPad the four views sit two to a row and fit the screen together, square where there is room and a little flatter with the iPad held sideways; on a computer they stay square. The bar over each view is a single line with Slice beside the other buttons, and the expand button stands as tall as the buttons around it. Where a view is short of room, the buttons keep one word each: Centre, Slice, Regions, Reset. The opacity slider keeps up with a drag: the regions follow it ten times a second instead of rebuilding every layer of every view for each step. The Add a region list's frosted backing now sits on a layer of its own behind the list, since iOS can refuse to scroll a list inside a blurred panel, and the list is given its scrolling afresh once it opens. The About box, on the home page and in the app, is titled Message from the Developer, without the line beneath it.
+
 ## v11.5 — 18 October 2026 — The Network Atlas has its own page again
-Commit · Give the Network Atlas its own page again and take it out of the Region Atlas
+Commit `4c120ae` · Give the Network Atlas its own page again and take it out of the Region Atlas
 
 The Network Atlas is a page of its own again. Its tab is back in the menu after Molecular, and its box on the home page and in the app's Atlas tab leads straight to it. It opens on the first of its six states, with the ring under four square views laid out like the Region Atlas's: a bar over each, the expand button, slicing with Slice regions, and the light theme's scans. Pick a state or a region and the scans follow, and the address names the state, so a link opens on it. Beside the key, the page sets how strongly the regions cover the scan, saves a PNG of the four views and exports the state as a 3D model. The Region Atlas no longer carries the Network Atlas section or its switch, and links to the old network mode open the new page on the same state. On the Region Atlas, the bars the receptor chart fades now fade to the strength they were meant to, not almost to nothing.
 

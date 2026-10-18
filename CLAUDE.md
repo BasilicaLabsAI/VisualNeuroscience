@@ -38,7 +38,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   Account, each a page of boxes in the home page's words, each box pushing a web page in a Capacitor bridge of its
   own. A page inside the tabs carries `data-shell="tabs"` and draws no web bar (`navbar.js`); the theme is the
   shell's (Account). When a home-page box's text or picture changes, change its twin in `Shell.swift` too. Android
-  keeps the web bar.
+  keeps the web bar. On an iPad the pages fill the screen: the shell also marks them `data-shell-pad`, the system bar
+  shows no title there, and the page's title strip steps aside (`viewer.css`), keeping any buttons it carries.
 - `site/sw.js` precaches pages and assets: **bump `VERSION`** (`vn-NN`) whenever a precached file changes.
 - Shared receptor drawings live in `site/assets/rxfig.js` + `rxfig.css`, built from `site/assets/rx/receptors.json`
   (`scripts/receptors/build.py`) and `site/assets/nt/molecules.json` (`scripts/neurotransmitters/build.py`).
