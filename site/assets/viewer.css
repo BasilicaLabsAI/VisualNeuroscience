@@ -237,6 +237,19 @@ select{
 
 .slice-btn.active{ background:var(--ink); color:var(--paper); }
 
+/* the switch that takes the cuts through the highlighted regions as well,
+   along the top edge where none of the three sliders runs */
+.slice-regions{
+  position:absolute; top:7px; left:50%; transform:translateX(-50%);
+  pointer-events:auto; display:inline-flex; align-items:center; gap:.4rem;
+  font-family:var(--font-brand); font-weight:500; font-size:.5rem;
+  letter-spacing:.2em; text-transform:uppercase; white-space:nowrap; cursor:pointer;
+  color:#9A9A9A; transition:color .2s ease;
+  text-shadow:0 0 4px #000, 0 0 4px #000;
+}
+.slice-regions.cutting{ color:#FFFFFF; }
+.slice-regions input{ width:12px; height:12px; margin:0; cursor:pointer; accent-color:#FFFFFF; }
+
 @media (max-width:760px){
   .slice-edge.left, .slice-edge.right{ width:24px; top:6px; bottom:6px; }
   .slice-edge.bottom{ left:28px; right:28px; bottom:3px; }

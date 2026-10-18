@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.1 — 18 October 2026 — Open any view over the grid, and cut the regions with the brain
+Commit · Let each Region Atlas view open over the grid, cut the highlighted regions with the slices, and drop the 3D lock
+
+Every view in the Region Atlas now has an expand button at the end of its caption that opens it over the whole four-view grid, the same view at the size of all four, and puts it back with the same button or Escape. When you slice the 3D view, a Slice regions switch along its top takes the cuts through the highlighted regions as well as the brain, so a region is cut open with it instead of hanging whole in front of the cut; it is on each time slicing starts, and a saved model keeps it. The 3D view no longer has a direction lock, which it did not need, so Slice, Reset cuts and Centre planes sit on one line.
+
 ## v11.0 — 18 October 2026 — The iPhone and iPad app gets a tab bar
-Commit · Give the iOS app a system tab bar over the web app's pages
+Commit `574da16` · Give the iOS app a system tab bar over the web app's pages
 
 The iPhone and iPad app now opens on a tab bar, the system's own, in place of the website's menu. The site's sections are four tabs: Atlas, with the Region Atlas, the Network Atlas, Microanatomy, Molecular and Tractography; Library, with Visualizing Studies and the Digital Textbook; Practice; and About, with the developer's message, where to follow and write, and the MCP server. Each opens on a page laid out like the home page, a box for each of its pages in the home page's words and pictures, and a page you open stays inside its tab under the system's navigation bar, with Back and the edge swipe as in any iPhone app. Every tab keeps its place when you leave it and come back. Account, the fifth tab, holds your account page, the switch between light and dark, support and the privacy page, and the credits, and the theme you had chosen carries over. The Mac and Apple Vision Pro, which run the iPad app, get the same. The website and the Android app keep their own menus, and the tab bar reaches the App Store with version 1.1.
 

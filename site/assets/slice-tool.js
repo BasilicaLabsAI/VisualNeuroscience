@@ -17,8 +17,13 @@
    Shared by every page carrying a volume render, so the tool behaves the
    same wherever it appears. Wire one up with:
 
-     MN_SLICE.attach({ stage: <.mri-stage>, tools: <.view-tools>, nv: <Niivue> });
+     MN_SLICE.attach({ stage: <.mri-stage>, tools: <.view-tools>, nv: <Niivue>,
+                       regions: "Slice regions" });
        → { open, close, reset, state, setState }
+
+   regions is optional: given, a switch along the top of the box takes the
+   cuts through the volumes the page paints over the scan (its highlighted
+   regions) as well as the scan itself. It is on each time slicing starts.
 
    Meshes are not clipped by this — clip planes act on the volume only —
    so a page whose 3D view is a tractogram gets nothing useful from it. */
@@ -92,6 +97,29 @@ function attach(o){
     rows[ax.id] = {slider: slider, edge: edge};
   });
 
+  /* the cuts through the painted regions too, or through the scan alone:
+     the viewer's isClipAllVolumes takes its clip planes from the scan to
+     every volume it draws */
+  var cutRegions = false, regionsBox = null, regionsLabel = null;
+  if (o.regions){
+    regionsLabel = document.createElement("label");
+    regionsLabel.className = "slice-regions";
+    regionsBox = document.createElement("input");
+    regionsBox.type = "checkbox";
+    regionsLabel.appendChild(regionsBox);
+    regionsLabel.appendChild(document.createTextNode(typeof o.regions === "string" ? o.regions : "Slice regions"));
+    panel.appendChild(regionsLabel);
+    regionsBox.addEventListener("change", function(){ setRegions(regionsBox.checked); });
+  }
+  function setRegions(next){
+    cutRegions = !!next;
+    if (regionsBox){
+      regionsBox.checked = cutRegions;
+      regionsLabel.classList.toggle("cutting", cutRegions);
+    }
+    apply();
+  }
+
   stage.appendChild(panel);
 
   var btn = document.createElement("button");
@@ -126,6 +154,7 @@ function attach(o){
   }
 
   function apply(){
+    try{ nv.opts.isClipAllVolumes = on && cutRegions; }catch(e){}
     try{ nv.setClipPlanes(planes()); }
     catch(e){ /* a viewer without multi-plane clipping simply does nothing */ }
   }
@@ -141,6 +170,7 @@ function attach(o){
   }
 
   function setOn(next){
+    if (next && !on && regionsBox){ cutRegions = true; regionsBox.checked = true; regionsLabel.classList.add("cutting"); }
     on = next;
     panel.classList.toggle("on", on);
     btn.classList.toggle("active", on);
@@ -155,7 +185,9 @@ function attach(o){
   /* the cuts as a plain object, so a saved view can carry them */
   function state(){
     var c = {}; AXES.forEach(function(ax){ c[ax.id] = cuts[ax.id]; });
-    return { on: on, cuts: c };
+    var st = { on: on, cuts: c };
+    if (regionsBox) st.regions = cutRegions;
+    return st;
   }
   function setState(st){
     if (!st || typeof st !== "object"){ resetAll(); setOn(false); return; }
@@ -167,6 +199,7 @@ function attach(o){
       rows[ax.id].edge.classList.toggle("cutting", Math.abs(v) > 0.005);
     });
     setOn(!!st.on);
+    if (regionsBox && typeof st.regions === "boolean") setRegions(st.regions);
   }
 
   return {

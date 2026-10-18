@@ -767,6 +767,32 @@ mark{ background:var(--ink); color:var(--paper); }
 :root:not([data-theme="dark"]) .slice-range::-webkit-slider-runnable-track{ background:rgba(0,0,0,.28); }
 :root:not([data-theme="dark"]) .slice-range::-moz-range-track{ background:rgba(0,0,0,.28); }
 :root:not([data-theme="dark"]) .slice-range:focus-visible{ outline-color:#111111; }
+:root:not([data-theme="dark"]) .slice-regions{ color:#5A5A5A; text-shadow:0 0 4px #FFFFFF, 0 0 4px #FFFFFF; }
+:root:not([data-theme="dark"]) .slice-regions.cutting{ color:#111111; }
+:root:not([data-theme="dark"]) .slice-regions input{ accent-color:#111111; }
+
+/* ── a view opened over the grid ── each caption ends in the button that
+   lays its view over all four; the opened view covers the grid exactly,
+   its scan taking the height the caption and tools leave */
+.views .view-cap{ justify-content:flex-start; }
+.views .view-cap b{ margin-right:auto; }
+.view-expand{
+  position:relative; flex:none; align-self:center;
+  width:1.55rem; height:1.55rem; margin-left:.6rem; padding:0;
+  display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid var(--hair); background:var(--paper); color:var(--ink); cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.view-expand::after{ content:""; position:absolute; inset:-9px; }
+.view-expand svg{ width:.78rem; height:.78rem; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:square; }
+@media (hover: hover){ .view-expand:hover{ background:var(--ink); color:var(--paper); } }
+.view-expand:active{ background:var(--ink); color:var(--paper); }
+.views-wrap .views .view.open{
+  position:absolute; inset:0; z-index:12; background:var(--paper);
+}
+.views-wrap .views .view.open .mri-stage{ flex:1 1 auto; height:auto; min-height:0; }
+.views-wrap .views .view.closing{ position:relative; z-index:12; background:var(--paper); }
+.views .view-hold{ visibility:hidden; }
 
 /* ── the region picker ─────────────────────────────────────────────────
    The AAL list runs to a hundred and sixteen names with the pairs split,
@@ -1047,7 +1073,7 @@ mark{ background:var(--ink); color:var(--paper); }
           </div>
           <div class="view" data-box="render">
             <div class="view-cap"><b>3D</b><span>volume render</span></div>
-            <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="render" role="group" aria-label="3D rotation lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free rotation" aria-label="Free rotation">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Spin left&ndash;right only" aria-label="Spin left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Tilt up&ndash;down only" aria-label="Tilt up and down only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="render" type="button">Centre planes</button></div>
+            <div class="view-tools"><button class="ts-btn centre-btn" data-centre="render" type="button">Centre planes</button></div>
             <div class="mri-stage"><canvas id="glRen"></canvas></div>
           </div>
         </div>
@@ -1353,12 +1379,11 @@ mark{ background:var(--ink); color:var(--paper); }
      Each viewport can confine a drag to one direction. The stored value is
      the axis left FREE to move: "x" left–right, "y" anterior–posterior,
      "z" superior–inferior — which is also the index into a crosshair
-     position, NiiVue holding those as fractions of the volume. In the 3D
-     box the same switch confines the camera to azimuth or elevation. */
+     position, NiiVue holding those as fractions of the volume. The 3D box
+     turns freely and has no lock. */
   var LOCK_AXIS = {x:0, y:1, z:2};
-  var locks = {axial:"free", coronal:"free", sagittal:"free", render:"free"};
+  var locks = {axial:"free", coronal:"free", sagittal:"free"};
   var anchor = null;        /* crosshair position when the drag began */
-  var camAnchor = null;     /* camera angles when the 3D drag began */
   var dragBox = null;       /* which viewport the drag started in */
   var correcting = false;   /* guards the re-entry from our own redraw */
 
@@ -1374,7 +1399,7 @@ mark{ background:var(--ink); color:var(--paper); }
     });
   });
 
-  /* A drag starts from wherever the crosshair — or the camera — sits now. */
+  /* A drag starts from wherever the crosshair sits now. */
   document.querySelectorAll(".view[data-box]").forEach(function(box){
     var key = box.getAttribute("data-box");
     var stage = box.querySelector(".mri-stage");
@@ -1384,7 +1409,6 @@ mark{ background:var(--ink); color:var(--paper); }
       if (!nv) return;
       dragBox = key;
       anchor = nv.scene.crosshairPos.slice();
-      camAnchor = {az: nv.scene.renderAzimuth, el: nv.scene.renderElevation};
     });
   });
 
@@ -1397,7 +1421,7 @@ mark{ background:var(--ink); color:var(--paper); }
   });
 
   ["pointerup", "pointercancel"].forEach(function(evt){
-    window.addEventListener(evt, function(){ anchor = null; camAnchor = null; dragBox = null; });
+    window.addEventListener(evt, function(){ anchor = null; dragBox = null; });
   });
 
   /* Put the frozen axes back after NiiVue has moved the crosshair, then let
@@ -1467,19 +1491,89 @@ mark{ background:var(--ink); color:var(--paper); }
     btn.addEventListener("click", centrePlanes);
   });
 
-  /* The 3D box rotates rather than points, so its lock holds one angle. */
-  function lockCamera(){
-    var free = locks.render;
-    var nv = INSTANCES.render;
-    if (correcting || dragBox !== "render" || free === "free" || !nv || !camAnchor) return;
-    correcting = true;
-    try{
-      if (free === "x") nv.scene.renderElevation = camAnchor.el;
-      else nv.scene.renderAzimuth = camAnchor.az;
-      nv.drawScene();
-    } catch(e){}
-    finally{ correcting = false; }
-  }
+  /* ── a view opened over the grid ─────────────────────────────────────
+     Each view's caption carries a button that lays that view over the
+     whole grid, the same viewer at the size of all four, and puts it back.
+     It grows out of its own box and returns into it (a placeholder keeps
+     its cell, so the other three stay where they are); with reduced motion
+     it simply appears and goes. Escape closes it too. */
+  (function(){
+    var wrap = document.querySelector(".views-wrap");
+    if (!wrap) return;
+    var ICON_OPEN = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.5 2.5h4v4M13.5 2.5 9 7M6.5 13.5h-4v-4M2.5 13.5 7 9"/></svg>';
+    var ICON_SHUT = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M13.5 6.5h-4v-4M9.5 6.5 14 2M2.5 9.5h4v4M6.5 9.5 2 14"/></svg>';
+    var still = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+    var open = null, hold = null;
+
+    function remeasure(){ if (window.MN_LIFE) MN_LIFE.remeasure(); }
+    function nameOf(view){
+      var b = view.querySelector(".view-cap b");
+      return b ? b.textContent.trim() : "this";
+    }
+    function dress(btn, view, isOpen){
+      btn.innerHTML = isOpen ? ICON_SHUT : ICON_OPEN;
+      btn.setAttribute("aria-expanded", String(isOpen));
+      btn.setAttribute("aria-label", (isOpen ? "Close the expanded " : "Expand the ") + nameOf(view) + " view");
+      btn.title = isOpen ? "Back to the four views" : "Expand over the four views";
+    }
+    /* from one box to another: the view is laid out where it ends up and
+       drawn as though it were still where it began, then let go */
+    function glide(view, from, done){
+      var to = view.getBoundingClientRect();
+      if ((still && still.matches) || !view.animate || !to.width || !to.height){ done(); return; }
+      var a = view.animate([
+        { transformOrigin: "0 0", transform: "translate(" + (from.left - to.left) + "px," + (from.top - to.top) + "px) scale(" + (from.width / to.width) + "," + (from.height / to.height) + ")" },
+        { transformOrigin: "0 0", transform: "none" }
+      ], { duration: 320, easing: "cubic-bezier(.32,.72,0,1)" });
+      a.onfinish = a.oncancel = done;
+    }
+    function expand(view, btn){
+      var from = view.getBoundingClientRect();
+      hold = document.createElement("div");
+      hold.className = "view view-hold";
+      hold.setAttribute("aria-hidden", "true");
+      hold.style.order = getComputedStyle(view).order;
+      hold.style.height = from.height + "px";
+      view.parentNode.insertBefore(hold, view);
+      open = view;
+      wrap.classList.add("has-open");
+      view.classList.add("open");
+      dress(btn, view, true);
+      remeasure();
+      glide(view, from, remeasure);
+    }
+    function collapse(){
+      var view = open;
+      if (!view) return;
+      var btn = view.querySelector(".view-expand");
+      var from = view.getBoundingClientRect();
+      open = null;
+      view.classList.remove("open");
+      view.classList.add("closing");
+      wrap.classList.remove("has-open");
+      if (hold){ hold.remove(); hold = null; }
+      if (btn) dress(btn, view, false);
+      remeasure();
+      glide(view, from, function(){ view.classList.remove("closing"); remeasure(); });
+    }
+
+    wrap.querySelectorAll(".views .view").forEach(function(view){
+      var cap = view.querySelector(".view-cap");
+      if (!cap) return;
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "view-expand";
+      dress(btn, view, false);
+      btn.addEventListener("click", function(){
+        if (open === view) collapse();
+        else if (!open) expand(view, btn);
+      });
+      cap.appendChild(btn);
+    });
+    document.addEventListener("keydown", function(e){
+      if (e.key === "Escape" && open && !e.defaultPrevented) collapse();
+    });
+  })();
 
   var selections = new Map();
 
@@ -2540,7 +2634,6 @@ mark{ background:var(--ink); color:var(--paper); }
         nv.onLocationChange = (function(key){
           return function(loc){ applyLock(key, loc); };
         })(p.key);
-        if (p.key === "render") nv.onAzimuthElevationChange = lockCamera;
         INSTANCES[p.key] = nv;
         if (window.MN_LIFE) MN_LIFE.register(nv);
       }
@@ -2567,7 +2660,8 @@ mark{ background:var(--ink); color:var(--paper); }
         if (renBox) sliceTool = MN_SLICE.attach({
           stage: renBox.querySelector(".mri-stage"),
           tools: renBox.querySelector(".view-tools"),
-          nv: INSTANCES.render
+          nv: INSTANCES.render,
+          regions: "Slice regions"
         });
       }
 
