@@ -51,7 +51,7 @@
   .views .view-cap .view-tools{ order:0; flex:1 1 0; flex-wrap:nowrap; }
 }
 /* short of room: a word to a button, and the line drawn tighter */
-@container view (max-width:489px){
+@container view (max-width:559px){
   .views .view-cap .lbl-more{ display:none; }
   .views .view-cap{ gap:.3rem .4rem; padding-left:.55rem; padding-right:.55rem; }
   .views .view-cap .view-tools, .views .view-cap .view-end{ gap:.4rem; }
@@ -74,10 +74,12 @@
 
 /* square scans: every stage as tall as it is wide */
 .views-wrap .views .view .mri-stage{ height:auto; aspect-ratio:1 / 1; }
-/* On a tablet the four views fit the screen together: square where the
-   screen has the room, flatter where it is short (an iPad held sideways).
-   The allowance is the two bars, the gap between the rows and a margin. */
-@media (pointer:coarse) and (min-width:761px){
+/* On a tablet the four views fit the screen together, two to a row: square
+   where the screen has the room, flatter where it is short (an iPad held
+   sideways). The allowance is the two bars, the gap between the rows and a
+   margin. A phone held sideways is too short for it and keeps its own. */
+@media (pointer:coarse) and (min-width:700px) and (min-height:600px){
+  .views-wrap .views{ grid-template-columns:1fr 1fr; }
   .views-wrap .views .view .mri-stage{ max-height:calc((100vh - 10rem) / 2); max-height:calc((100dvh - 10rem) / 2); }
 }
 
