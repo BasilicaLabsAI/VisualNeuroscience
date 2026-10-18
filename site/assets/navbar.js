@@ -1,6 +1,7 @@
 /* The app's top bar.
 
-   Inside the native app the site's masthead and tab row are hidden
+   Inside the Android app, and the iOS app before its tab bar (Shell.swift),
+   the site's masthead and tab row are hidden
    (viewer.css) and this builds what an iPhone app has instead: a bar pinned
    to the top with a back button on the left that names the screen it
    returns to, the page's title in the middle, and the theme and account
@@ -67,6 +68,11 @@
 (function(){
   var root = document.documentElement;
   if (!root.hasAttribute("data-native")) return;
+  /* Inside the iOS app's tabs (the shell marks the page data-shell before
+     anything runs) the system navigation bar carries back and the title,
+     the tab bar the sections and the Account tab the theme and the account,
+     so this bar is not drawn there. */
+  if (root.hasAttribute("data-shell")) return;
 
   var TITLES = {
     "": "Home", "index.html": "Home",

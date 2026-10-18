@@ -132,11 +132,17 @@ paste the text below into *What's New in This Version*, and update App
 Privacy as the section below says, since 1.1 is the first version that can
 put an address on the newsletter's list.
 
+The iPhone and iPad screenshots in `app/store/screenshots/` were taken from
+the pages in a browser (`scripts/shoot-store.js`) and show the web app's own
+bar, not the tab bar the app has had since v11. Retake the iOS sets from the
+simulator or a device before submitting 1.1; the Android sets stand.
+
 Check the build number on the 1.0 page first. If 1.0 went out as build 14
 rather than 15, the second block is new to App Store users as well and goes
 above the first. 4,000 characters allowed; both together are well under.
 
 ```
+• A tab bar. The atlases, the library, practice, about and your account each have a tab that opens on a page of its own, and whatever you open stays in its tab when you switch away and back. Light or dark is chosen under Account.
 • Microanatomy: a neuron drawn part by part, with twenty structures to click and a quiz to learn them, seventeen neurotransmitters drawn the way chemists draw them, and a hundred and fifty receptors, channels and transporters, each with the drugs that act on it.
 • Molecular: the dopamine and serotonin receptors themselves in 3D, built from thirty-nine experimental structures. Watch the neurotransmitter dock and switch the receptor on, see where antipsychotics, triptans, LSD and psilocin sit in the same pocket, and compare the subtypes.
 • Receptor densities now come from published PET and autoradiography, with a source behind every number. Pick a region to see its receptors ranked against the rest of the brain, or pick a receptor to see where it is densest and light those regions up on the scan.

@@ -20,7 +20,7 @@ serving `./site` as the plain static assets it is.
 |---|---|---|---|
 | Website | Cloudflare Workers | service worker (`site/sw.js`) | — |
 | Android | the app bundle | everything is local already | Play |
-| iPhone, iPad | the app bundle | everything is local already | App Store |
+| iPhone, iPad | the app bundle, under a native tab bar (below) | everything is local already | App Store |
 | Apple Vision Pro | its own app in `visionos/`, see `visionos/README.md` | the brain is bundled; the atlas pages are the live site for now | App Store, the visionOS platform of the same app |
 | Mac (Apple silicon) | the iPad app as it is | everything is local already | Mac App Store, from the same iOS build |
 
@@ -28,6 +28,85 @@ serving `./site` as the plain static assets it is.
 haptic tick or a write to Photos when Capacitor is there, asks the browser for
 its own version when it is not, and falls back to a plain download when neither
 exists. Nothing on a page has to know which of the three it is running in.
+
+## The iOS tab bar
+
+Since v11 the iOS app (and so the iPad, Mac and Vision Pro runs of it) opens
+on one system `TabView`, in SwiftUI, rather than on a web view. The site's
+navigation falls into four groups, and each is a tab whose page is laid out
+like the home page: a header, then a box for each of the group's pages, in
+the home page's own words and pictures. A box pushes its page inside the
+tab, so every tab keeps its own stack and scroll position. Account comes
+last and gathers what is not a section of the site.
+
+| Tab | Symbol | Its page |
+|---|---|---|
+| Atlas | `brain` | Region Atlas, Network Atlas, Microanatomy, Molecular, Tractography |
+| Library | `books.vertical` | Visualizing Studies, Digital Textbook |
+| Practice | `checklist` | Neuroscience Practice |
+| About | `info.circle` | the developer's message, YouTube, Instagram, LinkedIn and email, the MCP server |
+| Account | `person` | the account page (sign-in, your data, deletion), Appearance (dark or light), support and the privacy page, the credits |
+
+There is no badge, because nothing in the app is waiting to be done:
+practice is adaptive and keeps no queue of due questions. If it ever does,
+the count belongs on `AppStore` as a published value, shown with
+`.badge(count)` on the Practice tab. There is no gate either (no
+`fullScreenCover`), since nothing has to be settled before the app can be
+used, and no selection binding, since nothing switches tabs in code.
+
+**The shared pieces**, in `ios/App/App/ShellKit.swift`, are what make the five
+pages read as one object:
+
+- `PageHeader(kicker:title:meta:)` heads every tab: a small spaced kicker in
+  Flux after a ring like the mark's, the title in Prata tracked in by 1% of its
+  size, and an optional uppercase readout line, full width and flush left.
+- `paperBackground()` puts the paper under every tab, past the safe areas: the
+  site's paper colour with a faint grid of ink dots at the site's 14-point gap.
+- `keyboardDismissal()` is for any page with a text field: a drag on the page
+  lowers the keyboard (interactive scroll dismissal) and Done above the keys
+  puts it away, since on an iPhone the keyboard covers the tab bar. No native
+  page has a field yet; the web pages have theirs, and their web views get
+  the same two things from UIKit (interactive dismissal on the web view's
+  scroll view, and the system's Done bar above the keys).
+- `TabPage` is every tab's shell: its own stack with the system navigation bar
+  hidden, a `ScrollView` holding a `VStack(spacing: 14)` with 14 points of
+  padding. `TabStack` is `NavigationStack` from iOS 16 and the stack style of
+  `NavigationView` on iOS 15, the deployment target; for the same reason the
+  tabs are written with `.tabItem`, not iOS 18's `Tab`.
+- `Box` and `PageBox` draw a box in the home page's voice (kicker, Prata
+  headline, standfirst, the picture from the bundled site, a readout under a
+  rule, a signpost) and `PressStyle` makes it answer on the press.
+- `Palette` is the site's ink, paper and two greys, as colour sets with dark
+  variants in `Assets.xcassets`; the ink tints the app once, on the root view.
+  `Faces` are the site's Flux, Newsreader and Prata, unpacked from
+  `site/fonts` into `ios/App/App/Fonts/` and listed under `UIAppFonts`.
+
+**The pages** (`ios/App/App/ShellWeb.swift`). Each page a box opens gets a
+Capacitor bridge of its own, opened on that page, so sign-in, Files, the share
+sheet and haptics work there as before. A link from one page to another is
+caught by a small plugin in that bridge (`ShellLinks`) and pushed as a new
+page in the same tab, so each web view holds one page and Back is the
+system's; popping a page lets its bridge go. In those bridges the splash is
+off and the status bar plugin is replaced by one that does nothing
+(`StillStatusBar`), because the real one resizes its web view to the whole
+window whenever any bridge appears. The Firebase plugin keeps a small object
+per page opened, since it never removes its auth listeners; the web view
+itself is freed.
+
+The theme is the shell's: Account's Appearance switch sets it, the shell
+writes it into each page before the page runs and presses the page's own
+theme switch when it changes while the page is open. The first page to open
+after the update reports the theme the web app last used, and the shell keeps
+that, so nobody's choice is lost. A page knows it is in the tabs by
+`data-shell="tabs"` on its root element: `site/assets/navbar.js` then draws no
+bar of its own and `site/assets/viewer.css` drops the room it kept for one.
+Android, which has no tab bar, keeps the web bar and its sections menu.
+
+Nothing in this repository can compile Swift, so a change here is proven by
+Xcode Cloud's build on the next push to `main`. On a device, check light and
+dark, the largest Dynamic Type size, VoiceOver reading each tab's name, that
+a tab keeps its place when you leave it and come back, and that the keyboard
+can always be put away.
 
 ## Building
 
@@ -99,6 +178,9 @@ here that a browser tab is not:
   ctrl+wheel, trackpad pinch and shift+drag.
 - **A snapshot goes where a phone puts pictures** — Photos, Files, or the share
   sheet — rather than into a downloads folder a phone does not really have.
+- **It is laid out as an iPhone app**: a native tab bar and native section
+  pages, with each of the site's pages pushed inside its tab under the
+  system's navigation bar (the iOS tab bar section above).
 - **Haptics** on region selection.
 - **The device's own furniture is respected**: safe areas around the notch and
   the home indicator, no rubber-band scrolling, no long-press callout on a

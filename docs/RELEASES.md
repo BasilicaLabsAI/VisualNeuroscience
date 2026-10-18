@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.0 — 18 October 2026 — The iPhone and iPad app gets a tab bar
+Commit · Give the iOS app a system tab bar over the web app's pages
+
+The iPhone and iPad app now opens on a tab bar, the system's own, in place of the website's menu. The site's sections are four tabs: Atlas, with the Region Atlas, the Network Atlas, Microanatomy, Molecular and Tractography; Library, with Visualizing Studies and the Digital Textbook; Practice; and About, with the developer's message, where to follow and write, and the MCP server. Each opens on a page laid out like the home page, a box for each of its pages in the home page's words and pictures, and a page you open stays inside its tab under the system's navigation bar, with Back and the edge swipe as in any iPhone app. Every tab keeps its place when you leave it and come back. Account, the fifth tab, holds your account page, the switch between light and dark, support and the privacy page, and the credits, and the theme you had chosen carries over. The Mac and Apple Vision Pro, which run the iPad app, get the same. The website and the Android app keep their own menus, and the tab bar reaches the App Store with version 1.1.
+
 ## v10.110 — 18 October 2026 — The side column shows everything and ends at the readouts
-Commit · Show every card in the Region Atlas's rail whole and end it at the readouts
+Commit `a6848d6` · Show every card in the Region Atlas's rail whole and end it at the readouts
 
 The column beside the Region Atlas's scans no longer scrolls as a whole. Every box in it is shown in full, and the column now runs down to the foot of the readouts under the scans instead of stopping where the scans end. The Highlighted box takes whatever height is left, and its list of regions is the one thing that scrolls, inside the box; the boxes keep to the scans' own spacing to make room. In the export part of the Saved models box, Save PNG snapshot now comes after Export 3D model. On a very short window the column runs on past the readouts rather than hide anything.
 

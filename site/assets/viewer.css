@@ -289,6 +289,9 @@ body{
    variables since Android 15 draws the app under the bars either way */
 :root[data-native]{ --vn-top-inset:max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px)); }
 :root[data-native] body{ padding-top:calc(var(--vn-top-inset) + 44px); }
+/* in the iOS app's tabs the system bar stands where this one would, outside
+   the page, so the page keeps only the inset (navbar.js draws no bar there) */
+:root[data-native][data-shell] body{ padding-top:max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px)); }
 .vn-bar{
   position:fixed; top:0; left:0; right:0; z-index:60;
   box-sizing:border-box; height:calc(var(--vn-top-inset, env(safe-area-inset-top)) + 44px);

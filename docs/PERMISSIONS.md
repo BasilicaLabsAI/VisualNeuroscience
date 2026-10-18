@@ -98,7 +98,7 @@ original drawing could be restored under the same permission if wanted.
 | Receptor structures (39 Protein Data Bank entries, dopamine and serotonin GPCRs) | wwPDB, obtained through GPCRdb (gpcrdb.org); each entry and its paper is cited on the viewer's About tab | CC0 1.0 (wwPDB archive data) | `molecular.html`, About tab of the viewer; `scripts/molecular/data/citations.json` |
 | three.js r128 | three.js authors | MIT | `site/vendor/three/LICENSE` |
 | Firebase JS SDK | Google | Apache 2.0 | `site/vendor/firebase/NOTICE.md` |
-| Afacad Flux, Newsreader, Prata | Their authors; the files are self-hosted in `site/fonts/` | SIL Open Font License 1.1 | `site/fonts/LICENSE-*.txt` |
+| Afacad Flux, Newsreader, Prata | Their authors; the files are self-hosted in `site/fonts/`, and unpacked from there into `app/ios/App/App/Fonts/` for the iOS app's native tab pages | SIL Open Font License 1.1 | `site/fonts/LICENSE-*.txt`, which the app carries in its bundled copy of the site; the Account tab's credits |
 | Noto Serif, Noto Sans (Greek, embedded in the print posters only) | Google, via Fontsource on npm, fetched at build time | SIL Open Font License 1.1 | `scripts/posters/README.md` |
 | Studies drawn on the scan | Open-access papers, cited on each page | As published | The page itself |
 

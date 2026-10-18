@@ -24,6 +24,15 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<!-- the site's typefaces, unpacked from site/fonts into Fonts/, for the
+	     tab bar's own pages (ShellKit.swift); the web pages load theirs -->
+	<key>UIAppFonts</key>
+	<array>
+		<string>Flux.otf</string>
+		<string>Newsreader-Regular.ttf</string>
+		<string>Newsreader-Italic.ttf</string>
+		<string>Prata-Regular.ttf</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
