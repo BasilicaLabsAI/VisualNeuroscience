@@ -1,26 +1,23 @@
-/* Network mode on the Region Atlas.
+/* The Network Atlas: the chord ring of brain states, and its regions on
+   the scan.
 
-   The chord ring of brain states, drawn in the section under the
-   viewports and painting its regions onto the scan beside the atlas's
-   own highlights. It is off until its switch is pressed; on, it offers
-   the states with None chosen, and None paints nothing. Picking a state
-   lays every mapped region's ring colour under the atlas's colours, so an
-   explicit highlight wins where the two meet; the Highlighted card shows
-   the state as a line of its own, and its Clear all puts the state back
-   to None. The ring is read the other way too: with nothing pinned, the
-   crosshair over a lit region reads it back on the ring.
+   Picking a state lays every mapped region's ring colour on the scan; the
+   picked region comes forward, the ones it couples to in the state hold at
+   half strength, the rest fall back. The ring is read the other way too:
+   with nothing pinned, the crosshair over a lit region reads it back on
+   the ring.
 
-   The page opens its door through MN_SEL: a colour layer beneath the
-   highlights, a repaint, the crosshair's moves, the Clear all button, and
-   the planes' centring. regions.html#network opens the mode;
-   #network=<state> opens it on that state, which is where the old
-   Network Atlas page's links land. */
-window.MN_NETMODE = (function(){
+   The page's scans open their door through MN_SCAN (network-atlas.html):
+   a colour layer for the atlas's parcels, a repaint, the planes' centring,
+   the crosshair's moves and the first viewer, for the 3D export. The page
+   opens on the first state; #state=<id> opens it on that one, and the
+   address follows the state picked. */
+window.MN_NETWORK = (function(){
 "use strict";
 
 function $(id){ return document.getElementById(id); }
 var svg = $("ring");
-if (!svg || !window.MN_NET || !window.MN_RING || !window.MN_SEL || !window.MN_ATLAS) return null;
+if (!svg || !window.MN_NET || !window.MN_RING || !window.MN_SCAN || !window.MN_ATLAS) return null;
 var DATA = window.MN_NET;
 
 /* Where each region lands on the atlas. The ring is drawn from the
@@ -66,7 +63,7 @@ DATA.NODES.forEach(function(n){ var m = MAP[n.id]; if (m) for (var k in m) n[k] 
 var EMPH = { full: 1, mid: 0.52, faint: 0.2 };
 var NONE = { id: "none", label: "None", title: "", anno: "", blurb: "", source: "", links: [], down: [], notes: {} };
 var FIT_LABEL = { exact: "Measured parcel", approx: "Approximate", none: "Not in the atlas" };
-var on = false, selected = null, selectedGroup = null, groupTouches = [];
+var selected = null, selectedGroup = null, groupTouches = [];
 function pinned(){ return selected || selectedGroup; }
 
 function hexToRgb(h){ return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)]; }
@@ -104,7 +101,7 @@ var ring = MN_RING.create({
 if (window.MN_DIAG) MN_DIAG.attach({ svg: svg });
 
 function stateNow(){ return ring.state || NONE; }
-function active(){ return on && stateNow().id !== "none"; }
+function active(){ return stateNow().id !== "none"; }
 
 /* every mapped region is drawn in its ring colour; emphasis is what
    changes: the picked region comes forward, the ones it couples to in the
@@ -121,7 +118,7 @@ function emphasisFor(n){
   if (n.id === selected) return EMPH.full;
   return ring.isLinked(selected, n.id) ? EMPH.mid : EMPH.faint;
 }
-MN_SEL.setLayer(function(){
+MN_SCAN.setLayer(function(){
   if (!active()) return null;
   var out = {};
   DATA.NODES.forEach(function(n){
@@ -131,7 +128,7 @@ MN_SEL.setLayer(function(){
   });
   return out;
 });
-function repaint(){ MN_SEL.repaint(); }
+function repaint(){ MN_SCAN.repaint(); }
 
 /* ── the reading ───────────────────────────────────────────────────────── */
 function setWhere(text, badge, exact){
@@ -173,27 +170,24 @@ function readGroup(g){
 }
 function unread(){
   ring.clear();
-  var none = stateNow().id === "none";
   $("netKicker").textContent = "The ring";
-  $("netName").textContent = none ? "Pick a state" : "Explore the ring";
-  $("netNote").textContent = none
-    ? "Choose a state above, then click a region or a whole network on the ring."
-    : "Click a region — coloured threads strengthen, grey dashed threads fall quiet, and hollow markers power down.";
+  $("netName").textContent = "Explore the ring";
+  $("netNote").textContent = "Click a region — coloured threads strengthen, grey dashed threads fall quiet, and hollow markers power down.";
   $("netWhere").hidden = true;
 }
 /* picking a region or a network drives the scan as well as the ring */
 function select(n){
   selected = n.id; selectedGroup = null; groupTouches = [];
   read(n); repaint();
-  if (n.mni) MN_SEL.centreMm(n.mni);
-  else if (n.bases) MN_SEL.centre(parcelsOf(n));
+  if (n.mni) MN_SCAN.centreMm(n.mni);
+  else if (n.bases) MN_SCAN.centre(parcelsOf(n));
 }
 function selectGroup(g){
   selected = null; selectedGroup = g.id;
   readGroup(g); repaint();
   var parcels = [];
   ring.membersOf(g.id).forEach(function(n){ parcels.push.apply(parcels, parcelsOf(n)); });
-  if (parcels.length) MN_SEL.centre(parcels);
+  if (parcels.length) MN_SCAN.centre(parcels);
 }
 function deselect(){
   selected = null; selectedGroup = null; groupTouches = [];
@@ -202,7 +196,7 @@ function deselect(){
 
 /* …and the ring follows the crosshair back, while nothing is pinned */
 var lastParcel = -1;
-MN_SEL.onLocation(function(d){
+MN_SCAN.onLocation(function(d){
   if (!active() || pinned()) return;
   var parcel = -1;
   try{
@@ -215,7 +209,7 @@ MN_SEL.onLocation(function(d){
   if (id) read(ring.byId[id]); else unread();
 });
 
-/* ── the state, with None first ────────────────────────────────────────── */
+/* ── the state ─────────────────────────────────────────────────────────── */
 var sel = $("netState");
 DATA.STATES.forEach(function(s){
   var o = document.createElement("option");
@@ -224,107 +218,90 @@ DATA.STATES.forEach(function(s){
 });
 function stateById(id){
   for (var i = 0; i < DATA.STATES.length; i++) if (DATA.STATES[i].id === id) return DATA.STATES[i];
-  return NONE;
+  return null;
 }
+var statOut = $("statState");
 function showState(id){
-  var st = stateById(id);
+  var st = stateById(id) || DATA.STATES[0];
   selected = null; selectedGroup = null; groupTouches = [];
   ring.setState(st);
   sel.value = st.id;
-  $("netBlurb").textContent = st.id === "none"
-    ? "Pick a state and its networks light up on the scan: every region with a parcel takes its ring colour, and the threads show which couplings strengthen and which fall quiet."
-    : st.blurb;
+  $("netBlurb").textContent = st.blurb;
+  if (statOut) statOut.textContent = st.label;
   var src = $("netSource");
   src.textContent = st.source || "";
   src.hidden = !st.source;
-  unread(); repaint(); updateChip();
+  unread(); repaint();
 }
-sel.addEventListener("change", function(){ showState(sel.value); });
-
-/* the state's line in the Highlighted card, with its own × */
-var chips = $("chips"), chip = document.createElement("div");
-chip.className = "netchip"; chip.hidden = true;
-chip.innerHTML = '<span class="dot" aria-hidden="true"></span><span class="name"></span><span class="side">network</span>' +
-                 '<button class="x" type="button" aria-label="Set the brain state to None">×</button>';
-chip.querySelector(".x").addEventListener("click", function(){ showState("none"); });
-if (chips) chips.insertBefore(chip, chips.firstChild);
-var drawnCount = DATA.NODES.filter(function(n){ return n.bases; }).length;
-function updateChip(){
-  var a = active();
-  chip.hidden = !a;
-  if (a){
-    var st = stateNow();
-    chip.querySelector(".name").textContent = st.label + " state";
-    chip.querySelector(".name").title = st.title || st.label;
-    chip.querySelector(".side").textContent = drawnCount + " regions";
-  }
-  if (chips) chips.classList.toggle("net-on", a);
+/* the address names the state, so a link opens the page on it */
+function markAddress(id){
+  try{ history.replaceState(history.state, "", location.pathname + location.search + "#state=" + id); }catch(e){}
 }
+sel.addEventListener("change", function(){ showState(sel.value); markAddress(sel.value); });
 
-/* ── the switch and the note ──────────────────────────────────────────── */
-var sw = $("netSwitch"), lbl = $("netSwitchLbl"), body = $("netBody"), sec = $("networkSec");
-var hideTimer = null;
-function setOn(v){
-  on = !!v;
-  sw.setAttribute("aria-checked", String(on));
-  lbl.textContent = on ? "On" : "Off";
-  clearTimeout(hideTimer);
-  if (on){
-    body.hidden = false;
-    void body.offsetWidth;   /* the closed state is laid out, so the open one can be reached from it */
-    body.classList.add("show");
-  } else {
-    body.classList.remove("show");
-    hideTimer = setTimeout(function(){ if (!on) body.hidden = true; }, 240);
-    if (stateNow().id !== "none") showState("none"); else if (pinned()) deselect();
-  }
-  sec.classList.toggle("net-on", on);
-  repaint(); updateChip();
-}
-sw.addEventListener("click", function(){ setOn(!on); });
-
-var infoBtn = $("netInfoBtn"), info = $("netInfo"), infoTimer = null;
-function infoOpen(){ return infoBtn.getAttribute("aria-expanded") === "true"; }
-function setInfo(v){
-  clearTimeout(infoTimer);
-  infoBtn.setAttribute("aria-expanded", String(!!v));
-  if (v){ info.hidden = false; void info.offsetWidth; info.classList.add("show"); }
-  else {
-    info.classList.remove("show");
-    infoTimer = setTimeout(function(){ if (!infoOpen()) info.hidden = true; }, 240);
-  }
-}
-infoBtn.addEventListener("click", function(){ setInfo(!infoOpen()); });
-document.addEventListener("keydown", function(e){ if (e.key === "Escape" && infoOpen()) setInfo(false); });
-
-/* Clear all in the Highlighted card puts the state back to None */
-MN_SEL.onClear(function(){
-  if (stateNow().id !== "none") showState("none");
-  else if (pinned()) deselect();
-});
+/* letting go of the pick: the whole state on the scan again */
+var clearBtn = $("netClear");
+if (clearBtn) clearBtn.addEventListener("click", function(){ if (pinned()) deselect(); });
 
 var wt = $("netWt");
 ring.setWeight(+wt.value);
 wt.addEventListener("input", function(){ ring.setWeight(+wt.value); });
 
-showState("none");
-
-/* deep links: #network opens the mode, #network=<state> on that state */
-var m = location.hash.match(/^#network(?:=([\w-]+))?$/);
-if (m){
-  setOn(true);
-  if (m[1] && stateById(m[1]) !== NONE) showState(m[1]);
-  setTimeout(function(){ try{ sec.scrollIntoView({ block: "start", behavior: "smooth" }); }catch(e){} }, 400);
+/* ── the state as a 3D model ───────────────────────────────────────────
+   Each region with a parcel as its surface in its ring colour, carried as
+   far as its emphasis on the scan; the three without one as a sphere at
+   their published coordinate; the couplings as tubes between them; the
+   brain around them. */
+if (window.MN_EXPORT3D && $("export3d")){
+  var x3d = MN_EXPORT3D.attach({
+    host: $("export3d"),
+    note: false,
+    basename: function(){ return "network-" + stateNow().id; },
+    options: [
+      { id: "links", label: "The couplings in this state", checked: true },
+      { id: "shell", label: "The brain surface", checked: true }
+    ],
+    build: function(ctx){
+      return MN_EXPORT3D.volumes(MN_SCAN.instance(), MN_ATLAS.ATLAS_URL, MN_ATLAS.TPL_URL).then(function(v){
+        var atlas = v[0], tpl = v[1], parts = [], centre = {}, st = stateNow();
+        DATA.NODES.forEach(function(n){
+          var rgb = MN_EXPORT3D.hexColour(n.color), em = emphasisFor(n);
+          var alpha = em >= EMPH.full ? 1 : em >= EMPH.mid ? 0.7 : 0.4;
+          var ps = parcelsOf(n);
+          if (ps.length){
+            parts.push(MN_EXPORT3D.labelSurface(atlas, ps, { name: n.full, colour: rgb, alpha: alpha }));
+            centre[n.id] = MN_EXPORT3D.labelCentroid(atlas, ps);
+          } else if (n.mni){
+            parts.push(MN_EXPORT3D.sphere(n.mni, 5, { name: n.full, colour: rgb, alpha: alpha }));
+            centre[n.id] = n.mni;
+          }
+        });
+        if (ctx.options.links && st.links){
+          var live = [], quiet = [];
+          st.links.forEach(function(l){
+            var a = centre[l.s], b = centre[l.t];
+            if (!a || !b) return;
+            (l.quiet ? quiet : live).push(MN_EXPORT3D.tube(a, b, 0.8 + 2.2 * l.w, { colour: [1, 1, 1] }));
+          });
+          if (live.length) parts.push(MN_EXPORT3D.merge(live, { name: "Couplings that strengthen", colour: [0.95, 0.93, 0.9] }));
+          if (quiet.length) parts.push(MN_EXPORT3D.merge(quiet, { name: "Couplings that fall quiet", colour: [0.5, 0.5, 0.5], alpha: 0.5 }));
+        }
+        if (ctx.options.shell) parts.push(MN_EXPORT3D.brainSurface(tpl, { alpha: 0.2 }));
+        return { name: "VisualNeuroscience network " + st.label, parts: parts };
+      });
+    }
+  });
+  /* the PNG of the four views goes under the 3D model's button, as on the
+     Region Atlas */
+  var shotRow = $("shotRow");
+  if (x3d && x3d.button && x3d.button.parentNode && shotRow)
+    x3d.button.parentNode.insertAdjacentElement("afterend", shotRow);
 }
 
-return {
-  get: function(){ return { on: on, state: stateNow().id }; },
-  set: function(o){
-    if (!o || !o.on){ if (on) setOn(false); return; }
-    if (!on) setOn(true);
-    showState(o.state || "none");
-  },
-  setOn: setOn,
-  showState: showState
-};
+/* #state=<id> opens on that state (and #network=<id>, the Region Atlas's
+   old link, on the way through); otherwise the first */
+var m = location.hash.match(/^#(?:state|network)=([\w-]+)$/);
+showState(m && stateById(m[1]) ? m[1] : DATA.STATES[0].id);
+
+return { showState: showState, state: function(){ return stateNow().id; } };
 })();

@@ -25,7 +25,7 @@ nonisolated struct Page: Sendable {
     let title: String
 
     static let regionAtlas = Page(file: "regions.html", title: "Region Atlas")
-    static let networkAtlas = Page(file: "regions.html", fragment: "network", title: "Network Atlas")
+    static let networkAtlas = Page(file: "network-atlas.html", title: "Network Atlas")
     static let microanatomy = Page(file: "microanatomy.html", title: "Microanatomy")
     static let molecular = Page(file: "molecular.html", title: "Molecular")
     static let tractography = Page(file: "tracts.html", title: "Tractography")
@@ -39,7 +39,7 @@ nonisolated struct Page: Sendable {
 
     /// The titles of the pages a link can lead to, as the app's bar named them.
     static let titles: [String: String] = [
-        "regions.html": "Region Atlas", "tracts.html": "Tractography",
+        "regions.html": "Region Atlas", "network-atlas.html": "Network Atlas", "tracts.html": "Tractography",
         "microanatomy.html": "Microanatomy", "molecular.html": "Molecular",
         "studies.html": "Visualizing Studies", "hallucinations.html": "Hallucinations",
         "practice.html": "Practice", "textbook.html": "Digital Textbook",
@@ -55,15 +55,13 @@ extension Page {
         var file = url.lastPathComponent
         var fragment = url.fragment
         if file.isEmpty || file == "/" || file == "index.html" { return nil }
-        // the old Network Atlas page only sends its visitors on to the mode
-        if file == "network-atlas.html" {
-            file = "regions.html"
-            fragment = "network" + (fragment.map { "=" + $0 } ?? "")
+        // the Region Atlas's old network mode is the Network Atlas's own page
+        if file == "regions.html", let f = fragment, f == "network" || f.hasPrefix("network=") {
+            file = "network-atlas.html"
+            fragment = f.hasPrefix("network=") ? "state=" + f.dropFirst("network=".count) : nil
         }
         if let f = fragment, f.isEmpty { fragment = nil }
-        let network = file == "regions.html" && (fragment?.hasPrefix("network") ?? false)
-        let title = network ? "Network Atlas"
-            : (Page.titles[file] ?? file.replacingOccurrences(of: ".html", with: "").capitalized)
+        let title = Page.titles[file] ?? file.replacingOccurrences(of: ".html", with: "").capitalized
         self.init(file: file, fragment: fragment, title: title)
     }
 }

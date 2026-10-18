@@ -25,13 +25,13 @@
    Nothing cross-origin is touched at all — since the typefaces moved
    in-house there is no outside request left to think about. */
 
-var VERSION = "vn-134";
+var VERSION = "vn-135";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
 /* the pages and the small files they need to draw at all */
 var PRECACHE = [
-  "/", "/index.html", "/regions.html", "/tracts.html", "/studies.html", "/hallucinations.html",
+  "/", "/index.html", "/regions.html", "/network-atlas.html", "/tracts.html", "/studies.html", "/hallucinations.html",
   "/privacy.html", "/account.html", "/about.html", "/mcp.html", "/connect.html", "/practice.html", "/assets/home/practice.jpg",
   "/textbook.html", "/assets/home/textbook.jpg", "/assets/textbook.css", "/assets/textbook.js",
   "/microanatomy.html", "/assets/home/cells.jpg", "/assets/cells.js",
@@ -48,9 +48,10 @@ var PRECACHE = [
   "/assets/stage-lifecycle.js", "/assets/diagram-gestures.js",
   "/assets/firebase-config.js", "/assets/auth.js", "/assets/auth-ui.js",
   "/assets/userdata.js", "/vendor/firebase/firebase-bundle.js",
-  "/assets/slice-tool.js", "/assets/region-notes.js", "/assets/network-ring.js",
+  "/assets/slice-tool.js", "/assets/scan-look.js", "/assets/view-expand.js", "/assets/atlas-views.css",
+  "/assets/region-notes.js", "/assets/network-ring.js",
   "/assets/export3d.js", "/assets/models.js",
-  "/assets/network-states.js", "/assets/network.css", "/assets/network-mode.js", "/assets/atlas-data.js",
+  "/assets/network-states.js", "/assets/network.css", "/assets/network-atlas.js", "/assets/atlas-data.js",
   "/assets/brodmann-areas.js", "/assets/brodmann-outline.js",
   "/assets/receptor-data.js",
   "/assets/logo.svg", "/manifest.webmanifest",

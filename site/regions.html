@@ -28,10 +28,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="assets/atlas-views.css">
 <link rel="stylesheet" href="assets/rxfig.css">
-<link rel="stylesheet" href="assets/network.css">
 <link rel="stylesheet" href="fonts/fonts.css">
 <meta name="color-scheme" content="dark light">
+<script>/* The Network Atlas has its own page again; a link to the mode it was
+   here (regions.html#network, #network=<state>) lands there, on its state. */
+(function(){var m=location.hash.match(/^#network(?:=([\w-]+))?$/);
+if(m)location.replace("network-atlas.html"+(m[1]?"#state="+m[1]:""));})();</script>
 <script>/* Dark is the default; only an explicit choice of light overrides it.
    Set before first paint so no page flashes white on its way in. */
 (function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
@@ -756,84 +760,6 @@ mark{ background:var(--ink); color:var(--paper); }
 .barow[aria-pressed="true"] mark{ background:var(--paper); color:var(--ink); }
 @media (max-width:1100px){ .balist{ max-height:min(40vh,360px); } }
 
-/* ── the scans in the light theme ──────────────────────────────────────
-   Light, the viewports are white rather than black (the viewers clear to
-   white, makeNV below), and the cutting controls along the 3D box's
-   edges, drawn for a black stage, take ink where they took light. */
-/* NiiVue paints its canvas's parent black, inline, as it attaches */
-:root:not([data-theme="dark"]) .mri-stage{ background:#FFFFFF !important; }
-:root:not([data-theme="dark"]) .slice-edge .ax{ color:#5A5A5A; text-shadow:0 0 4px #FFFFFF, 0 0 4px #FFFFFF; }
-:root:not([data-theme="dark"]) .slice-edge.cutting .ax{ color:#111111; }
-:root:not([data-theme="dark"]) .slice-range::-webkit-slider-runnable-track{ background:rgba(0,0,0,.28); }
-:root:not([data-theme="dark"]) .slice-range::-moz-range-track{ background:rgba(0,0,0,.28); }
-:root:not([data-theme="dark"]) .slice-range:focus-visible{ outline-color:#111111; }
-
-/* ── one bar over each view ────────────────────────────────────────────
-   A view's caption and its tools share one rule: the tools to the left,
-   the plane's name in the middle, and Centre planes and the button that
-   opens the view over the grid to the right. The name holds the middle
-   while both sides fit either side of it and gives way to the wider side
-   when they do not. A view too narrow for one line (a phone, a small
-   tablet, a browser without container queries) keeps the name, Centre
-   planes and that button on the first line and gives its tools the
-   whole of a second. */
-.views .view{ container:view / inline-size; }
-.views .view-cap{
-  display:flex; flex-wrap:wrap; justify-content:normal; align-items:center;
-  gap:.4rem .6rem; padding:.45rem .8rem;
-}
-/* two lines: an empty start as wide as the end, so the name sits in the
-   middle of the first, and the tools taking the whole of the second */
-.views .view-cap::before{ content:""; order:0; flex:1 1 0; }
-.views .view-cap b{ order:1; flex:none; margin-right:-.28em; }
-.views .view-cap .view-end{ order:2; flex:1 1 0; display:flex; justify-content:flex-end; align-items:center; gap:.6rem; }
-.views .view-cap .view-tools{ order:3; flex:0 0 100%; padding:0; border:0; }
-/* the caption's italic is for its own words, not the tools' label */
-.views .view-cap .tool-label{ font-family:var(--font-brand); font-style:normal; font-size:.55rem; color:var(--ink-60); }
-.views .view-cap .centre-btn{ margin-left:0; }
-/* the drag-lock cells, border and all, as tall as the buttons beside them,
-   so every bar is the same height */
-.views .view-cap .seg-btn{ width:calc(1.8rem - 2px); height:calc(1.8rem - 2px); }
-/* one line from the width the 3D view's tools need while slicing, so the
-   four bars always match: the tools take the start, as wide as the end */
-@container view (min-width:490px){
-  .views .view-cap{ flex-wrap:nowrap; }
-  .views .view-cap::before{ display:none; }
-  .views .view-cap .view-tools{ order:0; flex:1 1 0; flex-wrap:nowrap; }
-}
-/* the words before the drag-lock cells go where the bar is short of room */
-@container view (max-width:559px){ .views .view-cap .tool-label{ display:none; } }
-@media (max-width:760px){
-  .views .view-cap{ padding:.35rem .55rem; gap:.3rem .45rem; }
-  .views .view-cap .view-end{ gap:.45rem; }
-  .views .view-cap .seg-btn{ width:calc(1.6rem - 2px); height:calc(1.6rem - 2px); }
-}
-@media (pointer:coarse){ .views .view-cap .seg-btn{ width:42px; height:42px; } }
-
-/* square scans: every stage as tall as it is wide */
-.views-wrap .views .view .mri-stage{ height:auto; aspect-ratio:1 / 1; }
-
-/* ── a view opened over the grid ── the button at the end of each bar
-   lays its view over all four; the opened view covers the grid exactly,
-   its scan taking the height the bar leaves */
-.view-expand{
-  position:relative; flex:none; align-self:center;
-  width:1.55rem; height:1.55rem; padding:0;
-  display:inline-flex; align-items:center; justify-content:center;
-  border:1px solid var(--hair); background:var(--paper); color:var(--ink); cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.view-expand::after{ content:""; position:absolute; inset:-9px; }
-.view-expand svg{ width:.78rem; height:.78rem; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:square; }
-@media (hover: hover){ .view-expand:hover{ background:var(--ink); color:var(--paper); } }
-.view-expand:active{ background:var(--ink); color:var(--paper); }
-.views-wrap .views .view.open{
-  position:absolute; inset:0; z-index:12; background:var(--paper);
-}
-.views-wrap .views .view.open .mri-stage{ flex:1 1 auto; height:auto; min-height:0; aspect-ratio:auto; }
-.views-wrap .views .view.closing{ position:relative; z-index:12; background:var(--paper); }
-.views .view-hold{ visibility:hidden; }
-
 /* ── the region picker ─────────────────────────────────────────────────
    The AAL list runs to a hundred and sixteen names with the pairs split,
    too many to scroll a native menu for, so the dropdown carries a search
@@ -1009,6 +935,7 @@ mark{ background:var(--ink); color:var(--paper); }
     <a href="regions.html" aria-current="page">Region Atlas</a>
     <a href="microanatomy.html">Microanatomy</a>
     <a href="molecular.html">Molecular</a>
+    <a href="network-atlas.html">Network Atlas</a>
     <a href="tracts.html">Tractography</a>
     <a href="studies.html">Visualizing Studies</a>
     <a href="textbook.html">Digital Textbook</a>
@@ -1131,49 +1058,6 @@ mark{ background:var(--ink); color:var(--paper); }
         <div class="stat"><div class="k">Probe</div><div class="v probe-v"><span id="cursorRegion">—</span><small id="cursorCoords">hover a view · drag = crosshair</small></div></div>
       </div>
 
-      <!-- ── the Network Atlas, behind its switch (assets/network-mode.js) ── -->
-      <section class="netsec" id="networkSec" aria-labelledby="net-h">
-        <div class="net-head">
-          <h2 id="net-h">Network Atlas <small>brain states on the scan</small></h2>
-          <div class="net-tools">
-            <button class="net-info-btn" id="netInfoBtn" type="button" aria-expanded="false" aria-controls="netInfo" aria-label="What the Network Atlas is" title="What the Network Atlas is">i</button>
-            <span class="net-switch"><span class="lbl" id="netSwitchLbl">Off</span><button class="switch-btn" id="netSwitch" type="button" role="switch" aria-checked="false" aria-label="Network mode"><span class="knob" aria-hidden="true"></span></button></span>
-          </div>
-        </div>
-        <div class="net-info" id="netInfo" hidden>
-          <b>What this is</b>
-          <p>Six brain states &mdash; flow, rest, focused attention, threat, reward pursuit and meditation &mdash; each drawn as a ring of fourteen regions in seven networks, with the couplings that strengthen in that state as coloured threads and the ones that fall quiet as grey dashes. Switch it on and pick a state: every region that has a parcel in the atlas lights up on the scan in its ring colour, with the ones the state powers down held at half strength. Click a region, or a whole network, and it comes forward on the ring and the planes centre on it; move the crosshair over a lit region and the ring reads it back.</p>
-          <p>The couplings are composites read off the imaging literature, not measured connectomes, and each state names its sources beneath the ring. Three of the fourteen regions have no parcel in AAL-116 and wear a dashed arc: picking one parks the crosshair at a published coordinate instead. Anything you highlight yourself keeps its own colour over the network&rsquo;s, and Clear all puts the state back to None.</p>
-        </div>
-        <div class="net-body" id="netBody" hidden>
-          <div class="card net-state">
-            <h2>Brain state</h2>
-            <div class="selwrap"><select id="netState" aria-label="Brain state"><option value="none">None</option></select></div>
-            <p class="rail-note" id="netBlurb"></p>
-          </div>
-          <div class="card net-reading">
-            <h2>Reading</h2>
-            <div class="panel-kicker" id="netKicker">The ring</div>
-            <div class="panel-title" id="netName">Pick a state</div>
-            <p id="netNote">Choose a state above, then click a region or a whole network on the ring.</p>
-            <div class="where" id="netWhere" hidden><b>On the scan</b><span id="netWhereText"></span></div>
-          </div>
-          <div class="card net-key">
-            <h2>Key</h2>
-            <div class="key-list">
-              <span><i class="key grad"></i>Strengthens in this state</span>
-              <span><i class="key quiet"></i>Falls quiet in this state</span>
-              <span><i class="key dot"></i>More active</span>
-              <span><i class="key hollow"></i>Less active</span>
-              <span><i class="key solidarc"></i>Drawn on the atlas</span>
-              <span><i class="key dasharc"></i>No atlas parcel</span>
-            </div>
-            <div class="rail-row"><span class="tool-label">Thread</span><input type="range" id="netWt" min="0.28" max="1" step="0.04" value="1" aria-label="Thread weight"></div>
-          </div>
-          <div class="ring-stage"><svg id="ring" viewBox="0 0 720 720" role="img" aria-label="Circular graph of how brain regions couple in the chosen state, linked to the scan"></svg></div>
-        </div>
-        <p class="net-source" id="netSource" hidden></p>
-      </section>
 
     <section class="bamap" id="baMapSec" aria-labelledby="bamap-h">
       <h2 class="sec-h" id="bamap-h">Brodmann map <small>both faces of the hemisphere &middot; click an area to highlight it</small></h2>
@@ -1281,11 +1165,11 @@ mark{ background:var(--ink); color:var(--paper); }
 <script src="assets/region-notes.js"></script>
 <script src="assets/diagram-gestures.js"></script>
 <script src="assets/slice-tool.js"></script>
+<script src="assets/scan-look.js"></script>
+<script src="assets/view-expand.js"></script>
 <script src="assets/zoom.js"></script>
 <script src="assets/export3d.js"></script>
 <script src="assets/models.js"></script>
-<script src="assets/network-states.js"></script>
-<script src="assets/network-ring.js"></script>
 <script src="assets/rxfig.js"></script>
 <script src="assets/receptor-data.js"></script>
 <script>
@@ -1349,15 +1233,9 @@ mark{ background:var(--ink); color:var(--paper); }
   ];
   var INSTANCES = {};
   var sliceTool = null;      /* the clip-plane panel on the 3D box, once attached */
-  /* The scans follow the theme. Dark, the viewports are pure black, the
-     scan's own background, so the two blend. Light, they are white and the
-     crosshair is ink (paintScene, below, does the rest once the scans are
-     in). */
-  function sceneColours(){
-    var dark = document.documentElement.getAttribute("data-theme") === "dark";
-    return dark ? {back: [0, 0, 0, 1], cross: [1, 1, 1, 1], clear: false}
-                : {back: [1, 1, 1, 1], cross: [0.067, 0.067, 0.067, 1], clear: true};
-  }
+  /* The scans follow the theme, light or dark, as assets/scan-look.js
+     draws them for both atlases. */
+  function sceneColours(){ return MN_LOOK.colours(); }
   function makeNV(sliceType){
     var c = sceneColours();
     return new niivue.Niivue({
@@ -1372,49 +1250,10 @@ mark{ background:var(--ink); color:var(--paper); }
   }
   function allNV(){ return PLANES.map(function(p){ return INSTANCES[p.key]; }).filter(Boolean); }
 
-  /* On white, nothing in the slices is black. The template is zero outside
-     the brain, so in the light theme its scale is clear at zero, letting
-     the white through, and above zero it reads like a stained section
-     rather than a scan: fluid white, grey matter the darkest grey, white
-     matter pale. Each step is a place in the plain scale's window (0 its
-     bottom, 1 its top) and a lightness; the clear end is white too, so the
-     brain's edge fades into the page instead of drawing a dark rim. The 3D
-     render keeps the plain scale, which already draws the brain alone. */
-  var LIGHT_STEPS = [[-0.05, 1], [0.30, 0.45], [0.50, 0.40], [0.70, 0.55], [0.90, 0.80], [1, 0.86]];
-  function lightScale(w){
-    var I = [0, 1], L = [255, 255], A = [0, 255];
-    LIGHT_STEPS.forEach(function(s){
-      var i = Math.round(255 * (w.min + s[0] * (w.max - w.min)) / w.max);
-      if (i > I[I.length - 1] && i <= 255){ I.push(i); L.push(Math.round(255 * s[1])); A.push(255); }
-    });
-    if (I[I.length - 1] < 255){ I.push(255); L.push(L[L.length - 1]); A.push(255); }
-    return {R: L, G: L.slice(), B: L.slice(), A: A, I: I};
-  }
   function paintScene(){
-    var c = sceneColours();
-    PLANES.forEach(function(p){
-      var nv = INSTANCES[p.key];
-      if (!nv) return;
-      nv.opts.backColor = c.back;
-      nv.opts.crosshairColor = c.cross;
-      var slice = p.key !== "render", vol = nv.volumes && nv.volumes[0];
-      nv.opts.isAlphaClipDark = c.clear && slice;
-      if (slice && vol){
-        if (!vol.vnWindow) vol.vnWindow = {min: vol.cal_min, max: vol.cal_max};
-        var w = vol.vnWindow;
-        if (c.clear && w.max > 0){
-          nv.addColormap("vn-gray-light", lightScale(w));
-          vol.colormap = "vn-gray-light"; vol.cal_min = 0; vol.cal_max = w.max;
-        } else {
-          vol.colormap = "gray"; vol.cal_min = w.min; vol.cal_max = w.max;
-        }
-        try{ nv.updateGLVolume(); }catch(e){}
-      }
-      try{ nv.drawScene(); }catch(e){}
-    });
+    MN_LOOK.paint(PLANES.map(function(p){ return {nv: INSTANCES[p.key], slice: p.key !== "render"}; }));
   }
-  /* a press on the theme switch reaches the scans at once */
-  new MutationObserver(paintScene).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
+  MN_LOOK.follow(paintScene);
 
   /* ── direction locks ────────────────────────────────────────────────
      Each viewport can confine a drag to one direction. The stored value is
@@ -1511,90 +1350,9 @@ mark{ background:var(--ink); color:var(--paper); }
     btn.addEventListener("click", centrePlanes);
   });
 
-  /* ── a view opened over the grid ─────────────────────────────────────
-     Each view's bar ends in a button that lays that view over the whole
-     grid, the same viewer at the size of all four, and puts it back.
-     It grows out of its own box and returns into it (a placeholder keeps
-     its cell, so the other three stay where they are); with reduced motion
-     it simply appears and goes. Escape closes it too. */
-  (function(){
-    var wrap = document.querySelector(".views-wrap");
-    if (!wrap) return;
-    var ICON_OPEN = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.5 2.5h4v4M13.5 2.5 9 7M6.5 13.5h-4v-4M2.5 13.5 7 9"/></svg>';
-    var ICON_SHUT = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M13.5 6.5h-4v-4M9.5 6.5 14 2M2.5 9.5h4v4M6.5 9.5 2 14"/></svg>';
-    var still = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
-    var open = null, hold = null;
-
-    function remeasure(){ if (window.MN_LIFE) MN_LIFE.remeasure(); }
-    function nameOf(view){
-      var b = view.querySelector(".view-cap b");
-      return b ? b.textContent.trim() : "this";
-    }
-    function dress(btn, view, isOpen){
-      btn.innerHTML = isOpen ? ICON_SHUT : ICON_OPEN;
-      btn.setAttribute("aria-expanded", String(isOpen));
-      btn.setAttribute("aria-label", (isOpen ? "Close the expanded " : "Expand the ") + nameOf(view) + " view");
-      btn.title = isOpen ? "Back to the four views" : "Expand over the four views";
-    }
-    /* from one box to another: the view is laid out where it ends up and
-       drawn as though it were still where it began, then let go */
-    function glide(view, from, done){
-      var to = view.getBoundingClientRect();
-      if ((still && still.matches) || !view.animate || !to.width || !to.height){ done(); return; }
-      var a = view.animate([
-        { transformOrigin: "0 0", transform: "translate(" + (from.left - to.left) + "px," + (from.top - to.top) + "px) scale(" + (from.width / to.width) + "," + (from.height / to.height) + ")" },
-        { transformOrigin: "0 0", transform: "none" }
-      ], { duration: 320, easing: "cubic-bezier(.32,.72,0,1)" });
-      a.onfinish = a.oncancel = done;
-    }
-    function expand(view, btn){
-      var from = view.getBoundingClientRect();
-      hold = document.createElement("div");
-      hold.className = "view view-hold";
-      hold.setAttribute("aria-hidden", "true");
-      hold.style.order = getComputedStyle(view).order;
-      hold.style.height = from.height + "px";
-      view.parentNode.insertBefore(hold, view);
-      open = view;
-      wrap.classList.add("has-open");
-      view.classList.add("open");
-      dress(btn, view, true);
-      remeasure();
-      glide(view, from, remeasure);
-    }
-    function collapse(){
-      var view = open;
-      if (!view) return;
-      var btn = view.querySelector(".view-expand");
-      var from = view.getBoundingClientRect();
-      open = null;
-      view.classList.remove("open");
-      view.classList.add("closing");
-      wrap.classList.remove("has-open");
-      if (hold){ hold.remove(); hold = null; }
-      if (btn) dress(btn, view, false);
-      remeasure();
-      glide(view, from, function(){ view.classList.remove("closing"); remeasure(); });
-    }
-
-    wrap.querySelectorAll(".views .view").forEach(function(view){
-      var cap = view.querySelector(".view-cap");
-      if (!cap) return;
-      var btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "view-expand";
-      dress(btn, view, false);
-      btn.addEventListener("click", function(){
-        if (open === view) collapse();
-        else if (!open) expand(view, btn);
-      });
-      (cap.querySelector(".view-end") || cap).appendChild(btn);
-    });
-    document.addEventListener("keydown", function(e){
-      if (e.key === "Escape" && open && !e.defaultPrevented) collapse();
-    });
-  })();
-
+  /* each view's bar ends in the button that opens it over the grid
+     (assets/view-expand.js) */
+  if (window.MN_EXPAND) MN_EXPAND.attach(document.querySelector(".views-wrap"));
   var selections = new Map();
 
   var chipsEl = document.getElementById("chips");
@@ -1613,22 +1371,10 @@ mark{ background:var(--ink); color:var(--paper); }
   }
 
   function isBA(s){ return s.atlas === "ba"; }
-  /* the network mode's colours, laid first so an explicit highlight wins
-     where the two meet; and the hooks it listens on */
-  var layerFn = null, locWatchers = [], clearWatchers = [];
   function labelMap(n, labels, which){
     var R = new Array(n).fill(0), G = new Array(n).fill(0),
         Bl = new Array(n).fill(0), A = new Array(n).fill(0), I = [];
     for (var i = 0; i < n; i++) I.push(i);
-    if (!which && layerFn){
-      var layer = null;
-      try{ layer = layerFn(); }catch(e){}
-      if (layer) Object.keys(layer).forEach(function(k){
-        var idx = Number(k), rgb = layer[k];
-        if (!(idx >= 0 && idx < n)) return;
-        R[idx] = rgb[0]; G[idx] = rgb[1]; Bl[idx] = rgb[2]; A[idx] = 255;
-      });
-    }
     selections.forEach(function(s){
       if (isBA(s) !== which) return;
       var rgb = hexToRgb(s.color);
@@ -2133,13 +1879,7 @@ mark{ background:var(--ink); color:var(--paper); }
       var v = [sx/n, sy/n, sz/n];
       centreMm([0, 1, 2].map(function(r){ return A[r][0]*v[0] + A[r][1]*v[1] + A[r][2]*v[2] + A[r][3]; }));
     },
-    onChange: function(cb){ selWatchers.push(cb); },
-    /* the network mode's door */
-    setLayer: function(fn){ layerFn = fn; },
-    repaint: function(){ applyColormap(); },
-    centreMm: function(mm){ centreMm(mm); },
-    onLocation: function(cb){ locWatchers.push(cb); },
-    onClear: function(cb){ clearWatchers.push(cb); }
+    onChange: function(cb){ selWatchers.push(cb); }
   };
   function centreMm(mm){
     allNV().forEach(function(nv){
@@ -2206,7 +1946,6 @@ mark{ background:var(--ink); color:var(--paper); }
 
   document.getElementById("clearBtn").addEventListener("click", function(){
     selections.clear(); renderChips(); applyColormap();
-    clearWatchers.forEach(function(cb){ try{ cb(); }catch(e){} });
   });
 
   var opacityEl = document.getElementById("opacity");
@@ -2294,7 +2033,6 @@ mark{ background:var(--ink); color:var(--paper); }
       if (ba > 0 && B && B.BY_BA[ba]) bits.push("BA" + ba);
       regionOut.textContent = bits.length ? bits.join(" \u00B7 ") : "\u2014";
     } catch(e){}
-    locWatchers.forEach(function(cb){ try{ cb(loc); }catch(e){} });
   }
 
   /* ── the Brodmann areas ───────────────────────────────────────────────
@@ -2607,8 +2345,7 @@ mark{ background:var(--ink); color:var(--paper); }
           camera: ren ? { azimuth: ren.scene.renderAzimuth, elevation: ren.scene.renderElevation,
                           zoom: Number(ren.scene.volScaleMultiplier) || 1 } : null,
           crosshair: ren && ren.scene.crosshairPos ? Array.prototype.slice.call(ren.scene.crosshairPos) : null,
-          cuts: sliceTool && sliceTool.state ? sliceTool.state() : null,
-          network: window.MN_NETMODE ? MN_NETMODE.get() : null
+          cuts: sliceTool && sliceTool.state ? sliceTool.state() : null
         };
       },
       restore: function(m){
@@ -2626,7 +2363,6 @@ mark{ background:var(--ink); color:var(--paper); }
                                   indices: s.indices.map(Number), color: colour });
         });
         renderChips(); applyColormap();
-        if (window.MN_NETMODE) MN_NETMODE.set(m.network || null);
         if (m.opacity){ opacityEl.value = String(m.opacity); opacityEl.dispatchEvent(new Event("input")); }
         if (typeof m.mirror === "boolean" && mirrorEl.checked !== m.mirror){ mirrorEl.checked = m.mirror; renderDropdown(); }
         var ren = INSTANCES.render;
@@ -2715,7 +2451,6 @@ mark{ background:var(--ink); color:var(--paper); }
   boot();
 })();
 </script>
-<script src="assets/network-mode.js"></script>
 <script>
 /* ── receptor density ─────────────────────────────────────────────────────
    Drawn from assets/receptor-data.js, which scripts/build_receptor_data.mjs

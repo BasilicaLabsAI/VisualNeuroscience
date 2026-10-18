@@ -440,11 +440,13 @@ def nav(rel):
   <a class="brand" href="{rel}index.html"><img class="mark" src="{rel}assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
   <nav class="nav-row" aria-label="Site">
     <a href="{rel}regions.html">Region Atlas</a>
-    <a href="{rel}tracts.html">Tractography</a>
     <a href="{rel}microanatomy.html">Microanatomy</a>
+    <a href="{rel}molecular.html">Molecular</a>
+    <a href="{rel}network-atlas.html">Network Atlas</a>
+    <a href="{rel}tracts.html">Tractography</a>
     <a href="{rel}studies.html">Visualizing Studies</a>
-    <a href="{rel}practice.html">Practice</a>
     <a href="{rel}textbook.html" aria-current="page">Digital Textbook</a>
+    <a href="{rel}practice.html">Practice</a>
     <a href="{rel}about.html">About</a>
     <span class="nav-tools"><button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button></span>
   </nav>

@@ -1,0 +1,82 @@
+/* The four views the two atlases share: the Region Atlas and the Network
+   Atlas lay out their scans the same way, so the look of the scans, the
+   bar over each view, the square stages and the view opened over the grid
+   live here, after viewer.css, for both pages. */
+
+/* ── the scans in the light theme ──────────────────────────────────────
+   Light, the viewports are white rather than black (the viewers clear to
+   white, assets/scan-look.js), and the cutting controls along the 3D box's
+   edges, drawn for a black stage, take ink where they took light. */
+/* NiiVue paints its canvas's parent black, inline, as it attaches */
+:root:not([data-theme="dark"]) .mri-stage{ background:#FFFFFF !important; }
+:root:not([data-theme="dark"]) .slice-edge .ax{ color:#5A5A5A; text-shadow:0 0 4px #FFFFFF, 0 0 4px #FFFFFF; }
+:root:not([data-theme="dark"]) .slice-edge.cutting .ax{ color:#111111; }
+:root:not([data-theme="dark"]) .slice-range::-webkit-slider-runnable-track{ background:rgba(0,0,0,.28); }
+:root:not([data-theme="dark"]) .slice-range::-moz-range-track{ background:rgba(0,0,0,.28); }
+:root:not([data-theme="dark"]) .slice-range:focus-visible{ outline-color:#111111; }
+
+/* ── one bar over each view ────────────────────────────────────────────
+   A view's caption and its tools share one rule: the tools to the left,
+   the plane's name in the middle, and Centre planes and the button that
+   opens the view over the grid to the right. The name holds the middle
+   while both sides fit either side of it and gives way to the wider side
+   when they do not. A view too narrow for one line (a phone, a small
+   tablet, a browser without container queries) keeps the name, Centre
+   planes and that button on the first line and gives its tools the
+   whole of a second. */
+.views .view{ container:view / inline-size; }
+.views .view-cap{
+  display:flex; flex-wrap:wrap; justify-content:normal; align-items:center;
+  gap:.4rem .6rem; padding:.45rem .8rem;
+}
+/* two lines: an empty start as wide as the end, so the name sits in the
+   middle of the first, and the tools taking the whole of the second */
+.views .view-cap::before{ content:""; order:0; flex:1 1 0; }
+.views .view-cap b{ order:1; flex:none; margin-right:-.28em; }
+.views .view-cap .view-end{ order:2; flex:1 1 0; display:flex; justify-content:flex-end; align-items:center; gap:.6rem; }
+.views .view-cap .view-tools{ order:3; flex:0 0 100%; padding:0; border:0; }
+/* the caption's italic is for its own words, not the tools' label */
+.views .view-cap .tool-label{ font-family:var(--font-brand); font-style:normal; font-size:.55rem; color:var(--ink-60); }
+.views .view-cap .centre-btn{ margin-left:0; }
+/* the drag-lock cells, border and all, as tall as the buttons beside them,
+   so every bar is the same height */
+.views .view-cap .seg-btn{ width:calc(1.8rem - 2px); height:calc(1.8rem - 2px); }
+/* one line from the width the 3D view's tools need while slicing, so the
+   four bars always match: the tools take the start, as wide as the end */
+@container view (min-width:490px){
+  .views .view-cap{ flex-wrap:nowrap; }
+  .views .view-cap::before{ display:none; }
+  .views .view-cap .view-tools{ order:0; flex:1 1 0; flex-wrap:nowrap; }
+}
+/* the words before the drag-lock cells go where the bar is short of room */
+@container view (max-width:559px){ .views .view-cap .tool-label{ display:none; } }
+@media (max-width:760px){
+  .views .view-cap{ padding:.35rem .55rem; gap:.3rem .45rem; }
+  .views .view-cap .view-end{ gap:.45rem; }
+  .views .view-cap .seg-btn{ width:calc(1.6rem - 2px); height:calc(1.6rem - 2px); }
+}
+@media (pointer:coarse){ .views .view-cap .seg-btn{ width:42px; height:42px; } }
+
+/* square scans: every stage as tall as it is wide */
+.views-wrap .views .view .mri-stage{ height:auto; aspect-ratio:1 / 1; }
+
+/* ── a view opened over the grid ── the button at the end of each bar
+   lays its view over all four; the opened view covers the grid exactly,
+   its scan taking the height the bar leaves */
+.view-expand{
+  position:relative; flex:none; align-self:center;
+  width:1.55rem; height:1.55rem; padding:0;
+  display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid var(--hair); background:var(--paper); color:var(--ink); cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.view-expand::after{ content:""; position:absolute; inset:-9px; }
+.view-expand svg{ width:.78rem; height:.78rem; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:square; }
+@media (hover: hover){ .view-expand:hover{ background:var(--ink); color:var(--paper); } }
+.view-expand:active{ background:var(--ink); color:var(--paper); }
+.views-wrap .views .view.open{
+  position:absolute; inset:0; z-index:12; background:var(--paper);
+}
+.views-wrap .views .view.open .mri-stage{ flex:1 1 auto; height:auto; min-height:0; aspect-ratio:auto; }
+.views-wrap .views .view.closing{ position:relative; z-index:12; background:var(--paper); }
+.views .view-hold{ visibility:hidden; }

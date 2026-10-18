@@ -115,7 +115,7 @@ const link = (path, label) => "[" + label + "](" + SITE + "/" + path + ")";
 
 function regionLink(r){ return link("regions.html#sel=" + encodeURIComponent(r.sel), "Open in the Region Atlas"); }
 function baLink(a){ return link("regions.html#sel=B:" + a.ba, "Open in the Region Atlas"); }
-function stateLink(s){ return link("regions.html#network=" + s.id, "Open on the Region Atlas, network mode"); }
+function stateLink(s){ return link("network-atlas.html#state=" + s.id, "Open on the Network Atlas"); }
 
 function findRegion(name){
   const q = norm(name);
@@ -155,7 +155,7 @@ function doSearch({ query }){
     if (out.length >= 18) break;
     if (matches(norm(n.id + " " + n.full + " " + n.role))){
       const g = DATA.networks.groups.find(x => x.id === n.group);
-      out.push("**" + n.full + "** (network node, " + (g ? g.label : n.group) + " network). " + n.role + " " + link("regions.html#network", "Open the Region Atlas's network mode"));
+      out.push("**" + n.full + "** (network node, " + (g ? g.label : n.group) + " network). " + n.role + " " + link("network-atlas.html", "Open the Network Atlas"));
     }
   }
   for (const s of DATA.networks.states){

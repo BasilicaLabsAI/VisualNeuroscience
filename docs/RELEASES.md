@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.5 — 18 October 2026 — The Network Atlas has its own page again
+Commit · Give the Network Atlas its own page again and take it out of the Region Atlas
+
+The Network Atlas is a page of its own again. Its tab is back in the menu after Molecular, and its box on the home page and in the app's Atlas tab leads straight to it. It opens on the first of its six states, with the ring under four square views laid out like the Region Atlas's: a bar over each, the expand button, slicing with Slice regions, and the light theme's scans. Pick a state or a region and the scans follow, and the address names the state, so a link opens on it. Beside the key, the page sets how strongly the regions cover the scan, saves a PNG of the four views and exports the state as a 3D model. The Region Atlas no longer carries the Network Atlas section or its switch, and links to the old network mode open the new page on the same state. On the Region Atlas, the bars the receptor chart fades now fade to the strength they were meant to, not almost to nothing.
+
 ## v11.4 — 18 October 2026 — On a phone, the region picker above the scans and the rest below
-Commit · Lead the Region Atlas on a phone with the region picker and follow the scans with the rest of the rail
+Commit `ce52c54` · Lead the Region Atlas on a phone with the region picker and follow the scans with the rest of the rail
 
 On a phone the Region Atlas now opens with the Regions box, where you pick from the AAL regions or the Brodmann areas and set the opacity, with the scans straight after it. Highlighted, Saved models and Export follow the scans and their readouts, together in one box. On a tablet and on a computer the column of controls is as it was.
 

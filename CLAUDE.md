@@ -62,11 +62,16 @@ Read this first in every session. It is the handover; nothing else needs pasting
 - The owner's research documents on single regions are kept as supplied in `backend/data/regions/` (see its README).
   Detailed region function descriptions are to be written from them only when the owner asks; until then, store new
   ones there unchanged.
-- The Network Atlas is a mode of the Region Atlas since v10.93: the section under the viewports in `regions.html`,
-  run by `site/assets/network-mode.js` with `network.css`, behind a switch, with None as the default state and
-  Clear all returning to it. `regions.html#network` opens it and `#network=<state>` opens it on a state; the old
-  `site/network-atlas.html` only redirects there. There is no Network Atlas tab. The main script opens the door the
-  mode uses (`MN_SEL.setLayer`, `repaint`, `centreMm`, `onLocation`, `onClear`).
+- The Network Atlas is its own page again since v11.5 (it was a mode of the Region Atlas from v10.93):
+  `site/network-atlas.html`, run by `site/assets/network-atlas.js` with `network.css`, the ring (`network-ring.js`)
+  and the states (`network-states.js`), with its tab after Molecular. The page's scans open their door to the script
+  as `MN_SCAN` (`setLayer`, `repaint`, `centre`, `centreMm`, `onLocation`, `instance`). It opens on the first state;
+  `#state=<id>` opens another, and the address follows the state picked. The Region Atlas's old `regions.html#network`
+  and `#network=<state>` links forward there.
+- The two atlases draw their four views alike, from shared files: the scans' look in either theme is
+  `site/assets/scan-look.js`, and the bar over each view, the square stages, the light-theme stages and the view
+  opened over the grid are `site/assets/atlas-views.css` with `view-expand.js`. A change to the views belongs there,
+  so both pages get it; each page keeps its own viewer setup, locks and Centre planes.
 - The interface follows Apple's fluid-interface guidance (v10.92): controls answer on the press (`viewer.css`, the
   last section), the account box and both section menus arrive from their button and leave the same way, the bars
   and menus are translucent materials with `prefers-reduced-transparency` and `prefers-contrast` fallbacks, a thrown
@@ -92,7 +97,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
 - Sign-in providers: Google and Apple are on, on the web and in the apps (the iOS Google config and URL scheme are
   in the repo as of v10.85; Apple's Services ID, key and Team ID went into the Firebase console for v10.86). LinkedIn
   stays off until `docs/AUTH-SETUP.md` §7 is done.
-- MCP worker: deployed from the owner's Mac on 16 October 2026 with the v10.93 deep links (`regions.html#network=…`),
+- MCP worker: deployed from the owner's Mac on 16 October 2026 with the v10.93 deep links (`regions.html#network=…`;
+  since v11.5 `worker.js` writes `network-atlas.html#state=…`, live with the next deploy, and the old links forward),
   the sign-in and the account tools. The organisation's connector uses "Sign in when needed" with Claude's client
   metadata document, and all nine tools were run through it on 17 October 2026. Submitted to the Connectors Directory
   the same day (slug `visualneuroscience`, OAuth by client metadata document, required when the server asks; reviewer

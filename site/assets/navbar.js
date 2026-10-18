@@ -80,6 +80,7 @@
     "tracts.html": "Tractography",
     "microanatomy.html": "Microanatomy",
     "molecular.html": "Molecular",
+    "network-atlas.html": "Network Atlas",
     "studies.html": "Visualizing Studies", "hallucinations.html": "Hallucinations",
     "practice.html": "Practice", "textbook.html": "Digital Textbook",
     "about.html": "About", "privacy.html": "Privacy & Support"
@@ -139,7 +140,7 @@
   /* the sections, behind a button at the right of the bar: the same list
      the website's header carries, the page it is on marked */
   var SECTIONS = [["index.html", "Home"], ["regions.html", "Region Atlas"], ["microanatomy.html", "Microanatomy"],
-    ["molecular.html", "Molecular"], ["tracts.html", "Tractography"],
+    ["molecular.html", "Molecular"], ["network-atlas.html", "Network Atlas"], ["tracts.html", "Tractography"],
     ["studies.html", "Visualizing Studies"], ["textbook.html", "Digital Textbook"], ["practice.html", "Practice"],
     ["about.html", "About"]];
   var menuBtn = make("button", "vn-menu-btn");

@@ -104,8 +104,8 @@ struct PageBox: View {
 
 // MARK: - The tabs
 
-/// The four atlases: the regions with their networks, the cell, the
-/// receptors and the white matter.
+/// The atlases: the regions, the networks, the cell, the receptors and
+/// the white matter.
 struct AtlasTab: View {
     var body: some View {
         TabPage {
