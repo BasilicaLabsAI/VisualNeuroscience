@@ -1,12 +1,17 @@
 /* The service worker, so the site installs to a home screen and runs with
    the network switched off.
 
-   Three rules, because three kinds of file behave differently here:
+   Four rules, because four kinds of file behave differently here:
 
    Pages are fetched from the network first and fall back to the cache. A
    release is a push to main, so a reader online should get the new page the
    moment it lands rather than whenever a cache happens to expire; offline
    they get the last one they saw.
+
+   The scripts, stylesheets and data files the pages load are network-first
+   as well. Served from the cache and refreshed behind, a page just released
+   ran with the scripts from before it until the next load, and anything new
+   it asked of them simply did not happen.
 
    The volumes, the tractogram, the viewer and three.js are cache-first. They are
    megabytes each and they do not change between releases — mni152.nii.gz is
@@ -14,14 +19,13 @@
    waste. A release that does change them changes VERSION, which drops the
    old cache wholesale.
 
-   Everything else same-origin is served from cache and refreshed in the
-   background, so a stale stylesheet corrects itself on the next load rather
-   than blocking this one.
+   Everything else same-origin, the pictures and the typefaces, is served
+   from cache and refreshed in the background.
 
    Nothing cross-origin is touched at all — since the typefaces moved
    in-house there is no outside request left to think about. */
 
-var VERSION = "vn-131";
+var VERSION = "vn-132";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
@@ -61,6 +65,8 @@ var PRECACHE = [
 
 /* the megabytes: fetched once, then read off disk forever */
 var IS_BULK = /\.(nii\.gz|trx)$|niivue\.js$|^\/vendor\/d3\/|^\/vendor\/three\//;
+/* what a page runs and reads, which has to be the release the page is from */
+var IS_CODE = /\.(js|mjs|css|json|webmanifest)$/;
 
 self.addEventListener("install", function(e){
   e.waitUntil(
@@ -119,6 +125,22 @@ self.addEventListener("fetch", function(e){
           }
           return res;
         });
+      })
+    );
+    return;
+  }
+
+  /* scripts, styles and data: fresh when online, last-seen when not */
+  if (IS_CODE.test(url.pathname)){
+    e.respondWith(
+      fetch(req).then(function(res){
+        if (res && res.ok){
+          var copy = res.clone();
+          caches.open(SHELL).then(function(c){ c.put(req, copy); });
+        }
+        return res;
+      }).catch(function(){
+        return caches.match(req).then(function(hit){ return hit || Response.error(); });
       })
     );
     return;

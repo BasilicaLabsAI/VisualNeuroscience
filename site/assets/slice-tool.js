@@ -21,9 +21,10 @@
                        regions: "Slice regions" });
        → { open, close, reset, state, setState }
 
-   regions is optional: given, a switch along the top of the box takes the
-   cuts through the volumes the page paints over the scan (its highlighted
-   regions) as well as the scan itself. It is on each time slicing starts.
+   regions is optional: given, a button of that name joins Slice and Reset
+   cuts while slicing is on, and pressed it takes the cuts through the
+   volumes the page paints over the scan (its highlighted regions) as well
+   as the scan itself. It is pressed each time slicing starts.
 
    Meshes are not clipped by this — clip planes act on the volume only —
    so a page whose 3D view is a tractogram gets nothing useful from it. */
@@ -97,29 +98,6 @@ function attach(o){
     rows[ax.id] = {slider: slider, edge: edge};
   });
 
-  /* the cuts through the painted regions too, or through the scan alone:
-     the viewer's isClipAllVolumes takes its clip planes from the scan to
-     every volume it draws */
-  var cutRegions = false, regionsBox = null, regionsLabel = null;
-  if (o.regions){
-    regionsLabel = document.createElement("label");
-    regionsLabel.className = "slice-regions";
-    regionsBox = document.createElement("input");
-    regionsBox.type = "checkbox";
-    regionsLabel.appendChild(regionsBox);
-    regionsLabel.appendChild(document.createTextNode(typeof o.regions === "string" ? o.regions : "Slice regions"));
-    panel.appendChild(regionsLabel);
-    regionsBox.addEventListener("change", function(){ setRegions(regionsBox.checked); });
-  }
-  function setRegions(next){
-    cutRegions = !!next;
-    if (regionsBox){
-      regionsBox.checked = cutRegions;
-      regionsLabel.classList.toggle("cutting", cutRegions);
-    }
-    apply();
-  }
-
   stage.appendChild(panel);
 
   var btn = document.createElement("button");
@@ -134,10 +112,38 @@ function attach(o){
   resetBtn.textContent = "Reset cuts";
   resetBtn.hidden = true;
 
-  /* before the Centre planes button, which holds the right-hand end */
+  /* the cuts through the painted regions too, or through the scan alone:
+     the viewer's isClipAllVolumes takes its clip planes from the scan to
+     every volume it draws */
+  var cutRegions = false, regionsBtn = null;
+  if (o.regions){
+    regionsBtn = document.createElement("button");
+    regionsBtn.type = "button";
+    regionsBtn.className = "ts-btn slice-regions";
+    regionsBtn.textContent = typeof o.regions === "string" ? o.regions : "Slice regions";
+    regionsBtn.title = "Cut the highlighted regions with the brain";
+    regionsBtn.setAttribute("aria-pressed", "false");
+    regionsBtn.hidden = true;
+    regionsBtn.addEventListener("click", function(){ setRegions(!cutRegions); });
+  }
+  function paintRegions(){
+    if (!regionsBtn) return;
+    regionsBtn.classList.toggle("active", cutRegions);
+    regionsBtn.setAttribute("aria-pressed", String(cutRegions));
+  }
+  function setRegions(next){
+    cutRegions = !!next;
+    paintRegions();
+    apply();
+  }
+
+  /* before the Centre planes button where it shares the row, which holds
+     the right-hand end */
   var centre = tools.querySelector(".centre-btn");
-  if (centre){ tools.insertBefore(btn, centre); tools.insertBefore(resetBtn, centre); }
-  else { tools.appendChild(btn); tools.appendChild(resetBtn); }
+  [btn, regionsBtn, resetBtn].forEach(function(b){
+    if (!b) return;
+    if (centre) tools.insertBefore(b, centre); else tools.appendChild(b);
+  });
 
   function planes(){
     if (!on) return [];
@@ -170,12 +176,14 @@ function attach(o){
   }
 
   function setOn(next){
-    if (next && !on && regionsBox){ cutRegions = true; regionsBox.checked = true; regionsLabel.classList.add("cutting"); }
+    if (next && !on && regionsBtn) cutRegions = true;
     on = next;
     panel.classList.toggle("on", on);
     btn.classList.toggle("active", on);
     btn.setAttribute("aria-pressed", String(on));
     resetBtn.hidden = !on;
+    if (regionsBtn) regionsBtn.hidden = !on;
+    paintRegions();
     apply();
   }
 
@@ -186,7 +194,7 @@ function attach(o){
   function state(){
     var c = {}; AXES.forEach(function(ax){ c[ax.id] = cuts[ax.id]; });
     var st = { on: on, cuts: c };
-    if (regionsBox) st.regions = cutRegions;
+    if (regionsBtn) st.regions = cutRegions;
     return st;
   }
   function setState(st){
@@ -199,7 +207,7 @@ function attach(o){
       rows[ax.id].edge.classList.toggle("cutting", Math.abs(v) > 0.005);
     });
     setOn(!!st.on);
-    if (regionsBox && typeof st.regions === "boolean") setRegions(st.regions);
+    if (regionsBtn && typeof st.regions === "boolean") setRegions(st.regions);
   }
 
   return {

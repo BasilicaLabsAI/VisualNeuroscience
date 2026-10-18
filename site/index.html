@@ -254,12 +254,14 @@ img{ max-width:100%; height:auto; display:block; }
 }
 .m-mcp .mcp-url{ font-size:clamp(.78rem,.6rem + .6vw,1.2rem); overflow-wrap:anywhere; }
 .m-mcp .mcp-tools{ color:#A9A9A9; overflow-wrap:anywhere; }
-/* the maker, cut out, standing on the foot of his box */
-.m-about .about-face{
-  align-self:end; justify-self:center; width:min(250px, 70%);
-  margin-bottom:calc(-1 * clamp(16px,1.7vw,24px));
-}
-.m-about .about-face img{ width:100%; height:auto; display:block; }
+/* the maker in the whole frame the About page draws: the engraving behind
+   the photograph and the ribbon across its foot, in the frame's own
+   colours in both themes */
+.m-about .about-face{ align-self:center; justify-self:center; width:min(230px, 70%); }
+.m-about .about-face .frame{ position:relative; aspect-ratio:.82078; }
+.m-about .about-face .frame > img{ position:absolute; display:block; }
+.m-about .about-face .engraving, .m-about .about-face .ribbon{ inset:0; width:100%; height:100%; }
+.m-about .about-face .photo{ left:3.137%; top:3.099%; width:93.724%; height:92.344%; object-fit:contain; }
 
 /* ── the ledger ─────────────────────────────────────────────────────────
    The strip of figures across the foot of the mosaic. */
@@ -475,7 +477,11 @@ img{ max-width:100%; height:auto; display:block; }
         <div class="meta">Fadil Karim &middot; built by one engineer &middot; free to use</div>
         <div class="go">Read the message &rarr;</div>
       </div>
-      <div class="about-face"><img src="assets/portrait/portrait.webp" alt="" loading="lazy" decoding="async" width="454" height="545"></div>
+      <div class="about-face"><div class="frame">
+        <img class="engraving" src="assets/portrait/frame-back.webp" alt="" loading="lazy" decoding="async" width="704" height="857">
+        <img class="photo" src="assets/portrait/portrait.webp" alt="" loading="lazy" decoding="async" width="454" height="545">
+        <img class="ribbon" src="assets/portrait/ribbon.webp" alt="" loading="lazy" decoding="async" width="704" height="857">
+      </div></div>
     </a>
 
     <!-- ── the figures ────────────────────────────────────────────── -->

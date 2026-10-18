@@ -238,14 +238,14 @@ struct TabPage<Content: View>: View {
 nonisolated struct Shot: Sendable {
     let dark: String
     let light: String
-    /// Captures of a page sit on a plate; a cut-out such as the portrait
-    /// stands on the paper as it is.
-    let plate: Bool
+    /// Captures of a page sit on a plate; the portrait stands in the
+    /// engraved frame the About page draws round it.
+    let framed: Bool
 
-    init(_ path: String, light: String? = nil, plate: Bool = true) {
+    init(_ path: String, light: String? = nil, framed: Bool = false) {
         dark = path
         self.light = light ?? path
-        self.plate = plate
+        self.framed = framed
     }
 
     /// Renders on black sit on a black plate; one with a light twin sits on
@@ -276,7 +276,12 @@ struct ShotView: View {
 
     var body: some View {
         if let image = BundledImages.image(scheme == .dark ? shot.dark : shot.light) {
-            if shot.plate {
+            if shot.framed {
+                FramedPortrait(photo: image)
+                    .frame(maxWidth: 230)
+                    .frame(maxWidth: .infinity)
+                    .accessibilityHidden(true)
+            } else {
                 Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -286,14 +291,45 @@ struct ShotView: View {
                         Rectangle().strokeBorder(Palette.ink35, lineWidth: 1)
                     }
                     .accessibilityHidden(true)
-            } else {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(maxWidth: 260)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .accessibilityHidden(true)
             }
+        }
+    }
+}
+
+/// The portrait as the About page frames it: the engraved oval behind the
+/// photograph and the ribbon across its foot, in the frame's own colours in
+/// either theme. The photograph's place on the frame is about.html's.
+struct FramedPortrait: View {
+    let photo: UIImage
+
+    init(photo: UIImage) {
+        self.photo = photo
+    }
+
+    var body: some View {
+        if let engraving = BundledImages.image("assets/portrait/frame-back.webp"),
+           let ribbon = BundledImages.image("assets/portrait/ribbon.webp") {
+            Image(uiImage: engraving)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .overlay {
+                    GeometryReader { box in
+                        Image(uiImage: photo)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: box.size.width * 0.93724, height: box.size.height * 0.92344)
+                            .offset(x: box.size.width * 0.03137, y: box.size.height * 0.03099)
+                    }
+                }
+                .overlay {
+                    Image(uiImage: ribbon)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                }
+        } else {
+            Image(uiImage: photo)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
         }
     }
 }

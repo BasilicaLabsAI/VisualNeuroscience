@@ -767,18 +767,58 @@ mark{ background:var(--ink); color:var(--paper); }
 :root:not([data-theme="dark"]) .slice-range::-webkit-slider-runnable-track{ background:rgba(0,0,0,.28); }
 :root:not([data-theme="dark"]) .slice-range::-moz-range-track{ background:rgba(0,0,0,.28); }
 :root:not([data-theme="dark"]) .slice-range:focus-visible{ outline-color:#111111; }
-:root:not([data-theme="dark"]) .slice-regions{ color:#5A5A5A; text-shadow:0 0 4px #FFFFFF, 0 0 4px #FFFFFF; }
-:root:not([data-theme="dark"]) .slice-regions.cutting{ color:#111111; }
-:root:not([data-theme="dark"]) .slice-regions input{ accent-color:#111111; }
 
-/* ── a view opened over the grid ── each caption ends in the button that
+/* ── one bar over each view ────────────────────────────────────────────
+   A view's caption and its tools share one rule: the tools to the left,
+   the plane's name in the middle, and Centre planes and the button that
+   opens the view over the grid to the right. The name holds the middle
+   while both sides fit either side of it and gives way to the wider side
+   when they do not. A view too narrow for one line (a phone, a small
+   tablet, a browser without container queries) keeps the name, Centre
+   planes and that button on the first line and gives its tools the
+   whole of a second. */
+.views .view{ container:view / inline-size; }
+.views .view-cap{
+  display:flex; flex-wrap:wrap; justify-content:normal; align-items:center;
+  gap:.4rem .6rem; padding:.45rem .8rem;
+}
+/* two lines: an empty start as wide as the end, so the name sits in the
+   middle of the first, and the tools taking the whole of the second */
+.views .view-cap::before{ content:""; order:0; flex:1 1 0; }
+.views .view-cap b{ order:1; flex:none; margin-right:-.28em; }
+.views .view-cap .view-end{ order:2; flex:1 1 0; display:flex; justify-content:flex-end; align-items:center; gap:.6rem; }
+.views .view-cap .view-tools{ order:3; flex:0 0 100%; padding:0; border:0; }
+/* the caption's italic is for its own words, not the tools' label */
+.views .view-cap .tool-label{ font-family:var(--font-brand); font-style:normal; font-size:.55rem; color:var(--ink-60); }
+.views .view-cap .centre-btn{ margin-left:0; }
+/* the drag-lock cells, border and all, as tall as the buttons beside them,
+   so every bar is the same height */
+.views .view-cap .seg-btn{ width:calc(1.8rem - 2px); height:calc(1.8rem - 2px); }
+/* one line from the width the 3D view's tools need while slicing, so the
+   four bars always match: the tools take the start, as wide as the end */
+@container view (min-width:490px){
+  .views .view-cap{ flex-wrap:nowrap; }
+  .views .view-cap::before{ display:none; }
+  .views .view-cap .view-tools{ order:0; flex:1 1 0; flex-wrap:nowrap; }
+}
+/* the words before the drag-lock cells go where the bar is short of room */
+@container view (max-width:559px){ .views .view-cap .tool-label{ display:none; } }
+@media (max-width:760px){
+  .views .view-cap{ padding:.35rem .55rem; gap:.3rem .45rem; }
+  .views .view-cap .view-end{ gap:.45rem; }
+  .views .view-cap .seg-btn{ width:calc(1.6rem - 2px); height:calc(1.6rem - 2px); }
+}
+@media (pointer:coarse){ .views .view-cap .seg-btn{ width:42px; height:42px; } }
+
+/* square scans: every stage as tall as it is wide */
+.views-wrap .views .view .mri-stage{ height:auto; aspect-ratio:1 / 1; }
+
+/* ── a view opened over the grid ── the button at the end of each bar
    lays its view over all four; the opened view covers the grid exactly,
-   its scan taking the height the caption and tools leave */
-.views .view-cap{ justify-content:flex-start; }
-.views .view-cap b{ margin-right:auto; }
+   its scan taking the height the bar leaves */
 .view-expand{
   position:relative; flex:none; align-self:center;
-  width:1.55rem; height:1.55rem; margin-left:.6rem; padding:0;
+  width:1.55rem; height:1.55rem; padding:0;
   display:inline-flex; align-items:center; justify-content:center;
   border:1px solid var(--hair); background:var(--paper); color:var(--ink); cursor:pointer;
   -webkit-tap-highlight-color:transparent;
@@ -790,7 +830,7 @@ mark{ background:var(--ink); color:var(--paper); }
 .views-wrap .views .view.open{
   position:absolute; inset:0; z-index:12; background:var(--paper);
 }
-.views-wrap .views .view.open .mri-stage{ flex:1 1 auto; height:auto; min-height:0; }
+.views-wrap .views .view.open .mri-stage{ flex:1 1 auto; height:auto; min-height:0; aspect-ratio:auto; }
 .views-wrap .views .view.closing{ position:relative; z-index:12; background:var(--paper); }
 .views .view-hold{ visibility:hidden; }
 
@@ -928,32 +968,19 @@ mark{ background:var(--ink); color:var(--paper); }
 .probe-v small{ display:block; margin-left:0; margin-top:.12rem; font-variant-numeric:tabular-nums; }
 .card .btn{ width:100%; text-align:center; }
 .card + .card{ margin-top:var(--gap); }
-/* a card that holds two things titles the second the way it titles the first */
-.card h2.card-sub{ margin-top:1.15rem; }
 
-/* Beside the scans the rail runs from their top to the foot of the
-   readouts under them (fitRail sets --rail-h). Every card is shown whole;
-   the Highlighted card takes the height that is left, and its list of
-   regions is the one thing that scrolls, inside the card. Where a short
-   window leaves less than the cards need, the column runs on past the
-   readouts rather than hide anything. */
-.rail[data-fit]{ height:var(--rail-h); }
-.rail[data-fit] > *{ flex:none; }
-.rail[data-fit] > .hl-card{ flex:1 1 0; min-height:9rem; display:flex; flex-direction:column; }
-.rail[data-fit] > .hl-card .rchips{ flex:1 1 auto; min-height:2.6rem; overflow-y:auto; overscroll-behavior:contain; }
-/* the cards keep to the scans' own 14px rhythm here, one gap apart and a
-   little tighter inside, so that they fit above the readouts' foot */
-.rail[data-fit] > .sec-h{ margin-bottom:0; }
-.rail[data-fit] > .card + .card{ margin-top:0; }
-.rail[data-fit] > .card{ padding:.75rem .95rem .8rem; }
-.rail[data-fit] .card h2{ padding-bottom:.4rem; margin-bottom:.5rem; }
-.rail[data-fit] .card .toggles{ margin:.4rem 0 0; }
-.rail[data-fit] .card .row{ margin:.35rem 0 0; }
-.rail[data-fit] .card h2.card-sub{ margin-top:.7rem; }
-.rail[data-fit] .save-card .btns{ margin-top:.45rem; }
-.rail[data-fit] .empty-note, .rail[data-fit] .models-note{ line-height:1.4; }
-.rail[data-fit] .atlas-mode{ margin-bottom:.6rem; }
-.rail[data-fit] .card .btn{ padding-top:.5rem; padding-bottom:.45rem; }
+/* The rail is one box: the regions, the highlighted list, the saved models
+   and the export, each part under its own heading. The highlighted
+   regions scroll inside their part once they outgrow it, and nothing else
+   in the box scrolls. Where the rail runs under the scans as a row, the
+   parts sit two to a line. */
+.rail-box{ display:grid; grid-template-columns:minmax(0,1fr); row-gap:1.4rem; align-items:start; }
+.rchips{ max-height:24rem; overflow-y:auto; overscroll-behavior:contain; }
+.rchips > *{ flex-shrink:0; }
+@media (max-width:1100px) and (orientation:portrait), (max-width:900px) and (orientation:landscape){
+  .rail .rail-box{ grid-column:1 / -1; grid-template-columns:repeat(2, minmax(0,1fr)); column-gap:1.6rem; }
+}
+@media (max-width:760px){ .rail .rail-box{ grid-template-columns:minmax(0,1fr); } }
 
 </style>
 </head>
@@ -987,69 +1014,71 @@ mark{ background:var(--ink); color:var(--paper); }
     <aside class="rail" aria-label="Region controls">
       <h2 class="sec-h">Atlas <small>region picker</small></h2>
 
-      <div class="card">
-        <h2>Regions</h2>
-        <div class="atlas-mode" role="group" aria-label="Which atlas to pick from">
-          <button class="ts-btn active" type="button" id="atlasAAL" data-atlas="aal" aria-pressed="true">Automated Anatomical Labelling (AAL)</button>
-          <button class="ts-btn" type="button" id="atlasBA" data-atlas="ba" aria-pressed="false">Brodmann areas</button>
-        </div>
-        <div class="atlas-pane" id="aalPane">
-          <div class="selwrap rpick" id="rpick">
-            <button class="rpick-btn" id="rpickBtn" type="button" aria-haspopup="listbox" aria-expanded="false"
-                    aria-controls="rpickPop">Add a region&hellip;</button>
-            <div class="rpick-pop" id="rpickPop" hidden>
-              <div class="searchwrap">
-                <input type="search" id="rpickQ" role="combobox" aria-expanded="true" aria-controls="rpickList"
-                       aria-autocomplete="list" aria-describedby="rpickCount" autocomplete="off" spellcheck="false"
-                       placeholder="name, lobe, or what it does&hellip;" aria-label="Search the regions">
-                <button class="clear hidden" id="rpickClear" type="button" aria-label="Clear search">&times;</button>
+      <div class="card rail-box">
+        <section class="rail-part">
+          <h2>Regions</h2>
+          <div class="atlas-mode" role="group" aria-label="Which atlas to pick from">
+            <button class="ts-btn active" type="button" id="atlasAAL" data-atlas="aal" aria-pressed="true">Automated Anatomical Labelling (AAL)</button>
+            <button class="ts-btn" type="button" id="atlasBA" data-atlas="ba" aria-pressed="false">Brodmann areas</button>
+          </div>
+          <div class="atlas-pane" id="aalPane">
+            <div class="selwrap rpick" id="rpick">
+              <button class="rpick-btn" id="rpickBtn" type="button" aria-haspopup="listbox" aria-expanded="false"
+                      aria-controls="rpickPop">Add a region&hellip;</button>
+              <div class="rpick-pop" id="rpickPop" hidden>
+                <div class="searchwrap">
+                  <input type="search" id="rpickQ" role="combobox" aria-expanded="true" aria-controls="rpickList"
+                         aria-autocomplete="list" aria-describedby="rpickCount" autocomplete="off" spellcheck="false"
+                         placeholder="name, lobe, or what it does&hellip;" aria-label="Search the regions">
+                  <button class="clear hidden" id="rpickClear" type="button" aria-label="Clear search">&times;</button>
+                </div>
+                <p class="search-count" id="rpickCount" aria-live="polite"></p>
+                <div class="rpick-list" id="rpickList" role="listbox" aria-label="Regions"></div>
               </div>
-              <p class="search-count" id="rpickCount" aria-live="polite"></p>
-              <div class="rpick-list" id="rpickList" role="listbox" aria-label="Regions"></div>
+              <select id="regionSelect" hidden aria-hidden="true" tabindex="-1">
+                <option value="">Add a region…</option>
+              </select>
             </div>
-            <select id="regionSelect" hidden aria-hidden="true" tabindex="-1">
-              <option value="">Add a region…</option>
-            </select>
+            <div class="toggles" style="grid-template-columns:1fr">
+              <label class="toggle"><input type="checkbox" id="mirrorToggle" checked> Mirror left / right pairs</label>
+            </div>
           </div>
-          <div class="toggles" style="grid-template-columns:1fr">
-            <label class="toggle"><input type="checkbox" id="mirrorToggle" checked> Mirror left / right pairs</label>
+          <div class="atlas-pane hidden" id="baPane">
+            <div class="searchwrap">
+              <input type="search" id="baq" autocomplete="off" spellcheck="false"
+                     placeholder="number, name, or what it does&hellip;"
+                     aria-label="Search Brodmann areas by number, anatomical name, or function"
+                     aria-describedby="baqcount">
+              <button class="clear hidden" id="baqclear" type="button" aria-label="Clear search">&times;</button>
+            </div>
+            <p class="search-count" id="baqcount">All 41 areas.</p>
+            <div class="balist" id="balist" role="group" aria-label="Brodmann areas"></div>
           </div>
-        </div>
-        <div class="atlas-pane hidden" id="baPane">
-          <div class="searchwrap">
-            <input type="search" id="baq" autocomplete="off" spellcheck="false"
-                   placeholder="number, name, or what it does&hellip;"
-                   aria-label="Search Brodmann areas by number, anatomical name, or function"
-                   aria-describedby="baqcount">
-            <button class="clear hidden" id="baqclear" type="button" aria-label="Clear search">&times;</button>
+          <!-- how strongly the highlighted regions and areas cover the scan,
+               for either atlas, so it sits under both panes -->
+          <div class="row">
+            <label for="opacity">Opacity</label>
+            <input type="range" id="opacity" min="10" max="100" value="90">
+            <span class="val" id="opacityVal">90%</span>
           </div>
-          <p class="search-count" id="baqcount">All 41 areas.</p>
-          <div class="balist" id="balist" role="group" aria-label="Brodmann areas"></div>
-        </div>
-        <!-- how strongly the highlighted regions and areas cover the scan,
-             for either atlas, so it sits under both panes -->
-        <div class="row">
-          <label for="opacity">Opacity</label>
-          <input type="range" id="opacity" min="10" max="100" value="90">
-          <span class="val" id="opacityVal">90%</span>
-        </div>
-      </div>
-
-      <div class="card hl-card">
-        <h2>Highlighted</h2>
-        <div class="rchips" id="chips">
-          <div class="empty-note" id="emptyMsg">Nothing highlighted yet — pick a region or a Brodmann area above.</div>
-        </div>
-        <div class="btns"><button class="btn" id="clearBtn" type="button">Clear all</button></div>
-      </div>
-
-      <div class="card save-card">
-        <h2>Saved models</h2>
-        <p class="empty-note">Name the view &mdash; the highlighted regions, their colours, the camera and any cuts &mdash; and open it again later.</p>
-        <div id="models"></div>
-        <h2 class="card-sub">Export</h2>
-        <div id="export3d"></div>
-        <div class="btns" id="shotRow"><button class="btn" id="shotBtn" type="button">Save PNG snapshot</button></div>
+        </section>
+        <section class="rail-part">
+          <h2>Highlighted</h2>
+          <div class="rchips" id="chips">
+            <div class="empty-note" id="emptyMsg">Nothing highlighted yet — pick a region or a Brodmann area above.</div>
+          </div>
+          <div class="btns"><button class="btn" id="clearBtn" type="button">Clear all</button></div>
+        </section>
+        <section class="rail-part">
+          <h2>Saved models</h2>
+          <p class="empty-note">Name the view &mdash; the highlighted regions, their colours, the camera and any cuts &mdash; and open it again later.</p>
+          <div id="models"></div>
+        </section>
+        <section class="rail-part">
+          <h2>Export</h2>
+          <div id="export3d"></div>
+          <div class="btns" id="shotRow"><button class="btn" id="shotBtn" type="button">Save PNG snapshot</button></div>
+        </section>
       </div>
     </aside>
 
@@ -1057,23 +1086,19 @@ mark{ background:var(--ink); color:var(--paper); }
       <div class="views-wrap">
         <div class="views" id="viewsGrid">
           <div class="view" data-box="axial">
-            <div class="view-cap"><b>Axial</b><span>transverse plane</span></div>
-            <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="axial" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="axial" type="button">Centre planes</button></div>
+            <div class="view-cap"><b>Axial</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="axial" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="axial" type="button">Centre planes</button></div></div>
             <div class="mri-stage"><canvas id="glAx"></canvas></div>
           </div>
           <div class="view" data-box="coronal">
-            <div class="view-cap"><b>Coronal</b><span>frontal plane</span></div>
-            <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="coronal" role="group" aria-label="Coronal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="coronal" type="button">Centre planes</button></div>
+            <div class="view-cap"><b>Coronal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="coronal" role="group" aria-label="Coronal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="coronal" type="button">Centre planes</button></div></div>
             <div class="mri-stage"><canvas id="glCor"></canvas></div>
           </div>
           <div class="view" data-box="sagittal">
-            <div class="view-cap"><b>Sagittal</b><span>median plane</span></div>
-            <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="sagittal" role="group" aria-label="Sagittal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="sagittal" type="button">Centre planes</button></div>
+            <div class="view-cap"><b>Sagittal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="sagittal" role="group" aria-label="Sagittal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="sagittal" type="button">Centre planes</button></div></div>
             <div class="mri-stage"><canvas id="glSag"></canvas></div>
           </div>
           <div class="view" data-box="render">
-            <div class="view-cap"><b>3D</b><span>volume render</span></div>
-            <div class="view-tools"><button class="ts-btn centre-btn" data-centre="render" type="button">Centre planes</button></div>
+            <div class="view-cap"><b>3D</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="render" type="button">Centre planes</button></div></div>
             <div class="mri-stage"><canvas id="glRen"></canvas></div>
           </div>
         </div>
@@ -1450,27 +1475,6 @@ mark{ background:var(--ink); color:var(--paper); }
     finally{ correcting = false; }
   }
 
-  /* The rail beside the scans ends level with the readouts under them,
-     measured whenever the scans or the readouts change size (a window
-     resized or turned, one view made solo). In the one-column layouts the
-     rail is a run of cards and keeps its own height. */
-  (function fitRail(){
-    var rail = document.querySelector(".rail"), scans = document.querySelector(".views-wrap"),
-        stats = document.querySelector(".centre .stats"), studio = document.querySelector(".studio");
-    if (!rail || !scans || !stats || !studio || !window.ResizeObserver) return;
-    function fit(){
-      var beside = getComputedStyle(studio).gridTemplateColumns.trim().split(/\s+/).length > 1;
-      rail.toggleAttribute("data-fit", beside);
-      if (beside) rail.style.setProperty("--rail-h", Math.round(stats.getBoundingClientRect().bottom - rail.getBoundingClientRect().top) + "px");
-      else rail.style.removeProperty("--rail-h");
-    }
-    var watch = new ResizeObserver(fit);
-    watch.observe(scans);
-    watch.observe(stats);
-    window.addEventListener("resize", fit);
-    fit();
-  })();
-
   /* Put the crosshair back at the middle of the volume, so every plane shows
      its central slice again, and undo any panning or zooming with it. */
   function centrePlanes(){
@@ -1492,8 +1496,8 @@ mark{ background:var(--ink); color:var(--paper); }
   });
 
   /* ── a view opened over the grid ─────────────────────────────────────
-     Each view's caption carries a button that lays that view over the
-     whole grid, the same viewer at the size of all four, and puts it back.
+     Each view's bar ends in a button that lays that view over the whole
+     grid, the same viewer at the size of all four, and puts it back.
      It grows out of its own box and returns into it (a placeholder keeps
      its cell, so the other three stay where they are); with reduced motion
      it simply appears and goes. Escape closes it too. */
@@ -1568,7 +1572,7 @@ mark{ background:var(--ink); color:var(--paper); }
         if (open === view) collapse();
         else if (!open) expand(view, btn);
       });
-      cap.appendChild(btn);
+      (cap.querySelector(".view-end") || cap).appendChild(btn);
     });
     document.addEventListener("keydown", function(e){
       if (e.key === "Escape" && open && !e.defaultPrevented) collapse();

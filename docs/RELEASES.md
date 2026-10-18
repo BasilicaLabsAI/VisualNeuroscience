@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.2 — 18 October 2026 — Square viewports with one bar each, and the side column in one box
+Commit · Give each Region Atlas view one bar over a square scan, make the rail one box and frame the About portrait
+
+The Region Atlas's four viewports are now square, and each has a single bar above it instead of a caption and a row of tools: the view's own tools on the left, its name in the middle, and Centre planes and the expand button on the right, without the short description that followed each name. On a narrow screen the name, Centre planes and the expand button share the first line and the tools take a second. Slice regions is now a button beside Slice and Reset cuts, pressed each time you press Slice. It could go missing on the first visit after an update, because the site's offline copy kept the old scripts for one more load; scripts and styles now come fresh whenever you are online, so a new page never runs with old ones. The column beside the scans is one box, with Regions, Highlighted, Saved models and Export under their own headings. It no longer has to end at the readouts, so it can never run into the Highlighted Regions section below, and the Highlighted list shows about eight regions before it scrolls. On the home page the About box shows the portrait in its whole engraved frame, as the About page does, and the About tab of the iPhone and iPad app follows with its next build.
+
 ## v11.1 — 18 October 2026 — Open any view over the grid, and cut the regions with the brain
-Commit · Let each Region Atlas view open over the grid, cut the highlighted regions with the slices, and drop the 3D lock
+Commit `15ac846` · Let each Region Atlas view open over the grid, cut the highlighted regions with the slices, and drop the 3D lock
 
 Every view in the Region Atlas now has an expand button at the end of its caption that opens it over the whole four-view grid, the same view at the size of all four, and puts it back with the same button or Escape. When you slice the 3D view, a Slice regions switch along its top takes the cuts through the highlighted regions as well as the brain, so a region is cut open with it instead of hanging whole in front of the cut; it is on each time slicing starts, and a saved model keeps it. The 3D view no longer has a direction lock, which it did not need, so Slice, Reset cuts and Centre planes sit on one line.
 

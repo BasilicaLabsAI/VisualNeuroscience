@@ -183,7 +183,7 @@ struct AboutTab: View {
                        meta: "Fadil Karim · built by one engineer · free to use")
             PageBox(page: .about, kicker: "From the developer", title: "About",
                     text: "A message from the Developer about this Visual Neuroscience",
-                    shot: Shot("assets/portrait/portrait.webp", plate: false),
+                    shot: Shot("assets/portrait/portrait.webp", framed: true),
                     meta: "Fadil Karim · built by one engineer · free to use",
                     go: "Read the message")
             Box(kicker: "Follow and write", title: "Elsewhere") {
