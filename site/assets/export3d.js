@@ -1057,7 +1057,8 @@ function human(bytes){
      basename  string or function → the file name without extension
      options   [{id, label, checked}] checkboxes handed to build
      formats   ids to offer, default all
-     label     button text, default "Export 3D model" */
+     label     button text, default "Export 3D model"
+     note      false leaves out the line naming what opens each format */
 var PREF_KEY = "vn-x3d-format";
 function attach(o){
   var host = o.host; if (!host) return null;
@@ -1088,7 +1089,8 @@ function attach(o){
   var btn = document.createElement("button"); btn.type = "button"; btn.className = "btn"; btn.textContent = o.label || "Export 3D model";
   btns.appendChild(btn); wrap.appendChild(btns);
 
-  var note = document.createElement("p"); note.className = "x3d-note"; wrap.appendChild(note);
+  var note = document.createElement("p"); note.className = "x3d-note";
+  if (o.note !== false) wrap.appendChild(note);
   var status = document.createElement("p"); status.className = "x3d-status"; status.setAttribute("aria-live", "polite"); wrap.appendChild(status);
   host.appendChild(wrap);
 

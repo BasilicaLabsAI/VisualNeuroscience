@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.109 — 18 October 2026 — The Region Atlas's side column is as tall as the scans
+Commit · Hold the Region Atlas's rail to the height of the scans and put export under saved models
+
+Beside the scans, the Region Atlas's column of controls now ends exactly where the four views end. Saved models and Export are one box, with the export under the saved models, and the line naming the programs each 3D format opens in is gone. The Regions box keeps its size and the boxes under it share what is left: the Highlighted list stretches to fill the column, and when there are more regions or models than fit, that part of the column scrolls on its own, while the Add a region list still drops over everything and scrolls as before. On a phone, and on an iPad held upright, where the controls sit above or below the scans rather than beside them, the boxes stack as they did. The apps take the same page with their next build.
+
 ## v10.108 — 18 October 2026 — The opacity slider moves into the Regions box
-Commit · Move the Region Atlas's opacity slider into the Regions card
+Commit `a3b4b2c` · Move the Region Atlas's opacity slider into the Regions card
 
 The Region Atlas's Opacity slider, which sets how strongly the highlighted regions and Brodmann areas cover the scan, now sits in the Regions box, just under Mirror left / right pairs, instead of in an Overlay box of its own, so the column beside the viewports is a box shorter. It is there whichever atlas you are picking from, and it works as before.
 
