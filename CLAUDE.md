@@ -75,11 +75,13 @@ Read this first in every session. It is the handover; nothing else needs pasting
 - The Region Atlas is called the 3D Region Atlas wherever its name shows (nav, titles, home page, the app) since
   v11.12; its file stays `regions.html`. The Brodmann Area Atlas is its own page again since v11.12 (retired into the
   Region Atlas in v10.8): `site/brodmann.html`, with its nav entry and its box straight after the 3D Region Atlas.
-  It picks one area at a time from the list (`brodmann-areas.js`), the two-face map (`brodmann-outline.js`) or the
-  scans, and the reading opens over the page. `#ba=<n>` opens on an area, the address follows the pick, and the MCP
-  server's `brodmann_area` answers link there. The 3D border graph the old page had was taken off it in v11.13 at
-  the owner's request; the 3D export can still write the areas joined where they border. The 3D Region Atlas keeps
-  its own Brodmann list and map.
+  Since v11.15, at the owner's request, it is one screen and nothing else: the two faces of the map
+  (`brodmann-outline.js`) and the reading of the picked area (`brodmann-areas.js`), fitted to the window under the
+  header (the script measures `--screen-top`). On a phone the faces stack with the reading beneath; wider, the reading
+  is a column on the left and the faces sit side by side or stacked, whichever draws them larger. No list, scans,
+  graph or export; BA48, on neither face, is reached from the empty reading, and every reading links to the area on
+  the scan in the 3D Region Atlas. `#ba=<n>` opens on an area, the address follows the pick, and the MCP server's
+  `brodmann_area` answers link there. The 3D Region Atlas keeps its own Brodmann list and map.
 - The three atlases draw their four views alike, from shared files: the scans' look in either theme is
   `site/assets/scan-look.js`, and the bar over each view, the square stages, the light-theme stages and the view
   opened over the grid are `site/assets/atlas-views.css` with `view-expand.js`. A change to the views belongs there,

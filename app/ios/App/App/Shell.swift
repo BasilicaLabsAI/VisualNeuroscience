@@ -115,9 +115,9 @@ struct AtlasTab: View {
                     meta: "116 parcels · 41 Brodmann areas · four viewports · receptor densities · slice tool · PNG and 3D export · saved models",
                     go: "Open the atlas")
             PageBox(page: .brodmann, kicker: "Cytoarchitecture",
-                    text: "Brodmann’s 41 areas of the cortex as a map of both faces of the hemisphere and on the scan in four views, each searchable by what it does.",
+                    text: "Brodmann’s 41 areas of the cortex on a map of both faces of the hemisphere. Tap one and what it does appears beside it.",
                     shot: Shot("assets/home/brodmann.jpg"),
-                    meta: "41 areas · both faces · four viewports · search by function",
+                    meta: "41 areas · both faces · what each one does",
                     go: "Open the map")
             PageBox(page: .microanatomy, kicker: "Under the microscope",
                     text: "The neuron and its synapses at the cell’s scale, down to the neurotransmitters and their receptors.",

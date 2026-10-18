@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.15 — 18 October 2026 — The Brodmann Area Atlas on one screen
+Commit · Pare the Brodmann Area Atlas to its two maps and what the picked area does, on one screen
+
+The Brodmann Area Atlas is now the map and nothing else: both faces of the hemisphere and, beside them, what the area you tap does, all on one screen. On a phone, on the web or in the app, the two faces sit one above the other with the reading beneath, and a long reading scrolls in its own box with its foot fading; on an iPad or a computer the reading is a column on the left and the two faces fill the rest, as large as the screen allows. Tap an area again to let it go, pinch a face to look closer, and follow a reading's link to see the same area on the scan in the 3D Region Atlas. The one area on neither face, BA48, is reached from the reading before anything is picked. The list, the four scans and the export are gone from this page; the 3D Region Atlas still has them.
+
 ## v11.14 — 18 October 2026 — A shorter header on phones
-Commit · Keep the follow links on the buttons' line in the website's header on phones
+Commit `8bfc749` · Keep the follow links on the buttons' line in the website's header on phones
 
 On a phone the website's header is a line shorter. The YouTube, Instagram, LinkedIn and email links used to drop to a line of their own under the Menu, Log in and theme buttons; they now sit at the end of the buttons' line, centred on it, on any phone from 320 pixels wide up. The links close up a little to make room, and on the narrowest phones the buttons lose a touch of padding and the theme button keeps just its dot.
 

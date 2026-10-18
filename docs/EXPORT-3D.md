@@ -10,7 +10,6 @@ and on the Region Atlas a **Saved models** card.
 | Page | Parts in the file |
 |---|---|
 | 3D Region Atlas | Each highlighted region as a closed surface in its own colour, named as on the page (`Hippocampus (L+R)`), plus the brain's outer surface at 25 % opacity if ticked. With nothing highlighted, the brain surface alone. |
-| Brodmann Area Atlas | The picked area as a surface (lobe colour); if ticked (off by default), every area as a sphere at its centre of mass, coloured by lobe, joined by tubes whose thickness follows the measured border length; the brain surface. Each is optional. |
 | Network Atlas | Every region with an atlas parcel as a surface in its ring colour, regions without one (VTA, locus coeruleus, ventral striatum) as spheres at their coordinates, and the couplings of the state showing as tubes between region centres, solid where they strengthen and grey where they fall quiet. Opacity follows the emphasis on screen. |
 | Visualising Studies (hallucinations) | The ten regions of the model as surfaces, faded where the state has them fall back; the brain surface. |
 | Tractography | An even sample of the streamlines (1,000, 5,000 or 20,000) as polylines coloured by direction, or in the single accent colour if that view is on. |
