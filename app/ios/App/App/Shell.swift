@@ -177,7 +177,7 @@ struct AboutTab: View {
                     shot: Shot("assets/portrait/portrait.webp", framed: true),
                     meta: "Fadil Karim · built by one engineer · free to use",
                     go: "Read the message")
-            Box(kicker: "Follow and write", title: "Elsewhere") {
+            Box(kicker: "Follow and write", title: "Channels") {
                 VStack(alignment: .leading, spacing: 0) {
                     OutLink(name: "YouTube", handle: "@VisualNeuroscienceAI", url: "https://www.youtube.com/@VisualNeuroscienceAI")
                     OutLink(name: "Instagram", handle: "fid_900", url: "https://www.instagram.com/fid_900/")

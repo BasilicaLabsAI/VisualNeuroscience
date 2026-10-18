@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.11 — 18 October 2026 — Channels on the app's About tab
+Commit · Rename the Elsewhere box on the app's About tab to Channels
+
+In the iPhone and iPad app, the box on the About tab that lists YouTube, Instagram, LinkedIn and email is now called Channels. The app takes this with its next build.
+
 ## v11.10 — 18 October 2026 — The app's tabs open straight onto their boxes
-Commit · Take the header off each of the app's tab pages and name the first tab Atlases
+Commit `90b0f85` · Take the header off each of the app's tab pages and name the first tab Atlases
 
 In the iPhone and iPad app, the five tab pages no longer open on a title. The title, the small line above it and the line of figures beneath it are gone, so each page starts on its first box and the tab bar alone names it. The first tab is now called Atlases. The app takes this with its next build.
 
