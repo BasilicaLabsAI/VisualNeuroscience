@@ -80,15 +80,15 @@ Visual Neuroscience
 Interactive brain atlas: regions, Brodmann areas, tracts and receptors. Offline.
 ```
 
-**Full description** (3929/4000)
+**Full description** (3968/4000)
 
 ```
 Visual Neuroscience is an interactive atlas of the human brain, built for anyone learning neuroanatomy without a lab or a licence. Turn a real MNI152 brain, tap through its regions, search Brodmann areas by what they do, follow the white-matter tracts, go down to the cell and the molecule, and see published studies drawn on the scan itself. Everything ships inside the app and renders on your device, so it works on a train, at the back of a lecture theatre, or in aeroplane mode.
 
 WHAT IS INSIDE
 
-• Region Atlas: the MNI152 template with the AAL-116 parcellation. Pick any region, highlight it in three planes and in 3D, and read what it does.
-• Brodmann Areas: the classic cortical map, lateral and medial views, every area selectable and searchable by function, lit on the same scan.
+• 3D Region Atlas: the MNI152 template with the AAL-116 parcellation. Pick any region, highlight it in three planes and in 3D, and read what it does.
+• Brodmann Area Atlas: the classic cortical map, lateral and medial views, every area searchable by function, lit on the scan and placed in a 3D graph of where the areas border.
 • Tractography: the HCP1065 whole-brain tractogram. Rotate it, zoom it, follow the bundles.
 • Receptor density: where the major neurotransmitter receptors sit, from published PET and autoradiography, with a source behind every number.
 • Network Atlas: the brain's large-scale networks and the states they move between, region by region.

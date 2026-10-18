@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>VisualNeuroscience.AI — Mapping the brain in the browser</title>
-<meta name="description" content="The front page: the Region Atlas, receptor density, tractography, the Network Atlas and published studies drawn on the brain — all of it in the browser, free, with nothing to install.">
+<meta name="description" content="The front page: the 3D Region Atlas, the Brodmann Area Atlas, receptor density, tractography, the Network Atlas and published studies drawn on the brain — all of it in the browser, free, with nothing to install.">
 <!-- link previews. The card is built by site/share.html and rendered to
      assets/social-card.jpg; og:image has to be absolute, so this origin is
      the one thing to change if the site moves to its own domain. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="VisualNeuroscience.AI">
 <meta property="og:title" content="VisualNeuroscience.AI — Mapping the brain in the browser">
-<meta property="og:description" content="The front page: the Region Atlas, receptor density, tractography, the Network Atlas and published studies drawn on the brain — all of it in the browser, free, with nothing to install.">
+<meta property="og:description" content="The front page: the 3D Region Atlas, the Brodmann Area Atlas, receptor density, tractography, the Network Atlas and published studies drawn on the brain — all of it in the browser, free, with nothing to install.">
 <meta property="og:url" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/">
 <meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -156,12 +156,16 @@ img{ max-width:100%; height:auto; display:block; }
    Twelve columns on desktop, so the boxes can take unequal widths the way
    columns on a front page do: a lead that runs two rows deep, a pair of
    half-width sections beside it, then a narrow and a wide one below. On a
-   phone the whole thing collapses to a single box per line. */
+   phone the whole thing collapses to a single box per line. The Brodmann
+   box follows the lead in the markup, so a phone reads it straight after
+   the 3D Region Atlas; dense placement keeps the network and tractography
+   boxes beside the lead on wider screens, with the Brodmann box beneath. */
 .mosaic{
-  display:grid; gap:var(--gap);
+  display:grid; gap:var(--gap); grid-auto-flow:row dense;
   grid-template-columns:repeat(12,minmax(0,1fr));
 }
 .m-atlas  { grid-column:span 7; grid-row:span 2; }
+.m-brodmann{ grid-column:span 12; }
 .m-network{ grid-column:span 5; }
 .m-tracts { grid-column:span 5; }
 .m-studies{ grid-column:span 12; }
@@ -299,6 +303,7 @@ img{ max-width:100%; height:auto; display:block; }
 @media (max-width:1180px){
   .mosaic{ grid-template-columns:repeat(6,minmax(0,1fr)); }
   .m-atlas  { grid-column:span 6; grid-row:auto; }
+  .m-brodmann{ grid-column:span 6; }
   .m-network{ grid-column:span 3; }
   .m-tracts { grid-column:span 3; }
   .m-studies{ grid-column:span 6; }
@@ -314,7 +319,7 @@ img{ max-width:100%; height:auto; display:block; }
 /* ── phone: one box on each line, and the wide box stacks ── */
 @media (max-width:760px){
   .mosaic{ grid-template-columns:minmax(0,1fr); }
-  .m-atlas, .m-network, .m-tracts, .m-studies, .m-cells, .m-molecular, .m-practice, .m-textbook, .m-mcp, .m-about, .m-ledger{
+  .m-atlas, .m-brodmann, .m-network, .m-tracts, .m-studies, .m-cells, .m-molecular, .m-practice, .m-textbook, .m-mcp, .m-about, .m-ledger{
     grid-column:1 / -1; grid-row:auto;
   }
   .ledger{ grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -330,7 +335,8 @@ img{ max-width:100%; height:auto; display:block; }
 <header class="masthead wrap">
   <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
   <nav class="nav-row" aria-label="Site">
-    <a href="regions.html">Region Atlas</a>
+    <a href="regions.html">3D Region Atlas</a>
+    <a href="brodmann.html">Brodmann Area Atlas</a>
     <a href="microanatomy.html">Microanatomy</a>
     <a href="molecular.html">Molecular</a>
     <a href="network-atlas.html">Network Atlas</a>
@@ -360,13 +366,25 @@ img{ max-width:100%; height:auto; display:block; }
     <!-- ── the lead ───────────────────────────────────────────────── -->
     <a class="box m-atlas" href="regions.html">
       <div class="kicker">The Atlas</div>
-      <h2>Region Atlas</h2>
+      <h2>3D Region Atlas</h2>
       <p>A detailed 3D atlas of the human brain, with the Brodmann areas, receptor density maps and a functional breakdown of every region.</p>
       <div class="fig" aria-hidden="true">
         <span class="shot themed"><img class="for-dark" src="assets/home/atlas.jpg" alt="" loading="lazy" decoding="async" width="900" height="1094"><img class="for-light" src="assets/home/atlas-light.jpg" alt="" loading="lazy" decoding="async" width="900" height="1094"></span>
       </div>
       <div class="meta">116 parcels &middot; 41 Brodmann areas &middot; four viewports &middot; receptor densities &middot; slice tool &middot; PNG and 3D export &middot; saved models</div>
       <div class="go">Open the atlas &rarr;</div>
+    </a>
+
+    <!-- ── the Brodmann map ───────────────────────────────────────── -->
+    <a class="box m-brodmann box-h" href="brodmann.html">
+      <div class="side">
+        <div class="kicker">Cytoarchitecture</div>
+        <h2>Brodmann Area Atlas</h2>
+        <p>Brodmann&rsquo;s 41 areas of the cortex as a map of both faces of the hemisphere, on the scan in four views, and as a 3D graph of where they border, each searchable by what it does.</p>
+        <div class="meta">41 areas &middot; both faces &middot; four viewports &middot; border graph &middot; search by function</div>
+        <div class="go">Open the map &rarr;</div>
+      </div>
+      <div class="plate"><img src="assets/home/brodmann.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
     </a>
 
     <!-- ── the ring ───────────────────────────────────────────────── -->

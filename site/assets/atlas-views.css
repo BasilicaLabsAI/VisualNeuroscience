@@ -1,7 +1,7 @@
-/* The four views the two atlases share: the Region Atlas and the Network
-   Atlas lay out their scans the same way, so the look of the scans, the
-   bar over each view, the square stages and the view opened over the grid
-   live here, after viewer.css, for both pages. */
+/* The four views the atlases share: the 3D Region Atlas, the Brodmann Area
+   Atlas and the Network Atlas lay out their scans the same way, so the look
+   of the scans, the bar over each view, the square stages and the view
+   opened over the grid live here, after viewer.css, for all three pages. */
 
 /* ── the scans in the light theme ──────────────────────────────────────
    Light, the viewports are white rather than black (the viewers clear to

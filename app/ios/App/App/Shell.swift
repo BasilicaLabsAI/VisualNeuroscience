@@ -104,8 +104,8 @@ struct PageBox: View {
 
 // MARK: - The tabs
 
-/// The atlases: the regions, the cell, the receptors, the white matter
-/// and, last, the networks.
+/// The atlases: the regions in 3D, the Brodmann areas beneath them, the
+/// cell, the receptors, the white matter and, last, the networks.
 struct AtlasTab: View {
     var body: some View {
         TabPage {
@@ -114,6 +114,11 @@ struct AtlasTab: View {
                     shot: Shot("assets/home/atlas.jpg", light: "assets/home/atlas-light.jpg"),
                     meta: "116 parcels · 41 Brodmann areas · four viewports · receptor densities · slice tool · PNG and 3D export · saved models",
                     go: "Open the atlas")
+            PageBox(page: .brodmann, kicker: "Cytoarchitecture",
+                    text: "Brodmann’s 41 areas of the cortex as a map of both faces of the hemisphere, on the scan in four views, and as a 3D graph of where they border, each searchable by what it does.",
+                    shot: Shot("assets/home/brodmann.jpg"),
+                    meta: "41 areas · both faces · four viewports · border graph · search by function",
+                    go: "Open the map")
             PageBox(page: .microanatomy, kicker: "Under the microscope",
                     text: "The neuron and its synapses at the cell’s scale, down to the neurotransmitters and their receptors.",
                     shot: Shot("assets/home/cells.jpg"),

@@ -1,5 +1,6 @@
 /* The scans' look in either theme, shared by the atlases that draw the
-   MNI152 template in four views (the Region Atlas and the Network Atlas).
+   MNI152 template in four views (the 3D Region Atlas, the Brodmann Area
+   Atlas and the Network Atlas).
 
    Dark, the viewports are pure black, the scan's own background, so the
    two blend. Light, they are white and the crosshair is ink, and on white

@@ -233,7 +233,8 @@ svg{ display:block; }
 <header class="masthead wrap">
   <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
   <nav class="nav-row" aria-label="Site">
-    <a href="regions.html">Region Atlas</a>
+    <a href="regions.html">3D Region Atlas</a>
+    <a href="brodmann.html">Brodmann Area Atlas</a>
     <a href="microanatomy.html">Microanatomy</a>
     <a href="molecular.html">Molecular</a>
     <a href="network-atlas.html">Network Atlas</a>
@@ -340,7 +341,7 @@ import auth from "./assets/auth.js";
 import files from "./assets/userdata.js";
 
 const $ = id => document.getElementById(id);
-const TOOL_NAMES = { regions: "Region Atlas" };
+const TOOL_NAMES = { regions: "3D Region Atlas" };
 const SIGN_INS = { "google.com": "Google", "apple.com": "Apple", "password": "Email", "emailLink": "Email" };
 /* set before the account goes, since the sign-out it brings can arrive
    before the call that caused it returns */
@@ -426,7 +427,7 @@ async function models(list){
       if (tool === "regions"){
         const a = el("a", null, "Open");
         a.href = "regions.html";
-        a.setAttribute("aria-label", "Open " + f.name + " in the Region Atlas");
+        a.setAttribute("aria-label", "Open " + f.name + " in the 3D Region Atlas");
         files.load(tool, f.name).then(d => { a.href = regionLink(d); }).catch(() => {});
         li.append(a);
       }
@@ -434,7 +435,7 @@ async function models(list){
     }
     host.append(ul);
   }
-  if (!any) host.append(el("p", "acct-quiet", "No saved models yet. Save one in the Region Atlas, under Saved models, and it is listed here."));
+  if (!any) host.append(el("p", "acct-quiet", "No saved models yet. Save one in the 3D Region Atlas, under Saved models, and it is listed here."));
 }
 
 async function practice(){

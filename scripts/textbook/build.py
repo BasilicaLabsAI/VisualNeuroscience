@@ -439,7 +439,8 @@ def nav(rel):
     return f'''<header class="masthead site-wrap">
   <a class="brand" href="{rel}index.html"><img class="mark" src="{rel}assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
   <nav class="nav-row" aria-label="Site">
-    <a href="{rel}regions.html">Region Atlas</a>
+    <a href="{rel}regions.html">3D Region Atlas</a>
+    <a href="{rel}brodmann.html">Brodmann Area Atlas</a>
     <a href="{rel}microanatomy.html">Microanatomy</a>
     <a href="{rel}molecular.html">Molecular</a>
     <a href="{rel}network-atlas.html">Network Atlas</a>

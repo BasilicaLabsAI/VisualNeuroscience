@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Brodmann Area Atlas — VisualNeuroscience.AI</title>
+<meta name="description" content="The 41 Brodmann areas the atlas draws: a line map of both faces of the hemisphere, the areas on the MNI152 template in four views, and a 3D graph of where they border. Pick an area to see what it does, or search by number, by anatomical name, or by what a region is for.">
+<!-- link previews. The card is built by site/share.html and rendered to
+     assets/social-card.jpg; og:image has to be absolute, so this origin is
+     the one thing to change if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="Brodmann Area Atlas — VisualNeuroscience.AI">
+<meta property="og:description" content="The 41 Brodmann areas the atlas draws: a line map of both faces of the hemisphere, the areas on the MNI152 template in four views, and a 3D graph of where they border. Pick an area to see what it does, or search by number, by anatomical name, or by what a region is for.">
+<meta property="og:url" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/brodmann.html">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The flow-state network ring over orange-tinted MNI152 brain slices, with the VisualNeuroscience.AI wordmark at its centre.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="assets/atlas-views.css">
+<link rel="stylesheet" href="fonts/fonts.css">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+/* the brand face, served as a file */
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+
+/* dark mode — exact inverse of the default palette, site-wide */
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  padding-bottom:2rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+a{ color:var(--ink); text-decoration:none; }
+@media (hover: hover){ a:hover{ text-decoration:underline; text-underline-offset:3px; } }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+svg{ display:block; }
+
+.skip{
+  position:absolute; left:-999px; top:8px; z-index:99;
+  background:var(--ink); color:var(--paper); padding:.5rem 1rem;
+  font-family:var(--font-brand); font-size:.8rem; letter-spacing:.1em;
+}
+.skip:focus{ left:8px; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* ── masthead ── */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink);
+}
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:.65em; height:.65em; flex:none; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase;
+}
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+/* ── title strip, as on the other pages ── */
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{
+  font-family:var(--font-display); font-size:1.35rem;
+  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+}
+.title-strip .anno{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60);
+}
+
+/* ── the rail: one box, each part under its own heading, as on the other
+   atlases ── */
+.rail-box{ display:grid; grid-template-columns:minmax(0,1fr); row-gap:1.4rem; align-items:start; }
+.rail-note{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.8rem; color:var(--ink-60); margin:.6rem 0 0;
+}
+.rail-row{ display:flex; align-items:center; gap:.5rem; margin:.2rem 0 0; }
+.rail-row .tool-label{ flex:none; }
+.rail-row input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); }
+.rail-row .val{
+  min-width:44px; text-align:right; font-family:var(--font-brand);
+  font-size:.8rem; font-variant-numeric:tabular-nums;
+}
+.btn{
+  display:inline-block; font-family:var(--font-brand); font-weight:500;
+  font-size:.72rem; letter-spacing:.28em; text-transform:uppercase;
+  border:1px solid var(--ink); background:var(--paper); color:var(--ink);
+  padding:.7rem 1.3rem .62rem; cursor:pointer;
+}
+@media (hover: hover){ .btn:hover{ background:var(--ink); color:var(--paper); text-decoration:none; } }
+.card .btn{ width:100%; text-align:center; }
+.btns{ display:flex; gap:.6rem; margin-top:.6rem; }
+.btns .btn{ flex:1; padding:.55rem .4rem .48rem; letter-spacing:.18em; font-size:.66rem; }
+@media (max-width:1100px) and (orientation:portrait), (max-width:900px) and (orientation:landscape){
+  .rail .rail-box{ grid-column:1 / -1; grid-template-columns:repeat(2, minmax(0,1fr)); column-gap:1.6rem; }
+  .rail .rail-part:first-child{ grid-row:span 2; }
+}
+@media (max-width:760px){ .rail .rail-box{ grid-template-columns:minmax(0,1fr); } .rail .rail-part:first-child{ grid-row:auto; } }
+/* On a phone the list of areas leads in a box of its own, the map, the
+   scans and the graph come next, and the rest of the rail follows them in
+   a second box. The rail and its box step aside (display:contents) so that
+   their parts can stand round the centre in the page's one column. */
+@media (max-width:760px){
+  .studio{ row-gap:0; }
+  .studio .rail, .studio .rail .rail-box{ display:contents; }
+  .studio .rail-part{
+    order:2; min-width:0; background:var(--paper);
+    border:1px solid var(--hair); border-width:0 1px; padding:1.4rem 1.05rem 0;
+  }
+  .studio .rail-part:first-child{ order:0; border-width:1px; padding:1rem 1.05rem 1.1rem; margin-bottom:var(--gap); }
+  .studio .rail-part:nth-child(2){ border-top-width:1px; padding-top:1rem; }
+  .studio .rail-part:last-child{ border-bottom-width:1px; padding-bottom:1.1rem; }
+  .studio .centre{ order:1; margin-bottom:var(--gap); }
+}
+
+/* ── the list of areas, and the search that filters it ─────────────────
+   The list is the navigation: forty-one entries with names and functions
+   are worth seeing at once and worth searching, so there is no dropdown. */
+.searchwrap{ position:relative; margin-bottom:.55rem; }
+.searchwrap input{
+  width:100%; padding:.55rem 2rem .5rem .6rem;
+  font-family:var(--font-serif); font-size:.95rem;
+  color:var(--ink); background:var(--paper);
+  border:1px solid var(--hair); border-radius:0;
+}
+.searchwrap input::placeholder{ color:var(--ink-35); font-style:italic; }
+.searchwrap input:focus{ outline:2px solid var(--ink); outline-offset:1px; }
+.searchwrap input::-webkit-search-cancel-button{ -webkit-appearance:none; appearance:none; }
+.searchwrap .clear{
+  position:absolute; right:.3rem; top:50%; transform:translateY(-50%);
+  border:0; background:none; color:var(--ink-60); cursor:pointer;
+  font-size:1.1rem; line-height:1; padding:.2rem .3rem;
+}
+@media (hover: hover){ .searchwrap .clear:hover{ color:var(--ink); } }
+.search-count{
+  font-family:var(--font-serif); font-style:italic; font-size:.78rem;
+  color:var(--ink-60); margin:0 0 .5rem;
+}
+.balist{
+  max-height:min(58vh,560px); max-height:min(58dvh,560px); overflow-y:auto;
+  overscroll-behavior:contain; touch-action:pan-y; margin:0 -.2rem; padding:0 .2rem;
+}
+@media (max-width:1100px){ .balist{ max-height:min(46vh,420px); max-height:min(46dvh,420px); } }
+.balobe{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+  border-bottom:1px solid var(--ink-35); padding:.5rem .1rem .3rem; margin-top:.5rem;
+}
+.balobe:first-child{ margin-top:0; }
+.barow{
+  display:flex; align-items:baseline; gap:.5rem; width:100%;
+  border:0; border-bottom:1px solid var(--hair); background:none;
+  color:var(--ink); text-align:left; cursor:pointer;
+  padding:.42rem .25rem .38rem; font-family:var(--font-serif); font-size:.9rem;
+}
+@media (hover: hover){ .barow:hover{ background:color-mix(in srgb, var(--ink) 9%, transparent); } }
+.barow[aria-pressed="true"]{ background:var(--ink); color:var(--paper); }
+.barow .num{
+  font-family:var(--font-brand); font-weight:500; font-size:.72rem;
+  letter-spacing:.06em; min-width:2.6rem; flex:none; font-variant-numeric:tabular-nums;
+}
+.barow .nm{ min-width:0; line-height:1.3; }
+.barow .swatch{
+  width:.6rem; height:.6rem; flex:none; border:1px solid currentColor;
+  align-self:center; margin-left:auto;
+}
+.balist-empty{
+  font-family:var(--font-serif); font-style:italic; font-size:.85rem;
+  color:var(--ink-60); padding:.8rem .2rem;
+}
+mark{ background:var(--ink); color:var(--paper); }
+.barow[aria-pressed="true"] mark{ background:var(--paper); color:var(--ink); }
+@media (pointer:coarse){ .searchwrap input{ font-size:16px; } .barow{ min-height:44px; align-items:center; } }
+
+/* ── the selection bar ──────────────────────────────────────────────────
+   One line at the head of the column: the area picked and the way into
+   what it does. It holds its height whatever is picked, so choosing between
+   areas never shifts the map under the pointer. */
+.sel-bar{
+  display:flex; align-items:center; gap:.7rem 1rem;
+  border:1px solid var(--hair); padding:.55rem .8rem;
+  margin-bottom:var(--gap); min-height:3.1rem;
+}
+.sel-kick{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+  flex:none; border-left:3px solid transparent; padding-left:.6rem;
+}
+.sel-name{
+  font-family:var(--font-display); font-size:1.05rem; line-height:1.2;
+  min-width:0; display:-webkit-box; -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; overflow:hidden;
+}
+.sel-fn{ margin-left:auto; flex:none; }
+@media (max-width:560px){ .sel-bar{ flex-wrap:wrap; } .sel-name{ flex:1 1 60%; } }
+
+/* ── the two-face map ──────────────────────────────────────────────────
+   Most of the cortex is either folded into a sulcus or facing the other
+   way, so a scan can never show the whole Brodmann scheme at once. The
+   line map can, which is what it has always been for. An area on it is an
+   outline in ink with its number inside; picking fills it in the colour
+   it wears on the scan. Areas the atlas volume does not carry are drawn
+   dashed and cannot be picked. */
+.cartoons{ display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); }
+.cart{ border:1px solid var(--hair); min-width:0; margin:0; }
+.cart figcaption{
+  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline;
+  gap:.35rem .8rem; padding:.6rem .8rem .5rem; border-bottom:1px solid var(--hair);
+}
+.cart figcaption b{
+  font-family:var(--font-brand); font-weight:500; font-size:.68rem;
+  letter-spacing:.28em; text-transform:uppercase;
+}
+.cart figcaption span{
+  font-family:var(--font-serif); font-style:italic; font-size:.82rem; color:var(--ink-60);
+}
+.cart-stage{ padding:.5rem; }
+.cart-stage svg{ width:100%; height:auto; display:block; }
+.ba-tile{ cursor:pointer; }
+.ba-tile.mute{ cursor:default; }
+.ba-tile .shape{
+  fill:var(--ink); fill-opacity:.045; stroke:var(--ink); stroke-opacity:.72;
+  stroke-width:1.1; stroke-linejoin:round; transition:fill-opacity .12s ease;
+}
+.ba-tile .num{
+  font-family:var(--font-brand); font-weight:500; fill:var(--ink);
+  pointer-events:none; user-select:none;
+}
+@media (hover: hover){ .ba-tile:not(.mute):hover .shape{ fill-opacity:.18; } }
+.ba-tile.on .shape{ fill:var(--sel, var(--ink)); fill-opacity:1; stroke:var(--ink); stroke-opacity:1; stroke-width:1.4; }
+.ba-tile.on .num{ fill:#111111; }
+.ba-tile.mute .shape{ stroke-dasharray:3 2.5; stroke-opacity:.4; fill-opacity:.02; }
+.ba-tile.mute .num{ fill-opacity:.45; }
+.cart-miss{
+  font-family:var(--font-serif); font-style:italic; font-size:.9rem;
+  color:var(--ink); margin-top:.7rem;
+}
+.cart-miss:empty{ display:none; }
+@media (max-width:760px){ .cartoons{ grid-template-columns:1fr; } }
+
+/* ── the scans, and the readouts under them ── */
+.scansec, .graphsec{ margin-top:calc(var(--gap) * 2); }
+.views-wrap{ position:relative; }
+.views .view{ min-width:0; }
+.stats{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; margin-top:var(--gap); }
+.stat{ border:1px solid var(--hair); padding:.5rem .6rem .55rem; text-align:left; min-width:0; }
+.stat .k{
+  font-family:var(--font-brand); font-size:.58rem; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60);
+}
+.stat .v{
+  font-family:var(--font-brand); font-size:1.06rem; margin-top:.1rem;
+  font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.stat .v small{ font-size:.62rem; color:var(--ink-60); margin-left:.15rem; }
+.probe-v{ font-size:.9rem; }
+.probe-v small{ display:block; margin-left:0; margin-top:.12rem; }
+#cursorRegion{ cursor:pointer; }
+
+/* loading, and the message if the scans cannot be drawn */
+.status{
+  position:absolute; inset:0; z-index:10; background:#111111;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.9rem;
+  color:#A9A9A9; font-family:var(--font-brand); font-weight:500;
+  font-size:.66rem; letter-spacing:.3em; text-transform:uppercase;
+}
+.status .bar{ width:130px; height:2px; background:#2B2B2B; overflow:hidden; }
+.status .bar i{ display:block; height:100%; width:40%; background:#FFFFFF; }
+.status.error{ color:#FFFFFF; text-transform:none; letter-spacing:.02em;
+  font-family:var(--font-serif); font-style:italic; font-size:1rem; padding:0 2.5rem; text-align:center; line-height:1.7; }
+@media (prefers-reduced-motion: no-preference){
+  .status .bar i{ animation:scan 1.1s linear infinite; }
+  @keyframes scan{ from{transform:translateX(-100%)} to{transform:translateX(300%)} }
+}
+.hidden{ display:none !important; }
+
+/* ── the border graph ──────────────────────────────────────────────────── */
+.graph-lede{ font-size:.98rem; line-height:1.6; max-width:70ch; margin-bottom:var(--gap); }
+.graph-wrap{ border:1px solid var(--hair); }
+.graph-stage{ touch-action:none; cursor:grab; }
+.graph-stage:active{ cursor:grabbing; }
+.graph-stage svg{ width:100%; height:auto; max-height:min(74vh,760px); max-height:min(74dvh,760px); display:block; background:transparent; }
+.graph-tools{
+  display:flex; flex-wrap:wrap; align-items:center; gap:.4rem .8rem;
+  padding:.5rem .8rem; border-top:1px solid var(--hair);
+}
+.graph-count{
+  font-family:var(--font-brand); font-size:.55rem; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--ink-60); margin-left:auto;
+}
+.g-edge{ stroke:var(--ink-35); fill:none; }
+.g-node{ cursor:pointer; }
+.g-node text{
+  font-family:var(--font-brand); font-weight:500; font-size:9px;
+  fill:#111111; text-anchor:middle; dominant-baseline:central; pointer-events:none;
+}
+.graph-stage.picked .g-node{ opacity:.25; }
+.graph-stage.picked .g-node.on,
+.graph-stage.picked .g-node.near{ opacity:1; }
+.graph-stage.picked .g-edge{ stroke:var(--ink-35); opacity:.12; }
+.graph-stage.picked .g-edge.on{ opacity:1; stroke:var(--ink); }
+.g-brain{
+  fill:var(--ink); fill-opacity:.05;
+  stroke:var(--ink); stroke-opacity:.2; stroke-width:1;
+  pointer-events:none;
+}
+.g-ring{
+  fill:none; stroke:var(--ink); stroke-opacity:.1; stroke-width:.75;
+  pointer-events:none;
+}
+.graph-stage.picked .g-brain{ fill-opacity:.03; stroke-opacity:.12; }
+.graph-stage.picked .g-ring{ stroke-opacity:.07; }
+
+/* ── what an area does, opened over the page ───────────────────────────
+   It arrives from the button that opens it and leaves the same way; with
+   reduced motion it fades, with reduced transparency its scrim is solid. */
+.modal{ position:fixed; inset:0; z-index:90; display:flex;
+        align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); }
+.modal[hidden]{ display:none; }
+.modal-scrim{
+  position:absolute; inset:0; background:rgba(0,0,0,.6);
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  opacity:0; transition:opacity .22s ease;
+}
+.modal-box{
+  position:relative; z-index:1;
+  width:min(560px,100%); max-height:min(80vh,720px); max-height:min(80dvh,720px); overflow-y:auto;
+  overscroll-behavior:contain;
+  background:var(--paper); color:var(--ink);
+  border:1px solid var(--hair); padding:clamp(18px,3vw,30px);
+  box-shadow:0 24px 70px rgba(0,0,0,.5);
+  opacity:0; transform:scale(.94);
+  transition:opacity .2s cubic-bezier(.32,.72,0,1), transform .28s cubic-bezier(.32,.72,0,1);
+}
+.modal.open .modal-scrim{ opacity:1; }
+.modal.open .modal-box{ opacity:1; transform:none; }
+.modal-x{
+  position:absolute; top:.5rem; right:.7rem;
+  background:none; border:0; cursor:pointer; color:var(--ink);
+  font-size:1.5rem; line-height:1; padding:.1rem .3rem; min-width:44px; min-height:44px;
+}
+@media (hover: hover){ .modal-x:hover{ opacity:.6; } }
+.modal-h{
+  font-family:var(--font-display); font-weight:400;
+  font-size:1.5rem; line-height:1.12; margin:.25rem 2rem .1rem 0;
+}
+.ba-kick{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+}
+.ba-where{
+  font-family:var(--font-serif); font-style:italic; font-size:.92rem;
+  color:var(--ink-60); margin-bottom:.4rem;
+}
+.modal-box h3{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60);
+  margin:1rem 0 .25rem;
+}
+.modal-box p{ font-size:.98rem; line-height:1.6; }
+.ba-caveat{
+  font-family:var(--font-serif); font-style:italic; font-size:.88rem;
+  color:var(--ink-60); border-left:2px solid var(--ink-35);
+  padding-left:.7rem; margin-top:.9rem;
+}
+@media (prefers-reduced-motion: reduce){
+  .modal-box{ transform:none; transition:opacity .15s ease; }
+}
+@media (prefers-reduced-transparency: reduce){
+  .modal-scrim{ background:rgba(0,0,0,.8); -webkit-backdrop-filter:none; backdrop-filter:none; }
+}
+@media (prefers-contrast: more){
+  .modal-scrim{ background:rgba(0,0,0,.85); -webkit-backdrop-filter:none; backdrop-filter:none; }
+  .modal-box{ border-width:2px; }
+}
+
+/* ── what the page is, and its sources, below ── */
+.below{ margin-top:calc(var(--gap) * 2); }
+.prose h2{
+  font-family:var(--font-brand); font-weight:600; font-size:.66rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
+  border-bottom:1px solid var(--ink); padding:.2rem .1rem .45rem; margin:0 0 .8rem;
+}
+.prose p{ margin:0 0 .8rem; max-width:80ch; }
+.prose a{ text-decoration:underline; text-underline-offset:3px; }
+.credits{
+  border-top:1px solid var(--hair); margin-top:1.4rem; padding-top:1rem;
+  font-family:var(--font-serif); font-size:.82rem; color:var(--ink-60);
+}
+.credits p{ margin:0 0 .5rem; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="Site">
+    <a href="regions.html">3D Region Atlas</a>
+    <a href="brodmann.html" aria-current="page">Brodmann Area Atlas</a>
+    <a href="microanatomy.html">Microanatomy</a>
+    <a href="molecular.html">Molecular</a>
+    <a href="network-atlas.html">Network Atlas</a>
+    <a href="tracts.html">Tractography</a>
+    <a href="studies.html">Visualizing Studies</a>
+    <a href="textbook.html">Digital Textbook</a>
+    <a href="practice.html">Practice</a>
+    <a href="about.html">About</a>
+    <span class="nav-tools"><button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button></span>
+  </nav>
+</header>
+
+<main id="main" class="wrap">
+
+  <div class="title-strip">
+    <h1 class="name">Brodmann Area Atlas</h1>
+    <span class="anno">41 cytoarchitectural areas &middot; Brodmann 1909 &middot; on the MNI152 template</span>
+  </div>
+
+  <div class="studio">
+
+    <aside class="rail" aria-label="Brodmann areas">
+      <h2 class="sec-h">Areas <small>pick one, or search</small></h2>
+
+      <div class="card rail-box">
+        <section class="rail-part">
+          <h2>Areas</h2>
+          <div class="searchwrap">
+            <input type="search" id="q" autocomplete="off" spellcheck="false"
+                   placeholder="number, name, or what it does&hellip;"
+                   aria-label="Search Brodmann areas by number, anatomical name, or function"
+                   aria-describedby="qcount">
+            <button class="clear hidden" id="qclear" type="button" aria-label="Clear search">&times;</button>
+          </div>
+          <p class="search-count" id="qcount">All 41 areas.</p>
+          <div class="balist" id="balist" role="group" aria-label="Brodmann areas"></div>
+        </section>
+        <section class="rail-part">
+          <h2>Overlay</h2>
+          <div class="rail-row"><span class="tool-label">Opacity</span><input type="range" id="opacity" min="10" max="100" value="90" aria-label="How strongly the picked area covers the scan"><span class="val" id="opacityVal">90%</span></div>
+          <div class="btns"><button class="btn" id="clearBtn" type="button">Clear the pick</button></div>
+          <p class="rail-note">Pick an area from the list, the map, the graph or the scan, and the scans centre on it. Press it again to let it go.</p>
+        </section>
+        <section class="rail-part">
+          <h2>Export</h2>
+          <div id="export3d"></div>
+          <div class="btns" id="shotRow"><button class="btn" id="shotBtn" type="button">Save PNG snapshot</button></div>
+        </section>
+      </div>
+    </aside>
+
+    <section class="centre" aria-label="The Brodmann map, the scans and the border graph">
+      <div class="sel-bar" id="selBar" aria-live="polite">
+        <span class="sel-kick" id="selKick">Nothing picked</span>
+        <span class="sel-name" id="selName">Pick an area from the map, the list, the graph or the scan.</span>
+        <button class="ts-btn sel-fn" id="selFn" type="button" hidden>What it does &rarr;</button>
+      </div>
+
+      <!-- the line map: both faces of the hemisphere at once -->
+      <section class="bamap" aria-labelledby="bamap-h">
+        <h2 class="sec-h" id="bamap-h">Brodmann map <small>both faces of the hemisphere</small></h2>
+        <div class="cartoons">
+          <figure class="cart">
+            <figcaption><b>External</b><span>lateral surface</span></figcaption>
+            <div class="cart-stage" id="cartLateral"></div>
+          </figure>
+          <figure class="cart">
+            <figcaption><b>Internal</b><span>medial surface</span></figcaption>
+            <div class="cart-stage" id="cartMedial"></div>
+          </figure>
+        </div>
+        <p class="cart-miss" id="cartMiss"></p>
+      </section>
+
+      <!-- the same areas on the template, with the atlas's own boundaries -->
+      <section class="scansec" aria-labelledby="scan-h">
+        <h2 class="sec-h" id="scan-h">On the scan <small>MNI152 template &middot; four views</small></h2>
+        <div class="views-wrap">
+          <div class="views" id="viewsGrid">
+            <div class="view" data-box="axial">
+              <div class="view-cap"><b>Axial</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="axial" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="axial" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
+              <div class="mri-stage"><canvas id="baAx"></canvas></div>
+            </div>
+            <div class="view" data-box="coronal">
+              <div class="view-cap"><b>Coronal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="coronal" role="group" aria-label="Coronal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="coronal" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
+              <div class="mri-stage"><canvas id="baCor"></canvas></div>
+            </div>
+            <div class="view" data-box="sagittal">
+              <div class="view-cap"><b>Sagittal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="sagittal" role="group" aria-label="Sagittal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="sagittal" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
+              <div class="mri-stage"><canvas id="baSag"></canvas></div>
+            </div>
+            <div class="view" data-box="render">
+              <div class="view-cap"><b>3D</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="render" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
+              <div class="mri-stage"><canvas id="baRen"></canvas></div>
+            </div>
+          </div>
+          <div class="status" id="status">
+            <div class="bar"><i></i></div>
+            <div>Loading volumes</div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><div class="k">Template</div><div class="v">MNI152 <small>0.74&thinsp;mm</small></div></div>
+          <div class="stat"><div class="k">Atlas</div><div class="v">Brodmann <small>41 areas</small></div></div>
+          <div class="stat"><div class="k">Picked</div><div class="v" id="statSel">&mdash;</div></div>
+          <div class="stat"><div class="k">Probe</div><div class="v probe-v"><span id="cursorRegion">&mdash;</span><small id="cursorCoords">hover a view &middot; drag = crosshair</small></div></div>
+        </div>
+      </section>
+
+      <!-- how the areas border one another, at their true positions -->
+      <section class="graphsec" aria-labelledby="graph-h">
+        <h2 class="sec-h" id="graph-h">The same areas in 3D <small>at their true positions &middot; joined where they border</small></h2>
+        <p class="graph-lede">Every area drawn at its own centre of mass in the scan, joined to the areas it actually shares a border with, measured off the volume rather than asserted. Thicker lines are longer borders, and the brain drawn faintly around them is the template&rsquo;s own outer surface, turning with the graph so you can see where each area sits. Drag to turn it, pinch to zoom, two fingers to pan.</p>
+        <div class="graph-wrap">
+          <div class="graph-stage" id="graphStage"></div>
+          <div class="graph-tools">
+            <button class="ts-btn" id="gReset" type="button">Reset view</button>
+            <span class="graph-count" id="gCount"></span>
+          </div>
+        </div>
+      </section>
+    </section>
+
+  </div>
+
+  <section class="below prose" aria-labelledby="about-h">
+    <h2 id="about-h">What this is</h2>
+    <p>The two faces are a line map of the classic Brodmann scheme, descending from Brodmann&rsquo;s own 1909 figures: every area outlined and numbered, nothing drawn beneath. Pick an area and it fills in its lobe&rsquo;s colour on the face that shows it, the scans centre on it, and the graph lights the areas it borders. Anterior is on the left in the external view and, as the scheme is conventionally drawn, on the right in the internal one. The drawing is a schematic; where each area actually sits in a real head, with the atlas&rsquo;s own boundaries, is what the scans show. Brodmann Areas diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN &ndash; Institute for EEG-Neurofeedback / Neurofeedback Academy</a>.</p>
+    <p>Brodmann numbered the cortex in 1909 by how its cells are layered, not by what it does, which is why the numbers wander about the brain and why several of his 52 have no agreed human counterpart. The 41 drawn here are those the shipped atlas labels; 12&ndash;16, 31, 33 and 49&ndash;52 are absent. Each area is bilateral: Brodmann described cortical types, not hemispheres, so where a function is strongly one-sided the note says so rather than the atlas splitting the area. The boundaries are an approximation to begin with: they were drawn from a handful of post-mortem brains, and no two people&rsquo;s cortex is folded the same way. This particular volume descends from the Talairach Daemon, whose labels were grown outwards to fill the brain: 14% of what it marks lies in white matter that the AAL atlas does not count as cortex at all, and label 48 has become a catch-all for the peri-Sylvian region rather than the small area Brodmann gave that number to. Read a boundary as a neighbourhood, not a border. Educational, not diagnostic.</p>
+    <p>The <a href="regions.html">3D Region Atlas</a> carries the same areas beside the AAL regions, so the two can be lit together on one scan.</p>
+    <div class="credits">
+      <p>Rendered with NiiVue (Rorden lab). MNI152 template, McConnell Brain Imaging Centre. Brodmann atlas from <a href="https://github.com/neurolabusc/MRIcron" target="_blank" rel="noopener">MRIcron</a> (BSD). Brodmann diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN</a>.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- What an area does, over the page rather than on it: the bar at the head
+     of the column holds its height whatever is picked, and the reading opens
+     on top, following the pick while it is open. -->
+<div class="modal" id="fnModal" hidden>
+  <div class="modal-scrim" data-close></div>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="fn-title">
+    <button class="modal-x" type="button" data-close aria-label="Close">&times;</button>
+    <div class="ba-kick" id="fn-kick"></div>
+    <h2 class="modal-h" id="fn-title"></h2>
+    <div class="ba-where" id="fn-where"></div>
+    <h3>What it is for</h3>
+    <p id="fn-body"></p>
+    <p class="ba-caveat" id="fn-note" hidden></p>
+  </div>
+</div>
+
+<script src="assets/native.js"></script>
+<script src="assets/navbar.js"></script>
+<script src="assets/newsletter.js" defer></script>
+<script src="assets/stage-lifecycle.js"></script>
+<script src="assets/niivue.js"></script>
+<script src="assets/atlas-data.js"></script>
+<script src="assets/brodmann-areas.js"></script>
+<script src="assets/brodmann-outline.js"></script>
+<script src="assets/brain-hull.js"></script>
+<script src="assets/diagram-gestures.js"></script>
+<script src="assets/slice-tool.js"></script>
+<script src="assets/scan-look.js"></script>
+<script src="assets/view-expand.js"></script>
+<script src="assets/zoom.js"></script>
+<script src="assets/export3d.js"></script>
+<script>
+"use strict";
+/* The Brodmann Area Atlas: the areas as a list, as a line map of both
+   faces of the hemisphere, on the MNI152 template in four views drawn as
+   the other atlases draw theirs, and as a graph of where they border. One
+   area is picked at a time, since the page answers "what does this do",
+   and every one of the four shows the same pick. */
+(function(){
+  var B = window.MN_BRODMANN;
+  var TPL_URL = MN_ATLAS.TPL_URL;
+  var BA_URL = "assets/brodmann.nii.gz";
+  var N = B.MAX + 1;
+
+  /* one colour per lobe, so a picked area reads as belonging somewhere
+     before its name is read */
+  var LOBE_COLOUR = {
+    frontal:"#5A61D8", parietal:"#4AE8C3", temporal:"#FF704E",
+    occipital:"#DAD358", cingulate:"#E250A9"
+  };
+  function lobeOf(a){ return B.LOBES.filter(function(l){ return l.id === a.lobe; })[0]; }
+
+  var statusEl = document.getElementById("status");
+  function fail(msg){
+    statusEl.classList.remove("hidden");
+    statusEl.classList.add("error");
+    statusEl.innerHTML = "";
+    var d = document.createElement("div"); d.textContent = msg; statusEl.appendChild(d);
+  }
+
+  /* theme toggle — exact palette inverse, site-wide convention */
+  var themeBtn = document.getElementById("themeBtn");
+  var themeLbl = document.getElementById("themeLbl");
+  if (document.documentElement.getAttribute("data-theme") === "dark"){
+    themeLbl.textContent = "Light"; themeBtn.setAttribute("aria-pressed","true");
+  }
+  themeBtn.addEventListener("click", function(){
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark";
+    if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+    else { root.setAttribute("data-theme","dark"); themeLbl.textContent = "Light"; }
+    themeBtn.setAttribute("aria-pressed", String(!dark));
+    try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+  });
+
+  /* ── four synced instances: one boxed viewport per plane ── */
+  var hasNV = typeof niivue !== "undefined";
+  var PLANES = [
+    {key:"axial",    canvasId:"baAx",  st: hasNV ? niivue.SLICE_TYPE.AXIAL : 0},
+    {key:"coronal",  canvasId:"baCor", st: hasNV ? niivue.SLICE_TYPE.CORONAL : 1},
+    {key:"sagittal", canvasId:"baSag", st: hasNV ? niivue.SLICE_TYPE.SAGITTAL : 2},
+    {key:"render",   canvasId:"baRen", st: hasNV ? niivue.SLICE_TYPE.RENDER : 4}
+  ];
+  var INSTANCES = {};
+  function makeNV(sliceType){
+    var c = MN_LOOK.colours();
+    return new niivue.Niivue({
+      backColor: c.back,
+      crosshairColor: c.cross,
+      show3Dcrosshair: true,
+      sliceType: sliceType,
+      invertScrollDirection: true,
+      dragAndDropEnabled: false,
+      textHeight: 0.04
+    });
+  }
+  function allNV(){ return PLANES.map(function(p){ return INSTANCES[p.key]; }).filter(Boolean); }
+  function paintScene(){
+    MN_LOOK.paint(PLANES.map(function(p){ return {nv: INSTANCES[p.key], slice: p.key !== "render"}; }));
+  }
+  MN_LOOK.follow(paintScene);
+
+  /* ── direction locks ────────────────────────────────────────────────
+     Each slice can confine a drag to one direction. The stored value is
+     the axis left FREE to move: "x" left–right, "y" anterior–posterior,
+     "z" superior–inferior — also the index into a crosshair position,
+     which the viewer holds as fractions of the volume. The 3D box turns
+     freely and has no lock. */
+  var LOCK_AXIS = {x:0, y:1, z:2};
+  var locks = {axial:"free", coronal:"free", sagittal:"free"};
+  var anchor = null, dragBox = null, correcting = false;
+
+  document.querySelectorAll(".seg[data-lock-for]").forEach(function(seg){
+    var key = seg.getAttribute("data-lock-for");
+    seg.querySelectorAll("[data-lock]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        seg.querySelectorAll("[data-lock]").forEach(function(b){ b.classList.toggle("active", b === btn); });
+        locks[key] = btn.getAttribute("data-lock");
+      });
+    });
+  });
+  document.querySelectorAll(".view[data-box]").forEach(function(box){
+    var key = box.getAttribute("data-box"), stage = box.querySelector(".mri-stage");
+    if (!stage) return;
+    stage.addEventListener("pointerdown", function(){
+      var nv = INSTANCES[key];
+      if (!nv) return;
+      dragBox = key;
+      anchor = nv.scene.crosshairPos.slice();
+    });
+  });
+  /* over the 3D box the wheel zooms it, and the page stays where it is */
+  document.querySelectorAll('.view[data-box="render"] .mri-stage').forEach(function(stage){
+    stage.addEventListener("wheel", function(e){ e.preventDefault(); }, {capture: true, passive: false});
+  });
+  ["pointerup", "pointercancel"].forEach(function(evt){
+    window.addEventListener(evt, function(){ anchor = null; dragBox = null; });
+  });
+  /* Put the frozen axes back after the viewer has moved the crosshair, then
+     let it report where the crosshair actually landed. The boxes broadcast
+     crosshair moves to one another, so only the box the drag started in may
+     impose its lock. */
+  function applyLock(key, loc){
+    var free = locks[key], nv = INSTANCES[key];
+    if (correcting || key !== dragBox || !free || free === "free" || !nv || !anchor){ onLoc(loc); return; }
+    var pos = nv.scene.crosshairPos, held = [anchor[0], anchor[1], anchor[2]];
+    held[LOCK_AXIS[free]] = pos[LOCK_AXIS[free]];
+    if (held[0] === pos[0] && held[1] === pos[1] && held[2] === pos[2]){ onLoc(loc); return; }
+    correcting = true;
+    try{
+      allNV().forEach(function(inst){ inst.scene.crosshairPos = held.slice(); inst.drawScene(); });
+      nv.createOnLocationChange();
+    } catch(e){ onLoc(loc); }
+    finally{ correcting = false; }
+  }
+
+  /* Put the crosshair back at the middle of the volume, and undo any
+     panning or zooming with it. */
+  function centrePlanes(){
+    var nvs = allNV();
+    if (!nvs.length) return;
+    correcting = true;
+    try{
+      nvs.forEach(function(inst){
+        inst.scene.crosshairPos = [0.5, 0.5, 0.5];
+        inst.scene.pan2Dxyzmm = [0, 0, 0, 1];
+        inst.drawScene();
+      });
+      nvs[0].createOnLocationChange();
+    } catch(e){}
+    finally{ correcting = false; }
+  }
+  document.querySelectorAll("[data-centre]").forEach(function(btn){ btn.addEventListener("click", centrePlanes); });
+
+  /* each view's bar ends in the button that opens it over the grid */
+  if (window.MN_EXPAND) MN_EXPAND.attach(document.querySelector(".views-wrap"));
+
+  /* every view's crosshair on an MNI coordinate, so a pick from the list,
+     the map or the graph lands the scans on the area */
+  function goTo(mm){
+    var nvs = allNV();
+    nvs.forEach(function(nv){
+      try{ nv.scene.crosshairPos = nv.mm2frac(mm); nv.drawScene(); }catch(e){}
+    });
+    /* and the probe reads what the crosshair has landed on */
+    correcting = true;
+    try{ if (nvs.length) nvs[0].createOnLocationChange(); }catch(e){}
+    finally{ correcting = false; }
+  }
+
+  /* ── the pick ───────────────────────────────────────────────────────── */
+  var selected = null;
+
+  function hexToRgb(h){ var n = parseInt(h.slice(1), 16); return [(n>>16)&255, (n>>8)&255, n&255]; }
+  function paint(){
+    var R = new Array(N).fill(0), G = new Array(N).fill(0),
+        Bl = new Array(N).fill(0), A = new Array(N).fill(0), I = [];
+    for (var i = 0; i < N; i++) I.push(i);
+    if (selected != null){
+      var rgb = hexToRgb(LOBE_COLOUR[B.BY_BA[selected].lobe] || "#FFFFFF");
+      R[selected] = rgb[0]; G[selected] = rgb[1]; Bl[selected] = rgb[2]; A[selected] = 255;
+    }
+    var cm = {R: R, G: G, B: Bl, A: A, I: I, labels: B.LABELS};
+    allNV().forEach(function(nv){
+      if (!nv.volumes || nv.volumes.length < 2) return;
+      nv.volumes[1].setColormapLabel(cm);
+      try{ nv.updateGLVolume(); }catch(e){}
+    });
+  }
+
+  /* the bar names the pick and holds its height; what it does opens on top */
+  var statSel = document.getElementById("statSel");
+  var selKick = document.getElementById("selKick");
+  var selName = document.getElementById("selName");
+  var selFn = document.getElementById("selFn");
+  var fnModal = document.getElementById("fnModal");
+  var fnBox = fnModal.querySelector(".modal-box");
+
+  function read(){
+    if (selected == null){
+      selKick.textContent = "Nothing picked";
+      selKick.style.borderLeftColor = "transparent";
+      selName.textContent = "Pick an area from the map, the list, the graph or the scan.";
+      selFn.hidden = true;
+      statSel.innerHTML = "&mdash;";
+      closeFn();
+      return;
+    }
+    var a = B.BY_BA[selected], lobe = lobeOf(a);
+    selKick.textContent = "BA" + a.ba + " · " + (lobe ? lobe.label : "");
+    selKick.style.borderLeftColor = LOBE_COLOUR[a.lobe] || "transparent";
+    selName.textContent = a.name;
+    selFn.hidden = false;
+    statSel.textContent = "BA" + a.ba;
+    if (!fnModal.hidden) fillFn();
+  }
+
+  function fillFn(){
+    var a = selected != null && B.BY_BA[selected];
+    if (!a) return;
+    var lobe = lobeOf(a);
+    document.getElementById("fn-kick").textContent = "Brodmann area " + a.ba + " · " + (lobe ? lobe.label : "");
+    document.getElementById("fn-title").textContent = a.name;
+    document.getElementById("fn-where").textContent =
+      a.region + " · MNI " + a.at[0] + " " + a.at[1] + " " + a.at[2] + " mm · " + a.vox.toLocaleString() + " voxels";
+    document.getElementById("fn-body").textContent = a.fn;
+    var note = document.getElementById("fn-note");
+    note.hidden = !a.note;
+    note.textContent = a.note || "";
+    fnBox.style.borderTop = "3px solid " + (LOBE_COLOUR[a.lobe] || "transparent");
+  }
+
+  /* The reading grows out of the button that opened it and shrinks back
+     into it, so where it came from is never in doubt. */
+  var fnOpener = null, fnTimer = 0;
+  function originFrom(el){
+    if (!el || !el.getBoundingClientRect) return;
+    var r = el.getBoundingClientRect(), b = fnBox.getBoundingClientRect();
+    fnBox.style.transformOrigin = (r.left + r.width / 2 - b.left) + "px " + (r.top + r.height / 2 - b.top) + "px";
+  }
+  function openFn(){
+    if (selected == null) return;
+    clearTimeout(fnTimer);
+    fillFn();
+    fnOpener = document.activeElement;
+    fnModal.hidden = false;
+    originFrom(fnOpener);
+    document.body.style.overflow = "hidden";
+    void fnBox.offsetWidth;
+    fnModal.classList.add("open");
+    var x = fnModal.querySelector(".modal-x");
+    if (x) x.focus();
+  }
+  function closeFn(){
+    if (fnModal.hidden) return;
+    originFrom(fnOpener && document.contains(fnOpener) ? fnOpener : selFn);
+    fnModal.classList.remove("open");
+    document.body.style.overflow = "";
+    clearTimeout(fnTimer);
+    fnTimer = setTimeout(function(){ if (!fnModal.classList.contains("open")) fnModal.hidden = true; }, 280);
+    if (fnOpener && fnOpener.focus && document.contains(fnOpener)) fnOpener.focus();
+    fnOpener = null;
+  }
+  selFn.addEventListener("click", openFn);
+  fnModal.addEventListener("click", function(e){ if (e.target.hasAttribute("data-close")) closeFn(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeFn(); });
+
+  /* the address follows the pick, so a link opens on the same area */
+  function markAddress(){
+    var want = selected != null ? "#ba=" + selected : "";
+    if ((location.hash || "") === want) return;
+    try{ history.replaceState(history.state, "", location.pathname + location.search + want); }catch(e){}
+  }
+
+  function select(ba, fromList, quiet){
+    selected = (selected === ba) ? null : ba;
+    paint(); read(); markList(); markCartoon(); markGraph(); markAddress();
+    if (selected != null){
+      var a = B.BY_BA[selected];
+      if (a && a.at) goTo(a.at);
+      if (window.MN && !quiet) MN.tap("light");
+      if (!fromList) scrollListTo(selected);
+    }
+  }
+  document.getElementById("clearBtn").addEventListener("click", function(){
+    if (selected != null) select(selected, true);
+  });
+
+  /* ── the list, and the search that filters it ─────────────────────────
+     Three fields are searched at once: the number, the anatomical name and
+     the function text. Someone who knows they want BA17 types 17; someone
+     who knows they want the fusiform types fusiform; someone who only knows
+     they want the part that recognises faces types faces, and gets there. */
+  var listEl = document.getElementById("balist");
+  var qEl = document.getElementById("q");
+  var qClear = document.getElementById("qclear");
+  var qCount = document.getElementById("qcount");
+  var rows = {};
+
+  function norm(s){ return String(s).toLowerCase(); }
+  function hayFor(a){
+    return norm("ba" + a.ba + " " + a.ba + " " + a.name + " " + a.region + " " +
+                a.fn + " " + a.note + " " + a.lobe + " " + (a.tags || ""));
+  }
+  /* Two passes, because loose matching on several words is too generous:
+     a multi-word query is tried as a phrase first, and only if nothing
+     carries the phrase does it fall back to every-word-somewhere. */
+  function matches(a, terms, phrase){
+    if (!terms.length) return true;
+    var hay = hayFor(a);
+    if (phrase) return hay.indexOf(phrase) !== -1;
+    return terms.every(function(t){ return hay.indexOf(t) !== -1; });
+  }
+  function phraseFor(terms, raw){
+    if (terms.length < 2) return null;
+    var whole = norm(raw).trim().replace(/\s+/g, " ");
+    return B.AREAS.some(function(a){ return hayFor(a).indexOf(whole) !== -1; }) ? whole : null;
+  }
+  function highlight(text, terms){
+    if (!terms.length) return document.createTextNode(text);
+    var frag = document.createDocumentFragment();
+    var low = norm(text), i = 0;
+    while (i < text.length){
+      var best = -1, bestLen = 0;
+      terms.forEach(function(t){
+        var at = low.indexOf(t, i);
+        if (at !== -1 && (best === -1 || at < best)){ best = at; bestLen = t.length; }
+      });
+      if (best === -1){ frag.appendChild(document.createTextNode(text.slice(i))); break; }
+      if (best > i) frag.appendChild(document.createTextNode(text.slice(i, best)));
+      var m = document.createElement("mark");
+      m.textContent = text.slice(best, best + bestLen);
+      frag.appendChild(m);
+      i = best + bestLen;
+    }
+    return frag;
+  }
+  function buildList(){
+    var terms = norm(qEl.value).split(/\s+/).filter(Boolean);
+    var phrase = phraseFor(terms, qEl.value);
+    listEl.innerHTML = "";
+    rows = {};
+    var shown = 0;
+    B.LOBES.forEach(function(lobe){
+      var mine = B.AREAS.filter(function(a){ return a.lobe === lobe.id && matches(a, terms, phrase); });
+      if (!mine.length) return;
+      var h = document.createElement("div");
+      h.className = "balobe";
+      h.textContent = lobe.label + " · " + lobe.sub;
+      listEl.appendChild(h);
+      mine.forEach(function(a){
+        shown++;
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "barow"; b.dataset.ba = a.ba;
+        b.setAttribute("aria-pressed", String(selected === a.ba));
+        var num = document.createElement("span"); num.className = "num";
+        num.appendChild(highlight("BA" + a.ba, phrase ? [phrase] : terms));
+        var nm = document.createElement("span"); nm.className = "nm";
+        nm.appendChild(highlight(a.name, phrase ? [phrase] : terms));
+        var sw = document.createElement("span"); sw.className = "swatch";
+        sw.style.background = LOBE_COLOUR[a.lobe] || "transparent";
+        b.appendChild(num); b.appendChild(nm); b.appendChild(sw);
+        b.addEventListener("click", function(){ select(a.ba, true); });
+        listEl.appendChild(b);
+        rows[a.ba] = b;
+      });
+    });
+    if (!shown){
+      var e = document.createElement("p");
+      e.className = "balist-empty";
+      e.textContent = "Nothing matches “" + qEl.value.trim() + "”. Try a number, a gyrus, or what you want the area to do.";
+      listEl.appendChild(e);
+    }
+    qCount.textContent = terms.length
+      ? shown + (shown === 1 ? " area matches" : " areas match")
+      : "All " + B.AREAS.length + " areas.";
+    qClear.classList.toggle("hidden", !qEl.value);
+  }
+  function markList(){
+    Object.keys(rows).forEach(function(ba){ rows[ba].setAttribute("aria-pressed", String(Number(ba) === selected)); });
+  }
+  function scrollListTo(ba){
+    var r = rows[ba];
+    if (!r) return;
+    /* within the list only: the page itself stays where the reader is */
+    var top = r.offsetTop - listEl.offsetTop, bottom = top + r.offsetHeight;
+    if (top < listEl.scrollTop) listEl.scrollTop = top;
+    else if (bottom > listEl.scrollTop + listEl.clientHeight) listEl.scrollTop = bottom - listEl.clientHeight;
+  }
+  qEl.addEventListener("input", function(){ buildList(); markList(); });
+  qEl.addEventListener("keydown", function(e){
+    if (e.key === "Escape"){ qEl.value = ""; buildList(); markList(); }
+    /* Enter picks the only match, which is what typing "17" means */
+    if (e.key === "Enter"){
+      var only = Object.keys(rows);
+      if (only.length === 1) select(Number(only[0]), true);
+    }
+  });
+  qClear.addEventListener("click", function(){ qEl.value = ""; buildList(); markList(); qEl.focus(); });
+
+  /* ── probing the scan ─────────────────────────────────────────────────
+     The atlas is a label volume, so the value under the crosshair is the
+     area number. Reading it back makes the scan an index into the list. */
+  var regionOut = document.getElementById("cursorRegion");
+  var coordsOut = document.getElementById("cursorCoords");
+  function onLoc(loc){
+    try{
+      if (loc && loc.mm) coordsOut.textContent = "MNI " + loc.mm[0].toFixed(0) + " " + loc.mm[1].toFixed(0) + " " + loc.mm[2].toFixed(0) + " mm";
+      var idx = 0;
+      if (loc && loc.values && loc.values.length > 1 && loc.values[1]) idx = Math.round(loc.values[1].value || 0);
+      var a = B.BY_BA[idx];
+      regionOut.textContent = a ? ("BA" + a.ba + " · " + a.name) : "—";
+      regionOut.dataset.ba = a ? a.ba : "";
+    }catch(e){}
+  }
+  /* pressing the probe's read-out picks what it names */
+  regionOut.addEventListener("click", function(){
+    var ba = Number(regionOut.dataset.ba || 0);
+    if (ba && ba !== selected) select(ba, false);
+  });
+
+  /* how strongly the picked area covers the scan: the newest value at most
+     every tenth of a second, with one rebuild per view, so a drag is not
+     held up by the viewer rebuilding its layers for every step */
+  var opacityEl = document.getElementById("opacity"), opacityVal = document.getElementById("opacityVal");
+  var opacityTimer = 0, opacityLast = 0;
+  function applyOpacity(){
+    opacityTimer = 0; opacityLast = performance.now();
+    var v = opacityEl.value / 100;
+    allNV().forEach(function(nv){
+      if (!nv.volumes || nv.volumes.length < 2) return;
+      nv.volumes[1].opacity = v;
+      try{ nv.updateGLVolume(); }catch(e){}
+    });
+  }
+  opacityEl.addEventListener("input", function(){
+    opacityVal.textContent = opacityEl.value + "%";
+    if (opacityTimer) return;
+    opacityTimer = setTimeout(function(){ requestAnimationFrame(applyOpacity); },
+                              Math.max(0, 100 - (performance.now() - opacityLast)));
+  });
+
+  /* ── 3D export ────────────────────────────────────────────────────────
+     The picked area as a surface off the atlas volume, the border graph as
+     spheres at each area's centre of mass joined by tubes as thick as the
+     border is long, and the brain's outer surface for context. */
+  if (window.MN_EXPORT3D){
+    var x3d = MN_EXPORT3D.attach({
+      host: document.getElementById("export3d"),
+      basename: function(){ return selected != null ? "brodmann-area-" + selected : "brodmann-areas"; },
+      options: [
+        { id: "area",  label: "The picked area, as a surface", checked: true },
+        { id: "graph", label: "The border graph", checked: true },
+        { id: "shell", label: "The brain surface", checked: true }
+      ],
+      build: function(ctx){
+        return MN_EXPORT3D.volumes(allNV()[0], BA_URL, TPL_URL).then(function(v){
+          var ba = v[0], tpl = v[1], parts = [];
+          if (ctx.options.area && selected != null){
+            var a = B.BY_BA[selected];
+            parts.push(MN_EXPORT3D.labelSurface(ba, [selected], {
+              name: "BA" + selected + " " + a.name, colour: MN_EXPORT3D.hexColour(LOBE_COLOUR[a.lobe] || "#888888")
+            }));
+          }
+          if (ctx.options.graph){
+            B.AREAS.forEach(function(a){
+              parts.push(MN_EXPORT3D.sphere(a.at, 3.2, {
+                name: "BA" + a.ba + " " + a.name, colour: MN_EXPORT3D.hexColour(LOBE_COLOUR[a.lobe] || "#888888")
+              }));
+            });
+            var maxW = 0;
+            B.EDGES.forEach(function(e){ if (e[2] > maxW) maxW = e[2]; });
+            var tubes = [];
+            B.EDGES.forEach(function(e){
+              var p = B.BY_BA[e[0]], q = B.BY_BA[e[1]];
+              if (!p || !q) return;
+              tubes.push(MN_EXPORT3D.tube(p.at, q.at, 0.35 + 1.4 * Math.sqrt(e[2] / maxW), { colour: [0.55, 0.55, 0.55] }));
+            });
+            if (tubes.length) parts.push(MN_EXPORT3D.merge(tubes, { name: "Borders", colour: [0.55, 0.55, 0.55] }));
+          }
+          if (ctx.options.shell) parts.push(MN_EXPORT3D.brainSurface(tpl, { alpha: 0.22 }));
+          if (!parts.filter(Boolean).length) throw new Error("Tick at least one thing to export, or pick an area.");
+          return { name: "VisualNeuroscience Brodmann", parts: parts };
+        });
+      }
+    });
+    /* the PNG of the four views goes under the 3D model's button, as on the
+       other atlases */
+    var shotRow = document.getElementById("shotRow");
+    if (x3d && x3d.button && x3d.button.parentNode && shotRow)
+      x3d.button.parentNode.insertAdjacentElement("afterend", shotRow);
+  }
+
+  /* a PNG of the four views, laid out as they are on the page */
+  document.getElementById("shotBtn").addEventListener("click", function(){
+    var shown = PLANES.filter(function(p){ return INSTANCES[p.key]; });
+    if (!shown.length) return;
+    try{
+      var canvases = shown.map(function(p){ return document.getElementById(p.canvasId); });
+      shown.forEach(function(p){ try{ INSTANCES[p.key].drawScene(); }catch(e){} });
+      var w = 0, h = 0;
+      canvases.forEach(function(c){ w = Math.max(w, c.width); h = Math.max(h, c.height); });
+      var cols = 2, rowsN = Math.ceil(shown.length / cols);
+      var gap = Math.max(8, Math.round(w * 0.015)), bd = 2;
+      var out = document.createElement("canvas");
+      out.width = cols * w + (cols + 1) * gap;
+      out.height = rowsN * h + (rowsN + 1) * gap;
+      var ctx = out.getContext("2d");
+      var dark = document.documentElement.getAttribute("data-theme") === "dark";
+      ctx.fillStyle = dark ? "#111111" : "#FFFFFF";
+      ctx.fillRect(0, 0, out.width, out.height);
+      canvases.forEach(function(c, i){
+        var x = gap + (i % cols) * (w + gap), y = gap + Math.floor(i / cols) * (h + gap);
+        ctx.drawImage(c, x, y, w, h);
+        ctx.strokeStyle = dark ? "#FFFFFF" : "#111111";
+        ctx.lineWidth = bd;
+        ctx.strokeRect(x - bd/2, y - bd/2, w + bd, h + bd);
+      });
+      var name = selected != null ? "brodmann-area-" + selected + ".png" : "brodmann-areas.png";
+      /* handed to the platform rather than downloaded, so a phone puts it
+         in Photos or the share sheet */
+      if (window.MN){
+        MN.tap("light");
+        MN.saveImage(out.toDataURL("image/png"), name);
+      } else {
+        out.toBlob(function(blob){
+          if (!blob) return;
+          var u = URL.createObjectURL(blob);
+          var a = document.createElement("a"); a.href = u; a.download = name;
+          document.body.appendChild(a); a.click();
+          setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(u); }, 0);
+        });
+      }
+    } catch(e){ console.error(e); }
+  });
+
+  /* ── the line map ─────────────────────────────────────────────────────
+     Each area is its own outline with its number set at the most interior
+     point of the shape, so a wedge or a crescent still reads. Nothing is
+     drawn beneath the outlines: the map is the drawing. Geometry and anchors
+     come from scripts/make_brodmann_outline.mjs. */
+  var OUT = window.MN_BA_OUTLINE || {areas: {}, box: {}};
+  var tiles = {lateral: {}, medial: {}};
+  function drawCartoon(host, which){
+    var NS = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", (OUT.box && OUT.box[which]) || "0 0 600 400");
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", which === "lateral"
+      ? "Brodmann areas on the external surface of the hemisphere"
+      : "Brodmann areas on the internal surface of the hemisphere");
+    Object.keys(OUT.areas).forEach(function(k){
+      var ba = +k;
+      var spec = (OUT.areas[k] || []).filter(function(e){ return e.view === which; })[0];
+      if (!spec) return;
+      var a = B.BY_BA[ba];
+      var g = document.createElementNS(NS, "g");
+      g.setAttribute("class", "ba-tile" + (a ? "" : " mute"));
+      g.dataset.ba = ba;
+      if (a) g.style.setProperty("--sel", LOBE_COLOUR[a.lobe] || "var(--ink)");
+      var shape = document.createElementNS(NS, "path");
+      shape.setAttribute("class", "shape");
+      shape.setAttribute("d", spec.d);
+      shape.setAttribute("fill-rule", "evenodd");
+      var num = document.createElementNS(NS, "text");
+      num.setAttribute("class", "num");
+      num.setAttribute("x", spec.at[0]); num.setAttribute("y", spec.at[1]);
+      num.setAttribute("text-anchor", "middle");
+      num.setAttribute("dominant-baseline", "central");
+      /* a number no wider than the room its area has for it */
+      num.setAttribute("font-size", Math.max(6.5, Math.min(12, (spec.r || 8) * 1.15)).toFixed(1));
+      num.textContent = ba;
+      var ti = document.createElementNS(NS, "title");
+      ti.textContent = "BA" + ba + (a ? " — " + a.name : " — not in the atlas volume");
+      g.appendChild(shape); g.appendChild(num); g.appendChild(ti);
+      if (a) g.addEventListener("click", function(){ select(ba, false); });
+      svg.appendChild(g);
+      tiles[which][ba] = g;
+    });
+    host.innerHTML = "";
+    host.appendChild(svg);
+  }
+  function markCartoon(){
+    ["lateral", "medial"].forEach(function(w){
+      Object.keys(tiles[w]).forEach(function(ba){ tiles[w][ba].classList.toggle("on", Number(ba) === selected); });
+    });
+    /* an area can be real and simply not face either way */
+    var note = document.getElementById("cartMiss");
+    if (selected == null){ note.textContent = ""; return; }
+    note.textContent = (tiles.lateral[selected] || tiles.medial[selected]) ? ""
+      : "BA" + selected + " does not reach either surface: it is buried, and only the scans show it.";
+  }
+
+  /* ── the graph ────────────────────────────────────────────────────────
+     Not an abstract layout: each node sits at its area's own centre of mass
+     in MNI millimetres, so turning the graph turns the brain. Edges are the
+     borders measured off the volume, weighted by how much border there is. */
+  var GS = 660, GH = 400;
+  /* How far the eye stands from the middle, in the same millimetres the
+     nodes use: close enough to give depth, far enough that the brain drawn
+     around them keeps its own profile. */
+  var PERSP = 1500;
+  var gSvg, gNodes = {}, gEdges = [], gAngle = 0.6, gTilt = -0.25;
+  var gDiag = null, gBrain = null, gRings = [];
+  var HULL = window.MN_BRAIN_HULL || null;
+  var HULL_PTS = [];
+  if (HULL) HULL.rings.forEach(function(r){ HULL_PTS.push.apply(HULL_PTS, r); });
+
+  /* The cloud is centred on its own middle and given one scale, fixed from
+     the widest and tallest it ever gets over the turns it can be given, so
+     turning it does not make the whole graph swell and shrink. The brain
+     around the nodes is part of what has to fit. */
+  var gMid = [0,0,0], gK = 1.9;
+  function fitGraph(){
+    var n = B.AREAS.length;
+    gMid = [0,0,0];
+    B.AREAS.forEach(function(a){ for (var i = 0; i < 3; i++) gMid[i] += a.at[i] / n; });
+    var fitPts = B.AREAS.map(function(a){ return a.at; });
+    for (var h = 0; h < HULL_PTS.length; h += 2) fitPts.push(HULL_PTS[h]);
+    var MARGIN = 34;
+    /* the same projection the drawing uses, perspective included, since a
+       point in front of the middle is magnified */
+    function extents(k){
+      var mx = 1, mz = 1;
+      for (var ai = 0; ai < 24; ai++){
+        var A = ai * Math.PI / 12, ca = Math.cos(A), sa = Math.sin(A);
+        for (var ti = -5; ti <= 5; ti++){
+          var T = ti * 0.12, ct = Math.cos(T), st = Math.sin(T);
+          for (var j = 0; j < fitPts.length; j++){
+            var p = fitPts[j];
+            var x = p[0]-gMid[0], y = p[1]-gMid[1], z = p[2]-gMid[2];
+            var X = x*ca - y*sa, Y = x*sa + y*ca;
+            var Y2 = Y*ct - z*st, Z2 = Y*st + z*ct;
+            var denom = PERSP + Y2 * k;
+            if (denom <= 1) continue;
+            var persp = PERSP / denom;
+            var ax = Math.abs(X * k * persp), az = Math.abs(Z2 * k * persp);
+            if (ax > mx) mx = ax;
+            if (az > mz) mz = az;
+          }
+        }
+      }
+      return [mx, mz];
+    }
+    /* scale to the width, then make the box exactly as tall as that needs;
+       perspective depends on the scale, so it is settled in a few passes */
+    var target = GS / 2 - MARGIN;
+    gK = 1.9;
+    for (var pass = 0; pass < 5; pass++){ var e = extents(gK); gK *= target / e[0]; }
+    var fin = extents(gK);
+    GH = Math.round(2 * fin[1]) + 44;
+    if (gSvg){
+      if (gDiag) gDiag.setBase(0, 0, GS, GH);
+      else gSvg.setAttribute("viewBox", "0 0 " + GS + " " + GH);
+    }
+  }
+
+  /* The graph turns, so the brain behind it cannot be a picture. What ships
+     is a cage of contour rings, the template's own outline in ten sagittal
+     and nine coronal planes, put through the same projection as the nodes;
+     their points also give the silhouette, the farthest in each of
+     eighty-four directions round the middle, smoothed into one closed path. */
+  var BRAIN_BINS = 84;
+  function ringPath(ring){
+    var d = "";
+    for (var i = 0; i < ring.length; i++){
+      var pr = project(ring[i]);
+      d += (i ? "L" : "M") + pr.x.toFixed(1) + " " + pr.y.toFixed(1);
+    }
+    return d + "Z";
+  }
+  function brainOutline(){
+    var pts = HULL_PTS, n = pts.length;
+    if (!n) return "";
+    var px = new Float64Array(n), py = new Float64Array(n), cx = 0, cy = 0, i, b;
+    for (i = 0; i < n; i++){
+      var pr = project(pts[i]);
+      px[i] = pr.x; py[i] = pr.y; cx += pr.x; cy += pr.y;
+    }
+    cx /= n; cy /= n;
+    var bestR = new Float64Array(BRAIN_BINS), bx = new Float64Array(BRAIN_BINS), by = new Float64Array(BRAIN_BINS);
+    for (i = 0; i < n; i++){
+      var dx = px[i] - cx, dy = py[i] - cy, r = dx*dx + dy*dy;
+      b = Math.floor((Math.atan2(dy, dx) + Math.PI) / (2 * Math.PI) * BRAIN_BINS) % BRAIN_BINS;
+      if (r > bestR[b]){ bestR[b] = r; bx[b] = px[i]; by[b] = py[i]; }
+    }
+    /* a direction with no point of its own borrows the mean of its
+       neighbours, so the ring never gains a notch at the origin */
+    var ring = [];
+    for (b = 0; b < BRAIN_BINS; b++){
+      if (bestR[b] > 0){ ring.push([bx[b], by[b]]); continue; }
+      var prev = (b - 1 + BRAIN_BINS) % BRAIN_BINS, nextb = (b + 1) % BRAIN_BINS;
+      if (bestR[prev] > 0 && bestR[nextb] > 0) ring.push([(bx[prev] + bx[nextb]) / 2, (by[prev] + by[nextb]) / 2]);
+    }
+    if (ring.length < 8) return "";
+    /* closed Catmull-Rom through the ring, as cubics */
+    var m = ring.length, d = "M" + ring[0][0].toFixed(1) + " " + ring[0][1].toFixed(1);
+    for (i = 0; i < m; i++){
+      var p0 = ring[(i - 1 + m) % m], p1 = ring[i], p2 = ring[(i + 1) % m], p3 = ring[(i + 2) % m];
+      d += "C" + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + " " + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(1) +
+           " " + (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + " " + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(1) +
+           " " + p2[0].toFixed(1) + " " + p2[1].toFixed(1);
+    }
+    return d + "Z";
+  }
+  function project(mm){
+    /* MNI x is left-right, y front-back, z up. Turn about z, tilt about x. */
+    var x = mm[0]-gMid[0], y = mm[1]-gMid[1], z = mm[2]-gMid[2];
+    var ca = Math.cos(gAngle), sa = Math.sin(gAngle);
+    var X = x * ca - y * sa, Y = x * sa + y * ca;
+    var ct = Math.cos(gTilt), st = Math.sin(gTilt);
+    var Y2 = Y * ct - z * st, Z2 = Y * st + z * ct;
+    var persp = PERSP / (PERSP + Y2 * gK);
+    return { x: GS/2 + X * gK * persp, y: GH/2 - Z2 * gK * persp, d: Y2, s: persp };
+  }
+  function buildGraph(){
+    var NS = "http://www.w3.org/2000/svg", host = document.getElementById("graphStage");
+    gSvg = document.createElementNS(NS, "svg");
+    gSvg.setAttribute("role", "img");
+    gSvg.setAttribute("aria-label", "The Brodmann areas at their centres in the brain, joined where they border");
+    host.innerHTML = ""; host.appendChild(gSvg);
+    if (HULL){
+      var bg = document.createElementNS(NS, "g");
+      gBrain = document.createElementNS(NS, "path");
+      gBrain.setAttribute("class", "g-brain");
+      var bt = document.createElementNS(NS, "title");
+      bt.textContent = "The brain's outer surface, from the MNI152 template";
+      gBrain.appendChild(bt);
+      bg.appendChild(gBrain);
+      HULL.rings.forEach(function(){
+        var r = document.createElementNS(NS, "path");
+        r.setAttribute("class", "g-ring");
+        gRings.push(r); bg.appendChild(r);
+      });
+      gSvg.appendChild(bg);
+    }
+    var maxW = 0;
+    B.EDGES.forEach(function(e){ if (e[2] > maxW) maxW = e[2]; });
+    var eg = document.createElementNS(NS, "g");
+    gSvg.appendChild(eg);
+    B.EDGES.forEach(function(e){
+      var ln = document.createElementNS(NS, "line");
+      ln.setAttribute("class", "g-edge");
+      ln.setAttribute("stroke-width", (0.4 + 2.2 * Math.sqrt(e[2] / maxW)).toFixed(2));
+      eg.appendChild(ln);
+      gEdges.push({a: e[0], b: e[1], el: ln, w: e[2]});
+    });
+    var ng = document.createElementNS(NS, "g");
+    gSvg.appendChild(ng);
+    B.AREAS.forEach(function(a){
+      var g = document.createElementNS(NS, "g");
+      g.setAttribute("class", "g-node");
+      g.dataset.ba = a.ba;
+      var c = document.createElementNS(NS, "circle");
+      c.setAttribute("fill", LOBE_COLOUR[a.lobe] || "#888");
+      c.setAttribute("stroke", "var(--paper)");
+      c.setAttribute("stroke-width", "1.2");
+      var t = document.createElementNS(NS, "text");
+      t.textContent = a.ba;
+      var ti = document.createElementNS(NS, "title");
+      ti.textContent = "BA" + a.ba + " — " + a.name;
+      g.appendChild(c); g.appendChild(t); g.appendChild(ti);
+      g.addEventListener("click", function(){ select(a.ba, false); });
+      ng.appendChild(g);
+      gNodes[a.ba] = {g: g, c: c, t: t, area: a};
+    });
+    fitGraph();
+    document.getElementById("gCount").textContent = B.AREAS.length + " areas · " + B.EDGES.length + " borders";
+    layoutGraph();
+  }
+  function layoutGraph(){
+    if (gBrain){
+      gBrain.setAttribute("d", brainOutline());
+      for (var ri = 0; ri < gRings.length; ri++) gRings[ri].setAttribute("d", ringPath(HULL.rings[ri]));
+    }
+    var pos = {};
+    B.AREAS.forEach(function(a){ pos[a.ba] = project(a.at); });
+    gEdges.forEach(function(e){
+      var p = pos[e.a], q = pos[e.b];
+      if (!p || !q) return;
+      e.el.setAttribute("x1", p.x.toFixed(1)); e.el.setAttribute("y1", p.y.toFixed(1));
+      e.el.setAttribute("x2", q.x.toFixed(1)); e.el.setAttribute("y2", q.y.toFixed(1));
+    });
+    /* the far side first, so the near side sits on top of it */
+    var order = B.AREAS.slice().sort(function(a, b){ return pos[b.ba].d - pos[a.ba].d; });
+    order.forEach(function(a){
+      var n = gNodes[a.ba], p = pos[a.ba];
+      var r = (6 + Math.min(8, Math.sqrt(a.vox) / 55)) * p.s;
+      n.c.setAttribute("cx", p.x.toFixed(1)); n.c.setAttribute("cy", p.y.toFixed(1));
+      n.c.setAttribute("r", r.toFixed(1));
+      n.t.setAttribute("x", p.x.toFixed(1)); n.t.setAttribute("y", p.y.toFixed(1));
+      n.t.setAttribute("font-size", Math.max(6, 9 * p.s).toFixed(1));
+      n.g.parentNode.appendChild(n.g);
+    });
+  }
+  function markGraph(){
+    var stage = document.getElementById("graphStage");
+    stage.classList.toggle("picked", selected != null);
+    var near = {};
+    if (selected != null) B.EDGES.forEach(function(e){
+      if (e[0] === selected) near[e[1]] = true;
+      if (e[1] === selected) near[e[0]] = true;
+    });
+    Object.keys(gNodes).forEach(function(ba){
+      gNodes[ba].g.classList.toggle("on", Number(ba) === selected);
+      gNodes[ba].g.classList.toggle("near", !!near[ba]);
+    });
+    gEdges.forEach(function(e){ e.el.classList.toggle("on", selected != null && (e.a === selected || e.b === selected)); });
+  }
+  function bindGraph(){
+    var stage = document.getElementById("graphStage");
+    /* one finger turns it; the moment a second finger arrives the gesture
+       belongs to the pinch-and-pan handler, so the turn lets go and does
+       not snatch the graph when a finger lifts mid-pinch */
+    var down = false, held = new Set(), lx = 0, ly = 0;
+    stage.addEventListener("pointerdown", function(e){
+      held.add(e.pointerId);
+      if (held.size > 1){ down = false; return; }
+      if (e.target.closest(".g-node")) return;
+      down = true; lx = e.clientX; ly = e.clientY;
+      stage.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    stage.addEventListener("pointermove", function(e){
+      if (!down || held.size > 1) return;
+      gAngle += (e.clientX - lx) * 0.008;
+      gTilt = Math.max(-0.6, Math.min(0.6, gTilt + (e.clientY - ly) * 0.005));
+      lx = e.clientX; ly = e.clientY;
+      layoutGraph();
+    });
+    ["pointerup", "pointercancel"].forEach(function(ev){
+      stage.addEventListener(ev, function(e){ held.delete(e.pointerId); down = false; });
+    });
+    document.getElementById("gReset").addEventListener("click", function(){
+      gAngle = 0.6; gTilt = -0.25; layoutGraph();
+      if (gDiag) gDiag.reset();
+    });
+  }
+
+  /* ── the scans ── */
+  async function boot(){
+    if (!hasNV){ fail("NiiVue failed to load — the embedded script did not run."); return; }
+    try{
+      for (var i = 0; i < PLANES.length; i++){
+        var p = PLANES[i], nv = makeNV(p.st);
+        await nv.attachToCanvas(document.getElementById(p.canvasId));
+        nv.onLocationChange = (function(key){ return function(loc){ applyLock(key, loc); }; })(p.key);
+        INSTANCES[p.key] = nv;
+        if (window.MN_LIFE) MN_LIFE.register(nv);
+      }
+      await Promise.all(PLANES.map(function(p){
+        return INSTANCES[p.key].loadVolumes([
+          {url: TPL_URL, name: "mni152.nii.gz", colormap: "gray", opacity: 1},
+          {url: BA_URL, name: "brodmann.nii.gz", opacity: opacityEl.value / 100}
+        ]);
+      }));
+      PLANES.forEach(function(p){ INSTANCES[p.key].setSliceType(p.st); });
+      paintScene();
+      PLANES.forEach(function(p){
+        var others = PLANES.filter(function(q){ return q.key !== p.key; }).map(function(q){ return INSTANCES[q.key]; });
+        INSTANCES[p.key].broadcastTo(others, {"2d": true, "3d": true});
+      });
+      /* the cuts on the 3D box, through the picked area as well */
+      var renBox = document.querySelector('.view[data-box="render"]');
+      if (window.MN_SLICE && renBox) MN_SLICE.attach({
+        stage: renBox.querySelector(".mri-stage"), tools: renBox.querySelector(".view-tools"),
+        nv: INSTANCES.render, regions: "Slice areas"
+      });
+      /* the wheel zooms the 3D model; the slices answer to drag and touch */
+      if (window.MN_WHEEL){
+        if (renBox) MN_WHEEL.attach({ stage: renBox.querySelector(".mri-stage"), nv: INSTANCES.render });
+        PLANES.forEach(function(p){
+          if (p.key === "render") return;
+          var box = document.querySelector('.view[data-box="' + p.key + '"]');
+          if (box) MN_WHEEL.attach({ stage: box.querySelector(".mri-stage"), nv: INSTANCES[p.key], mode: "slice", wheel: "none" });
+        });
+      }
+      paint();
+      if (selected != null && B.BY_BA[selected]) goTo(B.BY_BA[selected].at);
+      statusEl.classList.add("hidden");
+    } catch(err){
+      console.error(err);
+      fail("Could not start the viewer: " + (err && err.message ? err.message : err) +
+           " — this page needs WebGL2 (any modern desktop or mobile browser).");
+    }
+  }
+
+  buildList();
+  read();
+  drawCartoon(document.getElementById("cartLateral"), "lateral");
+  drawCartoon(document.getElementById("cartMedial"), "medial");
+  buildGraph();
+  bindGraph();
+  if (window.MN_DIAG){
+    MN_DIAG.attach({ svg: document.querySelector("#cartLateral svg") });
+    MN_DIAG.attach({ svg: document.querySelector("#cartMedial svg") });
+    gDiag = MN_DIAG.attach({ svg: gSvg, stage: document.getElementById("graphStage"), rotates: true });
+  }
+
+  /* deep links: brodmann.html#ba=17 (or #ba17) opens on that area, from the
+     MCP server or anywhere else a link can live */
+  function fromHash(){
+    var m = /^#ba=?(\d{1,2})$/i.exec(location.hash || "");
+    var ba = m ? Number(m[1]) : null;
+    if (ba != null && B.BY_BA[ba] && ba !== selected) select(ba, false, true);
+  }
+  fromHash();
+  window.addEventListener("hashchange", fromHash);
+  markCartoon(); markGraph();
+  boot();
+})();
+</script>
+
+<script src="assets/firebase-config.js"></script>
+<script type="module" src="assets/auth-ui.js"></script>
+</body>
+</html>

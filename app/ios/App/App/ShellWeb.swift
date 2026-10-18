@@ -24,7 +24,8 @@ nonisolated struct Page: Sendable {
     var fragment: String? = nil
     let title: String
 
-    static let regionAtlas = Page(file: "regions.html", title: "Region Atlas")
+    static let regionAtlas = Page(file: "regions.html", title: "3D Region Atlas")
+    static let brodmann = Page(file: "brodmann.html", title: "Brodmann Area Atlas")
     static let networkAtlas = Page(file: "network-atlas.html", title: "Network Atlas")
     static let microanatomy = Page(file: "microanatomy.html", title: "Microanatomy")
     static let molecular = Page(file: "molecular.html", title: "Molecular")
@@ -39,7 +40,8 @@ nonisolated struct Page: Sendable {
 
     /// The titles of the pages a link can lead to, as the app's bar named them.
     static let titles: [String: String] = [
-        "regions.html": "Region Atlas", "network-atlas.html": "Network Atlas", "tracts.html": "Tractography",
+        "regions.html": "3D Region Atlas", "brodmann.html": "Brodmann Area Atlas",
+        "network-atlas.html": "Network Atlas", "tracts.html": "Tractography",
         "microanatomy.html": "Microanatomy", "molecular.html": "Molecular",
         "studies.html": "Visualizing Studies", "hallucinations.html": "Hallucinations",
         "practice.html": "Practice", "textbook.html": "Digital Textbook",

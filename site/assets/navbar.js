@@ -77,7 +77,8 @@
 
   var TITLES = {
     "": "Home", "index.html": "Home",
-    "regions.html": "Region Atlas",
+    "regions.html": "3D Region Atlas",
+    "brodmann.html": "Brodmann Area Atlas",
     "tracts.html": "Tractography",
     "microanatomy.html": "Microanatomy",
     "molecular.html": "Molecular",
@@ -140,10 +141,10 @@
 
   /* the sections, behind a button at the right of the bar: the same list
      the website's header carries, the page it is on marked */
-  var SECTIONS = [["index.html", "Home"], ["regions.html", "Region Atlas"], ["microanatomy.html", "Microanatomy"],
-    ["molecular.html", "Molecular"], ["network-atlas.html", "Network Atlas"], ["tracts.html", "Tractography"],
-    ["studies.html", "Visualizing Studies"], ["textbook.html", "Digital Textbook"], ["practice.html", "Practice"],
-    ["about.html", "About"]];
+  var SECTIONS = [["index.html", "Home"], ["regions.html", "3D Region Atlas"], ["brodmann.html", "Brodmann Area Atlas"],
+    ["microanatomy.html", "Microanatomy"], ["molecular.html", "Molecular"], ["network-atlas.html", "Network Atlas"],
+    ["tracts.html", "Tractography"], ["studies.html", "Visualizing Studies"], ["textbook.html", "Digital Textbook"],
+    ["practice.html", "Practice"], ["about.html", "About"]];
   var menuBtn = make("button", "vn-menu-btn");
   menuBtn.type = "button";
   menuBtn.setAttribute("aria-label", "Sections");

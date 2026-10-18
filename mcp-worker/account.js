@@ -132,7 +132,7 @@ function describe(env, model){
   const sels = Array.isArray(model && model.selections) ? model.selections : [];
   const parts = sels.map(s => s.atlas === "ba" ? "BA" + s.ba + " (" + s.name + ")" : s.name + (s.sideTag === "L" ? ", left" : s.sideTag === "R" ? ", right" : ""));
   const keys = sels.map(s => s.key).filter(Boolean);
-  return { parts, open: keys.length ? link(env, "regions.html#sel=" + keys.join("|"), "Open it in the Region Atlas") : null };
+  return { parts, open: keys.length ? link(env, "regions.html#sel=" + keys.join("|"), "Open it in the 3D Region Atlas") : null };
 }
 function when(ts){ return ts ? String(ts).slice(0, 10) : "undated"; }
 

@@ -42,7 +42,7 @@ position. Account comes last and gathers what is not a section of the site.
 
 | Tab | Symbol | Its page |
 |---|---|---|
-| Atlases | `brain` | Region Atlas, Microanatomy, Molecular, Tractography, Network Atlas |
+| Atlases | `brain` | 3D Region Atlas, Brodmann Area Atlas, Microanatomy, Molecular, Tractography, Network Atlas |
 | Library | `books.vertical` | Visualizing Studies, Digital Textbook |
 | Practice | `checklist` | Neuroscience Practice |
 | About | `info.circle` | the developer's message, YouTube, Instagram, LinkedIn and email, the MCP server |

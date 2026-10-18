@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.12 — 18 October 2026 — The Brodmann Area Atlas is back, beside the 3D Region Atlas
+Commit · Restore the Brodmann Area Atlas as its own page and call the Region Atlas the 3D Region Atlas
+
+The Brodmann Area Atlas has a page of its own again, straight after the Region Atlas, which is now called the 3D Region Atlas. The page lists the 41 areas by lobe with a search that finds them by number, by name or by what they do, draws both faces of the hemisphere as a line map, shows the area on the scan in the same four views as the other atlases, and places every area in a 3D graph at its true position, joined to the areas it borders. Pick an area anywhere and everything follows it: it fills in its lobe's colour on the map, the scans centre on it, the graph lights its neighbours, and What it does opens its reading over the page. A link to brodmann.html#ba=17 opens on that area. The 3D Region Atlas keeps its own Brodmann list and map. On the home page and on the app's Atlases tab the Brodmann Area Atlas sits under the 3D Region Atlas; the app takes this with its next build.
+
 ## v11.11 — 18 October 2026 — Channels on the app's About tab
-Commit · Rename the Elsewhere box on the app's About tab to Channels
+Commit `85572d4` · Rename the Elsewhere box on the app's About tab to Channels
 
 In the iPhone and iPad app, the box on the About tab that lists YouTube, Instagram, LinkedIn and email is now called Channels. The app takes this with its next build.
 

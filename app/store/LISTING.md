@@ -50,8 +50,8 @@ VisualNeuroscience.AI is an interactive atlas of the human brain, built for anyo
 
 WHAT IS INSIDE
 
-• Region Atlas: the MNI152 template with the AAL-116 parcellation. Pick any region, highlight it in three planes and in 3D, and read what it does. Mirror left and right pairs with one tap.
-• Brodmann Areas: the classic cortical map, lateral and medial views, every area selectable and searchable by function.
+• 3D Region Atlas: the MNI152 template with the AAL-116 parcellation. Pick any region, highlight it in three planes and in 3D, and read what it does. Mirror left and right pairs with one tap.
+• Brodmann Area Atlas: the classic cortical map, lateral and medial views, every area searchable by function, lit on the scan and placed in a 3D graph of where the areas border.
 • Tractography: the HCP1065 whole-brain tractogram. Rotate it, zoom it, follow the bundles.
 • Receptor density: where the major neurotransmitter receptors sit, laid over the same brain.
 • Network Atlas: the brain's large-scale networks and the states they move between, region by region.
@@ -146,7 +146,7 @@ above the first. 4,000 characters allowed; both together are well under.
 • Microanatomy: a neuron drawn part by part, with twenty structures to click and a quiz to learn them, seventeen neurotransmitters drawn the way chemists draw them, and a hundred and fifty receptors, channels and transporters, each with the drugs that act on it.
 • Molecular: the dopamine and serotonin receptors themselves in 3D, built from thirty-nine experimental structures. Watch the neurotransmitter dock and switch the receptor on, see where antipsychotics, triptans, LSD and psilocin sit in the same pocket, and compare the subtypes.
 • Receptor densities now come from published PET and autoradiography, with a source behind every number. Pick a region to see its receptors ranked against the rest of the brain, or pick a receptor to see where it is densest and light those regions up on the scan.
-• The Brodmann areas light up in the Region Atlas too, searchable by number, name or what they do.
+• The Brodmann Area Atlas: the classic map of both faces of the cortex, every area on the scan and in a 3D graph of where it borders, searchable by number, name or what it does. The areas light up in the 3D Region Atlas too.
 • The Digital Textbook is now OpenStax's Introduction to Behavioral Neuroscience in full, nineteen chapters, with its citations opening where they stand.
 • The side view opens on the brain itself rather than the gap between its halves, and picking a region brings every view to it.
 • A highlighted region lights up on the receptor chart in its own colour.
@@ -157,7 +157,7 @@ Only if 1.0 went out as build 14:
 
 ```
 • Export the brain in 3D. Every 3D view now saves as a model file: glTF (.glb), USDZ for Apple Quick Look, OBJ, STL for printing, PLY, VRML and X3D. Open a USDZ from Files to see the brain in your room.
-• Saved models. Name a Region Atlas view, with its regions, colours, camera and cuts, and open it again later. Signed in, models follow your account to every device.
+• Saved models. Name a 3D Region Atlas view, with its regions, colours, camera and cuts, and open it again later. Signed in, models follow your account to every device.
 • An About page says who made the app and why, and the Brodmann map is now a line drawing, credited to IFEN, whose diagram it is adapted from.
 ```
 

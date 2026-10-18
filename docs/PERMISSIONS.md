@@ -36,8 +36,9 @@ asked for.
 
 ## Brodmann Areas diagram (permission granted)
 
-**What.** The two-face Brodmann map on the Region Atlas, `regions.html`, and
-in the Vision Pro window `vision-brodmann.html`, the lateral and medial views with every area
+**What.** The two-face Brodmann map on the Brodmann Area Atlas, `brodmann.html`, on the
+3D Region Atlas, `regions.html`, and in the Vision Pro window `vision-brodmann.html`, the
+lateral and medial views with every area
 outlined and numbered. The outlines were traced, area by area, from the
 Brodmann Areas diagram published by IFEN at
 <https://neurofeedback-academy.com/brodmann-area>. Brodmann's 1909 scheme
@@ -69,10 +70,13 @@ reviewer on request. It is not in the repository.
 
 **Where the credit sits.**
 
+- `site/brodmann.html`: the paragraph about the map under "What this is",
+  and the credits line beneath it, both linking to neurofeedback-academy.com.
+  The page was retired in v10.8, when its areas moved into the Region Atlas,
+  and restored in v11.12 with the same two credits.
 - `site/regions.html`: the sentence under the map in the Brodmann map
   section, and the footer credits line, both linking to
-  neurofeedback-academy.com. Until v10.8 the map had its own page,
-  `brodmann.html`, which carried the same two credits.
+  neurofeedback-academy.com.
 - `app/store/LISTING.md`: the description, under "Built on open data".
 - `app/store/APP-REVIEW-REPLY.md`: point 6 of the review reply, and the
   follow-up message for the review thread.
@@ -91,7 +95,7 @@ original drawing could be restored under the same permission if wanted.
 | AAL-116 parcellation | Tzourio-Mazoyer et al., 2002; GIN | Free for non-commercial academic use | `regions.html` footer; `about.html` |
 | Receptor PET maps (19 group-average tracer maps) | Hansen JY et al., *Nat Neurosci* 2022;25:1569, compilation at github.com/netneurolab/hansen_receptors; each map's originating study is named on its receptor | CC BY-NC-SA 4.0 (the repository's LICENSE.md). Attribution, non-commercial, and the derived table shared alike | `regions.html` receptor section, per receptor and in the sources block; `backend/data/receptors/README.md` |
 | Receptor autoradiography (15 receptors, 44 cortical areas) | Zilles K, Palomero-Gallagher N. *Front Neuroanat* 2017;11:78, via the Hansen repository (Goulas et al. 2021) | CC BY 4.0 | `regions.html` receptor section; `backend/data/receptors/README.md` |
-| Brodmann atlas volume | MRIcron (Chris Rorden) | BSD | `regions.html` footer; `about.html` |
+| Brodmann atlas volume | MRIcron (Chris Rorden) | BSD | `brodmann.html` credits; `regions.html` footer; `about.html` |
 | HCP1065 tractography atlas | Yeh FC, *Nat Commun* 13:4933 (2022), from Human Connectome Project data; the shipped copy is NiiVue's subsampled redistribution | CC BY-SA 4.0, attribution and share-alike | `tracts.html` credits; `site/assets/tracts/README.md` |
 | NiiVue | Rorden lab | BSD | Footers; `about.html` |
 | d3 | Mike Bostock and contributors | ISC | `vendor/d3/` |
