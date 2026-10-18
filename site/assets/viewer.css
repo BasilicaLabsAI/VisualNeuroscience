@@ -604,9 +604,11 @@ html{ scroll-padding-top:5.2rem; }
   .nav-row.nav-row .nav-menu a{ display:block; }
 }
 /* only where even the word would push the row over does the theme
-   switch keep its dot alone */
-@media (max-width:340px){
-  .masthead.masthead .theme-toggle #themeLbl{ display:none; }
+   switch keep its dot alone; the word stays for a screen reader */
+@media (max-width:359px){
+  .masthead.masthead .theme-toggle #themeLbl{
+    position:absolute; width:1px; height:1px; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;
+  }
   .masthead.masthead .theme-toggle{ width:40px; padding:0; justify-content:center; }
 }
 /* the same menu inside the app: a button in the bar opens the sections under it */
@@ -659,7 +661,30 @@ html{ scroll-padding-top:5.2rem; }
   .nav-row .vn-social-nav{ display:none; }
 }
 .nav-row .vn-social-nav a{ width:28px; }
-@media (max-width:340px){ .masthead .vn-social a{ width:28px; } }
+/* On a phone the follow links keep to the buttons' line, centred on it,
+   rather than taking a line of their own under them: the links close up,
+   and on the narrowest phones the buttons give up a little of their
+   padding and tracking too. A row that still cannot hold both, with a long
+   account name in place of Log in, lets the links drop as before. */
+@media (max-width:420px){
+  .masthead.masthead{ column-gap:.5rem; }
+  .masthead .vn-social-head{ gap:0; }
+  .masthead .vn-social-head a{ width:27px; }
+  .masthead .vn-social-head svg{ width:20px; height:20px; }
+}
+@media (max-width:380px){
+  .masthead.masthead .nav-menu-btn, .masthead.masthead .theme-toggle{ padding:0 .5rem; }
+  .masthead.masthead .vn-auth-btn, .masthead.masthead .vn-auth-pick{ padding-left:.5rem; padding-right:.5rem; }
+  .masthead.masthead .nav-menu-btn, .masthead.masthead .vn-auth-btn,
+  .masthead.masthead .vn-auth-name, .masthead.masthead .theme-toggle{ letter-spacing:.14em; }
+  .nav-row.nav-row, .nav-row .nav-tools{ gap:.4rem; }
+  .masthead .vn-social-head a{ width:26px; }
+}
+@media (max-width:340px){
+  .masthead .vn-social a{ width:28px; }
+  .masthead.masthead{ padding-left:10px; padding-right:10px; }
+  .masthead .vn-social-head a{ width:25px; }
+}
 .vn-bar .vn-social-bar{ display:none; }
 .vn-menu .vn-social-menu{ display:grid; grid-template-columns:repeat(2, max-content); gap:0 2.2rem; padding:.3rem 1rem .2rem; }
 .vn-menu .vn-social-menu a{

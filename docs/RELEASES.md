@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.14 — 18 October 2026 — A shorter header on phones
+Commit · Keep the follow links on the buttons' line in the website's header on phones
+
+On a phone the website's header is a line shorter. The YouTube, Instagram, LinkedIn and email links used to drop to a line of their own under the Menu, Log in and theme buttons; they now sit at the end of the buttons' line, centred on it, on any phone from 320 pixels wide up. The links close up a little to make room, and on the narrowest phones the buttons lose a touch of padding and the theme button keeps just its dot.
+
 ## v11.13 — 18 October 2026 — The Brodmann Area Atlas without its 3D graph
-Commit · Take the border graph off the Brodmann Area Atlas
+Commit `7734e75` · Take the border graph off the Brodmann Area Atlas
 
 The 3D graph of where the Brodmann areas border one another is gone from the Brodmann Area Atlas, so the page ends with the map and the scans and is much shorter on a phone. Picking an area from the list, the map or the scans works as before. The 3D export can still write every area's centre joined where they border, now as an option that is off until ticked. The home page and the app describe the page without the graph; the app takes that with its next build.
 
