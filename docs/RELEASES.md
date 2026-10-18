@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.3 — 18 October 2026 — The About box's line, reworded
+Commit · Reword the About box as a message from the developer of Visual Neuroscience
+
+The About box now reads “A message from the developer of Visual Neuroscience”, on the home page and in the About tab of the iPhone and iPad app. In the app the portrait stands in its engraved frame in the middle of the box, as it does on the home page; the app picks up both with its next build.
+
 ## v11.2 — 18 October 2026 — Square viewports with one bar each, and the side column in one box
-Commit · Give each Region Atlas view one bar over a square scan, make the rail one box and frame the About portrait
+Commit `013eb62` · Give each Region Atlas view one bar over a square scan, make the rail one box and frame the About portrait
 
 The Region Atlas's four viewports are now square, and each has a single bar above it instead of a caption and a row of tools: the view's own tools on the left, its name in the middle, and Centre planes and the expand button on the right, without the short description that followed each name. On a narrow screen the name, Centre planes and the expand button share the first line and the tools take a second. Slice regions is now a button beside Slice and Reset cuts, pressed each time you press Slice. It could go missing on the first visit after an update, because the site's offline copy kept the old scripts for one more load; scripts and styles now come fresh whenever you are online, so a new page never runs with old ones. The column beside the scans is one box, with Regions, Highlighted, Saved models and Export under their own headings. It no longer has to end at the readouts, so it can never run into the Highlighted Regions section below, and the Highlighted list shows about eight regions before it scrolls. On the home page the About box shows the portrait in its whole engraved frame, as the About page does, and the About tab of the iPhone and iPad app follows with its next build.
 
