@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.108 — 18 October 2026 — The opacity slider moves into the Regions box
+Commit · Move the Region Atlas's opacity slider into the Regions card
+
+The Region Atlas's Opacity slider, which sets how strongly the highlighted regions and Brodmann areas cover the scan, now sits in the Regions box, just under Mirror left / right pairs, instead of in an Overlay box of its own, so the column beside the viewports is a box shorter. It is there whichever atlas you are picking from, and it works as before.
+
 ## v10.107 — 18 October 2026 — No black in the light theme's scans, and the home page's atlas picture retaken
-Commit · Draw the light theme's scans like a stained section and retake the home page's atlas picture for each theme
+Commit `a62b18a` · Draw the light theme's scans like a stained section and retake the home page's atlas picture for each theme
 
 In the light theme the Region Atlas's slices no longer sit inside a thick black band. On white, the scan is now drawn the way a stained section reads on paper: the fluid around the brain and in the ventricles is white, grey matter is the darkest grey and white matter a pale one, so nothing in the slices is black and the brain's edge fades into the page instead of ending in a dark rim. The Network Atlas, which draws on the same scans, follows; the dark theme and the 3D view are as they were. The home page's picture of the atlas is retaken from the live page with a twin for each theme, so in the light theme it shows the white atlas on a white plate and in the dark theme the dark one, and only the picture on show is downloaded.
 

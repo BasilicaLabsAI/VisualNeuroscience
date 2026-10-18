@@ -974,6 +974,13 @@ mark{ background:var(--ink); color:var(--paper); }
           <p class="search-count" id="baqcount">All 41 areas.</p>
           <div class="balist" id="balist" role="group" aria-label="Brodmann areas"></div>
         </div>
+        <!-- how strongly the highlighted regions and areas cover the scan,
+             for either atlas, so it sits under both panes -->
+        <div class="row">
+          <label for="opacity">Opacity</label>
+          <input type="range" id="opacity" min="10" max="100" value="90">
+          <span class="val" id="opacityVal">90%</span>
+        </div>
       </div>
 
       <div class="card">
@@ -982,15 +989,6 @@ mark{ background:var(--ink); color:var(--paper); }
           <div class="empty-note" id="emptyMsg">Nothing highlighted yet — pick a region or a Brodmann area above.</div>
         </div>
         <div class="btns"><button class="btn" id="clearBtn" type="button">Clear all</button></div>
-      </div>
-
-      <div class="card">
-        <h2>Overlay</h2>
-        <div class="row">
-          <label for="opacity">Opacity</label>
-          <input type="range" id="opacity" min="10" max="100" value="90">
-          <span class="val" id="opacityVal">90%</span>
-        </div>
       </div>
 
       <div class="card">
