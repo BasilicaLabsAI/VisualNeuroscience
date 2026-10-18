@@ -33,15 +33,16 @@ exists. Nothing on a page has to know which of the three it is running in.
 
 Since v11 the iOS app (and so the iPad, Mac and Vision Pro runs of it) opens
 on one system `TabView`, in SwiftUI, rather than on a web view. The site's
-navigation falls into four groups, and each is a tab whose page is laid out
-like the home page: a header, then a box for each of the group's pages, in
-the home page's own words and pictures. A box pushes its page inside the
-tab, so every tab keeps its own stack and scroll position. Account comes
-last and gathers what is not a section of the site.
+navigation falls into four groups, and each is a tab whose page is a column
+of boxes like the home page's, one for each of the group's pages, in the
+home page's own words and pictures. The pages have no header of their own,
+since the tab bar names them, so the first box starts at the top. A box
+pushes its page inside the tab, so every tab keeps its own stack and scroll
+position. Account comes last and gathers what is not a section of the site.
 
 | Tab | Symbol | Its page |
 |---|---|---|
-| Atlas | `brain` | Region Atlas, Microanatomy, Molecular, Tractography, Network Atlas |
+| Atlases | `brain` | Region Atlas, Microanatomy, Molecular, Tractography, Network Atlas |
 | Library | `books.vertical` | Visualizing Studies, Digital Textbook |
 | Practice | `checklist` | Neuroscience Practice |
 | About | `info.circle` | the developer's message, YouTube, Instagram, LinkedIn and email, the MCP server |
@@ -57,9 +58,6 @@ used, and no selection binding, since nothing switches tabs in code.
 **The shared pieces**, in `ios/App/App/ShellKit.swift`, are what make the five
 pages read as one object:
 
-- `PageHeader(kicker:title:meta:)` heads every tab: a small spaced kicker in
-  Flux after a ring like the mark's, the title in Prata tracked in by 1% of its
-  size, and an optional uppercase readout line, full width and flush left.
 - `paperBackground()` puts the paper under every tab, past the safe areas: the
   site's paper colour with a faint grid of ink dots at the site's 14-point gap.
 - `keyboardDismissal()` is for any page with a text field: a drag on the page

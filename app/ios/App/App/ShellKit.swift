@@ -2,8 +2,9 @@ import SwiftUI
 import UIKit
 
 /* The pieces every tab's page is made of, so the five read as one object:
-   the site's palette and typefaces, the page header, the paper under
-   everything, the box a page links from, and the keyboard's way out.
+   the site's palette and typefaces, the paper under everything, the box a
+   page links from, and the keyboard's way out. A page has no header of its
+   own: the tab bar names it, and its first box starts at the top.
    Shell.swift lays the tabs out with them; ShellWeb.swift opens the pages. */
 
 // MARK: - Palette
@@ -37,56 +38,6 @@ enum Faces {
     /// Prata, the display face of the titles.
     static func display(_ size: CGFloat, _ style: Font.TextStyle) -> Font {
         .custom("Prata-Regular", size: size, relativeTo: style)
-    }
-}
-
-// MARK: - The page header
-
-/// The head of every tab's page: a small spaced kicker after the ring of
-/// the mark, the title in the display face tracked in by a hundredth of its
-/// size, and an optional readout line. Full width, flush left.
-struct PageHeader: View {
-    let kicker: String
-    let title: String
-    var meta: String? = nil
-
-    @ScaledMetric(relativeTo: .largeTitle) private var titleSize: CGFloat = 40
-
-    init(kicker: String, title: String, meta: String? = nil) {
-        self.kicker = kicker
-        self.title = title
-        self.meta = meta
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 8) {
-                Circle()
-                    .strokeBorder(Palette.ink, lineWidth: 1)
-                    .frame(width: 9, height: 9)
-                    .accessibilityHidden(true)
-                Text(kicker.uppercased())
-                    .font(Faces.brand(11, .caption))
-                    .tracking(2.8)
-                    .foregroundColor(Palette.ink60)
-            }
-            Text(title)
-                .font(Faces.display(40, .largeTitle))
-                .tracking(-0.01 * titleSize)
-                .foregroundColor(Palette.ink)
-                .fixedSize(horizontal: false, vertical: true)
-            if let meta = meta {
-                Text(meta.uppercased())
-                    .font(Faces.brand(10, .caption2))
-                    .tracking(2)
-                    .foregroundColor(Palette.ink35)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.top, 6)
-        .accessibilityElement(children: .combine)
-        .accessibilityAddTraits(.isHeader)
     }
 }
 

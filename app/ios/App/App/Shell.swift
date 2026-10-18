@@ -70,7 +70,7 @@ struct ShellTabs: View {
     var body: some View {
         TabView {
             AtlasTab()
-                .tabItem { Label("Atlas", systemImage: "brain") }
+                .tabItem { Label("Atlases", systemImage: "brain") }
             LibraryTab()
                 .tabItem { Label("Library", systemImage: "books.vertical") }
             PracticeTab()
@@ -109,8 +109,6 @@ struct PageBox: View {
 struct AtlasTab: View {
     var body: some View {
         TabPage {
-            PageHeader(kicker: "VisualNeuroscience.AI", title: "Atlas",
-                       meta: "116 parcels · 41 Brodmann areas · 6 brain states")
             PageBox(page: .regionAtlas, kicker: "The Atlas",
                     text: "A detailed 3D atlas of the human brain, with the Brodmann areas, receptor density maps and a functional breakdown of every region.",
                     shot: Shot("assets/home/atlas.jpg", light: "assets/home/atlas-light.jpg"),
@@ -143,8 +141,6 @@ struct AtlasTab: View {
 struct LibraryTab: View {
     var body: some View {
         TabPage {
-            PageHeader(kicker: "The papers and the book", title: "Library",
-                       meta: "1 study drawn · 19 chapters · 506 figures")
             PageBox(page: .studies, kicker: "The Papers",
                     text: "Published neuroimaging studies drawn directly on the brain, region by region.",
                     shot: Shot("assets/studies/hallucinations.png"),
@@ -163,8 +159,6 @@ struct LibraryTab: View {
 struct PracticeTab: View {
     var body: some View {
         TabPage {
-            PageHeader(kicker: "Revision", title: "Practice",
-                       meta: "Adaptive questions · session score · explanations")
             PageBox(page: .practice, kicker: "Revision", title: "Neuroscience Practice",
                     text: "Adaptive multiple-choice revision built for the KCL MSc Neuroscience syllabus.",
                     shot: Shot("assets/home/practice.jpg"),
@@ -179,8 +173,6 @@ struct PracticeTab: View {
 struct AboutTab: View {
     var body: some View {
         TabPage {
-            PageHeader(kicker: "From the developer", title: "About",
-                       meta: "Fadil Karim · built by one engineer · free to use")
             PageBox(page: .about, kicker: "From the developer", title: "Message from the Developer",
                     shot: Shot("assets/portrait/portrait.webp", framed: true),
                     meta: "Fadil Karim · built by one engineer · free to use",
@@ -247,7 +239,6 @@ struct AccountTab: View {
 
     var body: some View {
         TabPage {
-            PageHeader(kicker: "VisualNeuroscience.AI", title: "Account")
             PageBox(page: .account, kicker: "Your account", title: "Account",
                     text: "Log in to see your details, your saved models and your practice progress, download a copy of all of it, or delete the account. An account is optional: everything works without one.",
                     go: "Open your account")

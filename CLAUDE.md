@@ -34,14 +34,15 @@ Read this first in every session. It is the handover; nothing else needs pasting
 - Static site in `site/`, deployed by Cloudflare Workers Builds on every push (preview builds on every branch).
   Native shells: Capacitor in `app/` (iOS, iPad, Mac, Android) and a visionOS app in `app/visionos`.
 - Since v11 the iOS app opens on a SwiftUI tab bar (`app/ios/App/App/Shell.swift`, `ShellKit.swift`,
-  `ShellWeb.swift`; `app/README.md` has the tab list and the shared pieces): Atlas, Library, Practice, About,
-  Account, each a page of boxes in the home page's words, each box pushing a web page in a Capacitor bridge of its
-  own. A page inside the tabs carries `data-shell="tabs"` and draws no web bar (`navbar.js`); the theme is the
-  shell's (Account). When a home-page box's text or picture changes, change its twin in `Shell.swift` too. Android
-  keeps the web bar. On an iPad the pages fill the screen: the shell also marks them `data-shell-pad`, the system bar
-  shows no title there, and the page's title strip steps aside (`viewer.css`), keeping any buttons it carries.
-  The stack's swipes back (from the edge, and iOS 26's from anywhere) are off on the pages, since a sideways drag on a
-  scan set them off; Back is the bar's button (`PageBridgeController.viewDidAppear`).
+  `ShellWeb.swift`; `app/README.md` has the tab list and the shared pieces): Atlases, Library, Practice, About,
+  Account, each a page of boxes in the home page's words with no header of its own (the tab bar names it), each box
+  pushing a web page in a Capacitor bridge of its own. A page inside the tabs carries `data-shell="tabs"` and draws
+  no web bar (`navbar.js`); the theme is the shell's (Account). When a home-page box's text or picture changes,
+  change its twin in `Shell.swift` too. Android keeps the web bar. On an iPad the pages fill the screen: the shell
+  also marks them `data-shell-pad`, the system bar shows no title there, and the page's title strip steps aside
+  (`viewer.css`), keeping any buttons it carries. The stack's swipes back (from the edge, and iOS 26's from
+  anywhere) are off on the pages, since a sideways drag on a scan set them off; Back is the bar's button
+  (`PageBridgeController.viewDidAppear`).
 - `site/sw.js` precaches pages and assets: **bump `VERSION`** (`vn-NN`) whenever a precached file changes.
 - Shared receptor drawings live in `site/assets/rxfig.js` + `rxfig.css`, built from `site/assets/rx/receptors.json`
   (`scripts/receptors/build.py`) and `site/assets/nt/molecules.json` (`scripts/neurotransmitters/build.py`).

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.10 — 18 October 2026 — The app's tabs open straight onto their boxes
+Commit · Take the header off each of the app's tab pages and name the first tab Atlases
+
+In the iPhone and iPad app, the five tab pages no longer open on a title. The title, the small line above it and the line of figures beneath it are gone, so each page starts on its first box and the tab bar alone names it. The first tab is now called Atlases. The app takes this with its next build.
+
 ## v11.9 — 18 October 2026 — The Network Atlas comes last on the app's Atlas tab
-Commit · Put the Network Atlas last on the app's Atlas tab
+Commit `b0a8b55` · Put the Network Atlas last on the app's Atlas tab
 
 In the iPhone and iPad app, the Atlas tab now lists the Network Atlas last, after the Region Atlas, Microanatomy, Molecular and Tractography. The app takes this with its next build.
 
