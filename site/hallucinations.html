@@ -381,6 +381,10 @@ td.hl{ color:var(--over); }
 /* the four views, laid out and drawn as the atlases draw theirs
    (assets/atlas-views.css); an opened view covers the wrapper */
 .views-wrap{ position:relative; }
+/* narrower than 900 pixels they stack one to a row, as on the 3D Region
+   Atlas: two to a row there leaves each bar too narrow for its controls
+   (a tablet keeps its two, from atlas-views.css) */
+@media (max-width:900px){ .views{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body>

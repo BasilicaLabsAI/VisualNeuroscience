@@ -12,9 +12,9 @@ text below. Both can also be run from a clone on a machine that can push.
 Versions before v8.6 were released without a ledger and are not recorded.
 
 ## v11.18 — 18 October 2026 — The tractogram on the page's own black
-Commit · Draw the tractogram on the page's own black instead of a deeper one
+Commit · Stack the Hallucinations study's views one to a row below 900 pixels, as the 3D Region Atlas does
 
-In the dark theme the Tractography view now clears to the same near-black as the page around it, so the tractogram floats on the page instead of sitting in a box of a deeper black. The loading message was already drawn on that black, so the view no longer darkens as the streamlines appear. In the light theme the view keeps its dark ground.
+In the dark theme the Tractography view now clears to the same near-black as the page around it, so the tractogram floats on the page instead of sitting in a box of a deeper black. The loading message was already drawn on that black, so the view no longer darkens as the streamlines appear. In the light theme the view keeps its dark ground. The Hallucinations study's four scans also stack one to a row on screens narrower than 900 pixels, as the 3D Region Atlas's do, so their bars keep every control inside them on a phone held sideways.
 
 ## v11.17 — 18 October 2026 — The Hallucinations scans match the 3D Region Atlas
 Commit `53640e8` · Give the Hallucinations study the atlases' four views and pad the region colour tables so no region turns black
