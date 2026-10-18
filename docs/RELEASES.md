@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.110 — 18 October 2026 — The side column shows everything and ends at the readouts
+Commit · Show every card in the Region Atlas's rail whole and end it at the readouts
+
+The column beside the Region Atlas's scans no longer scrolls as a whole. Every box in it is shown in full, and the column now runs down to the foot of the readouts under the scans instead of stopping where the scans end. The Highlighted box takes whatever height is left, and its list of regions is the one thing that scrolls, inside the box; the boxes keep to the scans' own spacing to make room. In the export part of the Saved models box, Save PNG snapshot now comes after Export 3D model. On a very short window the column runs on past the readouts rather than hide anything.
+
 ## v10.109 — 18 October 2026 — The Region Atlas's side column is as tall as the scans
-Commit · Hold the Region Atlas's rail to the height of the scans and put export under saved models
+Commit `25f42ab` · Hold the Region Atlas's rail to the height of the scans and put export under saved models
 
 Beside the scans, the Region Atlas's column of controls now ends exactly where the four views end. Saved models and Export are one box, with the export under the saved models, and the line naming the programs each 3D format opens in is gone. The Regions box keeps its size and the boxes under it share what is left: the Highlighted list stretches to fill the column, and when there are more regions or models than fit, that part of the column scrolls on its own, while the Add a region list still drops over everything and scrolls as before. On a phone, and on an iPad held upright, where the controls sit above or below the scans rather than beside them, the boxes stack as they did. The apps take the same page with their next build.
 

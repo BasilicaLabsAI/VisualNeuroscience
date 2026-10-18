@@ -905,28 +905,29 @@ mark{ background:var(--ink); color:var(--paper); }
 /* a card that holds two things titles the second the way it titles the first */
 .card h2.card-sub{ margin-top:1.15rem; }
 
-/* Beside the scans the rail is exactly as tall as they are (fitRail sets
-   --rail-h). The Regions card keeps its size and the cards under it share
-   what is left: the Highlighted card stretches so the last card ends level
-   with the scans, and when they need more room than that they scroll
-   together, in one place. The Regions card is outside that scroll, so its
-   picker's list still drops over the cards below and scrolls as before.
-   In the one-column layouts the wrapper steps aside and the cards are laid
-   out one by one, as they always were. */
-.rail-rest{ display:contents; }
-.rail-rest > .card:first-child{ margin-top:var(--gap); }
+/* Beside the scans the rail runs from their top to the foot of the
+   readouts under them (fitRail sets --rail-h). Every card is shown whole;
+   the Highlighted card takes the height that is left, and its list of
+   regions is the one thing that scrolls, inside the card. Where a short
+   window leaves less than the cards need, the column runs on past the
+   readouts rather than hide anything. */
 .rail[data-fit]{ height:var(--rail-h); }
 .rail[data-fit] > *{ flex:none; }
-.rail[data-fit] > .rail-rest{
-  flex:1 1 0; min-height:0; display:flex; flex-direction:column; gap:var(--gap);
-  overflow-y:auto; overscroll-behavior:contain;
-}
-.rail[data-fit] .rail-rest > .card{ flex:none; }
-.rail[data-fit] .rail-rest > .hl-card{ flex:1 0 auto; }
-/* the scroll's own hairline is the column's bottom edge, level with the
-   scans', whether a card is cut there or the last one ends there */
-.rail[data-fit] > .rail-rest{ border-bottom:1px solid var(--hair); }
-.rail[data-fit] .rail-rest > .save-card{ border-bottom:0; }
+.rail[data-fit] > .hl-card{ flex:1 1 0; min-height:9rem; display:flex; flex-direction:column; }
+.rail[data-fit] > .hl-card .rchips{ flex:1 1 auto; min-height:2.6rem; overflow-y:auto; overscroll-behavior:contain; }
+/* the cards keep to the scans' own 14px rhythm here, one gap apart and a
+   little tighter inside, so that they fit above the readouts' foot */
+.rail[data-fit] > .sec-h{ margin-bottom:0; }
+.rail[data-fit] > .card + .card{ margin-top:0; }
+.rail[data-fit] > .card{ padding:.75rem .95rem .8rem; }
+.rail[data-fit] .card h2{ padding-bottom:.4rem; margin-bottom:.5rem; }
+.rail[data-fit] .card .toggles{ margin:.4rem 0 0; }
+.rail[data-fit] .card .row{ margin:.35rem 0 0; }
+.rail[data-fit] .card h2.card-sub{ margin-top:.7rem; }
+.rail[data-fit] .save-card .btns{ margin-top:.45rem; }
+.rail[data-fit] .empty-note, .rail[data-fit] .models-note{ line-height:1.4; }
+.rail[data-fit] .atlas-mode{ margin-bottom:.6rem; }
+.rail[data-fit] .card .btn{ padding-top:.5rem; padding-bottom:.45rem; }
 
 </style>
 </head>
@@ -1008,7 +1009,6 @@ mark{ background:var(--ink); color:var(--paper); }
         </div>
       </div>
 
-      <div class="rail-rest">
       <div class="card hl-card">
         <h2>Highlighted</h2>
         <div class="rchips" id="chips">
@@ -1022,9 +1022,8 @@ mark{ background:var(--ink); color:var(--paper); }
         <p class="empty-note">Name the view &mdash; the highlighted regions, their colours, the camera and any cuts &mdash; and open it again later.</p>
         <div id="models"></div>
         <h2 class="card-sub">Export</h2>
-        <button class="btn" id="shotBtn" type="button">Save PNG snapshot</button>
         <div id="export3d"></div>
-      </div>
+        <div class="btns" id="shotRow"><button class="btn" id="shotBtn" type="button">Save PNG snapshot</button></div>
       </div>
     </aside>
 
@@ -1427,20 +1426,23 @@ mark{ background:var(--ink); color:var(--paper); }
     finally{ correcting = false; }
   }
 
-  /* The rail beside the scans is held to their height, measured whenever
-     they change size (a window resized or turned, one view made solo). In
-     the one-column layouts the rail is a run of cards and keeps its own. */
+  /* The rail beside the scans ends level with the readouts under them,
+     measured whenever the scans or the readouts change size (a window
+     resized or turned, one view made solo). In the one-column layouts the
+     rail is a run of cards and keeps its own height. */
   (function fitRail(){
     var rail = document.querySelector(".rail"), scans = document.querySelector(".views-wrap"),
-        studio = document.querySelector(".studio");
-    if (!rail || !scans || !studio || !window.ResizeObserver) return;
+        stats = document.querySelector(".centre .stats"), studio = document.querySelector(".studio");
+    if (!rail || !scans || !stats || !studio || !window.ResizeObserver) return;
     function fit(){
       var beside = getComputedStyle(studio).gridTemplateColumns.trim().split(/\s+/).length > 1;
       rail.toggleAttribute("data-fit", beside);
-      if (beside) rail.style.setProperty("--rail-h", Math.round(scans.getBoundingClientRect().height) + "px");
+      if (beside) rail.style.setProperty("--rail-h", Math.round(stats.getBoundingClientRect().bottom - rail.getBoundingClientRect().top) + "px");
       else rail.style.removeProperty("--rail-h");
     }
-    new ResizeObserver(fit).observe(scans);
+    var watch = new ResizeObserver(fit);
+    watch.observe(scans);
+    watch.observe(stats);
     window.addEventListener("resize", fit);
     fit();
   })();
@@ -2437,7 +2439,7 @@ mark{ background:var(--ink); color:var(--paper); }
      with the brain's outer surface for context, in whichever format the
      person picks. The geometry is made off the very voxels on screen. */
   if (window.MN_EXPORT3D){
-    MN_EXPORT3D.attach({
+    var x3d = MN_EXPORT3D.attach({
       host: document.getElementById("export3d"),
       note: false,
       basename: function(){ return selections.size ? "brain-regions" : "brain-surface"; },
@@ -2460,6 +2462,11 @@ mark{ background:var(--ink); color:var(--paper); }
         });
       }
     });
+    /* the PNG snapshot goes straight under Export 3D model, above the line
+       that reports how an export went */
+    var shotRow = document.getElementById("shotRow");
+    if (x3d && x3d.button && x3d.button.parentNode && shotRow)
+      x3d.button.parentNode.insertAdjacentElement("afterend", shotRow);
   }
 
   /* ── saved models ─────────────────────────────────────────────────────
