@@ -187,7 +187,8 @@ The shots of the four-view map are taken with the crosshair 4 mm left of
 the midline (x = −4 mm in MNI space), so the sagittal view shows the medial
 wall of the cortex rather than the fissure between the hemispheres. The
 pages themselves open on the exact midline; set the crosshair before the
-capture when retaking them.
+capture when retaking them. The home page's picture of the atlas, a twin
+for each theme, is taken the same way by `app/scripts/shoot-home-atlas.js`.
 
 **Support and privacy URLs.** Support URL:
 `https://visualneuroscience.ai/about.html` (the page carries the support

@@ -221,6 +221,13 @@ img{ max-width:100%; height:auto; display:block; }
   border:1px solid var(--ink-35); background:#000000;
 }
 .shot img{ width:100%; height:auto; display:block; }
+/* The Region Atlas draws on white in the light theme, so its picture has a
+   twin for each theme and its plate follows the paper. The twin not shown
+   is not fetched until the theme turns to it. */
+.shot .for-light{ display:none; }
+:root:not([data-theme="dark"]) .shot.themed{ background:var(--paper); }
+:root:not([data-theme="dark"]) .shot .for-dark{ display:none; }
+:root:not([data-theme="dark"]) .shot .for-light{ display:block; }
 /* the lead box is as tall as the two beside it; with a short standfirst
    the figure follows the text and the slack sits beneath it */
 .m-atlas .fig{ margin-top:1.4rem; align-items:flex-start; }
@@ -353,7 +360,7 @@ img{ max-width:100%; height:auto; display:block; }
       <h2>Region Atlas</h2>
       <p>A detailed 3D atlas of the human brain, with the Brodmann areas, receptor density maps and a functional breakdown of every region.</p>
       <div class="fig" aria-hidden="true">
-        <span class="shot"><img src="assets/home/atlas.jpg" alt="" decoding="async" width="900" height="1013"></span>
+        <span class="shot themed"><img class="for-dark" src="assets/home/atlas.jpg" alt="" loading="lazy" decoding="async" width="900" height="1094"><img class="for-light" src="assets/home/atlas-light.jpg" alt="" loading="lazy" decoding="async" width="900" height="1094"></span>
       </div>
       <div class="meta">116 parcels &middot; 41 Brodmann areas &middot; four viewports &middot; receptor densities &middot; slice tool &middot; PNG and 3D export &middot; saved models</div>
       <div class="go">Open the atlas &rarr;</div>

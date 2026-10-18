@@ -1284,13 +1284,24 @@ mark{ background:var(--ink); color:var(--paper); }
   }
   function allNV(){ return PLANES.map(function(p){ return INSTANCES[p.key]; }).filter(Boolean); }
 
-  /* On white, the slices clear only what is truly empty. The template is
-     zero outside the brain and at least one inside it, so in the light
-     theme its grey scale is clear at zero and opaque above it, running
-     from black to white over the same window as the plain one: the white
-     shows through the empty space while the brain, its ventricles
-     included, looks exactly as it does on black. The 3D render keeps the
-     plain scale, which already draws the brain alone. */
+  /* On white, nothing in the slices is black. The template is zero outside
+     the brain, so in the light theme its scale is clear at zero, letting
+     the white through, and above zero it reads like a stained section
+     rather than a scan: fluid white, grey matter the darkest grey, white
+     matter pale. Each step is a place in the plain scale's window (0 its
+     bottom, 1 its top) and a lightness; the clear end is white too, so the
+     brain's edge fades into the page instead of drawing a dark rim. The 3D
+     render keeps the plain scale, which already draws the brain alone. */
+  var LIGHT_STEPS = [[-0.05, 1], [0.30, 0.45], [0.50, 0.40], [0.70, 0.55], [0.90, 0.80], [1, 0.86]];
+  function lightScale(w){
+    var I = [0, 1], L = [255, 255], A = [0, 255];
+    LIGHT_STEPS.forEach(function(s){
+      var i = Math.round(255 * (w.min + s[0] * (w.max - w.min)) / w.max);
+      if (i > I[I.length - 1] && i <= 255){ I.push(i); L.push(Math.round(255 * s[1])); A.push(255); }
+    });
+    if (I[I.length - 1] < 255){ I.push(255); L.push(L[L.length - 1]); A.push(255); }
+    return {R: L, G: L.slice(), B: L.slice(), A: A, I: I};
+  }
   function paintScene(){
     var c = sceneColours();
     PLANES.forEach(function(p){
@@ -1304,10 +1315,8 @@ mark{ background:var(--ink); color:var(--paper); }
         if (!vol.vnWindow) vol.vnWindow = {min: vol.cal_min, max: vol.cal_max};
         var w = vol.vnWindow;
         if (c.clear && w.max > 0){
-          var k = Math.max(2, Math.min(254, Math.round(255 * w.min / w.max)));
-          nv.addColormap("vn-gray-clear", {R: [0, 0, 0, 255], G: [0, 0, 0, 255], B: [0, 0, 0, 255],
-                                           A: [0, 255, 255, 255], I: [0, 1, k, 255]});
-          vol.colormap = "vn-gray-clear"; vol.cal_min = 0; vol.cal_max = w.max;
+          nv.addColormap("vn-gray-light", lightScale(w));
+          vol.colormap = "vn-gray-light"; vol.cal_min = 0; vol.cal_max = w.max;
         } else {
           vol.colormap = "gray"; vol.cal_min = w.min; vol.cal_max = w.max;
         }

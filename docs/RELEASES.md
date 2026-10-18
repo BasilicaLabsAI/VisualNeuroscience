@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v10.107 — 18 October 2026 — No black in the light theme's scans, and the home page's atlas picture retaken
+Commit · Draw the light theme's scans like a stained section and retake the home page's atlas picture for each theme
+
+In the light theme the Region Atlas's slices no longer sit inside a thick black band. On white, the scan is now drawn the way a stained section reads on paper: the fluid around the brain and in the ventricles is white, grey matter is the darkest grey and white matter a pale one, so nothing in the slices is black and the brain's edge fades into the page instead of ending in a dark rim. The Network Atlas, which draws on the same scans, follows; the dark theme and the 3D view are as they were. The home page's picture of the atlas is retaken from the live page with a twin for each theme, so in the light theme it shows the white atlas on a white plate and in the dark theme the dark one, and only the picture on show is downloaded.
+
 ## v10.106 — 17 October 2026 — A wrong password clears, and repeated ones ask for a tick
-Commit · Clear a refused password and ask for a tick after three in a row
+Commit `a34561e` · Clear a refused password and ask for a tick after three in a row
 
 When a sign-in is refused, the password field now empties and takes the cursor, ready for another go. After three wrong passwords in a row, each further try waits behind an "I'm not a robot" box that has to be ticked by hand first. If Firebase, which runs the accounts, pauses sign-in to an account after too many wrong tries, the box now says so plainly and offers the two ways in that work at once: a password reset by email, or a sign-in link. The count lives in your browser for a quarter of an hour and clears when you sign in.
 
