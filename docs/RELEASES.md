@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.7 — 18 October 2026 — No more swiping back by accident in the app
+Commit · Take the swipe back away from the app's pages so a drag on a scan cannot leave the page
+
+In the iPhone and iPad app a swipe no longer takes you back a page. On iPadOS 26 a sideways swipe anywhere on a page went back, so dragging a scan, a slider or the 3D model could leave the page by accident; that swipe and the one from the left edge are both gone, and the back button at the top left is the way back. The app takes this with its next build.
+
 ## v11.6 — 18 October 2026 — The iPad gets the whole screen, and the view bars tighten
-Commit · Let the app's pages fill an iPad's screen without their title strip or the system bar's title
+Commit `539763a` · Let the app's pages fill an iPad's screen without their title strip or the system bar's title
 
 On an iPad, pages in the app now fill the screen. The title strip at the top of each page and the title under the tab bar are gone, so the Region Atlas, the Network Atlas and the Molecular viewer start right under the tab bar, and the Molecular viewer takes the screen's height. On an iPad the four views sit two to a row and fit the screen together, square where there is room and a little flatter with the iPad held sideways; on a computer they stay square. The bar over each view is a single line with Slice beside the other buttons, and the expand button stands as tall as the buttons around it. Where a view is short of room, the buttons keep one word each: Centre, Slice, Regions, Reset. The opacity slider keeps up with a drag: the regions follow it ten times a second instead of rebuilding every layer of every view for each step. The Add a region list's frosted backing now sits on a layer of its own behind the list, since iOS can refuse to scroll a list inside a blurred panel, and the list is given its scrolling afresh once it opens. The About box, on the home page and in the app, is titled Message from the Developer, without the line beneath it.
 

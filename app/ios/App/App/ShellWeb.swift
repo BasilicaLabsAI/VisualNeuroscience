@@ -181,13 +181,25 @@ final class PageBridgeController: CAPBridgeViewController {
         let paper = UIColor(named: "Paper") ?? .systemBackground
         webView.backgroundColor = paper
         webView.scrollView.backgroundColor = paper
-        // one page per web view: Back is the navigation bar's, and its edge
-        // swipe is the system's
+        // one page per web view, and Back is the navigation bar's button
         webView.allowsBackForwardNavigationGestures = false
         webView.scrollView.keyboardDismissMode = .interactive
         let content = webView.configuration.userContentController
         content.addUserScript(WKUserScript(source: startScript, injectionTime: .atDocumentStart, forMainFrameOnly: true))
         content.add(ShellMessages(controller: self), name: "vnShell")
+    }
+
+    /// The pages are worked by dragging (the scans, their sliders, the 3D
+    /// models), so the stack's swipes back are taken away: the swipe from
+    /// the edge, and from iOS 26 the swipe from anywhere on the page, which
+    /// a sideways drag on a scan would set off. Back is the bar's button.
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        guard let stack = navigationController else { return }
+        stack.interactivePopGestureRecognizer?.isEnabled = false
+        if #available(iOS 26.0, *) {
+            stack.interactiveContentPopGestureRecognizer?.isEnabled = false
+        }
     }
 
     /// Runs before anything on the page: marks the page as one of the

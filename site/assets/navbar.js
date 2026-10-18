@@ -11,10 +11,11 @@
 
    Moving forward slides the new page in from the right and moving back
    slides it out again, through cross-document view transitions where the
-   WebKit underneath has them. A swipe from the left edge is handled by the
-   web view itself (SceneDelegate.swift turns the gesture on), and that
-   already draws its own slide, so a page revealed by a swipe skips the
-   transition rather than sliding twice.
+   engine underneath has them. A back made without the button (Android's
+   own back gesture) already draws its own slide, so a page revealed that
+   way skips the transition rather than sliding twice. Inside the iOS app
+   this bar is not drawn: the shell's navigation bar carries Back, and the
+   swipe back is taken away there (ShellWeb.swift).
 
    The website is left exactly as it is: nothing here runs unless native.js
    has marked the document as native, and the view-transition opt-in is

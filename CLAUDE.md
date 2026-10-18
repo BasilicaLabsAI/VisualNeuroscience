@@ -40,6 +40,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   shell's (Account). When a home-page box's text or picture changes, change its twin in `Shell.swift` too. Android
   keeps the web bar. On an iPad the pages fill the screen: the shell also marks them `data-shell-pad`, the system bar
   shows no title there, and the page's title strip steps aside (`viewer.css`), keeping any buttons it carries.
+  The stack's swipes back (from the edge, and iOS 26's from anywhere) are off on the pages, since a sideways drag on a
+  scan set them off; Back is the bar's button (`PageBridgeController.viewDidAppear`).
 - `site/sw.js` precaches pages and assets: **bump `VERSION`** (`vn-NN`) whenever a precached file changes.
 - Shared receptor drawings live in `site/assets/rxfig.js` + `rxfig.css`, built from `site/assets/rx/receptors.json`
   (`scripts/receptors/build.py`) and `site/assets/nt/molecules.json` (`scripts/neurotransmitters/build.py`).
