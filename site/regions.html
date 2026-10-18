@@ -981,6 +981,22 @@ mark{ background:var(--ink); color:var(--paper); }
   .rail .rail-box{ grid-column:1 / -1; grid-template-columns:repeat(2, minmax(0,1fr)); column-gap:1.6rem; }
 }
 @media (max-width:760px){ .rail .rail-box{ grid-template-columns:minmax(0,1fr); } }
+/* On a phone the region picker leads in a box of its own, the scans come
+   next, and the rest of the rail follows them in a second box. The rail
+   and its box step aside (display:contents) so that their parts can stand
+   round the scans in the page's one column. */
+@media (max-width:760px){
+  .studio{ row-gap:0; }
+  .studio .rail, .studio .rail .rail-box{ display:contents; }
+  .studio .rail-part{
+    order:2; min-width:0; background:var(--paper);
+    border:1px solid var(--hair); border-width:0 1px; padding:1.4rem 1.05rem 0;
+  }
+  .studio .rail-part:first-child{ order:0; border-width:1px; padding:1rem 1.05rem 1.1rem; margin-bottom:var(--gap); }
+  .studio .rail-part:nth-child(2){ border-top-width:1px; padding-top:1rem; }
+  .studio .rail-part:last-child{ border-bottom-width:1px; padding-bottom:1.1rem; }
+  .studio .centre{ order:1; margin-bottom:var(--gap); }
+}
 
 </style>
 </head>

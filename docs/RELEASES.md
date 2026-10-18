@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.4 — 18 October 2026 — On a phone, the region picker above the scans and the rest below
+Commit · Lead the Region Atlas on a phone with the region picker and follow the scans with the rest of the rail
+
+On a phone the Region Atlas now opens with the Regions box, where you pick from the AAL regions or the Brodmann areas and set the opacity, with the scans straight after it. Highlighted, Saved models and Export follow the scans and their readouts, together in one box. On a tablet and on a computer the column of controls is as it was.
+
 ## v11.3 — 18 October 2026 — The About box's line, reworded
-Commit · Reword the About box as a message from the developer of Visual Neuroscience
+Commit `41af04d` · Reword the About box as a message from the developer of Visual Neuroscience
 
 The About box now reads “A message from the developer of Visual Neuroscience”, on the home page and in the About tab of the iPhone and iPad app. In the app the portrait stands in its engraved frame in the middle of the box, as it does on the home page; the app picks up both with its next build.
 
