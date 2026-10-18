@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.16 — 18 October 2026 — The iPad's scans fill their views again
+Commit · Let each scan fill its view on an iPad instead of sitting in a square at one end
+
+On an iPad, in the app or in Safari, the scans in the 3D Region Atlas and the Network Atlas fill their views again. Since the four views were fitted to the screen two to a row, an iPad held sideways showed each scan as a square at one end of a wider box, with an empty strip beside it. The boxes keep their size; the scan's stage now runs the whole width of each one, black in the dark theme and white in the light, with the brain in the middle, and it is square again wherever the screen has the room, as on an iPad held upright.
+
 ## v11.15 — 18 October 2026 — The Brodmann Area Atlas on one screen
-Commit · Pare the Brodmann Area Atlas to its two maps and what the picked area does, on one screen
+Commit `4589330` · Pare the Brodmann Area Atlas to its two maps and what the picked area does, on one screen
 
 The Brodmann Area Atlas is now the map and nothing else: both faces of the hemisphere and, beside them, what the area you tap does, all on one screen. On a phone, on the web or in the app, the two faces sit one above the other with the reading beneath, and a long reading scrolls in its own box with its foot fading; on an iPad or a computer the reading is a column on the left and the two faces fill the rest, as large as the screen allows. Tap an area again to let it go, pinch a face to look closer, and follow a reading's link to see the same area on the scan in the 3D Region Atlas. The one area on neither face, BA48, is reached from the reading before anything is picked. The list, the four scans and the export are gone from this page; the 3D Region Atlas still has them.
 
