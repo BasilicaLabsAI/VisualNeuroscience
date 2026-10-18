@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Brodmann Area Atlas — VisualNeuroscience.AI</title>
-<meta name="description" content="The 41 Brodmann areas the atlas draws: a line map of both faces of the hemisphere, the areas on the MNI152 template in four views, and a 3D graph of where they border. Pick an area to see what it does, or search by number, by anatomical name, or by what a region is for.">
+<meta name="description" content="The 41 Brodmann areas the atlas draws: a line map of both faces of the hemisphere and the areas on the MNI152 template in four views. Pick an area to see what it does, or search by number, by anatomical name, or by what a region is for.">
 <!-- link previews. The card is built by site/share.html and rendered to
      assets/social-card.jpg; og:image has to be absolute, so this origin is
      the one thing to change if the site moves to its own domain. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="VisualNeuroscience.AI">
 <meta property="og:title" content="Brodmann Area Atlas — VisualNeuroscience.AI">
-<meta property="og:description" content="The 41 Brodmann areas the atlas draws: a line map of both faces of the hemisphere, the areas on the MNI152 template in four views, and a 3D graph of where they border. Pick an area to see what it does, or search by number, by anatomical name, or by what a region is for.">
+<meta property="og:description" content="The 41 Brodmann areas the atlas draws: a line map of both faces of the hemisphere and the areas on the MNI152 template in four views. Pick an area to see what it does, or search by number, by anatomical name, or by what a region is for.">
 <meta property="og:url" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/brodmann.html">
 <meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -170,9 +170,8 @@ svg{ display:block; }
   .rail .rail-part:first-child{ grid-row:span 2; }
 }
 @media (max-width:760px){ .rail .rail-box{ grid-template-columns:minmax(0,1fr); } .rail .rail-part:first-child{ grid-row:auto; } }
-/* On a phone the list of areas leads in a box of its own, the map, the
-   scans and the graph come next, and the rest of the rail follows them in
-   a second box. The rail and its box step aside (display:contents) so that
+/* On a phone the list of areas leads in a box of its own, the map and the
+   scans come next, and the rest of the rail follows them in a second box. The rail and its box step aside (display:contents) so that
    their parts can stand round the centre in the page's one column. */
 @media (max-width:760px){
   .studio{ row-gap:0; }
@@ -313,7 +312,7 @@ mark{ background:var(--ink); color:var(--paper); }
 @media (max-width:760px){ .cartoons{ grid-template-columns:1fr; } }
 
 /* ── the scans, and the readouts under them ── */
-.scansec, .graphsec{ margin-top:calc(var(--gap) * 2); }
+.scansec{ margin-top:calc(var(--gap) * 2); }
 .views-wrap{ position:relative; }
 .views .view{ min-width:0; }
 .stats{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; margin-top:var(--gap); }
@@ -347,43 +346,6 @@ mark{ background:var(--ink); color:var(--paper); }
   @keyframes scan{ from{transform:translateX(-100%)} to{transform:translateX(300%)} }
 }
 .hidden{ display:none !important; }
-
-/* ── the border graph ──────────────────────────────────────────────────── */
-.graph-lede{ font-size:.98rem; line-height:1.6; max-width:70ch; margin-bottom:var(--gap); }
-.graph-wrap{ border:1px solid var(--hair); }
-.graph-stage{ touch-action:none; cursor:grab; }
-.graph-stage:active{ cursor:grabbing; }
-.graph-stage svg{ width:100%; height:auto; max-height:min(74vh,760px); max-height:min(74dvh,760px); display:block; background:transparent; }
-.graph-tools{
-  display:flex; flex-wrap:wrap; align-items:center; gap:.4rem .8rem;
-  padding:.5rem .8rem; border-top:1px solid var(--hair);
-}
-.graph-count{
-  font-family:var(--font-brand); font-size:.55rem; letter-spacing:.22em;
-  text-transform:uppercase; color:var(--ink-60); margin-left:auto;
-}
-.g-edge{ stroke:var(--ink-35); fill:none; }
-.g-node{ cursor:pointer; }
-.g-node text{
-  font-family:var(--font-brand); font-weight:500; font-size:9px;
-  fill:#111111; text-anchor:middle; dominant-baseline:central; pointer-events:none;
-}
-.graph-stage.picked .g-node{ opacity:.25; }
-.graph-stage.picked .g-node.on,
-.graph-stage.picked .g-node.near{ opacity:1; }
-.graph-stage.picked .g-edge{ stroke:var(--ink-35); opacity:.12; }
-.graph-stage.picked .g-edge.on{ opacity:1; stroke:var(--ink); }
-.g-brain{
-  fill:var(--ink); fill-opacity:.05;
-  stroke:var(--ink); stroke-opacity:.2; stroke-width:1;
-  pointer-events:none;
-}
-.g-ring{
-  fill:none; stroke:var(--ink); stroke-opacity:.1; stroke-width:.75;
-  pointer-events:none;
-}
-.graph-stage.picked .g-brain{ fill-opacity:.03; stroke-opacity:.12; }
-.graph-stage.picked .g-ring{ stroke-opacity:.07; }
 
 /* ── what an area does, opened over the page ───────────────────────────
    It arrives from the button that opens it and leaves the same way; with
@@ -513,7 +475,7 @@ mark{ background:var(--ink); color:var(--paper); }
           <h2>Overlay</h2>
           <div class="rail-row"><span class="tool-label">Opacity</span><input type="range" id="opacity" min="10" max="100" value="90" aria-label="How strongly the picked area covers the scan"><span class="val" id="opacityVal">90%</span></div>
           <div class="btns"><button class="btn" id="clearBtn" type="button">Clear the pick</button></div>
-          <p class="rail-note">Pick an area from the list, the map, the graph or the scan, and the scans centre on it. Press it again to let it go.</p>
+          <p class="rail-note">Pick an area from the list, the map or the scan, and the scans centre on it. Press it again to let it go.</p>
         </section>
         <section class="rail-part">
           <h2>Export</h2>
@@ -523,10 +485,10 @@ mark{ background:var(--ink); color:var(--paper); }
       </div>
     </aside>
 
-    <section class="centre" aria-label="The Brodmann map, the scans and the border graph">
+    <section class="centre" aria-label="The Brodmann map and the scans">
       <div class="sel-bar" id="selBar" aria-live="polite">
         <span class="sel-kick" id="selKick">Nothing picked</span>
-        <span class="sel-name" id="selName">Pick an area from the map, the list, the graph or the scan.</span>
+        <span class="sel-name" id="selName">Pick an area from the map, the list or the scan.</span>
         <button class="ts-btn sel-fn" id="selFn" type="button" hidden>What it does &rarr;</button>
       </div>
 
@@ -582,25 +544,13 @@ mark{ background:var(--ink); color:var(--paper); }
         </div>
       </section>
 
-      <!-- how the areas border one another, at their true positions -->
-      <section class="graphsec" aria-labelledby="graph-h">
-        <h2 class="sec-h" id="graph-h">The same areas in 3D <small>at their true positions &middot; joined where they border</small></h2>
-        <p class="graph-lede">Every area drawn at its own centre of mass in the scan, joined to the areas it actually shares a border with, measured off the volume rather than asserted. Thicker lines are longer borders, and the brain drawn faintly around them is the template&rsquo;s own outer surface, turning with the graph so you can see where each area sits. Drag to turn it, pinch to zoom, two fingers to pan.</p>
-        <div class="graph-wrap">
-          <div class="graph-stage" id="graphStage"></div>
-          <div class="graph-tools">
-            <button class="ts-btn" id="gReset" type="button">Reset view</button>
-            <span class="graph-count" id="gCount"></span>
-          </div>
-        </div>
-      </section>
     </section>
 
   </div>
 
   <section class="below prose" aria-labelledby="about-h">
     <h2 id="about-h">What this is</h2>
-    <p>The two faces are a line map of the classic Brodmann scheme, descending from Brodmann&rsquo;s own 1909 figures: every area outlined and numbered, nothing drawn beneath. Pick an area and it fills in its lobe&rsquo;s colour on the face that shows it, the scans centre on it, and the graph lights the areas it borders. Anterior is on the left in the external view and, as the scheme is conventionally drawn, on the right in the internal one. The drawing is a schematic; where each area actually sits in a real head, with the atlas&rsquo;s own boundaries, is what the scans show. Brodmann Areas diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN &ndash; Institute for EEG-Neurofeedback / Neurofeedback Academy</a>.</p>
+    <p>The two faces are a line map of the classic Brodmann scheme, descending from Brodmann&rsquo;s own 1909 figures: every area outlined and numbered, nothing drawn beneath. Pick an area and it fills in its lobe&rsquo;s colour on the face that shows it, and the scans centre on it. Anterior is on the left in the external view and, as the scheme is conventionally drawn, on the right in the internal one. The drawing is a schematic; where each area actually sits in a real head, with the atlas&rsquo;s own boundaries, is what the scans show. Brodmann Areas diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN &ndash; Institute for EEG-Neurofeedback / Neurofeedback Academy</a>.</p>
     <p>Brodmann numbered the cortex in 1909 by how its cells are layered, not by what it does, which is why the numbers wander about the brain and why several of his 52 have no agreed human counterpart. The 41 drawn here are those the shipped atlas labels; 12&ndash;16, 31, 33 and 49&ndash;52 are absent. Each area is bilateral: Brodmann described cortical types, not hemispheres, so where a function is strongly one-sided the note says so rather than the atlas splitting the area. The boundaries are an approximation to begin with: they were drawn from a handful of post-mortem brains, and no two people&rsquo;s cortex is folded the same way. This particular volume descends from the Talairach Daemon, whose labels were grown outwards to fill the brain: 14% of what it marks lies in white matter that the AAL atlas does not count as cortex at all, and label 48 has become a catch-all for the peri-Sylvian region rather than the small area Brodmann gave that number to. Read a boundary as a neighbourhood, not a border. Educational, not diagnostic.</p>
     <p>The <a href="regions.html">3D Region Atlas</a> carries the same areas beside the AAL regions, so the two can be lit together on one scan.</p>
     <div class="credits">
@@ -634,7 +584,6 @@ mark{ background:var(--ink); color:var(--paper); }
 <script src="assets/atlas-data.js"></script>
 <script src="assets/brodmann-areas.js"></script>
 <script src="assets/brodmann-outline.js"></script>
-<script src="assets/brain-hull.js"></script>
 <script src="assets/diagram-gestures.js"></script>
 <script src="assets/slice-tool.js"></script>
 <script src="assets/scan-look.js"></script>
@@ -644,10 +593,10 @@ mark{ background:var(--ink); color:var(--paper); }
 <script>
 "use strict";
 /* The Brodmann Area Atlas: the areas as a list, as a line map of both
-   faces of the hemisphere, on the MNI152 template in four views drawn as
-   the other atlases draw theirs, and as a graph of where they border. One
-   area is picked at a time, since the page answers "what does this do",
-   and every one of the four shows the same pick. */
+   faces of the hemisphere, and on the MNI152 template in four views drawn
+   as the other atlases draw theirs. One area is picked at a time, since the
+   page answers "what does this do", and every one of the three shows the
+   same pick. */
 (function(){
   var B = window.MN_BRODMANN;
   var TPL_URL = MN_ATLAS.TPL_URL;
@@ -787,8 +736,8 @@ mark{ background:var(--ink); color:var(--paper); }
   /* each view's bar ends in the button that opens it over the grid */
   if (window.MN_EXPAND) MN_EXPAND.attach(document.querySelector(".views-wrap"));
 
-  /* every view's crosshair on an MNI coordinate, so a pick from the list,
-     the map or the graph lands the scans on the area */
+  /* every view's crosshair on an MNI coordinate, so a pick from the list
+     or the map lands the scans on the area */
   function goTo(mm){
     var nvs = allNV();
     nvs.forEach(function(nv){
@@ -832,7 +781,7 @@ mark{ background:var(--ink); color:var(--paper); }
     if (selected == null){
       selKick.textContent = "Nothing picked";
       selKick.style.borderLeftColor = "transparent";
-      selName.textContent = "Pick an area from the map, the list, the graph or the scan.";
+      selName.textContent = "Pick an area from the map, the list or the scan.";
       selFn.hidden = true;
       statSel.innerHTML = "&mdash;";
       closeFn();
@@ -906,7 +855,7 @@ mark{ background:var(--ink); color:var(--paper); }
 
   function select(ba, fromList, quiet){
     selected = (selected === ba) ? null : ba;
-    paint(); read(); markList(); markCartoon(); markGraph(); markAddress();
+    paint(); read(); markList(); markCartoon(); markAddress();
     if (selected != null){
       var a = B.BY_BA[selected];
       if (a && a.at) goTo(a.at);
@@ -1073,16 +1022,16 @@ mark{ background:var(--ink); color:var(--paper); }
   });
 
   /* ── 3D export ────────────────────────────────────────────────────────
-     The picked area as a surface off the atlas volume, the border graph as
-     spheres at each area's centre of mass joined by tubes as thick as the
-     border is long, and the brain's outer surface for context. */
+     The picked area as a surface off the atlas volume, and, if asked for,
+     every area as a sphere at its centre of mass joined by tubes as thick as
+     its borders are long, with the brain's outer surface for context. */
   if (window.MN_EXPORT3D){
     var x3d = MN_EXPORT3D.attach({
       host: document.getElementById("export3d"),
       basename: function(){ return selected != null ? "brodmann-area-" + selected : "brodmann-areas"; },
       options: [
         { id: "area",  label: "The picked area, as a surface", checked: true },
-        { id: "graph", label: "The border graph", checked: true },
+        { id: "graph", label: "Every area’s centre, joined where they border", checked: false },
         { id: "shell", label: "The brain surface", checked: true }
       ],
       build: function(ctx){
@@ -1223,252 +1172,6 @@ mark{ background:var(--ink); color:var(--paper); }
       : "BA" + selected + " does not reach either surface: it is buried, and only the scans show it.";
   }
 
-  /* ── the graph ────────────────────────────────────────────────────────
-     Not an abstract layout: each node sits at its area's own centre of mass
-     in MNI millimetres, so turning the graph turns the brain. Edges are the
-     borders measured off the volume, weighted by how much border there is. */
-  var GS = 660, GH = 400;
-  /* How far the eye stands from the middle, in the same millimetres the
-     nodes use: close enough to give depth, far enough that the brain drawn
-     around them keeps its own profile. */
-  var PERSP = 1500;
-  var gSvg, gNodes = {}, gEdges = [], gAngle = 0.6, gTilt = -0.25;
-  var gDiag = null, gBrain = null, gRings = [];
-  var HULL = window.MN_BRAIN_HULL || null;
-  var HULL_PTS = [];
-  if (HULL) HULL.rings.forEach(function(r){ HULL_PTS.push.apply(HULL_PTS, r); });
-
-  /* The cloud is centred on its own middle and given one scale, fixed from
-     the widest and tallest it ever gets over the turns it can be given, so
-     turning it does not make the whole graph swell and shrink. The brain
-     around the nodes is part of what has to fit. */
-  var gMid = [0,0,0], gK = 1.9;
-  function fitGraph(){
-    var n = B.AREAS.length;
-    gMid = [0,0,0];
-    B.AREAS.forEach(function(a){ for (var i = 0; i < 3; i++) gMid[i] += a.at[i] / n; });
-    var fitPts = B.AREAS.map(function(a){ return a.at; });
-    for (var h = 0; h < HULL_PTS.length; h += 2) fitPts.push(HULL_PTS[h]);
-    var MARGIN = 34;
-    /* the same projection the drawing uses, perspective included, since a
-       point in front of the middle is magnified */
-    function extents(k){
-      var mx = 1, mz = 1;
-      for (var ai = 0; ai < 24; ai++){
-        var A = ai * Math.PI / 12, ca = Math.cos(A), sa = Math.sin(A);
-        for (var ti = -5; ti <= 5; ti++){
-          var T = ti * 0.12, ct = Math.cos(T), st = Math.sin(T);
-          for (var j = 0; j < fitPts.length; j++){
-            var p = fitPts[j];
-            var x = p[0]-gMid[0], y = p[1]-gMid[1], z = p[2]-gMid[2];
-            var X = x*ca - y*sa, Y = x*sa + y*ca;
-            var Y2 = Y*ct - z*st, Z2 = Y*st + z*ct;
-            var denom = PERSP + Y2 * k;
-            if (denom <= 1) continue;
-            var persp = PERSP / denom;
-            var ax = Math.abs(X * k * persp), az = Math.abs(Z2 * k * persp);
-            if (ax > mx) mx = ax;
-            if (az > mz) mz = az;
-          }
-        }
-      }
-      return [mx, mz];
-    }
-    /* scale to the width, then make the box exactly as tall as that needs;
-       perspective depends on the scale, so it is settled in a few passes */
-    var target = GS / 2 - MARGIN;
-    gK = 1.9;
-    for (var pass = 0; pass < 5; pass++){ var e = extents(gK); gK *= target / e[0]; }
-    var fin = extents(gK);
-    GH = Math.round(2 * fin[1]) + 44;
-    if (gSvg){
-      if (gDiag) gDiag.setBase(0, 0, GS, GH);
-      else gSvg.setAttribute("viewBox", "0 0 " + GS + " " + GH);
-    }
-  }
-
-  /* The graph turns, so the brain behind it cannot be a picture. What ships
-     is a cage of contour rings, the template's own outline in ten sagittal
-     and nine coronal planes, put through the same projection as the nodes;
-     their points also give the silhouette, the farthest in each of
-     eighty-four directions round the middle, smoothed into one closed path. */
-  var BRAIN_BINS = 84;
-  function ringPath(ring){
-    var d = "";
-    for (var i = 0; i < ring.length; i++){
-      var pr = project(ring[i]);
-      d += (i ? "L" : "M") + pr.x.toFixed(1) + " " + pr.y.toFixed(1);
-    }
-    return d + "Z";
-  }
-  function brainOutline(){
-    var pts = HULL_PTS, n = pts.length;
-    if (!n) return "";
-    var px = new Float64Array(n), py = new Float64Array(n), cx = 0, cy = 0, i, b;
-    for (i = 0; i < n; i++){
-      var pr = project(pts[i]);
-      px[i] = pr.x; py[i] = pr.y; cx += pr.x; cy += pr.y;
-    }
-    cx /= n; cy /= n;
-    var bestR = new Float64Array(BRAIN_BINS), bx = new Float64Array(BRAIN_BINS), by = new Float64Array(BRAIN_BINS);
-    for (i = 0; i < n; i++){
-      var dx = px[i] - cx, dy = py[i] - cy, r = dx*dx + dy*dy;
-      b = Math.floor((Math.atan2(dy, dx) + Math.PI) / (2 * Math.PI) * BRAIN_BINS) % BRAIN_BINS;
-      if (r > bestR[b]){ bestR[b] = r; bx[b] = px[i]; by[b] = py[i]; }
-    }
-    /* a direction with no point of its own borrows the mean of its
-       neighbours, so the ring never gains a notch at the origin */
-    var ring = [];
-    for (b = 0; b < BRAIN_BINS; b++){
-      if (bestR[b] > 0){ ring.push([bx[b], by[b]]); continue; }
-      var prev = (b - 1 + BRAIN_BINS) % BRAIN_BINS, nextb = (b + 1) % BRAIN_BINS;
-      if (bestR[prev] > 0 && bestR[nextb] > 0) ring.push([(bx[prev] + bx[nextb]) / 2, (by[prev] + by[nextb]) / 2]);
-    }
-    if (ring.length < 8) return "";
-    /* closed Catmull-Rom through the ring, as cubics */
-    var m = ring.length, d = "M" + ring[0][0].toFixed(1) + " " + ring[0][1].toFixed(1);
-    for (i = 0; i < m; i++){
-      var p0 = ring[(i - 1 + m) % m], p1 = ring[i], p2 = ring[(i + 1) % m], p3 = ring[(i + 2) % m];
-      d += "C" + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + " " + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(1) +
-           " " + (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + " " + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(1) +
-           " " + p2[0].toFixed(1) + " " + p2[1].toFixed(1);
-    }
-    return d + "Z";
-  }
-  function project(mm){
-    /* MNI x is left-right, y front-back, z up. Turn about z, tilt about x. */
-    var x = mm[0]-gMid[0], y = mm[1]-gMid[1], z = mm[2]-gMid[2];
-    var ca = Math.cos(gAngle), sa = Math.sin(gAngle);
-    var X = x * ca - y * sa, Y = x * sa + y * ca;
-    var ct = Math.cos(gTilt), st = Math.sin(gTilt);
-    var Y2 = Y * ct - z * st, Z2 = Y * st + z * ct;
-    var persp = PERSP / (PERSP + Y2 * gK);
-    return { x: GS/2 + X * gK * persp, y: GH/2 - Z2 * gK * persp, d: Y2, s: persp };
-  }
-  function buildGraph(){
-    var NS = "http://www.w3.org/2000/svg", host = document.getElementById("graphStage");
-    gSvg = document.createElementNS(NS, "svg");
-    gSvg.setAttribute("role", "img");
-    gSvg.setAttribute("aria-label", "The Brodmann areas at their centres in the brain, joined where they border");
-    host.innerHTML = ""; host.appendChild(gSvg);
-    if (HULL){
-      var bg = document.createElementNS(NS, "g");
-      gBrain = document.createElementNS(NS, "path");
-      gBrain.setAttribute("class", "g-brain");
-      var bt = document.createElementNS(NS, "title");
-      bt.textContent = "The brain's outer surface, from the MNI152 template";
-      gBrain.appendChild(bt);
-      bg.appendChild(gBrain);
-      HULL.rings.forEach(function(){
-        var r = document.createElementNS(NS, "path");
-        r.setAttribute("class", "g-ring");
-        gRings.push(r); bg.appendChild(r);
-      });
-      gSvg.appendChild(bg);
-    }
-    var maxW = 0;
-    B.EDGES.forEach(function(e){ if (e[2] > maxW) maxW = e[2]; });
-    var eg = document.createElementNS(NS, "g");
-    gSvg.appendChild(eg);
-    B.EDGES.forEach(function(e){
-      var ln = document.createElementNS(NS, "line");
-      ln.setAttribute("class", "g-edge");
-      ln.setAttribute("stroke-width", (0.4 + 2.2 * Math.sqrt(e[2] / maxW)).toFixed(2));
-      eg.appendChild(ln);
-      gEdges.push({a: e[0], b: e[1], el: ln, w: e[2]});
-    });
-    var ng = document.createElementNS(NS, "g");
-    gSvg.appendChild(ng);
-    B.AREAS.forEach(function(a){
-      var g = document.createElementNS(NS, "g");
-      g.setAttribute("class", "g-node");
-      g.dataset.ba = a.ba;
-      var c = document.createElementNS(NS, "circle");
-      c.setAttribute("fill", LOBE_COLOUR[a.lobe] || "#888");
-      c.setAttribute("stroke", "var(--paper)");
-      c.setAttribute("stroke-width", "1.2");
-      var t = document.createElementNS(NS, "text");
-      t.textContent = a.ba;
-      var ti = document.createElementNS(NS, "title");
-      ti.textContent = "BA" + a.ba + " — " + a.name;
-      g.appendChild(c); g.appendChild(t); g.appendChild(ti);
-      g.addEventListener("click", function(){ select(a.ba, false); });
-      ng.appendChild(g);
-      gNodes[a.ba] = {g: g, c: c, t: t, area: a};
-    });
-    fitGraph();
-    document.getElementById("gCount").textContent = B.AREAS.length + " areas · " + B.EDGES.length + " borders";
-    layoutGraph();
-  }
-  function layoutGraph(){
-    if (gBrain){
-      gBrain.setAttribute("d", brainOutline());
-      for (var ri = 0; ri < gRings.length; ri++) gRings[ri].setAttribute("d", ringPath(HULL.rings[ri]));
-    }
-    var pos = {};
-    B.AREAS.forEach(function(a){ pos[a.ba] = project(a.at); });
-    gEdges.forEach(function(e){
-      var p = pos[e.a], q = pos[e.b];
-      if (!p || !q) return;
-      e.el.setAttribute("x1", p.x.toFixed(1)); e.el.setAttribute("y1", p.y.toFixed(1));
-      e.el.setAttribute("x2", q.x.toFixed(1)); e.el.setAttribute("y2", q.y.toFixed(1));
-    });
-    /* the far side first, so the near side sits on top of it */
-    var order = B.AREAS.slice().sort(function(a, b){ return pos[b.ba].d - pos[a.ba].d; });
-    order.forEach(function(a){
-      var n = gNodes[a.ba], p = pos[a.ba];
-      var r = (6 + Math.min(8, Math.sqrt(a.vox) / 55)) * p.s;
-      n.c.setAttribute("cx", p.x.toFixed(1)); n.c.setAttribute("cy", p.y.toFixed(1));
-      n.c.setAttribute("r", r.toFixed(1));
-      n.t.setAttribute("x", p.x.toFixed(1)); n.t.setAttribute("y", p.y.toFixed(1));
-      n.t.setAttribute("font-size", Math.max(6, 9 * p.s).toFixed(1));
-      n.g.parentNode.appendChild(n.g);
-    });
-  }
-  function markGraph(){
-    var stage = document.getElementById("graphStage");
-    stage.classList.toggle("picked", selected != null);
-    var near = {};
-    if (selected != null) B.EDGES.forEach(function(e){
-      if (e[0] === selected) near[e[1]] = true;
-      if (e[1] === selected) near[e[0]] = true;
-    });
-    Object.keys(gNodes).forEach(function(ba){
-      gNodes[ba].g.classList.toggle("on", Number(ba) === selected);
-      gNodes[ba].g.classList.toggle("near", !!near[ba]);
-    });
-    gEdges.forEach(function(e){ e.el.classList.toggle("on", selected != null && (e.a === selected || e.b === selected)); });
-  }
-  function bindGraph(){
-    var stage = document.getElementById("graphStage");
-    /* one finger turns it; the moment a second finger arrives the gesture
-       belongs to the pinch-and-pan handler, so the turn lets go and does
-       not snatch the graph when a finger lifts mid-pinch */
-    var down = false, held = new Set(), lx = 0, ly = 0;
-    stage.addEventListener("pointerdown", function(e){
-      held.add(e.pointerId);
-      if (held.size > 1){ down = false; return; }
-      if (e.target.closest(".g-node")) return;
-      down = true; lx = e.clientX; ly = e.clientY;
-      stage.setPointerCapture(e.pointerId);
-      e.preventDefault();
-    });
-    stage.addEventListener("pointermove", function(e){
-      if (!down || held.size > 1) return;
-      gAngle += (e.clientX - lx) * 0.008;
-      gTilt = Math.max(-0.6, Math.min(0.6, gTilt + (e.clientY - ly) * 0.005));
-      lx = e.clientX; ly = e.clientY;
-      layoutGraph();
-    });
-    ["pointerup", "pointercancel"].forEach(function(ev){
-      stage.addEventListener(ev, function(e){ held.delete(e.pointerId); down = false; });
-    });
-    document.getElementById("gReset").addEventListener("click", function(){
-      gAngle = 0.6; gTilt = -0.25; layoutGraph();
-      if (gDiag) gDiag.reset();
-    });
-  }
-
   /* ── the scans ── */
   async function boot(){
     if (!hasNV){ fail("NiiVue failed to load — the embedded script did not run."); return; }
@@ -1521,12 +1224,9 @@ mark{ background:var(--ink); color:var(--paper); }
   read();
   drawCartoon(document.getElementById("cartLateral"), "lateral");
   drawCartoon(document.getElementById("cartMedial"), "medial");
-  buildGraph();
-  bindGraph();
   if (window.MN_DIAG){
     MN_DIAG.attach({ svg: document.querySelector("#cartLateral svg") });
     MN_DIAG.attach({ svg: document.querySelector("#cartMedial svg") });
-    gDiag = MN_DIAG.attach({ svg: gSvg, stage: document.getElementById("graphStage"), rotates: true });
   }
 
   /* deep links: brodmann.html#ba=17 (or #ba17) opens on that area, from the
@@ -1538,7 +1238,7 @@ mark{ background:var(--ink); color:var(--paper); }
   }
   fromHash();
   window.addEventListener("hashchange", fromHash);
-  markCartoon(); markGraph();
+  markCartoon();
   boot();
 })();
 </script>
