@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.9 — 18 October 2026 — The Network Atlas comes last on the app's Atlas tab
+Commit · Put the Network Atlas last on the app's Atlas tab
+
+In the iPhone and iPad app, the Atlas tab now lists the Network Atlas last, after the Region Atlas, Microanatomy, Molecular and Tractography. The app takes this with its next build.
+
 ## v11.8 — 18 October 2026 — The Molecular panel opens on its tabs and folds away
-Commit · Head the Molecular panel with its tabs and a fold button, and give the receptor picker a box of its own
+Commit `94df5c4` · Head the Molecular panel with its tabs and a fold button, and give the receptor picker a box of its own
 
 The Molecular viewer's panel now opens on its tabs. The heading and the paragraph under it are gone, and the first tab is called Binding whatever the family, so nothing in the panel names dopamine and serotonin as a title that would need changing when more families arrive. A button at the end of the tabs folds the text away and the model moves over to fill the whole width; the same button, or any tab, brings the text back. The family and receptor picker sits on its own at the bottom of the left side: the family on one row and its receptors in a grid beneath, drawn the same way for every family, so the buttons keep their size when you switch from dopamine to serotonin. A line naming the receptor's gene, length and G protein heads the Binding and Drugs tabs. On a phone the panel is one sheet along the bottom with the tabs at its top and the picker at its foot, and folding it leaves just those two. Above the viewer on the web, the line beside the title now reads "receptors in 3D, built from 39 experimental structures".
 

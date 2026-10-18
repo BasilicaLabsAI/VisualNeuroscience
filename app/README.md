@@ -41,7 +41,7 @@ last and gathers what is not a section of the site.
 
 | Tab | Symbol | Its page |
 |---|---|---|
-| Atlas | `brain` | Region Atlas, Network Atlas, Microanatomy, Molecular, Tractography |
+| Atlas | `brain` | Region Atlas, Microanatomy, Molecular, Tractography, Network Atlas |
 | Library | `books.vertical` | Visualizing Studies, Digital Textbook |
 | Practice | `checklist` | Neuroscience Practice |
 | About | `info.circle` | the developer's message, YouTube, Instagram, LinkedIn and email, the MCP server |

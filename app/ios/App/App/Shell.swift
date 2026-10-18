@@ -104,8 +104,8 @@ struct PageBox: View {
 
 // MARK: - The tabs
 
-/// The atlases: the regions, the networks, the cell, the receptors and
-/// the white matter.
+/// The atlases: the regions, the cell, the receptors, the white matter
+/// and, last, the networks.
 struct AtlasTab: View {
     var body: some View {
         TabPage {
@@ -116,10 +116,6 @@ struct AtlasTab: View {
                     shot: Shot("assets/home/atlas.jpg", light: "assets/home/atlas-light.jpg"),
                     meta: "116 parcels · 41 Brodmann areas · four viewports · receptor densities · slice tool · PNG and 3D export · saved models",
                     go: "Open the atlas")
-            PageBox(page: .networkAtlas, kicker: "Systems",
-                    text: "The brain’s large-scale networks in six states, from flow to meditation, mapped onto the scan.",
-                    meta: "6 states · 7 systems · 20 nodes",
-                    go: "Open the ring")
             PageBox(page: .microanatomy, kicker: "Under the microscope",
                     text: "The neuron and its synapses at the cell’s scale, down to the neurotransmitters and their receptors.",
                     shot: Shot("assets/home/cells.jpg"),
@@ -135,6 +131,10 @@ struct AtlasTab: View {
                     shot: Shot("assets/home/tracts.jpg"),
                     meta: "Direction-coloured streamlines · free rotation",
                     go: "Open the tractogram")
+            PageBox(page: .networkAtlas, kicker: "Systems",
+                    text: "The brain’s large-scale networks in six states, from flow to meditation, mapped onto the scan.",
+                    meta: "6 states · 7 systems · 20 nodes",
+                    go: "Open the ring")
         }
     }
 }
