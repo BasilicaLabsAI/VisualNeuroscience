@@ -77,7 +77,7 @@
   var lastRX = { dopamine: 'D2', serotonin: '5-HT2A' };
   function buildRxRow() {
     var row = $('#rxpick'), fam = D.families[FAMILY]; row.innerHTML = '';
-    row.classList.toggle('many', fam.rx.length > 6);
+    row.style.setProperty('--cols', String(Math.min(6, fam.rx.length)));
     fam.rx.forEach(function (k) {
       var b = document.createElement('button'); b.type = 'button'; b.setAttribute('data-rx', k); b.setAttribute('aria-label', k); b.textContent = RXINFO[k].short; b.setAttribute('aria-pressed', 'false');
       b.addEventListener('click', function () { setReceptor(k); }); row.appendChild(b);
@@ -103,9 +103,13 @@
     FAMILY = f;
     document.querySelectorAll('[data-fam]').forEach(function (b) { var on = b.getAttribute('data-fam') === f; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; });
     buildRxRow(); buildTable();
-    $('#tab-da').textContent = FAMINFO[f].name;
     setReceptor(lastRX[f], instant);
   }
+  Object.keys(D.families).forEach(function (f) {
+    var b = document.createElement('button'); b.type = 'button'; b.id = 'fam-' + f; b.setAttribute('role', 'tab'); b.setAttribute('data-fam', f);
+    b.setAttribute('aria-selected', 'false'); b.setAttribute('aria-controls', 'rxpick'); b.tabIndex = -1;
+    b.textContent = FAMINFO[f] ? FAMINFO[f].name : D.families[f].name; $('#famtabs').appendChild(b);
+  });
   var famBtns = Array.prototype.slice.call(document.querySelectorAll('[data-fam]'));
   famBtns.forEach(function (b, i) {
     b.addEventListener('click', function () { setFamily(b.getAttribute('data-fam')); });
@@ -128,6 +132,7 @@
   var TABS = ['da', 'drugs', 'cmp', 'show', 'about'];
   function selectTab(n, focus) {
     TABS.forEach(function (m) { var on = m === n, t = $('#tab-' + m); t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; $('#pane-' + m).hidden = !on; });
+    $('#rx-cap').hidden = !(n === 'da' || n === 'drugs');
     var pn = document.querySelector('.panes'); if (pn) pn.scrollTop = 0;
     if (focus) $('#tab-' + n).focus();
     if (n === 'da' || n === 'drugs' || n === 'cmp') setMode(n);
@@ -135,8 +140,8 @@
   }
   TABS.forEach(function (n, i) {
     var t = $('#tab-' + n);
-    t.addEventListener('click', function () { selectTab(n); });
-    t.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); selectTab(TABS[(i + (e.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length], true); } });
+    t.addEventListener('click', function () { selectTab(n); setFolded(false); });
+    t.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); selectTab(TABS[(i + (e.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length], true); setFolded(false); } });
   });
 
   // ------------------------------------------------------------------ display controls
@@ -158,8 +163,14 @@
   ['TM1', 'TM2', 'TM3', 'TM4', 'TM5', 'TM6', 'TM7', 'H8'].forEach(function (k) { keyHTML += '<span><i style="background:' + SEGCOL[k] + '"></i>' + k + '</span>'; });
   keyHTML += '<span><i style="background:' + LOOPCOL + '"></i>Loops</span><span><i style="background:var(--mod);box-shadow:inset 0 0 0 1px var(--line)"></i>Borrowed loop</span><span><i style="background:var(--ghost)"></i>Unresolved</span><span><i style="background:var(--insert)"></i>D2L-only stretch</span><span><i style="background:var(--da)"></i>Dopamine or serotonin (or its stand-in)</span><span><i style="background:var(--ligc)"></i>Drug carbon</span><span><i style="background:' + GCOL.Gs + '"></i>Gαs</span><span><i style="background:' + GCOL.Gi + '"></i>Gαi1</span><span><i style="background:' + GCOL.Go + '"></i>Gαo</span><span><i style="background:' + GCOL.Gq + '"></i>Gαq</span><span><i style="background:' + GCOL.a5 + '"></i>α5 helix</span><span><i style="background:' + GCOL.B + '"></i>Gβ1</span><span><i style="background:' + GCOL.C + '"></i>Gγ2</span><span><i class="sq" style="background:#1F6DB3"></i>GlcNAc</span><span><i style="background:#1E9B58"></i>Mannose</span>';
   $('#key').innerHTML = keyHTML;
-  var panel = $('#panel');
-  $('#collapse').addEventListener('click', function () { var c = panel.classList.toggle('collapsed'); this.textContent = c ? 'Show' : 'Hide'; this.setAttribute('aria-expanded', String(!c)); layout(); });
+  var panel = $('#panel'), side = $('#side'), foldBtn = $('#collapse');
+  function setFolded(c) {
+    if (c === panel.classList.contains('collapsed')) return;
+    panel.classList.toggle('collapsed', c);
+    foldBtn.setAttribute('aria-expanded', String(!c)); foldBtn.setAttribute('aria-label', c ? 'Show the text' : 'Hide the text');
+    layout();
+  }
+  foldBtn.addEventListener('click', function () { setFolded(!panel.classList.contains('collapsed')); });
   var hint = $('#hint'), hintShown = true;
   hint.textContent = coarse ? 'Drag to rotate, pinch to zoom, tap any part to identify it.' : 'Drag to rotate, right-drag to pan, scroll to zoom, hover to identify.';
   function hideHint() { if (hintShown && coarse) { hint.style.opacity = '0'; hintShown = false; } }
@@ -178,18 +189,36 @@
   new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
 
   // ------------------------------------------------------------------ layout and membrane cutaway
-  function layout() {
+  // The model sits in the space the column leaves: above the sheet on a phone, beside the column
+  // elsewhere, and in the whole width once the text is folded away. It glides there rather than
+  // jumping, except when the window itself changes size. The renderer is resized only when the
+  // window is, since setting a canvas's size clears it even to the same size, which flickered
+  // while the column folded.
+  var VO = { x: 0, y: 0, tx: 0, ty: 0 }, sized = '';
+  function applyOffset() { camera.setViewOffset(W, H, -VO.x, VO.y, W, H); camera.updateProjectionMatrix(); }
+  function layout(instant) {
     W = window.innerWidth; H = window.innerHeight;
-    renderer.setSize(W, H, false); camera.aspect = W / H;
-    var pr = panel.getBoundingClientRect(), mobile = W <= 760, ox = 0, oy = 0;
-    if (mobile) { freeW = W; freeH = Math.max(120, pr.top); oy = (H - freeH) / 2; }
-    else { freeW = Math.max(200, W - pr.right); freeH = H; ox = pr.right / 2; }
-    camera.setViewOffset(W, H, -ox, oy, W, H); camera.updateProjectionMatrix();
+    if (sized !== W + 'x' + H) { renderer.setSize(W, H, false); sized = W + 'x' + H; }
+    camera.aspect = W / H;
+    var sr = side.getBoundingClientRect(), mobile = W <= 760, folded = panel.classList.contains('collapsed');
+    VO.tx = 0; VO.ty = 0;
+    if (mobile) { freeW = W; freeH = Math.max(120, sr.top); VO.ty = (H - freeH) / 2; }
+    else if (folded) { freeW = W; freeH = H; }
+    else { freeW = Math.max(200, W - sr.right); freeH = H; VO.tx = sr.right / 2; }
+    if (instant === true || RM) { VO.x = VO.tx; VO.y = VO.ty; }
+    applyOffset();
     var nd = Math.max(1, 0.9 * Math.max(H / freeH, H / freeW));
     if (Math.abs(nd - distMul) > 1e-3) { ctl.gRadius *= nd / distMul; distMul = nd; }
   }
-  window.addEventListener('resize', layout);
-  if (window.ResizeObserver) new ResizeObserver(layout).observe(panel);
+  function stepOffset(dt) {
+    if (VO.x === VO.tx && VO.y === VO.ty) return;
+    var k = 1 - Math.exp(-dt * 7);
+    VO.x += (VO.tx - VO.x) * k; VO.y += (VO.ty - VO.y) * k;
+    if (Math.abs(VO.tx - VO.x) < 0.25 && Math.abs(VO.ty - VO.y) < 0.25) { VO.x = VO.tx; VO.y = VO.ty; }
+    applyOffset();
+  }
+  window.addEventListener('resize', function () { layout(true); });
+  if (window.ResizeObserver) { var ro = new ResizeObserver(function () { layout(); }); ro.observe(panel); ro.observe(side); }
   function updateCut() {
     var c = cutU.uCam.value, d = cutU.uDir.value; c.copy(camera.position); d.copy(ctl.target).sub(c); var tt = d.length() || 1; d.multiplyScalar(1 / tt);
     var r = 0.287 * tt * (1.25 - 0.8 * sm(60, 160, tt)) * clamp(freeW / H, 1, 1.5); cutU.uTT.value = tt; cutU.uR.value = r;
@@ -209,7 +238,7 @@
     M.OVT = !ST.showMono ? 0 : MODE === 'drugs' ? (cmpOn ? 1 : 0) : MODE === 'da' && FN.active ? clamp((0.95 - M.DU) * 12, 0, 1) : 0;
     var bk = currentBound(); if (bk !== boundKey) { boundKey = bk; ST.ixRes = M.ixRes(bk); M.dirty.sc = true; }
     if (Math.abs(M.OVT - M.OVW) > 1e-3) { M.OVW += (M.OVT - M.OVW) * (RM ? 1 : 1 - Math.exp(-dt * 6)); M.dirty.lig = true; }
-    stepCtl(dt); updateCut();
+    stepOffset(dt); stepCtl(dt); updateCut();
     bg.position.copy(camera.position); bgU.split.value = clamp(-camera.position.y / Math.max(1, camera.position.distanceTo(ctl.target)), -0.995, 0.995);
     var dirty = M.dirty;
     if (dirty.rec) { M.eval(); dirty.rec = false; dirty.sc = true; dirty.ghost = true; }
@@ -269,7 +298,7 @@
   window.addEventListener('hashchange', function () { show(fromLocation(), false); });
 
   applyTheme();
-  layout();
+  layout(true);
   setFamily('dopamine', true);
   show(fromLocation(), true);
   emit();

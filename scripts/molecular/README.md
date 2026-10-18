@@ -15,10 +15,10 @@ never edited by hand.
 | Size | About 2.4 MB on disk, 750 KB gzipped; 2.26 MB of it is the JSON data block (`<script type="application/json" id="d2data">`). |
 | Requests | three.js r128 from `site/vendor/three/three.min.js` (only the global `THREE` is used, no OrbitControls) and the site's own fonts from `site/fonts/`. No images, no fetches, no analytics, no storage. |
 | Rendering | WebGL 1/2 via three.js. If WebGL cannot start, the page shows a plain message in `#fail` instead of a blank canvas. |
-| Layout | Fills its own viewport. Panel on the left at widths over 760 px; at 760 px and under the panel docks at the bottom and the 3D view sits above it. Touch (pinch, drag, tap) is supported. |
+| Layout | Fills its own viewport. Over 760 px a column on the left holds the text panel, its tabs at the top beside a button that folds the text away, and the receptor picker on its own at the foot: the family on one row, its receptors in a grid of up to six columns below, the same for every family. At 760 px and under the column is one sheet along the bottom, tabs at its top and the picker at its foot, with the 3D view above. The model centres itself in the space the column leaves, the whole width once the text is folded. Touch (pinch, drag, tap) is supported. |
 | Theme | Dark unless the reader chose light, read from the site's `mn-theme` key before first paint; `data-theme="dark"` or `"light"` on the viewer's `<html>` is watched, and the section page sets it when the reader switches. All colours are CSS custom properties on `:root`. |
 | Typefaces | The site's three, mapped at the end of `viewer/extra.css`: Prata for headings and names, Newsreader for the reading text, Flux (Afacad Flux) for the controls, the pocket table and the labels on the model. |
-| Accessibility | Tabs are ARIA tablists with arrow-key navigation, the canvas is focusable (arrow keys rotate, plus and minus zoom), state captions are `aria-live`, every control is a real button or input. |
+| Accessibility | The section tabs and the family row are ARIA tablists with arrow-key navigation, the fold button reports `aria-expanded`, the canvas is focusable (arrow keys rotate, plus and minus zoom), state captions are `aria-live`, every control is a real button or input. |
 
 ## Embedding
 

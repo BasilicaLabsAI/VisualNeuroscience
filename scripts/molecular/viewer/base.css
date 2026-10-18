@@ -8,6 +8,7 @@
   --inact: #58789F; --act: #C8677A;
   --ghost: #8A86A6; --insert: #C8677A; --mod: #EAE6DC; --ligc: #383D44;
   --shadow: 0 1px 2px rgba(27, 42, 51, 0.08), 0 10px 30px rgba(27, 42, 51, 0.12);
+  --seg-on: #FFFFFF;
   --serif: 'Spectral', Georgia, 'Times New Roman', serif;
   --sans: 'Source Sans 3', 'Source Sans Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
   box-sizing: border-box;
@@ -24,6 +25,7 @@
     --inact: #7E9DC4; --act: #E08A9B;
     --ghost: #9A95BA; --insert: #E08A9B; --mod: #3B3F48; --ligc: #E8ECEF;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
+    --seg-on: #46555C;
   }
 }
 :root[data-theme="dark"] {
@@ -35,6 +37,7 @@
   --inact: #7E9DC4; --act: #E08A9B;
   --ghost: #9A95BA; --insert: #E08A9B; --mod: #3B3F48; --ligc: #E8ECEF;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
+  --seg-on: #46555C;
 }
 *, *::before, *::after { box-sizing: inherit; }
 html { scroll-padding-top: env(safe-area-inset-top, 0px); }
@@ -58,15 +61,27 @@ a { color: var(--accent); text-underline-offset: 2px; }
 .lab.res { font-size: 12.5px; padding: 1px 8px 2px; border-radius: 999px; background: var(--panel-solid); border: 1px solid var(--line); text-shadow: none; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12); }
 .lab sup, #info sup { font-size: 0.72em; font-weight: 600; color: var(--ink-soft); margin-left: 1px; vertical-align: 0.5em; line-height: 0; }
 
-#panel { position: fixed; z-index: 4; left: 18px; top: calc(18px + env(safe-area-inset-top, 0px)); width: 372px;
-  max-height: calc(100% - 36px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
-  display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
+/* The side column: the text panel at the top with its tabs, the receptor picker on its own at
+   the foot. The column lets drags through to the model; only its two cards take them. */
+#side { position: fixed; z-index: 4; left: 18px; top: calc(18px + env(safe-area-inset-top, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); width: 372px;
+  display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
+#panel, #picker { pointer-events: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
   -webkit-backdrop-filter: blur(16px) saturate(1.15); backdrop-filter: blur(16px) saturate(1.15); }
-.head { padding: 18px 20px 4px; }
-.head-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-h1 { font-family: var(--serif); font-weight: 600; font-size: 29px; line-height: 1.08; letter-spacing: -0.012em; margin: 0; }
-.lede { margin: 6px 0 0; color: var(--ink-soft); font-size: 14.5px; line-height: 1.45; }
-#collapse { display: none; background: none; border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; font-size: 13px; font-weight: 600; color: var(--ink-soft); cursor: pointer; }
+#panel { flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+#picker { flex: none; margin-top: auto; padding: 10px 12px 12px; }
+.vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* the tabs head the panel; the button at their end folds the text away, the tabs staying */
+.tabbar { position: relative; display: flex; align-items: stretch; gap: 10px; padding: 4px 12px 0 20px; flex: none; }
+.tabbar::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--line); transition: opacity 0.2s; }
+#collapse { position: relative; z-index: 1; flex: none; align-self: center; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: none; color: var(--ink-soft); cursor: pointer; }
+#collapse::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; }
+#collapse svg { display: block; transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1); }
+#panel.collapsed #collapse svg { transform: rotate(180deg); }
+#panel.collapsed .tabbar::after { opacity: 0; }
+#panel-body { display: grid; grid-template-rows: 1fr; min-height: 0; flex: 1 1 auto; overflow: hidden; visibility: visible;
+  transition: grid-template-rows 0.34s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0s; }
+#panel.collapsed #panel-body { grid-template-rows: 0fr; visibility: hidden;
+  transition: grid-template-rows 0.28s cubic-bezier(0.4, 0, 0.6, 1), visibility 0s linear 0.28s; }
 
 .state { padding: 12px 20px 10px; }
 .ends { display: flex; justify-content: space-between; gap: 12px; }
@@ -85,11 +100,12 @@ h1 { font-family: var(--serif); font-weight: 600; font-size: 29px; line-height: 
 #morph:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
 .cap { margin: 2px 0 0; font-size: 13.5px; line-height: 1.45; color: var(--ink-soft); min-height: 2.9em; }
 
-#panel-body { display: flex; flex-direction: column; min-height: 0; flex: 1 1 auto; }
-.tabs { display: flex; gap: 20px; padding: 0 20px; border-bottom: 1px solid var(--line); flex: none; }
-.tabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 9px 0 8px; font-weight: 600; font-size: 14.5px; color: var(--ink-soft); cursor: pointer; margin-bottom: -1px; }
+.tabs { position: relative; z-index: 1; display: flex; gap: 20px; flex: 1 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs button { flex: none; background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 0 9px; font-weight: 600; font-size: 14.5px; color: var(--ink-soft); cursor: pointer; }
 .tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
-.panes { overflow-y: auto; overscroll-behavior: contain; padding: 14px 20px 18px; min-height: 0; flex: 1 1 auto; }
+.panes { overflow-y: auto; overscroll-behavior: contain; padding: 14px 20px 18px; min-height: 0; transition: padding 0.34s cubic-bezier(0.2, 0.8, 0.2, 1); }
+#panel.collapsed .panes { padding-top: 0; padding-bottom: 0; transition: padding 0.28s cubic-bezier(0.4, 0, 0.6, 1); }
 .prose p { margin: 0 0 10px; font-size: 15px; line-height: 1.55; }
 .prose p:last-child { margin-bottom: 0; }
 h2 { font-family: var(--serif); font-weight: 600; font-size: 21px; line-height: 1.2; margin: 6px 0 8px; }
@@ -137,21 +153,38 @@ legend { font-family: var(--serif); font-weight: 600; font-size: 16px; padding: 
 #fail { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 24px; background: var(--c-extra); }
 #fail p { max-width: 440px; font-size: 16px; margin: 0; }
 
+/* On a phone the column is one sheet along the bottom: the tabs along its top, the text, and the
+   picker at its foot. Folding the text leaves the tabs and the picker. */
 @media (max-width: 760px) {
-  #panel { left: 0; right: 0; top: auto; bottom: 0; width: auto; max-height: 58%; border-radius: 18px 18px 0 0; border-left: 0; border-right: 0; border-bottom: 0; padding-bottom: env(safe-area-inset-bottom, 0px); }
-  .head { padding: 12px 18px 0; }
-  h1 { font-size: 22px; }
-  .lede { display: none; }
-  #collapse { display: inline-block; }
-  .state { padding: 8px 18px 6px; }
+  #side { left: 0; right: 0; top: auto; bottom: 0; width: auto; max-height: 60%; gap: 0; pointer-events: auto;
+    background: var(--panel); border-top: 1px solid var(--line); border-radius: 18px 18px 0 0; box-shadow: var(--shadow);
+    -webkit-backdrop-filter: blur(16px) saturate(1.15); backdrop-filter: blur(16px) saturate(1.15); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  #panel, #picker { background: none; border: 0; border-radius: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  #picker { margin-top: 0; padding: 8px 14px 10px; border-top: 1px solid var(--line); }
+  .tabbar { padding: 2px 10px 0 18px; }
+  .panes { padding-left: 18px; padding-right: 18px; }
+  #collapse svg { transform: rotate(180deg); }
+  #panel.collapsed #collapse svg { transform: none; }
   .end .e1 { font-size: 17px; }
   .cap { min-height: 0; font-size: 13px; }
-  .tabs, .panes { padding-left: 18px; padding-right: 18px; }
-  #panel.collapsed #panel-body { display: none; }
-  #panel.collapsed .cap { display: none; }
   #info { left: 10px !important; right: 10px; top: calc(10px + env(safe-area-inset-top, 0px)) !important; max-width: none; transform: none !important; }
   #hint { right: auto; left: 14px; bottom: auto; top: calc(12px + env(safe-area-inset-top, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .lab, #hint, .tog input, .tog input::after, .end .e1 { transition: none; }
+  .lab, #hint, .tog input, .tog input::after, .end .e1, .tabbar::after, #collapse svg { transition: none; }
+  #panel-body, #panel.collapsed #panel-body, .panes, #panel.collapsed .panes { transition: none; }
+}
+/* the column's cards are a frosted material; where the reader asks for less transparency they
+   turn solid, and where they ask for more contrast their edges darken */
+@media (prefers-reduced-transparency: reduce) {
+  #panel, #picker, #side { -webkit-backdrop-filter: none; backdrop-filter: none; }
+  #panel, #picker { background: var(--panel-solid); }
+}
+@media (prefers-reduced-transparency: reduce) and (max-width: 760px) {
+  #side { background: var(--panel-solid); }
+  #panel, #picker { background: none; }
+}
+@media (prefers-contrast: more) {
+  #panel, #picker, #side, #collapse { border-color: var(--ink-soft); }
+  .tabbar::after { background: var(--ink-soft); }
 }

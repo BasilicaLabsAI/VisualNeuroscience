@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Dopamine and serotonin receptors in 3D — VisualNeuroscience.AI</title>
+<title>Receptors in 3D — VisualNeuroscience.AI</title>
 <meta name="description" content="Interactive 3D models of the human dopamine receptors D1 to D5 and the twelve serotonin (5-HT) GPCRs: pick a receptor, watch dopamine or serotonin bind and switch it on, see how antipsychotics, psychedelics, migraine and Parkinson's drugs block or mimic it, and compare the subtypes. Built from 39 experimental structures.">
 <link rel="stylesheet" href="../../fonts/fonts.css">
 <script>/* The site's theme: dark unless the reader chose light, read from the
@@ -22,6 +22,7 @@ document.documentElement.setAttribute("data-theme",t);})();</script>
   --inact: #58789F; --act: #C8677A;
   --ghost: #8A86A6; --insert: #C8677A; --mod: #EAE6DC; --ligc: #383D44;
   --shadow: 0 1px 2px rgba(27, 42, 51, 0.08), 0 10px 30px rgba(27, 42, 51, 0.12);
+  --seg-on: #FFFFFF;
   --serif: 'Spectral', Georgia, 'Times New Roman', serif;
   --sans: 'Source Sans 3', 'Source Sans Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
   box-sizing: border-box;
@@ -38,6 +39,7 @@ document.documentElement.setAttribute("data-theme",t);})();</script>
     --inact: #7E9DC4; --act: #E08A9B;
     --ghost: #9A95BA; --insert: #E08A9B; --mod: #3B3F48; --ligc: #E8ECEF;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
+    --seg-on: #46555C;
   }
 }
 :root[data-theme="dark"] {
@@ -49,6 +51,7 @@ document.documentElement.setAttribute("data-theme",t);})();</script>
   --inact: #7E9DC4; --act: #E08A9B;
   --ghost: #9A95BA; --insert: #E08A9B; --mod: #3B3F48; --ligc: #E8ECEF;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
+  --seg-on: #46555C;
 }
 *, *::before, *::after { box-sizing: inherit; }
 html { scroll-padding-top: env(safe-area-inset-top, 0px); }
@@ -72,15 +75,27 @@ a { color: var(--accent); text-underline-offset: 2px; }
 .lab.res { font-size: 12.5px; padding: 1px 8px 2px; border-radius: 999px; background: var(--panel-solid); border: 1px solid var(--line); text-shadow: none; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12); }
 .lab sup, #info sup { font-size: 0.72em; font-weight: 600; color: var(--ink-soft); margin-left: 1px; vertical-align: 0.5em; line-height: 0; }
 
-#panel { position: fixed; z-index: 4; left: 18px; top: calc(18px + env(safe-area-inset-top, 0px)); width: 372px;
-  max-height: calc(100% - 36px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
-  display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
+/* The side column: the text panel at the top with its tabs, the receptor picker on its own at
+   the foot. The column lets drags through to the model; only its two cards take them. */
+#side { position: fixed; z-index: 4; left: 18px; top: calc(18px + env(safe-area-inset-top, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); width: 372px;
+  display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
+#panel, #picker { pointer-events: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
   -webkit-backdrop-filter: blur(16px) saturate(1.15); backdrop-filter: blur(16px) saturate(1.15); }
-.head { padding: 18px 20px 4px; }
-.head-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-h1 { font-family: var(--serif); font-weight: 600; font-size: 29px; line-height: 1.08; letter-spacing: -0.012em; margin: 0; }
-.lede { margin: 6px 0 0; color: var(--ink-soft); font-size: 14.5px; line-height: 1.45; }
-#collapse { display: none; background: none; border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; font-size: 13px; font-weight: 600; color: var(--ink-soft); cursor: pointer; }
+#panel { flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+#picker { flex: none; margin-top: auto; padding: 10px 12px 12px; }
+.vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* the tabs head the panel; the button at their end folds the text away, the tabs staying */
+.tabbar { position: relative; display: flex; align-items: stretch; gap: 10px; padding: 4px 12px 0 20px; flex: none; }
+.tabbar::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--line); transition: opacity 0.2s; }
+#collapse { position: relative; z-index: 1; flex: none; align-self: center; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: none; color: var(--ink-soft); cursor: pointer; }
+#collapse::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; }
+#collapse svg { display: block; transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1); }
+#panel.collapsed #collapse svg { transform: rotate(180deg); }
+#panel.collapsed .tabbar::after { opacity: 0; }
+#panel-body { display: grid; grid-template-rows: 1fr; min-height: 0; flex: 1 1 auto; overflow: hidden; visibility: visible;
+  transition: grid-template-rows 0.34s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0s; }
+#panel.collapsed #panel-body { grid-template-rows: 0fr; visibility: hidden;
+  transition: grid-template-rows 0.28s cubic-bezier(0.4, 0, 0.6, 1), visibility 0s linear 0.28s; }
 
 .state { padding: 12px 20px 10px; }
 .ends { display: flex; justify-content: space-between; gap: 12px; }
@@ -99,11 +114,12 @@ h1 { font-family: var(--serif); font-weight: 600; font-size: 29px; line-height: 
 #morph:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
 .cap { margin: 2px 0 0; font-size: 13.5px; line-height: 1.45; color: var(--ink-soft); min-height: 2.9em; }
 
-#panel-body { display: flex; flex-direction: column; min-height: 0; flex: 1 1 auto; }
-.tabs { display: flex; gap: 20px; padding: 0 20px; border-bottom: 1px solid var(--line); flex: none; }
-.tabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 9px 0 8px; font-weight: 600; font-size: 14.5px; color: var(--ink-soft); cursor: pointer; margin-bottom: -1px; }
+.tabs { position: relative; z-index: 1; display: flex; gap: 20px; flex: 1 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs button { flex: none; background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 0 9px; font-weight: 600; font-size: 14.5px; color: var(--ink-soft); cursor: pointer; }
 .tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
-.panes { overflow-y: auto; overscroll-behavior: contain; padding: 14px 20px 18px; min-height: 0; flex: 1 1 auto; }
+.panes { overflow-y: auto; overscroll-behavior: contain; padding: 14px 20px 18px; min-height: 0; transition: padding 0.34s cubic-bezier(0.2, 0.8, 0.2, 1); }
+#panel.collapsed .panes { padding-top: 0; padding-bottom: 0; transition: padding 0.28s cubic-bezier(0.4, 0, 0.6, 1); }
 .prose p { margin: 0 0 10px; font-size: 15px; line-height: 1.55; }
 .prose p:last-child { margin-bottom: 0; }
 h2 { font-family: var(--serif); font-weight: 600; font-size: 21px; line-height: 1.2; margin: 6px 0 8px; }
@@ -151,23 +167,40 @@ legend { font-family: var(--serif); font-weight: 600; font-size: 16px; padding: 
 #fail { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 24px; background: var(--c-extra); }
 #fail p { max-width: 440px; font-size: 16px; margin: 0; }
 
+/* On a phone the column is one sheet along the bottom: the tabs along its top, the text, and the
+   picker at its foot. Folding the text leaves the tabs and the picker. */
 @media (max-width: 760px) {
-  #panel { left: 0; right: 0; top: auto; bottom: 0; width: auto; max-height: 58%; border-radius: 18px 18px 0 0; border-left: 0; border-right: 0; border-bottom: 0; padding-bottom: env(safe-area-inset-bottom, 0px); }
-  .head { padding: 12px 18px 0; }
-  h1 { font-size: 22px; }
-  .lede { display: none; }
-  #collapse { display: inline-block; }
-  .state { padding: 8px 18px 6px; }
+  #side { left: 0; right: 0; top: auto; bottom: 0; width: auto; max-height: 60%; gap: 0; pointer-events: auto;
+    background: var(--panel); border-top: 1px solid var(--line); border-radius: 18px 18px 0 0; box-shadow: var(--shadow);
+    -webkit-backdrop-filter: blur(16px) saturate(1.15); backdrop-filter: blur(16px) saturate(1.15); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  #panel, #picker { background: none; border: 0; border-radius: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  #picker { margin-top: 0; padding: 8px 14px 10px; border-top: 1px solid var(--line); }
+  .tabbar { padding: 2px 10px 0 18px; }
+  .panes { padding-left: 18px; padding-right: 18px; }
+  #collapse svg { transform: rotate(180deg); }
+  #panel.collapsed #collapse svg { transform: none; }
   .end .e1 { font-size: 17px; }
   .cap { min-height: 0; font-size: 13px; }
-  .tabs, .panes { padding-left: 18px; padding-right: 18px; }
-  #panel.collapsed #panel-body { display: none; }
-  #panel.collapsed .cap { display: none; }
   #info { left: 10px !important; right: 10px; top: calc(10px + env(safe-area-inset-top, 0px)) !important; max-width: none; transform: none !important; }
   #hint { right: auto; left: 14px; bottom: auto; top: calc(12px + env(safe-area-inset-top, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .lab, #hint, .tog input, .tog input::after, .end .e1 { transition: none; }
+  .lab, #hint, .tog input, .tog input::after, .end .e1, .tabbar::after, #collapse svg { transition: none; }
+  #panel-body, #panel.collapsed #panel-body, .panes, #panel.collapsed .panes { transition: none; }
+}
+/* the column's cards are a frosted material; where the reader asks for less transparency they
+   turn solid, and where they ask for more contrast their edges darken */
+@media (prefers-reduced-transparency: reduce) {
+  #panel, #picker, #side { -webkit-backdrop-filter: none; backdrop-filter: none; }
+  #panel, #picker { background: var(--panel-solid); }
+}
+@media (prefers-reduced-transparency: reduce) and (max-width: 760px) {
+  #side { background: var(--panel-solid); }
+  #panel, #picker { background: none; }
+}
+@media (prefers-contrast: more) {
+  #panel, #picker, #side, #collapse { border-color: var(--ink-soft); }
+  .tabbar::after { background: var(--ink-soft); }
 }
 
 :root { --hb: #0E9AAE; --da: #D38F1F; --inact-bg: rgba(88, 120, 159, 0.14); --act-bg: rgba(200, 103, 122, 0.14); }
@@ -229,19 +262,19 @@ table.pocket th, table.pocket td { padding: 3px 4px; }
 .fnrow { display: flex; align-items: flex-start; gap: 12px; margin-top: 2px; }
 .fnrow .pill { flex: none; }
 .fnrow .cap { margin: 4px 0 0; }
-.rxpick { display: flex; gap: 3px; padding: 3px; border: 1px solid var(--line); border-radius: 10px; margin: 12px 0 6px; }
-.rxpick button { flex: 1; border: 0; background: transparent; border-radius: 7px; padding: 6px 0 7px; font-family: var(--serif); font-weight: 600; font-size: 17px; color: var(--ink-soft); cursor: pointer; }
+/* the picker: the family on a row of its own, its receptors below in a grid of up to six
+   columns, every family drawn the same way however many receptors or families there are */
+.famtabs { display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--line); overflow-x: auto; scrollbar-width: none; }
+.famtabs::-webkit-scrollbar { display: none; }
+.famtabs button { flex: 1 0 auto; border: 0; background: transparent; border-radius: 7px; padding: 5px 12px 6px; font-weight: 600; font-size: 14px; color: var(--ink-soft); cursor: pointer; white-space: nowrap; }
+.famtabs button[aria-selected="true"] { background: var(--seg-on); color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16); }
+.famtabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.rxpick { display: grid; grid-template-columns: repeat(var(--cols, 6), 1fr); gap: 2px; padding: 3px; border-radius: 10px; background: var(--line); margin: 8px 0 0; }
+.rxpick button { border: 0; background: transparent; border-radius: 7px; padding: 6px 0 7px; font-family: var(--serif); font-weight: 600; font-size: 16px; color: var(--ink-soft); cursor: pointer; }
 .rxpick button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
 .rxpick button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rx-cap { margin: 0; font-size: 13px; color: var(--ink-soft); }
-/* generation 4: two families */
-.famtabs { display: flex; gap: 16px; margin: 12px 0 0; border-bottom: 1px solid var(--line); }
-.famtabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 6px 0 6px; font-family: var(--serif); font-weight: 700; font-size: 16px; color: var(--ink-soft); cursor: pointer; margin-bottom: -1px; }
-.famtabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
-.famtabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rxpick { margin-top: 8px; flex-wrap: wrap; align-items: center; }
-.rxpick.many { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; }
-.rxpick.many button { padding: 5px 2px 6px; font-size: 15px; }
+@media (pointer: coarse) { .famtabs button { padding: 7px 12px 8px; } .rxpick button { padding: 8px 0 9px; } }
+.rx-cap { margin: 0 0 12px; font-size: 13px; color: var(--ink-soft); }
 table.pocket.wide { font-size: 11.5px; }
 table.pocket.wide th, table.pocket.wide td { padding: 3px 2px; }
 table.pocket.wide thead th { font-size: 11px; }
@@ -262,16 +295,16 @@ body { font-family: var(--serif); font-size: 15.5px; }
 .prose p { font-size: 15.5px; }
 h1 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01em; }
 h2, h3, legend, #info .t, .drug .nm, .end .e1 { font-family: var(--display); font-weight: 400; }
-.famtabs button, .rxpick button, .sub { font-weight: 500; }
+.rxpick button, .sub { font-weight: 500; }
 .lab.lig { font-weight: 400; }
-.tabs button, .pill, .seg span, .badge, .chips span, #collapse, #stop-count, .end .e2,
+.tabs button, .famtabs button, .pill, .seg span, .badge, .chips span, #stop-count, .end .e2,
 .lab, table.pocket, .facts, .key, #hint { font-family: var(--sans); }
 .tabs button { font-size: 15.5px; }
 .pill { font-size: 15px; }
 .seg span { font-size: 14.5px; }
 .badge { font-size: 12.5px; }
 .chips span { font-size: 13.5px; }
-#collapse { font-size: 14px; }
+.famtabs button { font-size: 15px; }
 #stop-count, .end .e2, .key, #hint { font-size: 14px; }
 .facts { font-size: 14.5px; }
 .lab { font-size: 14px; }
@@ -286,30 +319,23 @@ table.pocket.wide { font-size: 12.5px; }
 <canvas id="gl" tabindex="0" aria-label="3D model of the selected receptor. Drag to rotate, scroll or pinch to zoom. Arrow keys rotate; plus and minus zoom."></canvas>
 <div id="labels" aria-hidden="true"></div>
 
+<div id="side">
 <main id="panel">
-  <header class="head">
-    <div class="head-row">
-      <h1>Dopamine and serotonin receptors</h1>
-      <button id="collapse" type="button" aria-expanded="true" aria-controls="panel-body">Hide</button>
-    </div>
-    <p class="lede">Pick a family and a receptor, then watch its neurotransmitter switch it on, see which drugs block or mimic it, and compare it with its siblings. Built from 39 experimental structures.</p>
-    <div class="famtabs" role="tablist" aria-label="Receptor family">
-      <button role="tab" type="button" id="fam-dopamine" data-fam="dopamine" aria-selected="true">Dopamine</button>
-      <button role="tab" type="button" id="fam-serotonin" data-fam="serotonin" aria-selected="false" tabindex="-1">Serotonin</button>
-    </div>
-    <div class="rxpick" id="rxpick" role="group" aria-label="Receptor"></div>
-    <p class="rx-cap" id="rx-cap" aria-live="polite"></p>
-  </header>
-
-  <div id="panel-body">
+  <h1 class="vh">Receptors in 3D</h1>
+  <div class="tabbar">
     <div class="tabs" role="tablist" aria-label="Panel sections">
-      <button role="tab" type="button" id="tab-da" aria-selected="true" aria-controls="pane-da">Dopamine</button>
+      <button role="tab" type="button" id="tab-da" aria-selected="true" aria-controls="pane-da">Binding</button>
       <button role="tab" type="button" id="tab-drugs" aria-selected="false" aria-controls="pane-drugs" tabindex="-1">Drugs</button>
       <button role="tab" type="button" id="tab-cmp" aria-selected="false" aria-controls="pane-cmp" tabindex="-1">Compare</button>
       <button role="tab" type="button" id="tab-show" aria-selected="false" aria-controls="pane-show" tabindex="-1">Display</button>
       <button role="tab" type="button" id="tab-about" aria-selected="false" aria-controls="pane-about" tabindex="-1">About</button>
     </div>
+    <button id="collapse" type="button" aria-expanded="true" aria-controls="panel-body" aria-label="Hide the text"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3.5 10.2 8 5.8l4.5 4.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+
+  <div id="panel-body">
     <div class="panes">
+      <p class="rx-cap" id="rx-cap" aria-live="polite"></p>
       <section role="tabpanel" id="pane-da" aria-labelledby="tab-da">
         <div class="state">
           <div class="ends">
@@ -456,6 +482,12 @@ table.pocket.wide { font-size: 12.5px; }
     </div>
   </div>
 </main>
+
+<div id="picker">
+  <div class="famtabs" id="famtabs" role="tablist" aria-label="Receptor family"></div>
+  <div class="rxpick" id="rxpick" role="group" aria-label="Receptor"></div>
+</div>
+</div>
 
 <div id="info" hidden></div>
 <p id="hint"></p>
@@ -1585,7 +1617,7 @@ table.pocket.wide { font-size: 12.5px; }
   var lastRX = { dopamine: 'D2', serotonin: '5-HT2A' };
   function buildRxRow() {
     var row = $('#rxpick'), fam = D.families[FAMILY]; row.innerHTML = '';
-    row.classList.toggle('many', fam.rx.length > 6);
+    row.style.setProperty('--cols', String(Math.min(6, fam.rx.length)));
     fam.rx.forEach(function (k) {
       var b = document.createElement('button'); b.type = 'button'; b.setAttribute('data-rx', k); b.setAttribute('aria-label', k); b.textContent = RXINFO[k].short; b.setAttribute('aria-pressed', 'false');
       b.addEventListener('click', function () { setReceptor(k); }); row.appendChild(b);
@@ -1611,9 +1643,13 @@ table.pocket.wide { font-size: 12.5px; }
     FAMILY = f;
     document.querySelectorAll('[data-fam]').forEach(function (b) { var on = b.getAttribute('data-fam') === f; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; });
     buildRxRow(); buildTable();
-    $('#tab-da').textContent = FAMINFO[f].name;
     setReceptor(lastRX[f], instant);
   }
+  Object.keys(D.families).forEach(function (f) {
+    var b = document.createElement('button'); b.type = 'button'; b.id = 'fam-' + f; b.setAttribute('role', 'tab'); b.setAttribute('data-fam', f);
+    b.setAttribute('aria-selected', 'false'); b.setAttribute('aria-controls', 'rxpick'); b.tabIndex = -1;
+    b.textContent = FAMINFO[f] ? FAMINFO[f].name : D.families[f].name; $('#famtabs').appendChild(b);
+  });
   var famBtns = Array.prototype.slice.call(document.querySelectorAll('[data-fam]'));
   famBtns.forEach(function (b, i) {
     b.addEventListener('click', function () { setFamily(b.getAttribute('data-fam')); });
@@ -1636,6 +1672,7 @@ table.pocket.wide { font-size: 12.5px; }
   var TABS = ['da', 'drugs', 'cmp', 'show', 'about'];
   function selectTab(n, focus) {
     TABS.forEach(function (m) { var on = m === n, t = $('#tab-' + m); t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; $('#pane-' + m).hidden = !on; });
+    $('#rx-cap').hidden = !(n === 'da' || n === 'drugs');
     var pn = document.querySelector('.panes'); if (pn) pn.scrollTop = 0;
     if (focus) $('#tab-' + n).focus();
     if (n === 'da' || n === 'drugs' || n === 'cmp') setMode(n);
@@ -1643,8 +1680,8 @@ table.pocket.wide { font-size: 12.5px; }
   }
   TABS.forEach(function (n, i) {
     var t = $('#tab-' + n);
-    t.addEventListener('click', function () { selectTab(n); });
-    t.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); selectTab(TABS[(i + (e.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length], true); } });
+    t.addEventListener('click', function () { selectTab(n); setFolded(false); });
+    t.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); selectTab(TABS[(i + (e.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length], true); setFolded(false); } });
   });
 
   // ------------------------------------------------------------------ display controls
@@ -1666,8 +1703,14 @@ table.pocket.wide { font-size: 12.5px; }
   ['TM1', 'TM2', 'TM3', 'TM4', 'TM5', 'TM6', 'TM7', 'H8'].forEach(function (k) { keyHTML += '<span><i style="background:' + SEGCOL[k] + '"></i>' + k + '</span>'; });
   keyHTML += '<span><i style="background:' + LOOPCOL + '"></i>Loops</span><span><i style="background:var(--mod);box-shadow:inset 0 0 0 1px var(--line)"></i>Borrowed loop</span><span><i style="background:var(--ghost)"></i>Unresolved</span><span><i style="background:var(--insert)"></i>D2L-only stretch</span><span><i style="background:var(--da)"></i>Dopamine or serotonin (or its stand-in)</span><span><i style="background:var(--ligc)"></i>Drug carbon</span><span><i style="background:' + GCOL.Gs + '"></i>Gαs</span><span><i style="background:' + GCOL.Gi + '"></i>Gαi1</span><span><i style="background:' + GCOL.Go + '"></i>Gαo</span><span><i style="background:' + GCOL.Gq + '"></i>Gαq</span><span><i style="background:' + GCOL.a5 + '"></i>α5 helix</span><span><i style="background:' + GCOL.B + '"></i>Gβ1</span><span><i style="background:' + GCOL.C + '"></i>Gγ2</span><span><i class="sq" style="background:#1F6DB3"></i>GlcNAc</span><span><i style="background:#1E9B58"></i>Mannose</span>';
   $('#key').innerHTML = keyHTML;
-  var panel = $('#panel');
-  $('#collapse').addEventListener('click', function () { var c = panel.classList.toggle('collapsed'); this.textContent = c ? 'Show' : 'Hide'; this.setAttribute('aria-expanded', String(!c)); layout(); });
+  var panel = $('#panel'), side = $('#side'), foldBtn = $('#collapse');
+  function setFolded(c) {
+    if (c === panel.classList.contains('collapsed')) return;
+    panel.classList.toggle('collapsed', c);
+    foldBtn.setAttribute('aria-expanded', String(!c)); foldBtn.setAttribute('aria-label', c ? 'Show the text' : 'Hide the text');
+    layout();
+  }
+  foldBtn.addEventListener('click', function () { setFolded(!panel.classList.contains('collapsed')); });
   var hint = $('#hint'), hintShown = true;
   hint.textContent = coarse ? 'Drag to rotate, pinch to zoom, tap any part to identify it.' : 'Drag to rotate, right-drag to pan, scroll to zoom, hover to identify.';
   function hideHint() { if (hintShown && coarse) { hint.style.opacity = '0'; hintShown = false; } }
@@ -1686,18 +1729,36 @@ table.pocket.wide { font-size: 12.5px; }
   new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
 
   // ------------------------------------------------------------------ layout and membrane cutaway
-  function layout() {
+  // The model sits in the space the column leaves: above the sheet on a phone, beside the column
+  // elsewhere, and in the whole width once the text is folded away. It glides there rather than
+  // jumping, except when the window itself changes size. The renderer is resized only when the
+  // window is, since setting a canvas's size clears it even to the same size, which flickered
+  // while the column folded.
+  var VO = { x: 0, y: 0, tx: 0, ty: 0 }, sized = '';
+  function applyOffset() { camera.setViewOffset(W, H, -VO.x, VO.y, W, H); camera.updateProjectionMatrix(); }
+  function layout(instant) {
     W = window.innerWidth; H = window.innerHeight;
-    renderer.setSize(W, H, false); camera.aspect = W / H;
-    var pr = panel.getBoundingClientRect(), mobile = W <= 760, ox = 0, oy = 0;
-    if (mobile) { freeW = W; freeH = Math.max(120, pr.top); oy = (H - freeH) / 2; }
-    else { freeW = Math.max(200, W - pr.right); freeH = H; ox = pr.right / 2; }
-    camera.setViewOffset(W, H, -ox, oy, W, H); camera.updateProjectionMatrix();
+    if (sized !== W + 'x' + H) { renderer.setSize(W, H, false); sized = W + 'x' + H; }
+    camera.aspect = W / H;
+    var sr = side.getBoundingClientRect(), mobile = W <= 760, folded = panel.classList.contains('collapsed');
+    VO.tx = 0; VO.ty = 0;
+    if (mobile) { freeW = W; freeH = Math.max(120, sr.top); VO.ty = (H - freeH) / 2; }
+    else if (folded) { freeW = W; freeH = H; }
+    else { freeW = Math.max(200, W - sr.right); freeH = H; VO.tx = sr.right / 2; }
+    if (instant === true || RM) { VO.x = VO.tx; VO.y = VO.ty; }
+    applyOffset();
     var nd = Math.max(1, 0.9 * Math.max(H / freeH, H / freeW));
     if (Math.abs(nd - distMul) > 1e-3) { ctl.gRadius *= nd / distMul; distMul = nd; }
   }
-  window.addEventListener('resize', layout);
-  if (window.ResizeObserver) new ResizeObserver(layout).observe(panel);
+  function stepOffset(dt) {
+    if (VO.x === VO.tx && VO.y === VO.ty) return;
+    var k = 1 - Math.exp(-dt * 7);
+    VO.x += (VO.tx - VO.x) * k; VO.y += (VO.ty - VO.y) * k;
+    if (Math.abs(VO.tx - VO.x) < 0.25 && Math.abs(VO.ty - VO.y) < 0.25) { VO.x = VO.tx; VO.y = VO.ty; }
+    applyOffset();
+  }
+  window.addEventListener('resize', function () { layout(true); });
+  if (window.ResizeObserver) { var ro = new ResizeObserver(function () { layout(); }); ro.observe(panel); ro.observe(side); }
   function updateCut() {
     var c = cutU.uCam.value, d = cutU.uDir.value; c.copy(camera.position); d.copy(ctl.target).sub(c); var tt = d.length() || 1; d.multiplyScalar(1 / tt);
     var r = 0.287 * tt * (1.25 - 0.8 * sm(60, 160, tt)) * clamp(freeW / H, 1, 1.5); cutU.uTT.value = tt; cutU.uR.value = r;
@@ -1717,7 +1778,7 @@ table.pocket.wide { font-size: 12.5px; }
     M.OVT = !ST.showMono ? 0 : MODE === 'drugs' ? (cmpOn ? 1 : 0) : MODE === 'da' && FN.active ? clamp((0.95 - M.DU) * 12, 0, 1) : 0;
     var bk = currentBound(); if (bk !== boundKey) { boundKey = bk; ST.ixRes = M.ixRes(bk); M.dirty.sc = true; }
     if (Math.abs(M.OVT - M.OVW) > 1e-3) { M.OVW += (M.OVT - M.OVW) * (RM ? 1 : 1 - Math.exp(-dt * 6)); M.dirty.lig = true; }
-    stepCtl(dt); updateCut();
+    stepOffset(dt); stepCtl(dt); updateCut();
     bg.position.copy(camera.position); bgU.split.value = clamp(-camera.position.y / Math.max(1, camera.position.distanceTo(ctl.target)), -0.995, 0.995);
     var dirty = M.dirty;
     if (dirty.rec) { M.eval(); dirty.rec = false; dirty.sc = true; dirty.ghost = true; }
@@ -1777,7 +1838,7 @@ table.pocket.wide { font-size: 12.5px; }
   window.addEventListener('hashchange', function () { show(fromLocation(), false); });
 
   applyTheme();
-  layout();
+  layout(true);
   setFamily('dopamine', true);
   show(fromLocation(), true);
   emit();

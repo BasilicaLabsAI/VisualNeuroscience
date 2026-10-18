@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Dopamine and serotonin receptors in 3D — VisualNeuroscience.AI</title>
+<title>Receptors in 3D — VisualNeuroscience.AI</title>
 <meta name="description" content="Interactive 3D models of the human dopamine receptors D1 to D5 and the twelve serotonin (5-HT) GPCRs: pick a receptor, watch dopamine or serotonin bind and switch it on, see how antipsychotics, psychedelics, migraine and Parkinson's drugs block or mimic it, and compare the subtypes. Built from __NSTRUCT__ experimental structures.">
 <link rel="stylesheet" href="../../fonts/fonts.css">
 <script>/* The site's theme: dark unless the reader chose light, read from the
@@ -19,30 +19,23 @@ __CSS__
 <canvas id="gl" tabindex="0" aria-label="3D model of the selected receptor. Drag to rotate, scroll or pinch to zoom. Arrow keys rotate; plus and minus zoom."></canvas>
 <div id="labels" aria-hidden="true"></div>
 
+<div id="side">
 <main id="panel">
-  <header class="head">
-    <div class="head-row">
-      <h1>Dopamine and serotonin receptors</h1>
-      <button id="collapse" type="button" aria-expanded="true" aria-controls="panel-body">Hide</button>
-    </div>
-    <p class="lede">Pick a family and a receptor, then watch its neurotransmitter switch it on, see which drugs block or mimic it, and compare it with its siblings. Built from __NSTRUCT__ experimental structures.</p>
-    <div class="famtabs" role="tablist" aria-label="Receptor family">
-      <button role="tab" type="button" id="fam-dopamine" data-fam="dopamine" aria-selected="true">Dopamine</button>
-      <button role="tab" type="button" id="fam-serotonin" data-fam="serotonin" aria-selected="false" tabindex="-1">Serotonin</button>
-    </div>
-    <div class="rxpick" id="rxpick" role="group" aria-label="Receptor"></div>
-    <p class="rx-cap" id="rx-cap" aria-live="polite"></p>
-  </header>
-
-  <div id="panel-body">
+  <h1 class="vh">Receptors in 3D</h1>
+  <div class="tabbar">
     <div class="tabs" role="tablist" aria-label="Panel sections">
-      <button role="tab" type="button" id="tab-da" aria-selected="true" aria-controls="pane-da">Dopamine</button>
+      <button role="tab" type="button" id="tab-da" aria-selected="true" aria-controls="pane-da">Binding</button>
       <button role="tab" type="button" id="tab-drugs" aria-selected="false" aria-controls="pane-drugs" tabindex="-1">Drugs</button>
       <button role="tab" type="button" id="tab-cmp" aria-selected="false" aria-controls="pane-cmp" tabindex="-1">Compare</button>
       <button role="tab" type="button" id="tab-show" aria-selected="false" aria-controls="pane-show" tabindex="-1">Display</button>
       <button role="tab" type="button" id="tab-about" aria-selected="false" aria-controls="pane-about" tabindex="-1">About</button>
     </div>
+    <button id="collapse" type="button" aria-expanded="true" aria-controls="panel-body" aria-label="Hide the text"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3.5 10.2 8 5.8l4.5 4.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+
+  <div id="panel-body">
     <div class="panes">
+      <p class="rx-cap" id="rx-cap" aria-live="polite"></p>
       <section role="tabpanel" id="pane-da" aria-labelledby="tab-da">
         <div class="state">
           <div class="ends">
@@ -159,6 +152,12 @@ __SEROREFS__
     </div>
   </div>
 </main>
+
+<div id="picker">
+  <div class="famtabs" id="famtabs" role="tablist" aria-label="Receptor family"></div>
+  <div class="rxpick" id="rxpick" role="group" aria-label="Receptor"></div>
+</div>
+</div>
 
 <div id="info" hidden></div>
 <p id="hint"></p>
