@@ -1,6 +1,6 @@
-/* A view opened over the grid, for the atlases whose four views sit in a
-   .views-wrap (the 3D Region Atlas, the Brodmann Area Atlas and the Network
-   Atlas).
+/* A view opened over the grid, for the pages whose four views sit in a
+   .views-wrap (the 3D Region Atlas, the Network Atlas and the Hallucinations
+   study).
 
    Each view's bar ends in a button that lays that view over the whole grid,
    the same viewer at the size of all four, and puts it back. It grows out of

@@ -1,6 +1,6 @@
-/* The scans' look in either theme, shared by the atlases that draw the
-   MNI152 template in four views (the 3D Region Atlas, the Brodmann Area
-   Atlas and the Network Atlas).
+/* The scans' look in either theme, shared by the pages that draw the
+   MNI152 template in four views (the 3D Region Atlas, the Network Atlas and
+   the Hallucinations study).
 
    Dark, the viewports are pure black, the scan's own background, so the
    two blend. Light, they are white and the crosshair is ink, and on white
@@ -16,6 +16,8 @@
      MN_LOOK.colours()      → {back, cross, clear} for a new viewer
      MN_LOOK.paint(views)   views: [{nv, slice}], the template first in each
      MN_LOOK.follow(fn)     fn runs whenever the theme switches
+     MN_LOOK.labelTable(n, names) → {R, G, B, A, I, labels}, every entry
+                            clear, for a page to paint and hand the viewer
 */
 window.MN_LOOK = (function(){
 
@@ -60,10 +62,28 @@ function paint(views){
   });
 }
 
+/* The parcels' colour table is padded to a power of two. The viewer looks
+   each label's colour up in a filtered texture as wide as the table and
+   makes the faintest trace of opacity whole; at a width like the atlas's
+   117 a label's lookup could catch a trace of the entry above it, and the
+   label just below a painted one was drawn solid in its own clear colour,
+   black (the right insula, under the left anterior cingulate). At a power
+   of two every lookup lands exactly on its own entry. */
+function labelTable(n, names){
+  var w = 1;
+  while (w < n) w *= 2;
+  var t = {R: [], G: [], B: [], A: [], I: [], labels: []};
+  for (var i = 0; i < w; i++){
+    t.R.push(0); t.G.push(0); t.B.push(0); t.A.push(0); t.I.push(i);
+    t.labels.push(names && names[i] != null ? names[i] : "");
+  }
+  return t;
+}
+
 /* a press on the theme switch reaches the scans at once */
 function follow(fn){
   new MutationObserver(fn).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
 }
 
-return { colours: colours, paint: paint, follow: follow };
+return { colours: colours, paint: paint, follow: follow, labelTable: labelTable };
 })();

@@ -82,10 +82,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   graph or export; BA48, on neither face, is reached from the empty reading, and every reading links to the area on
   the scan in the 3D Region Atlas. `#ba=<n>` opens on an area, the address follows the pick, and the MCP server's
   `brodmann_area` answers link there. The 3D Region Atlas keeps its own Brodmann list and map.
-- The three atlases draw their four views alike, from shared files: the scans' look in either theme is
-  `site/assets/scan-look.js`, and the bar over each view, the square stages, the light-theme stages and the view
-  opened over the grid are `site/assets/atlas-views.css` with `view-expand.js`. A change to the views belongs there,
-  so every page gets it; each page keeps its own viewer setup, locks and Centre planes.
+- The 3D Region Atlas, the Network Atlas and, since v11.17, the Hallucinations study (`site/hallucinations.html`)
+  draw their four views alike, from shared files: the scans' look in either theme is `site/assets/scan-look.js`, and
+  the bar over each view, the square stages, the light-theme stages and the view opened over the grid are
+  `site/assets/atlas-views.css` with `view-expand.js`. A change to the views belongs there, so every page gets it;
+  each page keeps its own viewer setup, locks and Centre planes. On a tablet the stages take an explicit height
+  (`min(100cqw, …)`) rather than a capped aspect ratio, which WebKit narrowed to a square inside each view. Region
+  colours reach the viewer through `MN_LOOK.labelTable` (and the same padding in `vision-scan.js`): the table is padded
+  to a power of two, since at the atlas's 117 entries a highlighted label made the label just below it draw black.
 - The interface follows Apple's fluid-interface guidance (v10.92): controls answer on the press (`viewer.css`, the
   last section), the account box and both section menus arrive from their button and leave the same way, the bars
   and menus are translucent materials with `prefers-reduced-transparency` and `prefers-contrast` fallbacks, a thrown

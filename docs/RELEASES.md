@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.17 — 18 October 2026 — The Hallucinations scans match the 3D Region Atlas
+Commit · Give the Hallucinations study the atlases' four views and pad the region colour tables so no region turns black
+
+The four scans on the Hallucinations study, in the Library, now look and work as the 3D Region Atlas's do. Each view has a single bar, with its tools on the left, its name in the middle, and Centre and the button that opens it over the other three on the right. The slices can be held to one direction of drag, the stages are square, on an iPad the four fit the screen two to a row, and in the light theme the stages are white. The 3D view's Slice cuts through the highlighted regions as well as the brain, the wheel over a slice scrolls the page, and the opacity slider keeps up under a finger. On every page that draws the atlas's regions over the scan, a region no longer turns black when the one numbered after it is highlighted: picking the left anterior cingulate in the 3D Region Atlas used to blacken the right insula, and the Hallucinations study showed the same black patch.
+
 ## v11.16 — 18 October 2026 — The iPad's scans fill their views again
-Commit · Let each scan fill its view on an iPad instead of sitting in a square at one end
+Commit `eaee199` · Let each scan fill its view on an iPad instead of sitting in a square at one end
 
 On an iPad, in the app or in Safari, the scans in the 3D Region Atlas and the Network Atlas fill their views again. Since the four views were fitted to the screen two to a row, an iPad held sideways showed each scan as a square at one end of a wider box, with an empty strip beside it. The boxes keep their size; the scan's stage now runs the whole width of each one, black in the dark theme and white in the light, with the brain in the middle, and it is square again wherever the screen has the room, as on an iPad held upright.
 

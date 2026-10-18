@@ -1380,19 +1380,19 @@ mark{ background:var(--ink); color:var(--paper); }
   }
 
   function isBA(s){ return s.atlas === "ba"; }
+  /* the table padded as assets/scan-look.js pads it, so no clear label
+     beside a painted one is drawn black */
   function labelMap(n, labels, which){
-    var R = new Array(n).fill(0), G = new Array(n).fill(0),
-        Bl = new Array(n).fill(0), A = new Array(n).fill(0), I = [];
-    for (var i = 0; i < n; i++) I.push(i);
+    var t = MN_LOOK.labelTable(n, labels);
     selections.forEach(function(s){
       if (isBA(s) !== which) return;
       var rgb = hexToRgb(s.color);
       s.indices.forEach(function(idx){
         if (idx < 0 || idx >= n) return;
-        R[idx] = rgb[0]; G[idx] = rgb[1]; Bl[idx] = rgb[2]; A[idx] = 255;
+        t.R[idx] = rgb[0]; t.G[idx] = rgb[1]; t.B[idx] = rgb[2]; t.A[idx] = 255;
       });
     });
-    return {R:R, G:G, B:Bl, A:A, I:I, labels: labels};
+    return t;
   }
   function applyColormap(){
     var aal = labelMap(N_LABELS, RAW_LABELS, false);

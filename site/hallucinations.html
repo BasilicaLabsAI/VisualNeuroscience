@@ -28,6 +28,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="assets/atlas-views.css">
 <link rel="stylesheet" href="fonts/fonts.css">
 <meta name="color-scheme" content="dark light">
 <script>/* Dark is the default; only an explicit choice of light overrides it.
@@ -376,6 +377,10 @@ td.hl{ color:var(--over); }
 .page-foot{ margin-top:2.4rem; padding-top:1.2rem; border-top:1px solid var(--ink-35);
   font-size:.82rem; color:var(--ink-60); line-height:1.6; }
 .hidden{ display:none !important; }
+
+/* the four views, laid out and drawn as the atlases draw theirs
+   (assets/atlas-views.css); an opened view covers the wrapper */
+.views-wrap{ position:relative; }
 </style>
 </head>
 <body>
@@ -457,26 +462,24 @@ td.hl{ color:var(--over); }
   </aside>
 
   <section class="centre" aria-label="Brain viewports">
-    <div class="views" id="scan-views">
-      <div class="view" data-box="Ren">
-        <div class="view-cap"><b>3D</b><span>volume render</span></div>
-        <div class="view-tools"><span class="tool-label"><span class="tl-mouse">Drag to turn · wheel to zoom · shift-drag to pan</span><span class="tl-touch">Drag to turn · pinch to zoom · two fingers pan</span></span><button class="ts-btn centre-btn" data-centre="Ren" type="button">Centre planes</button></div>
-        <div class="mri-stage"><canvas id="hxRen"></canvas></div>
-      </div>
-      <div class="view" data-box="Ax">
-        <div class="view-cap"><b>Axial</b><span>transverse plane</span></div>
-        <div class="view-tools"><span class="tool-label"><span class="tl-mouse">Drag to move · ctrl+wheel to zoom · shift-drag to pan</span><span class="tl-touch">Drag to move · pinch to zoom · two fingers pan</span></span><button class="ts-btn centre-btn" data-centre="Ax" type="button">Centre planes</button></div>
-        <div class="mri-stage"><canvas id="hxAx"></canvas></div>
-      </div>
-      <div class="view" data-box="Cor">
-        <div class="view-cap"><b>Coronal</b><span>frontal plane</span></div>
-        <div class="view-tools"><span class="tool-label"><span class="tl-mouse">Drag to move · ctrl+wheel to zoom · shift-drag to pan</span><span class="tl-touch">Drag to move · pinch to zoom · two fingers pan</span></span><button class="ts-btn centre-btn" data-centre="Cor" type="button">Centre planes</button></div>
-        <div class="mri-stage"><canvas id="hxCor"></canvas></div>
-      </div>
-      <div class="view" data-box="Sag">
-        <div class="view-cap"><b>Sagittal</b><span>median plane</span></div>
-        <div class="view-tools"><span class="tool-label"><span class="tl-mouse">Drag to move · ctrl+wheel to zoom · shift-drag to pan</span><span class="tl-touch">Drag to move · pinch to zoom · two fingers pan</span></span><button class="ts-btn centre-btn" data-centre="Sag" type="button">Centre planes</button></div>
-        <div class="mri-stage"><canvas id="hxSag"></canvas></div>
+    <div class="views-wrap">
+      <div class="views" id="scan-views">
+        <div class="view" data-box="axial">
+          <div class="view-cap"><b>Axial</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="axial" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="axial" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
+          <div class="mri-stage"><canvas id="hxAx"></canvas></div>
+        </div>
+        <div class="view" data-box="coronal">
+          <div class="view-cap"><b>Coronal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="coronal" role="group" aria-label="Coronal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="coronal" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
+          <div class="mri-stage"><canvas id="hxCor"></canvas></div>
+        </div>
+        <div class="view" data-box="sagittal">
+          <div class="view-cap"><b>Sagittal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="sagittal" role="group" aria-label="Sagittal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="sagittal" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
+          <div class="mri-stage"><canvas id="hxSag"></canvas></div>
+        </div>
+        <div class="view" data-box="render">
+          <div class="view-cap"><b>3D</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="render" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
+          <div class="mri-stage"><canvas id="hxRen"></canvas></div>
+        </div>
       </div>
     </div>
     <p class="rail-note" id="scan-note">MNI152 template &middot; AAL-116 parcellation</p>
@@ -659,6 +662,8 @@ td.hl{ color:var(--over); }
 <script src="assets/newsletter.js" defer></script>
 <script src="assets/stage-lifecycle.js"></script>
 <script src="assets/slice-tool.js"></script>
+<script src="assets/scan-look.js"></script>
+<script src="assets/view-expand.js"></script>
 <script src="assets/zoom.js"></script>
 <script src="assets/diagram-gestures.js"></script>
 <script src="assets/export3d.js"></script>
@@ -796,19 +801,18 @@ function parcelsOf(region){
   return out;
 }
 
-/* Paint the atlas: one colour per parcel, everything else clear. */
+/* Paint the atlas: one colour per parcel, everything else clear, in the
+   table assets/scan-look.js pads so no clear parcel beside a painted one is
+   drawn black. */
 function paint(colouring){
   if (scanState !== "ready") return;
   const labels = MN_ATLAS.RAW_LABELS, n = labels.length;
-  const R = new Array(n).fill(0), G = new Array(n).fill(0),
-        B = new Array(n).fill(0), A = new Array(n).fill(0), I = [];
-  for (let i = 0; i < n; i++) I.push(i);
+  const cm = MN_LOOK.labelTable(n, labels);
   for (const [idx, rgb, alpha] of colouring){
     if (idx >= n) continue;
-    R[idx] = rgb[0]; G[idx] = rgb[1]; B[idx] = rgb[2];
-    A[idx] = alpha === undefined ? 255 : alpha;
+    cm.R[idx] = rgb[0]; cm.G[idx] = rgb[1]; cm.B[idx] = rgb[2];
+    cm.A[idx] = alpha === undefined ? 255 : alpha;
   }
-  const cm = {R, G, B, A, I, labels};
   for (const nv of scanInstances){
     if (nv.volumes && nv.volumes.length > 1){
       nv.volumes[1].setColormapLabel(cm);
@@ -854,11 +858,15 @@ function repaint(){
 /* Put the crosshair back at the middle of the volume, so every plane shows
    its central slice again, and undo any panning or zooming with it. */
 function centrePlanes(){
-  for (const inst of scanInstances){
-    inst.scene.crosshairPos = [0.5, 0.5, 0.5];
-    inst.scene.pan2Dxyzmm = [0, 0, 0, 1];
-    inst.drawScene();
-  }
+  correcting = true;
+  try{
+    for (const inst of scanInstances){
+      inst.scene.crosshairPos = [0.5, 0.5, 0.5];
+      inst.scene.pan2Dxyzmm = [0, 0, 0, 1];
+      inst.drawScene();
+    }
+  } catch(e){}
+  finally{ correcting = false; }
 }
 
 /* The centre is found in the atlas's own voxels and placed by millimetres,
@@ -1082,7 +1090,78 @@ function renderAll(){
   repaint();
 }
 
-/* ── the scans, as on the rest of the site ── */
+/* ── the scans, as the atlases draw them ─────────────────────────────────
+   Four synced views of the template under the AAL parcels, laid out with
+   the atlases' bar over each (assets/atlas-views.css), drawn in their look
+   for either theme (assets/scan-look.js), with their direction locks and
+   Centre planes, and the button that opens a view over the grid
+   (assets/view-expand.js). The viewer is fetched on first use. */
+const PLANES = [
+  {id:"hxRen", key:"render",   st:"RENDER"},
+  {id:"hxAx",  key:"axial",    st:"AXIAL"},
+  {id:"hxCor", key:"coronal",  st:"CORONAL"},
+  {id:"hxSag", key:"sagittal", st:"SAGITTAL"}
+];
+function paintScene(){
+  MN_LOOK.paint(PLANES.map(p => ({nv: byKey[p.key], slice: p.key !== "render"})));
+}
+MN_LOOK.follow(paintScene);
+
+/* Each slice can confine a drag to one direction. The stored value is the
+   axis left free to move: "x" left–right, "y" anterior–posterior, "z"
+   superior–inferior, also the index into a crosshair position, which the
+   viewer holds as fractions of the volume. The 3D view turns freely and has
+   no lock. */
+const LOCK_AXIS = {x:0, y:1, z:2};
+const locks = {axial:"free", coronal:"free", sagittal:"free"};
+let anchor = null, dragBox = null, correcting = false;
+
+document.querySelectorAll(".seg[data-lock-for]").forEach(seg => {
+  const key = seg.getAttribute("data-lock-for");
+  seg.querySelectorAll("[data-lock]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      seg.querySelectorAll("[data-lock]").forEach(b => b.classList.toggle("active", b === btn));
+      locks[key] = btn.getAttribute("data-lock");
+    });
+  });
+});
+document.querySelectorAll(".view[data-box]").forEach(box => {
+  const key = box.getAttribute("data-box"), stage = box.querySelector(".mri-stage");
+  if (!stage) return;
+  stage.addEventListener("pointerdown", () => {
+    const nv = byKey[key];
+    if (!nv) return;
+    dragBox = key;
+    anchor = nv.scene.crosshairPos.slice();
+  });
+});
+["pointerup", "pointercancel"].forEach(evt => {
+  window.addEventListener(evt, () => { anchor = null; dragBox = null; });
+});
+/* Put the frozen axes back after the viewer has moved the crosshair. The
+   views broadcast crosshair moves to one another, so only the view the drag
+   started in may impose its lock. */
+function applyLock(key){
+  const free = locks[key], nv = byKey[key];
+  if (correcting || key !== dragBox || !free || free === "free" || !nv || !anchor) return;
+  const pos = nv.scene.crosshairPos, held = [anchor[0], anchor[1], anchor[2]];
+  held[LOCK_AXIS[free]] = pos[LOCK_AXIS[free]];
+  if (held[0] === pos[0] && held[1] === pos[1] && held[2] === pos[2]) return;
+  correcting = true;
+  try{
+    for (const inst of scanInstances){ inst.scene.crosshairPos = held.slice(); inst.drawScene(); }
+  } catch(e){}
+  finally{ correcting = false; }
+}
+
+document.querySelectorAll("[data-centre]").forEach(btn => btn.addEventListener("click", centrePlanes));
+/* over the 3D view the wheel zooms it, and the page stays where it is */
+document.querySelectorAll('.view[data-box="render"] .mri-stage').forEach(stage => {
+  stage.addEventListener("wheel", e => e.preventDefault(), {capture:true, passive:false});
+});
+/* each view's bar ends in the button that opens it over the grid */
+if (window.MN_EXPAND) MN_EXPAND.attach(document.querySelector(".views-wrap"));
+
 async function ensureScan(){
   if (scanState === "ready" || scanState === "loading") return;
   scanState = "loading";
@@ -1090,67 +1169,49 @@ async function ensureScan(){
   try{
     if (typeof niivue === "undefined") await loadScript("assets/niivue.js");
     if (typeof MN_ATLAS === "undefined") await loadScript("assets/atlas-data.js");
-    const planes = [
-      {id:"hxRen", key:"Ren", st:niivue.SLICE_TYPE.RENDER},
-      {id:"hxAx",  key:"Ax",  st:niivue.SLICE_TYPE.AXIAL},
-      {id:"hxCor", key:"Cor", st:niivue.SLICE_TYPE.CORONAL},
-      {id:"hxSag", key:"Sag", st:niivue.SLICE_TYPE.SAGITTAL}
-    ];
     const tplUrl = MN_ATLAS.TPL_URL;
     const atlasUrl = MN_ATLAS.ATLAS_URL;
-    for (const p of planes){
+    for (const p of PLANES){
+      const c = MN_LOOK.colours();
       const nv = new niivue.Niivue({
-        backColor:[0,0,0,1], crosshairColor:[1,1,1,1], show3Dcrosshair:true,
-        sliceType:p.st, invertScrollDirection:true, dragAndDropEnabled:false,
-        textHeight:0.05
+        backColor:c.back, crosshairColor:c.cross, show3Dcrosshair:true,
+        sliceType:niivue.SLICE_TYPE[p.st], invertScrollDirection:true, dragAndDropEnabled:false,
+        textHeight:0.04
       });
       await nv.attachToCanvas($(p.id));
+      nv.onLocationChange = () => applyLock(p.key);
       byKey[p.key] = nv;
-        if (window.MN_LIFE) MN_LIFE.register(nv);
+      if (window.MN_LIFE) MN_LIFE.register(nv);
       scanInstances.push(nv);
     }
     await Promise.all(scanInstances.map(nv => nv.loadVolumes([
       {url:tplUrl, name:"mni152.nii.gz", colormap:"gray", opacity:1},
       {url:atlasUrl, name:"aal.nii.gz", opacity:0.85}
     ])));
-    planes.forEach((p, i) => scanInstances[i].setSliceType(p.st));
+    PLANES.forEach(p => byKey[p.key].setSliceType(niivue.SLICE_TYPE[p.st]));
+    paintScene();
     scanInstances.forEach(nv => nv.broadcastTo(
       scanInstances.filter(o => o !== nv), {"2d":true, "3d":true}));
-    document.querySelectorAll("[data-centre]").forEach(btn => {
-      btn.addEventListener("click", centrePlanes);
-    });
-    document.querySelectorAll(".mri-stage").forEach(stage => {
-      stage.addEventListener("wheel", e => e.preventDefault(), {capture:true, passive:false});
-    });
     scanState = "ready";
     $("scan-note").textContent = "MNI152 template · AAL-116 parcellation";
 
-      /* The slice tool goes on the 3D box only: a clip plane cuts the volume,
-         which is what the render draws. The 2D planes already are slices. */
-      if (window.MN_SLICE){
-        var renBox = document.querySelector('.view[data-box="Ren"]');
-        if (renBox) MN_SLICE.attach({
-          stage: renBox.querySelector(".mri-stage"),
-          tools: renBox.querySelector(".view-tools"),
-          nv: byKey.Ren
+    /* the cuts on the 3D view, through the regions as well as the brain */
+    const renBox = document.querySelector('.view[data-box="render"]');
+    if (window.MN_SLICE && renBox) MN_SLICE.attach({
+      stage: renBox.querySelector(".mri-stage"), tools: renBox.querySelector(".view-tools"),
+      nv: byKey.render, regions: "Slice regions"
+    });
+    /* the wheel zooms the 3D model; the slices answer to drag and touch
+       alone: pinch zooms, two fingers pan, and the wheel scrolls the page */
+    if (window.MN_WHEEL){
+      if (renBox) MN_WHEEL.attach({ stage: renBox.querySelector(".mri-stage"), nv: byKey.render });
+      ["axial", "coronal", "sagittal"].forEach(key => {
+        const box = document.querySelector('.view[data-box="' + key + '"]');
+        if (box && byKey[key]) MN_WHEEL.attach({
+          stage: box.querySelector(".mri-stage"), nv: byKey[key], mode: "slice", wheel: "none"
         });
-      }
-
-      /* the wheel zooms the 3D model rather than the 2D pan behind it */
-      if (window.MN_WHEEL){
-        var wheelBox = document.querySelector('.view[data-box="Ren"]');
-        if (wheelBox) MN_WHEEL.attach({
-          stage: wheelBox.querySelector(".mri-stage"),
-          nv: byKey.Ren
-        });
-        /* the slices speak the same gestures: pinch zooms, two fingers pan */
-        ["Ax","Cor","Sag"].forEach(function(key){
-          var box = document.querySelector('.view[data-box="' + key + '"]');
-          if (box && byKey[key]) MN_WHEEL.attach({
-            stage: box.querySelector(".mri-stage"), nv: byKey[key], mode: "slice"
-          });
-        });
-      }
+      });
+    }
     applyOpacity();
     renderAll();
   } catch (err){
@@ -1160,15 +1221,27 @@ async function ensureScan(){
   }
 }
 
+/* how strongly the regions cover the scan: the newest value at most every
+   tenth of a second, with one rebuild per view, so a drag is not held up by
+   the viewer rebuilding its layers for every step; the last value always
+   lands */
 const opacityEl = $("overlayOpacity"), opacityVal = $("overlayVal");
+let opacityTimer = 0, opacityLast = 0;
 function applyOpacity(){
-  const v = Number(opacityEl.value);
-  opacityVal.textContent = v + "%";
+  opacityTimer = 0; opacityLast = performance.now();
+  const v = Number(opacityEl.value) / 100;
   for (const nv of scanInstances){
-    if (nv.volumes && nv.volumes.length > 1){ nv.setOpacity(1, v/100); nv.drawScene(); }
+    if (!nv.volumes || nv.volumes.length < 2) continue;
+    nv.volumes[1].opacity = v;
+    try{ nv.updateGLVolume(); }catch(e){}
   }
 }
-opacityEl.addEventListener("input", applyOpacity);
+opacityEl.addEventListener("input", () => {
+  opacityVal.textContent = opacityEl.value + "%";
+  if (opacityTimer) return;
+  opacityTimer = setTimeout(() => requestAnimationFrame(applyOpacity),
+                            Math.max(0, 100 - (performance.now() - opacityLast)));
+});
 
 /* ── 3D export ──────────────────────────────────────────────────────────
    The circuit as a model: each region's parcels as one surface in the

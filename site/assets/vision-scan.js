@@ -21,11 +21,15 @@ window.VS = (function(){
   }
 
   /* label colormap: transparent everywhere, colour where selected —
-     exactly the Region Atlas page's recipe */
+     exactly the Region Atlas page's recipe, padded to a power of two as
+     assets/scan-look.js explains, so no clear label beside a selected one
+     is drawn black */
   function cmapFor(sels){
-    var R = new Array(N).fill(0), G = new Array(N).fill(0),
-        B = new Array(N).fill(0), Aa = new Array(N).fill(0), I = [];
-    for (var i = 0; i < N; i++) I.push(i);
+    var W = 1;
+    while (W < N) W *= 2;
+    var R = new Array(W).fill(0), G = new Array(W).fill(0),
+        B = new Array(W).fill(0), Aa = new Array(W).fill(0), I = [], names = [];
+    for (var i = 0; i < W; i++){ I.push(i); names.push(A.RAW_LABELS[i] || ""); }
     (sels || []).forEach(function(s){
       var r = byBase[s.base];
       if (!r) return;
@@ -34,7 +38,7 @@ window.VS = (function(){
         R[idx] = rgb[0]; G[idx] = rgb[1]; B[idx] = rgb[2]; Aa[idx] = 255;
       });
     });
-    return {R:R, G:G, B:B, A:Aa, I:I, labels: A.RAW_LABELS};
+    return {R:R, G:G, B:B, A:Aa, I:I, labels: names};
   }
 
   var instances = [];
