@@ -1061,6 +1061,11 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
    measure a phone answers to: 760 pixels wide, or a touch screen under 500
    tall (a phone held sideways). */
 .screen.one .stage{ padding:0; }
+/* the drawer's handle stands at the right edge, where the coronal slider
+   ran: on a phone that slider stands in from the edge, clear of it, and
+   the sagittal one along the bottom stops short of it */
+.screen.one:not(.all) .slice-edge.right{ right:26px; }
+.screen.one:not(.all) .slice-edge.bottom{ right:74px; }
 .screen.one .views{ display:block; height:100%; }
 .screen.one .views .view{ display:none; height:100%; border:0; }
 .screen.one .views .view.shown{ display:flex; }

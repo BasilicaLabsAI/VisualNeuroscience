@@ -110,7 +110,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   pick remembered as `vn-atlas-view`; the bar opens with the All button in a group of its own (`.panelbar-all`), a line,
   the four single-view buttons (`.panelbar-views`, `[data-view]`), another line, then the pop-up buttons, the readouts and the expand buttons are hidden, the region area is a drawer the height of the
   screen sliding over the view from the right (the box's elements, laid out so by `.screen.one`), shut at every load
-  whatever `vn-atlas-drawer` holds (since v11.25), and the pop-ups span the width. The Brodmann Area Atlas is its own page again since v11.12 (retired
+  whatever `vn-atlas-drawer` holds (since v11.25), and the pop-ups span the width. The slice tool's edge sliders
+  (`slice-tool.js`, styled in `viewer.css`) are 44px strips with 24px thumbs under a coarse pointer (v11.32); on a
+  phone the right-hand one stands 26px in from the edge, clear of the drawer's handle, and the bottom one stops short
+  of it (`.screen.one`). The Brodmann Area Atlas is its own page again since v11.12 (retired
   into the Region Atlas in v10.8): `site/brodmann.html`, with its nav entry and its box straight after the 3D Region
   Atlas.
   Since v11.15, at the owner's request, it is one screen and nothing else: the two faces of the map

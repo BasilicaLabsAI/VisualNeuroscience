@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.32 — 19 October 2026 — Slice sliders for a finger, the right one clear of the drawer's handle
+Commit · Size the slice sliders for a finger and set the right one in from a phone's edge, clear of the drawer's handle
+
+Under a finger the three sliders that cut the 3D view are now strips 44 points across with a thumb of 24, where they were a hair's line with a thumb made for a mouse, and they stay as they were for a pointer. On a phone the slider along the right edge stood where the region drawer's handle sits, which covered its thumb at the centre; it now stands in from the edge, clear of the handle, and the slider along the bottom stops short of it.
+
 ## v11.31 — 19 October 2026 — Reference at the far right of the bar
-Commit · Put the Reference button at the far right of the 3D Region Atlas's bar
+Commit `33df66e` · Put the Reference button at the far right of the 3D Region Atlas's bar
 
 The Reference button of the 3D Region Atlas now stands at the far right of the bar, after Saved maps and Export and divided from them by a line, on a computer, an iPad and a phone alike. The bar's other pop-up buttons, What they do, Receptor graph and Neurotransmitters, keep their places.
 

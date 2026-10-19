@@ -247,6 +247,26 @@ select{
   .slice-edge .ax{ font-size:.42rem; letter-spacing:.14em; }
   .slice-btn, .slice-regions, .slice-reset{ height:1.6rem; padding:0 .45rem; font-size:.5rem; }
 }
+/* under a finger each slider is a strip 44 points across, its thumb 24 and
+   its track 4, the bottom one held clear of the two at the sides; the
+   label keeps its size, the strip's width around the track is the target */
+@media (pointer:coarse){
+  .slice-edge.left, .slice-edge.right{ width:44px; top:4px; bottom:4px; }
+  .slice-edge.left{ left:0; }
+  .slice-edge.right{ right:0; }
+  .slice-edge.bottom{ left:48px; right:48px; bottom:0; height:44px; }
+  .slice-edge.bottom .slice-range{ height:44px; }
+  .slice-edge.left .slice-range, .slice-edge.right .slice-range{ width:44px; }
+  .slice-edge.bottom .slice-range::-webkit-slider-runnable-track{ height:4px; }
+  .slice-edge.left .slice-range::-webkit-slider-runnable-track,
+  .slice-edge.right .slice-range::-webkit-slider-runnable-track{ width:4px; }
+  .slice-range::-webkit-slider-thumb{ width:24px; height:24px; margin-top:-10px; }
+  .slice-edge.left .slice-range::-webkit-slider-thumb,
+  .slice-edge.right .slice-range::-webkit-slider-thumb{ margin:0 0 0 -10px; }
+  .slice-range::-moz-range-track{ height:4px; }
+  .slice-edge.left .slice-range::-moz-range-track, .slice-edge.right .slice-range::-moz-range-track{ width:4px; height:auto; }
+  .slice-range::-moz-range-thumb{ width:24px; height:24px; }
+}
 
 /* ── inside a native shell ──────────────────────────────────────────────
    native.js stamps the platform on the document, so these apply only in the
