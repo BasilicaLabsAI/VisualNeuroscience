@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.28 — 19 October 2026 — On a phone, the four views together come first
+Commit · Open a phone on the four views together, with their button first on the bar behind a line of its own
+
+On a phone the 3D Region Atlas now opens on all four views together, two by two, as it does elsewhere, and the button for that view stands first on the bar, divided by a line from the four buttons that open one view alone. The last view chosen is still remembered.
+
 ## v11.27 — 19 October 2026 — All four views at once on a phone, as a fifth choice
-Commit · Offer all four views together on a phone, two by two, as the bar's fifth view button
+Commit `686cc39` · Offer all four views together on a phone, two by two, as the bar's fifth view button
 
 On a phone the bar's view buttons now end with All: the four views together, two by two, close-set across the whole stage, with each view's expand button back in its bar. Pressing a view's expand button there opens that view alone, as the bar's own buttons do, and the choice is remembered with the others. The 3D view alone still opens first.
 

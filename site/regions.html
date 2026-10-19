@@ -1046,7 +1046,7 @@ main.screen{
 .panelbar .stat .v{ white-space:nowrap; }
 .panelbar .stat .v small{ display:inline; margin-left:.35rem; }
 .panelbar .probe-v{ max-width:22rem; overflow:hidden; text-overflow:ellipsis; }
-.panelbar-views{ display:none; }
+.panelbar-views, .panelbar-all{ display:none; }
 .panelbar-btns{ display:flex; gap:.15rem; flex:none; margin-left:.4rem; }
 .panelbar-end{ display:flex; gap:.15rem; flex:none; margin-left:auto; padding-left:.6rem; }
 /* a button is an icon over its word; the one in use is drawn in ink, the
@@ -1123,7 +1123,7 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
 .screen.one.all .views .view{ display:flex; height:auto; border:1px solid var(--hair); }
 .screen.one.all .view-expand{ display:inline-flex; }
 .screen.one .panelbar-stats{ display:none; }
-.screen.one .panelbar-views{ display:flex; gap:.15rem; flex:none; padding-right:.45rem; margin-right:.3rem; border-right:1px solid var(--hair); }
+.screen.one .panelbar-views, .screen.one .panelbar-all{ display:flex; gap:.15rem; flex:none; padding-right:.45rem; margin-right:.3rem; border-right:1px solid var(--hair); }
 .screen.one .panelbar-btns{ margin-left:0; }
 .screen.one .panelbar-end{ margin-left:0; padding-left:0; }
 .screen.one .pop{ left:0; right:0; bottom:0; max-height:76%; border-left:0; border-right:0; border-bottom:0; }
@@ -1400,12 +1400,14 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
         <div class="stat"><div class="k">Probe</div><div class="v probe-v"><span id="cursorRegion">—</span><small id="cursorCoords">hover a view · drag = crosshair</small></div></div>
     </div>
     <!-- on a phone one view shows at a time, and these pick it -->
-    <div class="panelbar-views" role="group" aria-label="View">
-      <button class="pbtn" type="button" data-view="render" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>3D</span></button>
+    <div class="panelbar-all">
+      <button class="pbtn" type="button" data-view="all" aria-pressed="true" aria-label="All four views"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg><span>All</span></button>
+    </div>
+    <div class="panelbar-views" role="group" aria-label="One view">
+      <button class="pbtn" type="button" data-view="render" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>3D</span></button>
       <button class="pbtn" type="button" data-view="axial" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16"/></svg><span>Axial</span></button>
       <button class="pbtn" type="button" data-view="coronal" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8"/></svg><span>Coronal</span></button>
       <button class="pbtn" type="button" data-view="sagittal" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 4v16"/></svg><span>Sagittal</span></button>
-      <button class="pbtn" type="button" data-view="all" aria-pressed="false" aria-label="All four views"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg><span>All</span></button>
     </div>
     <div class="panelbar-btns" role="group" aria-label="Panels">
       <button class="pbtn" type="button" data-pop="popNotes" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></svg><span>What they do</span></button>
@@ -3675,7 +3677,7 @@ if (location.hash === "#receptors") {
      hidden and keep in step through the viewer's own broadcast */
   var viewBtns = document.querySelectorAll(".panelbar [data-view]");
   var views = document.querySelectorAll(".views .view[data-box]");
-  var shown = "render";
+  var shown = "all";
   try{ var k = localStorage.getItem("vn-atlas-view"); if (k && (k === "all" || document.querySelector('.views .view[data-box="' + k + '"]'))) shown = k; }catch(e){}
   function showView(key, keep){
     shown = key;
