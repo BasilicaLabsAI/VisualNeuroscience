@@ -1,7 +1,8 @@
 /* The four views the atlases share: the 3D Region Atlas, the Network Atlas
    and the Hallucinations study lay out their scans the same way, so the
-   look of the scans, the bar over each view, the square stages and the view
-   opened over the grid live here, after viewer.css, for all three pages. */
+   look of the scans, the bar over each view, the stages' proportion and
+   the view opened over the grid live here, after viewer.css, for all three
+   pages. */
 
 /* ── the scans in the light theme ──────────────────────────────────────
    Light, the viewports are white rather than black (the viewers clear to
@@ -75,8 +76,10 @@
   .views .view-cap .seg-btn{ width:42px; height:42px; }
 }
 
-/* square scans: every stage as tall as it is wide */
-.views-wrap .views .view .mri-stage{ height:auto; aspect-ratio:1 / 1; }
+/* the scans' proportion: five wide to four tall, the one an iPad held
+   sideways gives them, wherever the screen does not fit them flatter below
+   (a phone, an iPad held upright); they were square from v11.2 to v11.19 */
+.views-wrap .views .view .mri-stage{ height:auto; aspect-ratio:5 / 4; }
 /* On a tablet the four views sit two to a row from 700 pixels wide; a
    phone held sideways is too short for it and keeps its own. */
 @media (pointer:coarse) and (min-width:700px) and (min-height:600px){
@@ -89,9 +92,10 @@
    computer's screen. assets/view-fit.js measures the room above the grid
    and the bar's height into --views-room and --view-bar on the wrap; what
    is left after the two bars, the gap between the rows, the borders and a
-   margin below is shared by the two rows. A stage is never taller than it
-   is wide (square where the screen has the room, as on an iPad held
-   upright) and never under 180 pixels (a short window scrolls instead).
+   margin below is shared by the two rows. A stage is never taller than
+   five to four (the proportion above, where the screen has the room, as
+   on an iPad held upright) and never under 180 pixels (a short window
+   scrolls instead).
    The stage is given its height outright and the whole of the view's
    width: left to the aspect ratio, a stage held to a maximum height stays
    square in WebKit, narrower than its view, and the scan sat in a square
@@ -100,8 +104,8 @@
   .views-wrap .views .view .mri-stage{
     width:100%; aspect-ratio:auto;
     height:calc((100vh - var(--views-room, 11rem) - 2 * var(--view-bar, 2.75rem) - 2 * var(--gap, 14px) - 4px) / 2);
-    height:clamp(180px, calc((100vh - var(--views-room, 11rem) - 2 * var(--view-bar, 2.75rem) - 2 * var(--gap, 14px) - 4px) / 2), 100cqw);
-    height:clamp(180px, calc((100dvh - var(--views-room, 11rem) - 2 * var(--view-bar, 2.75rem) - 2 * var(--gap, 14px) - 4px) / 2), 100cqw);
+    height:clamp(180px, calc((100vh - var(--views-room, 11rem) - 2 * var(--view-bar, 2.75rem) - 2 * var(--gap, 14px) - 4px) / 2), 80cqw);
+    height:clamp(180px, calc((100dvh - var(--views-room, 11rem) - 2 * var(--view-bar, 2.75rem) - 2 * var(--gap, 14px) - 4px) / 2), 80cqw);
   }
 }
 

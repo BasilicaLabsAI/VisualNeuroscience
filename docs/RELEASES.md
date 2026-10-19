@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.20 — 19 October 2026 — Five to four on a phone and an upright iPad, as on an iPad held sideways
+Commit · Give the scans the iPad's five-to-four proportion on a phone and an upright iPad instead of a square
+
+On a phone, and on an iPad held upright, the four scans in the 3D Region Atlas, the Network Atlas and the Hallucinations study are no longer square. They take the proportion an iPad held sideways gives them, five wide to four tall, so on a phone nearly two views fit a screen where one did, and each view is a little shorter. On a computer and an iPad held sideways nothing changes: there the views are already fitted to the screen, flatter than that.
+
 ## v11.19 — 19 October 2026 — The four views fit a computer's screen, as they fit an iPad's
-Commit · Fit the four views to the screen on a computer as on an iPad, measuring the room above them
+Commit `9644c24` · Fit the four views to the screen on a computer as on an iPad, measuring the room above them
 
 On a computer the 3D Region Atlas, the Network Atlas and the Hallucinations study now fit all four views on the screen, as an iPad does, instead of drawing four squares that ran past its foot. Each page measures what stands above the grid, the header and the title strip, and shares the height that is left between the two rows, so the four are in view at once with the page at the top. The views stay square wherever the screen has the room, as on an iPad held upright, and a very short window lets them scroll rather than shrink below 180 pixels.
 
