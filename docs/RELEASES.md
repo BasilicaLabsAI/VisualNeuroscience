@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.33 — 19 October 2026 — The Molecular page as one screen, and the atlas's boxes in its style
+Commit · Lay the Molecular page out as one screen in the atlas's manner, and give the atlas's boxes the viewer's rounded style
+
+The Molecular page is now one screen like the 3D Region Atlas: the receptor viewer takes everything under the header, nothing scrolls, and a bar along the foot carries its controls as an icon over a word. Receptors opens the picker, a box in the top left corner on a computer or an iPad that folds away on the tab at its edge, and on a phone a drawer the height of the screen sliding over the molecule from the right, shut when the page opens and closing again once a receptor is picked. Binding, Drugs, Compare and Display open the text as a window beside the molecule, or over its lower part on a phone, one section at a time, and About stands at the far right with the structures and their papers, now with the page's own introduction and credits as well. The molecule centres itself in the room the box and the window leave. The 3D Region Atlas's region box, its pop-ups and their tabs take the viewer's rounded, lifted style in turn, keeping all they do.
+
 ## v11.32 — 19 October 2026 — Slice sliders for a finger, the right one clear of the drawer's handle
-Commit · Size the slice sliders for a finger and set the right one in from a phone's edge, clear of the drawer's handle
+Commit `031b86e` · Size the slice sliders for a finger and set the right one in from a phone's edge, clear of the drawer's handle
 
 Under a finger the three sliders that cut the 3D view are now strips 44 points across with a thumb of 24, where they were a hair's line with a thumb made for a mouse, and they stay as they were for a pointer. On a phone the slider along the right edge stood where the region drawer's handle sits, which covered its thumb at the centre; it now stands in from the edge, clear of the handle, and the slider along the bottom stops short of it.
 

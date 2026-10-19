@@ -49,8 +49,18 @@ Read this first in every session. It is the handover; nothing else needs pasting
   The textbook is built by `scripts/textbook/build.py` from the OpenStax source (not in the repo; CC BY-NC-SA 4.0).
 - The molecular viewer, `site/assets/molecular/receptors.html`, framed by `site/molecular.html`, is built by
   `scripts/molecular/build.sh` from the sources in `scripts/molecular/` (viewer JS and CSS, pipeline, data; numpy and
-  scipy). Edit the source and rebuild rather than the built page; its typefaces are the site's, mapped at the end of
-  `viewer/extra.css`. It draws with three.js, vendored in `site/vendor/three/`.
+  scipy, both installed here, so the rebuild runs in a session). Edit the source and rebuild rather than the built
+  page; its typefaces are the site's, mapped at the end of `viewer/extra.css`. It draws with three.js, vendored in
+  `site/vendor/three/`. Since v11.33 the page is one screen in the atlas's manner: `molecular.html` is
+  `body.atlas-screen` with the iframe filling `main.screen` under the header (`--screen-top` measured as on the
+  atlas), and inside the viewer (`viewer/t4_markup.html`, the layout block at the end of `viewer/base.css`, the chrome
+  code in `viewer/t4_engine2.js`) a bar `#bar` of `.pbtn` icon buttons runs along the foot: Receptors toggles the
+  picker (`#col` the left column, `.drawer`/`#drawerBox` the box with `#drawerHide` on its edge and the handle
+  `#drawerTab`; a right-edge drawer on a phone, shut at every load there and closing after a pick; remembered as
+  `mn-rx-picker` on wide screens), and Binding, Drugs, Compare, Display and About (far right) open `#panel.pop`, the
+  window of text, one section at a time, the open section's button closing it; the model centres in the room the
+  column leaves (`layout()`). The page's former introduction and credits live in the About pane. The host API gained
+  `picker: "shown"|"hidden"` beside `panel`.
 - Verify changes headlessly before releasing: serve `site/` on port 8412
   (`setsid nohup python3 -m http.server 8412 --bind 127.0.0.1 --directory site &`; it dies often, restart it)
   and run Playwright from `app/` with `executablePath: '/opt/pw-browsers/chromium'`. Check phone (390px) and
@@ -84,7 +94,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   v11.12; its file stays `regions.html`. Since v11.22, at the owner's request, it is one screen in the manner of an
   anatomy app (`body.atlas-screen`, `main.screen`, the style block "the screen" and the script "the screen" at the end
   of the page): the four views fill the room between the header and a bar along the bottom (`.panelbar`), nothing
-  scrolls, the region picker and the highlighted list are a box in the deck's corner (since v11.24; `#drawer` is the
+  scrolls, the region picker and the highlighted list are a box in the deck's corner (since v11.24, rounded and lifted
+  like the molecular viewer's boxes since v11.33, as are the pop-ups and their tabs; `#drawer` is the
   column the views make room for, `#drawerBox` the box, as tall as its content up to the room, scrolling inside in
   `.drawer-in`; hidden on the tab at its edge, `#drawerHide`, shown again on the handle `#drawerTab` at the screen's
   edge; beside the views from 901px and over them below, remembered in `localStorage` as `vn-atlas-drawer`). The

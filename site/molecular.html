@@ -118,54 +118,33 @@ svg{ display:block; }
   background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
 }
 
-/* ── title strip, as on the other pages ── */
-.title-strip{
-  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
-  gap:.5rem 1.3rem; border:1px solid var(--hair);
-  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+/* ── the screen ──────────────────────────────────────────────────────────
+   The receptor viewer is a page of its own (assets/molecular/receptors.html)
+   that lays itself out against its window: its bar along the foot, its
+   receptor box and its window of text. Here it is given everything under
+   the header, as the 3D Region Atlas gives its views, and nothing scrolls:
+   the page's root is held still with its body, and the folded site menu,
+   taller than a phone held sideways, scrolls within the room under the
+   header. --screen-top is the header's measured height; the apps' pages
+   have no header and start at nought. */
+body.atlas-screen{ overflow:hidden; margin:0; padding-bottom:0; }
+html:has(> body.atlas-screen){ overflow:hidden; }
+@media (max-width:960px){
+  body.atlas-screen .nav-menu.nav-menu{ max-height:calc(100vh - var(--screen-top, 0px)); max-height:calc(100dvh - var(--screen-top, 0px)); overflow-y:auto; }
 }
-.title-strip .name{
-  font-family:var(--font-display); font-size:1.35rem;
-  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+:root[data-shell][data-shell-pad] body.atlas-screen{ padding-top:max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px)); }
+main.screen{
+  max-width:none; padding:0; margin:0;
+  height:calc(100vh - var(--screen-top, 0px)); height:calc(100dvh - var(--screen-top, 0px));
+  display:flex; flex-direction:column; min-height:0; overflow:hidden;
+  background:#0F222B;   /* the viewer's own dark and light grounds, until it paints */
 }
-.title-strip .anno{
-  font-family:var(--font-serif); font-style:italic;
-  font-size:.88rem; color:var(--ink-60);
-}
-/* ── the viewer's frame ──────────────────────────────────────────────────
-   The receptor viewer is a page of its own (assets/molecular/receptors.html):
-   it lays itself out against its window, so it sits here in a frame that is
-   given the rest of the viewport under the title strip, never less than a
-   phone's worth, and re-measured whenever the window changes. The frame's
-   hairline is the site's; everything inside it is the viewer's. */
-.frame{
-  border:1px solid var(--hair); background:#DCE9EC;   /* the viewer's own light and dark grounds, until it paints */
-  margin-bottom:var(--gap);
-}
-:root[data-theme="dark"] .frame{ background:#0F222B; }
-.frame iframe{
-  display:block; width:100%; height:70vh; height:70dvh; min-height:560px; border:0;
-}
-/* on an iPad in the app, with the title strip gone, the viewer takes the screen */
-:root[data-shell-pad] .frame iframe{ height:calc(100vh - 2.5rem); height:calc(100dvh - 2.5rem); }
-/* ── the caption and credits below ── */
-.below{ margin-top:var(--gap); }
-.prose{ max-width:none; }   /* the text runs the width of the frame above it */
-.prose h2{
-  font-family:var(--font-brand); font-weight:600; font-size:.66rem;
-  letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
-  border-bottom:1px solid var(--ink); padding:.2rem .1rem .45rem; margin:0 0 .8rem;
-}
-.prose p{ margin:0 0 .8rem; }
-.prose a{ text-decoration:underline; text-underline-offset:3px; }
-.credits{
-  border-top:1px solid var(--hair); margin-top:2rem; padding-top:1rem;
-  font-family:var(--font-serif); font-size:.82rem; color:var(--ink-60);
-}
-.credits p{ margin:0 0 .5rem; }
+:root:not([data-theme="dark"]) main.screen{ background:#DCE9EC; }
+main.screen iframe{ flex:1 1 auto; min-height:0; width:100%; border:0; display:block; }
+.screen .vh{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }
 </style>
 </head>
-<body>
+<body class="atlas-screen">
 <header class="masthead wrap">
   <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
   <nav class="nav-row" aria-label="Site">
@@ -182,32 +161,15 @@ svg{ display:block; }
     <span class="nav-tools"><button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button></span>
   </nav>
 </header>
-<main class="wrap">
-  <div class="title-strip">
-    <h1 class="name">Molecular</h1>
-    <span class="anno">receptors in 3D, built from 39 experimental structures</span>
-  </div>
-  <div class="frame">
-    <iframe id="viewer" data-src="assets/molecular/receptors.html" title="Receptors in 3D" allow="fullscreen"></iframe>
-    <script>/* The viewer needs scripting anyway, so its address is set from
-       here rather than in the markup: this page's own query and hash go
-       straight through, molecular.html?receptor=5-HT2A&tab=drugs&drug=LSD or
-       the short form molecular.html#5-HT2A/drugs/LSD, and the frame loads
-       once rather than starting on the plain address and being turned. */
-    (function(){ var f = document.getElementById("viewer"); f.src = f.getAttribute("data-src") + location.search + location.hash; })();</script>
-  </div>
-  <section class="below">
-  <section class="prose">
-    <h2>What you are looking at</h2>
-    <p>Every receptor here is a real molecule, drawn from the coordinates that crystallography and cryo-electron microscopy have measured: the five human dopamine receptors, D1 to D5, and the twelve serotonin receptors that signal through G proteins, from 5-HT<sub>1A</sub> to 5-HT<sub>7</sub>. Each sits in a patch of membrane with the outside of the cell above and the cytoplasm below. Pick a family and a receptor in the panel, then follow the tour on the Binding tab: the neurotransmitter arrives, finds the pocket between the helices, the receptor changes shape as it switches on, and the G protein docks beneath it. Drag to turn the molecule, scroll or pinch to zoom, and hover a residue for what it is doing.</p>
-    <p>The Drugs tab puts other molecules in the same pocket, each from its own structure: the antipsychotics that block D2, the agonists given in Parkinson&rsquo;s disease, the triptans and ergots of migraine, and LSD and psilocin at 5-HT<sub>2A</sub>, with a note on whether each blocks the receptor or mimics its transmitter. Compare lays every subtype of a family side by side in the same state, with the residues of the binding pocket in a table, and About cites every structure. Where no structure of a receptor bound to its own transmitter exists, a stand-in agonist is used and named; the entry path of the ligand and the unresolved loops are drawn as illustration, and the change of shape between resting and active is an interpolation between the two measured states.</p>
-    <p>The <a href="microanatomy.html">Microanatomy</a> page draws these receptors as schematics beside the transmitters that act on them, and the <a href="regions.html#receptors">3D Region Atlas</a> maps where in the brain each is dense.</p>
-  </section>
-  <section class="credits">
-    <p>Structures: Protein Data Bank entries, obtained through GPCRdb (gpcrdb.org); each is cited with its paper on the viewer&rsquo;s About tab. Coordinates are public domain (CC0). Rendered with <a href="https://threejs.org/" target="_blank" rel="noopener">three.js</a> (MIT).</p>
-  </section>
-  </section>
-<p class="credits">&copy; 2026 VisualNeuroscience.AI &middot; <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a></p>
+<main id="main" class="screen" aria-label="Molecular">
+  <h1 class="vh">Molecular</h1>
+  <iframe id="viewer" data-src="assets/molecular/receptors.html" title="Receptors in 3D" allow="fullscreen"></iframe>
+  <script>/* The viewer needs scripting anyway, so its address is set from
+     here rather than in the markup: this page's own query and hash go
+     straight through, molecular.html?receptor=5-HT2A&tab=drugs&drug=LSD or
+     the short form molecular.html#5-HT2A/drugs/LSD, and the frame loads
+     once rather than starting on the plain address and being turned. */
+  (function(){ var f = document.getElementById("viewer"); f.src = f.getAttribute("data-src") + location.search + location.hash; })();</script>
 </main>
 <script src="assets/native.js"></script>
 <script src="assets/navbar.js"></script>
@@ -252,15 +214,18 @@ svg{ display:block; }
     if (location.hash !== h){ try { history.replaceState(history.state, "", location.pathname + h); } catch (err){} }
   });
 
-  /* ── the frame takes the rest of the viewport under the title strip ── */
+  /* ── the screen takes everything under the header: its height is measured
+     into --screen-top, again whenever the header or the window changes ── */
+  var main = document.getElementById("main"), head = document.querySelector(".masthead");
   function fit(){
-    var top = frame.getBoundingClientRect().top + window.scrollY;
-    var h = window.innerHeight - top - 14;
-    frame.style.height = Math.max(560, Math.round(h)) + "px";
+    var top = main.getBoundingClientRect().top + (window.pageYOffset || 0);
+    root.style.setProperty("--screen-top", Math.max(0, Math.round(top)) + "px");
   }
   fit();
   window.addEventListener("resize", fit);
   window.addEventListener("load", fit);
+  if (window.ResizeObserver){ var ro = new ResizeObserver(fit); if (head) ro.observe(head); ro.observe(document.body); }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
 })();
 </script>
 <script src="assets/firebase-config.js"></script>

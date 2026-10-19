@@ -1,7 +1,6 @@
 :root { --hb: #0E9AAE; --da: #D38F1F; --inact-bg: rgba(88, 120, 159, 0.14); --act-bg: rgba(200, 103, 122, 0.14); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hb: #62DCEA; --da: #F0B04C; --inact-bg: rgba(126, 157, 196, 0.18); --act-bg: rgba(224, 138, 155, 0.18); } }
 :root[data-theme="dark"] { --hb: #62DCEA; --da: #F0B04C; --inact-bg: rgba(126, 157, 196, 0.18); --act-bg: rgba(224, 138, 155, 0.18); }
-.tabs { gap: 18px; }
 .state { padding: 0 0 12px; margin: 0 0 12px; border-bottom: 1px solid var(--line); }
 #toRest[aria-pressed="true"] .e1 { color: var(--inact); }
 #toSig[aria-pressed="true"] .e1 { color: var(--act); }
@@ -26,12 +25,9 @@
 .sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--da); margin-right: 6px; vertical-align: 0; }
 .refs .ref { font-size: 14px; }
 @media (max-width: 760px) {
-  .tabs { gap: 14px; }
   .drug .nm { font-size: 15.5px; }
 }
 
-.tabs { gap: 14px; }
-.tabs button { font-size: 14px; }
 .subpick { display: flex; flex-wrap: wrap; gap: 10px 14px; margin: 0 0 14px; }
 .subpick .grp { display: flex; flex-direction: column; gap: 5px; }
 .subpick .gl { font-size: 12px; color: var(--ink-soft); }
@@ -49,9 +45,7 @@ table.pocket thead th { font-weight: 700; color: var(--ink-soft); }
 table.pocket tbody th { font-weight: 600; color: var(--ink-soft); }
 table.pocket tr.diff td, table.pocket tr.diff th { background: var(--act-bg); }
 table.pocket .cur { font-weight: 700; color: var(--ink); box-shadow: inset 2px 0 0 var(--accent), inset -2px 0 0 var(--accent); }
-@media (max-width: 760px) { .tabs { gap: 11px; } .tabs button { font-size: 13.5px; } }
 
-.tabs button { white-space: nowrap; }
 table.pocket th, table.pocket td { padding: 3px 4px; }
 
 .fnrow { display: flex; align-items: flex-start; gap: 12px; margin-top: 2px; }
@@ -92,9 +86,8 @@ h1 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01em; }
 h2, h3, legend, #info .t, .drug .nm, .end .e1 { font-family: var(--display); font-weight: 400; }
 .rxpick button, .sub { font-weight: 500; }
 .lab.lig { font-weight: 400; }
-.tabs button, .famtabs button, .pill, .seg span, .badge, .chips span, #stop-count, .end .e2,
+.famtabs button, .pill, .seg span, .badge, .chips span, #stop-count, .end .e2,
 .lab, table.pocket, .facts, .key, #hint { font-family: var(--sans); }
-.tabs button { font-size: 15.5px; }
 .pill { font-size: 15px; }
 .seg span { font-size: 14.5px; }
 .badge { font-size: 12.5px; }
@@ -106,4 +99,3 @@ h2, h3, legend, #info .t, .drug .nm, .end .e1 { font-family: var(--display); fon
 .lab.res { font-size: 13.5px; }
 table.pocket { font-size: 13.5px; }
 table.pocket.wide { font-size: 12.5px; }
-@media (max-width: 760px) { .tabs button { font-size: 14.5px; } }

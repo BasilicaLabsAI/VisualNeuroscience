@@ -75,27 +75,7 @@ a { color: var(--accent); text-underline-offset: 2px; }
 .lab.res { font-size: 12.5px; padding: 1px 8px 2px; border-radius: 999px; background: var(--panel-solid); border: 1px solid var(--line); text-shadow: none; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12); }
 .lab sup, #info sup { font-size: 0.72em; font-weight: 600; color: var(--ink-soft); margin-left: 1px; vertical-align: 0.5em; line-height: 0; }
 
-/* The side column: the text panel at the top with its tabs, the receptor picker on its own at
-   the foot. The column lets drags through to the model; only its two cards take them. */
-#side { position: fixed; z-index: 4; left: 18px; top: calc(18px + env(safe-area-inset-top, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); width: 372px;
-  display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
-#panel, #picker { pointer-events: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
-  -webkit-backdrop-filter: blur(16px) saturate(1.15); backdrop-filter: blur(16px) saturate(1.15); }
-#panel { flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
-#picker { flex: none; margin-top: auto; padding: 10px 12px 12px; }
 .vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-/* the tabs head the panel; the button at their end folds the text away, the tabs staying */
-.tabbar { position: relative; display: flex; align-items: stretch; gap: 10px; padding: 4px 12px 0 20px; flex: none; }
-.tabbar::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--line); transition: opacity 0.2s; }
-#collapse { position: relative; z-index: 1; flex: none; align-self: center; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: none; color: var(--ink-soft); cursor: pointer; }
-#collapse::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; }
-#collapse svg { display: block; transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1); }
-#panel.collapsed #collapse svg { transform: rotate(180deg); }
-#panel.collapsed .tabbar::after { opacity: 0; }
-#panel-body { display: grid; grid-template-rows: 1fr; min-height: 0; flex: 1 1 auto; overflow: hidden; visibility: visible;
-  transition: grid-template-rows 0.34s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0s; }
-#panel.collapsed #panel-body { grid-template-rows: 0fr; visibility: hidden;
-  transition: grid-template-rows 0.28s cubic-bezier(0.4, 0, 0.6, 1), visibility 0s linear 0.28s; }
 
 .state { padding: 12px 20px 10px; }
 .ends { display: flex; justify-content: space-between; gap: 12px; }
@@ -114,12 +94,6 @@ a { color: var(--accent); text-underline-offset: 2px; }
 #morph:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
 .cap { margin: 2px 0 0; font-size: 13.5px; line-height: 1.45; color: var(--ink-soft); min-height: 2.9em; }
 
-.tabs { position: relative; z-index: 1; display: flex; gap: 20px; flex: 1 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
-.tabs::-webkit-scrollbar { display: none; }
-.tabs button { flex: none; background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 0 9px; font-weight: 600; font-size: 14.5px; color: var(--ink-soft); cursor: pointer; }
-.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
-.panes { overflow-y: auto; overscroll-behavior: contain; padding: 14px 20px 18px; min-height: 0; transition: padding 0.34s cubic-bezier(0.2, 0.8, 0.2, 1); }
-#panel.collapsed .panes { padding-top: 0; padding-bottom: 0; transition: padding 0.28s cubic-bezier(0.4, 0, 0.6, 1); }
 .prose p { margin: 0 0 10px; font-size: 15px; line-height: 1.55; }
 .prose p:last-child { margin-bottom: 0; }
 h2 { font-family: var(--serif); font-weight: 600; font-size: 21px; line-height: 1.2; margin: 6px 0 8px; }
@@ -163,50 +137,108 @@ legend { font-family: var(--serif); font-weight: 600; font-size: 16px; padding: 
 #info .s { font-size: 13px; color: var(--ink-soft); margin-top: 1px; }
 #info .n { font-size: 13.5px; line-height: 1.45; margin: 6px 0 0; }
 
-#hint { position: fixed; z-index: 3; right: 18px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); margin: 0; font-size: 13px; color: var(--ink-soft); text-shadow: 0 0 3px var(--halo), 0 0 8px var(--halo); pointer-events: none; transition: opacity 0.6s; }
+#hint { position: fixed; z-index: 3; right: 18px; bottom: calc(var(--bar-h, 60px) + 10px); margin: 0; font-size: 13px; color: var(--ink-soft); text-shadow: 0 0 3px var(--halo), 0 0 8px var(--halo); pointer-events: none; transition: opacity 0.6s; }
 #fail { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 24px; background: var(--c-extra); }
 #fail p { max-width: 440px; font-size: 16px; margin: 0; }
 
-/* On a phone the column is one sheet along the bottom: the tabs along its top, the text, and the
-   picker at its foot. Folding the text leaves the tabs and the picker. */
+@media (prefers-reduced-motion: reduce) {
+  .lab, #hint, .tog input, .tog input::after, .end .e1 { transition: none; }
+  .drawer, .drawer-box, .drawer-tab, #panel.pop { transition: none; }
+}
+/* the column's cards are a frosted material; where the reader asks for less transparency they
+   turn solid, and where they ask for more contrast their edges darken */
+@media (prefers-reduced-transparency: reduce) {
+  #panel.pop, .drawer-box, #bar { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--panel-solid); }
+}
+@media (prefers-contrast: more) {
+  #panel.pop, .drawer-box, #bar, .pop-x, .drawer-tab { border-color: var(--ink-soft); }
+}
+
+/* ── the screen, in the manner of the 3D Region Atlas ─────────────────────
+   The model has the whole window behind a bar along the foot, whose buttons
+   are an icon over a word. The receptor picker is a box in the top left
+   corner, folding away on the tab at its edge and coming back on the handle
+   the tab leaves at the window's edge; the text is a window that rises
+   from the bar's buttons, Binding, Drugs, Compare, Display and About, one
+   section at a time, and the model centres itself in the room they leave.
+   On a phone the picker is a drawer the height of the screen, over the
+   model from the right edge and shut when the page opens, and the window
+   rises the full width of the screen. */
+:root { --bar-h: 60px; --edge: 14px; }
+#bar { position: fixed; z-index: 5; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.45rem var(--edge) calc(0.45rem + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line);
+  background: var(--panel); -webkit-backdrop-filter: blur(16px) saturate(1.15); backdrop-filter: blur(16px) saturate(1.15);
+  overflow-x: auto; overflow-y: hidden; scrollbar-width: none; white-space: nowrap; }
+#bar::-webkit-scrollbar { display: none; }
+.bar-pick { display: flex; flex: none; padding-right: 0.45rem; margin-right: 0.3rem; border-right: 1px solid var(--line); }
+#bar .tabs { display: flex; gap: 0.15rem; flex: 1 1 auto; min-width: 0; }
+.pbtn { flex: none; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.28rem; min-width: 3.9rem;
+  padding: 0.3rem 0.55rem 0.25rem; border: 0; background: none; color: var(--ink-soft); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.pbtn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; display: block; }
+.pbtn span { font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; line-height: 1; }
+.pbtn.active, .pbtn[aria-pressed="true"] { color: var(--ink); }
+.pbtn.active span, .pbtn[aria-pressed="true"] span { font-weight: 600; }
+.pbtn.pbtn-ref { margin-left: auto; padding-left: 0.65rem; border-left: 1px solid var(--line); }
+@media (hover: hover) { .pbtn:hover { color: var(--ink); } }
+@media (pointer: coarse) { .pbtn { min-height: 44px; } }
+
+/* the room above the bar: the column at the left holds the box and the window */
+#col { position: fixed; z-index: 4; left: var(--edge); top: calc(var(--edge) + env(safe-area-inset-top, 0px)); bottom: calc(var(--bar-h) + var(--edge)); width: 372px;
+  display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
+.drawer { position: relative; flex: none; max-height: 320px; transition: max-height 0.32s cubic-bezier(0.32, 0.72, 0, 1), margin 0.32s cubic-bezier(0.32, 0.72, 0, 1), visibility 0s 0s; }
+.drawer-box { position: relative; pointer-events: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15); backdrop-filter: blur(16px) saturate(1.15);
+  transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.28s ease; }
+.drawer-in { padding: 10px 12px 12px; }
+#col.shut .drawer { max-height: 0; margin-bottom: -12px; visibility: hidden; transition-delay: 0s, 0s, 0.32s; }
+#col.shut .drawer-box { transform: translateX(calc(-100% - var(--edge) - 22px)); opacity: 0; }
+.drawer-tab { position: absolute; z-index: 6; top: 50%; transform: translateY(-50%); width: 22px; height: 64px; padding: 0; display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); border-left: 0; border-radius: 0 10px 10px 0; background: var(--panel-solid); color: var(--ink); cursor: pointer; pointer-events: auto; -webkit-tap-highlight-color: transparent; }
+.drawer-tab::after { content: ''; position: absolute; inset: -8px -10px; }
+.drawer-tab svg { width: 10px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: square; display: block; }
+.drawer-hide { right: -22px; }
+.drawer-show { position: fixed; left: 0; top: 50%; visibility: hidden; opacity: 0; transition: opacity 0.2s ease, visibility 0s 0.2s; }
+.drawer-show svg { transform: rotate(180deg); }
+#col.shut .drawer-show { visibility: visible; opacity: 1; transition-delay: 0.14s, 0.14s; }
+@media (hover: hover) { .drawer-tab:hover { background: var(--ink); color: var(--panel-solid); } }
+
+/* the window: the text, one section at a time from the bar's buttons */
+#panel.pop { pointer-events: auto; flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15); backdrop-filter: blur(16px) saturate(1.15);
+  opacity: 0; transform: translateY(14px); transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.32, 0.72, 0, 1); }
+#panel.pop.in { opacity: 1; transform: none; }
+.pop-head { flex: none; display: flex; align-items: center; gap: 0.7rem; padding: 0.55rem 0.6rem 0.55rem 1.1rem; border-bottom: 1px solid var(--line); }
+.pop-head b { flex: none; font-family: var(--sans); font-weight: 600; font-size: 0.66rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink); }
+.pop-head small { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--display); font-size: 1rem; color: var(--ink-soft); }
+.pop-x { flex: none; width: 2rem; height: 2rem; display: grid; place-items: center; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: none; color: var(--ink); font-size: 1.15rem; line-height: 1; cursor: pointer; }
+@media (hover: hover) { .pop-x:hover { background: var(--ink); color: var(--panel-solid); } }
+@media (pointer: coarse) { .pop-x { width: 44px; height: 44px; } }
+#panel-body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.panes { flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain; padding: 14px 20px 18px; min-height: 0; }
+
+/* a phone: the drawer over the model from the right, the window the width of the screen */
 @media (max-width: 760px) {
-  #side { left: 0; right: 0; top: auto; bottom: 0; width: auto; max-height: 60%; gap: 0; pointer-events: auto;
-    background: var(--panel); border-top: 1px solid var(--line); border-radius: 18px 18px 0 0; box-shadow: var(--shadow);
-    -webkit-backdrop-filter: blur(16px) saturate(1.15); backdrop-filter: blur(16px) saturate(1.15); padding-bottom: env(safe-area-inset-bottom, 0px); }
-  #panel, #picker { background: none; border: 0; border-radius: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
-  #picker { margin-top: 0; padding: 8px 14px 10px; border-top: 1px solid var(--line); }
-  .tabbar { padding: 2px 10px 0 18px; }
-  .panes { padding-left: 18px; padding-right: 18px; }
-  #collapse svg { transform: rotate(180deg); }
-  #panel.collapsed #collapse svg { transform: none; }
+  #col { left: 0; right: 0; top: env(safe-area-inset-top, 0px); bottom: var(--bar-h); width: auto; display: block; }
+  .drawer { position: absolute; right: 0; top: 0; bottom: 0; width: min(320px, 100vw - 60px); max-height: none; margin: 0; }
+  #col.shut .drawer { max-height: none; margin: 0; }
+  .drawer-box { height: 100%; display: flex; flex-direction: column; border-radius: 0; border-width: 0 0 0 1px; box-shadow: -8px 0 30px rgba(0, 0, 0, 0.25); }
+  .drawer-in { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 16px 14px 18px; }
+  #col.shut .drawer-box { transform: translateX(calc(100% + 22px)); opacity: 1; }
+  .drawer-hide { right: auto; left: -22px; border-left: 1px solid var(--line); border-right: 0; border-radius: 10px 0 0 10px; }
+  .drawer-hide svg { transform: rotate(180deg); }
+  .drawer-show { left: auto; right: 0; border-right: 0; border-left: 1px solid var(--line); border-radius: 10px 0 0 10px; }
+  .drawer-show svg { transform: none; }
+  #panel.pop { position: absolute; z-index: 7; left: 0; right: 0; bottom: 0; max-height: 76%; border-radius: 18px 18px 0 0; border-width: 1px 0 0; }
   .end .e1 { font-size: 17px; }
   .cap { min-height: 0; font-size: 13px; }
   #info { left: 10px !important; right: 10px; top: calc(10px + env(safe-area-inset-top, 0px)) !important; max-width: none; transform: none !important; }
   #hint { right: auto; left: 14px; bottom: auto; top: calc(12px + env(safe-area-inset-top, 0px)); }
 }
-@media (prefers-reduced-motion: reduce) {
-  .lab, #hint, .tog input, .tog input::after, .end .e1, .tabbar::after, #collapse svg { transition: none; }
-  #panel-body, #panel.collapsed #panel-body, .panes, #panel.collapsed .panes { transition: none; }
-}
-/* the column's cards are a frosted material; where the reader asks for less transparency they
-   turn solid, and where they ask for more contrast their edges darken */
-@media (prefers-reduced-transparency: reduce) {
-  #panel, #picker, #side { -webkit-backdrop-filter: none; backdrop-filter: none; }
-  #panel, #picker { background: var(--panel-solid); }
-}
-@media (prefers-reduced-transparency: reduce) and (max-width: 760px) {
-  #side { background: var(--panel-solid); }
-  #panel, #picker { background: none; }
-}
-@media (prefers-contrast: more) {
-  #panel, #picker, #side, #collapse { border-color: var(--ink-soft); }
-  .tabbar::after { background: var(--ink-soft); }
-}
 
 :root { --hb: #0E9AAE; --da: #D38F1F; --inact-bg: rgba(88, 120, 159, 0.14); --act-bg: rgba(200, 103, 122, 0.14); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hb: #62DCEA; --da: #F0B04C; --inact-bg: rgba(126, 157, 196, 0.18); --act-bg: rgba(224, 138, 155, 0.18); } }
 :root[data-theme="dark"] { --hb: #62DCEA; --da: #F0B04C; --inact-bg: rgba(126, 157, 196, 0.18); --act-bg: rgba(224, 138, 155, 0.18); }
-.tabs { gap: 18px; }
 .state { padding: 0 0 12px; margin: 0 0 12px; border-bottom: 1px solid var(--line); }
 #toRest[aria-pressed="true"] .e1 { color: var(--inact); }
 #toSig[aria-pressed="true"] .e1 { color: var(--act); }
@@ -231,12 +263,9 @@ legend { font-family: var(--serif); font-weight: 600; font-size: 16px; padding: 
 .sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--da); margin-right: 6px; vertical-align: 0; }
 .refs .ref { font-size: 14px; }
 @media (max-width: 760px) {
-  .tabs { gap: 14px; }
   .drug .nm { font-size: 15.5px; }
 }
 
-.tabs { gap: 14px; }
-.tabs button { font-size: 14px; }
 .subpick { display: flex; flex-wrap: wrap; gap: 10px 14px; margin: 0 0 14px; }
 .subpick .grp { display: flex; flex-direction: column; gap: 5px; }
 .subpick .gl { font-size: 12px; color: var(--ink-soft); }
@@ -254,9 +283,7 @@ table.pocket thead th { font-weight: 700; color: var(--ink-soft); }
 table.pocket tbody th { font-weight: 600; color: var(--ink-soft); }
 table.pocket tr.diff td, table.pocket tr.diff th { background: var(--act-bg); }
 table.pocket .cur { font-weight: 700; color: var(--ink); box-shadow: inset 2px 0 0 var(--accent), inset -2px 0 0 var(--accent); }
-@media (max-width: 760px) { .tabs { gap: 11px; } .tabs button { font-size: 13.5px; } }
 
-.tabs button { white-space: nowrap; }
 table.pocket th, table.pocket td { padding: 3px 4px; }
 
 .fnrow { display: flex; align-items: flex-start; gap: 12px; margin-top: 2px; }
@@ -297,9 +324,8 @@ h1 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01em; }
 h2, h3, legend, #info .t, .drug .nm, .end .e1 { font-family: var(--display); font-weight: 400; }
 .rxpick button, .sub { font-weight: 500; }
 .lab.lig { font-weight: 400; }
-.tabs button, .famtabs button, .pill, .seg span, .badge, .chips span, #stop-count, .end .e2,
+.famtabs button, .pill, .seg span, .badge, .chips span, #stop-count, .end .e2,
 .lab, table.pocket, .facts, .key, #hint { font-family: var(--sans); }
-.tabs button { font-size: 15.5px; }
 .pill { font-size: 15px; }
 .seg span { font-size: 14.5px; }
 .badge { font-size: 12.5px; }
@@ -311,7 +337,6 @@ h2, h3, legend, #info .t, .drug .nm, .end .e1 { font-family: var(--display); fon
 .lab.res { font-size: 13.5px; }
 table.pocket { font-size: 13.5px; }
 table.pocket.wide { font-size: 12.5px; }
-@media (max-width: 760px) { .tabs button { font-size: 14.5px; } }
 
 </style>
 </head>
@@ -319,19 +344,21 @@ table.pocket.wide { font-size: 12.5px; }
 <canvas id="gl" tabindex="0" aria-label="3D model of the selected receptor. Drag to rotate, scroll or pinch to zoom. Arrow keys rotate; plus and minus zoom."></canvas>
 <div id="labels" aria-hidden="true"></div>
 
-<div id="side">
-<main id="panel">
-  <h1 class="vh">Receptors in 3D</h1>
-  <div class="tabbar">
-    <div class="tabs" role="tablist" aria-label="Panel sections">
-      <button role="tab" type="button" id="tab-da" aria-selected="true" aria-controls="pane-da">Binding</button>
-      <button role="tab" type="button" id="tab-drugs" aria-selected="false" aria-controls="pane-drugs" tabindex="-1">Drugs</button>
-      <button role="tab" type="button" id="tab-cmp" aria-selected="false" aria-controls="pane-cmp" tabindex="-1">Compare</button>
-      <button role="tab" type="button" id="tab-show" aria-selected="false" aria-controls="pane-show" tabindex="-1">Display</button>
-      <button role="tab" type="button" id="tab-about" aria-selected="false" aria-controls="pane-about" tabindex="-1">About</button>
+<div id="col">
+<aside class="drawer" id="rxdrawer" aria-label="Receptor picker">
+  <div class="drawer-box" id="drawerBox">
+    <button class="drawer-tab drawer-hide" id="drawerHide" type="button" aria-controls="rxdrawer" aria-expanded="true" aria-label="Hide the receptor picker" title="Hide the receptor picker"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
+    <div class="drawer-in" id="picker">
+      <div class="famtabs" id="famtabs" role="tablist" aria-label="Receptor family"></div>
+      <div class="rxpick" id="rxpick" role="group" aria-label="Receptor"></div>
     </div>
-    <button id="collapse" type="button" aria-expanded="true" aria-controls="panel-body" aria-label="Hide the text"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3.5 10.2 8 5.8l4.5 4.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
+</aside>
+<button class="drawer-tab drawer-show" id="drawerTab" type="button" aria-controls="rxdrawer" aria-expanded="false" aria-label="Show the receptor picker" title="Show the receptor picker"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
+
+<main id="panel" class="pop" aria-labelledby="pop-title">
+  <h1 class="vh">Receptors in 3D</h1>
+  <header class="pop-head"><b id="pop-title">Binding</b><small id="pop-rx"></small><button id="collapse" class="pop-x" type="button" aria-expanded="true" aria-controls="panel-body" aria-label="Close the text">&times;</button></header>
 
   <div id="panel-body">
     <div class="panes">
@@ -426,6 +453,9 @@ table.pocket.wide { font-size: 12.5px; }
       </section>
 
       <section role="tabpanel" id="pane-about" aria-labelledby="tab-about" class="prose refs" hidden>
+        <p>Every receptor here is a real molecule, drawn from the coordinates that crystallography and cryo-electron microscopy have measured: the five human dopamine receptors, D1 to D5, and the twelve serotonin receptors that signal through G proteins, from 5-HT<sub>1A</sub> to 5-HT<sub>7</sub>. Each sits in a patch of membrane with the outside of the cell above and the cytoplasm below. Pick a family and a receptor in the box, then follow the tour under Binding: the neurotransmitter arrives, finds the pocket between the helices, the receptor changes shape as it switches on, and the G protein docks beneath it. Drag to turn the molecule, scroll or pinch to zoom, and hover or tap a residue for what it is doing.</p>
+        <p>Drugs puts other molecules in the same pocket, each from its own structure: the antipsychotics that block D2, the agonists given in Parkinson&rsquo;s disease, the triptans and ergots of migraine, and LSD and psilocin at 5-HT<sub>2A</sub>, with a note on whether each blocks the receptor or mimics its transmitter. Compare lays every subtype of a family side by side in the same state, with the residues of the binding pocket in a table. Where no structure of a receptor bound to its own transmitter exists, a stand-in agonist is used and named; the entry path of the ligand and the unresolved loops are drawn as illustration, and the change of shape between resting and active is an interpolation between the two measured states.</p>
+        <p>The <a href="../../microanatomy.html" target="_top">Microanatomy</a> page draws these receptors as schematics beside the transmitters that act on them, and the <a href="../../regions.html#receptors" target="_top">3D Region Atlas</a> maps where in the brain each is dense.</p>
         <p>The helices, loops, side chains, neurotransmitters and drugs come from 39 published structures of the human receptors. Each resting receptor is an antagonist- or inverse-agonist-bound structure with the ligand removed, since no structure of an empty receptor exists; where no resting structure has been solved, the receptor is shown only in its active shape. Where no structure with the neurotransmitter itself exists, an agonist stands in for it, as noted in the Binding tab.</p>
         <h3 class="famh">Dopamine receptors</h3>
         <h3>D1</h3>
@@ -478,16 +508,23 @@ table.pocket.wide { font-size: 12.5px; }
         <p>Coordinates come from <a href="https://gpcrdb.org" target="_blank" rel="noopener">GPCRdb</a>. Each receptor’s structures are superposed on one another using their transmembrane helices (0.5–1.0 Å RMSD), and every receptor is placed in the membrane by matching its helix positions to D2’s (0.5–1.0 Å RMSD), where D2 itself sits with its most hydrophobic 30 Å band in the lipid tails. In the Compare tab only resolved residues are drawn.</p>
         <p>Residues missing from every structure of a receptor (the N-terminus, most of loop 3, the tails) are drawn as beads on illustrative paths, not predictions. Short loops missing from one structure but present in another are borrowed and drawn pale. Sugars, the palmitoyl chain and the lipids are schematic. Fusion proteins, stabilising antibodies, nanobodies and modulators are left out; many constructs also carried thermostabilising point mutations, which are noted on hover.</p>
         <p>The agonist’s path into the pocket and the morph between structures are straight interpolations for illustration, not simulations. Superscripts are Ballesteros–Weinstein numbers. D2 residues follow the long isoform, D2L, D4 residues the common 4-repeat form, and 5-HT4 and 5-HT7 the isoforms used in their structures (388 and 479 residues). 5-HT3, a ligand-gated ion channel rather than a GPCR, is not included.</p>
+        <p class="small">Structures: Protein Data Bank entries, obtained through GPCRdb (gpcrdb.org), each cited above with its paper. Coordinates are public domain (CC0). Rendered with <a href="https://threejs.org/" target="_blank" rel="noopener">three.js</a> (MIT).</p>
       </section>
     </div>
   </div>
 </main>
+</div>
 
-<div id="picker">
-  <div class="famtabs" id="famtabs" role="tablist" aria-label="Receptor family"></div>
-  <div class="rxpick" id="rxpick" role="group" aria-label="Receptor"></div>
-</div>
-</div>
+<nav id="bar" aria-label="Receptor viewer">
+  <div class="bar-pick"><button class="pbtn" id="pickBtn" type="button" aria-pressed="true" aria-controls="rxdrawer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="6" r="2.6"/><circle cx="6" cy="17" r="2.6"/><circle cx="18" cy="17" r="2.6"/><path d="M10.8 8.3 7.2 14.7M13.2 8.3l3.6 6.4M8.6 17h6.8"/></svg><span>Receptors</span></button></div>
+  <div class="tabs" role="tablist" aria-label="Panel sections">
+    <button class="pbtn" role="tab" type="button" id="tab-da" aria-selected="true" aria-controls="pane-da"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/><path d="M12 4v2.6M12 17.4V20M4 12h2.6M17.4 12H20"/></svg><span>Binding</span></button>
+    <button class="pbtn" role="tab" type="button" id="tab-drugs" aria-selected="false" aria-controls="pane-drugs" tabindex="-1"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="9" width="17" height="6" rx="3" transform="rotate(-45 12 12)"/><path d="M9.2 9.2l5.6 5.6"/></svg><span>Drugs</span></button>
+    <button class="pbtn" role="tab" type="button" id="tab-cmp" aria-selected="false" aria-controls="pane-cmp" tabindex="-1"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/></svg><span>Compare</span></button>
+    <button class="pbtn" role="tab" type="button" id="tab-show" aria-selected="false" aria-controls="pane-show" tabindex="-1"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12s3.6-6 9.5-6 9.5 6 9.5 6-3.6 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.6"/></svg><span>Display</span></button>
+    <button class="pbtn pbtn-ref" role="tab" type="button" id="tab-about" aria-selected="false" aria-controls="pane-about" tabindex="-1"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8v.5"/></svg><span>About</span></button>
+  </div>
+</nav>
 
 <div id="info" hidden></div>
 <p id="hint"></p>
@@ -1620,10 +1657,10 @@ table.pocket.wide { font-size: 12.5px; }
     row.style.setProperty('--cols', String(Math.min(6, fam.rx.length)));
     fam.rx.forEach(function (k) {
       var b = document.createElement('button'); b.type = 'button'; b.setAttribute('data-rx', k); b.setAttribute('aria-label', k); b.textContent = RXINFO[k].short; b.setAttribute('aria-pressed', 'false');
-      b.addEventListener('click', function () { setReceptor(k); }); row.appendChild(b);
+      b.addEventListener('click', function () { setReceptor(k); if (isMobile()) setPicker(false, false); }); row.appendChild(b);
     });
   }
-  function rxCaption() { $('#rx-cap').textContent = RX + ', the ' + M.D.gene + ' gene, ' + M.D.length + ' residues. ' + RXINFO[RX].fam + '. ' + GPMETA[M.D.gp]; }
+  function rxCaption() { $('#rx-cap').textContent = RX + ', the ' + M.D.gene + ' gene, ' + M.D.length + ' residues. ' + RXINFO[RX].fam + '. ' + GPMETA[M.D.gp]; $('#pop-rx').textContent = RX; }
   function setReceptor(k, instant) {
     if (k === RX && M) return;
     var prev = M; RX = k; lastRX[FAMILY] = k;
@@ -1670,8 +1707,10 @@ table.pocket.wide { font-size: 12.5px; }
     }
   }
   var TABS = ['da', 'drugs', 'cmp', 'show', 'about'];
+  var TABNAME = { da: 'Binding', drugs: 'Drugs', cmp: 'Compare', show: 'Display', about: 'About' };
   function selectTab(n, focus) {
     TABS.forEach(function (m) { var on = m === n, t = $('#tab-' + m); t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; $('#pane-' + m).hidden = !on; });
+    $('#pop-title').textContent = TABNAME[n]; syncTabBtns();
     $('#rx-cap').hidden = !(n === 'da' || n === 'drugs');
     var pn = document.querySelector('.panes'); if (pn) pn.scrollTop = 0;
     if (focus) $('#tab-' + n).focus();
@@ -1680,7 +1719,11 @@ table.pocket.wide { font-size: 12.5px; }
   }
   TABS.forEach(function (n, i) {
     var t = $('#tab-' + n);
-    t.addEventListener('click', function () { selectTab(n); setFolded(false); });
+    // the bar's button opens the window on its section, and the button of the section already showing folds it away
+    t.addEventListener('click', function () {
+      if (panelOpen() && t.getAttribute('aria-selected') === 'true') { setFolded(true); return; }
+      selectTab(n); setFolded(false);
+    });
     t.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); selectTab(TABS[(i + (e.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length], true); setFolded(false); } });
   });
 
@@ -1703,14 +1746,53 @@ table.pocket.wide { font-size: 12.5px; }
   ['TM1', 'TM2', 'TM3', 'TM4', 'TM5', 'TM6', 'TM7', 'H8'].forEach(function (k) { keyHTML += '<span><i style="background:' + SEGCOL[k] + '"></i>' + k + '</span>'; });
   keyHTML += '<span><i style="background:' + LOOPCOL + '"></i>Loops</span><span><i style="background:var(--mod);box-shadow:inset 0 0 0 1px var(--line)"></i>Borrowed loop</span><span><i style="background:var(--ghost)"></i>Unresolved</span><span><i style="background:var(--insert)"></i>D2L-only stretch</span><span><i style="background:var(--da)"></i>Dopamine or serotonin (or its stand-in)</span><span><i style="background:var(--ligc)"></i>Drug carbon</span><span><i style="background:' + GCOL.Gs + '"></i>Gαs</span><span><i style="background:' + GCOL.Gi + '"></i>Gαi1</span><span><i style="background:' + GCOL.Go + '"></i>Gαo</span><span><i style="background:' + GCOL.Gq + '"></i>Gαq</span><span><i style="background:' + GCOL.a5 + '"></i>α5 helix</span><span><i style="background:' + GCOL.B + '"></i>Gβ1</span><span><i style="background:' + GCOL.C + '"></i>Gγ2</span><span><i class="sq" style="background:#1F6DB3"></i>GlcNAc</span><span><i style="background:#1E9B58"></i>Mannose</span>';
   $('#key').innerHTML = keyHTML;
-  var panel = $('#panel'), side = $('#side'), foldBtn = $('#collapse');
+  // ------------------------------------------------------------------ the window and the picker, in the manner of the 3D Region Atlas
+  var panel = $('#panel'), side = $('#col'), foldBtn = $('#collapse'), bar = $('#bar');
+  var pickBtn = $('#pickBtn'), pickHide = $('#drawerHide'), pickShow = $('#drawerTab');
+  function isMobile() { return window.innerWidth <= 760; }
+  function panelOpen() { return !panel.hidden && !panel.classList.contains('leaving'); }
+  function syncTabBtns() {
+    var open = panelOpen();
+    TABS.forEach(function (m) { var t = $('#tab-' + m); t.classList.toggle('active', open && t.getAttribute('aria-selected') === 'true'); });
+  }
+  // The window folds away and comes back as the atlas's pop-ups do: laid out before it arrives,
+  // so the arrival can be seen, and taken out of the layout once it has gone.
+  var panelGone = null;
   function setFolded(c) {
-    if (c === panel.classList.contains('collapsed')) return;
-    panel.classList.toggle('collapsed', c);
-    foldBtn.setAttribute('aria-expanded', String(!c)); foldBtn.setAttribute('aria-label', c ? 'Show the text' : 'Hide the text');
+    if (c === !panelOpen()) return;
+    clearTimeout(panelGone);
+    if (c) {
+      panel.classList.remove('in'); panel.classList.add('leaving');
+      foldBtn.setAttribute('aria-expanded', 'false');
+      panelGone = setTimeout(function () { panel.classList.remove('leaving'); panel.hidden = true; layout(); }, 280);
+    } else {
+      panel.hidden = false; panel.classList.remove('leaving');
+      void panel.offsetWidth;
+      panel.classList.add('in');
+      foldBtn.setAttribute('aria-expanded', 'true');
+    }
+    syncTabBtns(); layout();
+  }
+  foldBtn.addEventListener('click', function () { setFolded(true); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && panelOpen()) setFolded(true); });
+  // The picker is a box beside the model on a wide screen, as it was last left, and a drawer over
+  // the model on a phone, shut whenever the page opens there.
+  function setPicker(on, keep) {
+    side.classList.toggle('shut', !on);
+    pickBtn.setAttribute('aria-pressed', String(on)); pickShow.setAttribute('aria-expanded', String(on)); pickHide.setAttribute('aria-expanded', String(on));
+    if (keep) { try { localStorage.setItem('mn-rx-picker', on ? 'open' : 'shut'); } catch (e) {} }
     layout();
   }
-  foldBtn.addEventListener('click', function () { setFolded(!panel.classList.contains('collapsed')); });
+  pickBtn.addEventListener('click', function () { setPicker(side.classList.contains('shut'), true); });
+  pickHide.addEventListener('click', function () { setPicker(false, true); });
+  pickShow.addEventListener('click', function () { setPicker(true, true); });
+  function initChrome() {
+    var open = !isMobile();
+    if (open) { try { var kp = localStorage.getItem('mn-rx-picker'); if (kp) open = kp === 'open'; } catch (e) {} }
+    setPicker(open, false);
+    if (isMobile()) panel.hidden = true; else panel.classList.add('in');
+    syncTabBtns();
+  }
   var hint = $('#hint'), hintShown = true;
   hint.textContent = coarse ? 'Drag to rotate, pinch to zoom, tap any part to identify it.' : 'Drag to rotate, right-drag to pan, scroll to zoom, hover to identify.';
   function hideHint() { if (hintShown && coarse) { hint.style.opacity = '0'; hintShown = false; } }
@@ -1729,9 +1811,9 @@ table.pocket.wide { font-size: 12.5px; }
   new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
 
   // ------------------------------------------------------------------ layout and membrane cutaway
-  // The model sits in the space the column leaves: above the sheet on a phone, beside the column
-  // elsewhere, and in the whole width once the text is folded away. It glides there rather than
-  // jumping, except when the window itself changes size. The renderer is resized only when the
+  // The model sits in the space the chrome leaves: above the window on a phone, beside the column
+  // of the box and the window elsewhere, and in the whole width once both are folded away, always
+  // above the bar. It glides there rather than jumping, except when the window itself changes size. The renderer is resized only when the
   // window is, since setting a canvas's size clears it even to the same size, which flickered
   // while the column folded.
   var VO = { x: 0, y: 0, tx: 0, ty: 0 }, sized = '';
@@ -1740,11 +1822,15 @@ table.pocket.wide { font-size: 12.5px; }
     W = window.innerWidth; H = window.innerHeight;
     if (sized !== W + 'x' + H) { renderer.setSize(W, H, false); sized = W + 'x' + H; }
     camera.aspect = W / H;
-    var sr = side.getBoundingClientRect(), mobile = W <= 760, folded = panel.classList.contains('collapsed');
+    var barH = bar ? bar.offsetHeight : 0;
+    document.documentElement.style.setProperty('--bar-h', barH + 'px');
+    var open = panelOpen(), pickOpen = !side.classList.contains('shut');
     VO.tx = 0; VO.ty = 0;
-    if (mobile) { freeW = W; freeH = Math.max(120, sr.top); VO.ty = (H - freeH) / 2; }
-    else if (folded) { freeW = W; freeH = H; }
-    else { freeW = Math.max(200, W - sr.right); freeH = H; VO.tx = sr.right / 2; }
+    if (isMobile()) { freeW = W; freeH = Math.max(120, open ? panel.getBoundingClientRect().top : H - barH); VO.ty = (H - freeH) / 2; }
+    else {
+      var right = (open || pickOpen) ? side.getBoundingClientRect().right : 0;
+      freeW = Math.max(200, W - right); freeH = Math.max(120, H - barH); VO.tx = right / 2; VO.ty = (H - freeH) / 2;
+    }
     if (instant === true || RM) { VO.x = VO.tx; VO.y = VO.ty; }
     applyOffset();
     var nd = Math.max(1, 0.9 * Math.max(H / freeH, H / freeW));
@@ -1758,7 +1844,7 @@ table.pocket.wide { font-size: 12.5px; }
     applyOffset();
   }
   window.addEventListener('resize', function () { layout(true); });
-  if (window.ResizeObserver) { var ro = new ResizeObserver(function () { layout(); }); ro.observe(panel); ro.observe(side); }
+  if (window.ResizeObserver) { var ro = new ResizeObserver(function () { layout(); }); ro.observe(panel); ro.observe(side); ro.observe(bar); }
   function updateCut() {
     var c = cutU.uCam.value, d = cutU.uDir.value; c.copy(camera.position); d.copy(ctl.target).sub(c); var tt = d.length() || 1; d.multiplyScalar(1 / tt);
     var r = 0.287 * tt * (1.25 - 0.8 * sm(60, 160, tt)) * clamp(freeW / H, 1, 1.5); cutU.uTT.value = tt; cutU.uR.value = r;
@@ -1813,12 +1899,14 @@ table.pocket.wide { font-size: 12.5px; }
     var tab = TABALIAS[String(o.tab || '').toLowerCase()]; if (tab) selectTab(tab);
     if (o.drug) { if (curTab() !== 'drugs') selectTab('drugs'); setDrug(o.drug); }
     if (o.stop != null && MODE === 'da') setStop(Math.max(0, Math.min(STOPS.length - 1, parseInt(o.stop, 10) || 0)), instant);
-    if (o.panel === 'hidden' && !panel.classList.contains('collapsed')) $('#collapse').click();
-    if (o.panel === 'shown' && panel.classList.contains('collapsed')) $('#collapse').click();
+    if (o.panel === 'hidden') setFolded(true);
+    if (o.panel === 'shown') setFolded(false);
+    if (o.picker === 'hidden') setPicker(false, false);
+    if (o.picker === 'shown') setPicker(true, false);
   }
   function fromLocation() {
     var q = new URLSearchParams(location.search), o = {};
-    ['family', 'receptor', 'tab', 'drug', 'stop', 'panel'].forEach(function (k) { if (q.has(k)) o[k] = q.get(k); });
+    ['family', 'receptor', 'tab', 'drug', 'stop', 'panel', 'picker'].forEach(function (k) { if (q.has(k)) o[k] = q.get(k); });
     if (q.has('rx')) o.receptor = q.get('rx');
     var h = location.hash.replace(/^#\/?/, '');   // #5-HT2A/drugs/LSD
     if (h && !o.receptor) { var p = h.split('/'); o.receptor = decodeURIComponent(p[0]); if (p[1]) o.tab = p[1]; if (p[2]) o.drug = decodeURIComponent(p[2]); }
@@ -1838,6 +1926,7 @@ table.pocket.wide { font-size: 12.5px; }
   window.addEventListener('hashchange', function () { show(fromLocation(), false); });
 
   applyTheme();
+  initChrome();
   layout(true);
   setFamily('dopamine', true);
   show(fromLocation(), true);

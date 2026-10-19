@@ -19,19 +19,21 @@ __CSS__
 <canvas id="gl" tabindex="0" aria-label="3D model of the selected receptor. Drag to rotate, scroll or pinch to zoom. Arrow keys rotate; plus and minus zoom."></canvas>
 <div id="labels" aria-hidden="true"></div>
 
-<div id="side">
-<main id="panel">
-  <h1 class="vh">Receptors in 3D</h1>
-  <div class="tabbar">
-    <div class="tabs" role="tablist" aria-label="Panel sections">
-      <button role="tab" type="button" id="tab-da" aria-selected="true" aria-controls="pane-da">Binding</button>
-      <button role="tab" type="button" id="tab-drugs" aria-selected="false" aria-controls="pane-drugs" tabindex="-1">Drugs</button>
-      <button role="tab" type="button" id="tab-cmp" aria-selected="false" aria-controls="pane-cmp" tabindex="-1">Compare</button>
-      <button role="tab" type="button" id="tab-show" aria-selected="false" aria-controls="pane-show" tabindex="-1">Display</button>
-      <button role="tab" type="button" id="tab-about" aria-selected="false" aria-controls="pane-about" tabindex="-1">About</button>
+<div id="col">
+<aside class="drawer" id="rxdrawer" aria-label="Receptor picker">
+  <div class="drawer-box" id="drawerBox">
+    <button class="drawer-tab drawer-hide" id="drawerHide" type="button" aria-controls="rxdrawer" aria-expanded="true" aria-label="Hide the receptor picker" title="Hide the receptor picker"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
+    <div class="drawer-in" id="picker">
+      <div class="famtabs" id="famtabs" role="tablist" aria-label="Receptor family"></div>
+      <div class="rxpick" id="rxpick" role="group" aria-label="Receptor"></div>
     </div>
-    <button id="collapse" type="button" aria-expanded="true" aria-controls="panel-body" aria-label="Hide the text"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3.5 10.2 8 5.8l4.5 4.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
+</aside>
+<button class="drawer-tab drawer-show" id="drawerTab" type="button" aria-controls="rxdrawer" aria-expanded="false" aria-label="Show the receptor picker" title="Show the receptor picker"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
+
+<main id="panel" class="pop" aria-labelledby="pop-title">
+  <h1 class="vh">Receptors in 3D</h1>
+  <header class="pop-head"><b id="pop-title">Binding</b><small id="pop-rx"></small><button id="collapse" class="pop-x" type="button" aria-expanded="true" aria-controls="panel-body" aria-label="Close the text">&times;</button></header>
 
   <div id="panel-body">
     <div class="panes">
@@ -126,6 +128,9 @@ __CSS__
       </section>
 
       <section role="tabpanel" id="pane-about" aria-labelledby="tab-about" class="prose refs" hidden>
+        <p>Every receptor here is a real molecule, drawn from the coordinates that crystallography and cryo-electron microscopy have measured: the five human dopamine receptors, D1 to D5, and the twelve serotonin receptors that signal through G proteins, from 5-HT<sub>1A</sub> to 5-HT<sub>7</sub>. Each sits in a patch of membrane with the outside of the cell above and the cytoplasm below. Pick a family and a receptor in the box, then follow the tour under Binding: the neurotransmitter arrives, finds the pocket between the helices, the receptor changes shape as it switches on, and the G protein docks beneath it. Drag to turn the molecule, scroll or pinch to zoom, and hover or tap a residue for what it is doing.</p>
+        <p>Drugs puts other molecules in the same pocket, each from its own structure: the antipsychotics that block D2, the agonists given in Parkinson&rsquo;s disease, the triptans and ergots of migraine, and LSD and psilocin at 5-HT<sub>2A</sub>, with a note on whether each blocks the receptor or mimics its transmitter. Compare lays every subtype of a family side by side in the same state, with the residues of the binding pocket in a table. Where no structure of a receptor bound to its own transmitter exists, a stand-in agonist is used and named; the entry path of the ligand and the unresolved loops are drawn as illustration, and the change of shape between resting and active is an interpolation between the two measured states.</p>
+        <p>The <a href="../../microanatomy.html" target="_top">Microanatomy</a> page draws these receptors as schematics beside the transmitters that act on them, and the <a href="../../regions.html#receptors" target="_top">3D Region Atlas</a> maps where in the brain each is dense.</p>
         <p>The helices, loops, side chains, neurotransmitters and drugs come from __NSTRUCT__ published structures of the human receptors. Each resting receptor is an antagonist- or inverse-agonist-bound structure with the ligand removed, since no structure of an empty receptor exists; where no resting structure has been solved, the receptor is shown only in its active shape. Where no structure with the neurotransmitter itself exists, an agonist stands in for it, as noted in the Binding tab.</p>
         <h3 class="famh">Dopamine receptors</h3>
         <h3>D1</h3>
@@ -148,16 +153,23 @@ __SEROREFS__
         <p>Coordinates come from <a href="https://gpcrdb.org" target="_blank" rel="noopener">GPCRdb</a>. Each receptor’s structures are superposed on one another using their transmembrane helices (0.5–1.0 Å RMSD), and every receptor is placed in the membrane by matching its helix positions to D2’s (0.5–1.0 Å RMSD), where D2 itself sits with its most hydrophobic 30 Å band in the lipid tails. In the Compare tab only resolved residues are drawn.</p>
         <p>Residues missing from every structure of a receptor (the N-terminus, most of loop 3, the tails) are drawn as beads on illustrative paths, not predictions. Short loops missing from one structure but present in another are borrowed and drawn pale. Sugars, the palmitoyl chain and the lipids are schematic. Fusion proteins, stabilising antibodies, nanobodies and modulators are left out; many constructs also carried thermostabilising point mutations, which are noted on hover.</p>
         <p>The agonist’s path into the pocket and the morph between structures are straight interpolations for illustration, not simulations. Superscripts are Ballesteros–Weinstein numbers. D2 residues follow the long isoform, D2L, D4 residues the common 4-repeat form, and 5-HT4 and 5-HT7 the isoforms used in their structures (388 and 479 residues). 5-HT3, a ligand-gated ion channel rather than a GPCR, is not included.</p>
+        <p class="small">Structures: Protein Data Bank entries, obtained through GPCRdb (gpcrdb.org), each cited above with its paper. Coordinates are public domain (CC0). Rendered with <a href="https://threejs.org/" target="_blank" rel="noopener">three.js</a> (MIT).</p>
       </section>
     </div>
   </div>
 </main>
+</div>
 
-<div id="picker">
-  <div class="famtabs" id="famtabs" role="tablist" aria-label="Receptor family"></div>
-  <div class="rxpick" id="rxpick" role="group" aria-label="Receptor"></div>
-</div>
-</div>
+<nav id="bar" aria-label="Receptor viewer">
+  <div class="bar-pick"><button class="pbtn" id="pickBtn" type="button" aria-pressed="true" aria-controls="rxdrawer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="6" r="2.6"/><circle cx="6" cy="17" r="2.6"/><circle cx="18" cy="17" r="2.6"/><path d="M10.8 8.3 7.2 14.7M13.2 8.3l3.6 6.4M8.6 17h6.8"/></svg><span>Receptors</span></button></div>
+  <div class="tabs" role="tablist" aria-label="Panel sections">
+    <button class="pbtn" role="tab" type="button" id="tab-da" aria-selected="true" aria-controls="pane-da"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/><path d="M12 4v2.6M12 17.4V20M4 12h2.6M17.4 12H20"/></svg><span>Binding</span></button>
+    <button class="pbtn" role="tab" type="button" id="tab-drugs" aria-selected="false" aria-controls="pane-drugs" tabindex="-1"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="9" width="17" height="6" rx="3" transform="rotate(-45 12 12)"/><path d="M9.2 9.2l5.6 5.6"/></svg><span>Drugs</span></button>
+    <button class="pbtn" role="tab" type="button" id="tab-cmp" aria-selected="false" aria-controls="pane-cmp" tabindex="-1"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/></svg><span>Compare</span></button>
+    <button class="pbtn" role="tab" type="button" id="tab-show" aria-selected="false" aria-controls="pane-show" tabindex="-1"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12s3.6-6 9.5-6 9.5 6 9.5 6-3.6 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.6"/></svg><span>Display</span></button>
+    <button class="pbtn pbtn-ref" role="tab" type="button" id="tab-about" aria-selected="false" aria-controls="pane-about" tabindex="-1"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8v.5"/></svg><span>About</span></button>
+  </div>
+</nav>
 
 <div id="info" hidden></div>
 <p id="hint"></p>

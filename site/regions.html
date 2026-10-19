@@ -790,7 +790,7 @@ mark{ background:var(--ink); color:var(--paper); }
 .rpick.open .rpick-btn::after{ transform:translateY(-35%) rotate(180deg); }
 .rpick-pop{
   position:absolute; z-index:40; left:var(--pop-left, 0); right:auto; width:var(--pop-w, 100%); top:var(--pop-top, calc(100% + 4px));
-  padding:.6rem .6rem .35rem; border:1px solid var(--hair);
+  padding:.6rem .6rem .35rem; border:1px solid var(--hair); border-radius:12px;
   box-shadow:0 14px 30px rgba(0,0,0,.25);
   opacity:0; transform:translateY(-8px) scale(.985); transform-origin:top left;
   transition:opacity .18s cubic-bezier(.32,.72,0,1), transform .22s cubic-bezier(.32,.72,0,1);
@@ -936,7 +936,8 @@ main.screen{
 .drawer-box{
   position:relative; flex:0 1 auto; width:var(--box-w); max-height:100%; min-height:0;
   display:flex; flex-direction:column;
-  border:1px solid var(--hair); background:var(--paper);
+  border:1px solid var(--hair); border-radius:16px; background:var(--paper);
+  box-shadow:0 1px 2px rgba(0,0,0,.08), 0 10px 30px rgba(0,0,0,.14);
   transition:transform .32s cubic-bezier(.32,.72,0,1);
 }
 .drawer-in.card{ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; border:0; padding:var(--gap) var(--gap) 1.4rem; }
@@ -953,8 +954,8 @@ main.screen{
 }
 .drawer-tab::after{ content:""; position:absolute; inset:-8px -10px; }
 .drawer-tab svg{ width:10px; height:16px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:square; }
-.drawer-hide{ right:-22px; }
-.drawer-show{ left:0; visibility:hidden; opacity:0; transition:opacity .2s ease, visibility 0s .2s; }
+.drawer-hide{ right:-22px; border-radius:0 10px 10px 0; }
+.drawer-show{ left:0; border-radius:0 10px 10px 0; visibility:hidden; opacity:0; transition:opacity .2s ease, visibility 0s .2s; }
 .drawer-show svg{ transform:rotate(180deg); }
 .deck.shut .drawer-show{ visibility:visible; opacity:1; transition-delay:.14s, .14s; }
 @media (hover: hover){ .drawer-tab:hover{ background:var(--ink); color:var(--paper); } }
@@ -1018,7 +1019,8 @@ main.screen{
 .pop{
   position:absolute; left:calc(var(--gap) + 10px); right:var(--gap); bottom:var(--gap); z-index:20;
   max-height:min(72%, calc(100% - 2 * var(--gap))); display:flex; flex-direction:column; overflow:hidden;
-  border:1px solid var(--hair);
+  border:1px solid var(--hair); border-radius:16px;
+  box-shadow:0 1px 2px rgba(0,0,0,.08), 0 12px 32px rgba(0,0,0,.18);
   background:color-mix(in srgb, var(--paper) 90%, transparent);
   -webkit-backdrop-filter:saturate(180%) blur(24px); backdrop-filter:saturate(180%) blur(24px);
   box-shadow:0 18px 60px rgba(0,0,0,.35);
@@ -1035,7 +1037,7 @@ main.screen{
   margin-left:auto; flex:none; width:1.8rem; height:1.8rem; padding:0;
   border:1px solid var(--hair); background:none; color:var(--ink); cursor:pointer;
   font-size:1.15rem; line-height:1; -webkit-tap-highlight-color:transparent;
-}
+ border-radius:50%; }
 @media (hover: hover){ .pop-x:hover{ background:var(--ink); color:var(--paper); } }
 .pop-x:active{ background:var(--ink); color:var(--paper); }
 @media (pointer:coarse){ .pop-x{ width:44px; height:44px; } }
@@ -1080,15 +1082,15 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
 .screen.one .panelbar-views, .screen.one .panelbar-all{ display:flex; gap:.15rem; flex:none; padding-right:.45rem; margin-right:.3rem; border-right:1px solid var(--hair); }
 .screen.one .panelbar-btns{ margin-left:0; }
 .screen.one .panelbar-end{ margin-left:0; padding-left:0; }
-.screen.one .pop{ left:0; right:0; bottom:0; max-height:76%; border-left:0; border-right:0; border-bottom:0; }
+.screen.one .pop{ left:0; right:0; bottom:0; max-height:76%; border-left:0; border-right:0; border-bottom:0; border-radius:18px 18px 0 0; }
 .screen.one .pop-sm{ width:100%; }
 .screen.one .drawer{ left:auto; right:0; padding:0; }
-.screen.one .drawer-box{ flex:1 1 auto; max-height:none; border-width:0 0 0 1px; box-shadow:-8px 0 30px rgba(0,0,0,.25); }
+.screen.one .drawer-box{ flex:1 1 auto; max-height:none; border-width:0 0 0 1px; border-radius:0; box-shadow:-8px 0 30px rgba(0,0,0,.25); }
 .screen.one .deck.shut .drawer-box{ transform:translateX(calc(100% + 22px)); }
 .screen.one .drawer-tab{ border-left:1px solid var(--hair); border-right:0; }
-.screen.one .drawer-hide{ right:auto; left:-22px; }
+.screen.one .drawer-hide{ right:auto; left:-22px; border-radius:10px 0 0 10px; }
 .screen.one .drawer-hide svg{ transform:rotate(180deg); }
-.screen.one .drawer-show{ left:auto; right:0; }
+.screen.one .drawer-show{ left:auto; right:0; border-radius:10px 0 0 10px; }
 .screen.one .drawer-show svg{ transform:none; }
 
 /* narrower than 901 pixels the drawer lies over the views instead */

@@ -80,10 +80,10 @@
     row.style.setProperty('--cols', String(Math.min(6, fam.rx.length)));
     fam.rx.forEach(function (k) {
       var b = document.createElement('button'); b.type = 'button'; b.setAttribute('data-rx', k); b.setAttribute('aria-label', k); b.textContent = RXINFO[k].short; b.setAttribute('aria-pressed', 'false');
-      b.addEventListener('click', function () { setReceptor(k); }); row.appendChild(b);
+      b.addEventListener('click', function () { setReceptor(k); if (isMobile()) setPicker(false, false); }); row.appendChild(b);
     });
   }
-  function rxCaption() { $('#rx-cap').textContent = RX + ', the ' + M.D.gene + ' gene, ' + M.D.length + ' residues. ' + RXINFO[RX].fam + '. ' + GPMETA[M.D.gp]; }
+  function rxCaption() { $('#rx-cap').textContent = RX + ', the ' + M.D.gene + ' gene, ' + M.D.length + ' residues. ' + RXINFO[RX].fam + '. ' + GPMETA[M.D.gp]; $('#pop-rx').textContent = RX; }
   function setReceptor(k, instant) {
     if (k === RX && M) return;
     var prev = M; RX = k; lastRX[FAMILY] = k;
@@ -130,8 +130,10 @@
     }
   }
   var TABS = ['da', 'drugs', 'cmp', 'show', 'about'];
+  var TABNAME = { da: 'Binding', drugs: 'Drugs', cmp: 'Compare', show: 'Display', about: 'About' };
   function selectTab(n, focus) {
     TABS.forEach(function (m) { var on = m === n, t = $('#tab-' + m); t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; $('#pane-' + m).hidden = !on; });
+    $('#pop-title').textContent = TABNAME[n]; syncTabBtns();
     $('#rx-cap').hidden = !(n === 'da' || n === 'drugs');
     var pn = document.querySelector('.panes'); if (pn) pn.scrollTop = 0;
     if (focus) $('#tab-' + n).focus();
@@ -140,7 +142,11 @@
   }
   TABS.forEach(function (n, i) {
     var t = $('#tab-' + n);
-    t.addEventListener('click', function () { selectTab(n); setFolded(false); });
+    // the bar's button opens the window on its section, and the button of the section already showing folds it away
+    t.addEventListener('click', function () {
+      if (panelOpen() && t.getAttribute('aria-selected') === 'true') { setFolded(true); return; }
+      selectTab(n); setFolded(false);
+    });
     t.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); selectTab(TABS[(i + (e.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length], true); setFolded(false); } });
   });
 
@@ -163,14 +169,53 @@
   ['TM1', 'TM2', 'TM3', 'TM4', 'TM5', 'TM6', 'TM7', 'H8'].forEach(function (k) { keyHTML += '<span><i style="background:' + SEGCOL[k] + '"></i>' + k + '</span>'; });
   keyHTML += '<span><i style="background:' + LOOPCOL + '"></i>Loops</span><span><i style="background:var(--mod);box-shadow:inset 0 0 0 1px var(--line)"></i>Borrowed loop</span><span><i style="background:var(--ghost)"></i>Unresolved</span><span><i style="background:var(--insert)"></i>D2L-only stretch</span><span><i style="background:var(--da)"></i>Dopamine or serotonin (or its stand-in)</span><span><i style="background:var(--ligc)"></i>Drug carbon</span><span><i style="background:' + GCOL.Gs + '"></i>Gαs</span><span><i style="background:' + GCOL.Gi + '"></i>Gαi1</span><span><i style="background:' + GCOL.Go + '"></i>Gαo</span><span><i style="background:' + GCOL.Gq + '"></i>Gαq</span><span><i style="background:' + GCOL.a5 + '"></i>α5 helix</span><span><i style="background:' + GCOL.B + '"></i>Gβ1</span><span><i style="background:' + GCOL.C + '"></i>Gγ2</span><span><i class="sq" style="background:#1F6DB3"></i>GlcNAc</span><span><i style="background:#1E9B58"></i>Mannose</span>';
   $('#key').innerHTML = keyHTML;
-  var panel = $('#panel'), side = $('#side'), foldBtn = $('#collapse');
+  // ------------------------------------------------------------------ the window and the picker, in the manner of the 3D Region Atlas
+  var panel = $('#panel'), side = $('#col'), foldBtn = $('#collapse'), bar = $('#bar');
+  var pickBtn = $('#pickBtn'), pickHide = $('#drawerHide'), pickShow = $('#drawerTab');
+  function isMobile() { return window.innerWidth <= 760; }
+  function panelOpen() { return !panel.hidden && !panel.classList.contains('leaving'); }
+  function syncTabBtns() {
+    var open = panelOpen();
+    TABS.forEach(function (m) { var t = $('#tab-' + m); t.classList.toggle('active', open && t.getAttribute('aria-selected') === 'true'); });
+  }
+  // The window folds away and comes back as the atlas's pop-ups do: laid out before it arrives,
+  // so the arrival can be seen, and taken out of the layout once it has gone.
+  var panelGone = null;
   function setFolded(c) {
-    if (c === panel.classList.contains('collapsed')) return;
-    panel.classList.toggle('collapsed', c);
-    foldBtn.setAttribute('aria-expanded', String(!c)); foldBtn.setAttribute('aria-label', c ? 'Show the text' : 'Hide the text');
+    if (c === !panelOpen()) return;
+    clearTimeout(panelGone);
+    if (c) {
+      panel.classList.remove('in'); panel.classList.add('leaving');
+      foldBtn.setAttribute('aria-expanded', 'false');
+      panelGone = setTimeout(function () { panel.classList.remove('leaving'); panel.hidden = true; layout(); }, 280);
+    } else {
+      panel.hidden = false; panel.classList.remove('leaving');
+      void panel.offsetWidth;
+      panel.classList.add('in');
+      foldBtn.setAttribute('aria-expanded', 'true');
+    }
+    syncTabBtns(); layout();
+  }
+  foldBtn.addEventListener('click', function () { setFolded(true); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && panelOpen()) setFolded(true); });
+  // The picker is a box beside the model on a wide screen, as it was last left, and a drawer over
+  // the model on a phone, shut whenever the page opens there.
+  function setPicker(on, keep) {
+    side.classList.toggle('shut', !on);
+    pickBtn.setAttribute('aria-pressed', String(on)); pickShow.setAttribute('aria-expanded', String(on)); pickHide.setAttribute('aria-expanded', String(on));
+    if (keep) { try { localStorage.setItem('mn-rx-picker', on ? 'open' : 'shut'); } catch (e) {} }
     layout();
   }
-  foldBtn.addEventListener('click', function () { setFolded(!panel.classList.contains('collapsed')); });
+  pickBtn.addEventListener('click', function () { setPicker(side.classList.contains('shut'), true); });
+  pickHide.addEventListener('click', function () { setPicker(false, true); });
+  pickShow.addEventListener('click', function () { setPicker(true, true); });
+  function initChrome() {
+    var open = !isMobile();
+    if (open) { try { var kp = localStorage.getItem('mn-rx-picker'); if (kp) open = kp === 'open'; } catch (e) {} }
+    setPicker(open, false);
+    if (isMobile()) panel.hidden = true; else panel.classList.add('in');
+    syncTabBtns();
+  }
   var hint = $('#hint'), hintShown = true;
   hint.textContent = coarse ? 'Drag to rotate, pinch to zoom, tap any part to identify it.' : 'Drag to rotate, right-drag to pan, scroll to zoom, hover to identify.';
   function hideHint() { if (hintShown && coarse) { hint.style.opacity = '0'; hintShown = false; } }
@@ -189,9 +234,9 @@
   new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
 
   // ------------------------------------------------------------------ layout and membrane cutaway
-  // The model sits in the space the column leaves: above the sheet on a phone, beside the column
-  // elsewhere, and in the whole width once the text is folded away. It glides there rather than
-  // jumping, except when the window itself changes size. The renderer is resized only when the
+  // The model sits in the space the chrome leaves: above the window on a phone, beside the column
+  // of the box and the window elsewhere, and in the whole width once both are folded away, always
+  // above the bar. It glides there rather than jumping, except when the window itself changes size. The renderer is resized only when the
   // window is, since setting a canvas's size clears it even to the same size, which flickered
   // while the column folded.
   var VO = { x: 0, y: 0, tx: 0, ty: 0 }, sized = '';
@@ -200,11 +245,15 @@
     W = window.innerWidth; H = window.innerHeight;
     if (sized !== W + 'x' + H) { renderer.setSize(W, H, false); sized = W + 'x' + H; }
     camera.aspect = W / H;
-    var sr = side.getBoundingClientRect(), mobile = W <= 760, folded = panel.classList.contains('collapsed');
+    var barH = bar ? bar.offsetHeight : 0;
+    document.documentElement.style.setProperty('--bar-h', barH + 'px');
+    var open = panelOpen(), pickOpen = !side.classList.contains('shut');
     VO.tx = 0; VO.ty = 0;
-    if (mobile) { freeW = W; freeH = Math.max(120, sr.top); VO.ty = (H - freeH) / 2; }
-    else if (folded) { freeW = W; freeH = H; }
-    else { freeW = Math.max(200, W - sr.right); freeH = H; VO.tx = sr.right / 2; }
+    if (isMobile()) { freeW = W; freeH = Math.max(120, open ? panel.getBoundingClientRect().top : H - barH); VO.ty = (H - freeH) / 2; }
+    else {
+      var right = (open || pickOpen) ? side.getBoundingClientRect().right : 0;
+      freeW = Math.max(200, W - right); freeH = Math.max(120, H - barH); VO.tx = right / 2; VO.ty = (H - freeH) / 2;
+    }
     if (instant === true || RM) { VO.x = VO.tx; VO.y = VO.ty; }
     applyOffset();
     var nd = Math.max(1, 0.9 * Math.max(H / freeH, H / freeW));
@@ -218,7 +267,7 @@
     applyOffset();
   }
   window.addEventListener('resize', function () { layout(true); });
-  if (window.ResizeObserver) { var ro = new ResizeObserver(function () { layout(); }); ro.observe(panel); ro.observe(side); }
+  if (window.ResizeObserver) { var ro = new ResizeObserver(function () { layout(); }); ro.observe(panel); ro.observe(side); ro.observe(bar); }
   function updateCut() {
     var c = cutU.uCam.value, d = cutU.uDir.value; c.copy(camera.position); d.copy(ctl.target).sub(c); var tt = d.length() || 1; d.multiplyScalar(1 / tt);
     var r = 0.287 * tt * (1.25 - 0.8 * sm(60, 160, tt)) * clamp(freeW / H, 1, 1.5); cutU.uTT.value = tt; cutU.uR.value = r;
@@ -273,12 +322,14 @@
     var tab = TABALIAS[String(o.tab || '').toLowerCase()]; if (tab) selectTab(tab);
     if (o.drug) { if (curTab() !== 'drugs') selectTab('drugs'); setDrug(o.drug); }
     if (o.stop != null && MODE === 'da') setStop(Math.max(0, Math.min(STOPS.length - 1, parseInt(o.stop, 10) || 0)), instant);
-    if (o.panel === 'hidden' && !panel.classList.contains('collapsed')) $('#collapse').click();
-    if (o.panel === 'shown' && panel.classList.contains('collapsed')) $('#collapse').click();
+    if (o.panel === 'hidden') setFolded(true);
+    if (o.panel === 'shown') setFolded(false);
+    if (o.picker === 'hidden') setPicker(false, false);
+    if (o.picker === 'shown') setPicker(true, false);
   }
   function fromLocation() {
     var q = new URLSearchParams(location.search), o = {};
-    ['family', 'receptor', 'tab', 'drug', 'stop', 'panel'].forEach(function (k) { if (q.has(k)) o[k] = q.get(k); });
+    ['family', 'receptor', 'tab', 'drug', 'stop', 'panel', 'picker'].forEach(function (k) { if (q.has(k)) o[k] = q.get(k); });
     if (q.has('rx')) o.receptor = q.get('rx');
     var h = location.hash.replace(/^#\/?/, '');   // #5-HT2A/drugs/LSD
     if (h && !o.receptor) { var p = h.split('/'); o.receptor = decodeURIComponent(p[0]); if (p[1]) o.tab = p[1]; if (p[2]) o.drug = decodeURIComponent(p[2]); }
@@ -298,6 +349,7 @@
   window.addEventListener('hashchange', function () { show(fromLocation(), false); });
 
   applyTheme();
+  initChrome();
   layout(true);
   setFamily('dopamine', true);
   show(fromLocation(), true);

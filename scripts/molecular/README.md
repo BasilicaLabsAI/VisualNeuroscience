@@ -15,7 +15,7 @@ never edited by hand.
 | Size | About 2.4 MB on disk, 750 KB gzipped; 2.26 MB of it is the JSON data block (`<script type="application/json" id="d2data">`). |
 | Requests | three.js r128 from `site/vendor/three/three.min.js` (only the global `THREE` is used, no OrbitControls) and the site's own fonts from `site/fonts/`. No images, no fetches, no analytics, no storage. |
 | Rendering | WebGL 1/2 via three.js. If WebGL cannot start, the page shows a plain message in `#fail` instead of a blank canvas. |
-| Layout | Fills its own viewport. Over 760 px a column on the left holds the text panel, its tabs at the top beside a button that folds the text away, and the receptor picker on its own at the foot: the family on one row, its receptors in a grid of up to six columns below, the same for every family. At 760 px and under the column is one sheet along the bottom, tabs at its top and the picker at its foot, with the 3D view above. The model centres itself in the space the column leaves, the whole width once the text is folded. Touch (pinch, drag, tap) is supported. |
+| Layout | Fills its own viewport, in the manner of the site's 3D Region Atlas. A bar along the foot carries the controls as an icon over a word: Receptors toggles the picker, Binding, Drugs, Compare, Display and About open the text as a window, one section at a time, the open section's button closing it again. Over 760 px the picker is a box in the top left corner (the family on a row, its receptors in a grid of up to six columns below) that folds away on the tab at its edge and comes back on the handle left at the window's edge, as it was last left; the window stands below it in the same column. At 760 px and under the picker is a drawer the height of the screen, over the model from the right edge, shut when the page opens and closing again once a receptor is picked, and the window rises the full width of the screen from the bar. The model centres itself in the room the column leaves, the whole width once both are away. Touch (pinch, drag, tap) is supported. |
 | Theme | Dark unless the reader chose light, read from the site's `mn-theme` key before first paint; `data-theme="dark"` or `"light"` on the viewer's `<html>` is watched, and the section page sets it when the reader switches. All colours are CSS custom properties on `:root`. |
 | Typefaces | The site's three, mapped at the end of `viewer/extra.css`: Prata for headings and names, Newsreader for the reading text, Flux (Afacad Flux) for the controls, the pocket table and the labels on the model. |
 | Accessibility | The section tabs and the family row are ARIA tablists with arrow-key navigation, the fold button reports `aria-expanded`, the canvas is focusable (arrow keys rotate, plus and minus zoom), state captions are `aria-live`, every control is a real button or input. |
@@ -24,9 +24,9 @@ never edited by hand.
 
 The page assumes it owns its window (`html, body { height: 100% }`,
 fixed-position overlays, `window.innerWidth/innerHeight` for layout), so it
-is framed rather than pasted into another page. `site/molecular.html` gives
-the frame the rest of the viewport under the title strip, never less than
-560 px, and re-measures it on resize. It runs a `requestAnimationFrame` loop
+is framed rather than pasted into another page. `site/molecular.html` is one
+screen: the frame takes everything under the site's header, measured into
+`--screen-top` and re-measured when the header or the window changes. It runs a `requestAnimationFrame` loop
 while visible.
 
 ## Deep links
@@ -43,6 +43,7 @@ through, so every form below also works on `molecular.html`.
 | `drug` | a drug name as shown on that receptor's Drugs tab, e.g. `LSD`, `psilocin`, `risperidone`, `aripiprazole`, `haloperidol`, `ergotamine`, `lasmiditan` (switches to the Drugs tab) | `?receptor=5-HT2A&drug=LSD` |
 | `stop` | 0-based step of the Binding-tab tour (`0` = ligand outside, last = loops) | `?receptor=D2&tab=binding&stop=2` |
 | `panel` | `hidden` collapses the text panel; `shown` opens it | `?receptor=5-HT7&panel=hidden` |
+| `picker` | `hidden` folds the receptor picker away; `shown` brings it out | `?receptor=D3&picker=hidden` |
 
 Hash form, same meaning: `#5-HT2A/drugs/LSD` (`#receptor/tab/drug`). With no
 parameters: dopamine, D2, Binding tab, tour at step 0. The section page keeps
@@ -55,6 +56,7 @@ Same origin, a small API on the viewer window:
 ```js
 const v = document.querySelector('iframe').contentWindow.receptorViewer;
 v.show({ receptor: '5-HT1A', tab: 'drugs', drug: 'aripiprazole' });   // any subset of the deep-link keys
+v.show({ panel: 'hidden', picker: 'hidden' });                     // the window and the picker away, the model alone
 v.show({ receptor: 'D3', tab: 'binding', stop: 2 });
 v.state();                // { family, receptor, tab, drug, stop, stops }
 v.families();             // ['dopamine', 'serotonin']
