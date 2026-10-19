@@ -1123,8 +1123,9 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
 .screen.one .panelbar-end{ margin-left:0; padding-left:0; }
 .screen.one .pop{ left:0; right:0; bottom:0; max-height:76%; border-left:0; border-right:0; border-bottom:0; }
 .screen.one .pop-sm{ width:100%; }
-.screen.one .drawer{ left:auto; right:0; padding:var(--gap) var(--gap) var(--gap) 0; }
-.screen.one .deck.shut .drawer-box{ transform:translateX(calc(100% + var(--gap) + 22px)); }
+.screen.one .drawer{ left:auto; right:0; padding:0; }
+.screen.one .drawer-box{ flex:1 1 auto; max-height:none; border-width:0 0 0 1px; box-shadow:-8px 0 30px rgba(0,0,0,.25); }
+.screen.one .deck.shut .drawer-box{ transform:translateX(calc(100% + 22px)); }
 .screen.one .drawer-tab{ border-left:1px solid var(--hair); border-right:0; }
 .screen.one .drawer-hide{ right:auto; left:-22px; }
 .screen.one .drawer-hide svg{ transform:rotate(180deg); }
@@ -3637,11 +3638,15 @@ if (location.hash === "#receptors") {
      it, the handle at the edge brings it back */
   var deck = document.getElementById("deck"), tab = document.getElementById("drawerTab"), hideBtn = document.getElementById("drawerHide");
   var narrow = window.matchMedia ? window.matchMedia("(max-width:900px)") : null;
+  /* a phone, or a phone held sideways: one view at a time, and the region
+     drawer over it, shut whenever the page opens */
+  var one = window.matchMedia ? window.matchMedia("(max-width:760px), (pointer:coarse) and (max-height:500px)") : null;
   var open;
   try{
     var kept = localStorage.getItem("vn-atlas-drawer");
     open = kept === "open" ? true : kept === "shut" ? false : !(narrow && narrow.matches);
   } catch(e){ open = !(narrow && narrow.matches); }
+  if (one && one.matches) open = false;
   function setDrawer(on, keep){
     open = on;
     deck.classList.toggle("shut", !on);
@@ -3658,7 +3663,6 @@ if (location.hash === "#receptors") {
 
   /* one view at a time on a phone, picked from the bar; the rest wait
      hidden and keep in step through the viewer's own broadcast */
-  var one = window.matchMedia ? window.matchMedia("(max-width:760px), (pointer:coarse) and (max-height:500px)") : null;
   var viewBtns = document.querySelectorAll(".panelbar [data-view]");
   var views = document.querySelectorAll(".views .view[data-box]");
   var shown = "render";

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.25 — 19 October 2026 — On a phone, the region drawer slides over the view and starts shut
+Commit · Make the phone's region area a drawer the height of the screen, over the view and shut at every opening
+
+On a phone, held either way, the 3D Region Atlas's region area is a drawer again rather than a box: it slides over the view from the right edge, the height of the screen, and it is shut whenever the page opens, so the view has the whole screen until the handle at the right edge is pressed. The tab at the drawer's edge puts it away again. On a computer and an iPad the region picker stays the box in the corner that v11.24 made it, open or shut as it was last left.
+
 ## v11.24 — 19 October 2026 — The region picker as a box, its list let out of the box's scroll
-Commit · Make the region picker a box in the corner with its own scroll, its list hung outside that scroll
+Commit `71bcadc` · Make the region picker a box in the corner with its own scroll, its list hung outside that scroll
 
 The region picker of the 3D Region Atlas is now a box rather than a column from the header to the bar. It stands in the corner, beside the views on a computer or an iPad and over them on a phone, as tall as what it holds and no taller than the room, and when the highlighted list grows long the box scrolls inside. It folds away on the tab at its edge and comes back on the handle the tab leaves at the screen's edge. The list of regions to add now hangs from the box, under its button and past the box's edge where the names have room, instead of sitting inside the box's own scroll, so it is one scroller rather than one inside another, which an iPad would not always let scroll. The website and the apps open the same pages, so this layout holds on a phone, a tablet and a computer wherever the atlas is opened.
 
