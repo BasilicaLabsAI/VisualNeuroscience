@@ -136,6 +136,7 @@ struct AtlasTab: View {
                     go: "Open the tractogram")
             PageBox(page: .networkAtlas, kicker: "Systems",
                     text: "The brain’s large-scale networks in six states, from flow to meditation, mapped onto the scan.",
+                    shot: Shot("assets/home/network.jpg"),
                     meta: "6 states · 7 systems · 20 nodes",
                     go: "Open the ring")
         }

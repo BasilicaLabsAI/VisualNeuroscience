@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.34 — 19 October 2026 — A picture for the Network Atlas's box
+Commit · Give the Network Atlas's box a picture, the ring and the networks on the brain, on the home page and in the app
+
+The Network Atlas's box on the home page and on the app's Atlases page now carries a picture like the boxes around it: the ring of networks at the left and the brain in the flow state at the right, its networks coloured on the 3D scan. The home page's box showed the site's mark there before, and the app's box nothing.
+
 ## v11.33 — 19 October 2026 — The Molecular page as one screen, and the atlas's boxes in its style
-Commit · Lay the Molecular page out as one screen in the atlas's manner, and give the atlas's boxes the viewer's rounded style
+Commit `3386006` · Lay the Molecular page out as one screen in the atlas's manner, and give the atlas's boxes the viewer's rounded style
 
 The Molecular page is now one screen like the 3D Region Atlas: the receptor viewer takes everything under the header, nothing scrolls, and a bar along the foot carries its controls as an icon over a word. Receptors opens the picker, a box in the top left corner on a computer or an iPad that folds away on the tab at its edge, and on a phone a drawer the height of the screen sliding over the molecule from the right, shut when the page opens and closing again once a receptor is picked. Binding, Drugs, Compare and Display open the text as a window beside the molecule, or over its lower part on a phone, one section at a time, and About stands at the far right with the structures and their papers, now with the page's own introduction and credits as well. The molecule centres itself in the room the box and the window leave. The 3D Region Atlas's region box, its pop-ups and their tabs take the viewer's rounded, lifted style in turn, keeping all they do.
 
