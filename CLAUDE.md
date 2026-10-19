@@ -84,8 +84,13 @@ Read this first in every session. It is the handover; nothing else needs pasting
   v11.12; its file stays `regions.html`. Since v11.22, at the owner's request, it is one screen in the manner of an
   anatomy app (`body.atlas-screen`, `main.screen`, the style block "the screen" and the script "the screen" at the end
   of the page): the four views fill the room between the header and a bar along the bottom (`.panelbar`), nothing
-  scrolls, the region picker and the highlighted list are a drawer on the left (`#drawer`, folding on `#drawerTab`,
-  beside the views from 901px and over them below, remembered in `localStorage` as `vn-atlas-drawer`), and the bar's
+  scrolls, the region picker and the highlighted list are a box in the deck's corner (since v11.24; `#drawer` is the
+  column the views make room for, `#drawerBox` the box, as tall as its content up to the room, scrolling inside in
+  `.drawer-in`; hidden on the tab at its edge, `#drawerHide`, shown again on the handle `#drawerTab` at the screen's
+  edge; beside the views from 901px and over them below, remembered in `localStorage` as `vn-atlas-drawer`). The
+  Add-a-region panel (`#rpickPop`) is placed by the script from its button relative to `#drawerBox` (`--pop-left`,
+  `--pop-top`, `--pop-w`), outside the box's scroller, so its list is one scroller and not one inside another, which
+  the iPad would not always let scroll; the box's own scroll closes it. The bar's
   buttons raise one pop-up at a time over the views (`.pop`: What they do, Receptor graph and Neurotransmitters, which
   are the receptor section's own chart and types tabs, Brodmann map, Reference; Saved maps and Export at the bar's
   end). The readouts sit at the bar's start. Every element id the script uses is unchanged, so the pop-ups' contents
@@ -98,7 +103,7 @@ Read this first in every session. It is the handover; nothing else needs pasting
   SVG), and on a phone (the script's `one` media query: 760px wide or less, or a coarse pointer under 500px tall) the
   screen is `main.screen.one`: one view at a time fills the stage edge to edge (`.view.shown`, 3D first, the pick
   remembered as `vn-atlas-view`), the bar opens with four view buttons (`.panelbar-views`, `[data-view]`) divided from
-  the pop-up buttons, the readouts and the expand buttons are hidden, the drawer slides in from the right on a tab at
+  the pop-up buttons, the readouts and the expand buttons are hidden, the box comes in from the right on the handle at
   the right edge, and the pop-ups span the width. The Brodmann Area Atlas is its own page again since v11.12 (retired
   into the Region Atlas in v10.8): `site/brodmann.html`, with its nav entry and its box straight after the 3D Region
   Atlas.

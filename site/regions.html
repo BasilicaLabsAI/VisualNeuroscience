@@ -776,10 +776,21 @@ mark{ background:var(--ink); color:var(--paper); }
 }
 @media (hover: hover){ .rpick-btn:hover{ box-shadow:0 0 0 1px var(--ink) inset; } }
 .rpick-btn:active, .rpick-btn[aria-expanded="true"]{ box-shadow:0 0 0 1px var(--ink) inset; }
-.rpick::after{ transition:transform .22s cubic-bezier(.32,.72,0,1); }
-.rpick.open::after{ transform:translateY(-35%) rotate(180deg); }
+/* the wrapper is not positioned, so the panel hangs from the box around
+   it (the script sets where, from the button) and escapes the box's
+   scroller; the chevron moves onto the button for the same reason */
+.rpick{ position:static; }
+.rpick::after{ content:none; }
+.rpick-btn{ position:relative; }
+.rpick-btn::after{
+  content:""; position:absolute; right:.75rem; top:50%; transform:translateY(-35%);
+  border-left:4px solid transparent; border-right:4px solid transparent;
+  border-top:5px solid var(--ink); pointer-events:none;
+  transition:transform .22s cubic-bezier(.32,.72,0,1);
+}
+.rpick.open .rpick-btn::after{ transform:translateY(-35%) rotate(180deg); }
 .rpick-pop{
-  position:absolute; z-index:40; left:0; right:0; top:calc(100% + 4px);
+  position:absolute; z-index:40; left:var(--pop-left, 0); right:auto; width:var(--pop-w, 100%); top:var(--pop-top, calc(100% + 4px));
   padding:.6rem .6rem .35rem; border:1px solid var(--hair);
   box-shadow:0 14px 30px rgba(0,0,0,.25);
   opacity:0; transform:translateY(-8px) scale(.985); transform-origin:top left;
@@ -823,7 +834,7 @@ mark{ background:var(--ink); color:var(--paper); }
 }
 @media (prefers-reduced-motion: reduce){
   .rpick-pop{ transform:none; transition:opacity .15s ease; }
-  .rpick::after{ transition:none; }
+  .rpick-btn::after{ transition:none; }
 }
 @media (prefers-reduced-transparency: reduce){
   .rpick-pop::before{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
@@ -963,25 +974,47 @@ main.screen{
 .screen .vh{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }
 .deck{ flex:1 1 auto; min-height:0; display:flex; position:relative; }
 
-/* the drawer: beside the views, folding to nothing on its tab */
+/* the drawer: a box in the deck's corner rather than a column from the
+   header to the bar, beside the views on a wide screen and over them on a
+   narrow one. It is as tall as what it holds, up to the room between the
+   header and the bar, and scrolls inside when the highlighted list grows
+   long. It folds away on the tab at its edge and comes back on the handle
+   the tab leaves at the screen's edge; the column it stands in is what the
+   views make room for, and it slides off whole rather than reflowing as
+   the column closes. The box itself does not clip: the region picker's
+   list is hung from it, outside the box's scroller, so that it is a
+   scroller of its own and not one inside another, which iOS would not
+   always let scroll. */
 .drawer{
-  flex:0 0 300px; width:300px; min-height:0; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
-  border-right:1px solid var(--hair); background:var(--paper);
-  transition:flex-basis .32s cubic-bezier(.32,.72,0,1), width .32s cubic-bezier(.32,.72,0,1), visibility 0s 0s;
+  --box-w:300px;
+  position:relative; flex:0 0 calc(var(--box-w) + var(--gap)); width:calc(var(--box-w) + var(--gap)); min-width:0; min-height:0;
+  display:flex; flex-direction:column; align-items:flex-start; padding:var(--gap) 0 var(--gap) var(--gap);
+  transition:flex-basis .32s cubic-bezier(.32,.72,0,1), width .32s cubic-bezier(.32,.72,0,1), padding .32s cubic-bezier(.32,.72,0,1), visibility 0s 0s;
 }
-.drawer-in.card{ border:0; padding:var(--gap) var(--gap) 1.4rem; }
+.drawer-box{
+  position:relative; flex:0 1 auto; width:var(--box-w); max-height:100%; min-height:0;
+  display:flex; flex-direction:column;
+  border:1px solid var(--hair); background:var(--paper);
+  transition:transform .32s cubic-bezier(.32,.72,0,1);
+}
+.drawer-in.card{ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; border:0; padding:var(--gap) var(--gap) 1.4rem; }
 .drawer .rchips{ max-height:none; }
-.deck.shut .drawer{ flex-basis:0; width:0; overflow:hidden; border-right-width:0; visibility:hidden; transition-delay:0s, 0s, .32s; }
+.deck.shut .drawer{ flex-basis:0; width:0; padding-left:0; visibility:hidden; transition-delay:0s, 0s, 0s, .32s; }
+.deck.shut .drawer-box{ transform:translateX(calc(-100% - var(--gap) - 22px)); }
+/* the tab and the handle: one shape, the tab on the box's edge at its
+   middle, the handle at the screen's edge while the box is away */
 .drawer-tab{
-  position:absolute; left:300px; top:50%; transform:translateY(-50%); z-index:16;
+  position:absolute; z-index:16; top:50%; transform:translateY(-50%);
   width:22px; height:64px; padding:0; display:flex; align-items:center; justify-content:center;
   border:1px solid var(--hair); border-left:0; background:var(--paper); color:var(--ink); cursor:pointer;
-  -webkit-tap-highlight-color:transparent; transition:left .32s cubic-bezier(.32,.72,0,1);
+  -webkit-tap-highlight-color:transparent;
 }
 .drawer-tab::after{ content:""; position:absolute; inset:-8px -10px; }
-.drawer-tab svg{ width:10px; height:16px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:square; transition:transform .32s cubic-bezier(.32,.72,0,1); }
-.deck.shut .drawer-tab{ left:0; }
-.deck.shut .drawer-tab svg{ transform:rotate(180deg); }
+.drawer-tab svg{ width:10px; height:16px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:square; }
+.drawer-hide{ right:-22px; }
+.drawer-show{ left:0; visibility:hidden; opacity:0; transition:opacity .2s ease, visibility 0s .2s; }
+.drawer-show svg{ transform:rotate(180deg); }
+.deck.shut .drawer-show{ visibility:visible; opacity:1; transition-delay:.14s, .14s; }
 @media (hover: hover){ .drawer-tab:hover{ background:var(--ink); color:var(--paper); } }
 .drawer-tab:active{ background:var(--ink); color:var(--paper); }
 
@@ -1090,28 +1123,25 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
 .screen.one .panelbar-end{ margin-left:0; padding-left:0; }
 .screen.one .pop{ left:0; right:0; bottom:0; max-height:76%; border-left:0; border-right:0; border-bottom:0; }
 .screen.one .pop-sm{ width:100%; }
-.screen.one .drawer{ left:auto; right:0; border-right:0; border-left:1px solid var(--hair); box-shadow:-8px 0 30px rgba(0,0,0,.25); }
-.screen.one .deck.shut .drawer{ transform:translateX(100%); }
-.screen.one .drawer-tab{ left:auto; right:0; border-left:1px solid var(--hair); border-right:0; }
-.screen.one .deck.shut .drawer-tab{ left:auto; right:0; }
-.screen.one .drawer-tab svg{ transform:rotate(180deg); }
-.screen.one .deck.shut .drawer-tab svg{ transform:none; }
+.screen.one .drawer{ left:auto; right:0; padding:var(--gap) var(--gap) var(--gap) 0; }
+.screen.one .deck.shut .drawer-box{ transform:translateX(calc(100% + var(--gap) + 22px)); }
+.screen.one .drawer-tab{ border-left:1px solid var(--hair); border-right:0; }
+.screen.one .drawer-hide{ right:auto; left:-22px; }
+.screen.one .drawer-hide svg{ transform:rotate(180deg); }
+.screen.one .drawer-show{ left:auto; right:0; }
+.screen.one .drawer-show svg{ transform:none; }
 
 /* narrower than 901 pixels the drawer lies over the views instead */
 @media (max-width:900px){
-  .drawer{
-    position:absolute; left:0; top:0; bottom:0; z-index:15; flex:none; width:min(320px, 86%);
-    box-shadow:8px 0 30px rgba(0,0,0,.25); transition:transform .32s cubic-bezier(.32,.72,0,1), visibility 0s 0s;
-  }
-  .deck.shut .drawer{ transform:translateX(-100%); width:min(320px, 86%); flex:none; visibility:hidden; transition-delay:0s, .32s; }
-  .drawer-tab{ left:min(320px, 86%); }
-  .deck.shut .drawer-tab{ left:0; }
+  .drawer{ --box-w:min(320px, 100vw - 60px); position:absolute; left:0; top:0; bottom:0; z-index:15; flex:none; width:auto; transition:visibility 0s 0s; }
+  .deck.shut .drawer{ width:auto; padding-left:var(--gap); visibility:hidden; transition-delay:.32s; }
+  .drawer-box{ box-shadow:0 10px 30px rgba(0,0,0,.25); }
 }
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more){
   .panelbar, .pop{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
 }
 @media (prefers-reduced-motion: reduce){
-  .drawer, .drawer-tab, .drawer-tab svg, .pop{ transition:none; }
+  .drawer, .drawer-box, .drawer-tab, .drawer-tab svg, .pop{ transition:none; }
 }
 </style>
 </head>
@@ -1140,9 +1170,12 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
 
   <div class="deck" id="deck">
 
-    <!-- the region picker: a drawer that folds away on its tab -->
+    <!-- the region picker: a box over the deck's corner, folding away on the
+         tab at its edge and coming back on the handle left at the screen's -->
     <aside class="drawer" id="drawer" aria-label="Region picker">
-      <div class="drawer-in card rail-box">
+      <div class="drawer-box" id="drawerBox">
+        <button class="drawer-tab drawer-hide" id="drawerHide" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Hide the region picker" title="Hide the region picker"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
+        <div class="drawer-in card rail-box">
         <section class="rail-part">
           <h2>Regions</h2>
           <div class="atlas-mode" role="group" aria-label="Which atlas to pick from">
@@ -1197,9 +1230,10 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
           </div>
           <div class="btns"><button class="btn" id="clearBtn" type="button">Clear all</button></div>
         </section>
+        </div>
       </div>
     </aside>
-    <button class="drawer-tab" id="drawerTab" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Hide the region picker" title="Hide the region picker"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
+    <button class="drawer-tab drawer-show" id="drawerTab" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Show the region picker" title="Show the region picker"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
 
     <!-- the views, and the pop-ups the bar raises over them -->
     <section class="stage" aria-label="Brain viewports">
@@ -1911,13 +1945,25 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
   /* the list is kept above a phone's keyboard: it ends where the visible
      part of the screen does, and on a touch screen a picker low on the
      page is first brought up under the bar */
+  /* the panel hangs from the picker's box, under its button: the box's
+     scroller would otherwise clip it, and a list scrolling inside another
+     scroller is one iOS does not always let scroll */
+  var rpickBox = document.getElementById("drawerBox");
+  function placeRegionPop(){
+    if (!rpickBox) return;
+    var b = rpickBox.getBoundingClientRect(), r = rpickBtn.getBoundingClientRect();
+    rpickPop.style.setProperty("--pop-left", Math.round(r.left - b.left - rpickBox.clientLeft) + "px");
+    rpickPop.style.setProperty("--pop-top", Math.round(r.bottom - b.top - rpickBox.clientTop + 4) + "px");
+    rpickPop.style.setProperty("--pop-w", Math.round(r.width) + "px");
+  }
   function fitRegionList(){
     if (!rpick.classList.contains("open")) return;
+    placeRegionPop();
     var vv = window.visualViewport;
     var floor = vv ? vv.height + vv.offsetTop : window.innerHeight;
-    /* the list lives in the drawer, which ends above the bar */
-    var drawer = document.getElementById("drawer");
-    if (drawer) floor = Math.min(floor, drawer.getBoundingClientRect().bottom);
+    /* the list may run past the box, but ends above the bar */
+    var deck = document.getElementById("deck");
+    if (deck) floor = Math.min(floor, deck.getBoundingClientRect().bottom - 14);
     var room = floor - rpickList.getBoundingClientRect().top - 14;
     rpickList.style.maxHeight = Math.round(Math.max(176, Math.min(420, room))) + "px";
   }
@@ -2002,6 +2048,11 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
   });
   if (window.visualViewport) window.visualViewport.addEventListener("resize", fitRegionList);
   window.addEventListener("resize", fitRegionList);
+  /* the box scrolled under the open panel would carry its button away */
+  if (rpickBox){
+    var rpickScroller = rpickBox.querySelector(".drawer-in");
+    if (rpickScroller) rpickScroller.addEventListener("scroll", function(){ closeRegionPicker(false); }, {passive: true});
+  }
 
 
   /* ── a door for the receptor section below ────────────────────────────
@@ -3582,8 +3633,9 @@ if (location.hash === "#receptors") {
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(soon);
 
   /* the drawer: open beside the views on a wide screen, folded over them
-     on a narrow one, and as it was last left */
-  var deck = document.getElementById("deck"), tab = document.getElementById("drawerTab");
+     on a narrow one, and as it was last left; the tab on the box hides
+     it, the handle at the edge brings it back */
+  var deck = document.getElementById("deck"), tab = document.getElementById("drawerTab"), hideBtn = document.getElementById("drawerHide");
   var narrow = window.matchMedia ? window.matchMedia("(max-width:900px)") : null;
   var open;
   try{
@@ -3594,13 +3646,15 @@ if (location.hash === "#receptors") {
     open = on;
     deck.classList.toggle("shut", !on);
     tab.setAttribute("aria-expanded", String(on));
-    tab.setAttribute("aria-label", on ? "Hide the region picker" : "Show the region picker");
-    tab.title = on ? "Hide the region picker" : "Show the region picker";
+    if (hideBtn) hideBtn.setAttribute("aria-expanded", String(on));
     if (keep){ try{ localStorage.setItem("vn-atlas-drawer", on ? "open" : "shut"); }catch(e){} }
     if (window.MN_LIFE) MN_LIFE.remeasure();
   }
+  /* the focus follows the box: the button pressed is about to go */
+  function focusSoon(el){ setTimeout(function(){ try{ el.focus({preventScroll: true}); }catch(e){} }, 360); }
   setDrawer(open, false);
-  tab.addEventListener("click", function(){ setDrawer(!open, true); });
+  tab.addEventListener("click", function(){ setDrawer(true, true); if (hideBtn) focusSoon(hideBtn); });
+  if (hideBtn) hideBtn.addEventListener("click", function(){ setDrawer(false, true); focusSoon(tab); });
 
   /* one view at a time on a phone, picked from the bar; the rest wait
      hidden and keep in step through the viewer's own broadcast */

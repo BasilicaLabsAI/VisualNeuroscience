@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.24 — 19 October 2026 — The region picker as a box, its list let out of the box's scroll
+Commit · Make the region picker a box in the corner with its own scroll, its list hung outside that scroll
+
+The region picker of the 3D Region Atlas is now a box rather than a column from the header to the bar. It stands in the corner, beside the views on a computer or an iPad and over them on a phone, as tall as what it holds and no taller than the room, and when the highlighted list grows long the box scrolls inside. It folds away on the tab at its edge and comes back on the handle the tab leaves at the screen's edge. The list of regions to add now hangs from the box, under its button and past the box's edge where the names have room, instead of sitting inside the box's own scroll, so it is one scroller rather than one inside another, which an iPad would not always let scroll. The website and the apps open the same pages, so this layout holds on a phone, a tablet and a computer wherever the atlas is opened.
+
 ## v11.23 — 19 October 2026 — The 3D Region Atlas on a phone: one view at a time
-Commit · Lay the 3D Region Atlas out for a phone: one view at a time, the drawer from the right, icons on the bar
+Commit `a75105f` · Lay the 3D Region Atlas out for a phone: one view at a time, the drawer from the right, icons on the bar
 
 On a phone, held either way, the 3D Region Atlas now shows one view at a time, filling the screen edge to edge between the header and the bar, the 3D view first. The bar begins with the four views, 3D, Axial, Coronal and Sagittal, to switch between them, a line dividing them from the pop-up buttons; the readouts and each view's expand button step aside, having nothing to add to a view that already fills the screen, and the view chosen is remembered. The region drawer slides in from the right on a tab at the right edge, where a thumb reaches it, and the pop-ups rise the full width of the screen. The page's root no longer scrolls on a phone held sideways, where the folded site menu, laid out under the header though hidden, had made the document taller than the screen; that menu now scrolls within the room under the header there. Everywhere, on a computer and an iPad as well, the bar's buttons are an icon over a word, so the bar reads at a glance.
 
