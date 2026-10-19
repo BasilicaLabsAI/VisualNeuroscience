@@ -104,8 +104,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   shift-drag does (`zoom.js`). Since v11.23 the bar's buttons are an icon over a word at every width (`.pbtn`, inline
   SVG), and on a phone (the script's `one` media query: 760px wide or less, or a coarse pointer under 500px tall) the
   screen is `main.screen.one`: one view at a time fills the stage edge to edge (`.view.shown`, 3D first, the pick
-  remembered as `vn-atlas-view`), the bar opens with four view buttons (`.panelbar-views`, `[data-view]`) divided from
-  the pop-up buttons, the readouts and the expand buttons are hidden, the region area is a drawer the height of the
+  remembered as `vn-atlas-view`), the bar opens with five view buttons (`.panelbar-views`, `[data-view]`: the four and
+  `all`, which lays the four two by two across the stage as `main.one.all`, with the expand buttons shown and, in that
+  mode, opening a view alone instead of over the grid; since v11.27) divided from the pop-up buttons, the readouts and the expand buttons are hidden, the region area is a drawer the height of the
   screen sliding over the view from the right (the box's elements, laid out so by `.screen.one`), shut at every load
   whatever `vn-atlas-drawer` holds (since v11.25), and the pop-ups span the width. The Brodmann Area Atlas is its own page again since v11.12 (retired
   into the Region Atlas in v10.8): `site/brodmann.html`, with its nav entry and its box straight after the 3D Region

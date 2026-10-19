@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.27 — 19 October 2026 — All four views at once on a phone, as a fifth choice
+Commit · Offer all four views together on a phone, two by two, as the bar's fifth view button
+
+On a phone the bar's view buttons now end with All: the four views together, two by two, close-set across the whole stage, with each view's expand button back in its bar. Pressing a view's expand button there opens that view alone, as the bar's own buttons do, and the choice is remembered with the others. The 3D view alone still opens first.
+
 ## v11.26 — 19 October 2026 — The keyboard waits for a tap on the search field
-Commit · Focus the region search on opening only where a keyboard is at hand, so a phone's keyboard waits for a tap
+Commit `da6cfb3` · Focus the region search on opening only where a keyboard is at hand, so a phone's keyboard waits for a tap
 
 Opening the list of regions to add on a phone or an iPad no longer brings the keyboard up at once over the regions. The search field at the top of the list waits for a tap, and until then the list has the whole room to scroll through and pick from. With a mouse the field still takes the focus as the list opens, and typing a letter on the closed button still opens the list searching for it, as it always has.
 

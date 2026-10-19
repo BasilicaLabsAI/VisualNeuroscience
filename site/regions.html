@@ -1117,6 +1117,11 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
 .screen.one .views .view.shown{ display:flex; }
 .screen.one .views .view.open{ display:flex; }
 .screen.one .view-expand{ display:none; }
+/* the four together, when the bar's fifth button asks: two by two,
+   close-set, each with its expand button, which here opens the view alone */
+.screen.one.all .views{ display:grid; gap:6px; }
+.screen.one.all .views .view{ display:flex; height:auto; border:1px solid var(--hair); }
+.screen.one.all .view-expand{ display:inline-flex; }
 .screen.one .panelbar-stats{ display:none; }
 .screen.one .panelbar-views{ display:flex; gap:.15rem; flex:none; padding-right:.45rem; margin-right:.3rem; border-right:1px solid var(--hair); }
 .screen.one .panelbar-btns{ margin-left:0; }
@@ -1400,6 +1405,7 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
       <button class="pbtn" type="button" data-view="axial" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16"/></svg><span>Axial</span></button>
       <button class="pbtn" type="button" data-view="coronal" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8"/></svg><span>Coronal</span></button>
       <button class="pbtn" type="button" data-view="sagittal" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 4v16"/></svg><span>Sagittal</span></button>
+      <button class="pbtn" type="button" data-view="all" aria-pressed="false" aria-label="All four views"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg><span>All</span></button>
     </div>
     <div class="panelbar-btns" role="group" aria-label="Panels">
       <button class="pbtn" type="button" data-pop="popNotes" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></svg><span>What they do</span></button>
@@ -3670,10 +3676,11 @@ if (location.hash === "#receptors") {
   var viewBtns = document.querySelectorAll(".panelbar [data-view]");
   var views = document.querySelectorAll(".views .view[data-box]");
   var shown = "render";
-  try{ var k = localStorage.getItem("vn-atlas-view"); if (k && document.querySelector('.views .view[data-box="' + k + '"]')) shown = k; }catch(e){}
+  try{ var k = localStorage.getItem("vn-atlas-view"); if (k && (k === "all" || document.querySelector('.views .view[data-box="' + k + '"]'))) shown = k; }catch(e){}
   function showView(key, keep){
     shown = key;
-    views.forEach(function(v){ v.classList.toggle("shown", v.getAttribute("data-box") === key); });
+    main.classList.toggle("all", key === "all");
+    views.forEach(function(v){ v.classList.toggle("shown", key === "all" || v.getAttribute("data-box") === key); });
     viewBtns.forEach(function(b){
       var on = b.getAttribute("data-view") === key;
       b.classList.toggle("active", on); b.setAttribute("aria-pressed", String(on));
@@ -3690,6 +3697,17 @@ if (location.hash === "#receptors") {
   oneView();
   if (one){ if (one.addEventListener) one.addEventListener("change", oneView); else if (one.addListener) one.addListener(oneView); }
   viewBtns.forEach(function(b){ b.addEventListener("click", function(){ showView(b.getAttribute("data-view"), true); }); });
+  /* in the grid of four, a view's expand button opens that view alone
+     rather than laying it over the grid */
+  document.addEventListener("click", function(e){
+    if (!main.classList.contains("one")) return;
+    var btn = e.target.closest ? e.target.closest(".view-expand") : null;
+    if (!btn) return;
+    var view = btn.closest(".view[data-box]");
+    if (!view) return;
+    e.preventDefault(); e.stopPropagation();
+    showView(view.getAttribute("data-box"), true);
+  }, true);
 
   /* the pop-ups */
   var pops = {}, current = null;
