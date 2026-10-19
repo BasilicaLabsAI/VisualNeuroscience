@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.29 — 19 October 2026 — The receptor table's column names whole
+Commit · Set the receptor table's column names the whole of their length and scroll the table with its pop-up
+
+In the Neurotransmitters pop-up of the 3D Region Atlas the region names along the top of the table are now set whole: the header is as tall as the longest of them, where before a fixed height cut the longer names off at the top. The table scrolls with the pop-up, down and sideways, and its column names stay at the top and its row labels at the left whichever way it goes.
+
 ## v11.28 — 19 October 2026 — On a phone, the four views together come first
-Commit · Open a phone on the four views together, with their button first on the bar behind a line of its own
+Commit `9e525fc` · Open a phone on the four views together, with their button first on the bar behind a line of its own
 
 On a phone the 3D Region Atlas now opens on all four views together, two by two, as it does elsewhere, and the button for that view stands first on the bar, divided by a line from the four buttons that open one view alone. The last view chosen is still remembered.
 

@@ -522,13 +522,12 @@ table.dtable td.num{ font-size:.84rem; }
 .heat-lede{ flex:1 1 24rem; font-family:var(--font-serif); font-size:.92rem; line-height:1.5; color:var(--ink-60); margin:0; }
 .heat-legend{ display:inline-flex; align-items:center; gap:.35rem; font-family:var(--font-brand); font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); }
 .heat-legend i{ display:block; width:6rem; height:.7rem; border:1px solid var(--hair); background:linear-gradient(90deg,#FFE066,#FF8C1A,#C1121F); }
-/* the table sits in the page at its full height rather than in a box of
-   its own; only where its columns are wider than the screen does it
-   scroll, and then sideways alone. Where it fits, the column names stay
-   put at the top of the window as the page scrolls. */
-.heat{ overflow-x:auto; margin-bottom:var(--gap); }
-.heat.fits{ overflow:visible; }
-:root[data-native] .heat thead th{ top:calc(env(safe-area-inset-top) + 44px); }
+/* the table sits whole in its pop-up and scrolls with the pop-up's body,
+   down and sideways, so that its column names stay at the body's top and
+   its row labels at its left whichever way it is scrolled. The names are
+   set the whole of their length, the header as tall as the longest of
+   them (the fixed height they had cut the long ones off at the top). */
+.heat{ overflow:visible; margin-bottom:var(--gap); }
 /* ── every receptor in a row beneath the table, slid across by thumb or
    arrow; a name clicked in the table slides to its card ── */
 .rx-slide.rxfig{ display:block; margin:var(--gap) 0 calc(var(--gap) * 1.5); }
@@ -547,14 +546,14 @@ table.dtable td.num{ font-size:.84rem; }
 .rx-slide-links .rxfig-more{ margin-top:.5rem; }
 .heat table{ border-collapse:separate; border-spacing:0; font-size:.72rem; line-height:1.15; }
 .heat th, .heat td{ padding:0; border-right:1px solid var(--paper); border-bottom:1px solid var(--paper); }
-.heat thead th{ position:sticky; top:0; z-index:2; background:var(--paper); vertical-align:bottom; height:9.5rem; }
+.heat thead th{ position:sticky; top:0; z-index:2; background:var(--paper); vertical-align:bottom; }
 .heat thead th.corner{ left:0; z-index:3; }
 .heat th.col{ width:1.45rem; min-width:1.45rem; }
 .heat th.col button{
-  display:block; width:100%; height:100%; border:0; background:none; color:var(--ink-60); cursor:pointer;
+  display:block; width:100%; height:auto; max-height:14.5rem; border:0; background:none; color:var(--ink-60); cursor:pointer;
   writing-mode:vertical-rl; transform:rotate(180deg); text-align:left; padding:.35rem 0 .3rem;
   font-family:var(--font-brand); font-weight:500; font-size:.66rem; letter-spacing:.03em; line-height:1;
-  white-space:nowrap; text-decoration:none;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-decoration:none;
 }
 @media (hover: hover){ .heat th.col button:hover{ color:var(--ink); text-decoration:underline; text-underline-offset:2px; } }
 .heat th.col button.picked{ color:var(--sel, var(--ink)); font-weight:600; }
@@ -1097,6 +1096,11 @@ main.screen{
 @media (pointer:coarse){ .pop-x{ width:44px; height:44px; } }
 .pop-body{ flex:1 1 auto; min-height:0; overflow:auto; overscroll-behavior:contain; padding:.9rem 1rem 1.1rem; }
 .pop .notes, .pop .rxsec, .pop .bamap{ margin:0; }
+/* the receptor pop-up's room is on its section, not its body: a sticky
+   column name or row label stops short of a scrolling body's padding, and
+   the table's cells showed through the band left over */
+#popRx .pop-body{ padding:0; }
+#popRx .pop-body > .rxsec{ padding:.9rem 1rem 1.1rem; }
 .pop .ref-line{ font-family:var(--font-serif); font-size:.95rem; line-height:1.55; margin:0 0 .35rem; }
 .pop .ref-line b{ font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); margin-right:.5rem; }
 .pop .estab{ margin-top:1rem; }
