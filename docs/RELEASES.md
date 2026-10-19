@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.23 — 19 October 2026 — The 3D Region Atlas on a phone: one view at a time
+Commit · Lay the 3D Region Atlas out for a phone: one view at a time, the drawer from the right, icons on the bar
+
+On a phone, held either way, the 3D Region Atlas now shows one view at a time, filling the screen edge to edge between the header and the bar, the 3D view first. The bar begins with the four views, 3D, Axial, Coronal and Sagittal, to switch between them, a line dividing them from the pop-up buttons; the readouts and each view's expand button step aside, having nothing to add to a view that already fills the screen, and the view chosen is remembered. The region drawer slides in from the right on a tab at the right edge, where a thumb reaches it, and the pop-ups rise the full width of the screen. The page's root no longer scrolls on a phone held sideways, where the folded site menu, laid out under the header though hidden, had made the document taller than the screen; that menu now scrolls within the room under the header there. Everywhere, on a computer and an iPad as well, the bar's buttons are an icon over a word, so the bar reads at a glance.
+
 ## v11.22 — 19 October 2026 — The 3D Region Atlas as one screen
-Commit · Make the 3D Region Atlas one screen: the views fill it, the picker is a drawer, the rest rises from a bar
+Commit `11a4604` · Make the 3D Region Atlas one screen: the views fill it, the picker is a drawer, the rest rises from a bar
 
 The 3D Region Atlas is now one screen, in the manner of an anatomy app, on the website and in the apps. The four views fill everything between the header and a bar along the bottom, and nothing scrolls. The region picker and the highlighted list are a drawer on the left, folded away on its tab when the views want the room, beside them on a computer or an iPad and over them on a phone. Everything that used to stand below the views rises from the bar's buttons as a pop-up over them, one at a time: what the highlighted regions do, the receptor graph, the receptor types by neurotransmitter, the Brodmann map and the reference, with Saved maps and Export at the bar's end; each still follows the selection, and the map still highlights what is tapped. The readouts sit at the bar's start. On a phone the four views keep their names and their expand buttons, with the tools waiting in the opened view. In any 3D view, a drag with the mouse's wheel button now pans, as a drag with shift held does.
 

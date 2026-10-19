@@ -91,8 +91,17 @@ Read this first in every session. It is the handover; nothing else needs pasting
   end). The readouts sit at the bar's start. Every element id the script uses is unchanged, so the pop-ups' contents
   still follow the selection; a chart is told to measure itself when its pop-up opens. A view too narrow for its
   bar's tools (a phone) shows the name and the expand button alone. The page's `--screen-top` is the header's
-  measured height. In every 3D view, a drag on the wheel's button pans, as shift-drag does (`zoom.js`). The Brodmann Area Atlas is its own page again since v11.12 (retired into the
-  Region Atlas in v10.8): `site/brodmann.html`, with its nav entry and its box straight after the 3D Region Atlas.
+  measured height, and the root is `overflow:hidden` with the body (`html:has(> body.atlas-screen)`), since the folded
+  site menu, laid out under the header though hidden, made the document taller than a phone held sideways; that menu
+  scrolls within the room under the header on this page. In every 3D view, a drag on the wheel's button pans, as
+  shift-drag does (`zoom.js`). Since v11.23 the bar's buttons are an icon over a word at every width (`.pbtn`, inline
+  SVG), and on a phone (the script's `one` media query: 760px wide or less, or a coarse pointer under 500px tall) the
+  screen is `main.screen.one`: one view at a time fills the stage edge to edge (`.view.shown`, 3D first, the pick
+  remembered as `vn-atlas-view`), the bar opens with four view buttons (`.panelbar-views`, `[data-view]`) divided from
+  the pop-up buttons, the readouts and the expand buttons are hidden, the drawer slides in from the right on a tab at
+  the right edge, and the pop-ups span the width. The Brodmann Area Atlas is its own page again since v11.12 (retired
+  into the Region Atlas in v10.8): `site/brodmann.html`, with its nav entry and its box straight after the 3D Region
+  Atlas.
   Since v11.15, at the owner's request, it is one screen and nothing else: the two faces of the map
   (`brodmann-outline.js`) and the reading of the picked area (`brodmann-areas.js`), fitted to the window under the
   header (the script measures `--screen-top`). On a phone the faces stack with the reading beneath; wider, the reading
