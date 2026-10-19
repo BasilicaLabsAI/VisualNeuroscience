@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.35 — 19 October 2026 — The receptor graph without the speech
+Commit · Strip the receptor density pop-up to its graph, one sentence above it and its controls in rows
+
+The Receptor graph pop-up of the 3D Region Atlas is now the graph and little else. One sentence stands above it where a paragraph did; the controls come in rows beneath that sentence, the source first, in vivo PET or autoradiography, then by receptor or by region, then the dropdown; and the graph follows straight after, higher than before, with the receptor's and transmitter's drawings and the sources beneath it as they were. The Chart, Receptor Types and Density Table tabs are gone from the pop-up, the bar's own Receptor graph and Neurotransmitters buttons doing their work, and the density table is shown nowhere for now.
+
 ## v11.34 — 19 October 2026 — A picture for the Network Atlas's box
-Commit · Give the Network Atlas's box a picture, the ring and the networks on the brain, on the home page and in the app
+Commit `e71d2ef` · Give the Network Atlas's box a picture, the ring and the networks on the brain, on the home page and in the app
 
 The Network Atlas's box on the home page and on the app's Atlases page now carries a picture like the boxes around it: the ring of networks at the left and the brain in the flow state at the right, its networks coloured on the 3D scan. The home page's box showed the site's mark there before, and the app's box nothing.
 

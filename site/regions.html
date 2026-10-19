@@ -635,12 +635,13 @@ table.dtable td.num{ font-size:.84rem; }
 /* keeps a control's space while it does not apply, so nothing shifts */
   .inapplicable { visibility: hidden; }
 .rxsec{ margin-top:calc(var(--gap) * 2.5); }
-.rx-controls{ display:flex; flex-wrap:wrap; align-items:center;
-  gap:.6rem 1.2rem; border:1px solid var(--hair); padding:.7rem .9rem;
-  margin-bottom:var(--gap); }
-.rx-controls .selwrap{ flex:1 1 15rem; min-width:11rem; }
+/* the controls stand in rows above the graph: the source, then by receptor
+   or by region, then the dropdown, and the graph straight after them */
+.rx-controls{ display:flex; flex-direction:column; align-items:flex-start;
+  gap:.55rem; margin-bottom:.7rem; }
+.rx-controls .selwrap{ flex:none; width:100%; max-width:30rem; min-width:0; }
 .rx-lede{ font-family:var(--font-serif); font-size:.98rem; line-height:1.6;
-  margin:0 0 var(--gap); }
+  margin:0 0 .7rem; }
 .rx-note{ font-family:var(--font-serif); font-style:italic; font-size:.85rem;
   color:var(--ink-60); margin-top:.8rem; }
 </style>
@@ -1239,13 +1240,15 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
         <header class="pop-head"><b id="rx-h">Receptor density</b><small id="rx-unit"></small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
         <div class="pop-body">
           <section class="rxsec" id="receptorSec" aria-labelledby="rx-h">
-            <p class="rx-lede">How thickly each receptor sits in each region, from two open sources: in vivo PET, one group-average tracer map per receptor or transporter, averaged over each AAL region; and ex vivo autoradiography, absolute densities in fmol/mg protein from post-mortem cortex, mapped onto the regions area by area. The two measure different things and are never put on one axis. Click a region&rsquo;s name and it lights up in the viewports above as a highlighted region like any other; whatever is highlighted above lights its bar here in the same colour, and a Brodmann area lights the regions most of it lies in. Pick a receptor and what binds it and what it sits in are drawn beneath the chart, with its source, tracer, sample and caveat under those.</p>
+            <p class="rx-lede">How thickly each receptor sits in each region, from in vivo PET or from autoradiography, by receptor or by region.</p>
+            <!-- the fuller account, kept for later and shown nowhere -->
+            <p class="rx-lede rx-lede-long" hidden>How thickly each receptor sits in each region, from two open sources: in vivo PET, one group-average tracer map per receptor or transporter, averaged over each AAL region; and ex vivo autoradiography, absolute densities in fmol/mg protein from post-mortem cortex, mapped onto the regions area by area. The two measure different things and are never put on one axis. Click a region&rsquo;s name and it lights up in the viewports above as a highlighted region like any other; whatever is highlighted above lights its bar here in the same colour, and a Brodmann area lights the regions most of it lies in. Pick a receptor and what binds it and what it sits in are drawn beneath the chart, with its source, tracer, sample and caveat under those.</p>
     <div class="rx-controls">
       <div class="ts-views" role="group" aria-label="Source">
         <button class="ts-btn active" data-layer="pet" type="button">In vivo PET</button>
         <button class="ts-btn" data-layer="ar" type="button">Autoradiography</button>
       </div>
-      <div class="ts-views" role="group" aria-label="View">
+      <div class="ts-views" role="group" aria-label="View" hidden>
         <button class="ts-btn active" data-tab="chart" type="button">Chart</button>
         <button class="ts-btn" data-tab="types" type="button">Receptor Types</button>
         <button class="ts-btn" data-tab="density" type="button">Density Table</button>
