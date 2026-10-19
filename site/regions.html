@@ -1973,7 +1973,7 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
      tree with visibility turns visible again. It is laid out closed first,
      so the arrival can still be seen, and leaves the way it came before it
      is taken out; opening again meanwhile turns it round mid-flight. */
-  function openRegionPicker(seed){
+  function openRegionPicker(seed, typed){
     if (rpick.classList.contains("open")) return;
     clearTimeout(rpickGone);
     rpickPop.hidden = false;
@@ -1990,7 +1990,11 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
     rpick.classList.add("open");
     rpickBtn.setAttribute("aria-expanded", "true");
     fitRegionList();
-    try{ rpickQ.focus({preventScroll: true}); }catch(e){ rpickQ.focus(); }
+    /* the field takes the focus where a keyboard is at hand, a mouse's or
+       the one that typed on the button; on a touch screen the on-screen
+       keyboard would rise over the list, so the field waits for a tap */
+    var coarse = window.matchMedia && matchMedia("(pointer:coarse)").matches;
+    if (typed || !coarse){ try{ rpickQ.focus({preventScroll: true}); }catch(e){ rpickQ.focus(); } }
     /* iOS can still hand back a list that has just appeared without its
        scrolling; taking the overflow away and giving it back once the
        panel has arrived makes it build the scroller afresh */
@@ -2021,10 +2025,10 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
     if (rpick.classList.contains("open")) closeRegionPicker(false); else openRegionPicker();
   });
   rpickBtn.addEventListener("keydown", function(e){
-    if (e.key === "ArrowDown" || e.key === "ArrowUp"){ e.preventDefault(); openRegionPicker(); }
+    if (e.key === "ArrowDown" || e.key === "ArrowUp"){ e.preventDefault(); openRegionPicker("", true); }
     /* typing on the closed button starts the search, as a select jumps */
     else if (e.key.length === 1 && e.key !== " " && !e.ctrlKey && !e.metaKey && !e.altKey){
-      e.preventDefault(); openRegionPicker(e.key);
+      e.preventDefault(); openRegionPicker(e.key, true);
     }
   });
   rpickQ.addEventListener("input", buildRegionList);

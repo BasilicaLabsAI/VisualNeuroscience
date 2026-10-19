@@ -90,7 +90,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   edge; beside the views from 901px and over them below, remembered in `localStorage` as `vn-atlas-drawer`). The
   Add-a-region panel (`#rpickPop`) is placed by the script from its button relative to `#drawerBox` (`--pop-left`,
   `--pop-top`, `--pop-w`), outside the box's scroller, so its list is one scroller and not one inside another, which
-  the iPad would not always let scroll; the box's own scroll closes it. The bar's
+  the iPad would not always let scroll; the box's own scroll closes it. Its search field takes the focus on opening
+  only with a fine pointer or when typing on the button opened it (`openRegionPicker(seed, typed)`): on a touch
+  screen the keyboard rose over the list, so there it waits for a tap (v11.26). The bar's
   buttons raise one pop-up at a time over the views (`.pop`: What they do, Receptor graph and Neurotransmitters, which
   are the receptor section's own chart and types tabs, Brodmann map, Reference; Saved maps and Export at the bar's
   end). The readouts sit at the bar's start. Every element id the script uses is unchanged, so the pop-ups' contents

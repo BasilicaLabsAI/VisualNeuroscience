@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.26 — 19 October 2026 — The keyboard waits for a tap on the search field
+Commit · Focus the region search on opening only where a keyboard is at hand, so a phone's keyboard waits for a tap
+
+Opening the list of regions to add on a phone or an iPad no longer brings the keyboard up at once over the regions. The search field at the top of the list waits for a tap, and until then the list has the whole room to scroll through and pick from. With a mouse the field still takes the focus as the list opens, and typing a letter on the closed button still opens the list searching for it, as it always has.
+
 ## v11.25 — 19 October 2026 — On a phone, the region drawer slides over the view and starts shut
-Commit · Make the phone's region area a drawer the height of the screen, over the view and shut at every opening
+Commit `a20fd9d` · Make the phone's region area a drawer the height of the screen, over the view and shut at every opening
 
 On a phone, held either way, the 3D Region Atlas's region area is a drawer again rather than a box: it slides over the view from the right edge, the height of the screen, and it is shut whenever the page opens, so the view has the whole screen until the handle at the right edge is pressed. The tab at the drawer's edge puts it away again. On a computer and an iPad the region picker stays the box in the corner that v11.24 made it, open or shut as it was last left.
 
