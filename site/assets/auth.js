@@ -104,6 +104,7 @@ function dormant(){
     linkProvider: off, deleteAccount: off, signOut: () => Promise.resolve(),
     usernameFree: off, setUsername: off, setUniversity: off, loadProfile: () => Promise.resolve(null), profile: () => null,
     pendingEmailLink: false, pendingLink: null, db: null, sdk: null,
+    track(){},
     ready: Promise.resolve(null)
   };
 }
@@ -131,6 +132,40 @@ async function build(){
   const plugin  = isNative && cap.Plugins ? cap.Plugins.FirebaseAuthentication : null;
   const browser = isNative && cap.Plugins ? cap.Plugins.Browser : null;
   const appPlug = isNative && cap.Plugins ? cap.Plugins.App : null;
+
+  /* ── usage counts ──────────────────────────────────────────────────────
+     Google Analytics for Firebase, named on the privacy page: which pages
+     and screens are opened, each sign-in and the way it was made, the kind
+     of device, and the country, to decide what to build next. On the
+     website the SDK's own analytics module sends to the measurementId's
+     stream; inside the apps the native plugin counts (a page there is a
+     screen, named by its file), so the web module stays out of the web
+     view and nothing is counted twice. CFG.analytics governs both: true
+     (the default) counts everywhere, "app" keeps the website silent, with
+     no analytics cookie, and counts in the apps alone, and false turns it
+     off everywhere. Every call here is best effort: counting never gets
+     in the way of signing in. */
+  const gaWant = CFG.analytics === undefined ? true : CFG.analytics;
+  const gaPlug = isNative && cap.Plugins ? cap.Plugins.FirebaseAnalytics : null;
+  let ga = null;
+  if (gaPlug){
+    try{ await gaPlug.setEnabled({ enabled: gaWant !== false }); }catch(_){}
+    if (gaWant !== false){
+      const page = (location.pathname.split("/").pop() || "index.html").replace(/\.html$/, "");
+      try{ gaPlug.setCurrentScreen({ screenName: page }).catch(() => {}); }catch(_){}
+    }
+  } else if (!isNative && gaWant === true && CFG.measurementId){
+    try{ if (await sdk.isSupported()) ga = sdk.getAnalytics(app); }catch(_){}
+  }
+  function track(name, params){
+    try{
+      if (gaPlug){ if (gaWant !== false) gaPlug.logEvent({ name, params: params || {} }).catch(() => {}); }
+      else if (ga) sdk.logEvent(ga, name, params || {});
+    }catch(_){}
+  }
+  /* the way a sign-in was made, as the counts name it */
+  const METHOD = { "google.com": "google", "apple.com": "apple", password: "email", emailLink: "email_link" };
+  function method(id){ return METHOD[id] || (id ? String(id).replace(/\.com$/, "") : "unknown"); }
 
   const wantP = Object.assign({ google:true, apple:true, linkedin:true, emailLink:true },
                               CFG.providers || {});
@@ -330,11 +365,14 @@ async function build(){
       throw friendly(err);
     }
     const u = res.user || auth.currentUser;
+    let info = null;
+    try{ info = sdk.getAdditionalUserInfo(res); }catch(_){}
+    /* the sign-in counted, as a first one or a return, by its method */
+    track(info && info.isNewUser ? "sign_up" : "login", { method: method(info && info.providerId) });
     /* Apple's one-time name, Google's photo, LinkedIn's profile — capture
        whatever this sign-in carried before it evaporates */
     let name = extra && extra.name;
     try{
-      const info = sdk.getAdditionalUserInfo(res);
       const p = info && info.profile;
       if (!name && p){
         name = p.name || [p.given_name || p.firstName, p.family_name || p.lastName]
@@ -463,6 +501,9 @@ async function build(){
     }
     const res = await sdk.signInWithCustomToken(auth, d.token).catch(e => { throw friendly(e); });
     const u = res.user;
+    let fresh = false;
+    try{ const i = sdk.getAdditionalUserInfo(res); fresh = !!(i && i.isNewUser); }catch(_){}
+    track(fresh ? "sign_up" : "login", { method: "linkedin" });
     const prof = d.profile || {};
     await adoptName(u, prof.name);
     await saveProfile(u, prof);
@@ -496,6 +537,7 @@ async function build(){
     let res;
     try{ res = await sdk.createUserWithEmailAndPassword(auth, email, password); }
     catch(err){ throw friendly(err); }
+    track("sign_up", { method: "email" });
     const name = [firstName, lastName].map(s => (s || "").trim()).filter(Boolean).join(" ");
     if (name) await adoptName(res.user, name);
     let claimed = null, refusal = null;
@@ -618,6 +660,7 @@ async function build(){
     signOut: doSignOut,
     deleteAccount,
     usernameFree, setUsername, setUniversity, loadProfile, profile,
+    track,
     ready, db, sdk
   };
 }

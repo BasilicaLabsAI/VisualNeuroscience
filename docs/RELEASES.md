@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.21 — 19 October 2026 — Usage counts: who signs in, from where, on what
+Commit · Count the site's and the apps' use with Google Analytics for Firebase, each sign-in by its method
+
+The site and the apps now count how they are used, through Google Analytics for Firebase, and say so on the privacy page: which pages and screens are opened, every sign-in and the way it was made, the kind of device, browser or app version, and the country, so that the owner can see how many people use the website and the app and how they sign in. Nothing is joined to an account, nothing is used for advertising, and the apps are built without the advertising identifier. On the website this is a first-party analytics cookie, which blocking cookies for the site stops; a setting in the site's configuration can keep the website out of it altogether and count in the apps alone. The bundled Firebase code now carries the analytics module and is rebuilt by one script kept in the repository.
+
 ## v11.20 — 19 October 2026 — Five to four on a phone and an upright iPad, as on an iPad held sideways
-Commit · Give the scans the iPad's five-to-four proportion on a phone and an upright iPad instead of a square
+Commit `cd67113` · Give the scans the iPad's five-to-four proportion on a phone and an upright iPad instead of a square
 
 On a phone, and on an iPad held upright, the four scans in the 3D Region Atlas, the Network Atlas and the Hallucinations study are no longer square. They take the proportion an iPad held sideways gives them, five wide to four tall, so on a phone nearly two views fit a screen where one did, and each view is a little shorter. On a computer and an iPad held sideways nothing changes: there the views are already fitted to the screen, flatter than that.
 

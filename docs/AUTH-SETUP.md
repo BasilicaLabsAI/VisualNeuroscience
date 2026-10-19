@@ -24,11 +24,8 @@ skip any you don't want (its button simply never appears).
 1. Go to https://console.firebase.google.com and sign in with a Google
    account you control long-term (this account owns the user database).
 2. **Add project** → name it (e.g. `visualneuroscience`) → Google Analytics:
-   your choice — the privacy page no longer forecloses analytics. Off is
-   simplest; on costs nothing now and lets you wire usage measurement in
-   later. Either way, if measurement ever runs on the pages, name the
-   provider on privacy.html (its "Usage counts" bullet reserves the spot)
-   → **Create project**.
+   **on** — the usage counts (§8) run through it, and the privacy page names
+   it under *Usage counts* → **Create project**.
 3. When it opens, click the **web** icon (`</>`) on the project overview to
    **add a web app**. Nickname `site`. Do **not** tick Firebase Hosting.
 4. It shows a `firebaseConfig` object. Copy the four values you need —
@@ -305,20 +302,33 @@ every account reads as "Set username".
 
 ## 8 · When you switch it on, say so
 
-**site/privacy.html** already describes accounts (and reserves a spot for
-usage analytics) under *Optional services*, so activating email/Google/Apple
-sign-in needs no policy rewrite — just check the description still matches
-what you shipped, and bump the "Last updated" date. Two things do still need
-your hand:
+**site/privacy.html** already describes accounts and the usage counts
+under *Optional services*, so activating email/Google/Apple sign-in needs no
+policy rewrite — just check the description still matches what you shipped,
+and bump the "Last updated" date. Two things do still need your hand:
 
 - **App Store / Play Store privacy labels** — currently "Data Not
   Collected". The release that ships accounts in the apps must declare:
   Contact Info (email, name) and User Content (saved files), linked to
-  identity, not used for tracking. If you also wire in analytics, add its
-  categories per its provider's documentation.
-- **Analytics on the pages** — if you ever add measurement to the site
-  itself, name the provider and what it records in the privacy page's
-  "Usage counts" bullet, in the same release.
+  identity, not used for tracking; and, for the usage counts, Usage Data
+  (product interaction) and Identifiers (device ID), not linked, for
+  analytics, not tracking (`app/store/LISTING.md`, `PLAY-STORE.md`).
+- **Usage counts** — Google Analytics for Firebase runs on the website
+  (the bundled SDK's analytics module, keyed by `measurementId` in
+  `firebase-config.js`) and in the apps (`@capacitor-firebase/analytics`,
+  built with the `AnalyticsWithoutAdIdSupport` trait on iOS and with
+  advertising-ID collection off in the Android manifest, so neither reads
+  the advertising identifier). `assets/auth.js` counts every sign-in as
+  `login` or `sign_up` with its `method` (google, apple, email, email_link,
+  linkedin) and names each page as a screen inside the apps; the website's
+  page views are the SDK's own. The `analytics` flag in `firebase-config.js`
+  governs both: `true` everywhere, `"app"` keeps the website silent (no
+  analytics cookie there), `false` stops counting everywhere. Read the
+  counts in the Firebase console under Analytics (Realtime, Events for
+  `login` by method, Dashboard for users by platform and device) or in the
+  linked Google Analytics property. After switching Analytics on, download
+  `GoogleService-Info.plist` again from Project settings so the apps carry
+  the current configuration.
 
 ## 9 · Costs
 
@@ -332,15 +342,15 @@ wasn't built.
 ## Appendix · Rebuilding the vendored SDK
 
 `site/vendor/firebase/firebase-bundle.js` is the official npm `firebase`
-package (app + auth + firestore-lite), bundled so the site serves every byte
-itself. To bump the SDK: `npm install firebase esbuild`, recreate the
-re-export entry file listed in `site/vendor/firebase/NOTICE.md` (every
-symbol `assets/auth.js` and `assets/userdata.js` import), then
-`npx esbuild entry.js --bundle --format=esm --minify --outfile=firebase-bundle.js`.
-The entry re-exports, from `firebase/auth`: `getAuth`, `initializeAuth`,
-`indexedDBLocalPersistence`, `browserLocalPersistence`, `inMemoryPersistence`
-(the apps initialise auth without the popup-redirect helper, which hangs in
-an iOS web view), plus the sign-in, link, profile and email-link functions
-`auth.js` calls; from `firebase/app`: `initializeApp`; from
-`firebase/firestore/lite`: `getFirestore`, `doc`, `collection`, `getDoc`,
-`getDocs`, `setDoc`, `updateDoc`, `deleteDoc`, `serverTimestamp`.
+package (app + auth + firestore-lite + analytics), bundled so the site
+serves every byte itself. To bump the SDK: bump `firebase` in
+`app/package.json`, run `npm ci` in `app/`, then `sh scripts/firebase/build.sh`,
+which bundles the re-exports in `scripts/firebase/entry.js` (every symbol
+`assets/auth.js` and `assets/userdata.js` use: from `firebase/auth` the
+persistence helpers, `getAuth` and `initializeAuth` — the apps initialise
+auth without the popup-redirect helper, which hangs in an iOS web view —
+and the sign-in, link, profile and email-link functions; from
+`firebase/app` `initializeApp`; from `firebase/firestore/lite` the document
+functions; from `firebase/analytics` `getAnalytics`, `isSupported`,
+`logEvent` and the consent and user-property setters). Bump `VERSION` in
+`site/sw.js` afterwards.

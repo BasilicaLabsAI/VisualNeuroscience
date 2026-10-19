@@ -204,12 +204,16 @@ deletion section reads the same logged in or out. Then the types:
 | Personal info → Email address | Yes | No | Yes, only with an account | Account management; Developer communications when the feature-announcements box is left ticked |
 | Personal info → User IDs | Yes | No | Yes, only with an account | Account management, App functionality |
 | App activity → Other user-generated content | Yes | No | Yes, only with an account | App functionality (saved models and practice progress, so the account works on every device) |
+| App activity → App interactions | Yes | No | No | Analytics (which screens are opened, sign-ins and their method) |
+| Device or other IDs | Yes | No | No | Analytics (the app's own install identifier, under which the counts are kept) |
 
 Everything else: not collected. No data is shared with third parties for
 their own use; Firebase (Google) and Mailchimp (Intuit) process it on our
-behalf, which Google's form counts as collection, not sharing. Nothing is
-used for advertising or analytics. The app does not use the advertising
-ID.
+behalf, which Google's form counts as collection, not sharing. The usage
+counts go to Google Analytics for Firebase under the app's own install
+identifier, as the privacy page says; nothing is used for advertising, and
+the app does not read the advertising ID (the manifest turns its collection
+off).
 
 **Advertising ID**: No.
 

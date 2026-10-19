@@ -62,6 +62,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   notes, Brodmann areas, network states or the receptor table in `regions.html` change, then ask for a deploy. Its
   sign-in (`mcp-worker/oauth.js`, consent page `site/connect.html`) needs the `OAUTH_SECRET` worker secret, set once
   by the owner; `node mcp-worker/tests/oauth.test.mjs` runs the whole flow offline and must pass before a deploy.
+- Usage counts (since v11.21): Google Analytics for Firebase on the website (the vendored bundle's analytics module,
+  `measurementId` in `site/assets/firebase-config.js`) and in the apps (`@capacitor-firebase/analytics`, iOS trait
+  `AnalyticsWithoutAdIdSupport`, Android manifest with advertising-ID collection off). `site/assets/auth.js` initialises
+  it, names each page as a screen inside the apps, and counts every sign-in as `login` or `sign_up` with its `method`;
+  `VN_AUTH.track(name, params)` is the door for any other count. The `analytics` flag in the config is `true`, `"app"`
+  (website silent, no cookie) or `false`. The privacy page names it under *Usage counts*; both store listings declare
+  it. The counts are read in the Firebase console under Analytics. The vendored bundle is rebuilt with
+  `sh scripts/firebase/build.sh` from `scripts/firebase/entry.js` (`docs/AUTH-SETUP.md` §8 and its appendix).
 - Licences and permissions are recorded in `docs/PERMISSIONS.md`; keep it in step with any new data source.
 - The owner's research documents on single regions are kept as supplied in `backend/data/regions/` (see its README).
   Detailed region function descriptions are to be written from them only when the owner asks; until then, store new
@@ -108,7 +116,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
 ## Open on the owner's side (update as they close)
 - App Store: version 1.0 was approved and released on 25 September 2026 (https://apps.apple.com/app/id6805618686)
   after an expedited review. The project is at 1.1 for the next submission; its What's New text, the App Privacy
-  change the newsletter needs, and the steps are in `app/store/LISTING.md`, the screenshots in `app/store/screenshots/`.
+  changes the newsletter and the usage counts need, and the steps are in `app/store/LISTING.md`, the screenshots in
+  `app/store/screenshots/`. Before 1.1, download `GoogleService-Info.plist` again from the Firebase console (Project
+  settings → the iOS app), since the copy in the repo predates Analytics being switched on for the project.
 - Google Play: the Android build, listing text, graphics and declarations are ready in `app/store/PLAY-STORE.md`
   (screenshots in `app/store/screenshots/`, `android-*`); still to do on the owner's Mac: the developer account, the
   upload key (`app/android/keystore.properties.example`), the Firebase fingerprints, the closed test a personal

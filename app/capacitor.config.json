@@ -46,11 +46,17 @@
         "packageOptions": {
           "@capacitor-firebase/authentication": {
             "symlink": true
+          },
+          "@capacitor-firebase/analytics": {
+            "symlink": true
           }
         },
         "packageTraits": {
           "@capacitor-firebase/authentication": [
             "Google"
+          ],
+          "@capacitor-firebase/analytics": [
+            "AnalyticsWithoutAdIdSupport"
           ]
         }
       }

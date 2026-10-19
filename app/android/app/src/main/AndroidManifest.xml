@@ -36,6 +36,12 @@
             android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
+        <!-- the usage counts run under the app's own install identifier,
+             never the advertising ID, as the privacy page says -->
+        <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
+        <!-- screens are reported by the page's own name from the web code
+             (assets/auth.js), not by the activity's class name -->
+        <meta-data android:name="google_analytics_automatic_screen_reporting_enabled" android:value="false" />
     </application>
 
     <!-- Permissions -->

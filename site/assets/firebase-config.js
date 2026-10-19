@@ -41,11 +41,15 @@ window.VN_FIREBASE = {
   storageBucket: "visualneuroscience-4315d.firebasestorage.app",
   messagingSenderId: "1020711830190",
   appId: "1:1020711830190:web:18a3408e0ed7d489e6a33f",
-  /* Analytics is on in the Firebase project, but nothing here sends it:
-     the bundled SDK carries no analytics module, so this id is inert
-     until usage counting is deliberately wired in (and named on the
-     privacy page). */
+  /* Usage counts, Google Analytics for Firebase, named on the privacy
+     page: the website sends to this stream through the bundled SDK's
+     analytics module, the apps through the native plugin, and auth.js
+     counts each sign-in as login or sign_up with its method. analytics
+     governs both: true counts everywhere, "app" keeps the website silent
+     (no analytics cookie there) and counts in the apps alone, false turns
+     it off everywhere. */
   measurementId: "G-NLQVT5PLRB",
+  analytics: true,
 
   /* email is live; each social provider flips to true when its console
      section in docs/AUTH-SETUP.md is done. Google is on: the web button

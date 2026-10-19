@@ -104,5 +104,9 @@
 			</array>
 		</dict>
 	</array>
+	<!-- screens are reported by the page's own name from the web code
+	     (assets/auth.js), not by the bridge's class name -->
+	<key>FirebaseAutomaticScreenReportingEnabled</key>
+	<false/>
 </dict>
 </plist>

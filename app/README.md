@@ -89,7 +89,10 @@ off and the status bar plugin is replaced by one that does nothing
 (`StillStatusBar`), because the real one resizes its web view to the whole
 window whenever any bridge appears. The Firebase plugin keeps a small object
 per page opened, since it never removes its auth listeners; the web view
-itself is freed.
+itself is freed. The usage counts (`@capacitor-firebase/analytics`, built
+without the advertising identifier) are driven from the web code: each page
+names itself as a screen and every sign-in is counted, as `docs/AUTH-SETUP.md`
+§8 describes.
 
 The theme is the shell's: Account's Appearance switch sets it, the shell
 writes it into each page before the page runs and presses the page's own

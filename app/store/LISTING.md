@@ -191,7 +191,12 @@ Contact first name, last name, phone and email: yours.
 With accounts on, as they are: Contact Info (name, email address) and
 User Content (other user content: saved files and practice progress),
 both **linked to the user's identity**, used for **App Functionality** and
-**Analytics**, and **not** used to track. Everything else: not collected.
+**Analytics**, and **not** used to track. Since the usage counts (Google
+Analytics for Firebase, from v11.21 of the site) the app also collects
+**Usage Data → Product Interaction** and **Identifiers → Device ID**, both
+**not linked** to the user's identity, used for **Analytics**, and **not**
+used to track: the app is built without the advertising identifier, so no
+tracking permission is asked. Everything else: not collected.
 
 The newsletter box stays on the website, but from 1.1 a new account's
 address goes to the newsletter's list at Mailchimp when the
