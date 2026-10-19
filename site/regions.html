@@ -850,63 +850,6 @@ mark{ background:var(--ink); color:var(--paper); }
   border-left:2px solid var(--ink-35); padding-left:.6rem; margin-top:.45rem;
 }
 
-/* ── the two-face map ──────────────────────────────────────────────────
-   Most of the cortex is either folded into a sulcus or facing the other
-   way, so a scan can never show the whole Brodmann scheme at once. The
-   line map can, which is what it has always been for. An area on it is an
-   outline in ink with its number inside; picking fills it in the colour
-   it wears on the scan. Areas the atlas volume does not carry are drawn
-   dashed and cannot be picked. */
-/* The map lives in the column under the scans, which is where the room is:
-   the rail beside it runs long once the Brodmann list is in it, and this
-   fills the space rather than leaving a field of black. */
-.bamap{ margin-top:var(--gap); }
-.centre .bamap .cart-stage{ padding:.4rem; }
-.cartoons{ display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); }
-.cart{ border:1px solid var(--hair); min-width:0; margin:0; }
-.cart figcaption{
-  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline;
-  gap:.35rem .8rem; padding:.6rem .8rem .5rem; border-bottom:1px solid var(--hair);
-}
-.cart figcaption b{
-  font-family:var(--font-brand); font-weight:500; font-size:.68rem;
-  letter-spacing:.28em; text-transform:uppercase;
-}
-.cart figcaption span{
-  font-family:var(--font-serif); font-style:italic; font-size:.82rem; color:var(--ink-60);
-}
-.cart-stage{ padding:.5rem; }
-.cart-stage svg{ width:100%; height:auto; display:block; }
-.ba-tile{ cursor:pointer; }
-.ba-tile.mute{ cursor:default; }
-.ba-tile .shape{
-  fill:var(--ink); fill-opacity:.045; stroke:var(--ink); stroke-opacity:.72;
-  stroke-width:1.1; stroke-linejoin:round; transition:fill-opacity .12s ease;
-}
-.ba-tile .num{
-  font-family:var(--font-brand); font-weight:500; fill:var(--ink);
-  pointer-events:none; user-select:none;
-}
-@media (hover: hover){ .ba-tile:not(.mute):hover .shape{ fill-opacity:.18; } }
-.ba-tile.on .shape{ fill:var(--sel, var(--ink)); fill-opacity:1; stroke:var(--ink); stroke-opacity:1; stroke-width:1.4; }
-.ba-tile.on .num{ fill:#111111; }
-.ba-tile.mute .shape{ stroke-dasharray:3 2.5; stroke-opacity:.4; fill-opacity:.02; }
-.ba-tile.mute .num{ fill-opacity:.45; }
-.cart-note{
-  font-family:var(--font-serif); font-style:italic; font-size:.85rem;
-  color:var(--ink-60); margin-top:.7rem;
-}
-.cart-miss{
-  font-family:var(--font-serif); font-style:italic; font-size:.9rem;
-  color:var(--ink); margin-top:.7rem;
-}
-.cart-miss:empty{ display:none; }
-.ba-foot{
-  font-family:var(--font-serif); font-style:italic; font-size:.85rem;
-  color:var(--ink-60); margin-top:.9rem;
-}
-@media (max-width:760px){ .cartoons{ grid-template-columns:1fr; } }
-
 .stats{ margin-top:var(--gap); }
 .probe-v{ font-size:.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .probe-v small{ display:block; margin-left:0; margin-top:.12rem; font-variant-numeric:tabular-nums; }
@@ -949,7 +892,7 @@ mark{ background:var(--ink); color:var(--paper); }
    the four views fill the room between the header and a bar along the
    bottom, nothing scrolls, the region picker is a drawer on the left that
    folds away on its tab, and everything that stood below the views (what
-   the regions do, the receptor graph and types, the Brodmann map, the
+   the regions do, the receptor graph and types, the
    reference) rises from the bar's buttons as a pop-up over the views, one
    at a time. --screen-top is the header's height, measured by the page's
    script (the apps' pages have no header and start at nought); --bar-h is
@@ -1095,7 +1038,7 @@ main.screen{
 .pop-x:active{ background:var(--ink); color:var(--paper); }
 @media (pointer:coarse){ .pop-x{ width:44px; height:44px; } }
 .pop-body{ flex:1 1 auto; min-height:0; overflow:auto; overscroll-behavior:contain; padding:.9rem 1rem 1.1rem; }
-.pop .notes, .pop .rxsec, .pop .bamap{ margin:0; }
+.pop .notes, .pop .rxsec{ margin:0; }
 /* the receptor pop-up's room is on its section, not its body: a sticky
    column name or row label stops short of a scrolling body's padding, and
    the table's cells showed through the band left over */
@@ -1347,27 +1290,6 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
         </div>
       </div>
 
-      <div class="pop" id="popMap" hidden aria-labelledby="popMapH">
-        <header class="pop-head"><b id="popMapH">Brodmann map</b><small>both faces of the hemisphere &middot; tap an area to highlight it</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
-        <div class="pop-body">
-          <section class="bamap" id="baMapSec" aria-labelledby="popMapH">
-            <div class="cartoons">
-        <figure class="cart">
-          <figcaption><b>External</b><span>lateral surface</span></figcaption>
-          <div class="cart-stage" id="cartLateral"></div>
-        </figure>
-        <figure class="cart">
-          <figcaption><b>Internal</b><span>medial surface</span></figcaption>
-          <div class="cart-stage" id="cartMedial"></div>
-        </figure>
-      </div>
-      <p class="cart-miss" id="cartMiss"></p>
-      <p class="cart-note">The two faces are a line map of the classic Brodmann scheme, descending from Brodmann&rsquo;s own 1909 figures: every area outlined and numbered, nothing drawn beneath. Pick an area, here or in the list, and it fills in its colour on the face that shows it. Anterior is on the left in the external view and, as the scheme is conventionally drawn, on the right in the internal one. The drawing is a schematic &mdash; where each area actually sits in a real head, with the atlas&rsquo;s own boundaries, is what the scan above shows. Brodmann Areas diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN &ndash; Institute for EEG-Neurofeedback / Neurofeedback Academy</a>.</p>
-            <p class="ba-foot">Brodmann numbered the cortex in 1909 by how its cells are layered, not by what it does &mdash; which is why the numbers wander about the brain and why several of his 52 have no agreed human counterpart. The 41 drawn here are those the shipped atlas labels; 12&ndash;16, 31, 33 and 49&ndash;52 are absent. Each area is bilateral: Brodmann described cortical types, not hemispheres, so where a function is strongly one-sided the note says so rather than the atlas splitting the area. The boundaries are an approximation to begin with &mdash; they were drawn from a handful of post-mortem brains, and no two people's cortex is folded the same way. This particular volume descends from the Talairach Daemon, whose labels were grown outwards to fill the brain: 14% of what it marks lies in white matter that the AAL atlas does not count as cortex at all, and label 48 has become a catch-all for the peri-Sylvian region rather than the small area Brodmann gave that number to. Read a boundary as a neighbourhood, not a border. Educational, not diagnostic.</p>
-          </section>
-        </div>
-      </div>
-
       <div class="pop" id="popRef" hidden aria-labelledby="popRefH">
         <header class="pop-head"><b id="popRefH">Reference</b><small>what the atlas is drawn from</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
         <div class="pop-body">
@@ -1417,7 +1339,6 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
       <button class="pbtn" type="button" data-pop="popNotes" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></svg><span>What they do</span></button>
       <button class="pbtn" type="button" data-pop="popRx" data-tab="chart" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20h16M7 20v-7M12 20V6M17 20v-10"/></svg><span>Receptor graph</span></button>
       <button class="pbtn" type="button" data-pop="popRx" data-tab="types" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4h16v16H4zM4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"/></svg><span>Neurotransmitters</span></button>
-      <button class="pbtn" type="button" data-pop="popMap" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8.5 18c-3 0-5.3-2-5.3-4.8 0-2.4 1.5-4.2 3.4-4.6C7.4 6 9.6 4.5 12.3 4.5c3.4 0 6.2 2.2 6.8 5.2 1.3.6 2 1.8 2 3.1 0 2.6-2.4 4.5-5.4 4.5l-1.9 1.9-1.4-1.2z"/><path d="M10.6 5.2c-.2 3.6 1 6.6 3.6 8.7"/></svg><span>Brodmann map</span></button>
       <button class="pbtn" type="button" data-pop="popRef" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/></svg><span>Reference</span></button>
     </div>
     <div class="panelbar-end" role="group" aria-label="Saving">
@@ -1435,7 +1356,6 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
 <script src="assets/niivue.js"></script>
 <script src="assets/atlas-data.js"></script>
 <script src="assets/brodmann-areas.js"></script>
-<script src="assets/brodmann-outline.js"></script>
 <script src="assets/region-notes.js"></script>
 <script src="assets/diagram-gestures.js"></script>
 <script src="assets/slice-tool.js"></script>
@@ -1671,7 +1591,7 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
       if (ba && nv.volumes.length > 2) nv.volumes[2].setColormapLabel(ba);
       nv.updateGLVolume();
     });
-    markBAList(); markCartoon();
+    markBAList();
   }
 
 
@@ -2232,7 +2152,6 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
      that side. */
   var atlasBtns = Array.prototype.slice.call(document.querySelectorAll(".atlas-mode [data-atlas]"));
   var aalPane = document.getElementById("aalPane"), baPane = document.getElementById("baPane");
-  var baMapSec = document.getElementById("baMapSec");
   function setAtlasMode(mode, quiet){
     if (mode !== "ba" || !B) mode = "aal";
     atlasBtns.forEach(function(b){
@@ -2242,7 +2161,6 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
     });
     aalPane.classList.toggle("hidden", mode !== "aal");
     baPane.classList.toggle("hidden", mode !== "ba");
-    /* the map lives in its pop-up now, shown on request whatever the picker's mode */
     if (!quiet){ try{ localStorage.setItem("mn-atlas-mode", mode); }catch(e){} }
   }
   atlasBtns.forEach(function(b){
@@ -2509,79 +2427,8 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
     baQClear.addEventListener("click", function(){ baQ.value = ""; buildBAList(); baQ.focus(); });
   }
 
-  /* The line map. Each area is its own outline with its number set at the
-     most interior point of the shape, so a wedge or a crescent still reads.
-     Nothing is drawn beneath the outlines: the map is the drawing. Geometry
-     and anchors come from scripts/make_brodmann_outline.mjs. */
-  var OUT = window.MN_BA_OUTLINE || {areas: {}, box: {}};
-  var tiles = {lateral: {}, medial: {}};
-  function drawCartoon(host, which){
-    if (!host || !B) return;
-    var NS = "http://www.w3.org/2000/svg";
-    var svg = document.createElementNS(NS, "svg");
-    svg.setAttribute("viewBox", (OUT.box && OUT.box[which]) || "0 0 600 400");
-    svg.setAttribute("role", "img");
-    svg.setAttribute("aria-label", which === "lateral"
-      ? "Brodmann areas on the external surface of the hemisphere"
-      : "Brodmann areas on the internal surface of the hemisphere");
-    Object.keys(OUT.areas).forEach(function(k){
-      var ba = +k;
-      var spec = (OUT.areas[k] || []).filter(function(e){ return e.view === which; })[0];
-      if (!spec) return;
-      var a = B.BY_BA[ba];
-      var g = document.createElementNS(NS, "g");
-      g.setAttribute("class", "ba-tile" + (a ? "" : " mute"));
-      g.dataset.ba = ba;
-      var shape = document.createElementNS(NS, "path");
-      shape.setAttribute("class", "shape");
-      shape.setAttribute("d", spec.d);
-      shape.setAttribute("fill-rule", "evenodd");
-      var num = document.createElementNS(NS, "text");
-      num.setAttribute("class", "num");
-      num.setAttribute("x", spec.at[0]); num.setAttribute("y", spec.at[1]);
-      num.setAttribute("text-anchor", "middle");
-      num.setAttribute("dominant-baseline", "central");
-      num.setAttribute("font-size", Math.max(6.5, Math.min(12, (spec.r || 8) * 1.15)).toFixed(1));
-      num.textContent = ba;
-      var ti = document.createElementNS(NS, "title");
-      ti.textContent = "BA" + ba + (a ? " \u2014 " + a.name : " \u2014 not in the atlas volume");
-      g.appendChild(shape); g.appendChild(num); g.appendChild(ti);
-      if (a) g.addEventListener("click", function(){ toggleBA(ba, false); });
-      svg.appendChild(g);
-      tiles[which][ba] = g;
-    });
-    host.innerHTML = "";
-    host.appendChild(svg);
-  }
-  function markCartoon(){
-    ["lateral", "medial"].forEach(function(w){
-      Object.keys(tiles[w]).forEach(function(ba){
-        var c = baColour(Number(ba));
-        tiles[w][ba].classList.toggle("on", !!c);
-        if (c) tiles[w][ba].style.setProperty("--sel", c); else tiles[w][ba].style.removeProperty("--sel");
-      });
-    });
-    /* an area can be real and simply not face either way */
-    var note = document.getElementById("cartMiss");
-    if (!note) return;
-    var buried = [];
-    selections.forEach(function(s){
-      if (isBA(s) && !tiles.lateral[s.ba] && !tiles.medial[s.ba]) buried.push("BA" + s.ba);
-    });
-    note.textContent = buried.length
-      ? buried.join(", ") + (buried.length === 1 ? " does" : " do") + " not reach either surface \u2014 buried, and only the scan shows " + (buried.length === 1 ? "it." : "them.")
-      : "";
-  }
-
   renderDropdown();
   buildBAList();
-  drawCartoon(document.getElementById("cartLateral"), "lateral");
-  drawCartoon(document.getElementById("cartMedial"), "medial");
-  if (window.MN_DIAG){
-    var cl = document.querySelector("#cartLateral svg"), cmn = document.querySelector("#cartMedial svg");
-    if (cl) MN_DIAG.attach({ svg: cl });
-    if (cmn) MN_DIAG.attach({ svg: cmn });
-  }
   renderChips();
 
   /* ── deep links ───────────────────────────────────────────────────────

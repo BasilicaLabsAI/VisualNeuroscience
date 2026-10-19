@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.30 — 19 October 2026 — The Brodmann map leaves the 3D Region Atlas
+Commit · Take the Brodmann map out of the 3D Region Atlas, which keeps its Brodmann list
+
+The 3D Region Atlas no longer carries the two-face Brodmann map: its button leaves the bar, and with it the pop-up and the drawing. The map has a page of its own, the Brodmann Area Atlas, where every area opens on the scan here. The atlas keeps its Brodmann list in the region box, so areas are still added and highlighted as before, and a link that lands on an area still opens on it.
+
 ## v11.29 — 19 October 2026 — The receptor table's column names whole
-Commit · Set the receptor table's column names the whole of their length and scroll the table with its pop-up
+Commit `57d6f04` · Set the receptor table's column names the whole of their length and scroll the table with its pop-up
 
 In the Neurotransmitters pop-up of the 3D Region Atlas the region names along the top of the table are now set whole: the header is as tall as the longest of them, where before a fixed height cut the longer names off at the top. The table scrolls with the pop-up, down and sideways, and its column names stay at the top and its row labels at the left whichever way it goes.
 
