@@ -269,18 +269,25 @@ function attach(o){
     if (slice) settle2();
   });
 
-  /* ── shift+drag pans with a mouse ─────────────────────────────────────── */
+  /* ── shift+drag, or a drag on the wheel's button, pans with a mouse ──── */
 
   var mDrag = false, mAnchor = null, mx = 0, my = 0;
   stage.addEventListener("pointerdown", function(e){
-    if (e.pointerType !== "mouse" || e.button !== 0 || !e.shiftKey) return;
+    if (e.pointerType !== "mouse" || !((e.button === 0 && e.shiftKey) || e.button === 1)) return;
     mDrag = true; mx = e.clientX; my = e.clientY;
     if (slice) mAnchor = mmAt(e.clientX, e.clientY);
     e.preventDefault();
     e.stopPropagation();
   }, {capture: true, passive: false});
+  /* pressed, the wheel's button would otherwise start the browser's own
+     autoscroll; the view takes the press for itself */
+  stage.addEventListener("mousedown", function(e){
+    if (e.button === 1) e.preventDefault();
+  }, {capture: true});
   stage.addEventListener("pointermove", function(e){
     if (!mDrag) return;
+    /* the button went up somewhere off the view */
+    if (!(e.buttons & 5)){ mDrag = false; mAnchor = null; return; }
     e.preventDefault();
     e.stopPropagation();
     if (slice){

@@ -933,8 +933,145 @@ mark{ background:var(--ink); color:var(--paper); }
 }
 
 </style>
+<style>
+/* ════════ the screen: the views are the page ════════
+   Since v11.22 the atlas is one screen in the manner of an anatomy app:
+   the four views fill the room between the header and a bar along the
+   bottom, nothing scrolls, the region picker is a drawer on the left that
+   folds away on its tab, and everything that stood below the views (what
+   the regions do, the receptor graph and types, the Brodmann map, the
+   reference) rises from the bar's buttons as a pop-up over the views, one
+   at a time. --screen-top is the header's height, measured by the page's
+   script (the apps' pages have no header and start at nought); --bar-h is
+   the bar's. */
+body.atlas-screen{ overflow:hidden; margin:0; }
+/* on an iPad the shell pads a page's top; this screen pads its own stage and keeps only the safe area */
+:root[data-shell][data-shell-pad] body.atlas-screen{ padding-top:max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px)); }
+main.screen{
+  max-width:none; padding:0; margin:0;
+  height:calc(100vh - var(--screen-top, 0px)); height:calc(100dvh - var(--screen-top, 0px));
+  display:flex; flex-direction:column; min-height:0; overflow:hidden;
+}
+.screen .vh{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }
+.deck{ flex:1 1 auto; min-height:0; display:flex; position:relative; }
+
+/* the drawer: beside the views, folding to nothing on its tab */
+.drawer{
+  flex:0 0 300px; width:300px; min-height:0; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+  border-right:1px solid var(--hair); background:var(--paper);
+  transition:flex-basis .32s cubic-bezier(.32,.72,0,1), width .32s cubic-bezier(.32,.72,0,1), visibility 0s 0s;
+}
+.drawer-in.card{ border:0; padding:var(--gap) var(--gap) 1.4rem; }
+.drawer .rchips{ max-height:none; }
+.deck.shut .drawer{ flex-basis:0; width:0; overflow:hidden; border-right-width:0; visibility:hidden; transition-delay:0s, 0s, .32s; }
+.drawer-tab{
+  position:absolute; left:300px; top:50%; transform:translateY(-50%); z-index:16;
+  width:22px; height:64px; padding:0; display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--hair); border-left:0; background:var(--paper); color:var(--ink); cursor:pointer;
+  -webkit-tap-highlight-color:transparent; transition:left .32s cubic-bezier(.32,.72,0,1);
+}
+.drawer-tab::after{ content:""; position:absolute; inset:-8px -10px; }
+.drawer-tab svg{ width:10px; height:16px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:square; transition:transform .32s cubic-bezier(.32,.72,0,1); }
+.deck.shut .drawer-tab{ left:0; }
+.deck.shut .drawer-tab svg{ transform:rotate(180deg); }
+@media (hover: hover){ .drawer-tab:hover{ background:var(--ink); color:var(--paper); } }
+.drawer-tab:active{ background:var(--ink); color:var(--paper); }
+
+/* the stage: the four views fill it, two by two, whatever the screen */
+.stage{ flex:1 1 auto; min-width:0; min-height:0; display:flex; flex-direction:column; position:relative; padding:var(--gap) var(--gap) var(--gap) calc(var(--gap) + 10px); }
+.screen .views-wrap{ position:relative; flex:1 1 auto; min-height:0; }
+.screen .views{ height:100%; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:var(--gap); }
+.screen .views .view{ min-height:0; min-width:0; }
+.screen .views-wrap .views .view .mri-stage{ flex:1 1 auto; min-height:0; height:auto; max-height:none; aspect-ratio:auto; }
+
+/* a view too narrow for its bar's tools (four to a phone's screen) keeps
+   its name and the button that opens it; the tools wait in the opened view */
+@container view (max-width:300px){
+  .screen .views .view:not(.open) .view-tools, .screen .views .view:not(.open) .centre-btn{ display:none; }
+}
+
+/* the bar along the bottom: a material, like the header's */
+.panelbar{
+  flex:none; display:flex; align-items:center; gap:.6rem;
+  padding:.45rem var(--gap) calc(.45rem + env(safe-area-inset-bottom, 0px));
+  border-top:1px solid var(--hair);
+  background:color-mix(in srgb, var(--paper) 84%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
+  overflow-x:auto; overflow-y:hidden; scrollbar-width:none; white-space:nowrap;
+}
+.panelbar::-webkit-scrollbar{ display:none; }
+.panelbar-stats{ display:flex; gap:1.1rem; flex:none; }
+.panelbar .stat{ border:0; padding:0; min-width:0; }
+.panelbar .stat .v{ white-space:nowrap; }
+.panelbar .stat .v small{ display:inline; margin-left:.35rem; }
+.panelbar .probe-v{ max-width:22rem; overflow:hidden; text-overflow:ellipsis; }
+/* the bar's buttons stand a little taller than a view's, and no more */
+.panelbar .ts-btn{ height:2.3rem; padding:0 .85rem; display:inline-flex; align-items:center; }
+@media (pointer:coarse){ .panelbar .ts-btn{ height:44px; min-height:44px; } }
+.panelbar-btns{ display:flex; gap:.4rem; flex:none; margin-left:.5rem; }
+.panelbar-end{ display:flex; gap:.4rem; flex:none; margin-left:auto; padding-left:.6rem; }
+.panelbar .ts-btn{ flex:none; }
+.panelbar .ts-btn.active{ background:var(--ink); color:var(--paper); }
+@media (max-width:760px){
+  .panelbar-stats .stat:first-child{ display:none; }
+  .panelbar .probe-v small{ display:none; }
+  .panelbar .probe-v{ max-width:9rem; }
+}
+
+/* a pop-up: one at a time, rising over the views above the bar; a chart
+   or a list scrolls inside it, the page never */
+.pop{
+  position:absolute; left:calc(var(--gap) + 10px); right:var(--gap); bottom:var(--gap); z-index:20;
+  max-height:min(72%, calc(100% - 2 * var(--gap))); display:flex; flex-direction:column; overflow:hidden;
+  border:1px solid var(--hair);
+  background:color-mix(in srgb, var(--paper) 90%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(24px); backdrop-filter:saturate(180%) blur(24px);
+  box-shadow:0 18px 60px rgba(0,0,0,.35);
+  opacity:0; transform:translateY(14px);
+  transition:opacity .22s cubic-bezier(.32,.72,0,1), transform .26s cubic-bezier(.32,.72,0,1);
+}
+.pop[hidden]{ display:none; }
+.pop.in{ opacity:1; transform:none; }
+.pop-sm{ left:auto; width:min(440px, calc(100% - 2 * var(--gap) - 10px)); }
+.pop-head{ flex:none; display:flex; align-items:center; gap:.7rem; padding:.5rem .6rem .5rem .9rem; border-bottom:1px solid var(--hair); }
+.pop-head b{ font-family:var(--font-brand); font-weight:500; font-size:.68rem; letter-spacing:.28em; text-transform:uppercase; white-space:nowrap; }
+.pop-head small{ font-family:var(--font-serif); font-style:italic; font-size:.78rem; color:var(--ink-60); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pop-x{
+  margin-left:auto; flex:none; width:1.8rem; height:1.8rem; padding:0;
+  border:1px solid var(--hair); background:none; color:var(--ink); cursor:pointer;
+  font-size:1.15rem; line-height:1; -webkit-tap-highlight-color:transparent;
+}
+@media (hover: hover){ .pop-x:hover{ background:var(--ink); color:var(--paper); } }
+.pop-x:active{ background:var(--ink); color:var(--paper); }
+@media (pointer:coarse){ .pop-x{ width:44px; height:44px; } }
+.pop-body{ flex:1 1 auto; min-height:0; overflow:auto; overscroll-behavior:contain; padding:.9rem 1rem 1.1rem; }
+.pop .notes, .pop .rxsec, .pop .bamap{ margin:0; }
+.pop .ref-line{ font-family:var(--font-serif); font-size:.95rem; line-height:1.55; margin:0 0 .35rem; }
+.pop .ref-line b{ font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); margin-right:.5rem; }
+.pop .estab{ margin-top:1rem; }
+.chart-tooltip{ z-index:60; }
+/* the newsletter card keeps clear of the bar */
+body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
+
+/* narrower than 901 pixels the drawer lies over the views instead */
+@media (max-width:900px){
+  .drawer{
+    position:absolute; left:0; top:0; bottom:0; z-index:15; flex:none; width:min(320px, 86%);
+    box-shadow:8px 0 30px rgba(0,0,0,.25); transition:transform .32s cubic-bezier(.32,.72,0,1), visibility 0s 0s;
+  }
+  .deck.shut .drawer{ transform:translateX(-100%); width:min(320px, 86%); flex:none; visibility:hidden; transition-delay:0s, .32s; }
+  .drawer-tab{ left:min(320px, 86%); }
+  .deck.shut .drawer-tab{ left:0; }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more){
+  .panelbar, .pop{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
+}
+@media (prefers-reduced-motion: reduce){
+  .drawer, .drawer-tab, .drawer-tab svg, .pop{ transition:none; }
+}
+</style>
 </head>
-<body>
+<body class="atlas-screen">
 <a class="skip" href="#main">Skip to content</a>
 
 <header class="masthead wrap">
@@ -954,19 +1091,14 @@ mark{ background:var(--ink); color:var(--paper); }
   </nav>
 </header>
 
-<main id="main" class="wrap">
+<main id="main" class="screen" aria-label="3D Region Atlas">
+  <h1 class="vh">3D Region Atlas</h1>
 
-  <div class="title-strip">
-    <span class="name">3D Region Atlas</span>
-    <span class="anno">MNI152 T1 · 0.74&thinsp;mm iso · AAL-116 parcellation · 41 Brodmann areas</span>
-  </div>
+  <div class="deck" id="deck">
 
-  <div class="studio">
-
-    <aside class="rail" aria-label="Region controls">
-      <h2 class="sec-h">Atlas <small>region picker</small></h2>
-
-      <div class="card rail-box">
+    <!-- the region picker: a drawer that folds away on its tab -->
+    <aside class="drawer" id="drawer" aria-label="Region picker">
+      <div class="drawer-in card rail-box">
         <section class="rail-part">
           <h2>Regions</h2>
           <div class="atlas-mode" role="group" aria-label="Which atlas to pick from">
@@ -1021,20 +1153,12 @@ mark{ background:var(--ink); color:var(--paper); }
           </div>
           <div class="btns"><button class="btn" id="clearBtn" type="button">Clear all</button></div>
         </section>
-        <section class="rail-part">
-          <h2>Saved models</h2>
-          <p class="empty-note">Name the view &mdash; the highlighted regions, their colours, the camera and any cuts &mdash; and open it again later.</p>
-          <div id="models"></div>
-        </section>
-        <section class="rail-part">
-          <h2>Export</h2>
-          <div id="export3d"></div>
-          <div class="btns" id="shotRow"><button class="btn" id="shotBtn" type="button">Save PNG snapshot</button></div>
-        </section>
       </div>
     </aside>
+    <button class="drawer-tab" id="drawerTab" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Hide the region picker" title="Hide the region picker"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
 
-    <section class="centre" aria-label="Brain viewports and the Brodmann map">
+    <!-- the views, and the pop-ups the bar raises over them -->
+    <section class="stage" aria-label="Brain viewports">
       <div class="views-wrap">
         <div class="views" id="viewsGrid">
           <div class="view" data-box="axial">
@@ -1060,46 +1184,22 @@ mark{ background:var(--ink); color:var(--paper); }
         </div>
       </div>
 
-      <div class="stats">
-        <div class="stat"><div class="k">Template</div><div class="v">MNI152 <small>0.74&thinsp;mm</small></div></div>
-        <div class="stat"><div class="k">Atlases</div><div class="v">AAL <small>116 regions</small> · Brodmann <small>41 areas</small></div></div>
-        <div class="stat"><div class="k">Highlighted</div><div class="v" id="statCount">0 <small>regions</small></div></div>
-        <div class="stat"><div class="k">Probe</div><div class="v probe-v"><span id="cursorRegion">—</span><small id="cursorCoords">hover a view · drag = crosshair</small></div></div>
-      </div>
-
-
-    <section class="bamap" id="baMapSec" aria-labelledby="bamap-h">
-      <h2 class="sec-h" id="bamap-h">Brodmann map <small>both faces of the hemisphere &middot; click an area to highlight it</small></h2>
-      <div class="cartoons">
-        <figure class="cart">
-          <figcaption><b>External</b><span>lateral surface</span></figcaption>
-          <div class="cart-stage" id="cartLateral"></div>
-        </figure>
-        <figure class="cart">
-          <figcaption><b>Internal</b><span>medial surface</span></figcaption>
-          <div class="cart-stage" id="cartMedial"></div>
-        </figure>
-      </div>
-      <p class="cart-miss" id="cartMiss"></p>
-      <p class="cart-note">The two faces are a line map of the classic Brodmann scheme, descending from Brodmann&rsquo;s own 1909 figures: every area outlined and numbered, nothing drawn beneath. Pick an area, here or in the list, and it fills in its colour on the face that shows it. Anterior is on the left in the external view and, as the scheme is conventionally drawn, on the right in the internal one. The drawing is a schematic &mdash; where each area actually sits in a real head, with the atlas&rsquo;s own boundaries, is what the scan above shows. Brodmann Areas diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN &ndash; Institute for EEG-Neurofeedback / Neurofeedback Academy</a>.</p>
-      <p class="ba-foot">Brodmann numbered the cortex in 1909 by how its cells are layered, not by what it does &mdash; which is why the numbers wander about the brain and why several of his 52 have no agreed human counterpart. The 41 drawn here are those the shipped atlas labels; 12&ndash;16, 31, 33 and 49&ndash;52 are absent. Each area is bilateral: Brodmann described cortical types, not hemispheres, so where a function is strongly one-sided the note says so rather than the atlas splitting the area. The boundaries are an approximation to begin with &mdash; they were drawn from a handful of post-mortem brains, and no two people's cortex is folded the same way. This particular volume descends from the Talairach Daemon, whose labels were grown outwards to fill the brain: 14% of what it marks lies in white matter that the AAL atlas does not count as cortex at all, and label 48 has become a catch-all for the peri-Sylvian region rather than the small area Brodmann gave that number to. Read a boundary as a neighbourhood, not a border. Educational, not diagnostic.</p>
-    </section>
-    </section>
-
-  </div>
-
-  <section class="notes" id="notesSec" aria-label="Highlighted regions">
-    <h2 class="sec-h">Highlighted regions <small id="notesCount"></small></h2>
-    <p class="notes-empty" id="notesEmpty">Add a region or a Brodmann area above and what it does appears here, stacked by layer: cerebrum at the top, the limbic midbrain beneath it, the reptilian core at the bottom, and the Brodmann areas in a block of their own.</p>
+      <div class="pop" id="popNotes" hidden aria-labelledby="popNotesH">
+        <header class="pop-head"><b id="popNotesH">What they do</b><small id="notesCount"></small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+          <section class="notes" id="notesSec" aria-label="Highlighted regions">
+            <p class="notes-empty" id="notesEmpty">Add a region or a Brodmann area above and what it does appears here, stacked by layer: cerebrum at the top, the limbic midbrain beneath it, the reptilian core at the bottom, and the Brodmann areas in a block of their own.</p>
     <div id="notesTiers"></div>
     <p class="notes-caveat">The three layers are MacLean's triune scheme. It stacks a brain map tidily and it is poor evolutionary history — the &ldquo;reptilian&rdquo; structures are not reptilian, and every layer here is present in every vertebrate with a brain. The grouping is a way of reading the map, not a claim about how it was built.</p>
-  </section>
+          </section>
+        </div>
+      </div>
 
-
-
-  <section class="rxsec" id="receptorSec" aria-labelledby="rx-h">
-    <h2 class="sec-h" id="rx-h">Receptor density <small id="rx-unit"></small></h2>
-    <p class="rx-lede">How thickly each receptor sits in each region, from two open sources: in vivo PET, one group-average tracer map per receptor or transporter, averaged over each AAL region; and ex vivo autoradiography, absolute densities in fmol/mg protein from post-mortem cortex, mapped onto the regions area by area. The two measure different things and are never put on one axis. Click a region&rsquo;s name and it lights up in the viewports above as a highlighted region like any other; whatever is highlighted above lights its bar here in the same colour, and a Brodmann area lights the regions most of it lies in. Pick a receptor and what binds it and what it sits in are drawn beneath the chart, with its source, tracer, sample and caveat under those.</p>
+      <div class="pop" id="popRx" hidden aria-labelledby="rx-h">
+        <header class="pop-head"><b id="rx-h">Receptor density</b><small id="rx-unit"></small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+          <section class="rxsec" id="receptorSec" aria-labelledby="rx-h">
+            <p class="rx-lede">How thickly each receptor sits in each region, from two open sources: in vivo PET, one group-average tracer map per receptor or transporter, averaged over each AAL region; and ex vivo autoradiography, absolute densities in fmol/mg protein from post-mortem cortex, mapped onto the regions area by area. The two measure different things and are never put on one axis. Click a region&rsquo;s name and it lights up in the viewports above as a highlighted region like any other; whatever is highlighted above lights its bar here in the same colour, and a Brodmann area lights the regions most of it lies in. Pick a receptor and what binds it and what it sits in are drawn beneath the chart, with its source, tracer, sample and caveat under those.</p>
     <div class="rx-controls">
       <div class="ts-views" role="group" aria-label="Source">
         <button class="ts-btn active" data-layer="pet" type="button">In vivo PET</button>
@@ -1155,11 +1255,78 @@ mark{ background:var(--ink); color:var(--paper); }
     </div>
     <p class="rx-note" id="rx-coverage"></p>
     <div class="rx-sources" id="rx-sources"></div>
-  </section>
+          </section>
+        </div>
+      </div>
 
-  <p class="estab">Runs fully offline · single file · no server</p>
-  <p class="credits">© 2026 VisualNeuroscience.AI · rendered with <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a> (Rorden lab) · MNI152 template · AAL atlas · Brodmann atlas from <a href="https://github.com/neurolabusc/MRIcron" target="_blank" rel="noopener">MRIcron</a> (BSD) · Brodmann diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN</a> · set in Flux, Newsreader &amp; Prata &middot; <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy</a></p>
+      <div class="pop" id="popMap" hidden aria-labelledby="popMapH">
+        <header class="pop-head"><b id="popMapH">Brodmann map</b><small>both faces of the hemisphere &middot; tap an area to highlight it</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+          <section class="bamap" id="baMapSec" aria-labelledby="popMapH">
+            <div class="cartoons">
+        <figure class="cart">
+          <figcaption><b>External</b><span>lateral surface</span></figcaption>
+          <div class="cart-stage" id="cartLateral"></div>
+        </figure>
+        <figure class="cart">
+          <figcaption><b>Internal</b><span>medial surface</span></figcaption>
+          <div class="cart-stage" id="cartMedial"></div>
+        </figure>
+      </div>
+      <p class="cart-miss" id="cartMiss"></p>
+      <p class="cart-note">The two faces are a line map of the classic Brodmann scheme, descending from Brodmann&rsquo;s own 1909 figures: every area outlined and numbered, nothing drawn beneath. Pick an area, here or in the list, and it fills in its colour on the face that shows it. Anterior is on the left in the external view and, as the scheme is conventionally drawn, on the right in the internal one. The drawing is a schematic &mdash; where each area actually sits in a real head, with the atlas&rsquo;s own boundaries, is what the scan above shows. Brodmann Areas diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN &ndash; Institute for EEG-Neurofeedback / Neurofeedback Academy</a>.</p>
+            <p class="ba-foot">Brodmann numbered the cortex in 1909 by how its cells are layered, not by what it does &mdash; which is why the numbers wander about the brain and why several of his 52 have no agreed human counterpart. The 41 drawn here are those the shipped atlas labels; 12&ndash;16, 31, 33 and 49&ndash;52 are absent. Each area is bilateral: Brodmann described cortical types, not hemispheres, so where a function is strongly one-sided the note says so rather than the atlas splitting the area. The boundaries are an approximation to begin with &mdash; they were drawn from a handful of post-mortem brains, and no two people's cortex is folded the same way. This particular volume descends from the Talairach Daemon, whose labels were grown outwards to fill the brain: 14% of what it marks lies in white matter that the AAL atlas does not count as cortex at all, and label 48 has become a catch-all for the peri-Sylvian region rather than the small area Brodmann gave that number to. Read a boundary as a neighbourhood, not a border. Educational, not diagnostic.</p>
+          </section>
+        </div>
+      </div>
 
+      <div class="pop" id="popRef" hidden aria-labelledby="popRefH">
+        <header class="pop-head"><b id="popRefH">Reference</b><small>what the atlas is drawn from</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+          <p class="ref-line"><b>Template</b> MNI152 T1, 0.74&thinsp;mm isotropic.</p>
+          <p class="ref-line"><b>Atlases</b> AAL, 116 regions &middot; Brodmann, 41 areas.</p>
+          <p class="ref-line"><b>Receptors</b> the sources are listed with the receptor density, under the graph.</p>
+          <p class="estab">Runs fully offline · single file · no server</p>
+          <p class="credits">© 2026 VisualNeuroscience.AI · rendered with <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a> (Rorden lab) · MNI152 template · AAL atlas · Brodmann atlas from <a href="https://github.com/neurolabusc/MRIcron" target="_blank" rel="noopener">MRIcron</a> (BSD) · Brodmann diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN</a> · set in Flux, Newsreader &amp; Prata &middot; <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy</a></p>
+        </div>
+      </div>
+
+      <div class="pop pop-sm" id="popSaved" hidden aria-labelledby="popSavedH">
+        <header class="pop-head"><b id="popSavedH">Saved maps</b><small>this map, named and kept</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+                    <p class="empty-note">Name the view &mdash; the highlighted regions, their colours, the camera and any cuts &mdash; and open it again later.</p>
+          <div id="models"></div>
+        </div>
+      </div>
+
+      <div class="pop pop-sm" id="popExport" hidden aria-labelledby="popExportH">
+        <header class="pop-head"><b id="popExportH">Export</b><small>a 3D model, or a picture</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+          <div id="export3d"></div>
+          <div class="btns" id="shotRow"><button class="btn" id="shotBtn" type="button">Save PNG snapshot</button></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- the bar: the readouts, the pop-ups' buttons, and saving at the end -->
+  <nav class="panelbar" aria-label="Atlas panels">
+    <div class="panelbar-stats">
+      <div class="stat"><div class="k">Highlighted</div><div class="v" id="statCount">0 <small>regions</small></div></div>
+        <div class="stat"><div class="k">Probe</div><div class="v probe-v"><span id="cursorRegion">—</span><small id="cursorCoords">hover a view · drag = crosshair</small></div></div>
+    </div>
+    <div class="panelbar-btns" role="group" aria-label="Panels">
+      <button class="ts-btn" type="button" data-pop="popNotes" aria-pressed="false">What they do</button>
+      <button class="ts-btn" type="button" data-pop="popRx" data-tab="chart" aria-pressed="false">Receptor graph</button>
+      <button class="ts-btn" type="button" data-pop="popRx" data-tab="types" aria-pressed="false">Neurotransmitters</button>
+      <button class="ts-btn" type="button" data-pop="popMap" aria-pressed="false">Brodmann map</button>
+      <button class="ts-btn" type="button" data-pop="popRef" aria-pressed="false">Reference</button>
+    </div>
+    <div class="panelbar-end" role="group" aria-label="Saving">
+      <button class="ts-btn" type="button" data-pop="popSaved" aria-pressed="false">Saved maps</button>
+      <button class="ts-btn" type="button" data-pop="popExport" aria-pressed="false">Export</button>
+    </div>
+  </nav>
 </main>
 
 <div id="chart-tooltip" class="chart-tooltip" role="tooltip"></div>
@@ -1696,7 +1863,11 @@ mark{ background:var(--ink); color:var(--paper); }
   function fitRegionList(){
     if (!rpick.classList.contains("open")) return;
     var vv = window.visualViewport;
-    var room = (vv ? vv.height + vv.offsetTop : window.innerHeight) - rpickList.getBoundingClientRect().top - 14;
+    var floor = vv ? vv.height + vv.offsetTop : window.innerHeight;
+    /* the list lives in the drawer, which ends above the bar */
+    var drawer = document.getElementById("drawer");
+    if (drawer) floor = Math.min(floor, drawer.getBoundingClientRect().bottom);
+    var room = floor - rpickList.getBoundingClientRect().top - 14;
     rpickList.style.maxHeight = Math.round(Math.max(176, Math.min(420, room))) + "px";
   }
   /* Closed, the panel is out of the layout, not merely invisible: iOS does
@@ -1952,7 +2123,7 @@ mark{ background:var(--ink); color:var(--paper); }
     });
     aalPane.classList.toggle("hidden", mode !== "aal");
     baPane.classList.toggle("hidden", mode !== "ba");
-    if (baMapSec) baMapSec.classList.toggle("hidden", mode !== "ba");
+    /* the map lives in its pop-up now, shown on request whatever the picker's mode */
     if (!quiet){ try{ localStorage.setItem("mn-atlas-mode", mode); }catch(e){} }
   }
   atlasBtns.forEach(function(b){
@@ -3330,6 +3501,106 @@ if (location.hash === "#receptors") {
   const rxs = document.getElementById("receptorSec");
   if (rxs) rxs.scrollIntoView();
 }
+</script>
+<script>
+/* ── the screen ──────────────────────────────────────────────────────────
+   The atlas is one screen: the header's height is measured into
+   --screen-top so the views fill the rest, the drawer on the left folds
+   away on its tab (and is remembered), and the bar's buttons raise one
+   pop-up at a time over the views. A pop-up that holds a chart tells the
+   chart to measure itself once it can be seen. */
+(function(){
+  var root = document.documentElement, main = document.getElementById("main");
+  var head = document.querySelector(".masthead"), bar = document.querySelector(".panelbar");
+  var queued = 0;
+  function fit(){
+    queued = 0;
+    var top = main.getBoundingClientRect().top + (window.pageYOffset || 0);
+    root.style.setProperty("--screen-top", Math.max(0, Math.round(top)) + "px");
+    if (bar) root.style.setProperty("--bar-h", Math.round(bar.getBoundingClientRect().height) + "px");
+  }
+  function soon(){ if (!queued) queued = requestAnimationFrame(fit); }
+  fit();
+  if (window.ResizeObserver){
+    var ro = new ResizeObserver(soon);
+    if (head) ro.observe(head);
+    if (bar) ro.observe(bar);
+    ro.observe(document.body);
+  }
+  window.addEventListener("resize", soon);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(soon);
+
+  /* the drawer: open beside the views on a wide screen, folded over them
+     on a narrow one, and as it was last left */
+  var deck = document.getElementById("deck"), tab = document.getElementById("drawerTab");
+  var narrow = window.matchMedia ? window.matchMedia("(max-width:900px)") : null;
+  var open;
+  try{
+    var kept = localStorage.getItem("vn-atlas-drawer");
+    open = kept === "open" ? true : kept === "shut" ? false : !(narrow && narrow.matches);
+  } catch(e){ open = !(narrow && narrow.matches); }
+  function setDrawer(on, keep){
+    open = on;
+    deck.classList.toggle("shut", !on);
+    tab.setAttribute("aria-expanded", String(on));
+    tab.setAttribute("aria-label", on ? "Hide the region picker" : "Show the region picker");
+    tab.title = on ? "Hide the region picker" : "Show the region picker";
+    if (keep){ try{ localStorage.setItem("vn-atlas-drawer", on ? "open" : "shut"); }catch(e){} }
+    if (window.MN_LIFE) MN_LIFE.remeasure();
+  }
+  setDrawer(open, false);
+  tab.addEventListener("click", function(){ setDrawer(!open, true); });
+
+  /* the pop-ups */
+  var pops = {}, current = null;
+  document.querySelectorAll(".stage .pop").forEach(function(p){ pops[p.id] = p; });
+  var buttons = document.querySelectorAll(".panelbar [data-pop]");
+  function activeTab(){
+    var t = document.querySelector("#popRx [data-tab].active");
+    return t ? t.getAttribute("data-tab") : null;
+  }
+  function press(){
+    buttons.forEach(function(b){
+      var on = !!current && b.getAttribute("data-pop") === current &&
+               (!b.hasAttribute("data-tab") || b.getAttribute("data-tab") === activeTab());
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-pressed", String(on));
+    });
+  }
+  function hide(){
+    if (!current) return;
+    var p = pops[current];
+    current = null;
+    p.classList.remove("in");
+    clearTimeout(p._leaving);
+    p._leaving = setTimeout(function(){ if (!p.classList.contains("in")) p.hidden = true; }, 280);
+    press();
+  }
+  function show(id, tabName){
+    if (current === id && (!tabName || tabName === activeTab())){ hide(); return; }
+    if (current && current !== id) hide();
+    var p = pops[id];
+    if (!p) return;
+    clearTimeout(p._leaving);
+    p.hidden = false;
+    current = id;
+    void p.offsetWidth;
+    p.classList.add("in");
+    if (tabName){
+      var t = document.querySelector('#popRx [data-tab="' + tabName + '"]');
+      if (t) t.click();
+    }
+    /* a chart measures its room once it is on screen */
+    requestAnimationFrame(function(){ window.dispatchEvent(new Event("resize")); });
+    press();
+  }
+  buttons.forEach(function(b){
+    b.addEventListener("click", function(){ show(b.getAttribute("data-pop"), b.getAttribute("data-tab")); });
+  });
+  document.querySelectorAll(".pop .pop-x").forEach(function(x){ x.addEventListener("click", hide); });
+  document.querySelectorAll("#popRx [data-tab]").forEach(function(t){ t.addEventListener("click", press); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && current) hide(); });
+})();
 </script>
 <script src="assets/firebase-config.js"></script>
 <script type="module" src="assets/auth-ui.js"></script>

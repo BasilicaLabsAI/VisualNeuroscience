@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.22 — 19 October 2026 — The 3D Region Atlas as one screen
+Commit · Make the 3D Region Atlas one screen: the views fill it, the picker is a drawer, the rest rises from a bar
+
+The 3D Region Atlas is now one screen, in the manner of an anatomy app, on the website and in the apps. The four views fill everything between the header and a bar along the bottom, and nothing scrolls. The region picker and the highlighted list are a drawer on the left, folded away on its tab when the views want the room, beside them on a computer or an iPad and over them on a phone. Everything that used to stand below the views rises from the bar's buttons as a pop-up over them, one at a time: what the highlighted regions do, the receptor graph, the receptor types by neurotransmitter, the Brodmann map and the reference, with Saved maps and Export at the bar's end; each still follows the selection, and the map still highlights what is tapped. The readouts sit at the bar's start. On a phone the four views keep their names and their expand buttons, with the tools waiting in the opened view. In any 3D view, a drag with the mouse's wheel button now pans, as a drag with shift held does.
+
 ## v11.21 — 19 October 2026 — Usage counts: who signs in, from where, on what
-Commit · Count the site's and the apps' use with Google Analytics for Firebase, each sign-in by its method
+Commit `e955a8d` · Count the site's and the apps' use with Google Analytics for Firebase, each sign-in by its method
 
 The site and the apps now count how they are used, through Google Analytics for Firebase, and say so on the privacy page: which pages and screens are opened, every sign-in and the way it was made, the kind of device, browser or app version, and the country, so that the owner can see how many people use the website and the app and how they sign in. Nothing is joined to an account, nothing is used for advertising, and the apps are built without the advertising identifier. On the website this is a first-party analytics cookie, which blocking cookies for the site stops; a setting in the site's configuration can keep the website out of it altogether and count in the apps alone. The bundled Firebase code now carries the analytics module and is rebuilt by one script kept in the repository.
 

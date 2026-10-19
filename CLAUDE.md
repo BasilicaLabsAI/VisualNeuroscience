@@ -81,7 +81,17 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `#state=<id>` opens another, and the address follows the state picked. The Region Atlas's old `regions.html#network`
   and `#network=<state>` links forward there.
 - The Region Atlas is called the 3D Region Atlas wherever its name shows (nav, titles, home page, the app) since
-  v11.12; its file stays `regions.html`. The Brodmann Area Atlas is its own page again since v11.12 (retired into the
+  v11.12; its file stays `regions.html`. Since v11.22, at the owner's request, it is one screen in the manner of an
+  anatomy app (`body.atlas-screen`, `main.screen`, the style block "the screen" and the script "the screen" at the end
+  of the page): the four views fill the room between the header and a bar along the bottom (`.panelbar`), nothing
+  scrolls, the region picker and the highlighted list are a drawer on the left (`#drawer`, folding on `#drawerTab`,
+  beside the views from 901px and over them below, remembered in `localStorage` as `vn-atlas-drawer`), and the bar's
+  buttons raise one pop-up at a time over the views (`.pop`: What they do, Receptor graph and Neurotransmitters, which
+  are the receptor section's own chart and types tabs, Brodmann map, Reference; Saved maps and Export at the bar's
+  end). The readouts sit at the bar's start. Every element id the script uses is unchanged, so the pop-ups' contents
+  still follow the selection; a chart is told to measure itself when its pop-up opens. A view too narrow for its
+  bar's tools (a phone) shows the name and the expand button alone. The page's `--screen-top` is the header's
+  measured height. In every 3D view, a drag on the wheel's button pans, as shift-drag does (`zoom.js`). The Brodmann Area Atlas is its own page again since v11.12 (retired into the
   Region Atlas in v10.8): `site/brodmann.html`, with its nav entry and its box straight after the 3D Region Atlas.
   Since v11.15, at the owner's request, it is one screen and nothing else: the two faces of the map
   (`brodmann-outline.js`) and the reading of the picked area (`brodmann-areas.js`), fitted to the window under the
