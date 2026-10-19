@@ -86,8 +86,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   draw their four views alike, from shared files: the scans' look in either theme is `site/assets/scan-look.js`, and
   the bar over each view, the square stages, the light-theme stages and the view opened over the grid are
   `site/assets/atlas-views.css` with `view-expand.js`. A change to the views belongs there, so every page gets it;
-  each page keeps its own viewer setup, locks and Centre planes. On a tablet the stages take an explicit height
-  (`min(100cqw, …)`) rather than a capped aspect ratio, which WebKit narrowed to a square inside each view. Region
+  each page keeps its own viewer setup, locks and Centre planes. Wherever the four sit two to a row on a screen at
+  least 600 tall (a tablet from 700 wide, a computer from 901) they are fitted to the screen since v11.19: `view-fit.js`
+  measures the room above the grid and the bar's height into `--views-room` and `--view-bar` on the wrap, and
+  atlas-views.css sizes each stage so both rows fit under the header with the page at rest, capped square (`100cqw`;
+  never a capped aspect ratio, which WebKit narrows to a square inside the view) and floored at 180px. Region
   colours reach the viewer through `MN_LOOK.labelTable` (and the same padding in `vision-scan.js`): the table is padded
   to a power of two, since at the atlas's 117 entries a highlighted label made the label just below it draw black.
 - The interface follows Apple's fluid-interface guidance (v10.92): controls answer on the press (`viewer.css`, the

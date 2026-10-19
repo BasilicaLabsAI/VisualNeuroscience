@@ -1176,6 +1176,7 @@ mark{ background:var(--ink); color:var(--paper); }
 <script src="assets/slice-tool.js"></script>
 <script src="assets/scan-look.js"></script>
 <script src="assets/view-expand.js"></script>
+<script src="assets/view-fit.js"></script>
 <script src="assets/zoom.js"></script>
 <script src="assets/export3d.js"></script>
 <script src="assets/models.js"></script>
@@ -1360,8 +1361,10 @@ mark{ background:var(--ink); color:var(--paper); }
   });
 
   /* each view's bar ends in the button that opens it over the grid
-     (assets/view-expand.js) */
+     (assets/view-expand.js), and the four are fitted to the screen where
+     they sit two to a row (assets/view-fit.js) */
   if (window.MN_EXPAND) MN_EXPAND.attach(document.querySelector(".views-wrap"));
+  if (window.MN_FIT) MN_FIT.attach(document.querySelector(".views-wrap"));
   var selections = new Map();
 
   var chipsEl = document.getElementById("chips");

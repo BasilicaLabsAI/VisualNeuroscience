@@ -37,8 +37,11 @@
 .views .view-cap b{ order:1; flex:none; margin-right:-.28em; }
 .views .view-cap .view-end{ order:2; flex:1 1 0; display:flex; justify-content:flex-end; align-items:center; gap:.6rem; }
 .views .view-cap .view-tools{ order:3; flex:0 0 100%; padding:0; border:0; }
-/* the caption's italic is for its own words, not the tools' label */
+/* the caption's italic is for its own words, not the tools' label nor
+   the second word of a button (Centre planes, Reset cuts, Slice regions);
+   that word's space is inside its span, which a flex button would trim */
 .views .view-cap .tool-label{ font-family:var(--font-brand); font-style:normal; font-size:.55rem; color:var(--ink-60); }
+.views .view-cap .ts-btn span{ font:inherit; letter-spacing:inherit; color:inherit; white-space:pre; }
 .views .view-cap .centre-btn{ margin-left:0; }
 /* the drag-lock cells, border and all, as tall as the buttons beside them,
    so every bar is the same height */
@@ -74,22 +77,31 @@
 
 /* square scans: every stage as tall as it is wide */
 .views-wrap .views .view .mri-stage{ height:auto; aspect-ratio:1 / 1; }
-/* On a tablet the four views fit the screen together, two to a row: square
-   where the screen has the room, flatter where it is short (an iPad held
-   sideways). The allowance is the two bars, the gap between the rows and a
-   margin. A phone held sideways is too short for it and keeps its own.
-   The stage is given its height outright, the view's width (100cqw) or the
-   allowance, whichever is less, and the whole of the view's width: left to
-   the aspect ratio, a stage held to a maximum height stays square in
-   WebKit, narrower than its view, and the scan sat in a square at one end
-   of the box. */
+/* On a tablet the four views sit two to a row from 700 pixels wide; a
+   phone held sideways is too short for it and keeps its own. */
 @media (pointer:coarse) and (min-width:700px) and (min-height:600px){
   .views-wrap .views{ grid-template-columns:1fr 1fr; }
+}
+/* Wherever the four sit two to a row on a screen with the height (a tablet
+   from 700 wide, a computer from 901; narrower, the pages stack them), the
+   stages are fitted to the screen, both rows under whatever stands above
+   the grid with the page at rest, as on an iPad: four squares do not fit a
+   computer's screen. assets/view-fit.js measures the room above the grid
+   and the bar's height into --views-room and --view-bar on the wrap; what
+   is left after the two bars, the gap between the rows, the borders and a
+   margin below is shared by the two rows. A stage is never taller than it
+   is wide (square where the screen has the room, as on an iPad held
+   upright) and never under 180 pixels (a short window scrolls instead).
+   The stage is given its height outright and the whole of the view's
+   width: left to the aspect ratio, a stage held to a maximum height stays
+   square in WebKit, narrower than its view, and the scan sat in a square
+   at one end of the box. */
+@media (min-width:901px) and (min-height:600px), (pointer:coarse) and (min-width:700px) and (min-height:600px){
   .views-wrap .views .view .mri-stage{
     width:100%; aspect-ratio:auto;
-    height:calc((100vh - 10rem) / 2);
-    height:min(100cqw, calc((100vh - 10rem) / 2));
-    height:min(100cqw, calc((100dvh - 10rem) / 2));
+    height:calc((100vh - var(--views-room, 11rem) - 2 * var(--view-bar, 2.75rem) - 2 * var(--gap, 14px) - 4px) / 2);
+    height:clamp(180px, calc((100vh - var(--views-room, 11rem) - 2 * var(--view-bar, 2.75rem) - 2 * var(--gap, 14px) - 4px) / 2), 100cqw);
+    height:clamp(180px, calc((100dvh - var(--views-room, 11rem) - 2 * var(--view-bar, 2.75rem) - 2 * var(--gap, 14px) - 4px) / 2), 100cqw);
   }
 }
 

@@ -371,6 +371,7 @@ svg{ display:block; }
 <script src="assets/slice-tool.js"></script>
 <script src="assets/scan-look.js"></script>
 <script src="assets/view-expand.js"></script>
+<script src="assets/view-fit.js"></script>
 <script src="assets/zoom.js"></script>
 <script src="assets/export3d.js"></script>
 <script>
@@ -515,6 +516,8 @@ svg{ display:block; }
 
   /* each view's bar ends in the button that opens it over the grid */
   if (window.MN_EXPAND) MN_EXPAND.attach(document.querySelector(".views-wrap"));
+  /* and the four are fitted to the screen where they sit two to a row */
+  if (window.MN_FIT) MN_FIT.attach(document.querySelector(".views-wrap"));
 
   /* ── the regions' colours, from the door ── */
   var layerFn = null, locWatchers = [];
