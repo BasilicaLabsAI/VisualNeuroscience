@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.31 — 19 October 2026 — Reference at the far right of the bar
+Commit · Put the Reference button at the far right of the 3D Region Atlas's bar
+
+The Reference button of the 3D Region Atlas now stands at the far right of the bar, after Saved maps and Export and divided from them by a line, on a computer, an iPad and a phone alike. The bar's other pop-up buttons, What they do, Receptor graph and Neurotransmitters, keep their places.
+
 ## v11.30 — 19 October 2026 — The Brodmann map leaves the 3D Region Atlas
-Commit · Take the Brodmann map out of the 3D Region Atlas, which keeps its Brodmann list
+Commit `26dc5b6` · Take the Brodmann map out of the 3D Region Atlas, which keeps its Brodmann list
 
 The 3D Region Atlas no longer carries the two-face Brodmann map: its button leaves the bar, and with it the pop-up and the drawing. The map has a page of its own, the Brodmann Area Atlas, where every area opens on the scan here. The atlas keeps its Brodmann list in the region box, so areas are still added and highlighted as before, and a link that lands on an area still opens on it.
 

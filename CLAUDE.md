@@ -94,8 +94,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   only with a fine pointer or when typing on the button opened it (`openRegionPicker(seed, typed)`): on a touch
   screen the keyboard rose over the list, so there it waits for a tap (v11.26). The bar's
   buttons raise one pop-up at a time over the views (`.pop`: What they do, Receptor graph and Neurotransmitters, which
-  are the receptor section's own chart and types tabs, Reference; Saved maps and Export at the bar's end; the Brodmann
-  map left the page in v11.30, the Brodmann Area Atlas having it). The readouts sit at the bar's start. Every element id the script uses is unchanged, so the pop-ups' contents
+  are the receptor section's own chart and types tabs; then Saved maps, Export and, at the far right behind a line,
+  Reference (`.pbtn-ref`, since v11.31); the Brodmann map left the page in v11.30, the Brodmann Area Atlas having it). The readouts sit at the bar's start. Every element id the script uses is unchanged, so the pop-ups' contents
   still follow the selection; a chart is told to measure itself when its pop-up opens. The receptor types table
   (`#types-heat`, `.heat`) is `overflow:visible` and scrolls with the pop-up's body, so its sticky column names and
   row labels hold; its header is as tall as the longest name (`th.col button` sized by its text, since v11.29). A view too narrow for its

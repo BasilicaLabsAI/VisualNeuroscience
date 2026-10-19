@@ -991,6 +991,8 @@ main.screen{
 .panelbar-views, .panelbar-all{ display:none; }
 .panelbar-btns{ display:flex; gap:.15rem; flex:none; margin-left:.4rem; }
 .panelbar-end{ display:flex; gap:.15rem; flex:none; margin-left:auto; padding-left:.6rem; }
+/* the reference stands at the far right, a line between it and the saving */
+.pbtn.pbtn-ref{ margin-left:.3rem; padding-left:.65rem; border-left:1px solid var(--hair); }
 /* a button is an icon over its word; the one in use is drawn in ink, the
    rest in the quieter grey, as the anatomy apps draw theirs */
 .pbtn{
@@ -1339,11 +1341,11 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
       <button class="pbtn" type="button" data-pop="popNotes" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></svg><span>What they do</span></button>
       <button class="pbtn" type="button" data-pop="popRx" data-tab="chart" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20h16M7 20v-7M12 20V6M17 20v-10"/></svg><span>Receptor graph</span></button>
       <button class="pbtn" type="button" data-pop="popRx" data-tab="types" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4h16v16H4zM4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"/></svg><span>Neurotransmitters</span></button>
-      <button class="pbtn" type="button" data-pop="popRef" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/></svg><span>Reference</span></button>
     </div>
-    <div class="panelbar-end" role="group" aria-label="Saving">
+    <div class="panelbar-end" role="group" aria-label="Saving and reference">
       <button class="pbtn" type="button" data-pop="popSaved" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3.5h10v17l-5-3.6-5 3.6z"/></svg><span>Saved maps</span></button>
       <button class="pbtn" type="button" data-pop="popExport" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15V4M8 8l4-4 4 4M5 13v7h14v-7"/></svg><span>Export</span></button>
+      <button class="pbtn pbtn-ref" type="button" data-pop="popRef" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/></svg><span>Reference</span></button>
     </div>
   </nav>
 </main>
