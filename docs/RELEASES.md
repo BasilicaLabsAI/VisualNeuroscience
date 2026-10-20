@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.37 — 20 October 2026 — The MCP server first in the Vision Pro About window too
+Commit · Lead the Vision Pro console's About window with the MCP server, as the other About pages do
+
+The About window of the Apple Vision Pro console now opens with the MCP server as well, a card of its own above the project's card: what an assistant can ask the atlas, the address to add as a connector, and the nine tools. With it every About page leads with the server, in the app, on the website and in the room.
+
 ## v11.36 — 20 October 2026 — The MCP server first on the About page
-Commit · Put the MCP server at the head of the About page, in the app and on the website
+Commit `a9012bd` · Put the MCP server at the head of the About page, in the app and on the website
 
 The MCP server now comes first on the About page. In the app on iPhone, iPad and Mac its box leads the About tab, above the message from the developer and the channels. On the website, and so in the Android app, the About page opens with the same box under its title, above the developer's portrait and message; inside the iPhone and iPad app that page is reached from the About tab, which already leads with the server, so there it is not shown a second time.
 

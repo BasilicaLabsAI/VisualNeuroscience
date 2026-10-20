@@ -8,8 +8,16 @@
 <link rel="stylesheet" href="fonts/fonts.css">
 <link rel="stylesheet" href="assets/vision.css">
 <style>
-.vmain{ justify-content:center; padding-top:1rem; overflow-y:auto; }
-.vcard{ width:min(38rem,100%); align-self:flex-start; }
+/* the cards stand one above the other, the MCP server's first, as the
+   About pages of the app and the website lead with it */
+.vmain{ flex-direction:column; align-items:center; justify-content:flex-start; padding-top:1rem; overflow-y:auto; }
+.vcard{ flex:none; width:min(38rem,100%); }
+.mcp-at{ font-size:.95rem; overflow-wrap:anywhere; }
+.mcp-meta{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60);
+  border-top:1px solid var(--edge); padding-top:.6rem; margin-top:.9rem;
+}
 .vcard h3{
   font-family:var(--font-brand); font-weight:500; font-size:.68rem;
   letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
@@ -46,6 +54,14 @@
 </div>
 
 <div class="vmain">
+  <div class="vcard">
+    <div class="vkicker">For AI assistants</div>
+    <h2>MCP Server</h2>
+    <p class="lede">Ask the atlas from Claude, ChatGPT or any assistant that speaks the Model Context Protocol: what a region does, where a receptor is densest, how the brain changes in a state. Each answer links to the view it describes.</p>
+    <p class="mcp-at">Add <b>https://mcp.visualneuroscience.ai/</b> to the assistant as a connector.</p>
+    <p class="mcp-meta">9 tools &middot; no key needed &middot; sign in only for your own models</p>
+  </div>
+
   <div class="vcard">
     <div class="vkicker">The project</div>
     <h2>About</h2>
