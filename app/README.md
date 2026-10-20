@@ -45,7 +45,7 @@ position. Account comes last and gathers what is not a section of the site.
 | Atlases | `brain` | 3D Region Atlas, Brodmann Area Atlas, Microanatomy, Molecular, Tractography, Network Atlas |
 | Library | `books.vertical` | Visualizing Studies, Digital Textbook |
 | Practice | `checklist` | Neuroscience Practice |
-| About | `info.circle` | the developer's message, YouTube, Instagram, LinkedIn and email, the MCP server |
+| About | `info.circle` | the MCP server, the developer's message, YouTube, Instagram, LinkedIn and email |
 | Account | `person` | the account page (sign-in, your data, deletion), Appearance (dark or light), support and the privacy page, the credits |
 
 There is no badge, because nothing in the app is waiting to be done:

@@ -38,7 +38,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   Account, each a page of boxes in the home page's words with no header of its own (the tab bar names it), each box
   pushing a web page in a Capacitor bridge of its own. A page inside the tabs carries `data-shell="tabs"` and draws
   no web bar (`navbar.js`); the theme is the shell's (Account). When a home-page box's text or picture changes,
-  change its twin in `Shell.swift` too. Android keeps the web bar. On an iPad the pages fill the screen: the shell
+  change its twin in `Shell.swift` too. The About tab leads with the MCP server since v11.36, and the website's About
+  page opens with the same box (`.mcp-box` in `about.html`, hidden inside the app's tabs). Android keeps the web bar. On an iPad the pages fill the screen: the shell
   also marks them `data-shell-pad`, the system bar shows no title there, and the page's title strip steps aside
   (`viewer.css`), keeping any buttons it carries. The stack's swipes back (from the edge, and iOS 26's from
   anywhere) are off on the pages, since a sideways drag on a scan set them off; Back is the bar's button

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.36 — 20 October 2026 — The MCP server first on the About page
+Commit · Put the MCP server at the head of the About page, in the app and on the website
+
+The MCP server now comes first on the About page. In the app on iPhone, iPad and Mac its box leads the About tab, above the message from the developer and the channels. On the website, and so in the Android app, the About page opens with the same box under its title, above the developer's portrait and message; inside the iPhone and iPad app that page is reached from the About tab, which already leads with the server, so there it is not shown a second time.
+
 ## v11.35 — 19 October 2026 — The receptor graph without the speech
-Commit · Strip the receptor density pop-up to its graph, one sentence above it and its controls in rows
+Commit `a888eab` · Strip the receptor density pop-up to its graph, one sentence above it and its controls in rows
 
 The Receptor graph pop-up of the 3D Region Atlas is now the graph and little else. One sentence stands above it where a paragraph did; the controls come in rows beneath that sentence, the source first, in vivo PET or autoradiography, then by receptor or by region, then the dropdown; and the graph follows straight after, higher than before, with the receptor's and transmitter's drawings and the sources beneath it as they were. The Chart, Receptor Types and Density Table tabs are gone from the pop-up, the bar's own Receptor graph and Neurotransmitters buttons doing their work, and the density table is shown nowhere for now.
 

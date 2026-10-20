@@ -174,11 +174,15 @@ struct PracticeTab: View {
     }
 }
 
-/// The developer's message, where to follow and write, and the server
-/// that lets an assistant ask the atlas.
+/// The server that lets an assistant ask the atlas, first, then the
+/// developer's message and where to follow and write.
 struct AboutTab: View {
     var body: some View {
         TabPage {
+            PageBox(page: .mcp, kicker: "For AI assistants",
+                    text: "Ask the atlas from Claude, ChatGPT or any assistant that speaks the Model Context Protocol: what a region does, where a receptor is densest, how the brain changes in a state. Each answer links to the view it describes.",
+                    meta: "9 tools · no key needed · sign in only for your own models",
+                    go: "How to connect")
             PageBox(page: .about, kicker: "From the developer", title: "Message from the Developer",
                     shot: Shot("assets/portrait/portrait.webp", framed: true),
                     meta: "Fadil Karim · built by one engineer · free to use",
@@ -192,10 +196,6 @@ struct AboutTab: View {
                 }
                 .padding(.top, 10)
             }
-            PageBox(page: .mcp, kicker: "For AI assistants",
-                    text: "Ask the atlas from Claude, ChatGPT or any assistant that speaks the Model Context Protocol: what a region does, where a receptor is densest, how the brain changes in a state. Each answer links to the view it describes.",
-                    meta: "9 tools · no key needed · sign in only for your own models",
-                    go: "How to connect")
         }
     }
 }

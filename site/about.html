@@ -136,6 +136,42 @@ svg{ display:block; }
   margin:0 0 calc(var(--gap) * 1.6);
 }
 
+/* ── the server for assistants, at the head of the page ────────────────
+   The same box the home page and the app's About tab show, in the reading
+   column above the story. Inside the app's tabs it stands at the head of
+   the About tab already, from which this page is opened, so it is not
+   shown twice. */
+.mcp-box{
+  max-width:72ch; margin:0 auto var(--gap);
+  display:flex; flex-direction:column; min-width:0;
+  border:1px solid var(--hair); background:var(--paper); color:var(--ink);
+  text-decoration:none; padding:clamp(16px,1.7vw,24px);
+  transition:background .18s ease;
+}
+@media (hover: hover){
+  a.mcp-box:hover{ text-decoration:none; background:color-mix(in srgb, var(--ink) 7%, transparent); }
+  a.mcp-box:hover .go{ text-decoration:underline; text-underline-offset:3px; }
+}
+.mcp-box .kicker{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.26em; text-transform:uppercase; color:var(--ink-60);
+}
+.mcp-box h2{
+  font-family:var(--font-display); font-weight:400; letter-spacing:.01em;
+  font-size:1.5rem; line-height:1.1; margin:.4rem 0 .5rem; text-transform:none; border:0; padding:0;
+}
+.mcp-box p{ font-size:.95rem; line-height:1.55; color:var(--ink-60); margin:0; }
+.mcp-box .meta{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-35);
+  border-top:1px solid var(--ink-35); padding-top:.55rem; margin-top:.85rem;
+}
+.mcp-box .go{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.24em; text-transform:uppercase; padding-top:.9rem;
+}
+:root[data-shell="tabs"] .mcp-box{ display:none; }
+
 /* ── the story ──────────────────────────────────────────────────────── */
 .policy{ max-width:72ch; margin:0 auto; }
 
@@ -250,6 +286,14 @@ svg{ display:block; }
   <h1 class="name">About</h1>
   <span class="anno">who built this, and why</span>
 </div>
+
+<a class="mcp-box" href="mcp.html">
+  <div class="kicker">For AI assistants</div>
+  <h2>MCP Server</h2>
+  <p>Ask the atlas from Claude, ChatGPT or any assistant that speaks the Model Context Protocol: what a region does, where a receptor is densest, how the brain changes in a state. Each answer links to the view it describes.</p>
+  <div class="meta">9 tools &middot; no key needed &middot; sign in only for your own models</div>
+  <div class="go">How to connect &rarr;</div>
+</a>
 
 <div class="policy">
 
