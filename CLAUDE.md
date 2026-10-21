@@ -133,7 +133,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   sideways hint and keeps a room-taking scrollbar out of the graph's height before it measures; the table's lede is one concise paragraph ending in a live example read off the table (`heatExample`); the
   bar's two buttons each stand for a family of tabs (`data-tabs`), lit for any of them); then Saved
   maps, Export and, at the far right behind a line,
-  Reference (`.pbtn-ref`, since v11.31); the Brodmann map left the page in v11.30, the Brodmann Area Atlas having it). The readouts sit at the bar's start. Every element id the script uses is unchanged, so the pop-ups' contents
+  Reference (`.pbtn-ref`, since v11.31); the Brodmann map left the page in v11.30, the Brodmann Area Atlas having it). The readouts sit at the bar's start; since v11.51 the Probe readout's names are buttons (`.probe-btn`, built in `onLoc`
+  only as the names change): the region's lights the side under the crosshair, or the pair while Mirror is ticked, and puts
+  out whatever entry covers the label (`toggleProbe`, `litBy`), the area's lights or puts out the Brodmann area
+  (`toggleProbeBA`), and `paintProbe` keeps their pressed state and colour dot in step through `selWatchers`. Every element id the script uses is unchanged, so the pop-ups' contents
   still follow the selection; a chart is told to measure itself when its pop-up opens. The receptor types table
   (`#types-heat`, `.heat`) is `overflow:visible` and scrolls with the pop-up's body, so its sticky column names and
   row labels hold; its header is as tall as the longest name (`th.col button` sized by its text, since v11.29). A view too narrow for its

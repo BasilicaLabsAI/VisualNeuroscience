@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.51 — 21 October 2026 — The probe's names highlight on a tap
+Commit · Make the probe's names buttons that light the region or the Brodmann area under the crosshair, or put it out
+
+The bar's Probe readout names the region under the crosshair, and the Brodmann area where there is one, and until now that was all it did. Each name is now a button: a tap highlights the region, on the side the crosshair is on or on both sides while Mirror left / right pairs is ticked, and it joins the Highlighted list with a colour of its own, which the name then carries as a dot; tapped again, or lit already by any entry in the list, it goes out. The area's name does the same for the Brodmann area. Under a finger the names answer to a touch well above and below their line.
+
 ## v11.50 — 21 October 2026 — A neurotransmitter dropdown on the receptor types
-Commit · Add a neurotransmitter dropdown to the receptor types tab, filtering the row of cards and the table
+Commit `e65b911` · Add a neurotransmitter dropdown to the receptor types tab, filtering the row of cards and the table
 
 The receptor window's Receptor types tab lays every receptor's card in a row, with a table of sub-types beneath, and the only way through the 69 was the arrows. A dropdown now stands at the head of the row: pick a neurotransmitter, dopamine say, and the row holds its receptors alone, the count reads one of six, the arrows walk through those, and the table beneath keeps that family's sub-types only; Every neurotransmitter brings them all back. The pick holds while the source is switched and while a card is charted and the tab reopened. On a phone the dropdown takes a line of its own, with the count and the arrows beneath it.
 

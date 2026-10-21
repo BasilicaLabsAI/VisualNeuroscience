@@ -996,6 +996,22 @@ main.screen{
 .panelbar .stat .v{ white-space:nowrap; }
 .panelbar .stat .v small{ display:inline; margin-left:.35rem; }
 .panelbar .probe-v{ max-width:22rem; overflow:hidden; text-overflow:ellipsis; }
+/* the probe's names are buttons: a tap lights the region or the area under
+   the crosshair as the list would, or puts it out; the dot is the colour
+   it is lit in. Under a finger the readout's box reaches above and below
+   its line, unseen, so the names are easier to hit */
+.probe-btn{ position:relative; font:inherit; color:inherit; letter-spacing:inherit; line-height:inherit; background:none; border:0; border-radius:0;
+  padding:0; margin:0; cursor:pointer; border-bottom:1px dotted var(--ink-35); transition:opacity .12s; }
+.probe-btn[aria-pressed="true"]{ border-bottom:1px solid var(--ink); }
+.probe-btn .dot{ display:none; width:.55em; height:.55em; margin-right:.32em; border:1px solid var(--ink-35); vertical-align:.02em; }
+.probe-btn[aria-pressed="true"] .dot{ display:inline-block; }
+.probe-btn:active{ opacity:.55; }
+@media (hover: hover){ .probe-btn:hover{ border-bottom-color:var(--ink); } }
+@media (pointer: coarse){
+  .panelbar .probe-v{ padding-top:.7rem; padding-bottom:.7rem; margin-top:-.7rem; margin-bottom:-.7rem; }
+  .panelbar .probe-btn::after{ content:""; position:absolute; left:0; right:0; top:-.7rem; bottom:-.7rem; }
+}
+@media (prefers-reduced-motion: reduce){ .probe-btn{ transition:none; } }
 .panelbar-views, .panelbar-all{ display:none; }
 .panelbar-btns{ display:flex; gap:.15rem; flex:none; margin-left:.4rem; }
 .panelbar-end{ display:flex; gap:.15rem; flex:none; margin-left:auto; padding-left:.6rem; }
@@ -2398,6 +2414,58 @@ main.screen.one.land{ flex-direction:row; }
     }
   });
 
+  /* The probe's names are buttons. The region's lights the side the
+     crosshair is on, or both sides while Mirror is ticked, as the list's
+     dropdown would; lit already, by any entry that covers the label, a tap
+     puts those out. The area's lights or puts out the Brodmann area. The
+     buttons are rebuilt only as the names change, so a tap is never
+     landing on a button the readout has just replaced. */
+  var probeIdx = 0, probeBA = 0, probeBtn = null, probeBABtn = null;
+  function probeButton(text, onTap){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "probe-btn";
+    var dot = document.createElement("span"); dot.className = "dot";
+    b.appendChild(dot); b.appendChild(document.createTextNode(text));
+    b.addEventListener("click", onTap);
+    return b;
+  }
+  function litBy(idx){      /* the keys of every region entry lighting a label */
+    var keys = [];
+    selections.forEach(function(s, k){ if (!isBA(s) && s.indices.indexOf(idx) >= 0) keys.push(k); });
+    return keys;
+  }
+  function paintProbeBtn(b, colour){
+    if (!b) return;
+    b.setAttribute("aria-pressed", colour ? "true" : "false");
+    b.firstChild.style.background = colour || "";
+    b.title = colour ? "Highlighted · tap to put it out" : "Tap to highlight";
+  }
+  function paintProbe(){
+    var keys = probeIdx ? litBy(probeIdx) : [];
+    paintProbeBtn(probeBtn, keys.length ? selections.get(keys[0]).color : null);
+    paintProbeBtn(probeBABtn, probeBA ? baColour(probeBA) : null);
+  }
+  function toggleProbe(){
+    var r = byIndex[probeIdx];
+    if (!r) return;
+    var on = litBy(probeIdx);
+    if (on.length) on.forEach(function(k){ selections.delete(k); });
+    else {
+      var k = selKeyFor(mirrorEl.checked && r.L != null ? [r.L, r.R] : [probeIdx]);
+      if (!k) return;
+      k.entry.color = nextColor();
+      selections.set(k.key, k.entry);
+    }
+    renderChips(); applyColormap();
+    if (window.MN) MN.tap("light");
+  }
+  function toggleProbeBA(){
+    var key = "B:" + probeBA;
+    if (selections.has(key)){ selections.delete(key); renderChips(); applyColormap(); }
+    else if (!addBA(probeBA)) return;
+    if (window.MN) MN.tap("light");
+  }
+  selWatchers.push(paintProbe);
   function onLoc(loc){
     try{
       if (loc && loc.mm){
@@ -2406,10 +2474,19 @@ main.screen.one.land{ flex-direction:row; }
       var idx = 0, ba = 0;
       if (loc && loc.values && loc.values.length > 1 && loc.values[1]) idx = Math.round(loc.values[1].value || 0);
       if (loc && loc.values && loc.values.length > 2 && loc.values[2]) ba = Math.round(loc.values[2].value || 0);
-      var bits = [];
-      if (idx > 0 && PRETTY[idx]) bits.push(PRETTY[idx]);
-      if (ba > 0 && B && B.BY_BA[ba]) bits.push("BA" + ba);
-      regionOut.textContent = bits.length ? bits.join(" \u00B7 ") : "\u2014";
+      if (!(idx > 0 && PRETTY[idx])) idx = 0;
+      if (!(ba > 0 && B && B.BY_BA[ba])) ba = 0;
+      if (idx !== probeIdx || ba !== probeBA || !regionOut.firstChild){
+        probeIdx = idx; probeBA = ba; probeBtn = null; probeBABtn = null;
+        regionOut.textContent = "";
+        if (idx){ probeBtn = probeButton(PRETTY[idx], toggleProbe); regionOut.appendChild(probeBtn); }
+        if (ba){
+          if (idx) regionOut.appendChild(document.createTextNode(" · "));
+          probeBABtn = probeButton("BA" + ba, toggleProbeBA); regionOut.appendChild(probeBABtn);
+        }
+        if (!idx && !ba) regionOut.textContent = "—";
+      }
+      paintProbe();
     } catch(e){}
   }
 
