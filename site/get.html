@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Get VisualNeuroscience.AI</title>
+<meta name="description" content="VisualNeuroscience.AI on every screen: the website, the iPhone and iPad app, and what is coming for Apple Vision Pro, Android, Mac, Linux and Windows.">
+<!-- An unlisted landing page: nothing on the site links here, and search
+     engines are asked not to list it. It is reached by its address alone. -->
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="Get VisualNeuroscience.AI">
+<meta property="og:description" content="VisualNeuroscience.AI on every screen: the website, the iPhone and iPad app, and what is coming for Apple Vision Pro, Android, Mac, Linux and Windows.">
+<meta property="og:url" content="https://visualneuroscience.ai/get">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The flow-state network ring over orange-tinted MNI152 brain slices, with the VisualNeuroscience.AI wordmark at its centre.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#111111">
+<link rel="stylesheet" href="fonts/fonts.css">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so the page never flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+:root{
+  --paper:#FFFFFF; --ink:#111111; --ink-60:#5A5A5A; --ink-35:#A9A9A9; --hair:#111111; --quiet:#8A8A8A;
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+  --gap:14px;
+}
+:root[data-theme="dark"]{ --paper:#111111; --ink:#FFFFFF; --ink-60:#A9A9A9; --ink-35:#5A5A5A; --hair:#FFFFFF; --quiet:#8A8A8A; }
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ min-height:100%; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  min-height:100vh; min-height:100dvh; display:flex; flex-direction:column;
+  padding:0 clamp(16px,4vw,40px) max(1.6rem, env(safe-area-inset-bottom, 0px));
+}
+::selection{ background:var(--ink); color:var(--paper); }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+a{ color:var(--ink); }
+svg{ display:block; }
+
+/* the brand line, as the site's masthead sets it */
+.masthead{ text-align:center; padding:clamp(28px,5vw,56px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.6rem); }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
+}
+.brand .mark{ width:.65em; height:.65em; flex:none; }
+
+main{ width:100%; max-width:640px; margin:0 auto; padding:clamp(28px,5vw,52px) 0 0; flex:1 0 auto; }
+.kicker{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink-60);
+}
+h1{
+  font-family:var(--font-display); font-weight:400;
+  font-size:clamp(1.7rem,5.2vw,2.5rem); line-height:1.12; letter-spacing:.01em;
+  margin:.5rem 0 .9rem;
+}
+h1 em{ font-style:italic; }
+.lede{ font-size:1.04rem; line-height:1.6; color:var(--ink); margin:0 0 1.9rem; }
+.lede b{ font-weight:600; }
+
+/* the screens, one row each: a glyph, the name and its line, and at the
+   right the way to it, or the word that it is on its way */
+.screens{ list-style:none; border-top:1px solid var(--hair); }
+.screen{
+  display:grid; grid-template-columns:2rem minmax(0,1fr) auto; align-items:center; gap:.4rem 1rem;
+  padding:.95rem 0; border-bottom:1px solid var(--hair);
+}
+.screen .glyph{ width:1.5rem; height:1.5rem; color:var(--ink); justify-self:start; }
+.screen .glyph svg{ width:100%; height:100%; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.screen .name{ font-family:var(--font-brand); font-weight:500; font-size:1.12rem; line-height:1.2; }
+.screen .line{ font-size:.92rem; color:var(--ink-60); line-height:1.45; margin-top:.12rem; }
+.screen.soon .glyph, .screen.soon .name{ color:var(--ink-60); }
+.go, .tag{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.24em; text-transform:uppercase; white-space:nowrap;
+  display:inline-flex; align-items:center; gap:.5rem; min-height:40px;
+  padding:.5rem .95rem; border:1px solid var(--hair);
+}
+.go{ color:var(--ink); text-decoration:none; transition:transform .12s cubic-bezier(.32,.72,0,1), opacity .12s; }
+.go svg{ width:.8rem; height:.8rem; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+@media (hover: hover){ .go:hover{ background:var(--ink); color:var(--paper); } }
+.go:active{ transform:scale(.97); opacity:.85; }
+.tag{ color:var(--ink-60); border-color:var(--ink-35); border-style:dashed; }
+@media (max-width:460px){
+  .screen{ grid-template-columns:1.6rem minmax(0,1fr); gap:.5rem .8rem; }
+  .screen .go, .screen .tag{ grid-column:2; justify-self:start; }
+  .screen .glyph{ width:1.25rem; height:1.25rem; }
+}
+
+.foot{
+  max-width:640px; margin:2.6rem auto 0; width:100%;
+  font-family:var(--font-brand); font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-60);
+  display:flex; flex-wrap:wrap; gap:.4rem 1.2rem; justify-content:center; text-align:center;
+}
+.foot a{ color:var(--ink-60); text-decoration:none; }
+@media (hover: hover){ .foot a:hover{ color:var(--ink); } }
+@media (prefers-reduced-motion: reduce){ .go{ transition:none; } .go:active{ transform:none; } }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <a class="brand" href="https://visualneuroscience.ai/"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+</header>
+
+<main>
+  <p class="kicker">Get the atlas</p>
+  <h1>The human brain, on <em>every</em> screen.</h1>
+  <p class="lede">VisualNeuroscience.AI is a free interactive atlas of the human brain: the 3D Region Atlas, the Brodmann areas, receptor densities, tractography, the Network Atlas and published studies drawn on the brain. It runs in the browser today, and on iPhone and iPad from the App Store. The rest is on its way.</p>
+
+  <ul class="screens">
+    <li class="screen">
+      <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg></span>
+      <div><div class="name">Website</div><div class="line">In any browser, on any computer, tablet or phone. Nothing to install.</div></div>
+      <a class="go" href="https://visualneuroscience.ai/">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </li>
+    <li class="screen">
+      <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.2"/><path d="M10 5h4"/></svg></span>
+      <div><div class="name">iPhone and iPad</div><div class="line">The app, on the App Store.</div></div>
+      <a class="go" href="https://apps.apple.com/app/id6805618686">App Store <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </li>
+    <li class="screen soon">
+      <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 10.5c0-2 1.3-3.5 3.3-3.5h10.4c2 0 3.3 1.5 3.3 3.5v3.2c0 2-1.4 3.3-3.3 3.3h-1.6c-.9 0-1.6-.4-2.1-1.1l-.5-.7c-.5-.7-1.5-.7-2 0l-.5.7c-.5.7-1.2 1.1-2.1 1.1H6.8c-1.9 0-3.3-1.3-3.3-3.3z"/></svg></span>
+      <div><div class="name">Apple Vision Pro</div><div class="line">The atlas in the room with you.</div></div>
+      <span class="tag">Coming soon</span>
+    </li>
+    <li class="screen soon">
+      <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.2"/><circle cx="12" cy="18.3" r=".9"/></svg></span>
+      <div><div class="name">Android</div><div class="line">For phones and tablets, on Google Play.</div></div>
+      <span class="tag">Coming soon</span>
+    </li>
+    <li class="screen soon">
+      <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="11" rx="1.6"/><path d="M2 19h20"/></svg></span>
+      <div><div class="name">Mac</div><div class="line">The app for macOS.</div></div>
+      <span class="tag">Coming soon</span>
+    </li>
+    <li class="screen soon">
+      <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1.6"/><path d="M7 9l3 3-3 3M12 15h5"/></svg></span>
+      <div><div class="name">Linux</div><div class="line">The app for Linux desktops.</div></div>
+      <span class="tag">Coming soon</span>
+    </li>
+    <li class="screen soon">
+      <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7.5" height="7.5"/><rect x="13" y="3.5" width="7.5" height="7.5"/><rect x="3.5" y="13" width="7.5" height="7.5"/><rect x="13" y="13" width="7.5" height="7.5"/></svg></span>
+      <div><div class="name">Windows</div><div class="line">The app for Windows.</div></div>
+      <span class="tag">Coming soon</span>
+    </li>
+  </ul>
+</main>
+
+<footer class="foot">
+  <span>Made by Fadil Karim</span>
+  <a href="mailto:fkarim@visualneuroscience.ai">fkarim@visualneuroscience.ai</a>
+  <a href="https://visualneuroscience.ai/privacy.html">Privacy</a>
+  <a href="https://visualneuroscience.ai/terms.html">Terms</a>
+</footer>
+
+</body>
+</html>

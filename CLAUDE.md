@@ -83,6 +83,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   it. The counts are read in the Firebase console under Analytics. The vendored bundle is rebuilt with
   `sh scripts/firebase/build.sh` from `scripts/firebase/entry.js` (`docs/AUTH-SETUP.md` §8 and its appendix).
 - Licences and permissions are recorded in `docs/PERMISSIONS.md`; keep it in step with any new data source.
+- `site/get.html` (v11.55) is an unlisted landing page naming every screen, the website and the App Store app with
+  links and the rest marked coming soon: it carries `noindex, nofollow`, stands apart from the site's chrome, and must
+  stay out of the nav, the foot, the apps' tabs, the precache list and any sitemap. Its address alone reaches it
+  (`/get`). As a platform ships, swap its Coming soon tag for a link there.
 - Legal pages (since v11.41): `site/privacy.html`, `site/terms.html` and `site/delete-account.html`, linked from the foot of
   every page beside the privacy policy and from the app's Account tab (`PageRow` rows in `Shell.swift`: privacy, terms,
   and Delete your account, which opens `account.html#delete`); the Play listing's deletion link is the deletion page and

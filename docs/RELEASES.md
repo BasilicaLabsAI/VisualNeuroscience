@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.55 — 21 October 2026 — A landing page for every screen
+Commit · Add an unlisted landing page naming every screen the atlas is on or is coming to
+
+A page apart from the site, reached by its address alone and listed nowhere, not in the menu, the foot or the apps, and marked for search engines to leave out. It names every screen: the website and the iPhone and iPad app with their links, and Apple Vision Pro, Android, Mac, Linux and Windows marked coming soon, each with a word on what it will be. It stands in the site's type and either theme, with the brand line at its head and the maker, the address, Privacy and Terms at its foot.
+
 ## v11.54 — 21 October 2026 — The bar steps aside on a phone
-Commit · Hide the bar while a pop-up is open on a phone held upright, on the 3D Region Atlas and the Hallucinations study
+Commit `ed93ef3` · Hide the bar while a pop-up is open on a phone held upright, on the 3D Region Atlas and the Hallucinations study
 
 On a phone held upright the bar of buttons stayed under an open pop-up, a second row of buttons above the app's own tab bar, and the pop-up stopped short of it. Now the bar steps aside as a pop-up opens and the pop-up takes its room; the cross at the pop-up's corner, or Escape on a keyboard, closes it and brings the bar back with the views. The Hallucinations study, which shares the chrome, does the same. Held sideways, where the bar stands along the edge, and on a tablet or a computer, the bar stays. The Neurotransmitters table also loses a row of buttons that should never have shown: its scale toggle, within each receptor or across the whole table, belongs to autoradiography alone, and under PET it had been standing there doing nothing.
 
