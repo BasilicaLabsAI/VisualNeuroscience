@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.52 — 21 October 2026 — The receptor window on a phone
+Commit · Give the receptor window's graph and table a height worth reading on a phone, and cut the table's text there
+
+On a phone the receptor window's Graph tab shrank the graph to whatever the controls left, a sliver in a mobile browser, and the Neurotransmitters tab spent most of the screen on its sentence. The graph now keeps a reading height and the tab scrolls as a whole when the window is short, the controls going up out of the way; the table does the same, and its sentence is cut to the bone on a phone, the example with it. The window's tabs stand in one row that scrolls sideways, the open one brought into view, which gives the screen another line. Held sideways, and on a tablet or a computer, nothing changes.
+
 ## v11.51 — 21 October 2026 — The probe's names highlight on a tap
-Commit · Make the probe's names buttons that light the region or the Brodmann area under the crosshair, or put it out
+Commit `d4a0366` · Make the probe's names buttons that light the region or the Brodmann area under the crosshair, or put it out
 
 The bar's Probe readout names the region under the crosshair, and the Brodmann area where there is one, and until now that was all it did. Each name is now a button: a tap highlights the region, on the side the crosshair is on or on both sides while Mirror left / right pairs is ticked, and it joins the Highlighted list with a colour of its own, which the name then carries as a dot; tapped again, or lit already by any entry in the list, it goes out. The area's name does the same for the Brodmann area. Under a finger the names answer to a touch well above and below their line.
 

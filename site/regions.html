@@ -1099,6 +1099,18 @@ main.screen{
 #types-pane #types-heat{ flex:1 1 auto; min-height:0; overflow:auto; overscroll-behavior:contain; margin-bottom:0; }
 .screen.one #popRx{ height:100%; max-height:none; }
 .screen.one .heat-legend{ display:none; }
+/* a phone: the tabs in one row that scrolls sideways, and the Graph and
+   Neurotransmitters tabs scrolling as a whole when the window is short,
+   the graph and the table each keeping a height worth reading instead of
+   shrinking to the room the controls leave (upright only: held sideways
+   the graph has the room beside its controls) */
+.screen.one .pop-tabs{ flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+.screen.one .pop-tabs::-webkit-scrollbar{ display:none; }
+.screen.one .pop-tabs::after{ content:""; flex:none; width:.5rem; }
+.screen.one:not(.land) #chart-pane, .screen.one:not(.land) #types-pane{ overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; }
+.screen.one:not(.land) #chart-pane #receptor-graph{ min-height:400px; }
+.screen.one:not(.land) #types-pane #types-heat{ min-height:320px; }
+.screen.one .heat-lede{ font-size:.86rem; line-height:1.45; }
 .pop .ref-line{ font-family:var(--font-serif); font-size:.95rem; line-height:1.55; margin:0 0 .35rem; }
 .pop .ref-line b{ font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); margin-right:.5rem; }
 .pop .estab{ margin-top:1rem; }
@@ -3318,7 +3330,7 @@ function renderChart() {
   markPicked();
 }
 let resizeTimer;
-window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { renderChart(); fitHeat(); }, 150); });
+window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { renderChart(); if (ledeShort != null && ledeShort !== phoneQ.matches) renderHeat(); fitHeat(); }, 150); });
 
 /* ── what the receptor looks like: the transmitter that binds it, and the
    machine it is, both drawn by assets/rxfig.js from the same files the
@@ -3412,7 +3424,12 @@ function heatColour(t) {
 /* one receptor read off the table, so its colours explain themselves: the
    charted one where it has numbers here, else the first that does; on one
    scale across the table, the densest box of all */
+/* on a phone the lede and its example are cut to the bone, so the table
+   has the screen; the sentence is set again should the width cross over */
+const phoneQ = window.matchMedia("(max-width: 600px)");
+let ledeShort = null;
 function heatExample(rs, cols, scaleAll) {
+  const short = phoneQ.matches;
   const has = r => r.data && cols.some(reg => raw(r, reg.base) != null);
   let r = axisMode === "receptor" ? rs.find(x => x.id === dropdown.value) : null;
   if (!r || !has(r)) r = rs.find(has);
@@ -3420,11 +3437,13 @@ function heatExample(rs, cols, scaleAll) {
   if (scaleAll) {
     let top = null;
     rs.forEach(x => cols.forEach(reg => { const v = raw(x, reg.base); if (v != null && (!top || v > top.v)) top = { r: x, reg, v }; }));
+    if (short) return " <b>" + escapeHtml(shortName(top.r)) + "</b> in the <b>" + escapeHtml(top.reg.name) + "</b> is the densest box of all; the rest are coloured against it.";
     return " For example, <b>" + escapeHtml(shortName(top.r)) + "</b> in the <b>" + escapeHtml(top.reg.name) + "</b> is the densest in the whole table, hence bright red, and every other box is coloured against it.";
   }
   let hi = null, lo = null;
   cols.forEach(reg => { const v = raw(r, reg.base); if (v == null) return; if (!hi || v > hi.v) hi = { reg, v }; if (!lo || v < lo.v) lo = { reg, v }; });
   if (!hi || hi.reg === lo.reg) return "";
+  if (short) return " <b>" + escapeHtml(shortName(r)) + "</b>, say: densest in the <b>" + escapeHtml(hi.reg.name) + "</b> (red), sparsest in the <b>" + escapeHtml(lo.reg.name) + "</b> (yellow).";
   return " For example, <b>" + escapeHtml(shortName(r)) + "</b> is densest in the <b>" + escapeHtml(hi.reg.name) + "</b>, hence bright red, and sparsest in the <b>" + escapeHtml(lo.reg.name) + "</b>, hence yellow.";
 }
 function renderHeat() {
@@ -3435,9 +3454,14 @@ function renderHeat() {
   let allMax = 0;
   rs.forEach(r => REG.forEach(reg => { const v = raw(r, reg.base); if (v > allMax) allMax = v; }));
   const cols = layer === "ar" ? REG.filter(reg => rs.some(r => r.data && r.data.values[reg.base] != null)) : REG;
-  const lede = layer === "pet"
-    ? "Each row is a receptor, each column a region: yellow where it is sparsest, red where it is densest, scaled within each row. A hatched box has no data. Click a receptor to chart it, or a region to light it on the scan."
-    : "Each row is a receptor, each column a region, yellow to red. Within each receptor shows where each one concentrates; across the whole table puts them all on one fmol/mg scale. A hatched box has no data. Click a receptor to chart it, or a region to light it on the scan.";
+  ledeShort = phoneQ.matches;
+  const lede = ledeShort
+    ? (layer === "pet"
+      ? "Yellow to red, sparsest to densest in each row; hatched, no data. Tap a receptor to chart it, a region to light it."
+      : "Yellow to red, within each receptor or across the whole table; hatched, no data. Tap a receptor to chart it, a region to light it.")
+    : (layer === "pet"
+      ? "Each row is a receptor, each column a region: yellow where it is sparsest, red where it is densest, scaled within each row. A hatched box has no data. Click a receptor to chart it, or a region to light it on the scan."
+      : "Each row is a receptor, each column a region, yellow to red. Within each receptor shows where each one concentrates; across the whole table puts them all on one fmol/mg scale. A hatched box has no data. Click a receptor to chart it, or a region to light it on the scan.");
   document.getElementById("heat-lede").innerHTML = escapeHtml(lede) + heatExample(rs, cols, scaleAll);
   let html = "<table><thead><tr><th class=\"corner\"></th>";
   cols.forEach(reg => { html += "<th class=\"col\"><button type=\"button\" data-base=\"" + reg.base + "\" title=\"" + escapeHtml(reg.name) + "\">" + escapeHtml(reg.name) + "</button></th>"; });
@@ -3689,6 +3713,9 @@ function activeRxTab() { const t = document.querySelector("#popRx [role=\"tab\"]
 function showRxTab(tab) {
   document.querySelectorAll("#popRx [role=\"tab\"]").forEach(b => { const on = b.dataset.tab === tab; b.classList.toggle("active", on); b.setAttribute("aria-selected", String(on)); });
   for (const [name, id] of Object.entries(panes)) document.getElementById(id).classList.toggle("hidden", name !== tab);
+  /* the row of tabs scrolls sideways on a phone: the open one is brought into view */
+  const on = document.querySelector("#popRx [role=\"tab\"].active");
+  if (on && on.scrollIntoView) { try { on.scrollIntoView({ block: "nearest", inline: "nearest" }); } catch (e) {} }
   if (tab === "chart") renderChart();
   if (tab === "figs") renderCite();
   if (tab === "types") fitHeat();
