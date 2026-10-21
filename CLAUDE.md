@@ -146,7 +146,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   whatever `vn-atlas-drawer` holds (since v11.25), and the pop-ups span the width. The slice tool's edge sliders
   (`slice-tool.js`, styled in `viewer.css`) are 44px strips with 24px thumbs under a coarse pointer (v11.32); on a
   phone the right-hand one stands 26px in from the edge, clear of the drawer's handle, and the bottom one stops short
-  of it (`.screen.one`). The Brodmann Area Atlas is its own page again since v11.12 (retired
+  of it (`.screen.one`). Held sideways (v11.42: `main.screen.one.land`, the script's `land` query, a coarse pointer in
+  landscape) the bar stands along the right edge, its icons two to a row with the words for screen readers alone, the
+  drawer's handle off the bar's edge, the four views one row, the one view's tools and Centre at the left of its bar
+  and the name at the right, the masthead hidden; in the app's tabs the shell hides its bar on a phone sideways
+  (`WebPage.sideways` in `ShellWeb.swift`, `BackOverPage` the back button it keeps at the top left) and the page's body
+  loses its top padding there, the view's bar making 56px of room for that button. The Brodmann Area Atlas is its own page again since v11.12 (retired
   into the Region Atlas in v10.8): `site/brodmann.html`, with its nav entry and its box straight after the 3D Region
   Atlas.
   Since v11.15, at the owner's request, it is one screen and nothing else: the two faces of the map

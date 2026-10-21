@@ -1110,6 +1110,53 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
 .screen.one .drawer-show{ left:auto; right:0; border-radius:10px 0 0 10px; }
 .screen.one .drawer-show svg{ transform:none; }
 
+/* ── a phone held sideways ───────────────────────────────────────────────
+   The page's script marks the screen .land beside .one when a touch screen
+   is wider than tall. There the bar stands along the right edge, its icons
+   two to a row with their words read by screen readers alone, the drawer's
+   handle coming off the bar's edge, and the views have the whole height:
+   the four together are one row, and the one view's tools and Centre
+   stand at the left of its bar with the name at the right. The site's
+   masthead steps aside; in the app's tabs the shell keeps its own bar off
+   the page too, leaving only its back button over the page's top left
+   corner, which the view's bar makes room for. */
+body.atlas-screen:has(> main.screen.one.land) .masthead{ display:none; }
+:root[data-shell]:not([data-shell-pad]) body.atlas-screen:has(> main.screen.one.land){ padding-top:0; }
+main.screen.one.land{ flex-direction:row; }
+.screen.one.land .deck{ flex:1 1 auto; min-width:0; }
+.screen.one.land .panelbar{
+  flex:none; flex-direction:column; align-items:stretch; justify-content:center; gap:0;
+  padding:.3rem .25rem calc(.3rem + env(safe-area-inset-bottom, 0px));
+  border-top:0; border-left:1px solid var(--hair); overflow:visible; white-space:normal;
+}
+.screen.one.land .panelbar-all, .screen.one.land .panelbar-views, .screen.one.land .panelbar-btns, .screen.one.land .panelbar-end{
+  display:grid; grid-template-columns:44px 44px; gap:0; flex:none;
+  margin:0 0 .25rem; padding:0 0 .25rem; border-right:0; border-bottom:1px solid var(--hair);
+}
+.screen.one.land .panelbar-all{ grid-template-columns:88px; justify-items:center; }
+.screen.one.land .panelbar-end{ margin-bottom:0; padding-bottom:0; border-bottom:0; }
+.screen.one.land .pbtn{ position:relative; min-width:0; width:44px; min-height:44px; padding:0; gap:0; }
+.screen.one.land .pbtn.pbtn-ref{ margin-left:0; padding-left:0; border-left:0; }
+.screen.one.land .pbtn span{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }
+.screen.one.land .pbtn svg{ width:24px; height:24px; }
+.screen.one.land .pop{ max-height:100%; }
+.screen.one.land.all .views{ grid-template-columns:repeat(4, minmax(0, 1fr)); grid-template-rows:minmax(0, 1fr); }
+/* the one view's bar: the tools and Centre at the left, the name at the right */
+.screen.one.land:not(.all) .views .view-cap{ flex-wrap:nowrap; justify-content:flex-start; }
+.screen.one.land:not(.all) .views .view-cap::before{ display:none; }
+.screen.one.land:not(.all) .views .view-cap .view-tools{ order:0; flex:none; }
+.screen.one.land:not(.all) .views .view-cap .view-end{ order:1; flex:none; justify-content:flex-start; }
+.screen.one.land:not(.all) .views .view-cap b{ order:2; margin-left:auto; margin-right:0; }
+/* the room the shell's back button takes at the top left */
+:root[data-shell]:not([data-shell-pad]) .screen.one.land:not(.all) .views .view-cap{ padding-left:56px; }
+/* the receptor window's graph tab, short of height: the controls stand in
+   a column at the left and the graph has the rest */
+.screen.one.land #chart-pane{ display:grid; grid-template-columns:minmax(150px, 220px) minmax(0, 1fr); grid-template-rows:minmax(0, 1fr) auto auto; column-gap:.8rem; }
+.screen.one.land #chart-pane .rx-controls{ grid-column:1; grid-row:1 / span 3; margin-bottom:0; align-self:start; }
+.screen.one.land #chart-pane #receptor-graph{ grid-column:2; grid-row:1; }
+.screen.one.land #chart-pane .chart-scroll-hint{ grid-column:2; grid-row:2; }
+.screen.one.land #chart-pane .legend{ grid-column:2; grid-row:3; }
+
 /* narrower than 901 pixels the drawer lies over the views instead */
 @media (max-width:900px){
   .drawer{ --box-w:min(320px, 100vw - 60px); position:absolute; left:0; top:0; bottom:0; z-index:15; flex:none; width:auto; transition:visibility 0s 0s; }
@@ -3593,6 +3640,8 @@ if (location.hash === "#receptors") {
   /* a phone, or a phone held sideways: one view at a time, and the region
      drawer over it, shut whenever the page opens */
   var one = window.matchMedia ? window.matchMedia("(max-width:760px), (pointer:coarse) and (max-height:500px)") : null;
+  /* a touch screen wider than tall, a phone held sideways: the bar goes to the right edge */
+  var land = window.matchMedia ? window.matchMedia("(orientation: landscape) and (pointer: coarse)") : null;
   var open;
   try{
     var kept = localStorage.getItem("vn-atlas-drawer");
@@ -3633,11 +3682,12 @@ if (location.hash === "#receptors") {
   function oneView(){
     var on = !!(one && one.matches);
     main.classList.toggle("one", on);
+    main.classList.toggle("land", on && !!(land && land.matches));
     if (on) showView(shown, false); else if (window.MN_LIFE) MN_LIFE.remeasure();
     soon();
   }
   oneView();
-  if (one){ if (one.addEventListener) one.addEventListener("change", oneView); else if (one.addListener) one.addListener(oneView); }
+  [one, land].forEach(function(q){ if (!q) return; if (q.addEventListener) q.addEventListener("change", oneView); else if (q.addListener) q.addListener(oneView); });
   viewBtns.forEach(function(b){ b.addEventListener("click", function(){ showView(b.getAttribute("data-view"), true); }); });
   /* in the grid of four, a view's expand button opens that view alone
      rather than laying it over the grid */

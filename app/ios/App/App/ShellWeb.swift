@@ -81,11 +81,20 @@ struct WebPage: View {
 
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.verticalSizeClass) private var verticalSize
     @State private var next: Page?
     @State private var showingNext = false
 
     init(page: Page) {
         self.page = page
+    }
+
+    /// A phone held sideways: the system bar is kept off the page, which
+    /// has the whole height then, and only a back button stands over its
+    /// top left corner, where the bar's stood (the page's own bar makes
+    /// room for it there).
+    private var sideways: Bool {
+        UIDevice.current.userInterfaceIdiom == .phone && verticalSize == .compact
     }
 
     var body: some View {
@@ -103,7 +112,12 @@ struct WebPage: View {
             // section and the page its own contents
             .navigationTitle(UIDevice.current.userInterfaceIdiom == .pad ? "" : page.title)
             .navigationBarTitleDisplayMode(.inline)
-            .systemBar(hidden: false)
+            .systemBar(hidden: sideways)
+            .overlay(alignment: .topLeading) {
+                if sideways {
+                    BackOverPage { dismiss() }
+                }
+            }
             // the page's own fields lower the keyboard as its scroll is
             // dragged and get Done from the system's bar above the keys
             // (PageBridgeController); this covers any native field it grows
@@ -113,6 +127,28 @@ struct WebPage: View {
                     WebPage(page: next)
                 }
             }
+    }
+}
+
+/// The back button a phone held sideways keeps over the page's top left
+/// corner, the system bar being off the page there: the bar's own chevron,
+/// on a disc of the material the bar would have been.
+struct BackOverPage: View {
+    let act: () -> Void
+
+    var body: some View {
+        Button(action: act) {
+            Image(systemName: "chevron.backward")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundColor(Palette.ink)
+                .frame(width: 40, height: 40)
+                .background(.thinMaterial, in: Circle())
+                .contentShape(Circle())
+        }
+        .buttonStyle(PressStyle())
+        .padding(.leading, 8)
+        .padding(.top, 2)
+        .accessibilityLabel("Back")
     }
 }
 
