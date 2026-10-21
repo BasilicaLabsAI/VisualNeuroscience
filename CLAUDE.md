@@ -107,9 +107,15 @@ Read this first in every session. It is the handover; nothing else needs pasting
   only with a fine pointer or when typing on the button opened it (`openRegionPicker(seed, typed)`): on a touch
   screen the keyboard rose over the list, so there it waits for a tap (v11.26). The bar's
   buttons raise one pop-up at a time over the views (`.pop`: What they do, Receptor graph and Neurotransmitters, which
-  are the receptor section's own chart and types tabs, the section's own view tabs being hidden since v11.35 (the
-  Density Table among them, kept in the code and shown nowhere; the fuller account above the graph likewise, one
-  sentence standing in its place, and the controls in rows: source, by receptor or region, dropdown); then Saved
+  open the receptor window (`#popRx`, `.pop-tabbed`) on one of its tabs: since v11.40 a row of tabs under its head,
+  Graph, Receptor (named Region when charting by region), Neurotransmitters, Receptor types and Sources, one pane at a
+  time (`showRxTab`), the window one height whichever is open (`#popRx{height}`; the whole stage on a phone). The
+  graph and the heat table are fitted to their tab and scroll inside their own box only when too big for it
+  (`chartHeight()` sizes the graph to its room, never under `CHART.minHeight`; `fitHeat()` caps the column names to
+  two fifths of the box with `--heat-cap`), and the tabs of text scroll down. The Density Table is kept in the code
+  and shown nowhere; the graph's controls stand in rows (source, by receptor or region, dropdown) with no sentence
+  above; the table's lede is one concise paragraph ending in a live example read off the table (`heatExample`); the
+  bar's two buttons each stand for a family of tabs (`data-tabs`), lit for any of them); then Saved
   maps, Export and, at the far right behind a line,
   Reference (`.pbtn-ref`, since v11.31); the Brodmann map left the page in v11.30, the Brodmann Area Atlas having it). The readouts sit at the bar's start. Every element id the script uses is unchanged, so the pop-ups' contents
   still follow the selection; a chart is told to measure itself when its pop-up opens. The receptor types table

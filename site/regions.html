@@ -518,8 +518,10 @@ table.dtable td.num{ font-size:.84rem; }
 .rail .mode-group { display: flex; gap: .4rem; }
 .rail .mode-group .ts-btn { flex: 1; text-align: center; }
 /* ── the heat-map: sub-types down, structures across ── */
-.heat-head{ display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1.2rem; margin-bottom:.7rem; }
-.heat-lede{ flex:1 1 24rem; font-family:var(--font-serif); font-size:.92rem; line-height:1.5; color:var(--ink-60); margin:0; }
+.heat-head{ display:flex; flex-direction:column; gap:.55rem; margin-bottom:.6rem; }
+.heat-lede{ font-family:var(--font-serif); font-size:.92rem; line-height:1.5; color:var(--ink-60); margin:0; }
+.heat-lede b{ color:var(--ink); font-weight:600; }
+.heat-tools{ display:flex; flex-wrap:wrap; align-items:center; gap:.5rem 1rem; }
 .heat-legend{ display:inline-flex; align-items:center; gap:.35rem; font-family:var(--font-brand); font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); }
 .heat-legend i{ display:block; width:6rem; height:.7rem; border:1px solid var(--hair); background:linear-gradient(90deg,#FFE066,#FF8C1A,#C1121F); }
 /* the table sits whole in its pop-up and scrolls with the pop-up's body,
@@ -547,10 +549,11 @@ table.dtable td.num{ font-size:.84rem; }
 .heat table{ border-collapse:separate; border-spacing:0; font-size:.72rem; line-height:1.15; }
 .heat th, .heat td{ padding:0; border-right:1px solid var(--paper); border-bottom:1px solid var(--paper); }
 .heat thead th{ position:sticky; top:0; z-index:2; background:var(--paper); vertical-align:bottom; }
+.heat.short thead th{ position:static; }
 .heat thead th.corner{ left:0; z-index:3; }
 .heat th.col{ width:1.45rem; min-width:1.45rem; }
 .heat th.col button{
-  display:block; width:100%; height:auto; max-height:14.5rem; border:0; background:none; color:var(--ink-60); cursor:pointer;
+  display:block; width:100%; height:auto; max-height:var(--heat-cap, 14.5rem); border:0; background:none; color:var(--ink-60); cursor:pointer;
   writing-mode:vertical-rl; transform:rotate(180deg); text-align:left; padding:.35rem 0 .3rem;
   font-family:var(--font-brand); font-weight:500; font-size:.66rem; letter-spacing:.03em; line-height:1;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-decoration:none;
@@ -632,8 +635,6 @@ table.dtable td.num{ font-size:.84rem; }
 .rx-regcard .tier-body{ grid-template-columns:1fr; }
 .rx-regcard .rnote{ border-right:0; border-bottom:0; }
 .rx-regcard .dot.off{ background:transparent; border-color:var(--ink-35); }
-/* keeps a control's space while it does not apply, so nothing shifts */
-  .inapplicable { visibility: hidden; }
 .rxsec{ margin-top:calc(var(--gap) * 2.5); }
 /* the controls stand in rows above the graph: the source, then by receptor
    or by region, then the dropdown, and the graph straight after them */
@@ -1047,6 +1048,23 @@ main.screen{
    the table's cells showed through the band left over */
 #popRx .pop-body{ padding:0; }
 #popRx .pop-body > .rxsec{ padding:.9rem 1rem 1.1rem; }
+/* the receptor window is tabbed, the tabs in a row under its head, and it
+   keeps one height whichever tab is open: the graph and the table are
+   fitted to their tab and scroll inside it only when too big for it, in
+   whichever direction they overflow, and the tabs of text scroll down */
+#popRx{ height:max(min(84%, calc(100% - 2 * var(--gap))), min(560px, calc(100% - var(--gap)))); max-height:none; }
+.pop-tabs{ flex:none; display:flex; flex-wrap:wrap; gap:.3rem; padding:.5rem .9rem; border-bottom:1px solid var(--hair); }
+.pop-tabs .ts-btn{ flex:none; }
+#popRx .pop-body{ overflow:hidden; display:flex; flex-direction:column; }
+#popRx .pop-body > .rxsec{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
+.rx-tab{ flex:1 1 auto; min-height:0; }
+.rx-tab.rx-fill{ display:flex; flex-direction:column; }
+.rx-tab.rx-scroll{ overflow:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; }
+#chart-pane .rx-controls, #chart-pane .chart-scroll-hint, #chart-pane .legend, #types-pane .heat-head{ flex:none; }
+#chart-pane #receptor-graph{ flex:1 1 auto; min-height:0; overflow:auto; margin-top:0; line-height:0; overscroll-behavior:contain; }
+#types-pane #types-heat{ flex:1 1 auto; min-height:0; overflow:auto; overscroll-behavior:contain; margin-bottom:0; }
+.screen.one #popRx{ height:100%; max-height:none; }
+.screen.one .heat-legend{ display:none; }
 .pop .ref-line{ font-family:var(--font-serif); font-size:.95rem; line-height:1.55; margin:0 0 .35rem; }
 .pop .ref-line b{ font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); margin-right:.5rem; }
 .pop .estab{ margin-top:1rem; }
@@ -1240,68 +1258,85 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
         </div>
       </div>
 
-      <div class="pop" id="popRx" hidden aria-labelledby="rx-h">
+      <div class="pop pop-tabbed" id="popRx" hidden aria-labelledby="rx-h">
         <header class="pop-head"><b id="rx-h">Receptor density</b><small id="rx-unit"></small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <!-- the window's tabs, in a row under its head: the graph; the picked
+             receptor (or region) drawn with its source; the table of every
+             receptor against every region; the receptors as cards, with the
+             reference of their types; and the sources. The graph and the table
+             are fitted to their tab and scroll inside it only when too big for
+             it, in whichever direction they overflow; the tabs of text scroll
+             down as text does. -->
+        <div class="pop-tabs" role="tablist" aria-label="Receptor density">
+          <button class="ts-btn active" role="tab" type="button" data-tab="chart" id="rxtab-chart" aria-selected="true" aria-controls="chart-pane">Graph</button>
+          <button class="ts-btn" role="tab" type="button" data-tab="figs" id="rxtab-figs" aria-selected="false" aria-controls="figs-pane">Receptor</button>
+          <button class="ts-btn" role="tab" type="button" data-tab="types" id="rxtab-types" aria-selected="false" aria-controls="types-pane">Neurotransmitters</button>
+          <button class="ts-btn" role="tab" type="button" data-tab="primer" id="rxtab-primer" aria-selected="false" aria-controls="primer-pane">Receptor types</button>
+          <button class="ts-btn" role="tab" type="button" data-tab="sources" id="rxtab-sources" aria-selected="false" aria-controls="sources-pane">Sources</button>
+        </div>
         <div class="pop-body">
           <section class="rxsec" id="receptorSec" aria-labelledby="rx-h">
-            <p class="rx-lede">How thickly each receptor sits in each region, from in vivo PET or from autoradiography, by receptor or by region.</p>
             <!-- the fuller account, kept for later and shown nowhere -->
             <p class="rx-lede rx-lede-long" hidden>How thickly each receptor sits in each region, from two open sources: in vivo PET, one group-average tracer map per receptor or transporter, averaged over each AAL region; and ex vivo autoradiography, absolute densities in fmol/mg protein from post-mortem cortex, mapped onto the regions area by area. The two measure different things and are never put on one axis. Click a region&rsquo;s name and it lights up in the viewports above as a highlighted region like any other; whatever is highlighted above lights its bar here in the same colour, and a Brodmann area lights the regions most of it lies in. Pick a receptor and what binds it and what it sits in are drawn beneath the chart, with its source, tracer, sample and caveat under those.</p>
-    <div class="rx-controls">
-      <div class="ts-views" role="group" aria-label="Source">
-        <button class="ts-btn active" data-layer="pet" type="button">In vivo PET</button>
-        <button class="ts-btn" data-layer="ar" type="button">Autoradiography</button>
-      </div>
-      <div class="ts-views" role="group" aria-label="View" hidden>
-        <button class="ts-btn active" data-tab="chart" type="button">Chart</button>
-        <button class="ts-btn" data-tab="types" type="button">Receptor Types</button>
-        <button class="ts-btn" data-tab="density" type="button">Density Table</button>
-      </div>
-      <div class="mode-group" id="axis-group" role="group" aria-label="Chart axis">
-        <button class="ts-btn active" data-axis="receptor" type="button">By Receptor</button>
-        <button class="ts-btn" data-axis="region" type="button">By Region</button>
-      </div>
-      <div class="selwrap">
-        <select id="structure-dropdown" aria-label="Receptor"></select>
-      </div>
-    </div>
-    <div class="below">
-      <div id="chart-pane">
-        <div id="receptor-graph"></div>
-        <p class="chart-scroll-hint" aria-hidden="true">Scroll sideways for the rest &rarr;</p>
-        <div id="chart-legend" class="legend"></div>
-        <div class="rxfig" id="rx-figs" data-for=""></div>
-        <div class="rx-cite" id="rx-cite"></div>
-      </div>
-      <div id="density-table" class="table-wrap hidden"></div>
-      <div id="types-pane" class="hidden">
-        <div class="heat-head">
-          <p class="heat-lede" id="heat-lede"></p>
-          <div class="mode-group" id="heat-scale" role="group" aria-label="Colour scale">
-            <button class="ts-btn active" data-scale="row" type="button">Within each receptor</button>
-            <button class="ts-btn" data-scale="all" type="button">Across the whole table</button>
-          </div>
-          <span class="heat-legend" aria-hidden="true"><i></i><small>least</small><small>most</small></span>
-        </div>
-        <div id="types-heat" class="heat"></div>
-        <div class="rx-slide rxfig region" id="types-slide" data-for="">
-          <div class="rx-slide-head">
-            <span id="types-slide-count" aria-live="polite"></span>
-            <span class="rx-slide-nav">
-              <button type="button" data-slide="-1" aria-label="Previous receptor">&larr;</button>
-              <button type="button" data-slide="1" aria-label="Next receptor">&rarr;</button>
-            </span>
-          </div>
-          <ul class="rx-slide-track" id="types-slide-track"></ul>
-        </div>
-        <details class="rx-fold" id="types-fold">
-          <summary><h3 class="rx-sub">Receptor types <small>a reference of sub-types, families and mechanisms</small></h3></summary>
-          <div id="types-table" class="table-wrap"></div>
-        </details>
-      </div>
-    </div>
-    <p class="rx-note" id="rx-coverage"></p>
-    <div class="rx-sources" id="rx-sources"></div>
+            <div class="rx-tab rx-fill" id="chart-pane" role="tabpanel" aria-labelledby="rxtab-chart">
+              <div class="rx-controls">
+                <div class="ts-views" role="group" aria-label="Source">
+                  <button class="ts-btn active" data-layer="pet" type="button">In vivo PET</button>
+                  <button class="ts-btn" data-layer="ar" type="button">Autoradiography</button>
+                </div>
+                <div class="mode-group" id="axis-group" role="group" aria-label="Chart axis">
+                  <button class="ts-btn active" data-axis="receptor" type="button">By Receptor</button>
+                  <button class="ts-btn" data-axis="region" type="button">By Region</button>
+                </div>
+                <div class="selwrap">
+                  <select id="structure-dropdown" aria-label="Receptor"></select>
+                </div>
+              </div>
+              <div id="receptor-graph"></div>
+              <p class="chart-scroll-hint" aria-hidden="true">Scroll sideways for the rest &rarr;</p>
+              <div id="chart-legend" class="legend"></div>
+            </div>
+            <div class="rx-tab rx-scroll hidden" id="figs-pane" role="tabpanel" aria-labelledby="rxtab-figs">
+              <div class="rxfig" id="rx-figs" data-for=""></div>
+              <div class="rx-cite" id="rx-cite"></div>
+            </div>
+            <!-- the density table, kept in the code and shown nowhere -->
+            <div id="density-table" class="table-wrap hidden"></div>
+            <div class="rx-tab rx-fill hidden" id="types-pane" role="tabpanel" aria-labelledby="rxtab-types">
+              <div class="heat-head">
+                <p class="heat-lede" id="heat-lede"></p>
+                <div class="heat-tools">
+                  <div class="ts-views" role="group" aria-label="Source">
+                    <button class="ts-btn active" data-layer="pet" type="button">In vivo PET</button>
+                    <button class="ts-btn" data-layer="ar" type="button">Autoradiography</button>
+                  </div>
+                  <div class="mode-group" id="heat-scale" role="group" aria-label="Colour scale">
+                    <button class="ts-btn active" data-scale="row" type="button">Within each receptor</button>
+                    <button class="ts-btn" data-scale="all" type="button">Across the whole table</button>
+                  </div>
+                  <span class="heat-legend" aria-hidden="true"><i></i><small>least</small><small>most</small></span>
+                </div>
+              </div>
+              <div id="types-heat" class="heat"></div>
+            </div>
+            <div class="rx-tab rx-scroll hidden" id="primer-pane" role="tabpanel" aria-labelledby="rxtab-primer">
+              <div class="rx-slide rxfig region" id="types-slide" data-for="">
+                <div class="rx-slide-head">
+                  <span id="types-slide-count" aria-live="polite"></span>
+                  <span class="rx-slide-nav">
+                    <button type="button" data-slide="-1" aria-label="Previous receptor">&larr;</button>
+                    <button type="button" data-slide="1" aria-label="Next receptor">&rarr;</button>
+                  </span>
+                </div>
+                <ul class="rx-slide-track" id="types-slide-track"></ul>
+              </div>
+              <h3 class="rx-sub">Receptor types <small>a reference of sub-types, families and mechanisms</small></h3>
+              <div id="types-table" class="table-wrap"></div>
+            </div>
+            <div class="rx-tab rx-scroll hidden" id="sources-pane" role="tabpanel" aria-labelledby="rxtab-sources">
+              <p class="rx-note" id="rx-coverage"></p>
+              <div class="rx-sources" id="rx-sources"></div>
+            </div>
           </section>
         </div>
       </div>
@@ -1353,8 +1388,8 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
     </div>
     <div class="panelbar-btns" role="group" aria-label="Panels">
       <button class="pbtn" type="button" data-pop="popNotes" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></svg><span>What they do</span></button>
-      <button class="pbtn" type="button" data-pop="popRx" data-tab="chart" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20h16M7 20v-7M12 20V6M17 20v-10"/></svg><span>Receptor graph</span></button>
-      <button class="pbtn" type="button" data-pop="popRx" data-tab="types" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4h16v16H4zM4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"/></svg><span>Neurotransmitters</span></button>
+      <button class="pbtn" type="button" data-pop="popRx" data-tab="chart" data-tabs="chart figs sources" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20h16M7 20v-7M12 20V6M17 20v-10"/></svg><span>Receptor graph</span></button>
+      <button class="pbtn" type="button" data-pop="popRx" data-tab="types" data-tabs="types primer" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4h16v16H4zM4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"/></svg><span>Neurotransmitters</span></button>
     </div>
     <div class="panelbar-end" role="group" aria-label="Saving and reference">
       <button class="pbtn" type="button" data-pop="popSaved" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3.5h10v17l-5-3.6-5 3.6z"/></svg><span>Saved maps</span></button>
@@ -2873,7 +2908,7 @@ let regionFocus = null;
 function focusReceptor(id) {
   regionFocus = regionFocus === id ? null : id;
   applyRegionFocus();
-  if (regionFocus) document.getElementById("rx-figs").scrollIntoView({ block: "start", behavior: "smooth" });
+  if (regionFocus) showRxTab("figs");
 }
 function applyRegionFocus() {
   const on = axisMode !== "receptor" ? regionFocus : null;
@@ -2932,7 +2967,7 @@ function currentReceptor() { return receptors().find(r => r.id === dropdown.valu
 function currentRegion() { return BY_BASE[dropdown.value] || REG[0]; }
 
 /* ── the chart ── */
-const CHART = { height: 410, top: 12, right: 12, bottom: 148, left: 58, slot: 18 };  /* slot: the least width a bar and its label may have */
+const CHART = { height: 410, minHeight: 280, top: 12, right: 12, bottom: 148, left: 58, slot: 18 };  /* slot: the least width a bar and its label may have */
 function svgEl(tag, attrs) { const e = document.createElementNS(SVG_NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
 function niceCeiling(v) { if (!(v > 0)) return 1; const p = Math.pow(10, Math.floor(Math.log10(v))); const f = v / p; const n = f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10; return n * p; }
 function fmtTick(v) { return v >= 1000 ? (v / 1000).toLocaleString() + "k" : String(+v.toFixed(2)); }
@@ -3023,11 +3058,21 @@ function tipFor(r, reg) {
     "<div class=\"tt-value\">" + fmt(v, 0) + " fmol/mg protein</div>" +
     "from area" + (a.areas.length > 1 ? "s " : " ") + escapeHtml(a.areas.join(", ")) + " · " + (a.fit === "exact" ? "exact match" : "approximate match") + noteFor(reg);
 }
+/* the graph is as tall as its tab leaves it, never shorter than its
+   labels need: a tab too short for that scrolls the graph instead */
+function chartHeight() {
+  const room = document.getElementById("receptor-graph").clientHeight;
+  return room > 0 ? Math.max(CHART.minHeight, room - 2) : CHART.height;
+}
 function renderChart() {
   const c = buildChart();
   const host = document.getElementById("receptor-graph");
   host.innerHTML = "";
   hideTip();
+  /* the legend is set first, so the room measured for the graph is what is
+     left under it */
+  document.getElementById("chart-legend").innerHTML = c.legend.map(l => "<span class=\"legend-item\"><span class=\"legend-swatch\" style=\"background:" + l.colour + "\"></span>" + escapeHtml(l.name) + "</span>").join("");
+  const H = chartHeight();
   const n = c.bars.length;
   const avail = Math.max(host.clientWidth || 900, 320);
   const scrolls = CHART.left + CHART.right + n * CHART.slot > avail;         /* wider than the screen, it scrolls */
@@ -3042,13 +3087,13 @@ function renderChart() {
   host.classList.toggle("scrolls", scrolls);
   host.style.setProperty("--axis-w", CHART.left + "px");
   const x0 = CHART.left + gutter;
-  const plotW = width - x0 - CHART.right, plotH = CHART.height - CHART.top - CHART.bottom;
+  const plotW = width - x0 - CHART.right, plotH = H - CHART.top - CHART.bottom;
   const vals = c.bars.map(b => b.value).filter(v => v != null);
   const yMax = c.max != null ? c.max : niceCeiling(Math.max(...vals, 0));
-  const svg = svgEl("svg", { viewBox: "0 0 " + width + " " + CHART.height, width: width, height: CHART.height, role: "img", "aria-label": "Receptor density chart" });
+  const svg = svgEl("svg", { viewBox: "0 0 " + width + " " + H, width: width, height: H, role: "img", "aria-label": "Receptor density chart" });
   const y = v => CHART.top + plotH - (v / yMax) * plotH;
-  const axis = svgEl("svg", { viewBox: "0 0 " + CHART.left + " " + CHART.height, width: CHART.left, height: CHART.height, class: "y-axis", "aria-hidden": "true" });
-  axis.appendChild(svgEl("rect", { x: 0, y: 0, width: CHART.left - 1, height: CHART.height, class: "axis-bg" }));
+  const axis = svgEl("svg", { viewBox: "0 0 " + CHART.left + " " + H, width: CHART.left, height: H, class: "y-axis", "aria-hidden": "true" });
+  axis.appendChild(svgEl("rect", { x: 0, y: 0, width: CHART.left - 1, height: H, class: "axis-bg" }));
   for (let i = 0; i <= 4; i++) {
     const v = yMax * i / 4, yy = y(v);
     svg.appendChild(svgEl("line", { x1: CHART.left, x2: width - CHART.right, y1: yy, y2: yy, class: "grid-line" }));
@@ -3090,7 +3135,7 @@ function renderChart() {
       const last = runs[runs.length - 1];
       if (last && last.tier === b.tier) last.to = i; else runs.push({ tier: b.tier, from: i, to: i });
     });
-    const yBand = CHART.height - 24;
+    const yBand = H - 24;
     runs.forEach((run, k) => {
       const xa = x0 + slot * run.from + (slot - bw) / 2, xb = x0 + slot * run.to + (slot + bw) / 2;
       svg.appendChild(svgEl("line", { x1: xa, x2: xb, y1: yBand, y2: yBand, class: "tier-line" }));
@@ -3108,7 +3153,6 @@ function renderChart() {
   applyRegionFocus();
   host.appendChild(axis);
   host.appendChild(svg);
-  document.getElementById("chart-legend").innerHTML = c.legend.map(l => "<span class=\"legend-item\"><span class=\"legend-swatch\" style=\"background:" + l.colour + "\"></span>" + escapeHtml(l.name) + "</span>").join("");
   renderCite();
   markPicked();
 }
@@ -3204,17 +3248,36 @@ function heatColour(t) {
   const seg = t < 0.5 ? 0 : 1, u = (t - seg * 0.5) * 2, a = HEAT_STOPS[seg], b = HEAT_STOPS[seg + 1];
   return "rgb(" + [0, 1, 2].map(i => Math.round(a[i] + (b[i] - a[i]) * u)).join(",") + ")";
 }
+/* one receptor read off the table, so its colours explain themselves: the
+   charted one where it has numbers here, else the first that does; on one
+   scale across the table, the densest box of all */
+function heatExample(rs, cols, scaleAll) {
+  const has = r => r.data && cols.some(reg => raw(r, reg.base) != null);
+  let r = axisMode === "receptor" ? rs.find(x => x.id === dropdown.value) : null;
+  if (!r || !has(r)) r = rs.find(has);
+  if (!r) return "";
+  if (scaleAll) {
+    let top = null;
+    rs.forEach(x => cols.forEach(reg => { const v = raw(x, reg.base); if (v != null && (!top || v > top.v)) top = { r: x, reg, v }; }));
+    return " For example, <b>" + escapeHtml(shortName(top.r)) + "</b> in the <b>" + escapeHtml(top.reg.name) + "</b> is the densest in the whole table, hence bright red, and every other box is coloured against it.";
+  }
+  let hi = null, lo = null;
+  cols.forEach(reg => { const v = raw(r, reg.base); if (v == null) return; if (!hi || v > hi.v) hi = { reg, v }; if (!lo || v < lo.v) lo = { reg, v }; });
+  if (!hi || hi.reg === lo.reg) return "";
+  return " For example, <b>" + escapeHtml(shortName(r)) + "</b> is densest in the <b>" + escapeHtml(hi.reg.name) + "</b>, hence bright red, and sparsest in the <b>" + escapeHtml(lo.reg.name) + "</b>, hence yellow.";
+}
 function renderHeat() {
   const host = document.getElementById("types-heat");
   const rs = receptors().slice().sort((a, b) => FAMILIES.indexOf(a.family) - FAMILIES.indexOf(b.family));
   const scaleAll = layer === "ar" && heatScale === "all";
   document.getElementById("heat-scale").hidden = layer !== "ar";
-  document.getElementById("heat-lede").textContent = layer === "pet"
-    ? "Every receptor in the catalogue against every region: yellow where a receptor is sparsest and red where it is densest, scaled within each receptor because the tracers report different quantities. A hatched row has not enough information from PET; a hatched box is a region the map does not cover. Click a receptor's name to chart it, or a region's name to light it up on the scan."
-    : "Every receptor in the catalogue against every region the autoradiography reaches, yellow to red. Within each receptor shows where each one concentrates; across the whole table puts them all on one fmol/mg scale. A hatched row has not enough information from this source. Click a receptor's name to chart it, or a region's name to light it up on the scan.";
   let allMax = 0;
   rs.forEach(r => REG.forEach(reg => { const v = raw(r, reg.base); if (v > allMax) allMax = v; }));
   const cols = layer === "ar" ? REG.filter(reg => rs.some(r => r.data && r.data.values[reg.base] != null)) : REG;
+  const lede = layer === "pet"
+    ? "Each row is a receptor, each column a region: yellow where it is sparsest, red where it is densest, scaled within each row. A hatched box has no data. Click a receptor to chart it, or a region to light it on the scan."
+    : "Each row is a receptor, each column a region, yellow to red. Within each receptor shows where each one concentrates; across the whole table puts them all on one fmol/mg scale. A hatched box has no data. Click a receptor to chart it, or a region to light it on the scan.";
+  document.getElementById("heat-lede").innerHTML = escapeHtml(lede) + heatExample(rs, cols, scaleAll);
   let html = "<table><thead><tr><th class=\"corner\"></th>";
   cols.forEach(reg => { html += "<th class=\"col\"><button type=\"button\" data-base=\"" + reg.base + "\" title=\"" + escapeHtml(reg.name) + "\">" + escapeHtml(reg.name) + "</button></th>"; });
   html += "</tr></thead><tbody>";
@@ -3235,7 +3298,7 @@ function renderHeat() {
   });
   host.innerHTML = html + "</tbody></table>";
   host.querySelectorAll("th.col button").forEach(b => b.addEventListener("click", () => toggleRegion(BY_BASE[b.dataset.base])));
-  host.querySelectorAll("th.rlabel button").forEach(b => b.addEventListener("click", () => pickReceptor(b.dataset.rx, true)));
+  host.querySelectorAll("th.rlabel button").forEach(b => b.addEventListener("click", () => pickReceptor(b.dataset.rx)));
   fitHeat();
   markPicked();
 }
@@ -3290,14 +3353,12 @@ function stripCount() {
   const i = Math.min(cards.length - 1, Math.max(0, Math.round(track.scrollLeft / step)));
   out.textContent = "Every receptor \u00B7 " + (i + 1) + " of " + cards.length + " \u00B7 " + shortName(receptors().find(r => r.id === cards[i].dataset.rx) || { name: "" });
 }
-/* slide the strip to a receptor's card; bring the strip into view too when
-   the pick came from the table above */
+/* slide the strip to a receptor's card */
 function slideTo(id, show) {
   const track = document.getElementById("types-slide-track");
   const card = id && track.querySelector("[data-rx=\"" + id + "\"]");
   if (!card) return;
   track.scrollTo({ left: card.offsetLeft - track.offsetLeft, behavior: show ? "smooth" : "auto" });
-  if (show) document.getElementById("types-slide").scrollIntoView({ block: "center", behavior: "smooth" });
 }
 document.getElementById("types-slide-track").addEventListener("scroll", () => { clearTimeout(stripCount._t); stripCount._t = setTimeout(stripCount, 80); }, { passive: true });
 document.querySelectorAll("#types-slide [data-slide]").forEach(b => b.addEventListener("click", () => {
@@ -3306,34 +3367,33 @@ document.querySelectorAll("#types-slide [data-slide]").forEach(b => b.addEventLi
   const step = c[1] ? c[1].offsetLeft - c[0].offsetLeft : c[0].offsetWidth;
   track.scrollBy({ left: step * Number(b.dataset.slide), behavior: "smooth" });
 }));
-/* the table scrolls sideways only when it must: where it fits the screen it
-   is left open, so its column names can stick to the top of the window */
+/* the table scrolls inside its box, down and sideways, its column names
+   stuck to the top and its row labels to the left. The names are set the
+   whole of their length where the box is tall, and cut short where it is
+   not, so that the header never takes more than two fifths of the box;
+   should it still take half, it scrolls with the cells instead */
 function fitHeat() {
   const host = document.getElementById("types-heat");
   if (!host.clientWidth) return;            /* the pane is hidden; measured when it shows */
-  host.classList.remove("fits");
-  host.classList.toggle("fits", host.scrollWidth <= host.clientWidth + 1);
+  const room = host.clientHeight;
+  host.style.setProperty("--heat-cap", Math.max(88, Math.min(232, Math.round(room * 0.42))) + "px");
+  const head = host.querySelector("thead");
+  host.classList.toggle("short", !!head && head.offsetHeight > room * 0.5);
 }
-/* a receptor named in the table becomes the chart's receptor: the axis
-   goes to receptors if it was on regions, the picker takes it, the chart
-   tab comes forward and the section scrolls back to the top */
-function pickReceptor(id, stay) {
+/* a receptor named in the table, on a card or in the reference becomes the
+   chart's receptor: the axis goes to receptors if it was on regions, the
+   picker takes it and the graph tab comes forward */
+function pickReceptor(id) {
   if (!receptors().some(r => r.id === id)) return;
   if (axisMode !== "receptor") {
     axisMode = "receptor";
     document.querySelectorAll("#axis-group [data-axis]").forEach(b => b.classList.toggle("active", b.dataset.axis === "receptor"));
+    nameFigsTab();
     fillDropdown(false);
   }
   dropdown.value = id;
-  if (stay) {            /* picked in the table: stay on this tab and slide to its card below */
-    redraw();
-    slideTo(id, true);
-    return;
-  }
-  const chartTab = document.querySelector("[data-tab=\"chart\"]");
-  if (chartTab && !chartTab.classList.contains("active")) chartTab.click(); else renderChart();
   redraw();
-  document.getElementById("rx-h").scrollIntoView({ block: "start", behavior: "smooth" });
+  if (activeRxTab() !== "chart") showRxTab("chart");
 }
 document.querySelectorAll("#heat-scale [data-scale]").forEach(btn => {
   btn.addEventListener("click", () => {
@@ -3369,7 +3429,7 @@ function renderTypesTable() {
   }
   const host = document.getElementById("types-table");
   host.innerHTML = html + "</tbody></table>";
-  host.querySelectorAll("tr.pickable").forEach(tr => tr.addEventListener("click", () => pickReceptor(tr.dataset.rx, true)));
+  host.querySelectorAll("tr.pickable").forEach(tr => tr.addEventListener("click", () => pickReceptor(tr.dataset.rx)));
 }
 function cellOrDash(v) { return v && v.trim() ? escapeHtml(v) : "<span class=\"cell-empty\" title=\"not recorded in the source data\">&mdash;</span>"; }
 
@@ -3430,21 +3490,24 @@ document.querySelectorAll("#axis-group [data-axis]").forEach(btn => {
     if (axisMode === btn.dataset.axis) return;
     document.querySelectorAll("#axis-group [data-axis]").forEach(b => b.classList.toggle("active", b === btn));
     axisMode = btn.dataset.axis;
+    nameFigsTab();
     fillDropdown(false); redraw();
   });
 });
-const panes = { chart: document.getElementById("chart-pane"), density: document.getElementById("density-table"), types: document.getElementById("types-pane") };
-document.querySelectorAll("[data-tab]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll("[data-tab]").forEach(b => b.classList.toggle("active", b === btn));
-    const tab = btn.dataset.tab;
-    for (const [name, pane] of Object.entries(panes)) pane.classList.toggle("hidden", name !== tab);
-    dropdown.parentElement.classList.toggle("inapplicable", tab === "types");
-    document.getElementById("axis-group").classList.toggle("inapplicable", tab === "types");
-    if (tab === "chart") renderChart();
-    if (tab === "types") { fitHeat(); renderTypesStrip(); }   /* measured, and slid, only once on show */
-  });
-});
+function nameFigsTab() { document.getElementById("rxtab-figs").textContent = axisMode === "receptor" ? "Receptor" : "Region"; }
+/* the window's tabs: one pane at a time, the graph and the table measured
+   as theirs comes forward, the strip of cards slid to the picked receptor */
+const panes = { chart: "chart-pane", figs: "figs-pane", density: "density-table", types: "types-pane", primer: "primer-pane", sources: "sources-pane" };
+function activeRxTab() { const t = document.querySelector("#popRx [role=\"tab\"].active"); return t ? t.dataset.tab : "chart"; }
+function showRxTab(tab) {
+  document.querySelectorAll("#popRx [role=\"tab\"]").forEach(b => { const on = b.dataset.tab === tab; b.classList.toggle("active", on); b.setAttribute("aria-selected", String(on)); });
+  for (const [name, id] of Object.entries(panes)) document.getElementById(id).classList.toggle("hidden", name !== tab);
+  if (tab === "chart") renderChart();
+  if (tab === "figs") renderCite();
+  if (tab === "types") fitHeat();
+  if (tab === "primer") { renderTypesStrip(); stripCount(); slideTo(axisMode === "receptor" ? dropdown.value : null, false); }
+}
+document.querySelectorAll("#popRx [role=\"tab\"]").forEach(btn => btn.addEventListener("click", () => showRxTab(btn.dataset.tab)));
 
 function renderCoverage() {
   const el = document.getElementById("rx-coverage");
@@ -3596,10 +3659,16 @@ if (location.hash === "#receptors") {
     var t = document.querySelector("#popRx [data-tab].active");
     return t ? t.getAttribute("data-tab") : null;
   }
+  /* a bar button stands for a family of the receptor window's tabs:
+     Receptor graph for the graph, the receptor and the sources, and
+     Neurotransmitters for the table and the receptor types */
+  function inFamily(b, tab){
+    var fam = b.getAttribute("data-tabs");
+    return !fam || (" " + fam + " ").indexOf(" " + tab + " ") !== -1;
+  }
   function press(){
     buttons.forEach(function(b){
-      var on = !!current && b.getAttribute("data-pop") === current &&
-               (!b.hasAttribute("data-tab") || b.getAttribute("data-tab") === activeTab());
+      var on = !!current && b.getAttribute("data-pop") === current && inFamily(b, activeTab());
       b.classList.toggle("active", on);
       b.setAttribute("aria-pressed", String(on));
     });
@@ -3613,8 +3682,8 @@ if (location.hash === "#receptors") {
     p._leaving = setTimeout(function(){ if (!p.classList.contains("in")) p.hidden = true; }, 280);
     press();
   }
-  function show(id, tabName){
-    if (current === id && (!tabName || tabName === activeTab())){ hide(); return; }
+  function show(id, tabName, btn){
+    if (current === id && (!tabName || (btn ? inFamily(btn, activeTab()) : tabName === activeTab()))){ hide(); return; }
     if (current && current !== id) hide();
     var p = pops[id];
     if (!p) return;
@@ -3623,7 +3692,7 @@ if (location.hash === "#receptors") {
     current = id;
     void p.offsetWidth;
     p.classList.add("in");
-    if (tabName){
+    if (tabName && !(btn && inFamily(btn, activeTab()))){
       var t = document.querySelector('#popRx [data-tab="' + tabName + '"]');
       if (t) t.click();
     }
@@ -3632,7 +3701,7 @@ if (location.hash === "#receptors") {
     press();
   }
   buttons.forEach(function(b){
-    b.addEventListener("click", function(){ show(b.getAttribute("data-pop"), b.getAttribute("data-tab")); });
+    b.addEventListener("click", function(){ show(b.getAttribute("data-pop"), b.getAttribute("data-tab"), b); });
   });
   document.querySelectorAll(".pop .pop-x").forEach(function(x){ x.addEventListener("click", hide); });
   document.querySelectorAll("#popRx [data-tab]").forEach(function(t){ t.addEventListener("click", press); });

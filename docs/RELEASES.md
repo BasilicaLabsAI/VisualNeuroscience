@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.40 — 21 October 2026 — The receptor window in tabs
+Commit · Lay the receptor density window out in tabs, the graph and the table fitted to theirs
+
+The 3D Region Atlas's receptor density window is now tabbed, the tabs in a row under its title: Graph, Receptor (Region when charting by region), Neurotransmitters, Receptor types and Sources. The window keeps one height whichever tab is open. The graph fills its tab with nothing to scroll, the controls above it in their rows; where a screen is too short for its labels it scrolls inside its own box, and sideways only when it has more bars than fit. The Neurotransmitters tab holds the table of every receptor against every region, which scrolls down and across inside its box with the column names and row labels staying put, the names cut short where the box is small so the cells show; above it the text is one short paragraph, and ends with an example read off the table itself, naming the region where the receptor is densest, hence bright red, and where it is sparsest, hence yellow. The empty band that stood between the source buttons and that text is gone. The picked receptor's drawings and source have the Receptor tab, the cards of every receptor and their reference the Receptor types tab, and the coverage and the sources the last. The bar's Receptor graph and Neurotransmitters buttons open the window on the Graph and Neurotransmitters tabs, and a receptor's name pressed in the table charts it.
+
 ## v11.39 — 21 October 2026 — The privacy policy names its maker
-Commit · Name Fadil Karim as the maker of VisualNeuroscience.AI in the privacy policy
+Commit `4e41e78` · Name Fadil Karim as the maker of VisualNeuroscience.AI in the privacy policy
 
 The privacy policy now says, where it tells you whom to write to, that VisualNeuroscience.AI is made by Fadil Karim, and its last line says the same; the company name that stood there is gone. Nothing else in the policy changes.
 
