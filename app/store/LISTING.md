@@ -160,6 +160,11 @@ rather than 15, the second block is new to App Store users as well and goes
 above the first. 4,000 characters allowed; both together are well under.
 
 ```
+• The receptor density window is tabbed: the graph on show with nothing to scroll, the table of every receptor against every region, the receptor's own drawings, the receptor types and the sources each on a tab of their own.
+• Brodmann areas are added the way the regions are, from one searchable dropdown, by number, name or what they do.
+• Turn the phone sideways in the 3D Region Atlas and the views take the whole height: the bar moves to the right edge and the four views stand in one row.
+• The Hallucinations study is a screen like the atlas: the scans fill it, the brain state and the regions are a box in the corner, and the paper, the reading, the circuit, the figures, the imaging, the mechanism and the limits each open from a button of their own.
+• Terms of use, a page on deleting your account, and a Delete your account row under Account. Deleting an account signed in with Apple revokes the Sign in with Apple authorisation as well.
 • A tab bar. The atlases, the library, practice, about and your account each have a tab that opens on a page of its own, and whatever you open stays in its tab when you switch away and back. Light or dark is chosen under Account.
 • Microanatomy: a neuron drawn part by part, with twenty structures to click and a quiz to learn them, seventeen neurotransmitters drawn the way chemists draw them, and a hundred and fifty receptors, channels and transporters, each with the drugs that act on it.
 • Molecular: the dopamine and serotonin receptors themselves in 3D, built from thirty-nine experimental structures. Watch the neurotransmitter dock and switch the receptor on, see where antipsychotics, triptans, LSD and psilocin sit in the same pocket, and compare the subtypes.
@@ -180,6 +185,49 @@ Only if 1.0 went out as build 14:
 ```
 
 The description on the version page is 1.0's. Its WHAT IS INSIDE list predates Microanatomy and Molecular; the Play listing in `PLAY-STORE.md` carries the current list with an Apple-worded account line (Sign in with Apple or email), so paste its bullets into the App Store description with 1.1.
+
+## Submitting 1.1, in order
+
+1. **The Firebase file first.** `app/ios/App/App/GoogleService-Info.plist` in the
+   repository has `IS_ANALYTICS_ENABLED` false: it predates Analytics being
+   switched on for the project, so every build Xcode Cloud has made counts
+   nothing. Download the file again from the Firebase console (Project
+   settings → Your apps → the iOS app), replace the one in the repository,
+   commit it as a release (a ledger entry, no service-worker bump, since
+   the site does not change) and push to `main`. Xcode Cloud archives that
+   push; the build to submit is the one it uploads, so check its number in
+   App Store Connect → TestFlight before picking it.
+2. **Try that build from TestFlight** on an iPhone and an iPad: the Account
+   tab's three rows (Privacy, Terms, Delete your account), a full deletion of
+   an account signed in with Apple (it should leave the app's entry under
+   Settings → Apple ID → Sign in with Apple), the 3D Region Atlas held
+   sideways, and the Hallucinations study's bar.
+3. **The screenshots.** Retake the iPhone and iPad sets on the device or the
+   simulator (the current ones show the old web bar); the first three as
+   `APP-REVIEW-REPLY.md` §8 says, the tools rather than a brain on black.
+4. **App Store Connect → the app → the 1.1 version page**: pick the build,
+   paste *What's New* from above, upload the screenshots, paste the
+   description's bullets from `PLAY-STORE.md`, check the keywords (add
+   `MNI152` and `AAL` as §8 suggests), the Support and Marketing URLs and the
+   copyright.
+5. **App Information**: the name `Visual Neuroscience` and the subtitle (the
+   one above, or §8's `MRI atlas, tracts, Brodmann`), the privacy policy URL;
+   the licence agreement field stays empty.
+6. **App Privacy**: add *Developer's Advertising or Marketing* to Contact Info
+   → Email Address, and make sure Usage Data → Product Interaction and
+   Identifiers → Device ID are declared as the section above says (1.0
+   predates the usage counts).
+7. **App Review Information**: Sign-in required stays No, but reviewers do try
+   to log in, so create the demo account of `APP-REVIEW-REPLY.md` §3 and give
+   its details; paste the notes below and add two lines: the account
+   deletion page, `https://visualneuroscience.ai/delete-account.html`, and
+   "Deleting an account signed in with Apple revokes its Sign in with Apple
+   token in the app."
+8. **Age rating** stays 12+; export compliance is answered by `Info.plist`
+   (`ITSAppUsesNonExemptEncryption` false), so no question comes at upload.
+9. **Submit**, one build, no expedited request. After approval the new name
+   shows, and the project moves to 1.2 (`MARKETING_VERSION` in the Xcode
+   project) for the next one.
 
 ## App Review Information
 

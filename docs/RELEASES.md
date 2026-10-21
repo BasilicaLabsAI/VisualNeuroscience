@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.46 — 21 October 2026 — The App Store notes for 1.1
+Commit · Bring the App Store notes up to date for the 1.1 submission
+
+The notes that stand ready for the App Store, in the repository's store folder, now carry today's work in the What's New text, the tabbed receptor window, the Brodmann dropdown, the sideways atlas, the Hallucinations screen and the terms and deletion pages, and a numbered order for submitting 1.1, from the Firebase file that has to be refreshed before the build is made to the review notes and the submission itself. Nothing on the site changes.
+
 ## v11.45 — 21 October 2026 — The paper introduced, first in the Hallucinations study's bar
-Commit · Open the Hallucinations study's bar with a window that introduces the paper
+Commit `e2a636e` · Open the Hallucinations study's bar with a window that introduces the paper
 
 The Hallucinations study's bar now begins with The paper, a window that introduces Boksa's editorial before the rest: who wrote it, a neuroscientist at the Douglas Institute and McGill writing for the Journal of Psychiatry & Neuroscience in 2009; what it is, an editorial rather than a study, a short tour of what neuroscience knows about hallucinations written around Allen's review and the model this page draws; and what she is saying, her argument in five paragraphs, from hallucinations in the well to the imaging, the windows onto the mechanism, Allen's model and the treatment, and the limits she closes on. The citation and the links to PubMed, PMC and the PDF stand at its foot, moved there from the Reference window, which keeps the scan and the regions.
 
