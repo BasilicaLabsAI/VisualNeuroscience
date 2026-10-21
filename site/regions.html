@@ -421,6 +421,7 @@ table.dtable td.num{ font-size:.84rem; }
    that page is gone: clicking a structure here lights it in the atlas
    viewports above, as a highlighted region like any other. */
 .mode-group { display: flex; gap: .4rem; flex-wrap: wrap; }
+.mode-group[hidden] { display: none; }   /* the table's scale toggle is hidden under PET, where every box is already a share */
 .mode-label {
     font-family: var(--font-brand); font-weight: 500; font-size: .58rem;
     letter-spacing: .22em; text-transform: uppercase; color: var(--ink-60);
@@ -1152,6 +1153,11 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
 .screen.one .panelbar-btns{ margin-left:0; }
 .screen.one .panelbar-end{ margin-left:0; padding-left:0; }
 .screen.one .pop{ left:0; right:0; bottom:0; max-height:76%; border-left:0; border-right:0; border-bottom:0; border-radius:18px 18px 0 0; }
+/* a phone upright: while a pop-up is open the bar steps aside and the
+   pop-up has its room too; it closes on its own cross, and the bar comes
+   back with the views (held sideways the bar stands at the edge and stays) */
+.screen.one:not(.land).popped .panelbar{ display:none; }
+.screen.one:not(.land).popped .pop{ padding-bottom:env(safe-area-inset-bottom, 0px); }
 .screen.one .pop-sm{ width:100%; }
 .screen.one .drawer{ left:auto; right:0; padding:0; }
 .screen.one .drawer-box{ flex:1 1 auto; max-height:none; border-width:0 0 0 1px; border-radius:0; box-shadow:-8px 0 30px rgba(0,0,0,.25); }
@@ -3896,6 +3902,8 @@ if (location.hash === "#receptors") {
       b.setAttribute("aria-pressed", String(on));
     });
   }
+  var screenEl = document.querySelector("main.screen");
+  function popped(on){ if (screenEl) screenEl.classList.toggle("popped", on); }
   function hide(){
     if (!current) return;
     var p = pops[current];
@@ -3903,6 +3911,7 @@ if (location.hash === "#receptors") {
     p.classList.remove("in");
     clearTimeout(p._leaving);
     p._leaving = setTimeout(function(){ if (!p.classList.contains("in")) p.hidden = true; }, 280);
+    popped(false);
     press();
   }
   function show(id, tabName, btn){
@@ -3915,6 +3924,7 @@ if (location.hash === "#receptors") {
     current = id;
     void p.offsetWidth;
     p.classList.add("in");
+    popped(true);
     if (tabName && !(btn && inFamily(btn, activeTab()))){
       var t = document.querySelector('#popRx [data-tab="' + tabName + '"]');
       if (t) t.click();

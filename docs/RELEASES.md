@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.54 — 21 October 2026 — The bar steps aside on a phone
+Commit · Hide the bar while a pop-up is open on a phone held upright, on the 3D Region Atlas and the Hallucinations study
+
+On a phone held upright the bar of buttons stayed under an open pop-up, a second row of buttons above the app's own tab bar, and the pop-up stopped short of it. Now the bar steps aside as a pop-up opens and the pop-up takes its room; the cross at the pop-up's corner, or Escape on a keyboard, closes it and brings the bar back with the views. The Hallucinations study, which shares the chrome, does the same. Held sideways, where the bar stands along the edge, and on a tablet or a computer, the bar stays. The Neurotransmitters table also loses a row of buttons that should never have shown: its scale toggle, within each receptor or across the whole table, belongs to autoradiography alone, and under PET it had been standing there doing nothing.
+
 ## v11.53 — 21 October 2026 — The graph's key in one line on a phone
-Commit · Set the graph's key in one line that scrolls sideways on a phone
+Commit `0900b66` · Set the graph's key in one line that scrolls sideways on a phone
 
 Charting a region on a phone, the graph's key named all fourteen neurotransmitter families in four rows, and the graph paid for them. On a phone the key is now one line that scrolls sideways under the graph, in the app and on the web alike; a tablet and a computer keep the wrapped key.
 
