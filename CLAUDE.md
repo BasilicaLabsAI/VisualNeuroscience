@@ -138,7 +138,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   is a column on the left and the faces sit side by side or stacked, whichever draws them larger. No list, scans,
   graph or export; BA48, on neither face, is reached from the empty reading, and every reading links to the area on
   the scan in the 3D Region Atlas. `#ba=<n>` opens on an area, the address follows the pick, and the MCP server's
-  `brodmann_area` answers link there. The 3D Region Atlas keeps its own Brodmann list, and no map since v11.30.
+  `brodmann_area` answers link there. The 3D Region Atlas keeps its own Brodmann list, and no map since v11.30; since v11.38
+  the areas are picked through the same dropdown panel as the AAL regions (`dropPicker` in `regions.html`, shared by
+  `#rpick` and `#bapick`: button `#bapickBtn`, panel `#bapickPop`, list `#balist` a `.rpick-list` grouped by lobe).
 - The 3D Region Atlas, the Network Atlas and, since v11.17, the Hallucinations study (`site/hallucinations.html`)
   draw their four views alike, from shared files: the scans' look in either theme is `site/assets/scan-look.js`, and
   the bar over each view, the stages' proportion, the light-theme stages and the view opened over the grid are

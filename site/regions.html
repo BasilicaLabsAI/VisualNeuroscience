@@ -728,7 +728,6 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
   font-family:var(--font-serif); font-style:italic; font-size:.78rem;
   color:var(--ink-60); margin:0 0 .5rem;
 }
-.balist{ max-height:min(42vh,400px); max-height:min(42dvh,400px); overflow-y:auto; margin:0 -.2rem; padding:0 .2rem; }
 .balobe{
   font-family:var(--font-brand); font-weight:500; font-size:.55rem;
   letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
@@ -758,7 +757,6 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 }
 mark{ background:var(--ink); color:var(--paper); }
 .barow[aria-pressed="true"] mark{ background:var(--paper); color:var(--ink); }
-@media (max-width:1100px){ .balist{ max-height:min(40vh,360px); } }
 
 /* ── the region picker ─────────────────────────────────────────────────
    The AAL list runs to a hundred and sixteen names with the pairs split,
@@ -1168,15 +1166,21 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
             </div>
           </div>
           <div class="atlas-pane hidden" id="baPane">
-            <div class="searchwrap">
-              <input type="search" id="baq" autocomplete="off" spellcheck="false"
-                     placeholder="number, name, or what it does&hellip;"
-                     aria-label="Search Brodmann areas by number, anatomical name, or function"
-                     aria-describedby="baqcount">
-              <button class="clear hidden" id="baqclear" type="button" aria-label="Clear search">&times;</button>
+            <div class="selwrap rpick" id="bapick">
+              <button class="rpick-btn" id="bapickBtn" type="button" aria-haspopup="listbox" aria-expanded="false"
+                      aria-controls="bapickPop">Add a Brodmann area&hellip;</button>
+              <div class="rpick-pop" id="bapickPop" hidden>
+                <div class="searchwrap">
+                  <input type="search" id="baq" role="combobox" aria-expanded="true" aria-controls="balist"
+                         aria-autocomplete="list" aria-describedby="baqcount" autocomplete="off" spellcheck="false"
+                         placeholder="number, name, or what it does&hellip;"
+                         aria-label="Search Brodmann areas by number, anatomical name, or function">
+                  <button class="clear hidden" id="baqclear" type="button" aria-label="Clear search">&times;</button>
+                </div>
+                <p class="search-count" id="baqcount" aria-live="polite"></p>
+                <div class="rpick-list" id="balist" role="listbox" aria-label="Brodmann areas"></div>
+              </div>
             </div>
-            <p class="search-count" id="baqcount">All 41 areas.</p>
-            <div class="balist" id="balist" role="group" aria-label="Brodmann areas"></div>
           </div>
           <!-- how strongly the highlighted regions and areas cover the scan,
                for either atlas, so it sits under both panes -->
@@ -1760,7 +1764,7 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
         og.appendChild(oR);
       }
     });
-    if (rpick && rpick.classList.contains("open")) buildRegionList();
+    if (regionPicker && regionPicker.isOpen()) regionPicker.rebuild();
   }
 
   /* ── the region picker ────────────────────────────────────────────────
@@ -1777,7 +1781,6 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
   var rpickCount = document.getElementById("rpickCount");
   var rpickList = document.getElementById("rpickList");
   var rpickPop = document.getElementById("rpickPop");
-  var rpickOpts = [], rpickActive = -1, rpickGone = null;
 
   /* A name is matched anywhere in it, so "hippo" finds the parahippocampal
      gyrus too; what a region does is matched only from the start of a
@@ -1794,21 +1797,23 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
      the stretch of what the region does that holds it */
   function whyLine(base, marks){
     var note = window.MN_NOTES && MN_NOTES.NOTES[base];
-    if (!note || !marks.length) return null;
-    var low = norm(note.fn), at = -1;
+    return note ? whyFrom(note.fn, marks) : null;
+  }
+  function whyFrom(text, marks){
+    if (!text || !marks.length) return null;
+    var low = norm(text), at = -1;
     marks.forEach(function(m){
       var re = new RegExp("(^|[^a-z0-9\u00c0-\u024f])" + m.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
       var hit = re.exec(low), i = hit ? hit.index + hit[1].length : -1;
       if (i !== -1 && (at === -1 || i < at)) at = i;
     });
     if (at === -1) return null;
-    var from = at > 28 ? note.fn.lastIndexOf(" ", at - 20) + 1 : 0;
+    var from = at > 28 ? text.lastIndexOf(" ", at - 20) + 1 : 0;
     var span = document.createElement("span"); span.className = "why";
-    span.appendChild(highlightText((from > 0 ? "…" : "") + note.fn.slice(from), marks));
+    span.appendChild(highlightText((from > 0 ? "…" : "") + text.slice(from), marks));
     return span;
   }
-  function buildRegionList(){
-    var raw = rpickQ.value;
+  function buildRegionList(raw){
     var terms = norm(raw).split(/\s+/).filter(Boolean);
     var items = [];
     [].forEach.call(selectEl.getElementsByTagName("optgroup"), function(og){
@@ -1821,8 +1826,7 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
     var phrase = terms.length > 1 && items.some(function(it){ return regionHas(it.hay, whole); }) ? whole : null;
     var marks = phrase ? [phrase] : terms;
     rpickList.innerHTML = "";
-    rpickOpts = []; rpickActive = -1;
-    rpickQ.removeAttribute("aria-activedescendant");
+    var opts = [];
     var group = null, groupEl = null, named = -1;
     items.forEach(function(it){
       if (terms.length && !(phrase ? regionHas(it.hay, phrase)
@@ -1832,16 +1836,17 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
         groupEl = document.createElement("div");
         groupEl.setAttribute("role", "group");
         var h = document.createElement("div");
-        h.className = "balobe"; h.id = "rpick-g" + rpickOpts.length;
+        h.className = "balobe"; h.id = "rpick-g" + opts.length;
         h.appendChild(highlightText(group, marks));
         groupEl.setAttribute("aria-labelledby", h.id);
         groupEl.appendChild(h);
         rpickList.appendChild(groupEl);
       }
-      var k = rpickOpts.length;
+      var k = opts.length;
       var row = document.createElement("div");
       row.className = "barow rpick-opt"; row.id = "rpick-o" + k;
       row.setAttribute("role", "option"); row.setAttribute("aria-selected", "false");
+      row.setAttribute("data-value", it.value);
       var nm = document.createElement("span"); nm.className = "nm";
       nm.appendChild(highlightText(it.text, marks));
       if (marks.length && !marks.some(function(m){ return norm(it.text + " " + group).indexOf(m) !== -1; })){
@@ -1857,151 +1862,162 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
         row.setAttribute("aria-label", it.text + ", highlighted");
       }
       if (named === -1 && marks.length && marks.every(function(m){ return norm(it.text).indexOf(m) !== -1; })) named = k;
-      row.addEventListener("click", function(){ pickRegion(it.value); });
       groupEl.appendChild(row);
-      rpickOpts.push({el: row, value: it.value});
+      opts.push({el: row, value: it.value});
     });
-    if (!rpickOpts.length){
+    if (!opts.length){
       var e = document.createElement("p");
       e.className = "balist-empty";
       e.textContent = "Nothing matches “" + raw.trim() + "”. Try part of a name, a lobe, or what you want the region to do.";
       rpickList.appendChild(e);
     }
     rpickCount.textContent = terms.length
-      ? rpickOpts.length + (rpickOpts.length === 1 ? " region matches" : " regions match")
+      ? opts.length + (opts.length === 1 ? " region matches" : " regions match")
       : "All " + items.length + " regions.";
-    rpickClear.classList.toggle("hidden", !raw);
     /* Enter takes the first region named by what was typed, and failing
        that the first found by its lobe or by what it does */
-    if (terms.length && rpickOpts.length) setRegionActive(named !== -1 ? named : 0);
+    return {opts: opts, first: terms.length && opts.length ? (named !== -1 ? named : 0) : -1};
   }
-  function setRegionActive(i){
-    var was = rpickOpts[rpickActive];
-    if (was){ was.el.classList.remove("active"); was.el.setAttribute("aria-selected", "false"); }
-    rpickActive = i;
-    var o = rpickOpts[i];
-    if (!o){ rpickQ.removeAttribute("aria-activedescendant"); return; }
-    o.el.classList.add("active"); o.el.setAttribute("aria-selected", "true");
-    rpickQ.setAttribute("aria-activedescendant", o.el.id);
-    var top = o.el.offsetTop - rpickList.offsetTop, bottom = top + o.el.offsetHeight;
-    if (top < rpickList.scrollTop) rpickList.scrollTop = top;
-    else if (bottom > rpickList.scrollTop + rpickList.clientHeight) rpickList.scrollTop = bottom - rpickList.clientHeight;
-  }
-  /* the list is kept above a phone's keyboard: it ends where the visible
-     part of the screen does, and on a touch screen a picker low on the
-     page is first brought up under the bar */
-  /* the panel hangs from the picker's box, under its button: the box's
-     scroller would otherwise clip it, and a list scrolling inside another
-     scroller is one iOS does not always let scroll */
-  var rpickBox = document.getElementById("drawerBox");
-  function placeRegionPop(){
-    if (!rpickBox) return;
-    var b = rpickBox.getBoundingClientRect(), r = rpickBtn.getBoundingClientRect();
-    rpickPop.style.setProperty("--pop-left", Math.round(r.left - b.left - rpickBox.clientLeft) + "px");
-    rpickPop.style.setProperty("--pop-top", Math.round(r.bottom - b.top - rpickBox.clientTop + 4) + "px");
-    rpickPop.style.setProperty("--pop-w", Math.round(r.width) + "px");
-  }
-  function fitRegionList(){
-    if (!rpick.classList.contains("open")) return;
-    placeRegionPop();
-    var vv = window.visualViewport;
-    var floor = vv ? vv.height + vv.offsetTop : window.innerHeight;
-    /* the list may run past the box, but ends above the bar */
-    var deck = document.getElementById("deck");
-    if (deck) floor = Math.min(floor, deck.getBoundingClientRect().bottom - 14);
-    var room = floor - rpickList.getBoundingClientRect().top - 14;
-    rpickList.style.maxHeight = Math.round(Math.max(176, Math.min(420, room))) + "px";
-  }
-  /* Closed, the panel is out of the layout, not merely invisible: iOS does
-     not always give a list its scrolling back when a panel kept in the
-     tree with visibility turns visible again. It is laid out closed first,
-     so the arrival can still be seen, and leaves the way it came before it
-     is taken out; opening again meanwhile turns it round mid-flight. */
-  function openRegionPicker(seed, typed){
-    if (rpick.classList.contains("open")) return;
-    clearTimeout(rpickGone);
-    rpickPop.hidden = false;
-    rpickQ.value = seed || "";
-    buildRegionList();
-    rpickList.scrollTop = 0;
-    if (window.matchMedia && matchMedia("(pointer:coarse)").matches){
-      var bar = document.querySelector(".vn-bar") || document.querySelector(".masthead");
-      var under = bar ? Math.max(0, bar.getBoundingClientRect().bottom) : 0;
-      var at = rpickBtn.getBoundingClientRect().top;
-      if (at > (window.innerHeight || 0) * 0.4) window.scrollBy(0, at - under - 10);
+  /* ── the pickers' behaviour, shared ─────────────────────────────────
+     The AAL regions and the Brodmann areas are picked alike: a button that
+     opens a panel hung from the region box, a search field at its head and
+     the list beneath, filtered as the field is typed in, the arrow keys
+     walking it while the focus stays in the field, as a combobox's does,
+     and a press or Enter adding what is picked and closing the panel. Each
+     picker gives this its list's building, which returns the rows and the
+     one Enter takes, and what a pick does. */
+  var pickBox = document.getElementById("drawerBox");
+  function dropPicker(o){
+    var opts = [], active = -1, gone = null;
+    function isOpen(){ return o.wrap.classList.contains("open"); }
+    function setActive(i){
+      var was = opts[active];
+      if (was){ was.el.classList.remove("active"); was.el.setAttribute("aria-selected", "false"); }
+      active = i;
+      var it = opts[i];
+      if (!it){ o.q.removeAttribute("aria-activedescendant"); return; }
+      it.el.classList.add("active"); it.el.setAttribute("aria-selected", "true");
+      o.q.setAttribute("aria-activedescendant", it.el.id);
+      var top = it.el.offsetTop - o.list.offsetTop, bottom = top + it.el.offsetHeight;
+      if (top < o.list.scrollTop) o.list.scrollTop = top;
+      else if (bottom > o.list.scrollTop + o.list.clientHeight) o.list.scrollTop = bottom - o.list.clientHeight;
     }
-    void rpickPop.offsetWidth;
-    rpick.classList.add("open");
-    rpickBtn.setAttribute("aria-expanded", "true");
-    fitRegionList();
-    /* the field takes the focus where a keyboard is at hand, a mouse's or
-       the one that typed on the button; on a touch screen the on-screen
-       keyboard would rise over the list, so the field waits for a tap */
-    var coarse = window.matchMedia && matchMedia("(pointer:coarse)").matches;
-    if (typed || !coarse){ try{ rpickQ.focus({preventScroll: true}); }catch(e){ rpickQ.focus(); } }
-    /* iOS can still hand back a list that has just appeared without its
-       scrolling; taking the overflow away and giving it back once the
-       panel has arrived makes it build the scroller afresh */
-    if (window.matchMedia && matchMedia("(pointer:coarse)").matches){
-      setTimeout(function(){
-        if (!rpick.classList.contains("open")) return;
-        rpickList.style.overflowY = "hidden";
-        void rpickList.offsetHeight;
-        rpickList.style.overflowY = "";
-      }, 260);
+    function rebuild(){
+      var raw = o.q.value, r = o.build(raw);
+      opts = r.opts; active = -1;
+      o.q.removeAttribute("aria-activedescendant");
+      o.clear.classList.toggle("hidden", !raw);
+      if (r.first >= 0) setActive(r.first);
     }
-  }
-  function closeRegionPicker(refocus){
-    if (!rpick.classList.contains("open")) return;
-    rpick.classList.remove("open");
-    rpickBtn.setAttribute("aria-expanded", "false");
-    rpickQ.removeAttribute("aria-activedescendant");
-    clearTimeout(rpickGone);
-    rpickGone = setTimeout(function(){ if (!rpick.classList.contains("open")) rpickPop.hidden = true; }, 240);
-    if (refocus){ try{ rpickBtn.focus({preventScroll: true}); }catch(e){ rpickBtn.focus(); } }
-  }
-  function pickRegion(v){
-    selectEl.value = v;
-    selectEl.dispatchEvent(new Event("change"));
-    closeRegionPicker(true);
-  }
-  rpickBtn.addEventListener("click", function(){
-    if (rpick.classList.contains("open")) closeRegionPicker(false); else openRegionPicker();
-  });
-  rpickBtn.addEventListener("keydown", function(e){
-    if (e.key === "ArrowDown" || e.key === "ArrowUp"){ e.preventDefault(); openRegionPicker("", true); }
-    /* typing on the closed button starts the search, as a select jumps */
-    else if (e.key.length === 1 && e.key !== " " && !e.ctrlKey && !e.metaKey && !e.altKey){
-      e.preventDefault(); openRegionPicker(e.key, true);
+    /* the panel hangs from the region box, under its button: the box's
+       scroller would otherwise clip it, and a list scrolling inside another
+       scroller is one iOS does not always let scroll */
+    function place(){
+      if (!pickBox) return;
+      var b = pickBox.getBoundingClientRect(), r = o.btn.getBoundingClientRect();
+      o.pop.style.setProperty("--pop-left", Math.round(r.left - b.left - pickBox.clientLeft) + "px");
+      o.pop.style.setProperty("--pop-top", Math.round(r.bottom - b.top - pickBox.clientTop + 4) + "px");
+      o.pop.style.setProperty("--pop-w", Math.round(r.width) + "px");
     }
-  });
-  rpickQ.addEventListener("input", buildRegionList);
-  rpickQ.addEventListener("keydown", function(e){
-    if (e.key === "ArrowDown"){ e.preventDefault(); setRegionActive(Math.min(rpickActive + 1, rpickOpts.length - 1)); }
-    else if (e.key === "ArrowUp"){ e.preventDefault(); setRegionActive(Math.max(rpickActive - 1, 0)); }
-    else if (e.key === "Enter"){
-      e.preventDefault();
-      var o = rpickOpts[rpickActive];
-      if (o) pickRegion(o.value);
+    /* the list ends where the visible part of the screen does, above a
+       phone's keyboard, and never below the bar */
+    function fit(){
+      if (!isOpen()) return;
+      place();
+      var vv = window.visualViewport;
+      var floor = vv ? vv.height + vv.offsetTop : window.innerHeight;
+      var deck = document.getElementById("deck");
+      if (deck) floor = Math.min(floor, deck.getBoundingClientRect().bottom - 14);
+      var room = floor - o.list.getBoundingClientRect().top - 14;
+      o.list.style.maxHeight = Math.round(Math.max(176, Math.min(420, room))) + "px";
     }
-    else if (e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); closeRegionPicker(true); }
-  });
-  rpickClear.addEventListener("click", function(){ rpickQ.value = ""; buildRegionList(); rpickQ.focus(); });
-  /* a press on a row must not take the focus out of the field */
-  rpickList.addEventListener("mousedown", function(e){ e.preventDefault(); });
-  document.addEventListener("pointerdown", function(e){
-    if (rpick.classList.contains("open") && !rpick.contains(e.target)) closeRegionPicker(false);
-  });
-  rpick.addEventListener("focusout", function(e){
-    if (rpick.classList.contains("open") && e.relatedTarget && !rpick.contains(e.relatedTarget)) closeRegionPicker(false);
-  });
-  if (window.visualViewport) window.visualViewport.addEventListener("resize", fitRegionList);
-  window.addEventListener("resize", fitRegionList);
-  /* the box scrolled under the open panel would carry its button away */
-  if (rpickBox){
-    var rpickScroller = rpickBox.querySelector(".drawer-in");
-    if (rpickScroller) rpickScroller.addEventListener("scroll", function(){ closeRegionPicker(false); }, {passive: true});
+    /* Closed, the panel is out of the layout, not merely invisible: iOS does
+       not always give a list its scrolling back when a panel kept in the
+       tree with visibility turns visible again. It is laid out closed first,
+       so the arrival can still be seen, and leaves the way it came before it
+       is taken out; opening again meanwhile turns it round mid-flight. */
+    function open(seed, typed){
+      if (isOpen()) return;
+      clearTimeout(gone);
+      o.pop.hidden = false;
+      o.q.value = seed || "";
+      rebuild();
+      o.list.scrollTop = 0;
+      void o.pop.offsetWidth;
+      o.wrap.classList.add("open");
+      o.btn.setAttribute("aria-expanded", "true");
+      fit();
+      /* the field takes the focus where a keyboard is at hand, a mouse's or
+         the one that typed on the button; on a touch screen the on-screen
+         keyboard would rise over the list, so the field waits for a tap */
+      var coarse = window.matchMedia && matchMedia("(pointer:coarse)").matches;
+      if (typed || !coarse){ try{ o.q.focus({preventScroll: true}); }catch(e){ o.q.focus(); } }
+      /* iOS can still hand back a list that has just appeared without its
+         scrolling; taking the overflow away and giving it back once the
+         panel has arrived makes it build the scroller afresh */
+      if (coarse){
+        setTimeout(function(){
+          if (!isOpen()) return;
+          o.list.style.overflowY = "hidden";
+          void o.list.offsetHeight;
+          o.list.style.overflowY = "";
+        }, 260);
+      }
+    }
+    function close(refocus){
+      if (!isOpen()) return;
+      o.wrap.classList.remove("open");
+      o.btn.setAttribute("aria-expanded", "false");
+      o.q.removeAttribute("aria-activedescendant");
+      clearTimeout(gone);
+      gone = setTimeout(function(){ if (!isOpen()) o.pop.hidden = true; }, 240);
+      if (refocus){ try{ o.btn.focus({preventScroll: true}); }catch(e){ o.btn.focus(); } }
+    }
+    function choose(v){ o.pick(v); close(true); }
+    o.btn.addEventListener("click", function(){ if (isOpen()) close(false); else open(); });
+    o.btn.addEventListener("keydown", function(e){
+      if (e.key === "ArrowDown" || e.key === "ArrowUp"){ e.preventDefault(); open("", true); }
+      /* typing on the closed button starts the search, as a select jumps */
+      else if (e.key.length === 1 && e.key !== " " && !e.ctrlKey && !e.metaKey && !e.altKey){
+        e.preventDefault(); open(e.key, true);
+      }
+    });
+    o.q.addEventListener("input", rebuild);
+    o.q.addEventListener("keydown", function(e){
+      if (e.key === "ArrowDown"){ e.preventDefault(); setActive(Math.min(active + 1, opts.length - 1)); }
+      else if (e.key === "ArrowUp"){ e.preventDefault(); setActive(Math.max(active - 1, 0)); }
+      else if (e.key === "Enter"){
+        e.preventDefault();
+        var it = opts[active];
+        if (it) choose(it.value);
+      }
+      else if (e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); close(true); }
+    });
+    o.clear.addEventListener("click", function(){ o.q.value = ""; rebuild(); o.q.focus(); });
+    /* a press on a row must not take the focus out of the field */
+    o.list.addEventListener("mousedown", function(e){ e.preventDefault(); });
+    o.list.addEventListener("click", function(e){
+      var row = e.target.closest ? e.target.closest("[data-value]") : null;
+      if (row && o.list.contains(row)) choose(row.getAttribute("data-value"));
+    });
+    document.addEventListener("pointerdown", function(e){
+      if (isOpen() && !o.wrap.contains(e.target)) close(false);
+    });
+    o.wrap.addEventListener("focusout", function(e){
+      if (isOpen() && e.relatedTarget && !o.wrap.contains(e.relatedTarget)) close(false);
+    });
+    if (window.visualViewport) window.visualViewport.addEventListener("resize", fit);
+    window.addEventListener("resize", fit);
+    /* the box scrolled under the open panel would carry its button away */
+    var scroller = pickBox && pickBox.querySelector(".drawer-in");
+    if (scroller) scroller.addEventListener("scroll", function(){ close(false); }, {passive: true});
+    return {isOpen: isOpen, open: open, close: close, rebuild: rebuild};
   }
+  var regionPicker = dropPicker({
+    wrap: rpick, btn: rpickBtn, pop: rpickPop, q: rpickQ, list: rpickList, clear: rpickClear,
+    build: buildRegionList,
+    pick: function(v){ selectEl.value = v; selectEl.dispatchEvent(new Event("change")); }
+  });
 
 
   /* ── a door for the receptor section below ────────────────────────────
@@ -2314,17 +2330,6 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
     var a = B && B.BY_BA[ba];
     if (a && a.at) centreMm(a.at);
   }
-  function toggleBA(ba, fromList){
-    var key = "B:" + ba;
-    if (selections.has(key)){
-      selections.delete(key); renderChips(); applyColormap();
-      return;
-    }
-    if (!addBA(ba)) return;
-    centreOnBA(ba);
-    if (window.MN) MN.tap("light");
-    if (!fromList) scrollBAListTo(ba);
-  }
   function baColour(ba){
     var e = selections.get("B:" + ba);
     return e ? e.color : null;
@@ -2334,7 +2339,6 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
   var baQ = document.getElementById("baq");
   var baQClear = document.getElementById("baqclear");
   var baQCount = document.getElementById("baqcount");
-  var baRows = {};
 
   function norm(s){ return String(s).toLowerCase(); }
   function hayFor(a){
@@ -2374,73 +2378,83 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
     }
     return frag;
   }
-  function buildBAList(){
-    if (!B || !baListEl) return;
-    var terms = norm(baQ.value).split(/\s+/).filter(Boolean);
-    var phrase = phraseFor(terms, baQ.value);
+  /* The rows are the AAL list's: grouped by lobe, the number and the name,
+     a swatch on an area already highlighted, and, where the name does not
+     carry the match, the stretch of what the area does that holds it.
+     Enter takes the area whose number was typed, then the first named by
+     what was typed, then the first found at all. */
+  function buildBAList(raw){
+    var terms = norm(raw).split(/\s+/).filter(Boolean);
+    var phrase = phraseFor(terms, raw);
+    var marks = phrase ? [phrase] : terms;
+    var asked = terms.length === 1 && /^(ba)?\d{1,2}$/.test(terms[0]) ? Number(terms[0].replace(/^ba/, "")) : null;
     baListEl.innerHTML = "";
-    baRows = {};
-    var shown = 0;
+    var opts = [], named = -1, exact = -1;
     B.LOBES.forEach(function(lobe){
       var mine = B.AREAS.filter(function(a){ return a.lobe === lobe.id && baMatches(a, terms, phrase); });
       if (!mine.length) return;
+      var groupEl = document.createElement("div");
+      groupEl.setAttribute("role", "group");
       var h = document.createElement("div");
-      h.className = "balobe";
-      h.textContent = lobe.label + " \u00B7 " + lobe.sub;
-      baListEl.appendChild(h);
+      h.className = "balobe"; h.id = "bapick-g" + opts.length;
+      h.appendChild(highlightText(lobe.label + " \u00B7 " + lobe.sub, marks));
+      groupEl.setAttribute("aria-labelledby", h.id);
+      groupEl.appendChild(h);
+      baListEl.appendChild(groupEl);
       mine.forEach(function(a){
-        shown++;
-        var b = document.createElement("button");
-        b.type = "button"; b.className = "barow"; b.dataset.ba = a.ba;
+        var k = opts.length;
+        var row = document.createElement("div");
+        row.className = "barow rpick-opt"; row.id = "bapick-o" + k;
+        row.setAttribute("role", "option"); row.setAttribute("aria-selected", "false");
+        row.setAttribute("data-value", String(a.ba));
         var num = document.createElement("span"); num.className = "num";
-        num.appendChild(highlightText("BA" + a.ba, phrase ? [phrase] : terms));
+        num.appendChild(highlightText("BA" + a.ba, marks));
         var nm = document.createElement("span"); nm.className = "nm";
-        nm.appendChild(highlightText(a.name, phrase ? [phrase] : terms));
-        var sw = document.createElement("span"); sw.className = "swatch";
-        b.appendChild(num); b.appendChild(nm); b.appendChild(sw);
-        b.addEventListener("click", function(){ toggleBA(a.ba, true); });
-        baListEl.appendChild(b);
-        baRows[a.ba] = b;
+        nm.appendChild(highlightText(a.name, marks));
+        if (marks.length && !marks.some(function(m){ return norm("ba" + a.ba + " " + a.name).indexOf(m) !== -1; })){
+          var why = whyFrom(a.fn, marks);
+          if (why) nm.appendChild(why);
+        }
+        row.appendChild(num); row.appendChild(nm);
+        var c = baColour(a.ba);
+        if (c){
+          var sw = document.createElement("span"); sw.className = "swatch";
+          sw.style.background = c; sw.title = "Highlighted";
+          row.appendChild(sw);
+          row.setAttribute("aria-label", "BA" + a.ba + " " + a.name + ", highlighted");
+        }
+        if (asked !== null && a.ba === asked) exact = k;
+        if (named === -1 && marks.length && marks.every(function(m){ return norm("ba" + a.ba + " " + a.name).indexOf(m) !== -1; })) named = k;
+        groupEl.appendChild(row);
+        opts.push({el: row, value: String(a.ba)});
       });
     });
-    if (!shown){
+    if (!opts.length){
       var e = document.createElement("p");
       e.className = "balist-empty";
-      e.textContent = "Nothing matches \u201C" + baQ.value.trim() + "\u201D. Try a number, a gyrus, or what you want the area to do.";
+      e.textContent = "Nothing matches \u201C" + raw.trim() + "\u201D. Try a number, a gyrus, or what you want the area to do.";
       baListEl.appendChild(e);
     }
     baQCount.textContent = terms.length
-      ? shown + (shown === 1 ? " area matches" : " areas match")
+      ? opts.length + (opts.length === 1 ? " area matches" : " areas match")
       : "All " + B.AREAS.length + " areas.";
-    baQClear.classList.toggle("hidden", !baQ.value);
-    markBAList();
+    return {opts: opts, first: !terms.length || !opts.length ? -1 : exact !== -1 ? exact : named !== -1 ? named : 0};
   }
-  function markBAList(){
-    Object.keys(baRows).forEach(function(ba){
-      var c = baColour(Number(ba));
-      baRows[ba].setAttribute("aria-pressed", String(!!c));
-      if (c) baRows[ba].style.setProperty("--sel", c); else baRows[ba].style.removeProperty("--sel");
-    });
-  }
-  function scrollBAListTo(ba){
-    var r = baRows[ba];
-    if (r && r.scrollIntoView) r.scrollIntoView({block: "nearest"});
-  }
-  if (baQ){
-    baQ.addEventListener("input", buildBAList);
-    baQ.addEventListener("keydown", function(e){
-      if (e.key === "Escape"){ baQ.value = ""; buildBAList(); }
-      /* Enter picks the only match, which is what typing "17" means */
-      if (e.key === "Enter"){
-        var only = Object.keys(baRows);
-        if (only.length === 1) toggleBA(Number(only[0]), true);
-      }
-    });
-    baQClear.addEventListener("click", function(){ baQ.value = ""; buildBAList(); baQ.focus(); });
-  }
+  /* a pick adds the area and centres the planes on it; one already
+     highlighted stays as it is, as a region picked again does */
+  var baPicker = B && baListEl ? dropPicker({
+    wrap: document.getElementById("bapick"), btn: document.getElementById("bapickBtn"),
+    pop: document.getElementById("bapickPop"), q: baQ, list: baListEl, clear: baQClear,
+    build: buildBAList,
+    pick: function(v){
+      var ba = Number(v);
+      if (addBA(ba)){ centreOnBA(ba); if (window.MN) MN.tap("light"); }
+    }
+  }) : null;
+  /* the open list follows the highlights, as the chips do */
+  function markBAList(){ if (baPicker && baPicker.isOpen()) baPicker.rebuild(); }
 
   renderDropdown();
-  buildBAList();
   renderChips();
 
   /* ── deep links ───────────────────────────────────────────────────────

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.38 — 21 October 2026 — Brodmann areas picked the way the regions are
+Commit · Pick Brodmann areas in the 3D Region Atlas through the same dropdown the AAL regions use
+
+In the 3D Region Atlas the Brodmann areas are now added the way the AAL regions are. Where the pane held a search field and a long list of its own, it holds one button, Add a Brodmann area…, which opens the same kind of panel the regions' button does: a search field at its head, the areas listed beneath it by lobe, filtered as you type, with a swatch on each area already highlighted and, when the match is in what an area does rather than its name, the line that holds it. The arrow keys walk the list, Enter or a press adds the area and centres the planes on it, and the panel closes. The region box is the same height whichever atlas is chosen, on the website and in every app.
+
 ## v11.37 — 20 October 2026 — The MCP server first in the Vision Pro About window too
-Commit · Lead the Vision Pro console's About window with the MCP server, as the other About pages do
+Commit `f54a95c` · Lead the Vision Pro console's About window with the MCP server, as the other About pages do
 
 The About window of the Apple Vision Pro console now opens with the MCP server as well, a card of its own above the project's card: what an assistant can ask the atlas, the address to add as a connector, and the nine tools. With it every About page leads with the server, in the app, on the website and in the room.
 
