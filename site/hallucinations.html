@@ -150,7 +150,8 @@ svg{ display:block; }
   flex:none; font-family:var(--font-brand); font-weight:500; font-size:.55rem;
   letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60);
 }
-.rail-row input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); }
+/* a drag on the thumb is the slider's, never the box's scroll */
+.rail-row input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); touch-action:none; }
 .slider-val{
   font-family:var(--font-brand); font-size:.6rem; letter-spacing:.1em;
   font-variant-numeric:tabular-nums; color:var(--ink-60); min-width:2.4rem; text-align:right;
@@ -290,6 +291,7 @@ td.hl{ color:var(--over); }
 .drawer-in .mode-group .ts-btn{ flex:1; text-align:center; }
 .drawer-in .rail-note{ margin-top:.75rem; }
 .drawer-in .rlist{ margin-top:.6rem; }
+.drawer-in .rail-row{ margin-top:.7rem; }
 /* the reading: the region's name, where it sits, what it does and what
    the imaging found, in the window the Reading button raises */
 .reading-h{ font-family:var(--font-display); font-weight:400; font-size:1.5rem; line-height:1.12; margin:0 0 .1rem; }
@@ -570,12 +572,12 @@ main.screen.one.land{ flex-direction:row; }
         <button class="ts-btn" data-role="lang" type="button" aria-pressed="false">Language</button>
         <button class="ts-btn" data-role="ctrl" type="button" aria-pressed="false">Control</button>
       </div>
-          <div class="rlist" id="rlist" role="group" aria-label="Brain regions"></div>
           <div class="rail-row">
         <span class="tool-label">Opacity</span>
         <input type="range" id="overlayOpacity" min="0" max="100" step="5" value="85" aria-label="Highlight opacity">
         <span class="slider-val" id="overlayVal">85%</span>
       </div>
+          <div class="rlist" id="rlist" role="group" aria-label="Brain regions"></div>
           <p class="rail-note" id="coverage"></p>
         </section>
         </div>

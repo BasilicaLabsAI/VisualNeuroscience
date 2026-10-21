@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.48 — 21 October 2026 — The opacity slider within reach
+Commit · Bring the Hallucinations study's opacity slider up where an iPad shows it, and keep a drag on either slider from scrolling the box
+
+On an iPad the Hallucinations study's box holds more than the screen is tall, and its opacity slider stood at the foot of the box, below what showed, so it looked as if it did nothing. The slider now stands under the Regions heading, beside the system buttons, where it shows without scrolling, and a finger dragging its thumb, on this page or on the 3D Region Atlas, moves the slider and never the box behind it.
+
 ## v11.47 — 21 October 2026 — The Firebase file checked
-Commit · Record that the Firebase file is current and what to check instead before 1.1
+Commit `0b41253` · Record that the Firebase file is current and what to check instead before 1.1
 
 The store notes said the Firebase file had to be refreshed before the 1.1 build was made. It was downloaded again and came back identical, and the flag in it does not switch the usage counts off in the SDKs the app uses, so the notes now say what to confirm instead: that the iOS stream shows in the Firebase console's Realtime view with a TestFlight build, and what to do if no iOS stream is listed. Nothing on the site changes.
 
