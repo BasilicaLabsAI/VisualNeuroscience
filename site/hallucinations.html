@@ -120,21 +120,6 @@ svg{ display:block; }
   background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
 }
 
-.title-strip{
-  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
-  gap:.5rem 1.3rem; border:1px solid var(--hair);
-  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
-}
-.title-strip .name{
-  font-family:var(--font-display); font-size:1.35rem;
-  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
-}
-.title-strip .anno{
-  font-family:var(--font-serif); font-style:italic;
-  font-size:.88rem; color:var(--ink-60);
-}
-.title-strip .ts-views{ margin-left:auto; display:flex; gap:.4rem; flex-wrap:wrap; }
-
 /* ── the source ─────────────────────────────────────────────────────────
    The paper this page reads, and the two ways to go and read it yourself:
    the record it is indexed under, and the editorial itself, which the
@@ -156,10 +141,6 @@ svg{ display:block; }
 .source-links{ display:flex; gap:.4rem; flex-wrap:wrap; flex:none; }
 .source-links a{ display:inline-block; }
 
-/* rail */
-.rail .mode-group{ display:flex; gap:.4rem; }
-.rail .mode-group .ts-btn{ flex:1; text-align:center; }
-.btn-wide{ width:100%; text-align:center; margin-top:.35rem; }
 .rail-note{
   font-family:var(--font-serif); font-style:italic;
   font-size:.8rem; color:var(--ink-60); margin:.6rem 0 0;
@@ -200,7 +181,6 @@ svg{ display:block; }
 }
 .legend-key i{ width:.7rem; height:.7rem; border:1px solid var(--hair); }
 
-/* the reading panel */
 .panel-kicker{
   font-family:var(--font-brand); font-weight:500; font-size:.55rem;
   letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60);
@@ -208,75 +188,6 @@ svg{ display:block; }
 .panel-title{ font-family:var(--font-display); font-size:1.2rem; line-height:1.15; margin:.25rem 0 .1rem; }
 .panel-latin{ font-family:var(--font-brand); font-size:.62rem; letter-spacing:.1em;
   text-transform:uppercase; color:var(--ink-60); margin-bottom:.6rem; }
-.panel h3{
-  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
-  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60);
-  margin:.8rem 0 .2rem;
-}
-.panel p{ font-size:.94rem; line-height:1.55; }
-.panel .src{
-  font-family:var(--font-brand); font-size:.58rem; letter-spacing:.1em;
-  color:var(--ink-60); margin-top:.9rem; padding-top:.6rem; border-top:1px solid var(--ink-35);
-}
-.panel .empty{ font-style:italic; color:var(--ink-60); font-size:.94rem; }
-
-/* ── the reading card holds its size ────────────────────────────────────
-   It used to carry the whole reading, so its height followed whatever
-   region was picked and everything below it moved down the page each time
-   the selection changed. Now it shows only the name and where the region
-   sits, in a box tall enough for the longest of those, and the reading
-   itself opens on top. Titles and anatomy lines are clamped rather than
-   allowed to wrap indefinitely, because one long name should not be able
-   to shift the layout either. */
-.panel-head{
-  min-height:5.2rem;      /* two lines of title over two of anatomy */
-  display:flex; flex-direction:column;
-}
-.panel-title{
-  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;
-  overflow:hidden;
-}
-.panel-latin{
-  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;
-  overflow:hidden;
-}
-.panel .empty{ margin-top:auto; }
-#p-open{ margin-top:.2rem; }
-
-/* ── the reading, on top ────────────────────────────────────────────── */
-.modal{ position:fixed; inset:0; z-index:60; display:flex;
-        align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); }
-.modal[hidden]{ display:none; }
-.modal-scrim{ position:absolute; inset:0; background:rgba(0,0,0,.72); }
-.modal-box{
-  position:relative; z-index:1;
-  width:min(560px,100%); max-height:min(80vh,720px); max-height:min(80dvh,720px); overflow-y:auto;
-  background:var(--paper); color:var(--ink);
-  border:1px solid var(--hair); padding:clamp(18px,3vw,30px);
-  box-shadow:0 24px 70px rgba(0,0,0,.5);
-}
-.modal-x{
-  position:absolute; top:.5rem; right:.7rem;
-  background:none; border:0; cursor:pointer; color:var(--ink);
-  font-size:1.5rem; line-height:1; padding:.1rem .3rem;
-}
-@media (hover: hover){ .modal-x:hover{ opacity:.6; } }
-.modal-h{
-  font-family:var(--font-display); font-weight:400;
-  font-size:1.5rem; line-height:1.12; margin:.25rem 2rem .1rem 0;
-}
-.modal-box h3{
-  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
-  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60);
-  margin:1rem 0 .25rem;
-}
-.modal-box p{ font-size:.98rem; line-height:1.6; }
-.modal-box .src{
-  font-family:var(--font-brand); font-size:.58rem; letter-spacing:.1em;
-  color:var(--ink-60); margin-top:1rem; padding-top:.6rem;
-  border-top:1px solid var(--ink-35);
-}
-
 /* prose below the brain */
 /* ── the model, drawn as a circuit ──────────────────────────────────────
    The scan says where; this says what flows where, which is the part of
@@ -353,11 +264,6 @@ svg{ display:block; }
   .mech-out text{ font-size:19px; }
 }
 
-.below{ margin-top:var(--gap); }
-.blk{ padding:2.6rem 0 0; border-top:1px solid var(--ink-35); margin-top:2rem; }
-.blk h2{ font-family:var(--font-display); font-weight:400;
-  font-size:clamp(1.3rem,2.4vw,1.9rem); letter-spacing:.01em; margin:0 0 .3rem; }
-.blk .sub{ color:var(--ink-60); margin:0 0 1.5rem; font-size:.95rem; }
 .figs{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:1px;
   background:var(--ink-35); border:1px solid var(--ink-35); }
 .fig{ padding:1.3rem 1.1rem; background:var(--paper); }
@@ -378,16 +284,236 @@ td.hl{ color:var(--over); }
   font-size:.82rem; color:var(--ink-60); line-height:1.6; }
 .hidden{ display:none !important; }
 
-/* the four views, laid out and drawn as the atlases draw theirs
-   (assets/atlas-views.css); an opened view covers the wrapper */
+/* the drawer's two parts, under their own headings, as the atlas's box */
+.rail-box{ display:grid; grid-template-columns:minmax(0,1fr); row-gap:1.4rem; align-items:start; }
+.drawer-in .mode-group{ display:flex; gap:.4rem; }
+.drawer-in .mode-group .ts-btn{ flex:1; text-align:center; }
+.drawer-in .rail-note{ margin-top:.75rem; }
+.drawer-in .rlist{ margin-top:.6rem; }
+/* the reading: the region's name, where it sits, what it does and what
+   the imaging found, in the window the Reading button raises */
+.reading-h{ font-family:var(--font-display); font-weight:400; font-size:1.5rem; line-height:1.12; margin:0 0 .1rem; }
+.reading h3{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60);
+  margin:1rem 0 .25rem;
+}
+.reading p{ font-size:.98rem; line-height:1.6; }
+.reading .src{
+  font-family:var(--font-brand); font-size:.58rem; letter-spacing:.1em;
+  color:var(--ink-60); margin-top:1rem; padding-top:.6rem; border-top:1px solid var(--ink-35);
+}
+.reading .empty{ font-style:italic; color:var(--ink-60); font-size:.98rem; margin:0; }
+.pop .sub{ color:var(--ink-60); margin:0 0 1.1rem; font-size:.95rem; }
+.pop .source{ margin-bottom:var(--gap); }
+.pop .page-foot{ margin-top:1.4rem; padding-top:1rem; }
+.pop .caveat{ margin-top:.2rem; }
+.pop .empty-note{ font-family:var(--font-serif); font-style:italic; font-size:.9rem; color:var(--ink-60); margin:0 0 .8rem; }
+.pop .ref-line{ font-family:var(--font-serif); font-size:.95rem; line-height:1.55; margin:0 0 .35rem; }
+.pop .ref-line b{ font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); margin-right:.5rem; }
+.stat{ border:1px solid var(--hair); padding:.5rem .6rem .55rem; text-align:left; }
+.stat .k{ font-family:var(--font-brand); font-size:.58rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); }
+.stat .v{ font-family:var(--font-brand); font-size:1.06rem; margin-top:.1rem; font-variant-numeric:tabular-nums; }
+.stat .v small{ font-size:.62rem; color:var(--ink-60); margin-left:.15rem; }
+.probe-v{ font-size:.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.probe-v small{ display:block; margin-left:0; margin-top:.12rem; }
 .views-wrap{ position:relative; }
-/* narrower than 900 pixels they stack one to a row, as on the 3D Region
-   Atlas: two to a row there leaves each bar too narrow for its controls
-   (a tablet keeps its two, from atlas-views.css) */
-@media (max-width:900px){ .views{ grid-template-columns:1fr; } }
+</style>
+<style>
+/* ════════ the screen: the views are the page ════════
+   Since v11.43 this study is one screen in the 3D Region Atlas's manner:
+   the four views fill the room between the header and a bar along the
+   bottom, nothing scrolls, the state and the regions are a drawer on the
+   left that folds away on its tab, and everything that stood below the
+   scans (the reading, the circuit, the figures, the imaging, the windows,
+   the limits, the export and the reference) rises from the bar's buttons
+   as a pop-up over the views, one at a time. The chrome is the atlas's
+   (regions.html, "the screen"), carried here with the same names; a change
+   to it belongs in both. --screen-top is the header's height, measured by
+   the page's script; --bar-h is the bar's. */
+body.atlas-screen{ overflow:hidden; margin:0; }
+html:has(> body.atlas-screen){ overflow:hidden; }
+@media (max-width:960px){
+  body.atlas-screen .nav-menu.nav-menu{ max-height:calc(100vh - var(--screen-top, 0px)); max-height:calc(100dvh - var(--screen-top, 0px)); overflow-y:auto; }
+}
+:root[data-shell][data-shell-pad] body.atlas-screen{ padding-top:max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px)); }
+main.screen{
+  max-width:none; padding:0; margin:0;
+  height:calc(100vh - var(--screen-top, 0px)); height:calc(100dvh - var(--screen-top, 0px));
+  display:flex; flex-direction:column; min-height:0; overflow:hidden;
+}
+.screen .vh{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }
+.deck{ flex:1 1 auto; min-height:0; display:flex; position:relative; }
+.drawer{
+  --box-w:300px;
+  position:relative; flex:0 0 calc(var(--box-w) + var(--gap)); width:calc(var(--box-w) + var(--gap)); min-width:0; min-height:0;
+  display:flex; flex-direction:column; align-items:flex-start; padding:var(--gap) 0 var(--gap) var(--gap);
+  transition:flex-basis .32s cubic-bezier(.32,.72,0,1), width .32s cubic-bezier(.32,.72,0,1), padding .32s cubic-bezier(.32,.72,0,1), visibility 0s 0s;
+}
+.drawer-box{
+  position:relative; flex:0 1 auto; width:var(--box-w); max-height:100%; min-height:0;
+  display:flex; flex-direction:column;
+  border:1px solid var(--hair); border-radius:16px; background:var(--paper);
+  box-shadow:0 1px 2px rgba(0,0,0,.08), 0 10px 30px rgba(0,0,0,.14);
+  transition:transform .32s cubic-bezier(.32,.72,0,1);
+}
+.drawer-in.card{ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; border:0; padding:var(--gap) var(--gap) 1.4rem; }
+.deck.shut .drawer{ flex-basis:0; width:0; padding-left:0; visibility:hidden; transition-delay:0s, 0s, 0s, .32s; }
+.deck.shut .drawer-box{ transform:translateX(calc(-100% - var(--gap) - 22px)); }
+.drawer-tab{
+  position:absolute; z-index:16; top:50%; transform:translateY(-50%);
+  width:22px; height:64px; padding:0; display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--hair); border-left:0; background:var(--paper); color:var(--ink); cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.drawer-tab::after{ content:""; position:absolute; inset:-8px -10px; }
+.drawer-tab svg{ width:10px; height:16px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:square; }
+.drawer-hide{ right:-22px; border-radius:0 10px 10px 0; }
+.drawer-show{ left:0; border-radius:0 10px 10px 0; visibility:hidden; opacity:0; transition:opacity .2s ease, visibility 0s .2s; }
+.drawer-show svg{ transform:rotate(180deg); }
+.deck.shut .drawer-show{ visibility:visible; opacity:1; transition-delay:.14s, .14s; }
+@media (hover: hover){ .drawer-tab:hover{ background:var(--ink); color:var(--paper); } }
+.drawer-tab:active{ background:var(--ink); color:var(--paper); }
+.stage{ flex:1 1 auto; min-width:0; min-height:0; display:flex; flex-direction:column; position:relative; padding:var(--gap) var(--gap) var(--gap) calc(var(--gap) + 10px); }
+.screen .views-wrap{ position:relative; flex:1 1 auto; min-height:0; }
+.screen .views{ height:100%; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:var(--gap); }
+.screen .views .view{ min-height:0; min-width:0; }
+.screen .views-wrap .views .view .mri-stage{ flex:1 1 auto; min-height:0; height:auto; max-height:none; aspect-ratio:auto; }
+@container view (max-width:300px){
+  .screen .views .view:not(.open) .view-tools, .screen .views .view:not(.open) .centre-btn{ display:none; }
+}
+.panelbar{
+  flex:none; display:flex; align-items:center; gap:.6rem;
+  padding:.45rem var(--gap) calc(.45rem + env(safe-area-inset-bottom, 0px));
+  border-top:1px solid var(--hair);
+  background:color-mix(in srgb, var(--paper) 84%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
+  overflow-x:auto; overflow-y:hidden; scrollbar-width:none; white-space:nowrap;
+}
+.panelbar::-webkit-scrollbar{ display:none; }
+.panelbar-stats{ display:flex; gap:1.1rem; flex:none; }
+.panelbar .stat{ border:0; padding:0; min-width:0; }
+.panelbar .stat .v{ white-space:nowrap; }
+.panelbar .stat .v small{ display:inline; margin-left:.35rem; }
+.panelbar .probe-v{ max-width:22rem; overflow:hidden; text-overflow:ellipsis; }
+.panelbar-views, .panelbar-all{ display:none; }
+.panelbar-btns{ display:flex; gap:.15rem; flex:none; margin-left:.4rem; }
+.panelbar-end{ display:flex; gap:.15rem; flex:none; margin-left:auto; padding-left:.6rem; }
+.pbtn.pbtn-ref{ margin-left:.3rem; padding-left:.65rem; border-left:1px solid var(--hair); }
+.pbtn{
+  flex:none; display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:.28rem;
+  min-width:3.9rem; padding:.3rem .55rem .25rem; border:0; background:none; color:var(--ink-60); cursor:pointer;
+  -webkit-tap-highlight-color:transparent; transition:color .18s;
+}
+.pbtn svg{ width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.pbtn span{ font-family:var(--font-brand); font-weight:500; font-size:.5rem; letter-spacing:.14em; text-transform:uppercase; white-space:nowrap; }
+.pbtn.active{ color:var(--ink); }
+.pbtn.active span{ font-weight:600; }
+@media (hover: hover){ .pbtn:hover{ color:var(--ink); } }
+.pbtn:active{ color:var(--ink); }
+@media (pointer:coarse){ .pbtn{ min-height:44px; } }
+@media (max-width:760px){
+  .panelbar-stats .stat:first-child{ display:none; }
+  .panelbar .probe-v small{ display:none; }
+  .panelbar .probe-v{ max-width:9rem; }
+}
+.pop{
+  position:absolute; left:calc(var(--gap) + 10px); right:var(--gap); bottom:var(--gap); z-index:20;
+  max-height:min(80%, calc(100% - 2 * var(--gap))); display:flex; flex-direction:column; overflow:hidden;
+  border:1px solid var(--hair); border-radius:16px;
+  background:color-mix(in srgb, var(--paper) 90%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(24px); backdrop-filter:saturate(180%) blur(24px);
+  box-shadow:0 18px 60px rgba(0,0,0,.35);
+  opacity:0; transform:translateY(14px);
+  transition:opacity .22s cubic-bezier(.32,.72,0,1), transform .26s cubic-bezier(.32,.72,0,1);
+}
+.pop[hidden]{ display:none; }
+.pop.in{ opacity:1; transform:none; }
+.pop-sm{ left:auto; width:min(440px, calc(100% - 2 * var(--gap) - 10px)); }
+.pop-md{ left:auto; width:min(640px, calc(100% - 2 * var(--gap) - 10px)); }
+.pop-head{ flex:none; display:flex; align-items:center; gap:.7rem; padding:.5rem .6rem .5rem .9rem; border-bottom:1px solid var(--hair); }
+.pop-head b{ font-family:var(--font-brand); font-weight:500; font-size:.68rem; letter-spacing:.28em; text-transform:uppercase; white-space:nowrap; }
+.pop-head small{ font-family:var(--font-serif); font-style:italic; font-size:.78rem; color:var(--ink-60); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pop-x{
+  margin-left:auto; flex:none; width:1.8rem; height:1.8rem; padding:0;
+  border:1px solid var(--hair); background:none; color:var(--ink); cursor:pointer;
+  font-size:1.15rem; line-height:1; -webkit-tap-highlight-color:transparent;
+  border-radius:50%; }
+@media (hover: hover){ .pop-x:hover{ background:var(--ink); color:var(--paper); } }
+.pop-x:active{ background:var(--ink); color:var(--paper); }
+@media (pointer:coarse){ .pop-x{ width:44px; height:44px; } }
+.pop-body{ flex:1 1 auto; min-height:0; overflow:auto; overscroll-behavior:contain; padding:.9rem 1rem 1.1rem; }
+
+/* ── a phone: one view at a time, the drawer from the right ── */
+.screen.one .stage{ padding:0; }
+.screen.one:not(.all) .slice-edge.right{ right:26px; }
+.screen.one:not(.all) .slice-edge.bottom{ right:74px; }
+.screen.one .views{ display:block; height:100%; }
+.screen.one .views .view{ display:none; height:100%; border:0; }
+.screen.one .views .view.shown{ display:flex; }
+.screen.one .views .view.open{ display:flex; }
+.screen.one .view-expand{ display:none; }
+.screen.one.all .views{ display:grid; gap:6px; }
+.screen.one.all .views .view{ display:flex; height:auto; border:1px solid var(--hair); }
+.screen.one.all .view-expand{ display:inline-flex; }
+.screen.one .panelbar-stats{ display:none; }
+.screen.one .panelbar-views, .screen.one .panelbar-all{ display:flex; gap:.15rem; flex:none; padding-right:.45rem; margin-right:.3rem; border-right:1px solid var(--hair); }
+.screen.one .panelbar-btns{ margin-left:0; }
+.screen.one .panelbar-end{ margin-left:0; padding-left:0; }
+.screen.one .pop{ left:0; right:0; bottom:0; max-height:76%; border-left:0; border-right:0; border-bottom:0; border-radius:18px 18px 0 0; }
+.screen.one .pop-sm, .screen.one .pop-md{ width:100%; }
+.screen.one .drawer{ left:auto; right:0; padding:0; }
+.screen.one .drawer-box{ flex:1 1 auto; max-height:none; border-width:0 0 0 1px; border-radius:0; box-shadow:-8px 0 30px rgba(0,0,0,.25); }
+.screen.one .deck.shut .drawer-box{ transform:translateX(calc(100% + 22px)); }
+.screen.one .drawer-tab{ border-left:1px solid var(--hair); border-right:0; }
+.screen.one .drawer-hide{ right:auto; left:-22px; border-radius:10px 0 0 10px; }
+.screen.one .drawer-hide svg{ transform:rotate(180deg); }
+.screen.one .drawer-show{ left:auto; right:0; border-radius:10px 0 0 10px; }
+.screen.one .drawer-show svg{ transform:none; }
+
+/* ── a phone held sideways: the bar along the right edge ── */
+body.atlas-screen:has(> main.screen.one.land) .masthead{ display:none; }
+:root[data-shell]:not([data-shell-pad]) body.atlas-screen:has(> main.screen.one.land){ padding-top:0; }
+main.screen.one.land{ flex-direction:row; }
+.screen.one.land .deck{ flex:1 1 auto; min-width:0; }
+.screen.one.land .panelbar{
+  flex:none; flex-direction:column; align-items:stretch; justify-content:center; gap:0;
+  padding:.3rem .25rem calc(.3rem + env(safe-area-inset-bottom, 0px));
+  border-top:0; border-left:1px solid var(--hair); overflow:visible; white-space:normal;
+}
+.screen.one.land .panelbar-all, .screen.one.land .panelbar-views, .screen.one.land .panelbar-btns, .screen.one.land .panelbar-end{
+  display:grid; grid-template-columns:44px 44px; gap:0; flex:none;
+  margin:0 0 .25rem; padding:0 0 .25rem; border-right:0; border-bottom:1px solid var(--hair);
+}
+.screen.one.land .panelbar-all{ grid-template-columns:88px; justify-items:center; }
+.screen.one.land .panelbar-end{ margin-bottom:0; padding-bottom:0; border-bottom:0; }
+.screen.one.land .pbtn{ position:relative; min-width:0; width:44px; min-height:44px; padding:0; gap:0; }
+.screen.one.land .pbtn.pbtn-ref{ margin-left:0; padding-left:0; border-left:0; }
+.screen.one.land .pbtn span{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }
+.screen.one.land .pbtn svg{ width:24px; height:24px; }
+.screen.one.land .pop{ max-height:100%; }
+.screen.one.land.all .views{ grid-template-columns:repeat(4, minmax(0, 1fr)); grid-template-rows:minmax(0, 1fr); }
+.screen.one.land:not(.all) .views .view-cap{ flex-wrap:nowrap; justify-content:flex-start; }
+.screen.one.land:not(.all) .views .view-cap::before{ display:none; }
+.screen.one.land:not(.all) .views .view-cap .view-tools{ order:0; flex:none; }
+.screen.one.land:not(.all) .views .view-cap .view-end{ order:1; flex:none; justify-content:flex-start; }
+.screen.one.land:not(.all) .views .view-cap b{ order:2; margin-left:auto; margin-right:0; }
+:root[data-shell]:not([data-shell-pad]) .screen.one.land:not(.all) .views .view-cap{ padding-left:56px; }
+
+@media (max-width:900px){
+  .drawer{ --box-w:min(320px, 100vw - 60px); position:absolute; left:0; top:0; bottom:0; z-index:15; flex:none; width:auto; transition:visibility 0s 0s; }
+  .deck.shut .drawer{ width:auto; padding-left:var(--gap); visibility:hidden; transition-delay:.32s; }
+  .drawer-box{ box-shadow:0 10px 30px rgba(0,0,0,.25); }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more){
+  .panelbar, .pop{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
+}
+@media (prefers-reduced-motion: reduce){
+  .drawer, .drawer-box, .drawer-tab, .drawer-tab svg, .pop{ transition:none; }
+}
 </style>
 </head>
-<body>
+<body class="atlas-screen">
 
 <header class="masthead wrap">
   <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
@@ -406,67 +532,51 @@ td.hl{ color:var(--over); }
   </nav>
 </header>
 
-<main class="wrap">
+<main id="main" class="screen" aria-label="Hallucinations">
+  <h1 class="vh">Hallucinations</h1>
 
-<div class="title-strip">
-  <h1 class="name">Hallucinations</h1>
-  <span class="anno">perceptions in the absence of a stimulus &middot; Boksa 2009</span>
-  <div class="ts-views" role="group" aria-label="Brain state">
-    <button class="ts-btn active" id="btn-healthy" type="button" aria-pressed="true">Normal audition</button>
-    <button class="ts-btn" id="btn-halluc" type="button" aria-pressed="false">Hallucinating</button>
-  </div>
-</div>
+  <div class="deck" id="deck">
 
-<div class="source">
-  <p class="cite">
-    Boksa P. <b>On the neurobiology of hallucinations.</b>
-    <em>Journal of Psychiatry &amp; Neuroscience</em> 2009;34(4):260&ndash;262.
-    <span class="pmid">PMID 19568476</span>
-  </p>
-  <div class="source-links">
-    <a class="ts-btn" href="https://pubmed.ncbi.nlm.nih.gov/19568476/" target="_blank" rel="noopener">PubMed</a>
-    <a class="ts-btn" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2702442/" target="_blank" rel="noopener">PMC</a>
-    <a class="ts-btn" href="assets/studies/boksa-2009-neurobiology-of-hallucinations.pdf" download>Download PDF &middot; 3&thinsp;pp</a>
-  </div>
-</div>
-
-<div class="studio">
-
-  <aside class="rail" aria-label="Regions">
-    <h2 class="sec-h">Regions <small>what the imaging found</small></h2>
-
-    <div class="card">
-      <h2>Systems</h2>
-      <div class="mode-group" role="group" aria-label="Highlight a system">
+    <!-- the state and the regions: a box over the deck's corner, folding
+         away on the tab at its edge and coming back on the handle left at
+         the screen's, as the 3D Region Atlas's region picker does -->
+    <aside class="drawer" id="drawer" aria-label="State and regions">
+      <div class="drawer-box" id="drawerBox">
+        <button class="drawer-tab drawer-hide" id="drawerHide" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Hide the regions" title="Hide the regions"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
+        <div class="drawer-in card rail-box">
+        <section class="rail-part">
+          <h2>Brain state</h2>
+          <div class="mode-group" role="group" aria-label="Brain state">
+            <button class="ts-btn active" id="btn-healthy" type="button" aria-pressed="true">Normal audition</button>
+            <button class="ts-btn" id="btn-halluc" type="button" aria-pressed="false">Hallucinating</button>
+          </div>
+          <p class="rail-note">Perceptions in the absence of a stimulus, as Boksa&rsquo;s editorial of 2009 maps them: hearing is intact, and what breaks is the handling of the brain&rsquo;s own inner speech.</p>
+          <p class="rail-note" id="legendKey">In the hallucinating state the overactive regions come forward and the weakened ones fall back. Each keeps its own colour throughout.</p>
+        </section>
+        <section class="rail-part">
+          <h2>Regions</h2>
+          <div class="mode-group" role="group" aria-label="Highlight a system">
         <button class="ts-btn" data-role="aud" type="button" aria-pressed="false">Auditory</button>
         <button class="ts-btn" data-role="lang" type="button" aria-pressed="false">Language</button>
         <button class="ts-btn" data-role="ctrl" type="button" aria-pressed="false">Control</button>
       </div>
-      <div class="rlist" id="rlist" role="group" aria-label="Brain regions"></div>
-      <p class="rail-note" id="legendKey">In the hallucinating state the overactive regions come forward and the weakened ones fall back. Each keeps its own colour throughout.</p>
-      <div class="rail-row">
+          <div class="rlist" id="rlist" role="group" aria-label="Brain regions"></div>
+          <div class="rail-row">
         <span class="tool-label">Opacity</span>
         <input type="range" id="overlayOpacity" min="0" max="100" step="5" value="85" aria-label="Highlight opacity">
         <span class="slider-val" id="overlayVal">85%</span>
       </div>
-      <p class="rail-note" id="coverage"></p>
-      <div id="export3d"></div>
-    </div>
-
-    <div class="card panel" id="panel" aria-live="polite">
-      <h2>Reading</h2>
-      <div class="panel-head">
-        <div class="panel-kicker" id="p-kicker">Normal audition</div>
-        <div class="panel-title" id="p-title">Select a region</div>
-        <div class="panel-latin" id="p-latin"></div>
-        <p class="empty" id="p-empty">Pick a region to see what the imaging found there.</p>
+          <p class="rail-note" id="coverage"></p>
+        </section>
+        </div>
       </div>
-      <button class="btn btn-wide" id="p-open" type="button" hidden>What it does &rarr;</button>
-    </div>
-  </aside>
+    </aside>
+    <button class="drawer-tab drawer-show" id="drawerTab" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Show the regions" title="Show the regions"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
 
-  <section class="centre" aria-label="Brain viewports">
-    <div class="views-wrap">
+    <!-- the views, and the pop-ups the bar raises over them: what stood
+         below the scans, each category behind a button of its own -->
+    <section class="stage" aria-label="Brain viewports">
+      <div class="views-wrap">
       <div class="views" id="scan-views">
         <div class="view" data-box="axial">
           <div class="view-cap"><b>Axial</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="axial" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="axial" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
@@ -486,15 +596,28 @@ td.hl{ color:var(--over); }
         </div>
       </div>
     </div>
-    <p class="rail-note" id="scan-note">MNI152 template &middot; AAL-116 parcellation</p>
-  </section>
 
-</div>
+      <div class="pop pop-md" id="popReading" hidden aria-labelledby="popReadingH">
+        <header class="pop-head"><b id="popReadingH">Reading</b><small id="p-kicker">Normal audition</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+          <div class="reading" id="reading">
+            <p class="empty" id="p-empty">Pick a region in the list, or a box in the circuit, and what the imaging found there appears here, for the state showing.</p>
+            <div id="p-body" hidden>
+              <h2 class="reading-h" id="m-title"></h2>
+              <div class="panel-latin" id="m-latin"></div>
+              <h3>What it does</h3>
+              <p id="m-role"></p>
+              <h3 id="m-stateh">In hallucination</h3>
+              <p id="m-state"></p>
+              <div class="src" id="m-src"></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-<section class="below">
-
-<section class="blk">
-  <h2>The model, as a circuit</h2>
+      <div class="pop" id="popCircuit" hidden aria-labelledby="popCircuitH">
+        <header class="pop-head"><b id="popCircuitH">The model, as a circuit</b><small>what flows where, in Allen&rsquo;s model</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
   <p class="sub">Allen's model is a claim about signal flow. Hearing is not what breaks — someone who hallucinates hears the world exactly as anyone else does. What breaks is the handling of the brain's own inner speech: the control regions normally send a copy of the command with it, marking it as self-generated, and when that copy fails to arrive the same inner speech is heard as a voice from somewhere else.</p>
 
   <div class="mech-tabs" role="tablist" aria-label="Brain state">
@@ -574,10 +697,12 @@ td.hl{ color:var(--over); }
     </div>
     <p class="mech-read" id="mechRead"></p>
   </div>
-</section>
+        </div>
+      </div>
 
-<section class="blk">
-  <h2>Not only in illness</h2>
+      <div class="pop" id="popWho" hidden aria-labelledby="popWhoH">
+        <header class="pop-head"><b id="popWhoH">Not only in illness</b><small>who reports hallucinations</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
   <p class="sub">Boksa opens by unsettling the assumption that hallucinations belong to schizophrenia alone. She adds one crucial caveat: it is unknown at present whether hallucinations are generated by similar mechanisms in patients and in healthy people.</p>
   <div class="figs">
     <div class="fig"><span class="n">60&ndash;70%</span><p>of people with schizophrenia experience hallucinations, auditory being the most common.</p></div>
@@ -585,10 +710,12 @@ td.hl{ color:var(--over); }
     <div class="fig"><span class="n">&#8531;&ndash;&frac12;</span><p>of bereaved spouses report hallucinations of the deceased.</p></div>
     <div class="fig"><span class="n">2</span><p>halves of a ping pong ball over the eyes, plus a waterfall recording, can induce vivid dreamlike imagery in some healthy people.</p></div>
   </div>
-</section>
+        </div>
+      </div>
 
-<section class="blk">
-  <h2>What the imaging found</h2>
+      <div class="pop" id="popImaging" hidden aria-labelledby="popImagingH">
+        <header class="pop-head"><b id="popImagingH">What the imaging found</b><small>structure, function, connectivity, lesions and treatment</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
   <p class="sub">Allen and colleagues reviewed structural, functional and connectivity studies of the hallucinating brain. Boksa's summary of their findings, and of the model they propose.</p>
   <div class="tbl-wrap"><table>
     <thead><tr><th>Method</th><th>Finding</th></tr></thead>
@@ -601,10 +728,12 @@ td.hl{ color:var(--over); }
       <tr><td>Treatment</td><td>Slow rTMS over right temporoparietal cortex reduced treatment-resistant auditory hallucinations, mean effect size 0.76. Boksa offers a comparison: clozapine versus typical antipsychotics scored 0.48 on the Brief Psychiatric Rating Scale &mdash; though that meta-analysis did not target hallucinations specifically.</td></tr>
     </tbody>
   </table></div>
-</section>
+        </div>
+      </div>
 
-<section class="blk">
-  <h2>Windows onto the mechanism</h2>
+      <div class="pop" id="popWindows" hidden aria-labelledby="popWindowsH">
+        <header class="pop-head"><b id="popWindowsH">Windows onto the mechanism</b><small>three approaches, each with Boksa&rsquo;s reservation</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
   <p class="sub">Three approaches Boksa reports, each with the reservation she attaches to it.</p>
   <div class="tbl-wrap"><table>
     <thead><tr><th>Approach</th><th>What it showed</th><th>Boksa's reservation</th></tr></thead>
@@ -626,40 +755,83 @@ td.hl{ color:var(--over); }
       </tr>
     </tbody>
   </table></div>
-</section>
+        </div>
+      </div>
 
-<section class="blk">
-  <h2>Where it stops</h2>
+      <div class="pop" id="popLimits" hidden aria-labelledby="popLimitsH">
+        <header class="pop-head"><b id="popLimitsH">Where it stops</b><small>the limits of the evidence</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
   <p class="sub">The editorial's closing argument, which is as much about the limits of the evidence as about the evidence.</p>
   <div class="caveat">
     <p>In studies with human participants, neural processes can only be shown to correlate with hallucinations, not to definitively cause them. Every finding above is an association.</p>
     <p>Animal models, which are normally where causal evidence comes from, do not resolve it. Monkeys and dogs can apparently tell their own vocalisations from another animal's, so one might expect them to misattribute under abnormal conditions &mdash; but assessing whether an animal is hallucinating is problematic. Monkeys given drugs known to produce psychosis in humans do show behavioural changes, yet what has been categorised as hallucinatory-like behaviour, such as responding to nonapparent stimuli or staring for extended periods, is too nonspecific for research into mechanism.</p>
     <p>Boksa's own conclusion is that although useful insight has been gained, we still have a long way to go to fully understand what causes the voices and visions of schizophrenia.</p>
   </div>
-</section>
+        </div>
+      </div>
 
-<p class="page-foot">An educational visualization of Boksa P, &ldquo;On the neurobiology of hallucinations,&rdquo; <em>Journal of Psychiatry &amp; Neuroscience</em> 2009;34(4):260&ndash;262 &mdash; <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2702442/">open access at PMC2702442</a>. Regions are drawn on the MNI152 template using the AAL-116 parcellation; each named region is matched to its nearest atlas parcel, and where that match is approximate the panel says so. The editorial concerns auditory hallucinations in schizophrenia almost throughout and does not address serotonergic, glutamatergic or default-mode accounts. It is now well over fifteen years old, and the field has moved. Not a diagnostic tool. <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a> &middot; <a href="terms.html">Terms of use</a>.</p>
+      <div class="pop pop-sm" id="popExport" hidden aria-labelledby="popExportH">
+        <header class="pop-head"><b id="popExportH">Export</b><small>the circuit as a 3D model</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+          <p class="empty-note">Each region&rsquo;s parcels as one surface in its colour, faded where the state showing has it fall back, with the brain&rsquo;s surface for context.</p>
+          <div id="export3d"></div>
+        </div>
+      </div>
 
-</section>
-</main>
-
-<!-- The reading, on top rather than in the rail. It used to sit in the card
-     and grow with whatever region was picked, which moved everything beneath
-     it down the page each time. -->
-<div class="modal" id="rdModal" hidden>
-  <div class="modal-scrim" data-close></div>
-  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="m-title">
-    <button class="modal-x" type="button" data-close aria-label="Close">&times;</button>
-    <div class="panel-kicker" id="m-kicker"></div>
-    <h2 class="modal-h" id="m-title"></h2>
-    <div class="panel-latin" id="m-latin"></div>
-    <h3>What it does</h3>
-    <p id="m-role"></p>
-    <h3 id="m-stateh">In hallucination</h3>
-    <p id="m-state"></p>
-    <div class="src" id="m-src"></div>
+      <div class="pop" id="popRef" hidden aria-labelledby="popRefH">
+        <header class="pop-head"><b id="popRefH">Reference</b><small>the paper, and what the page is drawn from</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+<div class="source">
+  <p class="cite">
+    Boksa P. <b>On the neurobiology of hallucinations.</b>
+    <em>Journal of Psychiatry &amp; Neuroscience</em> 2009;34(4):260&ndash;262.
+    <span class="pmid">PMID 19568476</span>
+  </p>
+  <div class="source-links">
+    <a class="ts-btn" href="https://pubmed.ncbi.nlm.nih.gov/19568476/" target="_blank" rel="noopener">PubMed</a>
+    <a class="ts-btn" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2702442/" target="_blank" rel="noopener">PMC</a>
+    <a class="ts-btn" href="assets/studies/boksa-2009-neurobiology-of-hallucinations.pdf" download>Download PDF &middot; 3&thinsp;pp</a>
   </div>
 </div>
+          <p class="ref-line"><b>Scan</b> <span id="scan-note">MNI152 template &middot; AAL-116 parcellation</span></p>
+          <p class="ref-line"><b>Regions</b> the ten of Allen&rsquo;s model, each drawn on the atlas parcels it occupies, approximate where the list says so.</p>
+<p class="page-foot">An educational visualization of Boksa P, &ldquo;On the neurobiology of hallucinations,&rdquo; <em>Journal of Psychiatry &amp; Neuroscience</em> 2009;34(4):260&ndash;262 &mdash; <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2702442/">open access at PMC2702442</a>. Regions are drawn on the MNI152 template using the AAL-116 parcellation; each named region is matched to its nearest atlas parcel, and where that match is approximate the panel says so. The editorial concerns auditory hallucinations in schizophrenia almost throughout and does not address serotonergic, glutamatergic or default-mode accounts. It is now well over fifteen years old, and the field has moved. Not a diagnostic tool. <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a> &middot; <a href="terms.html">Terms of use</a>.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- the bar along the bottom: the readouts, the view buttons a phone
+       shows, then one button for each category of what the study says,
+       and the export and the reference behind a line at the far right -->
+  <nav class="panelbar" aria-label="Study panels">
+    <div class="panelbar-stats">
+      <div class="stat"><div class="k">State</div><div class="v" id="statState">Normal audition</div></div>
+      <div class="stat"><div class="k">Region</div><div class="v probe-v" id="statRegion">&mdash; <small>pick one in the list or the circuit</small></div></div>
+    </div>
+    <div class="panelbar-all">
+      <button class="pbtn" type="button" data-view="all" aria-pressed="true" aria-label="All four views"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg><span>All</span></button>
+    </div>
+    <div class="panelbar-views" role="group" aria-label="One view">
+      <button class="pbtn" type="button" data-view="render" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>3D</span></button>
+      <button class="pbtn" type="button" data-view="axial" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16"/></svg><span>Axial</span></button>
+      <button class="pbtn" type="button" data-view="coronal" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8"/></svg><span>Coronal</span></button>
+      <button class="pbtn" type="button" data-view="sagittal" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 4v16"/></svg><span>Sagittal</span></button>
+    </div>
+    <div class="panelbar-btns" role="group" aria-label="Panels">
+      <button class="pbtn" type="button" data-pop="popReading" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 6.6c-1.7-1.5-4.1-2.1-7.2-2.1v13c3.1 0 5.5.6 7.2 2.1 1.7-1.5 4.1-2.1 7.2-2.1v-13c-3.1 0-5.5.6-7.2 2.1z"/><path d="M12 6.6v13"/></svg><span>Reading</span></button>
+      <button class="pbtn" type="button" data-pop="popCircuit" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="9" width="6" height="6" rx="1"/><rect x="15" y="3.5" width="6" height="6" rx="1"/><rect x="15" y="14.5" width="6" height="6" rx="1"/><path d="M9 12h3M12 12l3-5.5M12 12l3 5.5"/></svg><span>Circuit</span></button>
+      <button class="pbtn" type="button" data-pop="popWho" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 18 18 6"/><circle cx="7.5" cy="7.5" r="2.6"/><circle cx="16.5" cy="16.5" r="2.6"/></svg><span>Not only in illness</span></button>
+      <button class="pbtn" type="button" data-pop="popImaging" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.3 15.3 20 20M7.5 10.5h6M10.5 7.5v6"/></svg><span>Imaging</span></button>
+      <button class="pbtn" type="button" data-pop="popWindows" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12s3.6-6 9.5-6 9.5 6 9.5 6-3.6 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="3"/></svg><span>Mechanism</span></button>
+      <button class="pbtn" type="button" data-pop="popLimits" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8.5 3.5h7l5 5v7l-5 5h-7l-5-5v-7l5-5z"/><path d="M8 12h8"/></svg><span>Where it stops</span></button>
+    </div>
+    <div class="panelbar-end" role="group" aria-label="Export and reference">
+      <button class="pbtn" type="button" data-pop="popExport" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15V4M8 8l4-4 4 4M5 13v7h14v-7"/></svg><span>Export</span></button>
+      <button class="pbtn pbtn-ref" type="button" data-pop="popRef" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/></svg><span>Reference</span></button>
+    </div>
+  </nav>
+</main>
 
 <script src="assets/native.js"></script>
 <script src="assets/navbar.js"></script>
@@ -912,39 +1084,34 @@ function buildList(){
       selected = (selected === region.id) ? null : region.id;
       focus = selected ? [selected] : [];
       renderAll();
+      /* a region picked from the list is a wish to read about it */
+      if (selected && window.HX_SCREEN) HX_SCREEN.open("popReading");
     });
     list.appendChild(btn);
   }
 }
 
+/* the reading, in the window the bar's Reading button raises, and the
+   bar's own readouts of the state and the region picked */
 function renderPanel(){
   const d = selected ? DATA[selected] : null;
-  const kicker = state === "halluc" ? "Hallucinating state" : "Normal audition";
-  $("p-kicker").textContent = kicker;
+  $("p-kicker").textContent = state === "halluc" ? "Hallucinating state" : "Normal audition";
+  $("statState").textContent = state === "halluc" ? "Hallucinating" : "Normal audition";
+  $("p-empty").hidden = !!d;
+  $("p-body").hidden = !d;
+  const out = $("statRegion");
+  out.textContent = "";
+  const small = document.createElement("small");
   if (!d){
-    $("p-title").textContent = "Select a region";
-    $("p-latin").textContent = "";
-    $("p-empty").hidden = false;
-    $("p-open").hidden = true;
-    closeReading();
+    out.append("— ");
+    small.textContent = "pick one in the list or the circuit";
+    out.appendChild(small);
     return;
   }
-  $("p-empty").hidden = true;
-  $("p-open").hidden = false;
-  $("p-title").textContent = d.t;
-  $("p-latin").textContent = d.l + (REGIONS.find(r => r.id === selected).note
-    ? " · " + REGIONS.find(r => r.id === selected).note : "");
-  /* if the reading is open, it follows the selection and the state rather
-     than going stale behind the dialog */
-  if (!$("rdModal").hidden) fillReading();
-}
-
-/* ── the reading dialog ───────────────────────────────────────────────── */
-function fillReading(){
-  const d = selected ? DATA[selected] : null;
-  if (!d) return;
   const region = REGIONS.find(r => r.id === selected);
-  $("m-kicker").textContent = state === "halluc" ? "Hallucinating state" : "Normal audition";
+  out.append(d.t + " ");
+  small.textContent = d.l;
+  out.appendChild(small);
   $("m-title").textContent = d.t;
   $("m-latin").textContent = d.l + (region.note ? " · " + region.note : "");
   $("m-role").textContent = d.role;
@@ -953,35 +1120,6 @@ function fillReading(){
   $("m-src").textContent = "Boksa reports: " + d.src +
     (region.approx ? " · drawn on the nearest atlas parcels" : "");
 }
-
-let readingOpener = null;
-
-function openReading(){
-  if (!selected) return;
-  fillReading();
-  readingOpener = document.activeElement;
-  $("rdModal").hidden = false;
-  document.body.style.overflow = "hidden";
-  const x = $("rdModal").querySelector(".modal-x");
-  if (x) x.focus();
-}
-
-function closeReading(){
-  if ($("rdModal").hidden) return;
-  $("rdModal").hidden = true;
-  document.body.style.overflow = "";
-  if (readingOpener && readingOpener.focus) readingOpener.focus();
-  readingOpener = null;
-}
-
-$("p-open").addEventListener("click", openReading);
-$("rdModal").addEventListener("click", (e) => {
-  if (e.target.hasAttribute("data-close")) closeReading();
-});
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeReading();
-});
-
 
 /* ── the model as a circuit ─────────────────────────────────────────────
    Two pathways, drawn separately because only one of them changes.
@@ -1321,6 +1459,135 @@ renderAll();
 ensureScan();
 </script>
 
+<script>
+/* ── the screen ──────────────────────────────────────────────────────────
+   The 3D Region Atlas's screen, carried here: the header's height is
+   measured into --screen-top so the views fill the rest, the drawer folds
+   away on its tab (and is remembered), on a phone one view shows at a time
+   and the bar's first buttons pick it, sideways the bar stands at the
+   right edge, and the bar's buttons raise one pop-up at a time over the
+   views. The page's own script opens the reading through HX_SCREEN. */
+(function(){
+  var root = document.documentElement, main = document.getElementById("main");
+  var head = document.querySelector(".masthead"), bar = document.querySelector(".panelbar");
+  var queued = 0;
+  function fit(){
+    queued = 0;
+    var top = main.getBoundingClientRect().top + (window.pageYOffset || 0);
+    root.style.setProperty("--screen-top", Math.max(0, Math.round(top)) + "px");
+    if (bar) root.style.setProperty("--bar-h", Math.round(bar.getBoundingClientRect().height) + "px");
+  }
+  function soon(){ if (!queued) queued = requestAnimationFrame(fit); }
+  fit();
+  if (window.ResizeObserver){
+    var ro = new ResizeObserver(soon);
+    if (head) ro.observe(head);
+    if (bar) ro.observe(bar);
+    ro.observe(document.body);
+  }
+  window.addEventListener("resize", soon);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(soon);
+
+  /* the drawer */
+  var deck = document.getElementById("deck"), tab = document.getElementById("drawerTab"), hideBtn = document.getElementById("drawerHide");
+  var narrow = window.matchMedia ? window.matchMedia("(max-width:900px)") : null;
+  var one = window.matchMedia ? window.matchMedia("(max-width:760px), (pointer:coarse) and (max-height:500px)") : null;
+  var land = window.matchMedia ? window.matchMedia("(orientation: landscape) and (pointer: coarse)") : null;
+  var open;
+  try{
+    var kept = localStorage.getItem("vn-hx-drawer");
+    open = kept === "open" ? true : kept === "shut" ? false : !(narrow && narrow.matches);
+  } catch(e){ open = !(narrow && narrow.matches); }
+  if (one && one.matches) open = false;
+  function setDrawer(on, keep){
+    open = on;
+    deck.classList.toggle("shut", !on);
+    tab.setAttribute("aria-expanded", String(on));
+    if (hideBtn) hideBtn.setAttribute("aria-expanded", String(on));
+    if (keep){ try{ localStorage.setItem("vn-hx-drawer", on ? "open" : "shut"); }catch(e){} }
+    if (window.MN_LIFE) MN_LIFE.remeasure();
+  }
+  function focusSoon(el){ setTimeout(function(){ try{ el.focus({preventScroll: true}); }catch(e){} }, 360); }
+  setDrawer(open, false);
+  tab.addEventListener("click", function(){ setDrawer(true, true); if (hideBtn) focusSoon(hideBtn); });
+  if (hideBtn) hideBtn.addEventListener("click", function(){ setDrawer(false, true); focusSoon(tab); });
+
+  /* one view at a time on a phone */
+  var viewBtns = document.querySelectorAll(".panelbar [data-view]");
+  var views = document.querySelectorAll(".views .view[data-box]");
+  var shown = "all";
+  try{ var k = localStorage.getItem("vn-hx-view"); if (k && (k === "all" || document.querySelector('.views .view[data-box="' + k + '"]'))) shown = k; }catch(e){}
+  function showView(key, keep){
+    shown = key;
+    main.classList.toggle("all", key === "all");
+    views.forEach(function(v){ v.classList.toggle("shown", key === "all" || v.getAttribute("data-box") === key); });
+    viewBtns.forEach(function(b){
+      var on = b.getAttribute("data-view") === key;
+      b.classList.toggle("active", on); b.setAttribute("aria-pressed", String(on));
+    });
+    if (keep){ try{ localStorage.setItem("vn-hx-view", key); }catch(e){} }
+    if (window.MN_LIFE) MN_LIFE.remeasure();
+  }
+  function oneView(){
+    var on = !!(one && one.matches);
+    main.classList.toggle("one", on);
+    main.classList.toggle("land", on && !!(land && land.matches));
+    if (on) showView(shown, false); else if (window.MN_LIFE) MN_LIFE.remeasure();
+    soon();
+  }
+  oneView();
+  [one, land].forEach(function(q){ if (!q) return; if (q.addEventListener) q.addEventListener("change", oneView); else if (q.addListener) q.addListener(oneView); });
+  viewBtns.forEach(function(b){ b.addEventListener("click", function(){ showView(b.getAttribute("data-view"), true); }); });
+  document.addEventListener("click", function(e){
+    if (!main.classList.contains("one")) return;
+    var btn = e.target.closest ? e.target.closest(".view-expand") : null;
+    if (!btn) return;
+    var view = btn.closest(".view[data-box]");
+    if (!view) return;
+    e.preventDefault(); e.stopPropagation();
+    showView(view.getAttribute("data-box"), true);
+  }, true);
+
+  /* the pop-ups */
+  var pops = {}, current = null;
+  document.querySelectorAll(".stage .pop").forEach(function(p){ pops[p.id] = p; });
+  var buttons = document.querySelectorAll(".panelbar [data-pop]");
+  function press(){
+    buttons.forEach(function(b){
+      var on = !!current && b.getAttribute("data-pop") === current;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-pressed", String(on));
+    });
+  }
+  function hide(){
+    if (!current) return;
+    var p = pops[current];
+    current = null;
+    p.classList.remove("in");
+    clearTimeout(p._leaving);
+    p._leaving = setTimeout(function(){ if (!p.classList.contains("in")) p.hidden = true; }, 280);
+    press();
+  }
+  function openPop(id){
+    if (current === id) return;
+    if (current) hide();
+    var p = pops[id];
+    if (!p) return;
+    clearTimeout(p._leaving);
+    p.hidden = false;
+    current = id;
+    void p.offsetWidth;
+    p.classList.add("in");
+    requestAnimationFrame(function(){ window.dispatchEvent(new Event("resize")); });
+    press();
+  }
+  function show(id){ if (current === id) hide(); else openPop(id); }
+  buttons.forEach(function(b){ b.addEventListener("click", function(){ show(b.getAttribute("data-pop")); }); });
+  document.querySelectorAll(".pop .pop-x").forEach(function(x){ x.addEventListener("click", hide); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && current) hide(); });
+  window.HX_SCREEN = { open: openPop, show: show, hide: hide, current: function(){ return current; } };
+})();
+</script>
 <script src="assets/firebase-config.js"></script>
 <script type="module" src="assets/auth-ui.js"></script>
 </body>

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.43 — 21 October 2026 — The Hallucinations study as a screen of its own
+Commit · Lay the Hallucinations study out as the 3D Region Atlas is, its sections behind a bar of buttons of their own
+
+The Hallucinations study, the visualisation of Boksa's editorial on the hallucinating brain, is now one screen in the 3D Region Atlas's manner. The four views fill the room under the header, the brain state and the regions are a box in the corner that folds away on its tab, and what stood below the scans rises from a bar along the bottom, one window at a time, each category behind a button of its own: Reading, the picked region's part in the model, which opens as a region is picked from the list; Circuit, Allen's model drawn as signal flow with its Healthy and Hallucinating tabs; Not only in illness, the figures on who reports hallucinations; Imaging, what the structural, functional and connectivity studies found; Mechanism, the three windows onto it and Boksa's reservation on each; Where it stops, the limits of the evidence; then Export, the circuit as a 3D model, and Reference, the paper, its links and what the page is drawn from. The bar's readouts give the state showing and the region picked. On a phone the views show one at a time or four together, the box slides in from the right, and held sideways the bar stands along the right edge, as the atlas does.
+
 ## v11.42 — 21 October 2026 — The 3D Region Atlas on a phone held sideways
-Commit · Lay the 3D Region Atlas out for a phone held sideways, the bar along the right edge and the views the whole height
+Commit `0cfd29c` · Lay the 3D Region Atlas out for a phone held sideways, the bar along the right edge and the views the whole height
 
 Turn a phone sideways and the 3D Region Atlas now uses the room. In the app the bar at the top goes, leaving only its back button at the top left where it always stood; on the website the masthead steps aside. The bar of buttons moves from the bottom to the right edge, its icons two to a row, with the region drawer's handle coming off its edge, and the views take the whole height: the four together are one row of four instead of two rows of thumbnails, and the one view's tools and Centre stand at the left of its bar, after the back button, with the plane's name at the right. The receptor window puts its controls in a column beside the graph there, so the graph keeps its height. Turn the phone back and everything returns to its place. The app's part is a Swift change, verified by the owner's build.
 

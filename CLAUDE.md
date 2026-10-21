@@ -163,6 +163,15 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `brodmann_area` answers link there. The 3D Region Atlas keeps its own Brodmann list, and no map since v11.30; since v11.38
   the areas are picked through the same dropdown panel as the AAL regions (`dropPicker` in `regions.html`, shared by
   `#rpick` and `#bapick`: button `#bapickBtn`, panel `#bapickPop`, list `#balist` a `.rpick-list` grouped by lobe).
+- The Hallucinations study (`site/hallucinations.html`, the visualisation of Boksa 2009 that the owner calls the
+  schizophrenia visualisation) is one screen in the 3D Region Atlas's manner since v11.43: `body.atlas-screen`,
+  `main#main.screen`, the drawer (`#drawerBox`: Brain state, then Regions with the system filters, the list and the
+  opacity) and the stage with the four views; the bar's buttons each raise a pop-up of one category of what stood
+  below the scans (`#popReading`, which `HX_SCREEN.open` raises as a region is picked from the list; `#popCircuit` with
+  the two circuit drawings and their tabs; `#popWho`, `#popImaging`, `#popWindows`, `#popLimits`; `#popExport` with
+  `#export3d`; `#popRef` with the paper and `#scan-note`), with the readouts `#statState` and `#statRegion`. The chrome
+  (the screen, drawer, bar, pops, `.one` and `.land` rules, and the screen script with its `vn-hx-drawer` and
+  `vn-hx-view` keys) is a copy of the atlas's with the same names: a change to the chrome belongs in both pages.
 - The 3D Region Atlas, the Network Atlas and, since v11.17, the Hallucinations study (`site/hallucinations.html`)
   draw their four views alike, from shared files: the scans' look in either theme is `site/assets/scan-look.js`, and
   the bar over each view, the stages' proportion, the light-theme stages and the view opened over the grid are
