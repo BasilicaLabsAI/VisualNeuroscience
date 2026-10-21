@@ -202,8 +202,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
 - App Store: version 1.0 was approved and released on 25 September 2026 (https://apps.apple.com/app/id6805618686)
   after an expedited review. The project is at 1.1 for the next submission; its What's New text, the App Privacy
   changes the newsletter and the usage counts need, and the steps are in `app/store/LISTING.md`, the screenshots in
-  `app/store/screenshots/`. Before 1.1, download `GoogleService-Info.plist` again from the Firebase console (Project
-  settings → the iOS app), since the copy in the repo predates Analytics being switched on for the project.
+  `app/store/screenshots/`. `GoogleService-Info.plist` was downloaded again on 21 October 2026 and was identical to the
+  repo's copy (`IS_ANALYTICS_ENABLED` false); the key does not gate collection in current SDKs, so the apps count
+  unless `Info.plist` says otherwise. Confirm the iOS stream in the Firebase console's Realtime view with a TestFlight
+  build before submitting; if no iOS data stream is listed, link Analytics under Integrations and download again.
 - Google Play: the Android build, listing text, graphics and declarations are ready in `app/store/PLAY-STORE.md`
   (screenshots in `app/store/screenshots/`, `android-*`); still to do on the owner's Mac: the developer account, the
   upload key (`app/android/keystore.properties.example`), the Firebase fingerprints, the closed test a personal

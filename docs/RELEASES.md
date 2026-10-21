@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.47 — 21 October 2026 — The Firebase file checked
+Commit · Record that the Firebase file is current and what to check instead before 1.1
+
+The store notes said the Firebase file had to be refreshed before the 1.1 build was made. It was downloaded again and came back identical, and the flag in it does not switch the usage counts off in the SDKs the app uses, so the notes now say what to confirm instead: that the iOS stream shows in the Firebase console's Realtime view with a TestFlight build, and what to do if no iOS stream is listed. Nothing on the site changes.
+
 ## v11.46 — 21 October 2026 — The App Store notes for 1.1
-Commit · Bring the App Store notes up to date for the 1.1 submission
+Commit `e9bab01` · Bring the App Store notes up to date for the 1.1 submission
 
 The notes that stand ready for the App Store, in the repository's store folder, now carry today's work in the What's New text, the tabbed receptor window, the Brodmann dropdown, the sideways atlas, the Hallucinations screen and the terms and deletion pages, and a numbered order for submitting 1.1, from the Firebase file that has to be refreshed before the build is made to the review notes and the submission itself. Nothing on the site changes.
 

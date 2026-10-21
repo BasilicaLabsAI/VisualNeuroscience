@@ -188,15 +188,17 @@ The description on the version page is 1.0's. Its WHAT IS INSIDE list predates M
 
 ## Submitting 1.1, in order
 
-1. **The Firebase file first.** `app/ios/App/App/GoogleService-Info.plist` in the
-   repository has `IS_ANALYTICS_ENABLED` false: it predates Analytics being
-   switched on for the project, so every build Xcode Cloud has made counts
-   nothing. Download the file again from the Firebase console (Project
-   settings → Your apps → the iOS app), replace the one in the repository,
-   commit it as a release (a ledger entry, no service-worker bump, since
-   the site does not change) and push to `main`. Xcode Cloud archives that
-   push; the build to submit is the one it uploads, so check its number in
-   App Store Connect → TestFlight before picking it.
+1. **The Firebase file.** `app/ios/App/App/GoogleService-Info.plist` carries
+   `IS_ANALYTICS_ENABLED` false, and a fresh download from the Firebase
+   console on 21 October 2026 was identical, so there is nothing to replace.
+   The key does not switch collection off in current Firebase SDKs (only
+   `FIREBASE_ANALYTICS_COLLECTION_ENABLED` in `Info.plist` does, and it is
+   not set), so the apps count. Confirm it once: open the TestFlight build,
+   then Firebase console → Analytics → Realtime should show the iOS stream;
+   if Analytics lists no iOS data stream at all, link it under Project
+   settings → Integrations → Google Analytics and download the file again.
+   The build to submit is then the latest archive Xcode Cloud uploaded from
+   `main` (check its number under TestFlight).
 2. **Try that build from TestFlight** on an iPhone and an iPad: the Account
    tab's three rows (Privacy, Terms, Delete your account), a full deletion of
    an account signed in with Apple (it should leave the app's entry under
