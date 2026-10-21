@@ -130,7 +130,7 @@ Read this first in every session. It is the handover; nothing else needs pasting
   Graph and Neurotransmitters tabs scroll as a whole instead, the graph at least 400px tall and the table's box at least
   320px (`.screen.one:not(.land)` rules), the tabs stand in one sideways-scrolling row (`showRxTab` scrolls the open one
   into view), and the table's lede and example are the short phone versions (`phoneQ`, `ledeShort` in `renderHeat` and
-  `heatExample`, set again on a resize across 600px). The Density Table is kept in the code
+  `heatExample`, set again on a resize across 600px); the graph's key is one sideways-scrolling line there (v11.53). The Density Table is kept in the code
   and shown nowhere; the graph's controls stand in one line where there is room (since v11.49: the dropdown at the
   left, narrowing first, and the two button pairs, source and axis, together in `.rx-switches` at the far right) and
   in rows on a phone (source, by receptor or region, dropdown), with no sentence above; `renderChart()` toggles the

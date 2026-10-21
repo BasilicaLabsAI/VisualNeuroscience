@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.53 — 21 October 2026 — The graph's key in one line on a phone
+Commit · Set the graph's key in one line that scrolls sideways on a phone
+
+Charting a region on a phone, the graph's key named all fourteen neurotransmitter families in four rows, and the graph paid for them. On a phone the key is now one line that scrolls sideways under the graph, in the app and on the web alike; a tablet and a computer keep the wrapped key.
+
 ## v11.52 — 21 October 2026 — The receptor window on a phone
-Commit · Give the receptor window's graph and table a height worth reading on a phone, and cut the table's text there
+Commit `9bc3a29` · Give the receptor window's graph and table a height worth reading on a phone, and cut the table's text there
 
 On a phone the receptor window's Graph tab shrank the graph to whatever the controls left, a sliver in a mobile browser, and the Neurotransmitters tab spent most of the screen on its sentence. The graph now keeps a reading height and the tab scrolls as a whole when the window is short, the controls going up out of the way; the table does the same, and its sentence is cut to the bone on a phone, the example with it. The window's tabs stand in one row that scrolls sideways, the open one brought into view, which gives the screen another line. Held sideways, and on a tablet or a computer, nothing changes.
 
