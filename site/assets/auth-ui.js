@@ -3,8 +3,8 @@
    Reset), the signed-in state showing the person's username, and an account card
    with the username and university, Save and Log out side by side, and
    the door marked deletion. All behaviour lives in assets/auth.js; this file only draws,
-   and passes the address of a new account that keeps the feature-announcements
-   box ticked to the newsletter's worker.
+   and passes the address of a new account that ticks the feature-announcements
+   box to the newsletter's worker.
 
    Styling leans on the site's own custom properties (--paper, --ink,
    --hair, --font-brand …) with plain fallbacks, so the modal already wears
@@ -168,7 +168,8 @@ function mount(){
   document.head.appendChild(style);
 
   /* ── feature announcements, offered as an account is made ──────────────
-     The box starts ticked. Left ticked, the account's address goes to the
+     The box starts clear, since a pre-ticked box is no consent to email
+     under PECR. Ticked, the account's address goes to the
      newsletter's worker, the one the newsletter box posts to (its address
      is also the constant at the top of assets/newsletter.js), which adds it
      to Mailchimp as pending: the address is on the list only once its owner
@@ -194,7 +195,7 @@ function mount(){
     const label = document.createElement("label");
     label.className = "vn-check";
     const box = document.createElement("input");
-    box.type = "checkbox"; box.name = "newsletter"; box.checked = true;
+    box.type = "checkbox"; box.name = "newsletter"; box.checked = false;
     const text = document.createElement("span");
     text.textContent = "Email me when a new feature lands";
     const fine = document.createElement("small");

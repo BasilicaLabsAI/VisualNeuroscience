@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Delete your account — VisualNeuroscience.AI</title>
+<meta name="description" content="How to delete a VisualNeuroscience.AI account in the app, on the web or by email, and exactly what is removed.">
+<!-- link previews. The card is built by site/share.html and rendered to
+     assets/social-card.jpg; og:image has to be absolute, so this origin is
+     the one thing to change if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="Delete your account — VisualNeuroscience.AI">
+<meta property="og:description" content="How to delete a VisualNeuroscience.AI account in the app, on the web or by email, and exactly what is removed.">
+<meta property="og:url" content="https://visualneuroscience.ai/delete-account.html">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The flow-state network ring over orange-tinted MNI152 brain slices, with the VisualNeuroscience.AI wordmark at its centre.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="fonts/fonts.css">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+  --quiet:#8A8A8A;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+  --quiet:#8A8A8A;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  margin:0 0 3rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+a{ color:var(--ink); }
+svg{ display:block; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* masthead, shared with the rest of the site */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:.65em; height:.65em; flex:none; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{
+  font-family:var(--font-display); font-size:1.35rem;
+  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+}
+.title-strip .anno{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60);
+}
+
+.lede{
+  font-family:var(--font-serif); font-size:1.02rem; line-height:1.6;
+  margin:0 0 calc(var(--gap) * 1.6);
+}
+
+/* ── the shelf of studies ───────────────────────────────────────────────
+   A grid that reads correctly with one card and with a dozen: the columns
+   are sized, not divided, so a lone study sits at its natural width rather
+   than stretching across the page. */
+.shelf{
+  display:grid; gap:var(--gap);
+  grid-template-columns:repeat(auto-fill, minmax(330px, 420px));
+}
+.study{
+  border:1px solid var(--hair); background:var(--paper);
+  display:flex; flex-direction:column; text-decoration:none; color:var(--ink);
+}
+@media (hover: hover){ .study:hover{ text-decoration:none; } }
+@media (hover: hover){ .study:hover .study-body{ background:color-mix(in srgb, var(--ink) 6%, transparent); } }
+.study-fig{
+  border-bottom:1px solid var(--hair); background:#000000;
+  aspect-ratio:902 / 409; overflow:hidden; position:relative;
+}
+.study-fig img{ width:100%; height:100%; object-fit:cover; display:block; }
+.study-body{ padding:1rem 1.05rem 1.15rem; transition:background .2s ease; }
+.study-kicker{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+}
+.study h2{
+  font-family:var(--font-display); font-weight:400;
+  font-size:1.24rem; line-height:1.15; letter-spacing:.01em; margin:.35rem 0 .45rem;
+}
+.study p{ font-size:.94rem; line-height:1.55; color:var(--ink-60); }
+.study .cite{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.82rem; color:var(--ink-35); margin-top:.7rem;
+}
+.study .go{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.24em; text-transform:uppercase; margin-top:.85rem;
+  display:inline-flex; align-items:center; gap:.45rem;
+}
+@media (hover: hover){ .study:hover .go{ text-decoration:underline; text-underline-offset:3px; } }
+
+/* a slot for what is not built yet, so the shelf reads as a shelf */
+.study.soon{ border-style:dashed; cursor:default; }
+.study.soon .study-fig{ background:none; display:flex; align-items:center; justify-content:center; }
+.study.soon .study-body{ background:none; }
+.study.soon h2, .study.soon p{ color:var(--ink-35); }
+
+.attrib{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.85rem; color:var(--ink-60);
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2rem;
+}
+
+/* ── what is planned but not built ──────────────────────────────────────
+   Small tiles rather than the full study card: thirteen empty cards at
+   that size would be a wall of dashed boxes pretending to be content.
+   Each says what the drug acts on, which is enough to show the section
+   has a shape without claiming any of it is written yet. */
+.drugs-sec{ margin-top:calc(var(--gap) * 3); }
+.drug-grid{
+  display:grid; gap:var(--gap); list-style:none; margin:0; padding:0;
+  grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));
+}
+.drug{
+  border:1px dashed var(--ink-35); padding:.85rem .9rem 1rem;
+  display:flex; flex-direction:column; min-width:0;
+}
+.drug-name{
+  font-family:var(--font-display); font-weight:400;
+  font-size:1.12rem; line-height:1.15; color:var(--ink);
+}
+.drug-sub{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.8rem; color:var(--ink-35); margin-top:.15rem; overflow-wrap:anywhere;
+}
+.drug-target{
+  font-family:var(--font-serif); font-size:.88rem; line-height:1.45;
+  color:var(--ink-60); margin-top:.5rem;
+}
+.drug-target sub{ font-size:.72em; }
+.drug-soon{
+  font-family:var(--font-brand); font-weight:500; font-size:.52rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-35);
+  margin-top:auto; padding-top:.85rem;
+}
+
+/* ── the policy ─────────────────────────────────────────────────────── */
+.policy{ max-width:72ch; margin:0 auto; }
+.policy h2{
+  font-family:var(--font-brand); font-weight:600; font-size:.66rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
+  border-bottom:1px solid var(--ink); padding:.2rem .1rem .45rem;
+  margin:calc(var(--gap) * 2.4) 0 var(--gap);
+}
+.policy h2:first-of-type{ margin-top:var(--gap); }
+.policy p{ font-size:1rem; line-height:1.65; margin-bottom:.9rem; }
+.policy ul{ margin:0 0 1rem 1.1rem; }
+.policy li{ font-size:1rem; line-height:1.6; margin-bottom:.45rem; }
+.policy b{ font-weight:400; color:var(--ink); }
+.policy .note{
+  font-family:var(--font-serif); font-style:italic; font-size:.9rem;
+  color:var(--ink-60); border-left:2px solid var(--ink-35);
+  padding-left:.8rem; margin:1rem 0;
+}
+.policy .stamp{
+  font-family:var(--font-brand); font-size:.55rem; letter-spacing:.24em;
+  text-transform:uppercase; color:var(--ink-35);
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2.4rem;
+}
+</style>
+</head>
+<body>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="Site">
+    <a href="regions.html">3D Region Atlas</a>
+    <a href="brodmann.html">Brodmann Area Atlas</a>
+    <a href="microanatomy.html">Microanatomy</a>
+    <a href="molecular.html">Molecular</a>
+    <a href="network-atlas.html">Network Atlas</a>
+    <a href="tracts.html">Tractography</a>
+    <a href="studies.html">Visualizing Studies</a>
+    <a href="textbook.html">Digital Textbook</a>
+    <a href="practice.html">Practice</a>
+    <a href="about.html">About</a>
+    <span class="nav-tools"><button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button></span>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<div class="title-strip">
+  <h1 class="name">Delete your account</h1>
+  <span class="anno">in the app, on the web, or by email</span>
+</div>
+
+<div class="policy">
+
+<p class="lede">Deleting removes the account at once: your sign-in, your profile, your username, your saved models and your practice progress. Nothing of them is kept, and there is no undo. If you signed in with Apple, the Sign in with Apple authorisation is revoked as the account goes, so the app leaves the list on your Apple ID too. It takes two presses and a moment, wherever you are.</p>
+
+<h2>In the app on iPhone, iPad or Mac</h2>
+<p>Open the <b>Account</b> tab and press <b>Open your account</b>. Logged in, press <b>Delete account&hellip;</b> at the foot of the page and then <b>Press again to delete for ever</b>. The same button is in the account box behind <b>Log in</b> on any page of the app.</p>
+
+<h2>In the app on Android</h2>
+<p>Open the menu, press <b>Log in</b>, and in the account box press <b>Delete account&hellip;</b> and then <b>Press again to delete for ever</b>. The <a href="account.html">account page</a>, in the menu, has the same button under <i>Deleting your account</i>.</p>
+
+<h2>On the web</h2>
+<p>Open the <a href="account.html">account page</a>, log in, and press <b>Delete account&hellip;</b> under <i>Deleting your account</i>, then <b>Press again to delete for ever</b>. Or press <b>Log in</b> on any page and find the button at the foot of the account box.</p>
+<p>For safety, an account that has been logged in for a long while is asked to sign in again before it is deleted: with Google or Apple that is the same sheet as before, with an email address and password it is the Log in box, and the deletion follows at once.</p>
+
+<h2>By email</h2>
+<p>Cannot log in, or would rather not do it yourself? Write to <a href="mailto:fkarim@visualneuroscience.ai?subject=Delete%20my%20account&amp;body=Please%20delete%20the%20VisualNeuroscience.AI%20account%20that%20uses%20this%20email%20address."><b>fkarim@visualneuroscience.ai</b></a> from the address on the account, with the subject <i>Delete my account</i>. The account is deleted by hand within 30 days, with the same result, and the reply says when it is done.</p>
+
+<h2>What goes, and what does not</h2>
+<ul>
+  <li><b>Deleted at once:</b> the sign-in itself, the profile (name, email address, username and university), every saved model and all practice progress. The username is released for anyone to take.</li>
+  <li><b>Not part of the account:</b> the newsletter, if you joined it, is a separate list at Mailchimp; leave it from the link at the foot of any of its emails. The usage counts are kept under a random identifier that is never tied to an account and identify no one, as the <a href="privacy.html">privacy policy</a> says.</li>
+  <li><b>Kept on your device only:</b> the light-or-dark choice and the offline copy of the pages, which clear with the app or the browser&rsquo;s site data.</li>
+</ul>
+
+<h2>Questions</h2>
+<p>Write to <a href="mailto:fkarim@visualneuroscience.ai"><b>fkarim@visualneuroscience.ai</b></a> and a person reads it. The <a href="privacy.html">privacy policy</a> says what an account holds, and the <a href="terms.html">terms of use</a> say the rest.</p>
+
+<p class="stamp">Last updated 21 October 2026 &middot; VisualNeuroscience.AI &middot; made by Fadil Karim</p>
+
+</div>
+
+
+</main>
+
+<script src="assets/native.js"></script>
+<script src="assets/navbar.js"></script>
+<script>
+"use strict";
+(function(){
+  var themeBtn = document.getElementById("themeBtn");
+  var themeLbl = document.getElementById("themeLbl");
+  if (document.documentElement.getAttribute("data-theme") === "dark"){
+    themeLbl.textContent = "Light"; themeBtn.setAttribute("aria-pressed", "true");
+  }
+  themeBtn.addEventListener("click", function(){
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark";
+    if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+    else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+    themeBtn.setAttribute("aria-pressed", String(!dark));
+    try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+  });
+})();
+</script>
+
+<script src="assets/firebase-config.js"></script>
+<script type="module" src="assets/auth-ui.js"></script>
+</body>
+</html>

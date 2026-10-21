@@ -37,6 +37,8 @@ nonisolated struct Page: Sendable {
     static let mcp = Page(file: "mcp.html", title: "MCP Server")
     static let account = Page(file: "account.html", title: "Account")
     static let privacy = Page(file: "privacy.html", title: "Privacy & Support")
+    static let terms = Page(file: "terms.html", title: "Terms of Use")
+    static let deleteAccount = Page(file: "account.html", fragment: "delete", title: "Account")
 
     /// The titles of the pages a link can lead to, as the app's bar named them.
     static let titles: [String: String] = [
@@ -46,6 +48,7 @@ nonisolated struct Page: Sendable {
         "studies.html": "Visualizing Studies", "hallucinations.html": "Hallucinations",
         "practice.html": "Practice", "textbook.html": "Digital Textbook",
         "about.html": "About", "privacy.html": "Privacy & Support",
+        "terms.html": "Terms of Use", "delete-account.html": "Delete your account",
         "account.html": "Account", "mcp.html": "MCP Server", "connect.html": "Connect"
     ]
 }

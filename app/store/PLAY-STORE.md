@@ -134,6 +134,8 @@ https://visualneuroscience.ai. Phone is optional; leave it out.
 
 **Privacy policy**: https://visualneuroscience.ai/privacy.html
 
+**Terms of use** (no Play field asks for it; linked from the pages and the app): https://visualneuroscience.ai/terms.html
+
 ## Graphics
 
 All in `app/store/play/` and `app/store/screenshots/`.
@@ -195,8 +197,9 @@ categories (it is education, not a health service).
 **Data safety**. Does the app collect or share user data: Yes (only when
 someone signs in). Encrypted in transit: Yes.
 Users can request deletion: Yes, and the deletion link is
-https://visualneuroscience.ai/account.html#delete, the account page, whose
-deletion section reads the same logged in or out. Then the types:
+https://visualneuroscience.ai/delete-account.html, a page that reads the same
+logged in or out and gives the steps for the app, the web and email, and
+says exactly what is removed. Then the types:
 
 | Data type | Collected | Shared | Optional | Purpose |
 |---|---|---|---|---|

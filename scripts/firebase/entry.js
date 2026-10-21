@@ -14,7 +14,8 @@ export {
   signInWithEmailAndPassword, createUserWithEmailAndPassword,
   sendPasswordResetEmail, fetchSignInMethodsForEmail,
   sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink,
-  linkWithCredential, linkWithPopup, getAdditionalUserInfo
+  linkWithCredential, linkWithPopup, getAdditionalUserInfo,
+  reauthenticateWithCredential, reauthenticateWithPopup, revokeAccessToken
 } from "firebase/auth";
 export {
   getFirestore, doc, collection, getDoc, getDocs, setDoc, updateDoc, deleteDoc, serverTimestamp

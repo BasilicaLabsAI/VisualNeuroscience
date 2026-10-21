@@ -209,6 +209,14 @@ so the button shows on the website as well as in the apps.
    section drives the native Apple sheet — nothing more to install. It works
    on the Mac Catalyst build too, which keeps guideline 4.8 satisfied there.
 
+### Deleting an account signed in with Apple
+App Review requires the Sign in with Apple authorisation to be revoked when an account is
+deleted. `deleteAccount` in `site/assets/auth.js` does it: in the apps the native layer signs
+in with Apple again, revokes with the authorization code Apple hands back (the plugin's
+`revokeAccessToken`) and deletes the user; on the web the popup's access token goes to the
+SDK's `revokeAccessToken`. Nothing to set up beyond this section: the revocation uses the
+same Services ID and key.
+
 ## 7 · LinkedIn sign-in
 
 LinkedIn is not a built-in Firebase provider. Two workable designs:

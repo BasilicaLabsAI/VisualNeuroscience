@@ -61,6 +61,7 @@ const ERRORS = {
   "auth/expired-action-code":      "That sign-in link has expired — request a fresh one.",
   "auth/invalid-action-code":      "That sign-in link has already been used or is no longer valid — request a fresh one.",
   "auth/requires-recent-login":    "For safety, log in again before doing that.",
+  "auth/user-mismatch":            "That was a different account. Sign in with the account you want to delete, then try again.",
   "auth/unauthorized-domain":      "This copy of the app isn't authorised for sign-in — the site's domain needs adding in the Firebase console.",
   "auth/operation-not-allowed":    "That sign-in method isn't switched on for this app.",
   "auth/configuration-not-found":  "Sign-in isn't set up for this app yet.",
@@ -615,16 +616,18 @@ async function build(){
 
   /* ── delete the account, and the data with it ────────────────────────
      App Store guideline 5.1.1(v): an app that lets a person create an
-     account must let them destroy it, in the app. The saved files go
-     first — userdata.js keeps an index of every tool that ever saved,
-     because Firestore will not enumerate subcollections for a client —
-     then the profile, then the account itself. Firebase asks for a
-     recent sign-in before it will delete a user; that surfaces as the
-     friendly log-in-again sentence, and deleting right after signing in
-     always works. */
-  async function deleteAccount(){
-    const u = auth.currentUser;
-    if (!u) throw friendly({ code: "auth/requires-recent-login" });
+     account must let them destroy it, in the app, and one signed in with
+     Apple must have its Sign in with Apple authorisation revoked as it
+     goes. The saved files go first — userdata.js keeps an index of every
+     tool that ever saved, because Firestore will not enumerate
+     subcollections for a client — then the profile, then the account
+     itself. Firebase asks for a recent sign-in before it will delete a
+     user: Apple signs in again at the start, which the revocation needs
+     anyway, and before any waiting, so that a browser's popup still
+     follows the press that asked for it; Google signs in again on the
+     spot only when Firebase asks; an email address meets the log-in-again
+     sentence, and deleting right after logging in always works. */
+  async function sweepData(u){
     try{
       const idxRef = sdk.doc(db, "users", u.uid, "meta", "toolindex");
       const idx = await sdk.getDoc(idxRef);
@@ -641,8 +644,60 @@ async function build(){
       await sdk.deleteDoc(sdk.doc(db, "users", u.uid, "meta", "profile")).catch(() => {});
       profileCache = null;
     }catch(e){ console.warn("data cleanup incomplete:", e && e.message); }
+  }
+  function usesProvider(u, id){ return (u.providerData || []).some(p => p && p.providerId === id); }
+  async function deleteAccount(){
+    const u = auth.currentUser;
+    if (!u) throw friendly({ code: "auth/requires-recent-login" });
+    const apple = usesProvider(u, "apple.com"), google = usesProvider(u, "google.com");
+    /* In the apps the native layer signs in with Apple afresh, revokes the
+       authorisation with the code Apple hands back and deletes the user,
+       all through the native SDK, which is where Firebase keeps the
+       revocation; the webview's own session is then signed out, its user
+       gone. On the web the popup's result carries Apple's access token,
+       which the JS SDK revokes. Either way the sign-in must be the same
+       account, or nothing is touched. */
+    if (apple && plugin){
+      let res;
+      try{ res = await plugin.signInWithApple({ skipNativeAuth: false }); }
+      catch(err){ throw friendly({ code: canc(err) || "auth/network-request-failed" }); }
+      if (!res || !res.user || res.user.uid !== u.uid){
+        try{ await plugin.signOut(); }catch(_){}
+        throw friendly({ code: "auth/user-mismatch" });
+      }
+      await sweepData(u);
+      const code = res.credential && res.credential.authorizationCode;
+      if (code){ try{ await plugin.revokeAccessToken({ token: code }); }catch(e){ console.warn("apple revoke:", e && e.message); } }
+      try{ await plugin.deleteUser(); }
+      catch(err){ throw friendly(err); }
+      try{ await sdk.signOut(auth); }catch(_){}
+      return;
+    }
+    let appleToken = null;
+    if (apple){
+      let res;
+      try{ res = await sdk.reauthenticateWithPopup(u, new sdk.OAuthProvider("apple.com")); }
+      catch(err){ throw friendly(err); }
+      const c = sdk.OAuthProvider.credentialFromResult(res);
+      appleToken = c && c.accessToken;
+    }
+    await sweepData(u);
+    if (appleToken){ try{ await sdk.revokeAccessToken(auth, appleToken); }catch(e){ console.warn("apple revoke:", e && e.message); } }
     try{ await u.delete(); }
-    catch(err){ throw friendly(err); }
+    catch(err){
+      if (!(err && err.code === "auth/requires-recent-login" && google)) throw friendly(err);
+      try{
+        if (plugin){
+          const res = await plugin.signInWithGoogle({ skipNativeAuth: true });
+          const c = res && res.credential;
+          if (!c || !c.idToken) throw err;
+          await sdk.reauthenticateWithCredential(u, sdk.GoogleAuthProvider.credential(c.idToken, c.accessToken));
+        } else {
+          await sdk.reauthenticateWithPopup(u, new sdk.GoogleAuthProvider());
+        }
+        await u.delete();
+      }catch(e2){ throw friendly(canc(e2) ? { code: "auth/user-cancelled" } : e2); }
+    }
     if (plugin){ try{ await plugin.signOut(); }catch(_){} }
   }
 

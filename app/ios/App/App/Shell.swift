@@ -237,6 +237,43 @@ struct OutLink: View {
     }
 }
 
+/// A row that pushes one of the site's pages: the rows of the Support box,
+/// in OutLink's manner, with a chevron where an outward link carries an arrow.
+struct PageRow: View {
+    let name: String
+    let text: String
+    let page: Page
+
+    var body: some View {
+        NavigationLink(destination: WebPage(page: page)) {
+            HStack(alignment: .firstTextBaseline) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(name.uppercased())
+                        .font(Faces.brand(11, .footnote))
+                        .tracking(2.4)
+                        .foregroundColor(Palette.ink)
+                    Text(text)
+                        .font(Faces.serif(16, .body))
+                        .foregroundColor(Palette.ink60)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 8)
+                Image(systemName: "chevron.right")
+                    .font(Faces.brand(12, .footnote))
+                    .foregroundColor(Palette.ink)
+                    .accessibilityHidden(true)
+            }
+            .padding(.vertical, 12)
+            .overlay(alignment: .top) {
+                Rectangle().fill(Palette.ink35).frame(height: 1)
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(PressStyle())
+        .accessibilityElement(children: .combine)
+    }
+}
+
 /// The account and what goes with it: preferences, support and the credits.
 struct AccountTab: View {
     @EnvironmentObject private var store: AppStore
@@ -257,36 +294,13 @@ struct AccountTab: View {
                 .pickerStyle(.segmented)
                 .padding(.top, 14)
             }
-            Box(kicker: "Support", title: "Help and privacy",
-                text: "Questions, problems and requests to delete an account go straight to the developer.") {
+            Box(kicker: "Support", title: "Help, privacy and terms",
+                text: "Questions and problems go straight to the developer. The account is deleted from its own page, in two presses.") {
                 VStack(alignment: .leading, spacing: 0) {
                     OutLink(name: "Email", handle: "fkarim@visualneuroscience.ai", url: "mailto:fkarim@visualneuroscience.ai")
-                    NavigationLink(destination: WebPage(page: .privacy)) {
-                        HStack(alignment: .firstTextBaseline) {
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text("PRIVACY & SUPPORT")
-                                    .font(Faces.brand(11, .footnote))
-                                    .tracking(2.4)
-                                    .foregroundColor(Palette.ink)
-                                Text("What the app keeps, and how to reach the developer")
-                                    .font(Faces.serif(16, .body))
-                                    .foregroundColor(Palette.ink60)
-                                    .fixedSize(horizontal: false, vertical: true)
-                            }
-                            Spacer(minLength: 8)
-                            Image(systemName: "chevron.right")
-                                .font(Faces.brand(12, .footnote))
-                                .foregroundColor(Palette.ink)
-                                .accessibilityHidden(true)
-                        }
-                        .padding(.vertical, 12)
-                        .overlay(alignment: .top) {
-                            Rectangle().fill(Palette.ink35).frame(height: 1)
-                        }
-                        .contentShape(Rectangle())
-                    }
-                    .buttonStyle(PressStyle())
-                    .accessibilityElement(children: .combine)
+                    PageRow(name: "Privacy & Support", text: "What the app keeps, and how to reach the developer", page: .privacy)
+                    PageRow(name: "Terms of Use", text: "What you may do here, and what we promise and do not", page: .terms)
+                    PageRow(name: "Delete your account", text: "Remove the account, its saved models and its progress, for good", page: .deleteAccount)
                 }
                 .padding(.top, 10)
             }

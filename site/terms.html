@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Terms of Use — VisualNeuroscience.AI</title>
+<meta name="description" content="The terms of use of VisualNeuroscience.AI: an educational reference, free, with optional accounts; what you may do with the material, and the limits of what we promise.">
+<!-- link previews. The card is built by site/share.html and rendered to
+     assets/social-card.jpg; og:image has to be absolute, so this origin is
+     the one thing to change if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="Terms of Use — VisualNeuroscience.AI">
+<meta property="og:description" content="The terms of use of VisualNeuroscience.AI: an educational reference, free, with optional accounts; what you may do with the material, and the limits of what we promise.">
+<meta property="og:url" content="https://visualneuroscience.ai/terms.html">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The flow-state network ring over orange-tinted MNI152 brain slices, with the VisualNeuroscience.AI wordmark at its centre.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="fonts/fonts.css">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+  --quiet:#8A8A8A;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+  --quiet:#8A8A8A;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  margin:0 0 3rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+a{ color:var(--ink); }
+svg{ display:block; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* masthead, shared with the rest of the site */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:.65em; height:.65em; flex:none; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{
+  font-family:var(--font-display); font-size:1.35rem;
+  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+}
+.title-strip .anno{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60);
+}
+
+.lede{
+  font-family:var(--font-serif); font-size:1.02rem; line-height:1.6;
+  margin:0 0 calc(var(--gap) * 1.6);
+}
+
+/* ── the shelf of studies ───────────────────────────────────────────────
+   A grid that reads correctly with one card and with a dozen: the columns
+   are sized, not divided, so a lone study sits at its natural width rather
+   than stretching across the page. */
+.shelf{
+  display:grid; gap:var(--gap);
+  grid-template-columns:repeat(auto-fill, minmax(330px, 420px));
+}
+.study{
+  border:1px solid var(--hair); background:var(--paper);
+  display:flex; flex-direction:column; text-decoration:none; color:var(--ink);
+}
+@media (hover: hover){ .study:hover{ text-decoration:none; } }
+@media (hover: hover){ .study:hover .study-body{ background:color-mix(in srgb, var(--ink) 6%, transparent); } }
+.study-fig{
+  border-bottom:1px solid var(--hair); background:#000000;
+  aspect-ratio:902 / 409; overflow:hidden; position:relative;
+}
+.study-fig img{ width:100%; height:100%; object-fit:cover; display:block; }
+.study-body{ padding:1rem 1.05rem 1.15rem; transition:background .2s ease; }
+.study-kicker{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+}
+.study h2{
+  font-family:var(--font-display); font-weight:400;
+  font-size:1.24rem; line-height:1.15; letter-spacing:.01em; margin:.35rem 0 .45rem;
+}
+.study p{ font-size:.94rem; line-height:1.55; color:var(--ink-60); }
+.study .cite{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.82rem; color:var(--ink-35); margin-top:.7rem;
+}
+.study .go{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.24em; text-transform:uppercase; margin-top:.85rem;
+  display:inline-flex; align-items:center; gap:.45rem;
+}
+@media (hover: hover){ .study:hover .go{ text-decoration:underline; text-underline-offset:3px; } }
+
+/* a slot for what is not built yet, so the shelf reads as a shelf */
+.study.soon{ border-style:dashed; cursor:default; }
+.study.soon .study-fig{ background:none; display:flex; align-items:center; justify-content:center; }
+.study.soon .study-body{ background:none; }
+.study.soon h2, .study.soon p{ color:var(--ink-35); }
+
+.attrib{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.85rem; color:var(--ink-60);
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2rem;
+}
+
+/* ── what is planned but not built ──────────────────────────────────────
+   Small tiles rather than the full study card: thirteen empty cards at
+   that size would be a wall of dashed boxes pretending to be content.
+   Each says what the drug acts on, which is enough to show the section
+   has a shape without claiming any of it is written yet. */
+.drugs-sec{ margin-top:calc(var(--gap) * 3); }
+.drug-grid{
+  display:grid; gap:var(--gap); list-style:none; margin:0; padding:0;
+  grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));
+}
+.drug{
+  border:1px dashed var(--ink-35); padding:.85rem .9rem 1rem;
+  display:flex; flex-direction:column; min-width:0;
+}
+.drug-name{
+  font-family:var(--font-display); font-weight:400;
+  font-size:1.12rem; line-height:1.15; color:var(--ink);
+}
+.drug-sub{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.8rem; color:var(--ink-35); margin-top:.15rem; overflow-wrap:anywhere;
+}
+.drug-target{
+  font-family:var(--font-serif); font-size:.88rem; line-height:1.45;
+  color:var(--ink-60); margin-top:.5rem;
+}
+.drug-target sub{ font-size:.72em; }
+.drug-soon{
+  font-family:var(--font-brand); font-weight:500; font-size:.52rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-35);
+  margin-top:auto; padding-top:.85rem;
+}
+
+/* ── the policy ─────────────────────────────────────────────────────── */
+.policy{ max-width:72ch; margin:0 auto; }
+.policy h2{
+  font-family:var(--font-brand); font-weight:600; font-size:.66rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
+  border-bottom:1px solid var(--ink); padding:.2rem .1rem .45rem;
+  margin:calc(var(--gap) * 2.4) 0 var(--gap);
+}
+.policy h2:first-of-type{ margin-top:var(--gap); }
+.policy p{ font-size:1rem; line-height:1.65; margin-bottom:.9rem; }
+.policy ul{ margin:0 0 1rem 1.1rem; }
+.policy li{ font-size:1rem; line-height:1.6; margin-bottom:.45rem; }
+.policy b{ font-weight:400; color:var(--ink); }
+.policy .note{
+  font-family:var(--font-serif); font-style:italic; font-size:.9rem;
+  color:var(--ink-60); border-left:2px solid var(--ink-35);
+  padding-left:.8rem; margin:1rem 0;
+}
+.policy .stamp{
+  font-family:var(--font-brand); font-size:.55rem; letter-spacing:.24em;
+  text-transform:uppercase; color:var(--ink-35);
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2.4rem;
+}
+</style>
+</head>
+<body>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="Site">
+    <a href="regions.html">3D Region Atlas</a>
+    <a href="brodmann.html">Brodmann Area Atlas</a>
+    <a href="microanatomy.html">Microanatomy</a>
+    <a href="molecular.html">Molecular</a>
+    <a href="network-atlas.html">Network Atlas</a>
+    <a href="tracts.html">Tractography</a>
+    <a href="studies.html">Visualizing Studies</a>
+    <a href="textbook.html">Digital Textbook</a>
+    <a href="practice.html">Practice</a>
+    <a href="about.html">About</a>
+    <span class="nav-tools"><button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button></span>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<div class="title-strip">
+  <h1 class="name">Terms of Use</h1>
+  <span class="anno">what you may do here, and what we promise and do not</span>
+</div>
+
+<div class="policy">
+
+<p class="lede">VisualNeuroscience.AI is a free educational atlas of the human brain: this website, the iPhone, iPad, Mac and Android apps, the Apple Vision Pro app and the MCP server that answers from the same data. It is made by Fadil Karim, who is &ldquo;we&rdquo; below. Using any of them means you accept these terms. They are short, and written to be read; what is collected about you, which is very little, is the <a href="privacy.html">privacy policy</a>, a separate page.</p>
+
+<h2>What this is</h2>
+<p>A reference for study. The pages draw published atlases and summarise published work, and each says where its data came from and where the evidence stops. <b>Nothing here is medical advice, a diagnosis, a treatment or a medical device.</b> It is not a substitute for a doctor, and it must not be used to make decisions about anyone&rsquo;s health. If someone is unwell, speak to a clinician; in an emergency, call the emergency services.</p>
+<p>The anatomy is approximate by nature: atlases are averages, region borders are conventions, and the receptor densities and network states come from studies of particular groups of people with the caveats their sources give. We correct errors when we learn of them, and we would rather hear of one than not, but we cannot promise that everything is right or complete.</p>
+
+<h2>Using it</h2>
+<p>Everything is free, and nothing needs an account. You may use the site, the apps and the MCP server for your own study, teaching and research, in any way that does not harm the service or other people. You may not try to break into it, overload it, scrape it at a rate that slows it for others, pass off its answers or its content as your own, or use it for anything unlawful. The site and the apps are made for students and professionals; they are not directed at children.</p>
+
+<h2>Accounts</h2>
+<p>An account is optional. It keeps your saved models and your practice progress so that the same work is there on the web and in the apps. If you make one, give an email address that reaches you, keep your sign-in to yourself, and choose a username that does not impersonate anyone or offend. One account is one person. You can see everything it holds, download a copy of it and delete it at any time, on the <a href="account.html">account page</a> or from the account box on any page; the <a href="delete-account.html">deletion page</a> gives the steps for every platform. We may suspend or delete an account that is used to break these terms.</p>
+<p>What you save to an account, the models and their names and your progress, is yours. We store it only to give it back to you, we show it to no one else, and it goes when the account does.</p>
+
+<h2>The material and its licences</h2>
+<p>The text, drawings, interface and code of VisualNeuroscience.AI are &copy; Fadil Karim. You may quote and reproduce them for study and teaching with attribution to VisualNeuroscience.AI; anything beyond that needs our written permission.</p>
+<p>Much of what the pages draw belongs to others and comes under their own licences, which these terms do not change. The textbook is adapted from OpenStax under CC BY-NC-SA 4.0; the in vivo receptor maps are the Hansen et al. compilation under CC BY-NC-SA 4.0 and the autoradiography is Zilles and Palomero-Gallagher under CC BY 4.0; the AAL atlas, the MNI152 template, the HCP1065 tractogram and the Brodmann atlas are used under their own terms, the Brodmann diagram by permission of IFEN, and the viewers are built on NiiVue and three.js under their open licences. Each page names its sources, the About and Reference panels say more, and anything you take from those sources you take under their licence, not ours.</p>
+
+<h2>The MCP server</h2>
+<p>The server at mcp.visualneuroscience.ai answers questions from assistants that speak the Model Context Protocol, from the same public data as these pages, and the four account tools act on your own account only after you sign in and press Allow. It is offered as it is: we may change its tools, its address or its answers, or withdraw it, and an assistant&rsquo;s own words around its answers are the assistant&rsquo;s, not ours.</p>
+
+<h2>The apps</h2>
+<p>The apps are the same site, carried inside them. The app from the App Store is licensed to you under Apple&rsquo;s standard <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" rel="noopener">Licensed Application End User License Agreement</a>, which governs the licence of the app itself where these terms say less; Apple is not responsible for the app or its content, and has no obligation to support it. The app from Google Play comes under Google Play&rsquo;s terms in the same way. In both, these terms govern the content and the services.</p>
+
+<h2>Availability and changes</h2>
+<p>We may add, change or remove features at any time; every release is recorded in the ledger on GitHub, and the apps carry the version they were built from. We do not promise that the site or the server will always be up, and we may take them down for maintenance or for good.</p>
+
+<h2>No warranty, and the limit of our liability</h2>
+<p>The site, the apps and the server are provided as they are and as available, without warranty of any kind, express or implied, including that they are accurate, complete, fit for a particular purpose or free of errors. To the fullest extent the law allows, we are not liable for any loss or damage arising from your use of them or your reliance on anything in them, including indirect or consequential loss. Nothing in these terms excludes or limits liability for death or personal injury caused by negligence, for fraud, or for anything else that cannot be excluded under the law of England and Wales, and nothing in them affects the rights you have as a consumer under the law where you live.</p>
+
+<h2>Ending</h2>
+<p>You may stop using the site and the apps at any time, and delete your account at any time. We may end your access, or your account, if you break these terms, and we may end the service as a whole with notice on the site.</p>
+
+<h2>The law</h2>
+<p>These terms are governed by the law of England and Wales, and the courts of England and Wales have jurisdiction over any dispute, except that if you live elsewhere and the law there gives you the right to bring a claim at home, you keep it.</p>
+
+<h2>Changes to these terms</h2>
+<p>If these terms change, the date below changes with them, and a change that matters is announced on the site. Using the site or the apps after a change means you accept the terms as changed.</p>
+
+<h2>Contact</h2>
+<p>Write to <a href="mailto:fkarim@visualneuroscience.ai"><b>fkarim@visualneuroscience.ai</b></a> and a person reads it. VisualNeuroscience.AI is made by Fadil Karim.</p>
+
+<p class="stamp">Last updated 21 October 2026 &middot; VisualNeuroscience.AI &middot; made by Fadil Karim</p>
+
+</div>
+
+
+</main>
+
+<script src="assets/native.js"></script>
+<script src="assets/navbar.js"></script>
+<script>
+"use strict";
+(function(){
+  var themeBtn = document.getElementById("themeBtn");
+  var themeLbl = document.getElementById("themeLbl");
+  if (document.documentElement.getAttribute("data-theme") === "dark"){
+    themeLbl.textContent = "Light"; themeBtn.setAttribute("aria-pressed", "true");
+  }
+  themeBtn.addEventListener("click", function(){
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark";
+    if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+    else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+    themeBtn.setAttribute("aria-pressed", String(!dark));
+    try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+  });
+})();
+</script>
+
+<script src="assets/firebase-config.js"></script>
+<script type="module" src="assets/auth-ui.js"></script>
+</body>
+</html>

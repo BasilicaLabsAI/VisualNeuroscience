@@ -83,6 +83,17 @@ Read this first in every session. It is the handover; nothing else needs pasting
   it. The counts are read in the Firebase console under Analytics. The vendored bundle is rebuilt with
   `sh scripts/firebase/build.sh` from `scripts/firebase/entry.js` (`docs/AUTH-SETUP.md` §8 and its appendix).
 - Licences and permissions are recorded in `docs/PERMISSIONS.md`; keep it in step with any new data source.
+- Legal pages (since v11.41): `site/privacy.html`, `site/terms.html` and `site/delete-account.html`, linked from the foot of
+  every page beside the privacy policy and from the app's Account tab (`PageRow` rows in `Shell.swift`: privacy, terms,
+  and Delete your account, which opens `account.html#delete`); the Play listing's deletion link is the deletion page and
+  the App Store notes name it (`app/store/LISTING.md`, `PLAY-STORE.md`). Account deletion (`deleteAccount` in
+  `site/assets/auth.js`) revokes Sign in with Apple as the account goes: in the apps the native layer signs in with
+  Apple again, revokes with the authorization code (`revokeAccessToken`) and deletes the user, on the web the popup's
+  access token goes to the SDK's `revokeAccessToken`; a Google account Firebase asks to sign in again does so on the
+  spot. The bundle exports those names (`scripts/firebase/entry.js`; rebuilt here from a scratch `npm install
+  firebase@<NOTICE version>` with `NODE_PATH` pointing at it, since `app/node_modules` is absent). The
+  feature-announcements box offered as an account is made starts clear (PECR), in the account box and on the Create
+  account form (`newsCheck` in `auth-ui.js`).
 - The owner's research documents on single regions are kept as supplied in `backend/data/regions/` (see its README).
   Detailed region function descriptions are to be written from them only when the owner asks; until then, store new
   ones there unchanged.

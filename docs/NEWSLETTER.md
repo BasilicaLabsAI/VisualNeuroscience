@@ -22,10 +22,11 @@ repository or the worker.
   so installed copies pick it up.
 
 ## The box on a new account
-Making an account offers the same list: a tick box, ticked to start with and labelled as
+Making an account offers the same list: a tick box, clear to start with (a pre-ticked box is
+no consent to email under PECR; since v11.41) and labelled as
 feature announcements only, on the Create account form, and for an account made with Google,
 Apple or a sign-in link (which meets no form) beside the username the first time the account
-card opens. Left ticked, the account's address is posted to the worker exactly as the
+card opens. Ticked, the account's address is posted to the worker exactly as the
 newsletter box posts one, with `page` set to `account`, so it joins as pending and is on the
 list only once its owner confirms Mailchimp's email. A failure there is logged in the browser
 and never costs the account. An address Apple hides behind privaterelay.appleid.com receives

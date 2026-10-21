@@ -35,6 +35,24 @@ Interactive brain atlas
 https://visualneuroscience.ai/privacy.html
 ```
 
+**Terms of Use**: the optional licence agreement field can stay empty, since
+Apple's standard EULA applies and the terms page says so; the page is linked
+from the app's Account tab.
+
+```
+https://visualneuroscience.ai/terms.html
+```
+
+**Account deletion** (guideline 5.1.1(v)): in the app, Account tab → Delete
+your account, or Open your account → Delete account…, pressed twice; the same
+button stands at the foot of every Log in box. An account signed in with
+Apple has its Sign in with Apple authorisation revoked as it goes, as the
+guideline requires (site v11.41). The page to name in the review notes:
+
+```
+https://visualneuroscience.ai/delete-account.html
+```
+
 ## Version 1.0
 
 **Promotional Text** (160/170)

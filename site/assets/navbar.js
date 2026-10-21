@@ -85,7 +85,8 @@
     "network-atlas.html": "Network Atlas",
     "studies.html": "Visualizing Studies", "hallucinations.html": "Hallucinations",
     "practice.html": "Practice", "textbook.html": "Digital Textbook",
-    "about.html": "About", "privacy.html": "Privacy & Support"
+    "about.html": "About", "privacy.html": "Privacy & Support",
+    "terms.html": "Terms of Use", "delete-account.html": "Delete your account"
   };
 
   function fileOf(url){
