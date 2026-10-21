@@ -535,7 +535,14 @@ table.dtable td.num{ font-size:.84rem; }
 .rx-slide.rxfig{ display:block; margin:var(--gap) 0 calc(var(--gap) * 1.5); }
 .rx-slide-head{ display:flex; justify-content:space-between; align-items:center; gap:.6rem; margin-bottom:.5rem;
   font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60); }
-.rx-slide-nav{ display:inline-flex; gap:.3rem; }
+/* the head's dropdown narrows the row, and the table beneath it, to one
+   neurotransmitter's receptors; the count and the arrows follow it, on a
+   line of their own where the head is too narrow for the three */
+.rx-slide-head{ flex-wrap:wrap; }
+.rx-slide-pick{ flex:0 1 15rem; min-width:11rem; letter-spacing:0; text-transform:none; }
+.rx-slide-head #types-slide-count{ flex:1 1 auto; white-space:nowrap; }
+.rx-slide-nav{ display:inline-flex; gap:.3rem; margin-left:auto; }
+.rx-slide-track > .rxreg-item.out{ display:none; }
 .rx-slide-nav button{ border:1px solid var(--ink-35); background:var(--paper); color:var(--ink); cursor:pointer; font:inherit; font-size:.8rem; line-height:1; padding:.3rem .6rem; }
 @media (hover: hover){ .rx-slide-nav button:hover{ border-color:var(--ink); } }
 .rx-slide-track{ list-style:none; margin:0; padding:0 0 .5rem; display:flex; align-items:flex-start; gap:var(--gap); overflow-x:auto; scroll-snap-type:x mandatory;
@@ -1382,6 +1389,9 @@ main.screen.one.land{ flex-direction:row; }
             <div class="rx-tab rx-scroll hidden" id="primer-pane" role="tabpanel" aria-labelledby="rxtab-primer">
               <div class="rx-slide rxfig region" id="types-slide" data-for="">
                 <div class="rx-slide-head">
+                  <div class="selwrap rx-slide-pick">
+                    <select id="types-family" aria-label="Neurotransmitter"></select>
+                  </div>
                   <span id="types-slide-count" aria-live="polite"></span>
                   <span class="rx-slide-nav">
                     <button type="button" data-slide="-1" aria-label="Previous receptor">&larr;</button>
@@ -3391,7 +3401,7 @@ function renderTypesStrip() {
     receptors().slice().sort((a, b) => FAMILIES.indexOf(a.family) - FAMILIES.indexOf(b.family)).forEach(r => {
       const it = F.entry(data, r.id);
       const li = document.createElement("li");
-      li.className = "rxreg-item"; li.dataset.rx = r.id;
+      li.className = "rxreg-item"; li.dataset.rx = r.id; li.dataset.family = r.family;
       const cap = F.el("div", "rxreg-cap");
       cap.appendChild(F.el("span", "rx-slide-fam", r.family));
       if (it) { const kind = data.kinds[it.kind]; li.appendChild(F.diagram(kind, F.fillFor(it))); cap.appendChild(F.kicker(kind)); }
@@ -3410,10 +3420,34 @@ function renderTypesStrip() {
       track.appendChild(li);
     });
     F.popups(data.rx.glossary, data.rx.steps);
+    applyTypesFilter(false);
     markStrip();
     slideTo(axisMode === "receptor" ? dropdown.value : null, false);
   }).catch(err => { if (window.console) console.warn(err); });
 }
+/* the head's dropdown: one neurotransmitter's receptors in the row and in
+   the table beneath, or every one; the families stand in the catalogue's
+   order. A card outside the pick is taken out of the row, so the count,
+   the arrows and the slide see only the cards that show */
+let typesFamily = "";
+const TABLE_FAMILY = { Noradrenaline: "Adrenergic" };   /* the table's name for a family, where it differs */
+function fillTypesFamilies() {
+  const sel = document.getElementById("types-family");
+  if (!sel || sel.options.length) return;
+  const seen = new Set(RX.catalogue.map(c => c.family));
+  const every = document.createElement("option"); every.value = ""; every.textContent = "Every neurotransmitter"; sel.appendChild(every);
+  FAMILIES.filter(f => seen.has(f)).forEach(f => { const o = document.createElement("option"); o.value = f; o.textContent = f; sel.appendChild(o); });
+  sel.addEventListener("change", () => { typesFamily = sel.value; applyTypesFilter(true); renderTypesTable(); });
+}
+function visibleCards() { return Array.from(document.getElementById("types-slide-track").children).filter(c => !c.classList.contains("out")); }
+function applyTypesFilter(slide) {
+  const track = document.getElementById("types-slide-track");
+  Array.from(track.children).forEach(li => li.classList.toggle("out", !!typesFamily && li.dataset.family !== typesFamily));
+  const cards = visibleCards(), picked = axisMode === "receptor" ? dropdown.value : null;
+  if (slide && cards.length) slideTo(cards.some(c => c.dataset.rx === picked) ? picked : cards[0].dataset.rx, false);
+  stripCount();
+}
+fillTypesFamilies();
 function markStrip() {
   const on = axisMode === "receptor" ? dropdown.value : null;
   document.querySelectorAll("#types-slide-track > .rxreg-item").forEach(li => li.classList.toggle("on", li.dataset.rx === on));
@@ -3421,22 +3455,22 @@ function markStrip() {
 }
 function stripCount() {
   const track = document.getElementById("types-slide-track"), out = document.getElementById("types-slide-count");
-  const cards = track.children; if (!cards.length) { out.textContent = ""; return; }
+  const cards = visibleCards(); if (!cards.length) { out.textContent = ""; return; }
   const step = cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : cards[0].offsetWidth;
   if (!step) return;                        /* the pane is hidden; counted when it shows */
-  const i = Math.min(cards.length - 1, Math.max(0, Math.round(track.scrollLeft / step)));
-  out.textContent = "Every receptor \u00B7 " + (i + 1) + " of " + cards.length + " \u00B7 " + shortName(receptors().find(r => r.id === cards[i].dataset.rx) || { name: "" });
+  const i = Math.min(cards.length - 1, Math.max(0, Math.round((track.scrollLeft - (cards[0].offsetLeft - track.offsetLeft)) / step)));
+  out.textContent = (typesFamily || "Every receptor") + " \u00B7 " + (i + 1) + " of " + cards.length + " \u00B7 " + shortName(receptors().find(r => r.id === cards[i].dataset.rx) || { name: "" });
 }
 /* slide the strip to a receptor's card */
 function slideTo(id, show) {
   const track = document.getElementById("types-slide-track");
-  const card = id && track.querySelector("[data-rx=\"" + id + "\"]");
+  const card = id && track.querySelector("[data-rx=\"" + id + "\"]:not(.out)");
   if (!card) return;
   track.scrollTo({ left: card.offsetLeft - track.offsetLeft, behavior: show ? "smooth" : "auto" });
 }
 document.getElementById("types-slide-track").addEventListener("scroll", () => { clearTimeout(stripCount._t); stripCount._t = setTimeout(stripCount, 80); }, { passive: true });
 document.querySelectorAll("#types-slide [data-slide]").forEach(b => b.addEventListener("click", () => {
-  const track = document.getElementById("types-slide-track"), c = track.children;
+  const track = document.getElementById("types-slide-track"), c = visibleCards();
   if (!c.length) return;
   const step = c[1] ? c[1].offsetLeft - c[0].offsetLeft : c[0].offsetWidth;
   track.scrollBy({ left: step * Number(b.dataset.slide), behavior: "smooth" });
@@ -3494,7 +3528,9 @@ function renderTypesTable() {
   let html = "<table class=\"data-table\"><thead><tr>";
   for (const h of TYPES.header) html += "<th>" + escapeHtml(h) + "</th>";
   html += "</tr></thead><tbody>";
+  const want = typesFamily ? (TABLE_FAMILY[typesFamily] || typesFamily) : null;
   for (const row of TYPES.rows) {
+    if (want && row[2] !== want) continue;
     const id = rxForRow(row), c = id && RX.catalogue.find(x => x.id === id);
     html += "<tr" + (c ? " class=\"pickable" + (id === picked ? " on" : "") + "\" data-rx=\"" + escapeHtml(id) + "\" title=\"Chart " + escapeHtml(c.name) + "\"" : "") + "><td class=\"name\">"
       + (c ? "<button type=\"button\" data-rx=\"" + escapeHtml(id) + "\">" + cellOrDash(row[0]) + "</button>" : cellOrDash(row[0])) + "</td>";

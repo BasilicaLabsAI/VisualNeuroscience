@@ -120,7 +120,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   buttons raise one pop-up at a time over the views (`.pop`: What they do, Receptor graph and Neurotransmitters, which
   open the receptor window (`#popRx`, `.pop-tabbed`) on one of its tabs: since v11.40 a row of tabs under its head,
   Graph, Receptor (named Region when charting by region), Neurotransmitters, Receptor types and Sources, one pane at a
-  time (`showRxTab`), the window one height whichever is open (`#popRx{height}`; the whole stage on a phone). The
+  time (`showRxTab`), the window one height whichever is open (`#popRx{height}`; the whole stage on a phone). The Receptor types pane's row of cards and the table beneath are
+  filtered by the dropdown at the row's head (since v11.50: `#types-family`, `typesFamily`, `applyTypesFilter()`; a card
+  outside the pick is `.out`, and the count, arrows and slide see `visibleCards()` only; the table's Adrenergic is the
+  catalogue's Noradrenaline, `TABLE_FAMILY`). The
   graph and the heat table are fitted to their tab and scroll inside their own box only when too big for it
   (`chartHeight()` sizes the graph to its room, never under `CHART.minHeight`; `fitHeat()` caps the column names to
   two fifths of the box with `--heat-cap`), and the tabs of text scroll down. The Density Table is kept in the code
