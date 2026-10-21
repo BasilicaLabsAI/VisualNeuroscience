@@ -169,7 +169,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   opacity) and the stage with the four views; the bar's buttons each raise a pop-up of one category of what stood
   below the scans (`#popReading`, which `HX_SCREEN.open` raises as a region is picked from the list; `#popCircuit` with
   the two circuit drawings and their tabs; `#popWho`, `#popImaging`, `#popWindows`, `#popLimits`; `#popExport` with
-  `#export3d`; `#popRef` with the paper and `#scan-note`), with the readouts `#statState` and `#statRegion`. The chrome
+  `#export3d`; `#popRef` with the paper and `#scan-note`), with the readouts `#statState` and `#statRegion`. The box's
+  state buttons and the circuit's tabs are one `state` (v11.44; `renderAll` paints the circuit too), and the reading
+  gives both states, `#m-healthy` and `#m-halluc`, the one showing marked `.on`. The chrome
   (the screen, drawer, bar, pops, `.one` and `.land` rules, and the screen script with its `vn-hx-drawer` and
   `vn-hx-view` keys) is a copy of the atlas's with the same names: a change to the chrome belongs in both pages.
 - The 3D Region Atlas, the Network Atlas and, since v11.17, the Hallucinations study (`site/hallucinations.html`)

@@ -304,6 +304,8 @@ td.hl{ color:var(--over); }
   color:var(--ink-60); margin-top:1rem; padding-top:.6rem; border-top:1px solid var(--ink-35);
 }
 .reading .empty{ font-style:italic; color:var(--ink-60); font-size:.98rem; margin:0; }
+/* the state showing on the scan is marked beside its heading */
+.reading .m-tag.on::after{ content:"showing"; margin-left:.6rem; padding:.1rem .4rem .05rem; border:1px solid var(--ink-35); border-radius:999px; letter-spacing:.14em; color:var(--ink); }
 .pop .sub{ color:var(--ink-60); margin:0 0 1.1rem; font-size:.95rem; }
 .pop .source{ margin-bottom:var(--gap); }
 .pop .page-foot{ margin-top:1.4rem; padding-top:1rem; }
@@ -607,8 +609,10 @@ main.screen.one.land{ flex-direction:row; }
               <div class="panel-latin" id="m-latin"></div>
               <h3>What it does</h3>
               <p id="m-role"></p>
-              <h3 id="m-stateh">In hallucination</h3>
-              <p id="m-state"></p>
+              <h3 class="m-tag" id="m-healthyh">When perception is intact</h3>
+              <p id="m-healthy"></p>
+              <h3 class="m-tag" id="m-halluch">In hallucinating people</h3>
+              <p id="m-halluc"></p>
               <div class="src" id="m-src"></div>
             </div>
           </div>
@@ -621,7 +625,7 @@ main.screen.one.land{ flex-direction:row; }
   <p class="sub">Allen's model is a claim about signal flow. Hearing is not what breaks — someone who hallucinates hears the world exactly as anyone else does. What breaks is the handling of the brain's own inner speech: the control regions normally send a copy of the command with it, marking it as self-generated, and when that copy fails to arrive the same inner speech is heard as a voice from somewhere else.</p>
 
   <div class="mech-tabs" role="tablist" aria-label="Brain state">
-    <button class="mech-tab active" id="tab-healthy" type="button" role="tab" aria-selected="true" data-mstate="healthy">Healthy</button>
+    <button class="mech-tab active" id="tab-healthy" type="button" role="tab" aria-selected="true" data-mstate="healthy">Normal audition</button>
     <button class="mech-tab" id="tab-halluc" type="button" role="tab" aria-selected="false" data-mstate="halluc">Hallucinating</button>
   </div>
 
@@ -1115,8 +1119,12 @@ function renderPanel(){
   $("m-title").textContent = d.t;
   $("m-latin").textContent = d.l + (region.note ? " · " + region.note : "");
   $("m-role").textContent = d.role;
-  $("m-stateh").textContent = state === "halluc" ? "What changes" : "When perception is intact";
-  $("m-state").textContent = state === "halluc" ? d.halluc : d.healthy;
+  /* both states, whichever is showing, the one showing marked; a region
+     the editorial reports no change in says so rather than falling silent */
+  $("m-healthy").textContent = d.healthy;
+  $("m-halluc").textContent = d.halluc || "Boksa reports no change here in hallucinating people.";
+  $("m-healthyh").classList.toggle("on", state !== "halluc");
+  $("m-halluch").classList.toggle("on", state === "halluc");
   $("m-src").textContent = "Boksa reports: " + d.src +
     (region.approx ? " · drawn on the nearest atlas parcels" : "");
 }
@@ -1144,10 +1152,9 @@ const MECH_READ = {
     "outside. Hearing itself is untouched — the pathway above runs exactly as it always did."
 };
 
-let mechState = "healthy";
 
 function paintMechanism(){
-  const halluc = mechState === "halluc";
+  const halluc = state === "halluc";
   const inner = $("mechInner");
   const q = sel => inner.querySelector(sel);
 
@@ -1179,10 +1186,10 @@ function paintMechanism(){
   q(".mx-out-2").textContent = halluc ? "from outside" : "one's own";
 
   $("mechWhich").textContent = halluc ? "arriving untagged" : "tagged as one's own";
-  $("mechRead").textContent = MECH_READ[mechState];
+  $("mechRead").textContent = MECH_READ[state];
 
   document.querySelectorAll(".mech-tab").forEach(t => {
-    const on = t.dataset.mstate === mechState;
+    const on = t.dataset.mstate === state;
     t.classList.toggle("active", on);
     t.setAttribute("aria-selected", String(on));
   });
@@ -1191,7 +1198,9 @@ function paintMechanism(){
 
 function bindMechanism(){
   document.querySelectorAll(".mech-tab").forEach(t => {
-    t.addEventListener("click", () => { mechState = t.dataset.mstate; paintMechanism(); });
+    /* the circuit's tabs and the drawer's state buttons are one state: a
+       change in either shows in the other, on the scan and in the reading */
+    t.addEventListener("click", () => { state = t.dataset.mstate; renderAll(); });
   });
   /* a region in either circuit picks the same region the rail's list would */
   document.querySelectorAll(".mech-block [data-region]").forEach(g => {
@@ -1229,7 +1238,7 @@ function renderAll(){
   });
   $("legendKey").classList.toggle("hidden", state !== "halluc");
   renderPanel();
-  markMechanismSelection();
+  paintMechanism();
   repaint();
 }
 

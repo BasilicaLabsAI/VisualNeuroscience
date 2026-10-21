@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.44 — 21 October 2026 — One brain state in the Hallucinations study, and a reading of both
+Commit · Make the Hallucinations study's circuit tabs and state buttons one state, and have the reading give both states
+
+The Hallucinations study's two switches are one. The Normal audition and Hallucinating buttons in the box and the tabs over the circuit now move together: change either and the scan, the circuit, the readout and the reading all follow, and the circuit's first tab reads Normal audition as the box's does. The reading of a picked region now gives both states whatever the scan is showing, what the region does when perception is intact and what happens to it in hallucinating people, the one showing marked beside its heading; a region the editorial reports no change in says so rather than falling silent.
+
 ## v11.43 — 21 October 2026 — The Hallucinations study as a screen of its own
-Commit · Lay the Hallucinations study out as the 3D Region Atlas is, its sections behind a bar of buttons of their own
+Commit `57f3311` · Lay the Hallucinations study out as the 3D Region Atlas is, its sections behind a bar of buttons of their own
 
 The Hallucinations study, the visualisation of Boksa's editorial on the hallucinating brain, is now one screen in the 3D Region Atlas's manner. The four views fill the room under the header, the brain state and the regions are a box in the corner that folds away on its tab, and what stood below the scans rises from a bar along the bottom, one window at a time, each category behind a button of its own: Reading, the picked region's part in the model, which opens as a region is picked from the list; Circuit, Allen's model drawn as signal flow with its Healthy and Hallucinating tabs; Not only in illness, the figures on who reports hallucinations; Imaging, what the structural, functional and connectivity studies found; Mechanism, the three windows onto it and Boksa's reservation on each; Where it stops, the limits of the evidence; then Export, the circuit as a 3D model, and Reference, the paper, its links and what the page is drawn from. The bar's readouts give the state showing and the region picked. On a phone the views show one at a time or four together, the box slides in from the right, and held sideways the bar stands along the right edge, as the atlas does.
 
