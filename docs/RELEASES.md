@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.49 — 21 October 2026 — The graph's controls in one line
+Commit · Stand the receptor graph's controls in one line so the graph shows its full height
+
+On an iPad the receptor window's Graph tab stood its three controls one above another, and the graph under them had to scroll to show its whole height. Where there is room the controls now stand in one line, the receptor dropdown at the left and the two pairs of buttons, source and axis, together at the far right, so the graph has the height to show whole; a phone keeps the rows. A graph wider than its box, which scrolls sideways, is now measured with its "scroll sideways" line in place and, on a computer whose scrollbars take room, with that scrollbar kept out of its height, so it no longer stands a little taller than its box and scrolls down for the difference.
+
 ## v11.48 — 21 October 2026 — The opacity slider within reach
-Commit · Bring the Hallucinations study's opacity slider up where an iPad shows it, and keep a drag on either slider from scrolling the box
+Commit `118681f` · Bring the Hallucinations study's opacity slider up where an iPad shows it, and keep a drag on either slider from scrolling the box
 
 On an iPad the Hallucinations study's box holds more than the screen is tall, and its opacity slider stood at the foot of the box, below what showed, so it looked as if it did nothing. The slider now stands under the Regions heading, beside the system buttons, where it shows without scrolling, and a finger dragging its thumb, on this page or on the 3D Region Atlas, moves the slider and never the box behind it.
 

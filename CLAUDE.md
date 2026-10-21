@@ -124,8 +124,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   graph and the heat table are fitted to their tab and scroll inside their own box only when too big for it
   (`chartHeight()` sizes the graph to its room, never under `CHART.minHeight`; `fitHeat()` caps the column names to
   two fifths of the box with `--heat-cap`), and the tabs of text scroll down. The Density Table is kept in the code
-  and shown nowhere; the graph's controls stand in rows (source, by receptor or region, dropdown) with no sentence
-  above; the table's lede is one concise paragraph ending in a live example read off the table (`heatExample`); the
+  and shown nowhere; the graph's controls stand in one line where there is room (since v11.49: the dropdown at the
+  left, narrowing first, and the two button pairs, source and axis, together in `.rx-switches` at the far right) and
+  in rows on a phone (source, by receptor or region, dropdown), with no sentence above; `renderChart()` toggles the
+  sideways hint and keeps a room-taking scrollbar out of the graph's height before it measures; the table's lede is one concise paragraph ending in a live example read off the table (`heatExample`); the
   bar's two buttons each stand for a family of tabs (`data-tabs`), lit for any of them); then Saved
   maps, Export and, at the far right behind a line,
   Reference (`.pbtn-ref`, since v11.31); the Brodmann map left the page in v11.30, the Brodmann Area Atlas having it). The readouts sit at the bar's start. Every element id the script uses is unchanged, so the pop-ups' contents

@@ -1061,6 +1061,17 @@ main.screen{
 .rx-tab.rx-fill{ display:flex; flex-direction:column; }
 .rx-tab.rx-scroll{ overflow:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; }
 #chart-pane .rx-controls, #chart-pane .chart-scroll-hint, #chart-pane .legend, #types-pane .heat-head{ flex:none; }
+/* the graph's controls in one line where there is room, so the graph has
+   the height: the dropdown at the left, narrowing to make room, and the
+   source and the axis together at the far right, moving down as one when
+   the line is too short for the three; a phone keeps them in rows,
+   source, axis, dropdown */
+#chart-pane .rx-controls{ flex-direction:row; flex-wrap:wrap; align-items:center; gap:.55rem .9rem; }
+#chart-pane .rx-controls .selwrap{ order:0; flex:1 1 0; min-width:11rem; width:auto; max-width:30rem; }
+#chart-pane .rx-switches{ order:1; display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:.55rem .9rem; margin-left:auto; }
+.screen.one #chart-pane .rx-controls{ flex-direction:column; align-items:flex-start; }
+.screen.one #chart-pane .rx-controls .selwrap{ order:2; flex:none; width:100%; min-width:0; }
+.screen.one #chart-pane .rx-switches{ order:0; flex-direction:column; align-items:flex-start; justify-content:flex-start; gap:.55rem; margin-left:0; }
 #chart-pane #receptor-graph{ flex:1 1 auto; min-height:0; overflow:auto; margin-top:0; line-height:0; overscroll-behavior:contain; }
 #types-pane #types-heat{ flex:1 1 auto; min-height:0; overflow:auto; overscroll-behavior:contain; margin-bottom:0; }
 .screen.one #popRx{ height:100%; max-height:none; }
@@ -1327,13 +1338,15 @@ main.screen.one.land{ flex-direction:row; }
             <p class="rx-lede rx-lede-long" hidden>How thickly each receptor sits in each region, from two open sources: in vivo PET, one group-average tracer map per receptor or transporter, averaged over each AAL region; and ex vivo autoradiography, absolute densities in fmol/mg protein from post-mortem cortex, mapped onto the regions area by area. The two measure different things and are never put on one axis. Click a region&rsquo;s name and it lights up in the viewports above as a highlighted region like any other; whatever is highlighted above lights its bar here in the same colour, and a Brodmann area lights the regions most of it lies in. Pick a receptor and what binds it and what it sits in are drawn beneath the chart, with its source, tracer, sample and caveat under those.</p>
             <div class="rx-tab rx-fill" id="chart-pane" role="tabpanel" aria-labelledby="rxtab-chart">
               <div class="rx-controls">
-                <div class="ts-views" role="group" aria-label="Source">
-                  <button class="ts-btn active" data-layer="pet" type="button">In vivo PET</button>
-                  <button class="ts-btn" data-layer="ar" type="button">Autoradiography</button>
-                </div>
-                <div class="mode-group" id="axis-group" role="group" aria-label="Chart axis">
-                  <button class="ts-btn active" data-axis="receptor" type="button">By Receptor</button>
-                  <button class="ts-btn" data-axis="region" type="button">By Region</button>
+                <div class="rx-switches">
+                  <div class="ts-views" role="group" aria-label="Source">
+                    <button class="ts-btn active" data-layer="pet" type="button">In vivo PET</button>
+                    <button class="ts-btn" data-layer="ar" type="button">Autoradiography</button>
+                  </div>
+                  <div class="mode-group" id="axis-group" role="group" aria-label="Chart axis">
+                    <button class="ts-btn active" data-axis="receptor" type="button">By Receptor</button>
+                    <button class="ts-btn" data-axis="region" type="button">By Region</button>
+                  </div>
                 </div>
                 <div class="selwrap">
                   <select id="structure-dropdown" aria-label="Receptor"></select>
@@ -3106,9 +3119,23 @@ function tipFor(r, reg) {
     "from area" + (a.areas.length > 1 ? "s " : " ") + escapeHtml(a.areas.join(", ")) + " · " + (a.fit === "exact" ? "exact match" : "approximate match") + noteFor(reg);
 }
 /* the graph is as tall as its tab leaves it, never shorter than its
-   labels need: a tab too short for that scrolls the graph instead */
-function chartHeight() {
-  const room = document.getElementById("receptor-graph").clientHeight;
+   labels need: a tab too short for that scrolls the graph instead. A graph
+   wider than its box gets a scrollbar along its foot where scrollbars take
+   room (a mouse-driven computer), measured once and kept out of the
+   height, or the graph stood that much taller than the box */
+let scrollbarSize = null;
+function scrollbarThickness() {
+  if (scrollbarSize == null) {
+    const probe = document.createElement("div");
+    probe.style.cssText = "position:absolute;visibility:hidden;width:80px;height:80px;overflow:scroll;top:-200px";
+    document.body.appendChild(probe);
+    scrollbarSize = probe.offsetHeight - probe.clientHeight;
+    probe.remove();
+  }
+  return scrollbarSize;
+}
+function chartHeight(scrolls) {
+  const room = document.getElementById("receptor-graph").clientHeight - (scrolls ? scrollbarThickness() : 0);
   return room > 0 ? Math.max(CHART.minHeight, room - 2) : CHART.height;
 }
 function renderChart() {
@@ -3119,10 +3146,11 @@ function renderChart() {
   /* the legend is set first, so the room measured for the graph is what is
      left under it */
   document.getElementById("chart-legend").innerHTML = c.legend.map(l => "<span class=\"legend-item\"><span class=\"legend-swatch\" style=\"background:" + l.colour + "\"></span>" + escapeHtml(l.name) + "</span>").join("");
-  const H = chartHeight();
   const n = c.bars.length;
   const avail = Math.max(host.clientWidth || 900, 320);
   const scrolls = CHART.left + CHART.right + n * CHART.slot > avail;         /* wider than the screen, it scrolls */
+  host.classList.toggle("scrolls", scrolls);  /* shows the hint under the graph, so it is measured out of the room */
+  const H = chartHeight(scrolls);
   /* the labels lean left from their bars, so the first few reach back past
      the first bar; the gutter is only as wide as the longest reach, so
      none of them ends under the pinned axis */
@@ -3131,7 +3159,6 @@ function renderChart() {
   c.bars.forEach((b, i) => { reach = Math.max(reach, b.label.length * fs * 0.56 * Math.cos(52 * Math.PI / 180) - slot0 * (i + 0.5)); });
   const gutter = Math.ceil(Math.max(0, reach)) + 4;
   const width = scrolls ? CHART.left + gutter + n * CHART.slot + CHART.right : avail;
-  host.classList.toggle("scrolls", scrolls);
   host.style.setProperty("--axis-w", CHART.left + "px");
   const x0 = CHART.left + gutter;
   const plotW = width - x0 - CHART.right, plotH = H - CHART.top - CHART.bottom;
