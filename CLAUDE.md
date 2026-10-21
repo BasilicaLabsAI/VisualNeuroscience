@@ -167,7 +167,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   schizophrenia visualisation) is one screen in the 3D Region Atlas's manner since v11.43: `body.atlas-screen`,
   `main#main.screen`, the drawer (`#drawerBox`: Brain state, then Regions with the system filters, the list and the
   opacity) and the stage with the four views; the bar's buttons each raise a pop-up of one category of what stood
-  below the scans (`#popReading`, which `HX_SCREEN.open` raises as a region is picked from the list; `#popCircuit` with
+  below the scans (`#popPaper` first, since v11.45, introducing the editorial with its citation and links at its foot;
+  `#popReading`, which `HX_SCREEN.open` raises as a region is picked from the list; `#popCircuit` with
   the two circuit drawings and their tabs; `#popWho`, `#popImaging`, `#popWindows`, `#popLimits`; `#popExport` with
   `#export3d`; `#popRef` with the paper and `#scan-note`), with the readouts `#statState` and `#statRegion`. The box's
   state buttons and the circuit's tabs are one `state` (v11.44; `renderAll` paints the circuit too), and the reading

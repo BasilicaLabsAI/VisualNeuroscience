@@ -304,10 +304,18 @@ td.hl{ color:var(--over); }
   color:var(--ink-60); margin-top:1rem; padding-top:.6rem; border-top:1px solid var(--ink-35);
 }
 .reading .empty{ font-style:italic; color:var(--ink-60); font-size:.98rem; margin:0; }
+/* the paper's window: the editorial introduced, its citation at the foot */
+.paper h3{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60);
+  margin:1rem 0 .25rem;
+}
+.paper p{ font-size:.98rem; line-height:1.6; max-width:72ch; }
+.paper p + p{ margin-top:.7rem; }
+.paper .source{ margin:1.2rem 0 0; }
 /* the state showing on the scan is marked beside its heading */
 .reading .m-tag.on::after{ content:"showing"; margin-left:.6rem; padding:.1rem .4rem .05rem; border:1px solid var(--ink-35); border-radius:999px; letter-spacing:.14em; color:var(--ink); }
 .pop .sub{ color:var(--ink-60); margin:0 0 1.1rem; font-size:.95rem; }
-.pop .source{ margin-bottom:var(--gap); }
 .pop .page-foot{ margin-top:1.4rem; padding-top:1rem; }
 .pop .caveat{ margin-top:.2rem; }
 .pop .empty-note{ font-family:var(--font-serif); font-style:italic; font-size:.9rem; color:var(--ink-60); margin:0 0 .8rem; }
@@ -599,6 +607,38 @@ main.screen.one.land{ flex-direction:row; }
       </div>
     </div>
 
+      <div class="pop" id="popPaper" hidden aria-labelledby="popPaperH">
+        <header class="pop-head"><b id="popPaperH">The paper</b><small>who wrote it, what it is, and what she is saying</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+          <div class="paper">
+            <h2 class="reading-h">On the neurobiology of hallucinations</h2>
+            <div class="panel-latin">Patricia Boksa &middot; Journal of Psychiatry &amp; Neuroscience &middot; July 2009</div>
+            <h3>Who wrote it</h3>
+            <p>Patricia Boksa, a neuroscientist at the Douglas Mental Health University Institute and the Department of Psychiatry of McGill University in Montr&eacute;al, writing an editorial for the <i>Journal of Psychiatry &amp; Neuroscience</i>, the Canadian Medical Association&rsquo;s journal of the field. It appeared in July 2009, in volume 34, number 4, on pages 260 to 262: three pages, twenty-seven references, open access, and no competing interests declared.</p>
+            <h3>What it is</h3>
+            <p>An editorial, not a study. It is a short tour of what neuroscience knows about hallucinations, asked as one question, how close are we to understanding the brain mechanisms behind the hallucinations of psychotic disorders like schizophrenia, and written around the review of the hallucinating brain that Allen and colleagues had published the year before. Their model of auditory hallucination is what this page draws on the scan and as a circuit. She offers the piece as a foray, hoping it will &ldquo;provoke increased interest and thought on this fascinating and challenging subject&rdquo;.</p>
+            <h3>What she is saying</h3>
+            <p>A hallucination is a perception with no stimulus behind it and a compelling sense that it is real. It is a diagnostic feature of schizophrenia, where sixty to seventy per cent of people have them, most often voices; but it is not a sign of illness alone. Between seven and thirty per cent of children and adolescents report them, a third to a half of bereaved spouses see or hear the person they have lost, culture shapes where imagination ends, and mild sensory deprivation, half a ping pong ball over each eye and the sound of a waterfall, can bring vivid imagery to some healthy people. Whether the same mechanism is at work in patients and in the well is, she warns, not known.</p>
+            <p>The first clue is where lesions fall: in people hallucinating after brain damage, the damage lies in the pathway of the sense that hallucinates. Imaging of patients with schizophrenia fills the picture in. The most consistent structural finding is less grey matter in the superior temporal gyrus, primary auditory cortex included, with one large study adding the dorsolateral prefrontal cortex; functional studies of people hallucinating in the scanner find the language areas and the primary auditory cortex more active; and studies of connectivity agree that the links among temporal, prefrontal and anterior cingulate regions are altered. Hallucination, in other words, lives in the circuitry of normal hearing, language and their control.</p>
+            <p>The idea that ties the findings together is that a hallucinating person misattributes their own inner speech to the outside world. Her windows onto that are the oddest and the best part of the editorial: you cannot tickle yourself because you anticipate the touch, but people with hallucinations or passivity symptoms feel self-tickling as keenly as another&rsquo;s touch; hypnotised people hearing real speech and people told to hallucinate it both light up the right anterior cingulate cortex, though she is careful about what that proves; and on waking from REM dreams, women show the same lapse in telling self-made from external stimuli. Deficits in judging time may feed the same confusion.</p>
+            <p>Allen&rsquo;s model gathers it into three parts, which the circuit on this page draws: overactivity in the primary and secondary auditory cortex, altered connectivity with the language areas of the inferior frontal cortex, and weakened control by the anterior cingulate, prefrontal, premotor and cerebellar cortices. How that altered activity arises she leaves open, pointing to Behrendt&rsquo;s idea that perception rides on gamma rhythms in thalamocortical loops which, in schizophrenia, slip the hold of the senses and fall to attention instead, and to the parvalbumin interneurons that pace those rhythms. On treatment, slow rTMS over the right temporoparietal cortex damps resistant voices with a mean effect size of 0.76, larger, for comparison, than clozapine&rsquo;s 0.48 against typical antipsychotics on a general rating scale.</p>
+            <p>She closes on the limits. In people, brain activity can only be shown to go with hallucinations, never to cause them; and the animals that would settle cause cannot tell us whether they hallucinate, since the behaviours taken for it are too unspecific. Useful insight has been gained, and there is a long way still to go.</p>
+            <div class="source">
+  <p class="cite">
+    Boksa P. <b>On the neurobiology of hallucinations.</b>
+    <em>Journal of Psychiatry &amp; Neuroscience</em> 2009;34(4):260&ndash;262.
+    <span class="pmid">PMID 19568476</span>
+  </p>
+  <div class="source-links">
+    <a class="ts-btn" href="https://pubmed.ncbi.nlm.nih.gov/19568476/" target="_blank" rel="noopener">PubMed</a>
+    <a class="ts-btn" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2702442/" target="_blank" rel="noopener">PMC</a>
+    <a class="ts-btn" href="assets/studies/boksa-2009-neurobiology-of-hallucinations.pdf" download>Download PDF &middot; 3&thinsp;pp</a>
+  </div>
+</div>
+          </div>
+        </div>
+      </div>
+
       <div class="pop pop-md" id="popReading" hidden aria-labelledby="popReadingH">
         <header class="pop-head"><b id="popReadingH">Reading</b><small id="p-kicker">Normal audition</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
         <div class="pop-body">
@@ -785,18 +825,6 @@ main.screen.one.land{ flex-direction:row; }
       <div class="pop" id="popRef" hidden aria-labelledby="popRefH">
         <header class="pop-head"><b id="popRefH">Reference</b><small>the paper, and what the page is drawn from</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
         <div class="pop-body">
-<div class="source">
-  <p class="cite">
-    Boksa P. <b>On the neurobiology of hallucinations.</b>
-    <em>Journal of Psychiatry &amp; Neuroscience</em> 2009;34(4):260&ndash;262.
-    <span class="pmid">PMID 19568476</span>
-  </p>
-  <div class="source-links">
-    <a class="ts-btn" href="https://pubmed.ncbi.nlm.nih.gov/19568476/" target="_blank" rel="noopener">PubMed</a>
-    <a class="ts-btn" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2702442/" target="_blank" rel="noopener">PMC</a>
-    <a class="ts-btn" href="assets/studies/boksa-2009-neurobiology-of-hallucinations.pdf" download>Download PDF &middot; 3&thinsp;pp</a>
-  </div>
-</div>
           <p class="ref-line"><b>Scan</b> <span id="scan-note">MNI152 template &middot; AAL-116 parcellation</span></p>
           <p class="ref-line"><b>Regions</b> the ten of Allen&rsquo;s model, each drawn on the atlas parcels it occupies, approximate where the list says so.</p>
 <p class="page-foot">An educational visualization of Boksa P, &ldquo;On the neurobiology of hallucinations,&rdquo; <em>Journal of Psychiatry &amp; Neuroscience</em> 2009;34(4):260&ndash;262 &mdash; <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2702442/">open access at PMC2702442</a>. Regions are drawn on the MNI152 template using the AAL-116 parcellation; each named region is matched to its nearest atlas parcel, and where that match is approximate the panel says so. The editorial concerns auditory hallucinations in schizophrenia almost throughout and does not address serotonergic, glutamatergic or default-mode accounts. It is now well over fifteen years old, and the field has moved. Not a diagnostic tool. <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a> &middot; <a href="terms.html">Terms of use</a>.</p>
@@ -823,6 +851,7 @@ main.screen.one.land{ flex-direction:row; }
       <button class="pbtn" type="button" data-view="sagittal" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 4v16"/></svg><span>Sagittal</span></button>
     </div>
     <div class="panelbar-btns" role="group" aria-label="Panels">
+      <button class="pbtn" type="button" data-pop="popPaper" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 12h7M10 15.5h7M10 19h4"/></svg><span>The paper</span></button>
       <button class="pbtn" type="button" data-pop="popReading" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 6.6c-1.7-1.5-4.1-2.1-7.2-2.1v13c3.1 0 5.5.6 7.2 2.1 1.7-1.5 4.1-2.1 7.2-2.1v-13c-3.1 0-5.5.6-7.2 2.1z"/><path d="M12 6.6v13"/></svg><span>Reading</span></button>
       <button class="pbtn" type="button" data-pop="popCircuit" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="9" width="6" height="6" rx="1"/><rect x="15" y="3.5" width="6" height="6" rx="1"/><rect x="15" y="14.5" width="6" height="6" rx="1"/><path d="M9 12h3M12 12l3-5.5M12 12l3 5.5"/></svg><span>Circuit</span></button>
       <button class="pbtn" type="button" data-pop="popWho" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 18 18 6"/><circle cx="7.5" cy="7.5" r="2.6"/><circle cx="16.5" cy="16.5" r="2.6"/></svg><span>Not only in illness</span></button>

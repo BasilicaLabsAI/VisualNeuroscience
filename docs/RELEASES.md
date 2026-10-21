@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.45 — 21 October 2026 — The paper introduced, first in the Hallucinations study's bar
+Commit · Open the Hallucinations study's bar with a window that introduces the paper
+
+The Hallucinations study's bar now begins with The paper, a window that introduces Boksa's editorial before the rest: who wrote it, a neuroscientist at the Douglas Institute and McGill writing for the Journal of Psychiatry & Neuroscience in 2009; what it is, an editorial rather than a study, a short tour of what neuroscience knows about hallucinations written around Allen's review and the model this page draws; and what she is saying, her argument in five paragraphs, from hallucinations in the well to the imaging, the windows onto the mechanism, Allen's model and the treatment, and the limits she closes on. The citation and the links to PubMed, PMC and the PDF stand at its foot, moved there from the Reference window, which keeps the scan and the regions.
+
 ## v11.44 — 21 October 2026 — One brain state in the Hallucinations study, and a reading of both
-Commit · Make the Hallucinations study's circuit tabs and state buttons one state, and have the reading give both states
+Commit `805b911` · Make the Hallucinations study's circuit tabs and state buttons one state, and have the reading give both states
 
 The Hallucinations study's two switches are one. The Normal audition and Hallucinating buttons in the box and the tabs over the circuit now move together: change either and the scan, the circuit, the readout and the reading all follow, and the circuit's first tab reads Normal audition as the box's does. The reading of a picked region now gives both states whatever the scan is showing, what the region does when perception is intact and what happens to it in hallucinating people, the one showing marked beside its heading; a region the editorial reports no change in says so rather than falling silent.
 
