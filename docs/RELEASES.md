@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.56 — 22 October 2026 — The posters, ready for a shop
+Commit · Add the Posters page with the two prints and their box on the home page and in the app, and put the shop in the terms and the privacy policy
+
+The two A1 prints the site has long been able to draw, The Neurotransmitters and The Receptors, have a page of their own: each with the head of its poster for a picture, what it shows, its sources and size, and a Buy button that opens the print-on-demand shop once its address is filled in, and until then says the shop is opening soon. A box on the home page and in the app's Library tab leads there. The terms say a poster is bought from that shop under its own terms of sale, with the fourteen days a consumer has to cancel, and the privacy policy says the shop alone sees the payment and the address; the same page now says, correctly, that the feature-announcements box starts clear.
+
 ## v11.55 — 21 October 2026 — A landing page for every screen
-Commit · Add an unlisted landing page naming every screen the atlas is on or is coming to
+Commit `668c602` · Add an unlisted landing page naming every screen the atlas is on or is coming to
 
 A page apart from the site, reached by its address alone and listed nowhere, not in the menu, the foot or the apps, and marked for search engines to leave out. It names every screen: the website and the iPhone and iPad app with their links, and Apple Vision Pro, Android, Mac, Linux and Windows marked coming soon, each with a word on what it will be. It stands in the site's type and either theme, with the brand line at its head and the maker, the address, Privacy and Terms at its foot.
 

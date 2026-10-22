@@ -157,6 +157,11 @@ struct LibraryTab: View {
                     shot: Shot("assets/home/textbook.jpg"),
                     meta: "19 chapters · 85 sections · 506 figures · CC BY-NC-SA",
                     go: "Open the book")
+            PageBox(page: .posters, kicker: "On paper",
+                    text: "Two A1 prints: every neurotransmitter drawn to one scale, and the receptors with their affinities.",
+                    shot: Shot("assets/posters/home.jpg"),
+                    meta: "2 posters · A1 · shop opening soon",
+                    go: "See the posters")
         }
     }
 }

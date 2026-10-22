@@ -87,6 +87,18 @@ Read this first in every session. It is the handover; nothing else needs pasting
   links and the rest marked coming soon: it carries `noindex, nofollow`, stands apart from the site's chrome, and must
   stay out of the nav, the foot, the apps' tabs, the precache list and any sitemap. Its address alone reaches it
   (`/get`). As a platform ships, swap its Coming soon tag for a link there.
+- Posters (v11.56): `site/posters.html` offers the two A1 prints `scripts/posters/build.sh` draws, with a box on the home
+  page (`.m-posters`, its twin in `Shell.swift`'s Library tab, `Page.posters`). The shop is not open: `SHOP` at the foot
+  of the page holds one address per poster, empty, and each Buy button stands as "Shop opening soon" until its address
+  is filled in; filled, the button opens the shop in a new tab and, in the app, through Capacitor's Browser plugin when
+  it is installed (`npm i @capacitor/browser` and `npx cap sync` on the Mac; without it the link opens in the page's own
+  web view). Sell only what the licences allow (`docs/PERMISSIONS.md`): these two posters are clear, the receptor PET
+  maps, the AAL parcellation, the OpenStax text and the IFEN Brodmann drawing are not. The pictures in
+  `site/assets/posters/` are the head of each poster, cut from the build's PNGs with ImageMagick (`convert … -crop
+  2245x612+0+0 … -resize 1400x382!`; the home plate is `-crop 2245x1020+0+0 … -resize 1100x500!`), so they show nothing
+  provisional: the receptor poster renders as a layout proof until the affinity step in `scripts/posters/README.md` is
+  run, which the guidetopharmacology.org download blocks from a session. The terms (Posters section) and the privacy
+  policy (`#posters`) describe the shop; `app/store/LISTING.md`'s review notes name the physical goods and 3.1.5(a).
 - Legal pages (since v11.41): `site/privacy.html`, `site/terms.html` and `site/delete-account.html`, linked from the foot of
   every page beside the privacy policy and from the app's Account tab (`PageRow` rows in `Shell.swift`: privacy, terms,
   and Delete your account, which opens `account.html#delete`); the Play listing's deletion link is the deletion page and

@@ -173,6 +173,7 @@ img{ max-width:100%; height:auto; display:block; }
 .m-molecular{ grid-column:span 12; }
 .m-practice{ grid-column:span 6; }
 .m-textbook{ grid-column:span 6; }
+.m-posters{ grid-column:span 12; }
 .m-mcp    { grid-column:span 12; }
 .m-about  { grid-column:span 12; }
 .m-ledger { grid-column:span 12; }
@@ -310,6 +311,7 @@ img{ max-width:100%; height:auto; display:block; }
   .m-molecular{ grid-column:span 6; }
   .m-practice{ grid-column:span 3; }
   .m-textbook{ grid-column:span 3; }
+  .m-posters{ grid-column:span 6; }
   .m-mcp    { grid-column:span 6; }
   .m-about  { grid-column:span 6; }
   .m-ledger { grid-column:span 6; }
@@ -318,7 +320,7 @@ img{ max-width:100%; height:auto; display:block; }
 /* ── phone: one box on each line, and the wide box stacks ── */
 @media (max-width:760px){
   .mosaic{ grid-template-columns:minmax(0,1fr); }
-  .m-atlas, .m-brodmann, .m-network, .m-tracts, .m-studies, .m-cells, .m-molecular, .m-practice, .m-textbook, .m-mcp, .m-about, .m-ledger{
+  .m-atlas, .m-brodmann, .m-network, .m-tracts, .m-studies, .m-cells, .m-molecular, .m-practice, .m-textbook, .m-posters, .m-mcp, .m-about, .m-ledger{
     grid-column:1 / -1; grid-row:auto;
   }
   .ledger{ grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -467,6 +469,18 @@ img{ max-width:100%; height:auto; display:block; }
       </div>
       <div class="meta">19 chapters &middot; 85 sections &middot; 506 figures &middot; CC BY-NC-SA</div>
       <div class="go">Open the book &rarr;</div>
+    </a>
+
+    <!-- ── the posters ────────────────────────────────────────────── -->
+    <a class="box m-posters box-h" href="posters.html">
+      <div class="side">
+        <div class="kicker">On paper</div>
+        <h2>Posters</h2>
+        <p>Two A1 prints from the Microanatomy page: every neurotransmitter drawn to one scale, and the receptors with how tightly each holds its transmitter.</p>
+        <div class="meta">2 posters &middot; A1 &middot; shop opening soon</div>
+        <div class="go">See the posters &rarr;</div>
+      </div>
+      <div class="plate"><img src="assets/posters/home.jpg" alt="" loading="lazy" decoding="async" width="1100" height="500"></div>
     </a>
 
     <!-- ── the assistants ─────────────────────────────────────────── -->
