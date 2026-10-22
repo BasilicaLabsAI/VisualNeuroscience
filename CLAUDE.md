@@ -203,8 +203,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   loads `stage-lifecycle.js`, `scan-look.js` and `zoom.js`. On a phone held sideways (since v11.57: the script's
   `landQ`, a coarse pointer in landscape under 500px tall, `#baScreen.land` and `body.ba-land`, the masthead hidden) a
   bar of named buttons stands along the right edge (`.babar`, `.bbtn`): Outside, Inside and Both pick what the faces
-  show (`faceView`, remembered as `vn-ba-view`; `.maps.only-lateral`, `.only-medial`, `.side`), the reading a column
-  between the faces and the bar, and 3D (`#scanBtn`) raises the same panel. In the app the first face's name makes
+  show (`faceView`, remembered as `vn-ba-view`; `.maps.only-lateral`, `.only-medial`, `.side`) across the top of the
+  screen, the reading beneath them in two columns (since v11.60: the grid's rows 62:38, `.r-head` left and `.r-text`
+  right; upright the two are stacked in the reading's flex column), the bar spanning both rows at the edge, and 3D
+  (`#scanBtn`) raises the same panel over the faces alone. In the app the first face's name makes
   56px of room for the shell's back button. The 3D Region Atlas keeps its own Brodmann list, and no map since v11.30; since v11.38
   the areas are picked through the same dropdown panel as the AAL regions (`dropPicker` in `regions.html`, shared by
   `#rpick` and `#bapick`: button `#bapickBtn`, panel `#bapickPop`, list `#balist` a `.rpick-list` grouped by lobe).

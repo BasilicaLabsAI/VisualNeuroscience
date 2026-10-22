@@ -165,6 +165,8 @@ svg{ display:block; }
   -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - 2.2rem), transparent);
   mask-image:linear-gradient(to bottom, #000 calc(100% - 2.2rem), transparent);
 }
+.r-head{ flex:none; }
+.r-text{ display:flex; flex-direction:column; flex:1 1 auto; min-height:0; }
 .r-kick{
   font-family:var(--font-brand); font-weight:500; font-size:.6rem;
   letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
@@ -306,23 +308,32 @@ svg{ display:block; }
    room, as on the 3D Region Atlas ── */
 .babar{ display:none; }
 .ba-screen.land{
-  grid-template-columns:minmax(0,1fr) minmax(190px, 232px) 92px; grid-template-rows:minmax(0,1fr);
-  gap:10px; min-height:0; margin-top:0;
+  grid-template-columns:minmax(0,1fr) 92px; grid-template-rows:minmax(0,62fr) minmax(0,38fr);
+  gap:8px 10px; min-height:0; margin-top:0;
   height:calc(100vh - var(--screen-top, 0px) - 8px);
   height:calc(100dvh - var(--screen-top, 0px) - 8px);
 }
-.ba-screen.land .maps{ order:0; grid-template-rows:minmax(0,1fr); grid-template-columns:minmax(0,1fr); gap:10px; }
+/* the faces across the top, side by side or one alone, as upright has them first */
+.ba-screen.land .maps{ grid-column:1; grid-row:1; order:0; grid-template-rows:minmax(0,1fr); grid-template-columns:minmax(0,1fr); gap:10px; }
 .ba-screen.land .maps.side{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
 .ba-screen.land .maps.only-lateral .cart[data-face="medial"], .ba-screen.land .maps.only-medial .cart[data-face="lateral"]{ display:none; }
-.ba-screen.land .reading{ order:1; padding:.7rem .85rem .8rem; }
+/* the reading beneath them, its head to the left of its text so the function shows in the room there is */
+.ba-screen.land .reading{
+  grid-column:1; grid-row:2; order:1; padding:.55rem .85rem .6rem;
+  display:grid; grid-template-columns:minmax(170px, 230px) minmax(0,1fr); column-gap:1.1rem; align-content:start;
+}
+.ba-screen.land .r-head{ grid-column:1; }
+.ba-screen.land .r-text{ grid-column:2; display:block; }
 .ba-screen.land .r-kick{ font-size:.56rem; }
-.ba-screen.land .r-name{ font-size:1.12rem; margin:.35rem 0 .15rem; }
-.ba-screen.land .r-where{ font-size:.8rem; margin-bottom:.45rem; }
-.ba-screen.land .r-body{ font-size:.92rem; line-height:1.5; }
-.ba-screen.land .r-note{ font-size:.82rem; margin-top:.6rem; }
+.ba-screen.land .r-name{ font-size:1.08rem; margin:.3rem 0 .12rem; }
+.ba-screen.land .r-where{ font-size:.8rem; margin-bottom:0; }
+.ba-screen.land .r-h{ margin-top:.1rem; }
+.ba-screen.land .r-body{ font-size:.9rem; line-height:1.48; }
+.ba-screen.land .r-note{ font-size:.8rem; margin-top:.5rem; }
+.ba-screen.land .r-foot{ margin-top:.6rem; padding-top:0; }
 .ba-screen.land .cart figcaption span{ display:none; }
 .ba-screen.land .babar{
-  order:2; display:flex; flex-direction:column; align-items:stretch; gap:6px; min-height:0;
+  grid-column:2; grid-row:1 / span 2; order:2; display:flex; flex-direction:column; align-items:stretch; gap:6px; min-height:0;
   padding:6px 0 6px 6px; border-left:1px solid var(--hair); overflow-y:auto; scrollbar-width:none;
 }
 .babar::-webkit-scrollbar{ display:none; }
@@ -388,13 +399,17 @@ body.ba-land{ padding-bottom:0; }
 
   <section class="ba-screen" id="baScreen" aria-label="The Brodmann map and what the picked area does">
     <div class="reading" id="reading" aria-live="polite">
-      <div class="r-kick" id="rKick">Nothing picked</div>
-      <h2 class="r-name" id="rName">Tap an area on either face</h2>
-      <p class="r-where" id="rWhere"></p>
-      <h3 class="r-h" id="rForH" hidden>What it does</h3>
-      <p class="r-body" id="rBody"></p>
-      <p class="r-note" id="rNote" hidden></p>
-      <div class="r-foot" id="rFoot"></div>
+      <div class="r-head">
+        <div class="r-kick" id="rKick">Nothing picked</div>
+        <h2 class="r-name" id="rName">Tap an area on either face</h2>
+        <p class="r-where" id="rWhere"></p>
+      </div>
+      <div class="r-text">
+        <h3 class="r-h" id="rForH" hidden>What it does</h3>
+        <p class="r-body" id="rBody"></p>
+        <p class="r-note" id="rNote" hidden></p>
+        <div class="r-foot" id="rFoot"></div>
+      </div>
     </div>
     <div class="maps" id="baMaps">
       <figure class="cart" data-face="lateral">
