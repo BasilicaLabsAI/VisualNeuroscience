@@ -178,7 +178,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (`slice-tool.js`, styled in `viewer.css`) are 44px strips with 24px thumbs under a coarse pointer (v11.32); on a
   phone the right-hand one stands 26px in from the edge, clear of the drawer's handle, and the bottom one stops short
   of it (`.screen.one`). Held sideways (v11.42: `main.screen.one.land`, the script's `land` query, a coarse pointer in
-  landscape) the bar stands along the right edge, its icons two to a row with the words for screen readers alone, the
+  landscape) the bar stands along the right edge, its buttons two to a row, each its icon over its name as upright (since
+  v11.58; 66px cells in a 141px bar, the groups centred while they fit and the bar scrolling when they do not; the
+  longest name carries a soft hyphen), the
   drawer's handle off the bar's edge, the four views one row, the one view's tools and Centre at the left of its bar
   and the name at the right, the masthead hidden; in the app's tabs the shell hides its bar on a phone sideways
   (`WebPage.sideways` in `ShellWeb.swift`, `BackOverPage` the back button it keeps at the top left) and the page's body

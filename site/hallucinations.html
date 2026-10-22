@@ -494,20 +494,28 @@ body.atlas-screen:has(> main.screen.one.land) .masthead{ display:none; }
 main.screen.one.land{ flex-direction:row; }
 .screen.one.land .deck{ flex:1 1 auto; min-width:0; }
 .screen.one.land .panelbar{
-  flex:none; flex-direction:column; align-items:stretch; justify-content:center; gap:0;
+  flex:none; flex-direction:column; align-items:stretch; justify-content:flex-start; gap:0;
   padding:.3rem .25rem calc(.3rem + env(safe-area-inset-bottom, 0px));
-  border-top:0; border-left:1px solid var(--hair); overflow:visible; white-space:normal;
+  border-top:0; border-left:1px solid var(--hair); overflow-x:hidden; overflow-y:auto; white-space:normal; scrollbar-width:none;
 }
+.screen.one.land .panelbar::-webkit-scrollbar{ display:none; }
+/* the groups stand in the middle of the bar while they fit, and the bar scrolls when they do not */
+.screen.one.land .panelbar > :first-child{ margin-top:auto; }
+.screen.one.land .panelbar > :last-child{ margin-bottom:auto; }
+/* two to a row, each button its icon over its name, as the bar has them upright */
 .screen.one.land .panelbar-all, .screen.one.land .panelbar-views, .screen.one.land .panelbar-btns, .screen.one.land .panelbar-end{
-  display:grid; grid-template-columns:44px 44px; gap:0; flex:none;
+  display:grid; grid-template-columns:66px 66px; gap:0; flex:none;
   margin:0 0 .25rem; padding:0 0 .25rem; border-right:0; border-bottom:1px solid var(--hair);
 }
-.screen.one.land .panelbar-all{ grid-template-columns:88px; justify-items:center; }
-.screen.one.land .panelbar-end{ margin-bottom:0; padding-bottom:0; border-bottom:0; }
-.screen.one.land .pbtn{ position:relative; min-width:0; width:44px; min-height:44px; padding:0; gap:0; }
-.screen.one.land .pbtn.pbtn-ref{ margin-left:0; padding-left:0; border-left:0; }
-.screen.one.land .pbtn span{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }
-.screen.one.land .pbtn svg{ width:24px; height:24px; }
+.screen.one.land .panelbar-all{ grid-template-columns:132px; justify-items:center; }
+.screen.one.land .panelbar-end{ padding-bottom:0; border-bottom:0; }
+.screen.one.land .pbtn{ position:relative; min-width:0; width:66px; min-height:48px; padding:.25rem .15rem .2rem; gap:.2rem; }
+.screen.one.land .pbtn.pbtn-ref{ margin-left:0; padding-left:.15rem; border-left:0; }
+.screen.one.land .pbtn span{
+  font-size:.46rem; letter-spacing:.08em; line-height:1.15; white-space:normal; text-align:center; max-width:100%;
+  -webkit-hyphens:manual; hyphens:manual;
+}
+.screen.one.land .pbtn svg{ width:22px; height:22px; }
 .screen.one.land .pop{ max-height:100%; }
 .screen.one.land.all .views{ grid-template-columns:repeat(4, minmax(0, 1fr)); grid-template-rows:minmax(0, 1fr); }
 .screen.one.land:not(.all) .views .view-cap{ flex-wrap:nowrap; justify-content:flex-start; }

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.58 — 22 October 2026 — Names on the sideways bar
+Commit · Name the buttons of the bar along the edge on a phone held sideways, on the 3D Region Atlas and the Hallucinations study
+
+Held sideways on a phone, the bar along the right edge of the 3D Region Atlas and of the Hallucinations study showed its buttons as icons alone, two to a row. Each now carries its name under its icon, as the bar does upright: All, 3D, Axial, Coronal and Sagittal, then What they do, Receptor graph, Neurotransmitters, Saved maps, Export and Reference, two to a row in a bar a little wider; where a screen is too short for the whole bar it scrolls, and otherwise its groups stand in the middle of the edge.
+
 ## v11.57 — 22 October 2026 — The Brodmann atlas on a phone held sideways
-Commit · Give the Brodmann Area Atlas a bar of named buttons on a phone held sideways, and a scan panel with the picked area in the four views
+Commit `db2a166` · Give the Brodmann Area Atlas a bar of named buttons on a phone held sideways, and a scan panel with the picked area in the four views
 
 On a phone held sideways the Brodmann Area Atlas stacked its two faces in two thin strips, the drawings small in the middle of each. It now has a bar along the right edge, as the 3D Region Atlas has, with its buttons named: Outside and Inside show one face large, Both shows the two side by side, and the pick is remembered; the reading stands in a column between the faces and the bar, and the masthead steps aside for the room. The fourth button, Scan, slides out a panel with the picked area lit on the MNI152 scan in the four views the atlases share, 3D, axial, coronal and sagittal, the crosshair put on it, and each view's bar ending in the button that opens that view alone over the other three. The scan is fetched the first time the panel opens and never otherwise; the panel closes on its cross, on Escape, or on Scan again. Upright, and on a tablet or a computer, the page is as it was.
 
