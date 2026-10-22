@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.59 — 22 October 2026 — The area on the brain, in 3D, over the map
+Commit · Raise a 3D brain over the Brodmann map with the picked area lit, in place of the four scan views and the link to the 3D Region Atlas
+
+The Brodmann Area Atlas no longer sends the reader away to the 3D Region Atlas, and the panel of four scan views it gained a release ago is gone with the link. In its place, Show in 3D at the foot of the reading, and the 3D button of the bar on a phone held sideways, raise the MNI152 brain in 3D over the two faces, nothing but the brain, with the picked area lit in its lobe's colour; it turns under a finger or the mouse, a pinch or the wheel brings it closer, Reset puts it back, and the panel collapses back down on its own button, on Escape, on the bar's button or on Back to the map. The reading and the bar stay in view while the brain shows, so another area can be picked and lights at once. The brain is fetched the first time it rises, and never otherwise.
+
 ## v11.58 — 22 October 2026 — Names on the sideways bar
-Commit · Name the buttons of the bar along the edge on a phone held sideways, on the 3D Region Atlas and the Hallucinations study
+Commit `f9c0f08` · Name the buttons of the bar along the edge on a phone held sideways, on the 3D Region Atlas and the Hallucinations study
 
 Held sideways on a phone, the bar along the right edge of the 3D Region Atlas and of the Hallucinations study showed its buttons as icons alone, two to a row. Each now carries its name under its icon, as the bar does upright: All, 3D, Axial, Coronal and Sagittal, then What they do, Receptor graph, Neurotransmitters, Saved maps, Export and Reference, two to a row in a bar a little wider; where a screen is too short for the whole bar it scrolls, and otherwise its groups stand in the middle of the edge.
 
