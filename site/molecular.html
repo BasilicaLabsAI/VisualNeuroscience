@@ -129,9 +129,6 @@ svg{ display:block; }
    have no header and start at nought. */
 body.atlas-screen{ overflow:hidden; margin:0; padding-bottom:0; }
 html:has(> body.atlas-screen){ overflow:hidden; }
-@media (max-width:960px){
-  body.atlas-screen .nav-menu.nav-menu{ max-height:calc(100vh - var(--screen-top, 0px)); max-height:calc(100dvh - var(--screen-top, 0px)); overflow-y:auto; }
-}
 :root[data-shell][data-shell-pad] body.atlas-screen{ padding-top:max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px)); }
 main.screen{
   max-width:none; padding:0; margin:0;

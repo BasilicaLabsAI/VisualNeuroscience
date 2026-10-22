@@ -17,50 +17,85 @@
    this bar is not drawn: the shell's navigation bar carries Back, and the
    swipe back is taken away there (ShellWeb.swift).
 
-   The website is left exactly as it is: nothing here runs unless native.js
-   has marked the document as native, and the view-transition opt-in is
-   added from here for the same reason. */
-/* The website's header. It stays at the top of the page, drawing in to a
-   compact bar once the page has scrolled, and under 960px the section
-   links fold into a menu behind a button while the Log in and theme
-   buttons stay in view. Nothing here runs inside the native app, which
-   has the bar below instead. */
+   Nothing in this bar's section runs unless native.js has marked the
+   document as native, and the view-transition opt-in is added from here
+   for the same reason; the website's header is the section after it. */
+/* The website's header, since v11.63 the iOS app's (Shell.swift): a slim
+   bar with the brand at the left, the theme and account buttons at the
+   right and, between them, a floating island of the app's five tabs,
+   Atlases, Library, Practice, About and Account, each an icon over its
+   name, the one the page belongs to lit. The island is built here after
+   the brand, the buttons are moved out of the page's row of section links
+   and the row is hidden (viewer.css, the island section), its links still
+   in the page to be read. Atlases and Library open the home page on one
+   of its two hubs, the pages of boxes the app's tabs hold (index.html
+   switches between them on #library); the other three tabs are pages.
+   The bar draws in to a translucent material once the page has scrolled.
+   Nothing here runs inside the native app, which has the bar below instead. */
 (function(){
   var root = document.documentElement;
   if (root.hasAttribute("data-native")) return;
   var head = document.querySelector(".masthead");
   var nav = head && head.querySelector(".nav-row");
   if (!head || !nav) return;
-  var links = Array.prototype.slice.call(nav.children).filter(function(el){ return el.tagName === "A"; });
+  var brand = head.querySelector(".brand");
   var tools = nav.querySelector(".nav-tools");
-  if (!links.length || !tools) return;
 
-  /* the links go into a wrapper that is part of the row on wide screens and a panel under the bar on narrow ones */
-  var menu = document.createElement("div");
-  menu.className = "nav-menu";
-  menu.id = "nav-menu";
-  nav.insertBefore(menu, links[0]);
-  links.forEach(function(a){ menu.appendChild(a); });
+  /* the five tabs, drawn as the app's symbols are: a brain, books on a
+     shelf, a checklist, an i in a ring and a person */
+  var ICON = {
+    atlases: '<path d="M12 4.5v15.1"/>' +
+      '<path d="M12 4.5C10.9 3.4 8.6 3.6 7.9 5.2 6.1 5 4.6 6.6 5 8.4 3.5 9.3 3.4 11.6 4.6 12.6 3.9 14.3 4.9 16.3 6.7 16.6 6.9 18.5 8.9 19.7 10.6 19c.6.6 1.1.7 1.4.6"/>' +
+      '<path d="M12 4.5c1.1-1.1 3.4-.9 4.1.7 1.8-.2 3.3 1.4 2.9 3.2 1.5.9 1.6 3.2.4 4.2.7 1.7-.3 3.7-2.1 4-.2 1.9-2.2 3.1-3.9 2.4-.6.6-1.1.7-1.4.6"/>' +
+      '<path d="M8.3 9.2c1.3.1 2.2 1 2.4 2.3M15.7 9.2c-1.3.1-2.2 1-2.4 2.3M7.2 13.6c1.2-.2 2.3.4 2.8 1.5M16.8 13.6c-1.2-.2-2.3.4-2.8 1.5"/>',
+    library: '<rect x="3" y="4" width="4.2" height="16" rx=".9"/><rect x="9" y="4" width="4.2" height="16" rx=".9"/>' +
+      '<path d="M15.1 5.2l3.6-1 3.8 14.6-3.6 1z"/><path d="M3 8h4.2M9 8h4.2M3 16h4.2M9 16h4.2"/>',
+    practice: '<path d="M3.5 6.6l1.6 1.6 3-3.2M3.5 12.6l1.6 1.6 3-3.2M3.5 18.6l1.6 1.6 3-3.2"/>' +
+      '<path d="M11 6.5h9.5M11 12.5h9.5M11 18.5h9.5"/>',
+    about: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5.6"/><path d="M12 7.5h.01"/>',
+    account: '<circle cx="12" cy="8.2" r="3.7"/><path d="M4.6 20.2c.7-3.8 3.8-6.2 7.4-6.2s6.7 2.4 7.4 6.2"/>'
+  };
+  var p = location.pathname, here = p.slice(p.lastIndexOf("/") + 1);
+  var home = here === "" || here === "index.html";
+  /* on the home page itself the hubs keep its address, so a clean / stays / */
+  var homeHref = home ? (p || "index.html") : "index.html";
+  var TABS = [["atlases", "Atlases", homeHref], ["library", "Library", homeHref + "#library"],
+    ["practice", "Practice", "practice.html"], ["about", "About", "about.html"], ["account", "Account", "account.html"]];
+  /* the tab each page belongs to: the same pages the app's tabs hold */
+  var OF = {
+    "": "atlases", "index.html": "atlases", "regions.html": "atlases", "brodmann.html": "atlases",
+    "microanatomy.html": "atlases", "molecular.html": "atlases", "tracts.html": "atlases", "network-atlas.html": "atlases",
+    "studies.html": "library", "hallucinations.html": "library", "textbook.html": "library", "posters.html": "library",
+    "practice.html": "practice", "about.html": "about", "mcp.html": "about",
+    "account.html": "account", "privacy.html": "account", "terms.html": "account", "delete-account.html": "account", "connect.html": "account"
+  };
+  function current(){ return home && location.hash === "#library" ? "library" : (OF[here] || ""); }
 
-  var btn = document.createElement("button");
-  btn.type = "button"; btn.className = "nav-menu-btn";
-  btn.setAttribute("aria-expanded", "false");
-  btn.setAttribute("aria-controls", "nav-menu");
-  btn.innerHTML = '<span class="bars" aria-hidden="true"><i></i></span><span>Menu</span>';
-  tools.insertBefore(btn, tools.firstChild);
-
-  function setOpen(open){
-    head.classList.toggle("menu-open", open);
-    btn.setAttribute("aria-expanded", String(open));
-  }
-  btn.addEventListener("click", function(){ setOpen(!head.classList.contains("menu-open")); });
-  document.addEventListener("click", function(e){
-    if (head.classList.contains("menu-open") && !head.contains(e.target)) setOpen(false);
+  var isle = document.createElement("nav");
+  isle.className = "vn-isle";
+  isle.setAttribute("aria-label", "Sections");
+  var tabs = {};
+  TABS.forEach(function(t){
+    var a = document.createElement("a");
+    a.className = "vn-tab"; a.href = t[2]; a.dataset.tab = t[0];
+    a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + ICON[t[0]] + '</svg><span>' + t[1] + '</span>';
+    isle.appendChild(a); tabs[t[0]] = a;
   });
-  document.addEventListener("keydown", function(e){ if (e.key === "Escape") setOpen(false); });
-  window.addEventListener("resize", function(){ if (window.innerWidth > 960) setOpen(false); });
+  function mark(){
+    var c = current();
+    TABS.forEach(function(t){
+      if (t[0] === c) tabs[t[0]].setAttribute("aria-current", "page"); else tabs[t[0]].removeAttribute("aria-current");
+    });
+  }
+  mark();
+  window.addEventListener("hashchange", mark);
+  window.VN_ISLE = { mark: mark, current: current };
 
-  /* compact once the page has scrolled past the top */
+  head.insertBefore(isle, brand ? brand.nextSibling : nav);
+  if (tools) head.insertBefore(tools, nav);
+  head.classList.add("isled");
+
+  /* a material once the page has scrolled past the top */
   function stuck(){ head.classList.toggle("stuck", (window.scrollY || document.documentElement.scrollTop || 0) > 2); }
   window.addEventListener("scroll", stuck, { passive: true });
   stuck();
@@ -210,12 +245,12 @@
   });
 })();
 
-/* Where to follow and reach the maker, at the top of every page: YouTube,
-   Instagram, LinkedIn and email. On the website the links sit in the
-   masthead: at the right of the buttons' line on a phone or tablet, and
-   among the section links on a wide screen. In the app they sit in the top
-   bar where it has room, and at the foot of the sections menu on a phone,
-   where it has none. The About page lists them again, with GitHub. */
+/* Where to follow and reach the maker, at the top of every page of the
+   Android app: YouTube, Instagram, LinkedIn and email, in the top bar where
+   it has room and at the foot of the sections menu on a phone, where it has
+   none. The website's header carried them until v11.63, when it became the
+   iOS app's bar of tabs, which carry none; the About page lists them, with
+   GitHub, on the website and in both apps. */
 (function(){
   var LINKS = [
     { name: "YouTube", handle: "@VisualNeuroscienceAI", href: "https://www.youtube.com/@VisualNeuroscienceAI",
@@ -246,19 +281,9 @@
     return g;
   }
 
-  if (document.documentElement.hasAttribute("data-native")){
-    var right = document.querySelector(".vn-bar-right");
-    if (right) right.insertBefore(group("vn-social-bar"), right.querySelector(".vn-menu-btn") || right.firstChild);
-    var menu = document.getElementById("vn-menu");
-    if (menu) menu.appendChild(group("vn-social-menu", true));
-    return;
-  }
-  var head = document.querySelector(".masthead");
-  var brand = head && head.querySelector(".brand");
-  if (brand && brand.parentNode === head) head.insertBefore(group("vn-social-head"), brand.nextSibling);
-  var tools = head && head.querySelector(".nav-tools");
-  if (tools){
-    var menuBtn = tools.querySelector(".nav-menu-btn");
-    tools.insertBefore(group("vn-social-nav"), menuBtn ? menuBtn.nextSibling : tools.firstChild);
-  }
+  if (!document.documentElement.hasAttribute("data-native")) return;
+  var right = document.querySelector(".vn-bar-right");
+  if (right) right.insertBefore(group("vn-social-bar"), right.querySelector(".vn-menu-btn") || right.firstChild);
+  var menu = document.getElementById("vn-menu");
+  if (menu) menu.appendChild(group("vn-social-menu", true));
 })();

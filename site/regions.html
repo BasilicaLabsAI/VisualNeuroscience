@@ -906,14 +906,8 @@ mark{ background:var(--ink); color:var(--paper); }
    script (the apps' pages have no header and start at nought); --bar-h is
    the bar's. */
 body.atlas-screen{ overflow:hidden; margin:0; }
-/* the root too, for Safari on a phone, which scrolls a body alone; and the
-   folded site menu, laid out under the header though hidden, stands taller
-   than a phone held sideways and made the document scroll, so here it
-   scrolls within the room below the header */
+/* the root too, for Safari on a phone, which scrolls a body alone */
 html:has(> body.atlas-screen){ overflow:hidden; }
-@media (max-width:960px){
-  body.atlas-screen .nav-menu.nav-menu{ max-height:calc(100vh - var(--screen-top, 0px)); max-height:calc(100dvh - var(--screen-top, 0px)); overflow-y:auto; }
-}
 /* on an iPad the shell pads a page's top; this screen pads its own stage and keeps only the safe area */
 :root[data-shell][data-shell-pad] body.atlas-screen{ padding-top:max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px)); }
 main.screen{

@@ -178,6 +178,24 @@ img{ max-width:100%; height:auto; display:block; }
 .m-about  { grid-column:span 12; }
 .m-ledger { grid-column:span 12; }
 
+/* ── the two hubs ───────────────────────────────────────────────────────
+   On the website the mosaic is two pages of boxes, as the app's Atlases
+   and Library tabs are (Shell.swift; the island's tabs in navbar.js open
+   them): the six atlases with the figures beneath, and under #library the
+   papers, the book and the posters, the book and the posters side by side
+   where the atlases pair up. Practice, the MCP server and the developer's
+   message have tabs of their own, so their boxes show on neither hub. In
+   the Android app, whose bar lists the sections, the whole mosaic shows. */
+:root:not([data-native]) .mosaic:not(.hub-library) > .m-studies,
+:root:not([data-native]) .mosaic:not(.hub-library) > .m-textbook,
+:root:not([data-native]) .mosaic:not(.hub-library) > .m-posters,
+:root:not([data-native]) .mosaic:not(.hub-library) > .m-practice,
+:root:not([data-native]) .mosaic:not(.hub-library) > .m-mcp,
+:root:not([data-native]) .mosaic:not(.hub-library) > .m-about{ display:none; }
+.mosaic.hub-library > :not(.m-studies):not(.m-textbook):not(.m-posters){ display:none; }
+.mosaic.hub-library .m-posters{ grid-column:span 6; grid-template-columns:minmax(0,1fr); }
+.mosaic.hub-library .m-posters .plate{ order:-1; }
+
 /* ── a box ──────────────────────────────────────────────────────────────
    Hairline rule, kicker, display headline, standfirst, then the figure.
    The whole box is the link; the arrow is only a signpost. */
@@ -315,6 +333,7 @@ img{ max-width:100%; height:auto; display:block; }
   .m-mcp    { grid-column:span 6; }
   .m-about  { grid-column:span 6; }
   .m-ledger { grid-column:span 6; }
+  .mosaic.hub-library .m-posters{ grid-column:span 3; }
 }
 
 /* ── phone: one box on each line, and the wide box stacks ── */
@@ -549,6 +568,36 @@ themeBtn.addEventListener("click", () => {
 
 <script src="assets/native.js"></script>
 <script src="assets/navbar.js"></script>
+<script>
+"use strict";
+/* The two hubs. The mosaic shows the atlases, or with #library the papers,
+   the book and the posters, as the island's Atlases and Library tabs do in
+   the app (navbar.js). A tab for this page switches the hub in place and
+   returns to the top rather than loading the page again; the browser's
+   back steps between the two. In the Android app the whole mosaic shows
+   and nothing here runs. */
+(function(){
+  var mosaic = document.querySelector(".mosaic");
+  if (!mosaic || document.documentElement.hasAttribute("data-native")) return;
+  function hub(){ mosaic.classList.toggle("hub-library", location.hash === "#library"); }
+  function mark(){ if (window.VN_ISLE) VN_ISLE.mark(); }
+  hub();
+  window.addEventListener("hashchange", function(){ hub(); mark(); window.scrollTo(0, 0); });
+  window.addEventListener("popstate", function(){ hub(); mark(); });
+  document.addEventListener("click", function(e){
+    var a = e.target.closest ? e.target.closest(".vn-isle .vn-tab") : null;
+    if (!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var to;
+    try { to = new URL(a.getAttribute("href"), location.href); } catch (err){ return; }
+    if (to.pathname !== location.pathname) return;
+    e.preventDefault();
+    if (to.hash === location.hash){ window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+    if (to.hash){ location.hash = to.hash; return; }
+    try { history.pushState(null, "", to.pathname); } catch (err){}
+    hub(); mark(); window.scrollTo(0, 0);
+  });
+})();
+</script>
 <script src="assets/newsletter.js" defer></script>
 <script src="assets/firebase-config.js"></script>
 <script type="module" src="assets/auth-ui.js"></script>

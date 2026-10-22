@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.63 — 22 October 2026 — The island
+Commit · Give the website the iOS app's bar of tabs, an island of five in place of the header's row of links
+
+The website's header was a masthead with a row of ten section links beneath it, folding into a menu on a phone. It is now the iOS app's: a slim bar with the brand at the left, the theme and account buttons at the right and, floating between them, an island of the app's five tabs, Atlases, Library, Practice, About and Account, each an icon over its name, the page's own tab lit. On an iPad or a computer the three stand on one line; on a phone the island has a line of its own and spans the width, as the app's does. Atlases and Library open the home page on one of two hubs, the six atlases with the figures beneath, or the papers, the book and the posters, switching in place as the app's tabs do; the other three tabs are the pages themselves. The bar pins to the top and turns to a material as the page scrolls, and on a phone held sideways it scrolls away. The social links left the header with the row; the About page lists them. The apps are untouched: the iOS shell draws its own tabs and the Android app keeps its bar and sections menu.
+
 ## v11.62 — 22 October 2026 — A line under the graph
-Commit · Say under the receptor graph that a name tapped highlights its region on the 3D model
+Commit `1c47df8` · Say under the receptor graph that a name tapped highlights its region on the 3D model
 
 The receptor graph's names could always be tapped, a region's to light it on the 3D model and the scans, a receptor's to open its reading, and nothing said so. One line under the graph now does, beside the key where the line holds both and beneath it where it does not: on a touch screen it says tap, with a mouse click, and it changes with the axis, a region's name by receptor and a receptor's name by region.
 

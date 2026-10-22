@@ -121,44 +121,6 @@ select{
   .mri-stage{ height:clamp(190px,54vw,280px); }
 }
 
-/* ── narrow screens: the tabs stack, one to a line ──────────────────────
-   Six tabs wrapped into ragged rows on a phone, breaking mid-row and leaving
-   the current tab hard to find. Stacked, each one reads as its own line.
-   Every page declares .nav-row in its own sheet, so the class is doubled
-   here to outrank those rules whichever order the sheets land in. */
-@media (max-width:760px){
-  .nav-row.nav-row{ flex-direction:column; gap:.62rem; }
-  .nav-row.nav-row a{ display:block; }
-}
-
-/* ── the tab strip can never be wider than the page ─────────────────────
-   Two guarantees, whatever the browser, the zoom level or the fonts that
-   actually loaded. First, the strip wraps its own tabs and, when the
-   compact masthead below makes it a flex item, it may shrink to the line
-   rather than keep its full natural width and spill past both edges —
-   the centred strip was seen clipped at both ends in exactly that case.
-   Second, between a phone and a wide desktop the tabs are set a little
-   tighter, so eight of them and the two buttons sit on one row from
-   about 1180px up and on two tidy rows below, instead of three ragged
-   ones. Classes are doubled to outrank the per-page declarations. */
-.nav-row.nav-row{ flex-wrap:wrap; min-width:0; max-width:100%; box-sizing:border-box; }
-.masthead.masthead > .nav-row{ flex:0 1 auto; }
-/* the type, its tracking and the gaps all scale with the viewport, from a
-   compact setting at 761px up to the full one at about 1700px, so the strip
-   grows with the window rather than jumping between sizes at a breakpoint */
-@media (min-width:761px){
-  .nav-row.nav-row{ gap:.3rem clamp(.8rem, .2rem + 1.2vw, 2rem); }
-  .nav-row.nav-row a{
-    font-size:clamp(.64rem, .55rem + .11vw, .74rem);
-    letter-spacing:clamp(.2em, .1em + .12vw, .3em);
-  }
-}
-/* the Log in button and the theme toggle are one unit: where the eight
-   tabs fill a row and the buttons do not fit beside them, both drop to
-   the next row together, rather than one of them falling alone. The
-   group inherits the strip's gap so the spacing reads as one row. */
-.nav-row .nav-tools{ display:inline-flex; align-items:center; gap:inherit; }
-}
 
 /* ── enlarge: one box taking the whole grid ── */
 .views.solo{ grid-template-columns:1fr; }
@@ -407,23 +369,16 @@ body{
 
 /* ── landscape on a short screen: the chrome gives the height back ──────
    Landscape is the posture the app is designed in, and there the scarce
-   axis is height — yet the centred masthead, the nav and the title strip
-   spent some 200px of it before any content appeared. Under 940px of
-   height in landscape the brand shares its line with the nav, the strip
-   tightens, and the viewport grid is sized from the height that is
-   actually there rather than from fixed clamps. Phones in landscape pass
-   the min-width gate too, which is fine: the clamp floors keep the
-   stages usable and the page simply scrolls.
+   axis is height — yet the title strip and the stages' fixed clamps spent
+   it before any content appeared (the header itself is the slim bar of
+   the island at every width since v11.63). Under 1120px of height in
+   landscape the strip tightens and the viewport grid is sized from the
+   height that is actually there rather than from fixed clamps. Phones in
+   landscape pass the min-width gate too, which is fine: the clamp floors
+   keep the stages usable and the page simply scrolls.
    Classes are doubled where a page sheet declares the same single class,
    so these win whichever order the sheets land in. */
 @media (orientation: landscape) and (max-height: 1120px) and (min-width: 761px){
-  .masthead.masthead{
-    display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
-    column-gap:2.2rem; row-gap:0; padding:.5rem 0 0; text-align:left;
-  }
-  .masthead .brand{ font-size:1.3rem; }
-  .nav-row.nav-row{ padding:.3rem 0 .4rem; gap:.25rem 1.05rem; }
-  .nav-row.nav-row a{ font-size:.66rem; }
   .title-strip.title-strip{ padding:.45rem .9rem; margin-bottom:10px; }
   .title-strip .name{ font-size:1.05rem; }
   .masthead + * .title-strip{ margin-top:0; }
@@ -545,91 +500,119 @@ button, .ts-btn, .seg-btn, .barow{ touch-action:manipulation; }
 @media (hover: hover){ .models .mdel:hover{ background:var(--ink); color:var(--paper); } }
 @media (pointer: coarse){ .models .mdel{ min-width:36px; min-height:36px; } }
 
-/* ── the header stays ────────────────────────────────────────────────────
-   The masthead is pinned to the top of every page. At the top of a page it
-   is the full centred masthead as before; once the page scrolls it draws in
-   to a compact bar (navbar.js sets .stuck) so it keeps little of the screen.
-   Under 960px the section links fold into a menu behind a button, while the
-   Log in and theme buttons stay in view beside it. Classes are doubled to
-   outrank each page's own single-class rules whichever order the sheets
-   land in. */
+/* ── the header stays, and carries the island ───────────────────────────
+   The masthead is pinned to the top of every page: a slim bar, since
+   v11.63 the iOS app's (Shell.swift), with the brand at the left, the
+   theme and account buttons at the right and, between them, a floating
+   island of the app's five tabs, Atlases, Library, Practice, About and
+   Account, each an icon over its name, the one the page belongs to lit.
+   navbar.js builds the island after the brand, moves the buttons out of
+   the page's row of section links and marks the header .isled; the row
+   stays in the page, hidden, its links still there to be read, and the
+   links are hidden before the script runs so the old row never flashes.
+   From 1001px the three stand on one line, as on an iPad; below that the
+   island has a line of its own under the brand and the buttons, and on a
+   phone it spans the width, its five tabs equal. The island is inside the
+   header, so a page that measures its header's height (the atlas screens'
+   --screen-top) counts it, and wherever the header steps aside (a phone
+   held sideways on the atlases) the island goes with it. Once the page
+   has scrolled the bar is a material, not a wall (navbar.js sets .stuck):
+   the page shows faintly through, as the app's own bar lets it. Classes
+   are doubled to outrank each page's own single-class rules whichever
+   order the sheets land in. */
 .masthead-sentinel{ height:1px; margin-bottom:-1px; }
-.masthead.masthead{ position:sticky; top:0; z-index:80; background:var(--paper); }
-/* once the page scrolls under it the bar is a material, not a wall: the
-   page shows faintly through, as the app's own bar lets it */
+.masthead.masthead{
+  position:sticky; top:0; z-index:80; background:var(--paper);
+  display:grid; grid-template-columns:minmax(max-content,1fr) auto minmax(max-content,1fr); grid-template-areas:"brand isle tools";
+  align-items:center; column-gap:clamp(.8rem,2vw,1.6rem); row-gap:.45rem;
+  padding:.55rem clamp(14px,2.5vw,48px); text-align:left;
+}
+.masthead.masthead::after{ content:none; }
 .masthead.masthead.stuck{
-  padding-top:.45rem;
   background:color-mix(in srgb, var(--paper) 84%, transparent);
   -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
 }
-.masthead.masthead.stuck .brand{ font-size:1.35rem; }
-.masthead.masthead.stuck .nav-row{ padding:.3rem 0 .45rem; }
 html{ scroll-padding-top:5.2rem; }
-/* the links keep their place in the row on wide screens; the wrapper is
-   invisible to the layout until the narrow rules turn it into a panel */
-.nav-menu{ display:contents; }
-.nav-menu-btn{ display:none; }
-@media (max-width:960px){
-  /* Two lines. The brand has the first to itself, centred; the second
-     carries the menu, Log in and theme buttons on the left and the follow
-     links on the right. Where the second line cannot hold both, the links
-     drop to a line of their own, still on the right. The break after the
-     brand is the ::after, a full-width item of no height ordered between
-     the brand and the rest, so the brand keeps its own width as a link. */
-  .masthead.masthead{
-    display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
-    column-gap:.6rem; row-gap:0; padding:.6rem clamp(14px,2.5vw,48px) .65rem; text-align:left;
-  }
-  .masthead.masthead::after{ content:""; order:-1; flex:0 0 100%; height:0; }
-  .masthead.masthead .brand{ order:-2; margin:0 auto; font-size:1.45rem; }
-  .masthead.masthead.stuck{ padding-top:.6rem; }
-  .masthead.masthead.stuck .brand{ font-size:1.45rem; }
-  .nav-row.nav-row{ order:1; flex-direction:row; flex-wrap:nowrap; align-items:center; justify-content:flex-start; gap:.45rem; padding:0; flex:0 0 auto; margin:.6rem 0 0; }
-  .masthead.masthead.stuck .nav-row{ padding:0; }
-  .nav-row .nav-tools{ display:inline-flex; align-items:center; gap:.45rem; }
-  /* the buttons at a size a thumb finds at once, all four 40px tall */
-  .masthead.masthead .nav-menu-btn, .masthead.masthead .vn-auth-btn,
-  .masthead.masthead .vn-auth-name, .masthead.masthead .theme-toggle{
+.masthead.masthead .brand, .masthead.masthead.stuck .brand{ grid-area:brand; justify-self:start; margin:0; font-size:1.3rem; }
+/* the old row of section links: its links hidden, it holds the buttons
+   at the right until the script moves them out, then goes */
+.masthead.masthead > .nav-row.nav-row{
+  grid-area:tools; justify-self:end; display:inline-flex; flex-direction:row; flex-wrap:nowrap;
+  align-items:center; gap:.45rem; padding:0; margin:0;
+}
+.masthead.masthead > .nav-row > a{ display:none; }
+.masthead.masthead.isled > .nav-row.nav-row{ display:none; }
+.masthead.masthead > .nav-tools{ grid-area:tools; justify-self:end; display:inline-flex; align-items:center; gap:.45rem; }
+/* the island: a capsule of a faint tint, the lit tab a lens lifted from it */
+.vn-isle{
+  grid-area:isle; justify-self:center; max-width:100%; box-sizing:border-box;
+  display:inline-flex; align-items:stretch; gap:2px; padding:3px; border-radius:999px;
+  --lens:#FFFFFF; --capsule:rgba(17,17,17,.06); --edge:rgba(17,17,17,.1);
+  --lift:0 1px 2px rgba(0,0,0,.06), 0 6px 18px rgba(0,0,0,.08); --lens-lift:0 1px 3px rgba(0,0,0,.14);
+  background:var(--capsule); border:1px solid var(--edge); box-shadow:var(--lift);
+}
+:root[data-theme="dark"] .vn-isle{
+  --lens:rgba(255,255,255,.13); --capsule:rgba(255,255,255,.07); --edge:rgba(255,255,255,.12);
+  --lift:0 1px 2px rgba(0,0,0,.4), 0 6px 18px rgba(0,0,0,.35); --lens-lift:0 1px 3px rgba(0,0,0,.5);
+}
+.vn-tab{
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; box-sizing:border-box;
+  min-width:4.6rem; height:44px; padding:0 .8rem; border-radius:999px;
+  color:var(--ink-60); text-decoration:none; -webkit-tap-highlight-color:transparent;
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; line-height:1;
+}
+.vn-tab svg{ width:21px; height:21px; display:block; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.vn-tab span{ display:block; white-space:nowrap; }
+.vn-tab[aria-current]{ color:var(--ink); background:var(--lens); box-shadow:var(--lens-lift); }
+@media (hover:hover){ .vn-tab:hover{ color:var(--ink); } }
+.vn-tab:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+/* up to 1000px the island has a line of its own under the brand and the buttons */
+@media (max-width:1000px){
+  .masthead.masthead{ grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"brand tools" "isle isle"; padding-top:.6rem; padding-bottom:.6rem; }
+  /* the buttons at a size a thumb finds at once, all 40px tall */
+  .masthead.masthead .vn-auth-btn, .masthead.masthead .vn-auth-name, .masthead.masthead .theme-toggle{
     box-sizing:border-box; height:40px; min-height:0; font-size:.72rem; letter-spacing:.18em;
   }
-  .masthead.masthead .nav-menu-btn, .masthead.masthead .theme-toggle{ padding:0 .65rem; }
+  .masthead.masthead .theme-toggle{ padding:0 .65rem; }
   .masthead.masthead .vn-auth-btn, .masthead.masthead .vn-auth-name{ padding-top:0; padding-bottom:0; line-height:38px; }
   .masthead.masthead .vn-auth-btn, .masthead.masthead .vn-auth-pick{ padding-left:.65rem; padding-right:.65rem; }
   .masthead.masthead .theme-toggle .th-dot{ width:.8rem; height:.8rem; }
   /* signed in, the account button stands alone: it opens the account card,
      which carries Log out */
   .masthead.masthead .vn-auth-name + .vn-auth-btn{ display:none; }
-  .nav-menu-btn{
-    display:inline-flex; align-items:center; gap:.45rem;
-    font-family:var(--font-brand); font-weight:500; font-size:.66rem; letter-spacing:.22em; text-transform:uppercase;
-    color:var(--ink); background:none; border:1px solid var(--hair); cursor:pointer; padding:.28rem .6rem;
-  }
-  .nav-menu-btn .bars{ width:1rem; height:.75rem; position:relative; }
-  .nav-menu-btn .bars::before, .nav-menu-btn .bars::after, .nav-menu-btn .bars i{
-    content:""; position:absolute; left:0; right:0; height:1.5px; background:currentColor;
-  }
-  .nav-menu-btn .bars::before{ top:0; } .nav-menu-btn .bars i{ top:50%; margin-top:-.75px; } .nav-menu-btn .bars::after{ bottom:0; }
-  .nav-menu-btn[aria-expanded="true"]{ background:var(--ink); color:var(--paper); }
-  /* the folded sections: a panel under the bar, one link to a line */
-  .nav-menu.nav-menu{
-    display:none; position:absolute; left:0; right:0; top:100%;
-    flex-direction:column; align-items:stretch; padding:.4rem 0 .6rem;
-    background:var(--paper); border-top:1px solid var(--hair); border-bottom:1px solid var(--hair);
-    box-shadow:0 14px 30px rgba(0,0,0,.22);
-  }
-  .masthead.menu-open .nav-menu.nav-menu{ display:flex; }
-  .nav-menu.nav-menu a{ display:block; padding:.7rem clamp(14px,2.5vw,48px); border-bottom:1px solid color-mix(in srgb, var(--ink) 14%, transparent); }
-  .nav-menu.nav-menu a:last-child{ border-bottom:0; }
-  .nav-menu.nav-menu a[aria-current]{ border-bottom:1px solid color-mix(in srgb, var(--ink) 14%, transparent); padding-bottom:.7rem; font-weight:600; }
-  .nav-row.nav-row .nav-menu a{ display:block; }
 }
-/* only where even the word would push the row over does the theme
+/* on a phone the island spans the width, the five tabs equal */
+@media (max-width:600px){
+  .masthead.masthead .brand, .masthead.masthead.stuck .brand{ font-size:1.2rem; }
+  .vn-isle{ justify-self:stretch; display:flex; }
+  .vn-tab{ flex:1 1 0; min-width:0; padding:0 .2rem; }
+}
+@media (max-width:420px){
+  .masthead.masthead{ column-gap:.5rem; }
+  .vn-tab{ font-size:.56rem; letter-spacing:.12em; }
+  .masthead.masthead .theme-toggle{ padding:0 .5rem; }
+  .masthead.masthead .vn-auth-btn, .masthead.masthead .vn-auth-pick{ padding-left:.5rem; padding-right:.5rem; }
+  .masthead.masthead .vn-auth-btn, .masthead.masthead .vn-auth-name, .masthead.masthead .theme-toggle{ letter-spacing:.14em; }
+}
+/* only where even the word would push the line over does the theme
    switch keep its dot alone; the word stays for a screen reader */
 @media (max-width:359px){
+  .vn-tab{ font-size:.52rem; letter-spacing:.08em; }
   .masthead.masthead .theme-toggle #themeLbl{
     position:absolute; width:1px; height:1px; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;
   }
   .masthead.masthead .theme-toggle{ width:40px; padding:0; justify-content:center; }
+}
+@media (max-width:340px){ .masthead.masthead{ padding-left:10px; padding-right:10px; } }
+/* an anchor scrolled to lands clear of the pinned bar, taller where the
+   island has its own line */
+@media (max-width:1000px){ html{ scroll-padding-top:8rem; } }
+/* a phone held sideways has little height to spare: there the header
+   scrolls away with the page instead of pinning, as the app's shell hides
+   its bar sideways (the atlas screens hide the header there altogether) */
+@media (pointer:coarse) and (orientation:landscape) and (max-height:500px){
+  .masthead.masthead{ position:static; }
+  html{ scroll-padding-top:0; }
 }
 /* the same menu inside the app: a button in the bar opens the sections under it */
 .vn-menu-btn{
@@ -657,14 +640,12 @@ html{ scroll-padding-top:5.2rem; }
 .vn-menu a:last-child{ border-bottom:0; }
 
 /* ── where to reach the maker ────────────────────────────────────────────
-   navbar.js builds the same links twice for each place they can sit and
-   these rules show one of the two: on the website, on the brand's line up
-   to 960px and among the section links above it; in the app, in the top
-   bar from 700px and at the foot of the sections menu below it. */
+   navbar.js builds the same links twice for the two places they can sit in
+   the app and these rules show one of them: in the top bar from 700px and
+   at the foot of the sections menu below it. The website's header carries
+   none since v11.63, as the app's tabs carry none: the About page lists
+   them, with GitHub. */
 .vn-social{ display:inline-flex; align-items:center; gap:2px; }
-/* each link keeps a 32px target but takes no more height in its line than
-   the buttons beside it, so the masthead is no taller for carrying them */
-.masthead .vn-social{ margin:-4px 0; }
 .vn-social a{
   display:inline-flex; align-items:center; justify-content:center; flex:none;
   width:32px; height:32px; color:var(--ink); text-decoration:none;
@@ -673,38 +654,6 @@ html{ scroll-padding-top:5.2rem; }
 .vn-social svg{ width:19px; height:19px; display:block; flex:none; }
 @media (hover:hover){ .vn-social a:hover{ opacity:.55; } }
 .vn-social a:focus-visible{ outline:1px solid var(--ink); outline-offset:1px; }
-.masthead .vn-social-head{ display:none; }
-@media (max-width:960px){
-  .masthead .vn-social-head{ display:inline-flex; order:2; margin:.6rem 0 0 auto; }
-  .masthead .vn-social-head a{ width:30px; height:40px; }
-  .masthead .vn-social-head svg{ width:21px; height:21px; }
-  .nav-row .vn-social-nav{ display:none; }
-}
-.nav-row .vn-social-nav a{ width:28px; }
-/* On a phone the follow links keep to the buttons' line, centred on it,
-   rather than taking a line of their own under them: the links close up,
-   and on the narrowest phones the buttons give up a little of their
-   padding and tracking too. A row that still cannot hold both, with a long
-   account name in place of Log in, lets the links drop as before. */
-@media (max-width:420px){
-  .masthead.masthead{ column-gap:.5rem; }
-  .masthead .vn-social-head{ gap:0; }
-  .masthead .vn-social-head a{ width:27px; }
-  .masthead .vn-social-head svg{ width:20px; height:20px; }
-}
-@media (max-width:380px){
-  .masthead.masthead .nav-menu-btn, .masthead.masthead .theme-toggle{ padding:0 .5rem; }
-  .masthead.masthead .vn-auth-btn, .masthead.masthead .vn-auth-pick{ padding-left:.5rem; padding-right:.5rem; }
-  .masthead.masthead .nav-menu-btn, .masthead.masthead .vn-auth-btn,
-  .masthead.masthead .vn-auth-name, .masthead.masthead .theme-toggle{ letter-spacing:.14em; }
-  .nav-row.nav-row, .nav-row .nav-tools{ gap:.4rem; }
-  .masthead .vn-social-head a{ width:26px; }
-}
-@media (max-width:340px){
-  .masthead .vn-social a{ width:28px; }
-  .masthead.masthead{ padding-left:10px; padding-right:10px; }
-  .masthead .vn-social-head a{ width:25px; }
-}
 .vn-bar .vn-social-bar{ display:none; }
 .vn-menu .vn-social-menu{ display:grid; grid-template-columns:repeat(2, max-content); gap:0 2.2rem; padding:.3rem 1rem .2rem; }
 .vn-menu .vn-social-menu a{
@@ -727,11 +676,11 @@ html{ scroll-padding-top:5.2rem; }
    materials the page shows through. Anyone who has asked their device for
    less motion gets a plain fade and no scaling; anyone who has asked for
    less transparency or more contrast gets solid chrome. */
-.ts-btn, .btn, .seg-btn, .nav-menu-btn, .vn-menu-btn, .theme-toggle, .vn-auth-btn,
+.ts-btn, .btn, .seg-btn, .vn-tab, .vn-menu-btn, .theme-toggle, .vn-auth-btn,
 .vn-auth-name, .x3d .btn, .models .btn, .models .mdel, .zoom-btn, .cube .ts-btn{
   transition:transform .1s ease-out, background-color .15s ease, color .15s ease, opacity .15s ease;
 }
-.ts-btn:active, .btn:active, .seg-btn:active, .nav-menu-btn:active, .vn-menu-btn:active,
+.ts-btn:active, .btn:active, .seg-btn:active, .vn-tab:active, .vn-menu-btn:active,
 .theme-toggle:active, .vn-auth-btn:active, .vn-auth-name:active, .x3d .btn:not(:disabled):active,
 .models .btn:active, .models .mdel:active, .zoom-btn:active{ transform:scale(.96); }
 a.box{ transition:transform .12s ease-out, background .18s ease; }
@@ -755,34 +704,30 @@ a.box:active{ transform:scale(.992); }
   transition:opacity .18s cubic-bezier(.32,.72,0,1), transform .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .22s;
 }
 .vn-menu.vn-menu.open{ visibility:visible; opacity:1; transform:none; transition-delay:0s, 0s, 0s; }
-/* the website's folded sections, hung from the menu button at the left */
-@media (max-width:960px){
-  .nav-menu.nav-menu{
-    display:flex; visibility:hidden; opacity:0;
-    transform:translateY(-8px) scale(.985); transform-origin:top left;
-    background:color-mix(in srgb, var(--paper) 88%, transparent);
-    -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
-    transition:opacity .18s cubic-bezier(.32,.72,0,1), transform .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .22s;
-  }
-  .masthead.menu-open .nav-menu.nav-menu{ visibility:visible; opacity:1; transform:none; transition-delay:0s, 0s, 0s; }
-}
-
 @media (prefers-reduced-motion: reduce){
-  .ts-btn:active, .btn:active, .seg-btn:active, .nav-menu-btn:active, .vn-menu-btn:active,
+  .ts-btn:active, .btn:active, .seg-btn:active, .vn-tab:active, .vn-menu-btn:active,
   .theme-toggle:active, .vn-auth-btn:active, .vn-auth-name:active, .x3d .btn:active,
   .models .btn:active, .models .mdel:active, .zoom-btn:active, a.box:active{ transform:none; }
   .ts-btn:active, .btn:active, .seg-btn:active{ background:var(--ink); color:var(--paper); }
-  .vn-menu.vn-menu, .nav-menu.nav-menu{ transform:none; transition:opacity .15s ease, visibility 0s linear .15s; }
-  .vn-menu.vn-menu.open, .masthead.menu-open .nav-menu.nav-menu{ transition-delay:0s, 0s; }
+  .vn-menu.vn-menu{ transform:none; transition:opacity .15s ease, visibility 0s linear .15s; }
+  .vn-menu.vn-menu.open{ transition-delay:0s, 0s; }
 }
+/* solid chrome for anyone who asked for less transparency or more
+   contrast: the bar a wall again, the island's capsule the paper with an
+   ink edge and its lit tab inked */
 @media (prefers-reduced-transparency: reduce){
-  .vn-bar, .masthead.masthead.stuck, .vn-menu.vn-menu, .nav-menu.nav-menu{
+  .vn-bar, .masthead.masthead.stuck, .vn-menu.vn-menu{
     background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none;
   }
+  .vn-isle{ background:var(--paper); border-color:var(--ink); box-shadow:none; }
+  .vn-tab[aria-current]{ background:var(--ink); color:var(--paper); box-shadow:none; }
 }
 @media (prefers-contrast: more){
-  .vn-bar, .masthead.masthead.stuck, .vn-menu.vn-menu, .nav-menu.nav-menu{
+  .vn-bar, .masthead.masthead.stuck, .vn-menu.vn-menu{
     background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none;
     border-bottom:1px solid var(--ink);
   }
+  .vn-isle{ background:var(--paper); border-color:var(--ink); box-shadow:none; }
+  .vn-tab{ color:var(--ink); }
+  .vn-tab[aria-current]{ background:var(--ink); color:var(--paper); box-shadow:none; }
 }

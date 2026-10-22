@@ -45,6 +45,20 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (`viewer.css`), keeping any buttons it carries. The stack's swipes back (from the edge, and iOS 26's from
   anywhere) are off on the pages, since a sideways drag on a scan set them off; Back is the bar's button
   (`PageBridgeController.viewDidAppear`).
+- The website's header is the iOS app's since v11.63: a slim pinned bar with the brand at the left, the theme and
+  account buttons at the right and, between them, a floating island of the app's five tabs, Atlases, Library, Practice,
+  About and Account, each an icon over its name, the page's own tab lit. `navbar.js` (its website section) builds the
+  island after the brand, moves `.nav-tools` out of each page's `.nav-row` and marks the header `.isled`; the row of ten
+  section links stays in every page's markup, hidden by `viewer.css` (the island section, which also holds the bar's
+  layout: one line from 1001px, the island on a line of its own below that, spanning the width on a phone; the header
+  scrolls away on a phone held sideways). The page a file belongs to is the `OF` map in `navbar.js`: the atlases to
+  Atlases; studies, hallucinations, textbook and posters to Library; about and mcp to About; account, privacy, terms,
+  delete-account and connect to Account. Atlases and Library open the home page on one of its two hubs: `index.html`
+  shows the six atlas boxes and the figures, `index.html#library` the papers, the book and the posters
+  (`.mosaic.hub-library`, switched in place by the page's hub script; the practice, MCP and developer boxes show on
+  neither, their tabs leading there; the Android app, whose bar lists the sections, shows the whole mosaic). The
+  social links left the header with it; the About page lists them. A new page gets the island by carrying the same
+  masthead markup as the others; `get.html` carries none on purpose.
 - `site/sw.js` precaches pages and assets: **bump `VERSION`** (`vn-NN`) whenever a precached file changes.
 - Shared receptor drawings live in `site/assets/rxfig.js` + `rxfig.css`, built from `site/assets/rx/receptors.json`
   (`scripts/receptors/build.py`) and `site/assets/nt/molecules.json` (`scripts/neurotransmitters/build.py`).
@@ -165,9 +179,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (`#types-heat`, `.heat`) is `overflow:visible` and scrolls with the pop-up's body, so its sticky column names and
   row labels hold; its header is as tall as the longest name (`th.col button` sized by its text, since v11.29). A view too narrow for its
   bar's tools (a phone) shows the name and the expand button alone. The page's `--screen-top` is the header's
-  measured height, and the root is `overflow:hidden` with the body (`html:has(> body.atlas-screen)`), since the folded
-  site menu, laid out under the header though hidden, made the document taller than a phone held sideways; that menu
-  scrolls within the room under the header on this page. In every 3D view, a drag on the wheel's button pans, as
+  measured height, and the root is `overflow:hidden` with the body (`html:has(> body.atlas-screen)`), for Safari on a
+  phone, which scrolls a body alone. In every 3D view, a drag on the wheel's button pans, as
   shift-drag does (`zoom.js`). Since v11.23 the bar's buttons are an icon over a word at every width (`.pbtn`, inline
   SVG), and on a phone (the script's `one` media query: 760px wide or less, or a coarse pointer under 500px tall) the
   screen is `main.screen.one`: the stage holds the four views two by two (`main.one.all`, the default since v11.28,
