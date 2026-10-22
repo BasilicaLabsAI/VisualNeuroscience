@@ -1084,7 +1084,15 @@ main.screen{
 .rx-tab{ flex:1 1 auto; min-height:0; }
 .rx-tab.rx-fill{ display:flex; flex-direction:column; }
 .rx-tab.rx-scroll{ overflow:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; }
-#chart-pane .rx-controls, #chart-pane .chart-scroll-hint, #chart-pane .legend, #types-pane .heat-head{ flex:none; }
+#chart-pane .rx-controls, #chart-pane .chart-scroll-hint, #chart-pane .chart-foot, #types-pane .heat-head{ flex:none; }
+/* the graph's foot: the key at the left and, at the right while the line
+   holds both, the one line of instruction, what a name does when touched */
+.chart-foot{ display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:.2rem 1.2rem; margin-top:.5rem; }
+.chart-foot .legend{ margin:0; flex:0 1 auto; }
+.chart-hint{ flex:0 1 auto; margin:0; font-family:var(--font-serif); font-style:italic; font-size:.8rem; line-height:1.4; color:var(--ink-60); text-align:right; }
+.chart-hint:empty{ display:none; }
+.screen.one .chart-foot{ flex-direction:column; align-items:stretch; gap:.3rem; }
+.screen.one .chart-hint{ text-align:left; }
 /* the graph's controls in one line where there is room, so the graph has
    the height: the dropdown at the left, narrowing to make room, and the
    source and the axis together at the far right, moving down as one when
@@ -1221,7 +1229,7 @@ main.screen.one.land{ flex-direction:row; }
 .screen.one.land #chart-pane .rx-controls{ grid-column:1; grid-row:1 / span 3; margin-bottom:0; align-self:start; }
 .screen.one.land #chart-pane #receptor-graph{ grid-column:2; grid-row:1; }
 .screen.one.land #chart-pane .chart-scroll-hint{ grid-column:2; grid-row:2; }
-.screen.one.land #chart-pane .legend{ grid-column:2; grid-row:3; }
+.screen.one.land #chart-pane .chart-foot{ grid-column:2; grid-row:3; margin-top:.3rem; }
 
 /* narrower than 901 pixels the drawer lies over the views instead */
 @media (max-width:900px){
@@ -1409,7 +1417,10 @@ main.screen.one.land{ flex-direction:row; }
               </div>
               <div id="receptor-graph"></div>
               <p class="chart-scroll-hint" aria-hidden="true">Scroll sideways for the rest &rarr;</p>
-              <div id="chart-legend" class="legend"></div>
+              <div class="chart-foot">
+                <div id="chart-legend" class="legend"></div>
+                <p class="chart-hint" id="chart-hint"></p>
+              </div>
             </div>
             <div class="rx-tab rx-scroll hidden" id="figs-pane" role="tabpanel" aria-labelledby="rxtab-figs">
               <div class="rxfig" id="rx-figs" data-for=""></div>
@@ -3257,11 +3268,24 @@ function chartHeight(scrolls) {
   const room = document.getElementById("receptor-graph").clientHeight - (scrolls ? scrollbarThickness() : 0);
   return room > 0 ? Math.max(CHART.minHeight, room - 2) : CHART.height;
 }
+/* the instruction under the graph: by receptor the names are regions, which
+   light on the 3D model and the scans; by region they are receptors, which
+   open their reading. A touch screen is told to tap, a mouse to click. */
+function chartHint() {
+  const el = document.getElementById("chart-hint");
+  if (!el) return;
+  const touch = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+  const tap = touch ? "Tap" : "Click", again = touch ? "tap" : "click";
+  el.textContent = axisMode === "receptor"
+    ? tap + " a region\u2019s name to highlight it on the 3D model; " + again + " again to let it go."
+    : tap + " a receptor\u2019s name to read about it.";
+}
 function renderChart() {
   const c = buildChart();
   const host = document.getElementById("receptor-graph");
   host.innerHTML = "";
   hideTip();
+  chartHint();
   /* the legend is set first, so the room measured for the graph is what is
      left under it */
   document.getElementById("chart-legend").innerHTML = c.legend.map(l => "<span class=\"legend-item\"><span class=\"legend-swatch\" style=\"background:" + l.colour + "\"></span>" + escapeHtml(l.name) + "</span>").join("");

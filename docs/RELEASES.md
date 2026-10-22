@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.62 — 22 October 2026 — A line under the graph
+Commit · Say under the receptor graph that a name tapped highlights its region on the 3D model
+
+The receptor graph's names could always be tapped, a region's to light it on the 3D model and the scans, a receptor's to open its reading, and nothing said so. One line under the graph now does, beside the key where the line holds both and beneath it where it does not: on a touch screen it says tap, with a mouse click, and it changes with the axis, a region's name by receptor and a receptor's name by region.
+
 ## v11.61 — 22 October 2026 — Show in 3D, a button
-Commit · Make Show in 3D a button at the foot of the Brodmann reading, filled while the brain is up
+Commit `0bd5e03` · Make Show in 3D a button at the foot of the Brodmann reading, filled while the brain is up
 
 Show in 3D stood at the foot of the reading as an underlined line of text. It is now a button in the site's manner, the cube beside its word, which fills in while the brain is up and reads Back to the map until the brain is collapsed again.
 
