@@ -194,7 +194,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   graph or export; BA48, on neither face, is reached from the empty reading, and every reading links to the area on
   the scan in the 3D Region Atlas. `#ba=<n>` opens on an area, the address follows the pick, and the MCP server's
   `brodmann_area` answers link there. The page never links away to the 3D Region Atlas (the owner's wish, v11.59):
-  Show in 3D at the reading's foot (`#rTo3d`, a toggle) raises `#baScan` inside `#baMaps`, over the two faces and
+  Show in 3D at the reading's foot (`#rTo3d`, a bordered button with the cube glyph, filled and reading Back to the
+  map while the brain is up; `markScan` sets its word and `aria-expanded`) raises `#baScan` inside `#baMaps`, over the two faces and
   nothing else, a panel with one NiiVue render (`ren`, fetched on first open, `show3Dcrosshair:false`, the MNI152
   template with `assets/brodmann.nii.gz` over it at 0.9), the picked area lit by `paintScan` from `MN_LOOK.labelTable`
   and the lobe colour, zoom and rotation from `zoom.js`, Reset (`resetView`, the angle and scale kept in `home`) and a

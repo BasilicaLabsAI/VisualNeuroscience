@@ -192,7 +192,20 @@ svg{ display:block; }
   font-size:.6rem; letter-spacing:.22em; text-transform:uppercase;
 }
 .r-foot a{ text-decoration:underline; text-underline-offset:3px; }
-.r-3d{ background:none; border:0; padding:0; color:inherit; font:inherit; letter-spacing:inherit; text-transform:inherit; cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
+/* the button that raises the brain: the site's button, the cube beside its
+   word, filled while the brain is up */
+.r-3d{
+  display:inline-flex; align-items:center; gap:.55rem; border:1px solid var(--hair); background:var(--paper); color:var(--ink);
+  padding:.55rem .95rem .5rem .8rem; font-family:var(--font-brand); font-weight:500; font-size:.62rem; letter-spacing:.22em;
+  text-transform:uppercase; line-height:1; cursor:pointer; text-decoration:none; -webkit-tap-highlight-color:transparent;
+  transition:transform .12s cubic-bezier(.32,.72,0,1), background .12s, color .12s;
+}
+.r-3d svg{ width:.95rem; height:.95rem; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.r-3d[aria-expanded="true"]{ background:var(--ink); color:var(--paper); }
+@media (hover: hover){ .r-3d:hover{ background:var(--ink); color:var(--paper); } }
+.r-3d:active{ transform:scale(.97); }
+@media (pointer:coarse){ .r-3d{ min-height:44px; } }
+@media (prefers-reduced-motion: reduce){ .r-3d{ transition:none; } .r-3d:active{ transform:none; } }
 .r-pick{
   background:none; border:0; padding:0; color:inherit; font:inherit; cursor:pointer;
   text-decoration:underline; text-underline-offset:3px;
@@ -559,10 +572,10 @@ body.ba-land{ padding-bottom:0; }
     rNote.textContent = a.note || "";
     var to3d = document.createElement("button");
     to3d.type = "button"; to3d.className = "r-3d"; to3d.id = "rTo3d";
-    to3d.textContent = scanOpen ? "Back to the map ↓" : "Show in 3D →";
-    to3d.setAttribute("aria-expanded", String(scanOpen));
+    to3d.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12L4 7.5M12 12v9"/></svg><span></span>';
     to3d.addEventListener("click", function(){ if (scanOpen) closeScan(); else openScan(); });
     rFoot.appendChild(to3d);
+    markScan();
     reading.scrollTop = 0;
     markMore();
   }
@@ -641,7 +654,7 @@ body.ba-land{ padding-bottom:0; }
   function markScan(){
     scanBtn.setAttribute("aria-expanded", String(scanOpen));
     var b = document.getElementById("rTo3d");
-    if (b){ b.textContent = scanOpen ? "Back to the map ↓" : "Show in 3D →"; b.setAttribute("aria-expanded", String(scanOpen)); }
+    if (b){ b.querySelector("span").textContent = scanOpen ? "Back to the map" : "Show in 3D"; b.setAttribute("aria-expanded", String(scanOpen)); }
   }
   function openScan(){
     if (scanOpen) return;

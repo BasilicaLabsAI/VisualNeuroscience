@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.61 — 22 October 2026 — Show in 3D, a button
+Commit · Make Show in 3D a button at the foot of the Brodmann reading, filled while the brain is up
+
+Show in 3D stood at the foot of the reading as an underlined line of text. It is now a button in the site's manner, the cube beside its word, which fills in while the brain is up and reads Back to the map until the brain is collapsed again.
+
 ## v11.60 — 22 October 2026 — The faces above, the reading beneath, sideways
-Commit · Lay the Brodmann Area Atlas out sideways as it stands upright, the two faces across the top and the reading beneath them
+Commit `dd7591b` · Lay the Brodmann Area Atlas out sideways as it stands upright, the two faces across the top and the reading beneath them
 
 On a phone held sideways the Brodmann Area Atlas stood its reading as a column between the faces and the bar. Now, as upright, the two faces come first, across the top of the screen side by side, or one of them alone on Outside or Inside, and the reading stands beneath them across the same width, its name at the left and what the area does to the right so the function shows in the room there is; the bar keeps its place along the edge. The 3D brain rises over the faces alone and leaves the reading in view beneath.
 
