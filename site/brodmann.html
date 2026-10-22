@@ -28,6 +28,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="assets/atlas-views.css">
 <link rel="stylesheet" href="fonts/fonts.css">
 <meta name="color-scheme" content="dark light">
 <script>/* Dark is the default; only an explicit choice of light overrides it.
@@ -261,6 +262,92 @@ svg{ display:block; }
   .cart-stage{ padding:.3rem; }
 }
 
+/* ── the four views, as the atlases draw them (assets/viewer.css's rules
+   for them, carried here since this page does not load that sheet) ── */
+.views{ display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); min-width:0; }
+.view{ border:1px solid var(--hair); display:flex; flex-direction:column; min-width:0; background:var(--paper); }
+.view-cap{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline; gap:.35rem .8rem; padding:.6rem .8rem .5rem; border-bottom:1px solid var(--hair); }
+.view-cap b{ font-family:var(--font-brand); font-weight:500; font-size:.68rem; letter-spacing:.28em; text-transform:uppercase; }
+.view-tools{ display:flex; flex-wrap:wrap; align-items:center; gap:.36rem .6rem; }
+.mri-stage{ position:relative; background:#000000; height:clamp(240px,36vh,430px); touch-action:none; }
+.mri-stage canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; outline:none; }
+.ts-btn{ border:1px solid var(--hair); background:var(--paper); color:var(--ink); font-family:var(--font-brand); font-weight:500; font-size:.62rem; letter-spacing:.2em; text-transform:uppercase; cursor:pointer; padding:.5rem .7rem .42rem; text-decoration:none; line-height:1; }
+@media (hover: hover){ .ts-btn:hover{ background:var(--ink); color:var(--paper); } }
+@media (pointer:coarse){ .ts-btn{ min-height:44px; } }
+
+/* ── the scan panel: the picked area lit on the MNI152 scan in the four
+   views, sliding in from the right edge over the faces; the bar's Scan
+   button, the panel's cross and Escape close it. Each view's bar ends in
+   the button that opens it alone over the four (assets/view-expand.js). ── */
+.ba-screen{ position:relative; }
+.scan{
+  position:absolute; inset:0; z-index:20; display:flex; flex-direction:column; min-height:0;
+  border:1px solid var(--hair); border-radius:16px; overflow:hidden;
+  background:color-mix(in srgb, var(--paper) 92%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(24px); backdrop-filter:saturate(180%) blur(24px);
+  box-shadow:0 18px 60px rgba(0,0,0,.35);
+  transform:translateX(calc(100% + 24px)); opacity:0;
+  transition:transform .28s cubic-bezier(.32,.72,0,1), opacity .22s cubic-bezier(.32,.72,0,1);
+}
+.scan[hidden]{ display:none; }
+.scan.in{ transform:none; opacity:1; }
+.scan-head{ flex:none; display:flex; align-items:center; gap:.7rem; padding:.4rem .5rem .4rem .9rem; border-bottom:1px solid var(--hair); }
+.scan-head b{ font-family:var(--font-brand); font-weight:500; font-size:.66rem; letter-spacing:.28em; text-transform:uppercase; white-space:nowrap; }
+.scan-head small{ font-family:var(--font-serif); font-style:italic; font-size:.82rem; color:var(--ink-60); flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.scan-x{ flex:none; width:40px; height:40px; border:1px solid var(--hair); border-radius:50%; background:none; color:var(--ink); font:inherit; font-size:1.25rem; line-height:1; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; -webkit-tap-highlight-color:transparent; }
+.scan-x:active{ background:var(--ink); color:var(--paper); }
+.scan .views-wrap{ position:relative; flex:1 1 auto; min-height:0; padding:10px; }
+.scan .views{ height:100%; grid-template-columns:repeat(4, minmax(0,1fr)); grid-template-rows:minmax(0,1fr); gap:10px; }
+.scan .views .view{ min-height:0; }
+.scan .views .view .mri-stage{ flex:1 1 auto; min-height:0; height:auto; max-height:none; aspect-ratio:auto; }
+.scan .views-wrap .views .view.open{ inset:10px; }
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more){ .scan{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; } }
+@media (prefers-reduced-motion: reduce){ .scan{ transition:none; } }
+
+/* ── a phone held sideways: a bar of named buttons stands along the right
+   edge and picks the outside face, the inside face or both side by side,
+   and slides the scan panel out; the faces take the left, the reading a
+   column between them and the bar, and the masthead steps aside for the
+   room, as on the 3D Region Atlas ── */
+.babar{ display:none; }
+.ba-screen.land{
+  grid-template-columns:minmax(0,1fr) minmax(190px, 232px) 92px; grid-template-rows:minmax(0,1fr);
+  gap:10px; min-height:0; margin-top:0;
+  height:calc(100vh - var(--screen-top, 0px) - 8px);
+  height:calc(100dvh - var(--screen-top, 0px) - 8px);
+}
+.ba-screen.land .maps{ order:0; grid-template-rows:minmax(0,1fr); grid-template-columns:minmax(0,1fr); gap:10px; }
+.ba-screen.land .maps.side{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+.ba-screen.land .maps.only-lateral .cart[data-face="medial"], .ba-screen.land .maps.only-medial .cart[data-face="lateral"]{ display:none; }
+.ba-screen.land .reading{ order:1; padding:.7rem .85rem .8rem; }
+.ba-screen.land .r-kick{ font-size:.56rem; }
+.ba-screen.land .r-name{ font-size:1.12rem; margin:.35rem 0 .15rem; }
+.ba-screen.land .r-where{ font-size:.8rem; margin-bottom:.45rem; }
+.ba-screen.land .r-body{ font-size:.92rem; line-height:1.5; }
+.ba-screen.land .r-note{ font-size:.82rem; margin-top:.6rem; }
+.ba-screen.land .cart figcaption span{ display:none; }
+.ba-screen.land .babar{
+  order:2; display:flex; flex-direction:column; align-items:stretch; gap:6px; min-height:0;
+  padding:6px 0 6px 6px; border-left:1px solid var(--hair); overflow-y:auto; scrollbar-width:none;
+}
+.babar::-webkit-scrollbar{ display:none; }
+.bbtn{
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  min-height:54px; padding:6px 2px; border:1px solid transparent; background:none; color:var(--ink-60); cursor:pointer;
+  font-family:var(--font-brand); font-weight:500; font-size:.5rem; letter-spacing:.14em; text-transform:uppercase;
+  line-height:1.1; text-align:center; -webkit-tap-highlight-color:transparent; transition:color .12s, border-color .12s;
+}
+.bbtn svg{ width:24px; height:24px; fill:none; stroke:currentColor; stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; }
+.bbtn[aria-pressed="true"], .bbtn[aria-expanded="true"]{ color:var(--ink); border-color:var(--hair); }
+.bbtn:active{ color:var(--ink); }
+.babar .rule{ flex:none; height:1px; margin:4px 6px; background:var(--hair); opacity:.6; }
+body.ba-land .masthead, body.ba-land .title-strip, body.ba-land .below{ display:none; }
+body.ba-land{ padding-bottom:0; }
+/* in the app the shell keeps its back button over the top left: the first face's name makes room */
+:root[data-shell]:not([data-shell-pad]) body.ba-land{ padding-top:0; }
+:root[data-shell]:not([data-shell-pad]) .ba-screen.land .maps .cart:not([style*="display: none"]) figcaption{ left:56px; }
+@media (prefers-reduced-motion: reduce){ .bbtn{ transition:none; } }
+
 /* ── what the page is, and its sources, below ── */
 .below{ margin-top:calc(var(--gap) * 2); }
 .prose h2{
@@ -315,15 +402,36 @@ svg{ display:block; }
       <div class="r-foot" id="rFoot"></div>
     </div>
     <div class="maps" id="baMaps">
-      <figure class="cart">
+      <figure class="cart" data-face="lateral">
         <figcaption><b>External</b><span>lateral surface</span></figcaption>
         <div class="cart-stage" id="cartLateral"></div>
       </figure>
-      <figure class="cart">
+      <figure class="cart" data-face="medial">
         <figcaption><b>Internal</b><span>medial surface</span></figcaption>
         <div class="cart-stage" id="cartMedial"></div>
       </figure>
     </div>
+    <!-- the picked area on the scan: four views in a panel that slides in from
+         the right, with the viewer fetched on first use -->
+    <aside class="scan" id="baScan" hidden aria-label="The picked area on the scan">
+      <header class="scan-head"><b>On the scan</b><small id="scanNote">MNI152 template &middot; the Brodmann atlas volume</small><button class="scan-x" type="button" aria-label="Close the scan">&times;</button></header>
+      <div class="views-wrap">
+        <div class="views" id="scanViews">
+          <div class="view" data-box="render"><div class="view-cap"><b>3D</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" data-centre type="button" aria-label="Centre planes">Centre</button></div></div><div class="mri-stage"><canvas id="baRen"></canvas></div></div>
+          <div class="view" data-box="axial"><div class="view-cap"><b>Axial</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" data-centre type="button" aria-label="Centre planes">Centre</button></div></div><div class="mri-stage"><canvas id="baAx"></canvas></div></div>
+          <div class="view" data-box="coronal"><div class="view-cap"><b>Coronal</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" data-centre type="button" aria-label="Centre planes">Centre</button></div></div><div class="mri-stage"><canvas id="baCor"></canvas></div></div>
+          <div class="view" data-box="sagittal"><div class="view-cap"><b>Sagittal</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" data-centre type="button" aria-label="Centre planes">Centre</button></div></div><div class="mri-stage"><canvas id="baSag"></canvas></div></div>
+        </div>
+      </div>
+    </aside>
+    <!-- a phone held sideways: the bar along the right edge -->
+    <nav class="babar" id="baBar" aria-label="Views and the scan">
+      <button class="bbtn" type="button" data-view="outside" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13c0-4.4 3.8-8 8.5-8S21 8.6 21 13c0 2.6-1.6 4.6-4.1 5.3l-.7 2.2h-6.4l-.7-2.2C6.1 17.6 4 15.6 4 13z"/><path d="M9 10.5c1.5-1.4 3.4-1.9 5.4-1.3"/></svg><span>Outside</span></button>
+      <button class="bbtn" type="button" data-view="inside" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13c0-4.4 3.8-8 8.5-8S21 8.6 21 13c0 2.6-1.6 4.6-4.1 5.3l-.7 2.2h-6.4l-.7-2.2C6.1 17.6 4 15.6 4 13z"/><path d="M9.5 15.5c0-3 1.9-5 4.5-5.5M8 12.5c2.3-.2 4.5.4 6.3 2" stroke-dasharray="2 1.6"/></svg><span>Inside</span></button>
+      <button class="bbtn" type="button" data-view="both" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12.5c0-3 2.4-5.5 5.4-5.5s5.1 2.5 5.1 5.5c0 1.9-1 3.3-2.6 3.8l-.4 1.7H6l-.5-1.7c-1.6-.5-3-1.9-3-3.8z"/><path d="M13.5 12.5c0-3 2.3-5.5 5.1-5.5s4.9 2.5 4.9 5.5c0 1.9-1.3 3.3-2.9 3.8l-.5 1.7h-3.9l-.4-1.7c-1.6-.5-2.3-1.9-2.3-3.8z"/></svg><span>Both</span></button>
+      <span class="rule" aria-hidden="true"></span>
+      <button class="bbtn" type="button" id="scanBtn" aria-expanded="false" aria-controls="baScan"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg><span>Scan</span></button>
+    </nav>
   </section>
 
   <section class="below prose" aria-labelledby="about-h">
@@ -342,6 +450,10 @@ svg{ display:block; }
 <script src="assets/newsletter.js" defer></script>
 <script src="assets/brodmann-areas.js"></script>
 <script src="assets/brodmann-outline.js"></script>
+<script src="assets/stage-lifecycle.js"></script>
+<script src="assets/scan-look.js"></script>
+<script src="assets/view-expand.js"></script>
+<script src="assets/zoom.js"></script>
 <script src="assets/diagram-gestures.js"></script>
 <script>
 "use strict";
@@ -381,6 +493,7 @@ svg{ display:block; }
      above the other, whichever draws them larger in the room there is. */
   var screenEl = document.getElementById("baScreen"), mapsEl = document.getElementById("baMaps");
   function arrange(){
+    if (isLand()) return;                      /* held sideways, the bar's pick decides */
     var r = mapsEl.getBoundingClientRect(), g = 14;
     if (!r.width || !r.height) return;
     var side = Math.min((r.width - g) / 2 / 600, r.height / 400),
@@ -464,8 +577,167 @@ svg{ display:block; }
   function select(ba, quiet){
     selected = (selected === ba) ? null : ba;
     read(); markCartoon(); markAddress();
+    paintScan(); centreScan();
     if (selected != null && window.MN && !quiet) MN.tap("light");
   }
+
+  /* ── a phone held sideways ──────────────────────────────────────────────
+     The bar along the right edge: Outside, Inside and Both pick what the
+     faces show, remembered between visits, and Scan slides the panel out.
+     The query is the 3D Region Atlas's: a coarse pointer in landscape, on a
+     screen too short to be a tablet. */
+  var landQ = window.matchMedia ? window.matchMedia("(pointer: coarse) and (orientation: landscape) and (max-height: 500px)") : null;
+  var faceView = "both";
+  try{ faceView = localStorage.getItem("vn-ba-view") || "both"; }catch(e){}
+  if (["outside", "inside", "both"].indexOf(faceView) < 0) faceView = "both";
+  var bar = document.getElementById("baBar"), scanEl = document.getElementById("baScan"),
+      scanBtn = document.getElementById("scanBtn"), scanNote = document.getElementById("scanNote");
+  function isLand(){ return !!(landQ && landQ.matches); }
+  function layFaces(){
+    var land = isLand();
+    mapsEl.classList.toggle("only-lateral", land && faceView === "outside");
+    mapsEl.classList.toggle("only-medial", land && faceView === "inside");
+    if (land) mapsEl.classList.toggle("side", faceView === "both");
+    bar.querySelectorAll("[data-view]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-view") === faceView)); });
+  }
+  function onLand(){
+    var land = isLand();
+    screenEl.classList.toggle("land", land);
+    document.body.classList.toggle("ba-land", land);
+    if (!land && scanOpen) closeScan();
+    layFaces();
+    fitSoon();
+    if (window.MN_LIFE) MN_LIFE.remeasure();
+  }
+  bar.querySelectorAll("[data-view]").forEach(function(b){
+    b.addEventListener("click", function(){
+      faceView = b.getAttribute("data-view");
+      try{ localStorage.setItem("vn-ba-view", faceView); }catch(e){}
+      layFaces();
+      if (window.MN) MN.tap("light");
+    });
+  });
+
+  /* ── the scan panel ─────────────────────────────────────────────────────
+     The MNI152 template with the Brodmann atlas volume over it, in the four
+     views the atlases share, the picked area lit in its lobe's colour and the
+     crosshair put on it. The viewer and the scan are fetched the first time
+     the panel opens, and never otherwise. */
+  var scanOpen = false, scanState = "idle", scanNV = [], byKey = {};
+  var PLANES = [
+    {id:"baRen", key:"render",   st:"RENDER"},
+    {id:"baAx",  key:"axial",    st:"AXIAL"},
+    {id:"baCor", key:"coronal",  st:"CORONAL"},
+    {id:"baSag", key:"sagittal", st:"SAGITTAL"}
+  ];
+  function loadScript(src){
+    return new Promise(function(res, rej){
+      var el = document.createElement("script");
+      el.src = src; el.onload = res;
+      el.onerror = function(){ rej(new Error("could not load " + src)); };
+      document.head.appendChild(el);
+    });
+  }
+  function openScan(){
+    if (scanOpen) return;
+    scanOpen = true;
+    clearTimeout(scanEl._leaving);
+    scanEl.hidden = false;
+    void scanEl.offsetWidth;
+    scanEl.classList.add("in");
+    scanBtn.setAttribute("aria-expanded", "true");
+    ensureScan();
+    if (window.MN_LIFE) requestAnimationFrame(function(){ MN_LIFE.remeasure(); });
+  }
+  function closeScan(){
+    if (!scanOpen) return;
+    scanOpen = false;
+    scanEl.classList.remove("in");
+    scanBtn.setAttribute("aria-expanded", "false");
+    clearTimeout(scanEl._leaving);
+    scanEl._leaving = setTimeout(function(){ if (!scanOpen) scanEl.hidden = true; }, 300);
+  }
+  scanBtn.addEventListener("click", function(){ if (scanOpen) closeScan(); else openScan(); if (window.MN) MN.tap("light"); });
+  scanEl.querySelector(".scan-x").addEventListener("click", closeScan);
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && scanOpen && !e.defaultPrevented) closeScan(); });
+
+  function ensureScan(){
+    if (scanState !== "idle") return;
+    scanState = "loading";
+    scanNote.textContent = "Loading the MNI152 scan\u2026";
+    var p = (typeof niivue === "undefined") ? loadScript("assets/niivue.js") : Promise.resolve();
+    p.then(function(){
+      var c = window.MN_LOOK ? MN_LOOK.colours() : {back:[0,0,0,1], cross:[1,1,1,1]};
+      return Promise.all(PLANES.map(function(pl){
+        var nv = new niivue.Niivue({
+          backColor:c.back, crosshairColor:c.cross, show3Dcrosshair:true,
+          sliceType:niivue.SLICE_TYPE[pl.st], invertScrollDirection:true, dragAndDropEnabled:false, textHeight:0.04
+        });
+        return nv.attachToCanvas(document.getElementById(pl.id)).then(function(){
+          byKey[pl.key] = nv; scanNV.push(nv);
+          if (window.MN_LIFE) MN_LIFE.register(nv);
+        });
+      }));
+    }).then(function(){
+      return Promise.all(scanNV.map(function(nv){ return nv.loadVolumes([
+        {url:"assets/mni152.nii.gz", name:"mni152.nii.gz", colormap:"gray", opacity:1},
+        {url:"assets/brodmann.nii.gz", name:"brodmann.nii.gz", opacity:0.9}
+      ]); }));
+    }).then(function(){
+      PLANES.forEach(function(pl){ byKey[pl.key].setSliceType(niivue.SLICE_TYPE[pl.st]); });
+      if (window.MN_LOOK){ paintScene(); MN_LOOK.follow(paintScene); }
+      scanNV.forEach(function(nv){ nv.broadcastTo(scanNV.filter(function(o){ return o !== nv; }), {"2d":true, "3d":true}); });
+      /* the wheel and a pinch zoom the 3D model; the slices answer to a
+         drag and a pinch, and the wheel is left alone */
+      var Z = window.MN_ZOOM || window.MN_WHEEL;
+      if (Z) PLANES.forEach(function(pl){
+        var stage = scanEl.querySelector('.view[data-box="' + pl.key + '"] .mri-stage');
+        if (!stage) return;
+        if (pl.key === "render") Z.attach({ stage: stage, nv: byKey.render });
+        else Z.attach({ stage: stage, nv: byKey[pl.key], mode: "slice", wheel: "none" });
+      });
+      scanState = "ready";
+      scanNote.textContent = "MNI152 template \u00B7 the Brodmann atlas volume";
+      paintScan(); centreScan();
+      if (window.MN_LIFE) MN_LIFE.remeasure();
+    }).catch(function(err){
+      scanState = "failed";
+      scanNote.textContent = "The scan could not be loaded: " + (err && err.message ? err.message : err);
+    });
+  }
+  function paintScene(){
+    MN_LOOK.paint(PLANES.map(function(pl){ return {nv: byKey[pl.key], slice: pl.key !== "render"}; }));
+  }
+  function hexToRgb(h){ var n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  /* one colour, the picked area's, in the table assets/scan-look.js pads so
+     no clear label beside the lit one is drawn black */
+  function paintScan(){
+    if (scanState !== "ready" || !window.MN_LOOK) return;
+    var n = B.MAX + 1, cm = MN_LOOK.labelTable(n, B.LABELS);
+    if (selected != null && selected < n && B.BY_BA[selected]){
+      var rgb = hexToRgb(LOBE_COLOUR[B.BY_BA[selected].lobe] || "#5A61D8");
+      cm.R[selected] = rgb[0]; cm.G[selected] = rgb[1]; cm.B[selected] = rgb[2]; cm.A[selected] = 255;
+    }
+    scanNV.forEach(function(nv){
+      if (nv.volumes && nv.volumes.length > 1){ nv.volumes[1].setColormapLabel(cm); nv.updateGLVolume(); }
+    });
+  }
+  /* the crosshair on the area, placed by millimetres from the areas' table */
+  function centreScan(){
+    if (scanState !== "ready" || selected == null) return;
+    var a = B.BY_BA[selected];
+    if (!a || !a.at) return;
+    scanNV.forEach(function(nv){ try{ nv.scene.crosshairPos = nv.mm2frac(a.at); nv.drawScene(); }catch(e){} });
+  }
+  function centrePlanes(){
+    scanNV.forEach(function(nv){ try{ nv.scene.crosshairPos = [0.5, 0.5, 0.5]; nv.scene.pan2Dxyzmm = [0, 0, 0, 1]; nv.drawScene(); }catch(e){} });
+  }
+  scanEl.querySelectorAll("[data-centre]").forEach(function(b){ b.addEventListener("click", centrePlanes); });
+  scanEl.querySelectorAll('.view[data-box="render"] .mri-stage').forEach(function(st){
+    st.addEventListener("wheel", function(e){ e.preventDefault(); }, {capture:true, passive:false});
+  });
+  if (window.MN_EXPAND) MN_EXPAND.attach(scanEl.querySelector(".views-wrap"));
+  if (landQ){ if (landQ.addEventListener) landQ.addEventListener("change", onLand); else landQ.addListener(onLand); }
 
   /* ── the line map ─────────────────────────────────────────────────────
      Each area is its own outline with its number set at the most interior
@@ -553,6 +825,7 @@ svg{ display:block; }
   read();
   fromHash();
   window.addEventListener("hashchange", fromHash);
+  onLand();
   fit();
 })();
 </script>

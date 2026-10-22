@@ -191,7 +191,15 @@ Read this first in every session. It is the handover; nothing else needs pasting
   is a column on the left and the faces sit side by side or stacked, whichever draws them larger. No list, scans,
   graph or export; BA48, on neither face, is reached from the empty reading, and every reading links to the area on
   the scan in the 3D Region Atlas. `#ba=<n>` opens on an area, the address follows the pick, and the MCP server's
-  `brodmann_area` answers link there. The 3D Region Atlas keeps its own Brodmann list, and no map since v11.30; since v11.38
+  `brodmann_area` answers link there. On a phone held sideways (since v11.57: the script's `landQ`, a coarse pointer in
+  landscape under 500px tall, `#baScreen.land` and `body.ba-land`, the masthead hidden) a bar of named buttons stands
+  along the right edge (`.babar`, `.bbtn`): Outside, Inside and Both pick what the faces show (`faceView`, remembered as
+  `vn-ba-view`; `.maps.only-lateral`, `.only-medial`, `.side`), the reading a column between the faces and the bar, and
+  Scan slides out `#baScan`, a panel with the picked area lit on the MNI152 scan in the four views (`PLANES`, NiiVue
+  fetched on first open with `assets/brodmann.nii.gz` as the label volume, `paintScan` from `MN_LOOK.labelTable` and the
+  lobe colour, `centreScan` from the area's `at`), each view's bar carrying `view-expand.js`'s button to open it alone;
+  the page carries viewer.css's view rules inline and loads `atlas-views.css`, `stage-lifecycle.js`, `scan-look.js`,
+  `view-expand.js` and `zoom.js`. In the app the first face's name makes 56px of room for the shell's back button. The 3D Region Atlas keeps its own Brodmann list, and no map since v11.30; since v11.38
   the areas are picked through the same dropdown panel as the AAL regions (`dropPicker` in `regions.html`, shared by
   `#rpick` and `#bapick`: button `#bapickBtn`, panel `#bapickPop`, list `#balist` a `.rpick-list` grouped by lobe).
 - The Hallucinations study (`site/hallucinations.html`, the visualisation of Boksa 2009 that the owner calls the

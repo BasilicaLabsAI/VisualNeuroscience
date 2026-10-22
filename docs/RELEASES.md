@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.57 — 22 October 2026 — The Brodmann atlas on a phone held sideways
+Commit · Give the Brodmann Area Atlas a bar of named buttons on a phone held sideways, and a scan panel with the picked area in the four views
+
+On a phone held sideways the Brodmann Area Atlas stacked its two faces in two thin strips, the drawings small in the middle of each. It now has a bar along the right edge, as the 3D Region Atlas has, with its buttons named: Outside and Inside show one face large, Both shows the two side by side, and the pick is remembered; the reading stands in a column between the faces and the bar, and the masthead steps aside for the room. The fourth button, Scan, slides out a panel with the picked area lit on the MNI152 scan in the four views the atlases share, 3D, axial, coronal and sagittal, the crosshair put on it, and each view's bar ending in the button that opens that view alone over the other three. The scan is fetched the first time the panel opens and never otherwise; the panel closes on its cross, on Escape, or on Scan again. Upright, and on a tablet or a computer, the page is as it was.
+
 ## v11.56 — 22 October 2026 — The posters, ready for a shop
-Commit · Add the Posters page with the two prints and their box on the home page and in the app, and put the shop in the terms and the privacy policy
+Commit `0b9f078` · Add the Posters page with the two prints and their box on the home page and in the app, and put the shop in the terms and the privacy policy
 
 The two A1 prints the site has long been able to draw, The Neurotransmitters and The Receptors, have a page of their own: each with the head of its poster for a picture, what it shows, its sources and size, and a Buy button that opens the print-on-demand shop once its address is filled in, and until then says the shop is opening soon. A box on the home page and in the app's Library tab leads there. The terms say a poster is bought from that shop under its own terms of sale, with the fourteen days a consumer has to cancel, and the privacy policy says the shop alone sees the payment and the address; the same page now says, correctly, that the feature-announcements box starts clear.
 
