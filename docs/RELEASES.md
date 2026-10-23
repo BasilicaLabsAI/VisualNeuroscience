@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.66 — 23 October 2026 — The brain always on show
+Commit · Keep the Brodmann Area Atlas's brain in 3D on show on an iPad and a computer, the faces cut to their drawings
+
+On an iPad or a computer the Brodmann Area Atlas no longer hides its brain behind a button: the picked area lit on the MNI152 brain in 3D is a box of its own, always on show, loaded with the page. The two faces of the map are cut to their drawings, each box the shape of its face, so the room they left empty goes to the brain. Held upright, the faces stand beside the reading and the brain takes the whole width beneath them; held sideways, or on a computer, the faces stand down the right at the width that fills the height, smaller than before, and the brain sits under the reading at the left. A phone keeps Show in 3D and the panel that rises over the map.
+
 ## v11.65 — 23 October 2026 — The highlighted list by layer
-Commit · Head the 3D Region Atlas's highlighted list by layer of the brain, the Brodmann areas in a block of their own
+Commit `6366c6f` · Head the 3D Region Atlas's highlighted list by layer of the brain, the Brodmann areas in a block of their own
 
 The highlighted list in the 3D Region Atlas's box was one run of rows in the order they were added. It now stands under a subheading for each layer of the brain, the cortex at the top, the limbic midbrain beneath it and the reptilian core at the bottom, the order the What-they-do window stacks the same regions, with a count beside each and the Brodmann areas in a block of their own beneath. A layer with nothing lit is left out rather than headed empty, and the top layer is now named the cortex wherever the three are named, in the list, the window and the MCP server's answers.
 

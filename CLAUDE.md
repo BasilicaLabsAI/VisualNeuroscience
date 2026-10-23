@@ -213,13 +213,22 @@ Read this first in every session. It is the handover; nothing else needs pasting
   graph or export; BA48, on neither face, is reached from the empty reading, and every reading links to the area on
   the scan in the 3D Region Atlas. `#ba=<n>` opens on an area, the address follows the pick, and the MCP server's
   `brodmann_area` answers link there. The page never links away to the 3D Region Atlas (the owner's wish, v11.59):
-  Show in 3D at the reading's foot (`#rTo3d`, a bordered button with the cube glyph, filled and reading Back to the
-  map while the brain is up; `markScan` sets its word and `aria-expanded`) raises `#baScan` inside `#baMaps`, over the two faces and
-  nothing else, a panel with one NiiVue render (`ren`, fetched on first open, `show3Dcrosshair:false`, the MNI152
+  on a phone, Show in 3D at the reading's foot (`#rTo3d`, a bordered button with the cube glyph, filled and reading Back
+  to the map while the brain is up; `markScan` sets its word and `aria-expanded`) raises `#baScan`, a child of `#baScreen`
+  placed over the faces' cell (`grid-column:1 / 2; grid-row:1 / 2`, both lines named so the cell is its containing
+  block), over the two faces and nothing else, a panel with one NiiVue render (`ren`, fetched on first open, `show3Dcrosshair:false`, the MNI152
   template with `assets/brodmann.nii.gz` over it at 0.9), the picked area lit by `paintScan` from `MN_LOOK.labelTable`
   and the lobe colour, zoom and rotation from `zoom.js`, Reset (`resetView`, the angle and scale kept in `home`) and a
   collapse button (`#scanDown`); it rises from below and collapses back down (`.scan.in`), closes on Escape too, and
-  the reading and the bar stay in view, so a new pick repaints it. The page carries viewer.css's `.ts-btn` inline and
+  the reading and the bar stay in view, so a new pick repaints it. On an iPad or a computer (v11.66: `isWide()`, the
+  `(min-width: 761px)` query and not `.land`) the brain is always on show instead, opened with the page by
+  `applyScanMode` (`openScan(true)`, never collapsed, Escape ignored, the foot's button and the collapse button hidden):
+  `arrange()` marks the screen `.tall` (taller than wide, an iPad upright: the faces beside the reading, the brain the
+  whole width beneath, `grid-template-areas "read maps" "scan scan"`) or `.wide` (an iPad sideways, a computer: the
+  faces down the right at the width that fills the height, the brain under the reading, `"read maps" "scan maps"`), and
+  sets `--cart-w`, the faces' width (at most 55% of the screen; upright, capped so the two take 62% of the height at
+  most), and `--faces-h`, their height together; each `.cart` is cut to its drawing (`height:calc(var(--cart-w) * .6667)`,
+  the medial face `.6367`, from the outline's 600×400 and 600×382 boxes). The page carries viewer.css's `.ts-btn` inline and
   loads `stage-lifecycle.js`, `scan-look.js` and `zoom.js`. On a phone held sideways (since v11.57: the script's
   `landQ`, a coarse pointer in landscape under 500px tall, `#baScreen.land` and `body.ba-land`, the masthead hidden) a
   bar of named buttons stands along the right edge (`.babar`, `.bbtn`): Outside, Inside and Both pick what the faces
