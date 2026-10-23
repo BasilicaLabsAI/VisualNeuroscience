@@ -2,12 +2,14 @@
 
      cd app && npm run icons
 
-   The app mark is site/assets/app-mark.svg, the brain wired with circuit
-   traces and nodes, traced from the owner's drawing by
-   scripts/appmark/trace.py. It carries no ground of its own and is filled
-   with currentColor, so this script chooses both: the site's ink on a white
-   tile for every app icon (since v11.85), and white on the paper black of
-   the splash screens.
+   The app mark is the brain wired with circuit traces and nodes, traced
+   from the owner's drawing by scripts/appmark/trace.py into two files:
+   site/assets/app-mark-colour.svg, wearing the ring's colours swept round
+   it as the ring carries them, which every tile and splash draws (since
+   v11.86), and site/assets/app-mark.svg, the path alone in currentColor,
+   which the mono icon draws in the site's ink. Neither carries a ground, so
+   this script chooses it: white for the app icons, the paper black for the
+   splash screens.
 
    Apple rejects an icon with an alpha channel outright, and Android masks
    the foreground layer into whatever shape the launcher wants, so the opaque
@@ -24,8 +26,9 @@ import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { dirname, resolve } from 'path';
 
 const ROOT  = resolve(import.meta.dirname, '..', '..');   // the repo
-const MARK  = readFileSync(`${ROOT}/site/assets/app-mark.svg`, 'utf8');
-const INK   = '#111111';   // the site's ink, the brain on the tiles
+const MARK  = readFileSync(`${ROOT}/site/assets/app-mark-colour.svg`, 'utf8');   // the brain in the ring's colours
+const MONO  = readFileSync(`${ROOT}/site/assets/app-mark.svg`, 'utf8');          // the path alone, in currentColor
+const INK   = '#111111';   // the site's ink, for the mono icon
 const WHITE = '#FFFFFF';   // the tiles' ground
 const PAPER = '#111111';   // the splash screens' ground
 const TILE  = 0.76;        // the brain's width as a share of an opaque tile
@@ -33,15 +36,15 @@ const SAFE  = 0.60;        // inside the 66% safe zone of a masked layer
 const LAYER = 0.72;        // of an adaptive foreground, which the launcher insets itself
 const SPLASH = 0.22;       // of the splash's longer side, as the ring had
 
-/* { file, w, h, frac, ground (null for alpha), ink, round } */
+/* { file, w, h, frac, ground (null for alpha), ink, round, mono } */
 const jobs = [];
-const tile = (file, px, frac, ground, ink = INK, round = false) => jobs.push({ file, w: px, h: px, frac, ground, ink, round });
+const tile = (file, px, frac, ground, ink = INK, round = false, mono = false) => jobs.push({ file, w: px, h: px, frac, ground, ink, round, mono });
 
 // the web app, installed to a home screen, and Safari's home-screen icon
 tile('site/assets/icons/icon-192.png',          192,  TILE, WHITE);
 tile('site/assets/icons/icon-512.png',          512,  TILE, WHITE);
 tile('site/assets/icons/icon-maskable-512.png', 512,  SAFE, WHITE);
-tile('site/assets/icons/icon-mono.png',         512,  0.86, null);     // alpha, the ink alone
+tile('site/assets/icons/icon-mono.png',         512,  0.86, null, INK, false, true);   // alpha, the ink alone
 tile('site/assets/apple-touch-icon.png',        180,  TILE, WHITE);
 // iOS, the Mac and the store: one opaque 1024, in the catalog and in resources
 tile('app/resources/ios-icon-1024.png',                                      1024, TILE, WHITE);
@@ -63,8 +66,8 @@ for (const [d, px, layer] of [['ldpi', 36, 81], ['mdpi', 48, 108], ['hdpi', 72, 
   tile(`${res}/ic_launcher_foreground.png`, px,    LAYER, null);
   tile(`${res}/ic_launcher_background.png`, layer, 0,     WHITE);
 }
-// the splash screens: the brain in white on the paper black, 22% of the longer side
-const splash = (file, w, h) => jobs.push({ file, w, h, frac: SPLASH * Math.max(w, h) / w, ground: PAPER, ink: WHITE, round: false });
+// the splash screens: the brain in the ring's colours on the paper black, 22% of the longer side
+const splash = (file, w, h) => jobs.push({ file, w, h, frac: SPLASH * Math.max(w, h) / w, ground: PAPER, ink: WHITE, round: false, mono: false });
 splash('app/resources/splash.png',      2732, 2732);
 splash('app/resources/splash-dark.png', 2732, 2732);
 for (const scale of ['1x', '2x', '3x']){
@@ -87,7 +90,7 @@ for (const j of jobs){
   await p.setViewportSize({ width: j.w, height: j.h });
   const mw = Math.round(j.w * j.frac);
   const alpha = j.ground === null;
-  const mark = j.frac > 0 ? `<div class="m">${MARK}</div>` : '';
+  const mark = j.frac > 0 ? `<div class="m">${j.mono ? MONO : MARK}</div>` : '';
   const body = j.round ? `<div class="disc">${mark}</div>` : mark;
   await p.setContent(`<style>
       *{margin:0;padding:0;box-sizing:border-box}

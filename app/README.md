@@ -154,15 +154,17 @@ the two switches that put the same build on the Mac App Store.
 ## Icons and splash
 
 `npm run icons` draws every icon and splash the three targets use from the
-app mark, `../site/assets/app-mark.svg`: the brain wired with circuit traces
-and nodes, traced from the owner's drawing by `../scripts/appmark/trace.py`
-(the drawing is `brain.jpg` beside it; run the script again if the drawing
-changes). The web mark in the masthead and the browser tab is still the ring,
-`../site/assets/logo.svg`.
+app mark: the brain wired with circuit traces and nodes, traced from the
+owner's drawing by `../scripts/appmark/trace.py` (the drawing is `brain.jpg`
+beside it; run the script again if the drawing changes) into
+`../site/assets/app-mark-colour.svg`, which wears the ring's colours swept
+round it as the ring carries them, and `../site/assets/app-mark.svg`, the
+path alone in currentColor for the mono icon. The web mark in the masthead
+and the browser tab is still the ring, `../site/assets/logo.svg`.
 
-The mark carries no ground and is filled with currentColor, so the script
-chooses both: the site's ink on a white tile for every app icon (since
-v11.85), and white on the paper black of the splash screens. **Apple rejects
+The mark carries no ground, so the script chooses it: white for every app
+icon (since v11.85, in colour since v11.86), the paper black for the splash
+screens. **Apple rejects
 an icon with an alpha channel outright**, and Android masks the foreground
 layer into whatever shape the launcher wants, so the opaque tiles carry their
 ground themselves and the maskable and adaptive foregrounds keep the brain

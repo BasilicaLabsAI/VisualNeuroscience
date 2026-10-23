@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.86 — 23 October 2026 — The ring's colours on the brain
+Commit · Paint the app's brain in the ring's colours, swept round it as the ring carries them
+
+The app's icon keeps the colours of the mark it replaced: the brain's traces and nodes now run through the ring's fourteen colours, purple at the top, pink and red down the right, orange and yellow at the stem, green and cyan round the left and blue back to the top, on the white tile of every platform and on the paper black of the splash screens.
+
 ## v11.85 — 23 October 2026 — The brain on the app's icon
-Commit · Give the app a white icon carrying the brain drawing, and draw every icon and splash from it
+Commit `9430473` · Give the app a white icon carrying the brain drawing, and draw every icon and splash from it
 
 The app's icon is new: a brain wired with circuit traces and nodes, drawn in black on a white tile, on the iPhone, the iPad, the Mac, Android and the home screens of the web app alike, in place of the coloured ring on black. The splash screens show the same brain in white on the paper black. The website's masthead and browser tab keep the ring.
 

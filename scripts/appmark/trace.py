@@ -6,14 +6,18 @@ supplied as brain.jpg beside this script (white strokes on a dark ground, soft
 from its journey). This traces it into one clean vector path so the icons can
 be drawn at any size:
 
-    python3 scripts/appmark/trace.py > site/assets/app-mark.svg
+    python3 scripts/appmark/trace.py
+
+writes two files into site/assets: app-mark.svg, the path alone filled with
+currentColor, and app-mark-colour.svg, the same path wearing the ring's
+colours (the palette of scripts/make_logo.py, swept clockwise from the top as
+the ring carries them, in ninety flat wedges that read as one sweep). Neither
+carries a background, so the icon script chooses the ground: white for the
+app icons, the paper black for the splash screens.
 
 The drawing is cropped to its ink, enlarged three times and softened, the glow
 is cut off at the stroke's core, the edge is followed at sub-pixel precision
-(marching squares), simplified and smoothed into cubic curves. The path is
-filled with currentColor and carries no background, so the icon scripts choose
-the ground and the ink: black on white for the app icons, white on the paper
-black of the splash screens.
+(marching squares), simplified and smoothed into cubic curves.
 
 Needs numpy, scipy and Pillow (python3.13 here).
 """
@@ -34,6 +38,23 @@ LEVEL = 140        # where the stroke's core ends and the glow begins (0-255)
 SIMPLIFY = 1.5     # Douglas-Peucker tolerance, in enlarged pixels
 MIN_LOOP = 60      # drop specks shorter than this, in enlarged pixels
 MARGIN = 0.04      # breathing room around the ink, as a share of its width
+OUT_MONO = os.path.join(HERE, "..", "..", "site", "assets", "app-mark.svg")
+OUT_COLOUR = os.path.join(HERE, "..", "..", "site", "assets", "app-mark-colour.svg")
+WEDGES = 90        # the sweep of colour, in flat steps of four degrees
+
+# the ring's palette, as scripts/make_logo.py has it, clockwise from the top
+PALETTE = ["#915AD8", "#CD5AD8", "#E250A9", "#FF507A", "#FF704E", "#F89F3A",
+           "#DAD358", "#AFF05B", "#6BF75C", "#41F186", "#4AE8C3", "#4DCAE5",
+           "#4E95E4", "#5A61D8"]
+
+
+def palette_at(t):
+    """The ring's colour at t, a share of the way round clockwise from the top."""
+    x = (t % 1.0) * len(PALETTE)
+    i, f = int(x), x - int(x)
+    a = tuple(int(PALETTE[i][k:k + 2], 16) for k in (1, 3, 5))
+    b = tuple(int(PALETTE[(i + 1) % len(PALETTE)][k:k + 2], 16) for k in (1, 3, 5))
+    return "#%02X%02X%02X" % tuple(round(a[k] + (b[k] - a[k]) * f) for k in range(3))
 
 
 def field():
@@ -204,12 +225,25 @@ def main():
     H, W = f.shape
     m = W * MARGIN
     vb = f"{-m:.1f} {-m:.1f} {W + 2 * m:.1f} {H + 2 * m:.1f}"
-    sys.stdout.write(
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + vb + '" role="img" aria-label="VisualNeuroscience">\n'
-        "<title>VisualNeuroscience</title>\n"
-        '<path fill="currentColor" fill-rule="evenodd" d="' + "".join(paths) + '"/>\n'
-        "</svg>\n")
-    sys.stderr.write(f"traced {kept} loops of {len(loops)} from a {W}x{H} field\n")
+    d = "".join(paths)
+    head = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + vb + '" role="img" aria-label="VisualNeuroscience">\n'
+            "<title>VisualNeuroscience</title>\n")
+    with open(OUT_MONO, "w") as out:
+        out.write(head + '<path fill="currentColor" fill-rule="evenodd" d="' + d + '"/>\n</svg>\n')
+    # the sweep: wedges from the drawing's centre, each a flat step of the palette,
+    # overlapping their neighbours a touch so no hairline shows between them
+    cx, cy, R = W / 2.0, H / 2.0, math.hypot(W, H)
+    step = 360.0 / WEDGES
+    defs, uses = ['<path id="brain" fill-rule="evenodd" d="' + d + '"/>'], []
+    for i in range(WEDGES):
+        a0 = math.radians(-90 + i * step - 0.35)
+        a1 = math.radians(-90 + (i + 1) * step + 0.35)
+        pts = f"{cx:.1f},{cy:.1f} {cx + R * math.cos(a0):.1f},{cy + R * math.sin(a0):.1f} {cx + R * math.cos(a1):.1f},{cy + R * math.sin(a1):.1f}"
+        defs.append(f'<clipPath id="w{i}"><polygon points="{pts}"/></clipPath>')
+        uses.append(f'<use href="#brain" clip-path="url(#w{i})" fill="{palette_at((i + 0.5) / WEDGES)}"/>')
+    with open(OUT_COLOUR, "w") as out:
+        out.write(head + "<defs>" + "".join(defs) + "</defs>\n" + "\n".join(uses) + "\n</svg>\n")
+    sys.stderr.write(f"traced {kept} loops of {len(loops)} from a {W}x{H} field; wrote {os.path.relpath(OUT_MONO)} and {os.path.relpath(OUT_COLOUR)}\n")
 
 
 if __name__ == "__main__":

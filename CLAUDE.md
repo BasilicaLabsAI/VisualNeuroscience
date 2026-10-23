@@ -70,13 +70,15 @@ Read this first in every session. It is the handover; nothing else needs pasting
   social links left the header with it; the About page lists them. A new page gets the island by carrying the same
   masthead markup as the others; `get.html` carries none on purpose.
 - `site/sw.js` precaches pages and assets: **bump `VERSION`** (`vn-NN`) whenever a precached file changes.
-- The app icon (v11.85, at the owner's word) is the brain wired with circuit traces and nodes, in the site's ink on a white
-  tile, on every platform: `site/assets/app-mark.svg`, traced from the owner's drawing `scripts/appmark/brain.jpg` by
-  `scripts/appmark/trace.py` (marching squares over the enlarged, thresholded drawing, simplified and smoothed into one
-  evenodd path filled with currentColor). `app/scripts/make-icons.mjs` (`npm run icons` on the Mac; here, link the global
+- The app icon (v11.85, at the owner's word) is the brain wired with circuit traces and nodes on a white tile, on every
+  platform, wearing the ring's colours since v11.86: `scripts/appmark/trace.py` traces the owner's drawing
+  `scripts/appmark/brain.jpg` (marching squares over the enlarged, thresholded drawing, simplified and smoothed into one
+  evenodd path) and writes `site/assets/app-mark-colour.svg`, the path in `make_logo.py`'s palette swept clockwise from
+  the top as the ring carries it, in ninety flat wedges (`PALETTE`, `WEDGES`, `palette_at`), and `site/assets/app-mark.svg`,
+  the path alone filled with currentColor, which only the mono icon uses. `app/scripts/make-icons.mjs` (`npm run icons` on the Mac; here, link the global
   modules first, `ln -s "$(npm root -g)" app/node_modules`, and remove the link after) draws every icon and splash from it:
   the web app's icons and `apple-touch-icon.png`, the iOS catalog's 1024, `app/resources/`, the Play icon, the Android
-  launcher sets at every density and the splash screens (the brain in white on the paper black, 22% of the longer side),
+  launcher sets at every density and the splash screens (the coloured brain on the paper black, 22% of the longer side),
   so `capacitor-assets` is optional. The website's masthead and browser tab keep the ring, `site/assets/logo.svg`, and
   the Play feature graphic (`app/store/play/feature-graphic.html`) still carries the ring inline; its comment names a
   `shoot-play.js` that is not in the repository, so shoot it with Playwright at 1024×500 if it should change.
