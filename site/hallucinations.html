@@ -476,11 +476,9 @@ main.screen{
 .screen.one .panelbar-btns{ margin-left:0; }
 .screen.one .panelbar-end{ margin-left:0; padding-left:0; }
 .screen.one .pop{ left:0; right:0; bottom:0; max-height:76%; border-left:0; border-right:0; border-bottom:0; border-radius:18px 18px 0 0; }
-/* a phone upright: while a pop-up is open the bar steps aside and the
-   pop-up has its room too; it closes on its own cross, and the bar comes
-   back with the views (held sideways the bar stands at the edge and stays) */
-.screen.one:not(.land).popped .panelbar{ display:none; }
-.screen.one:not(.land).popped .pop{ padding-bottom:env(safe-area-inset-bottom, 0px); }
+/* a phone upright: the bar stays while a pop-up is open, the pop-up
+   standing above it with its button lit, so a tap on the button, the
+   cross or Escape closes it and another button swaps it (v11.82) */
 .screen.one .pop-sm, .screen.one .pop-md{ width:100%; }
 .screen.one .drawer{ left:auto; right:0; padding:0; }
 .screen.one .drawer-box{ flex:1 1 auto; max-height:none; border-width:0 0 0 1px; border-radius:0; box-shadow:-8px 0 30px rgba(0,0,0,.25); }

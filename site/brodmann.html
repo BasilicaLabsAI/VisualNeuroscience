@@ -490,8 +490,11 @@ svg{ display:block; }
 .ba-screen.one .r-where, .ba-screen.land .r-where{ font-size:.8rem; margin:0; }
 .ba-screen.one .r-text, .ba-screen.land .r-text{ display:none; }
 .ba-screen.one .reading.open, .ba-screen.land .reading.open{ z-index:25; background:var(--paper); }
+.r-x{ display:none; }
+.ba-screen.one .reading.open .r-x, .ba-screen.land .reading.open .r-x{ display:inline-flex; align-items:center; justify-content:center; position:absolute; top:.55rem; right:.6rem; margin:0; z-index:1; }
+.ba-screen.one .reading.open, .ba-screen.land .reading.open{ position:relative; }
 .ba-screen.one .reading.open .r-text, .ba-screen.land .reading.open .r-text{
-  display:flex; order:-1; flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain;
+  display:flex; order:-1; flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding-right:3rem;
   touch-action:pan-y; -webkit-overflow-scrolling:touch; padding:.2rem 0 .7rem; margin-bottom:.6rem; border-bottom:1px solid var(--hair);
   animation:r-rise .28s cubic-bezier(.32,.72,0,1);
 }
@@ -641,6 +644,7 @@ body.ba-land{ padding-bottom:0; }
         <p class="r-where" id="rWhere"></p>
       </div>
       <div class="r-text" id="rText">
+        <button class="pop-x r-x" type="button" id="readX" aria-label="Close the text">&times;</button>
         <h3 class="r-h" id="rForH" hidden>What it does</h3>
         <p class="r-body" id="rBody"></p>
         <p class="r-note" id="rNote" hidden></p>
@@ -873,6 +877,7 @@ body.ba-land{ padding-bottom:0; }
   function setRead(open){
     open = !!open;
     if (open && aboutOpen) setAbout(false);
+    if (open && scanOpen && isOne()) setScan(false);
     readOpen = open;
     reading.classList.toggle("open", readOpen);
     screenEl.classList.toggle("read-open", readOpen);
@@ -885,6 +890,7 @@ body.ba-land{ padding-bottom:0; }
     open = !!open;
     if (open === aboutOpen) return;
     if (open && readOpen) setRead(false);
+    if (open && scanOpen && isOne()) setScan(false);
     aboutOpen = open;
     clearTimeout(popAbout._leaving);
     if (open){
@@ -900,6 +906,7 @@ body.ba-land{ padding-bottom:0; }
     if (window.MN && open) MN.tap("light");
   }
   readBtn.addEventListener("click", function(){ setRead(!readOpen); });
+  document.getElementById("readX").addEventListener("click", function(){ setRead(false); });
   rHead.addEventListener("click", function(){ if (!isWide()) setRead(!readOpen); });
   aboutBtn.addEventListener("click", function(){ setAbout(!aboutOpen); });
   document.getElementById("aboutX").addEventListener("click", function(){ setAbout(false); });
@@ -978,6 +985,7 @@ body.ba-land{ padding-bottom:0; }
   function setScan(open){
     open = !!open;
     if (open === scanOpen) return;
+    if (open){ if (readOpen) setRead(false); if (aboutOpen) setAbout(false); }
     scanOpen = open;
     scanEl.classList.toggle("in", open);
     scanBtn.setAttribute("aria-expanded", String(open));

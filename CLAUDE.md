@@ -212,9 +212,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   screen is `main.screen.one`: the stage holds the four views two by two (`main.one.all`, the default since v11.28,
   close-set with the expand buttons shown, which there open a view alone) or one view edge to edge (`.view.shown`), the
   pick remembered as `vn-atlas-view`; the bar opens with the All button in a group of its own (`.panelbar-all`), a line,
-  the four single-view buttons (`.panelbar-views`, `[data-view]`), another line, then the pop-up buttons, the readouts and the expand buttons are hidden, the bar is hidden while a pop-up is open (`main.screen.popped`, set by
-  the pop script's show and hide, since v11.54; the pop-up has the bar's room and closes on its cross or Escape, upright
-  only), the region area is a drawer the height of the
+  the four single-view buttons (`.panelbar-views`, `[data-view]`), another line, then the pop-up buttons, the readouts and the expand buttons are hidden, the bar stays on show while a pop-up is open (since v11.82; from v11.54 to v11.81 `main.screen.popped`, which
+  the pop script still sets, hid it upright and the pop-up had its room), the pop-up standing above it in the stage, its
+  button lit, closing on that button, its cross or Escape, and swapped by another button, the region area is a drawer the height of the
   screen sliding over the view from the right (the box's elements, laid out so by `.screen.one`), shut at every load
   whatever `vn-atlas-drawer` holds (since v11.25), and the pop-ups span the width. The slice tool's edge sliders
   (`slice-tool.js`, styled in `viewer.css`) are 44px strips with 24px thumbs under a coarse pointer (v11.32); on a
@@ -258,8 +258,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   show too and the reading is a strip along the foot (`.r-head`: kick, name and where) and the bar's What it does, or a
   tap on the strip, raises the text (`#rText`) over the brain: `.reading.open` spans the brain's cell with the text above
   the strip (`order:-1`, scrolling inside, the `r-rise` keyframes), the strip staying put and the faces in reach, put
-  away by the button or Escape (`setRead`, `readOpen`, `.read-open` on the screen); on an iPad or a computer the
-  button's group is hidden and the whole reading shows.
+  away by the button or Escape (`setRead`, `readOpen`, `.read-open` on the screen), with a cross of its own at the top right of the text (`#readX`, v11.82); on an
+  iPad or a computer the button's group is hidden and the whole reading shows. The text, the notes and the brain's panel
+  open one at a time (v11.82).
   Upright (since v11.81) the faces stand one over the other at the full width, or at the width whose two faces fill the
   height left over the strip and the bar (`arrange()` sets `--cart-w`; `"maps" "read" "bar"`, each `.cart` at
   `aspect-ratio:3 / 2`, centred), and the brain is a panel over the faces' cell (`.ba-screen.one .scan`, `grid-area:1 /
