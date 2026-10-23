@@ -9,7 +9,8 @@
    v11.86), and site/assets/app-mark.svg, the path alone in currentColor,
    which the mono icon draws in the site's ink. Neither carries a ground, so
    this script chooses it: white for the app icons, the paper black for the
-   splash screens.
+   splash screens and for the iOS app's alternate icon, AppIcon-Black, which
+   the Account tab offers in place of the white one.
 
    Apple rejects an icon with an alpha channel outright, and Android masks
    the foreground layer into whatever shape the launcher wants, so the opaque
@@ -30,7 +31,7 @@ const MARK  = readFileSync(`${ROOT}/site/assets/app-mark-colour.svg`, 'utf8');  
 const MONO  = readFileSync(`${ROOT}/site/assets/app-mark.svg`, 'utf8');          // the path alone, in currentColor
 const INK   = '#111111';   // the site's ink, for the mono icon
 const WHITE = '#FFFFFF';   // the tiles' ground
-const PAPER = '#111111';   // the splash screens' ground
+const PAPER = '#111111';   // the splash screens' ground, and the black tile's
 const TILE  = 0.76;        // the brain's width as a share of an opaque tile
 const SAFE  = 0.60;        // inside the 66% safe zone of a masked layer
 const LAYER = 0.72;        // of an adaptive foreground, which the launcher insets itself
@@ -49,6 +50,7 @@ tile('site/assets/apple-touch-icon.png',        180,  TILE, WHITE);
 // iOS, the Mac and the store: one opaque 1024, in the catalog and in resources
 tile('app/resources/ios-icon-1024.png',                                      1024, TILE, WHITE);
 tile('app/ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png', 1024, TILE, WHITE);
+tile('app/ios/App/App/Assets.xcassets/AppIcon-Black.appiconset/AppIcon-512@2x.png', 1024, TILE, PAPER);   // the alternate icon, chosen under Account
 tile('app/resources/icon.png',                                               1024, TILE, WHITE);
 tile('app/resources/icon-only.png',                                          1024, TILE, WHITE);
 tile('app/resources/icon-foreground.png',                                    1024, SAFE, null);

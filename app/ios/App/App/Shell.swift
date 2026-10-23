@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /* The app's root since v11: one system tab bar over the web app's pages.
    The site's navigation falls into four groups, and each is a tab that
@@ -17,14 +18,30 @@ nonisolated enum Theme: String, Sendable {
     case dark, light
 }
 
+/// White or black: the tile behind the brain on the Home Screen.
+nonisolated enum IconTile: String, Sendable {
+    case white, black
+
+    /// The asset catalog's name for the tile; nil is the primary icon.
+    var alternateIconName: String? { self == .black ? "AppIcon-Black" : nil }
+}
+
 /// What the shell keeps: the theme, chosen on the Account tab and carried
-/// into every page.
+/// into every page, and the app icon's tile.
 final class AppStore: ObservableObject {
     /// Set by the Appearance switch on the Account tab, and kept.
     @Published var theme: Theme {
         didSet {
             hasTheme = true
             UserDefaults.standard.set(theme.rawValue, forKey: Self.key)
+        }
+    }
+    /// Set by the App icon switch on the Account tab. The system keeps the
+    /// icon itself, so this is read off it as the shell starts and written
+    /// through to it as it changes.
+    @Published var iconTile: IconTile {
+        didSet {
+            if iconTile != oldValue { showIcon(iconTile) }
         }
     }
     /// False until the shell has a theme of its own. Until then the first
@@ -42,11 +59,31 @@ final class AppStore: ObservableObject {
             theme = .dark   // the site's own default
             hasTheme = false
         }
+        iconTile = Self.shownTile
     }
 
     /// A page reports the theme it opened in.
     func pageReported(_ reported: Theme) {
         if !hasTheme { theme = reported }
+    }
+
+    /// The tile the Home Screen shows now.
+    private static var shownTile: IconTile {
+        UIApplication.shared.alternateIconName == IconTile.black.alternateIconName ? .black : .white
+    }
+
+    /// Asks the system for the tile. If it declines, the switch goes back
+    /// to the icon it kept.
+    private func showIcon(_ tile: IconTile) {
+        let app = UIApplication.shared
+        guard app.supportsAlternateIcons, app.alternateIconName != tile.alternateIconName else { return }
+        Task {
+            do {
+                try await UIApplication.shared.setAlternateIconName(tile.alternateIconName)
+            } catch {
+                self.iconTile = Self.shownTile
+            }
+        }
     }
 }
 
@@ -333,6 +370,17 @@ struct AccountTab: View {
                 }
                 .pickerStyle(.segmented)
                 .padding(.top, 14)
+            }
+            if UIApplication.shared.supportsAlternateIcons {
+                Box(kicker: "Preferences", title: "App icon",
+                    text: "The brain on a white tile or on a black one, on the Home Screen.") {
+                    Picker("App icon", selection: $store.iconTile) {
+                        Text("White").tag(IconTile.white)
+                        Text("Black").tag(IconTile.black)
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(.top, 14)
+                }
             }
             Box(kicker: "Support", title: "Help, privacy and terms",
                 text: "Questions and problems go straight to the developer. The account is deleted from its own page, in two presses.") {

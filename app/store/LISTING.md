@@ -165,6 +165,7 @@ rather than 15, the second block is new to App Store users as well and goes
 above the first. 4,000 characters allowed; both together are well under.
 
 ```
+• A new icon: the brain wired with circuit traces, on a white tile or, from a switch under Account, a black one.
 • The receptor density window is tabbed: the graph on show with nothing to scroll, the table of every receptor against every region, the receptor's own drawings, the receptor types and the sources each on a tab of their own.
 • Brodmann areas are added the way the regions are, from one searchable dropdown, by number, name or what they do.
 • Turn the phone sideways in the 3D Region Atlas and the views take the whole height: the bar moves to the right edge and the four views stand in one row.

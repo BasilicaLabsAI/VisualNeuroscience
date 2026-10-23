@@ -111,6 +111,19 @@ def neighbour_count(skel):
     return ndimage.convolve(skel.astype(np.uint8), np.ones((3, 3), dtype=np.uint8), mode="constant") - skel.astype(np.uint8)
 
 
+def crossings(skel):
+    """How many times the ring of eight neighbours steps from empty to set:
+    one at a line's end, two along it, three or more at a junction. (A count
+    of neighbours would call the corner of a diagonal's staircase a junction,
+    and cut the line there.)"""
+    img = np.pad(skel, 1).astype(bool)
+    def nb(dy, dx):
+        return np.roll(np.roll(img, dy, axis=0), dx, axis=1)
+    seq = [nb(1, 0), nb(1, -1), nb(0, -1), nb(-1, -1), nb(-1, 0), nb(-1, 1), nb(0, 1), nb(1, 1)]
+    seq.append(seq[0])
+    return sum(((~seq[i]) & seq[i + 1]).astype(np.uint8) for i in range(8))[1:-1, 1:-1]
+
+
 def prune(skel, length, protect):
     """Drop the short spurs thinning leaves beside bends and rings: a branch
     that runs from a free end into a junction within the given length. Ends
@@ -118,9 +131,9 @@ def prune(skel, length, protect):
     skel = np.pad(skel, 1).copy()
     protect = np.pad(protect, 1)
     while True:
-        nbc = neighbour_count(skel)
+        junc = crossings(skel) >= 3
         removed = False
-        for y, x in np.argwhere(skel & (nbc == 1) & ~protect):
+        for y, x in np.argwhere(skel & (crossings(skel) <= 1) & ~protect):
             path, cur, prev, hit = [(y, x)], (y, x), None, False
             for _ in range(length):
                 nxt = [(cur[0] + dy, cur[1] + dx) for dy in (-1, 0, 1) for dx in (-1, 0, 1)
@@ -128,7 +141,7 @@ def prune(skel, length, protect):
                        and (cur[0] + dy, cur[1] + dx) not in path]
                 if not nxt:
                     break
-                if len(nxt) >= 2 or nbc[nxt[0]] >= 3:
+                if len(nxt) >= 2 or junc[nxt[0]]:
                     hit = True
                     break
                 prev, cur = cur, nxt[0]
@@ -154,13 +167,15 @@ def walk(component):
             if q in left:
                 out.append(q)
         return out
-    # start at an end if there is one, else anywhere (a loop)
-    start = None
-    for p in pts:
+    # start at an end if there is one, else anywhere (a loop); an end is a
+    # pixel whose neighbours all sit together on one side, which a count
+    # would miss where the cut leaves a line's end two pixels wide
+    def transitions(p):
         y, x = p
-        if sum(1 for dy in (-1, 0, 1) for dx in (-1, 0, 1) if (dy or dx) and (y + dy, x + dx) in left) <= 1:
-            start = p
-            break
+        ring = [(y - 1, x), (y - 1, x + 1), (y, x + 1), (y + 1, x + 1), (y + 1, x), (y + 1, x - 1), (y, x - 1), (y - 1, x - 1)]
+        bits = [q in left for q in ring]
+        return sum(1 for i in range(8) if not bits[i] and bits[(i + 1) % 8])
+    start = next((p for p in pts if transitions(p) <= 1), None)
     closed = start is None
     cur = start or pts[0]
     order = [cur]
@@ -237,6 +252,8 @@ def bezier(pts, closed):
             p0, p1, p2, p3 = pts[(i - 1) % n], pts[i], pts[(i + 1) % n], pts[(i + 2) % n]
         else:
             p0, p1, p2, p3 = pts[max(i - 1, 0)], pts[i], pts[i + 1], pts[min(i + 2, n - 1)]
+        if np.hypot(*(p2 - p1)) < 1e-6:
+            continue                     # a doubled point: a corner, not a loop
         c1 = p1 + (p2 - p0) / 6.0
         c2 = p2 - (p3 - p1) / 6.0
         d.append(f"C{c1[0]:.1f},{c1[1]:.1f} {c2[0]:.1f},{c2[1]:.1f} {p2[0]:.1f},{p2[1]:.1f}")
@@ -285,8 +302,7 @@ def main():
     # the skeleton's junctions, and the lines between them
     skel &= neighbour_count(skel) > 0        # no lone pixels
     skel = prune(skel, int(0.8 * width), ndimage.binary_dilation(cut, iterations=4))
-    nbc = neighbour_count(skel)
-    junc = skel & (nbc >= 3)
+    junc = skel & (crossings(skel) >= 3)
     jl, nj = ndimage.label(ndimage.binary_dilation(junc, structure=EIGHT) & skel, structure=EIGHT)
     centroids = ndimage.center_of_mass(skel, jl, range(1, nj + 1)) if nj else []
     seg, ns = ndimage.label(skel & (jl == 0), structure=EIGHT)
@@ -350,67 +366,159 @@ def main():
             merged = True
             break
 
-    # snap the lines' free ends to the circle each one ran into
-    lines = []
+    # the lines' ends: into the circle each one ran into, or onto the
+    # junction's centre, and the thinning's spurs dropped
+    drawn = []                               # [pts, closed, [node index or None] * 2]
     for pts, closed, jid in chains:
         ends_at = [None if jid[e] is None else np.array(centroids[jid[e] - 1], dtype=np.float64) for e in (0, 1)]
         pts = smooth_chain(pts, closed, SMOOTH * (1.4 if len(pts) > 300 else 1.0))   # the long outline a touch more
-        snapped = [False, False]
+        snapped = [None, None]
         if not closed:
             for e, idx in ((0, 0), (1, -1)):
                 y, x = pts[idx]
                 # an end within reach of a node goes into its circle, whatever
                 # the skeleton made of the ring's remains beside it
-                for cy, cx, h, ro in nodes:
-                    if math.hypot(y - cy, x - cx) <= ro + 1.5 * width:   # past the bulge's junction too
-                        rc = ro - width / 2
-                        # carry the line on along its own heading until it meets
-                        # the circle's centre line, so it enters without a kink
-                        k = min(len(pts) - 1, max(2, int(width * 1.2)))
-                        hv = (pts[0] - pts[k]) if e == 0 else (pts[-1] - pts[-1 - k])
-                        hn = np.hypot(*hv)
-                        q = np.array([y - cy, x - cx])
-                        snap = None
-                        if hn:
-                            hv = hv / hn
-                            b = 2 * float(np.dot(q, hv))
-                            c0 = float(np.dot(q, q)) - rc * rc
-                            disc = b * b - 4 * c0
-                            if disc >= 0:
-                                roots = sorted(((-b - math.sqrt(disc)) / 2, (-b + math.sqrt(disc)) / 2))
-                                t = next((r for r in roots if r >= 0), None)
-                                if t is not None and t <= 3 * width:
-                                    snap = np.array([y, x]) + hv * t
-                        if snap is None:
-                            d = q / (np.hypot(*q) or 1)
-                            snap = np.array([cy, cx]) + d * rc
-                        pts = np.vstack([snap[None], pts]) if e == 0 else np.vstack([pts, snap[None]])
-                        snapped[e] = True
-                        break
-                if not snapped[e] and ends_at[e] is not None:
+                for ni, (cy, cx, h, ro) in enumerate(nodes):
+                    dist = math.hypot(y - cy, x - cx)
+                    if dist > ro + 1.5 * width:                # past the bulge's junction too
+                        continue
+                    rc = ro - width / 2
+                    # carry the line on along its own heading until it meets
+                    # the circle's centre line, so it enters without a kink
+                    k = min(len(pts) - 1, max(2, int(width * 1.2)))
+                    hv = (pts[0] - pts[k]) if e == 0 else (pts[-1] - pts[-1 - k])
+                    hn = np.hypot(*hv)
+                    q = np.array([y - cy, x - cx])
+                    snap = None
+                    if hn:
+                        hv = hv / hn
+                        b = 2 * float(np.dot(q, hv))
+                        c0 = float(np.dot(q, q)) - rc * rc
+                        disc = b * b - 4 * c0
+                        if disc >= 0:
+                            roots = sorted(((-b - math.sqrt(disc)) / 2, (-b + math.sqrt(disc)) / 2))
+                            t = next((r for r in roots if r >= 0), None)
+                            if t is not None and t <= 3 * width:
+                                snap = np.array([y, x]) + hv * t
+                    if snap is None:
+                        if dist > ro + 0.6 * width:
+                            continue                           # heading away: not this ring's end
+                        d = q / (np.hypot(*q) or 1)              # cut at the ring: straight in
+                        snap = np.array([cy, cx]) + d * rc
+                    pts = np.vstack([snap[None], pts]) if e == 0 else np.vstack([pts, snap[None]])
+                    snapped[e] = ni
+                    break
+                if snapped[e] is None and ends_at[e] is not None:
                     pts = np.vstack([ends_at[e][None], pts]) if e == 0 else np.vstack([pts, ends_at[e][None]])
             length = float(np.hypot(*(np.diff(pts, axis=0)).T).sum())
-            loose = sum(1 for e in (0, 1) if ends_at[e] is None and not snapped[e])
+            loose = sum(1 for e in (0, 1) if ends_at[e] is None and snapped[e] is None)
             if loose and length < 0.9 * width:
                 continue                      # a spur the thinning left
-            if length < 0.6 * width and any(snapped):
+            if length < 0.6 * width and any(n is not None for n in snapped):
                 continue                      # an arm of the bulge beside a ring
         else:
             if float(np.hypot(*(np.diff(np.vstack([pts, pts[:1]]), axis=0)).T).sum()) < 3 * width:
                 continue
-        if not closed:
-            # once the ends are in place, a lighter pass over the whole line,
-            # evenly spaced, softens the joint where an extension meets its curve
+        # a lighter pass over the piece, evenly spaced with its ends pinned,
+        # softens the joint where an extension meets its curve; then the
+        # piece is simplified here, before any joining, so a joint made
+        # below stays the sharp corner it is drawn as
+        if closed:
+            pts = smooth_chain(resample(np.vstack([pts, pts[:1]]))[:-1], True, SMOOTH * 0.6)
+            pts = simplify(np.vstack([pts, pts[:1]]), SIMPLIFY)[:-1]
+        else:
             pts = smooth_chain(resample(pts), False, SMOOTH * 0.6)
-        pts = simplify(pts, SIMPLIFY) if not closed else pts[::max(1, len(pts) // 60)]
-        lines.append(bezier(pts[:, ::-1], closed))   # to (x, y)
+            pts = simplify(pts, SIMPLIFY)
+        drawn.append([pts, closed, snapped])
 
+    # where a line runs straight on through a node, join its two pieces into
+    # one, riding the ring's own centre line from where one piece enters to
+    # where the other leaves, so the outline is one continuous line and the
+    # ring's centre stays open; a line that only ends at a node stays a piece
+    def ring_arc(ni, p_from, p_to):
+        cy, cx, h, ro = nodes[ni]
+        rc = ro - width / 2
+        a0 = math.atan2(p_from[0] - cy, p_from[1] - cx)
+        a1 = math.atan2(p_to[0] - cy, p_to[1] - cx)
+        d = (a1 - a0 + math.pi) % (2 * math.pi) - math.pi
+        if abs(abs(d) - math.pi) < 0.35:
+            # nearly straight through: take the way round that bulges outward
+            other = d - 2 * math.pi * (1 if d > 0 else -1)
+            def outward(dd):
+                am = a0 + dd / 2
+                return math.hypot(cy + rc * math.sin(am) - H / 2, cx + rc * math.cos(am) - W / 2)
+            d = max((d, other), key=outward)
+        n = max(2, int(abs(d) * rc / 4))
+        arc = np.array([[cy + rc * math.sin(a0 + d * t), cx + rc * math.cos(a0 + d * t)] for t in np.linspace(0, 1, n + 2)[1:-1]])
+        # the joints doubled, so the curve turns onto the ring with a corner
+        # (hidden under the ring) rather than rounding into its centre;
+        # bezier() draws no segment between the doubled points
+        return np.vstack([[p_from], arc, [p_to]])
+
+    def heading_in(ch, e):
+        pts = ch[0]
+        k = min(len(pts) - 1, max(2, int(width * 1.2)))
+        a, b = (pts[k], pts[0]) if e == 0 else (pts[-1 - k], pts[-1])
+        v = b - a
+        n = np.hypot(*v)
+        return v / n if n else v
+    merged = True
+    while merged:
+        merged = False
+        at_node = {}
+        for ci, ch in enumerate(drawn):
+            if ch[1]:
+                continue
+            for e in (0, 1):
+                if ch[2][e] is not None:
+                    at_node.setdefault(ch[2][e], []).append((ci, e))
+        for ni, inc in at_node.items():
+            if len(inc) < 2:
+                continue
+            best, pair = -0.6, None
+            for a in range(len(inc)):
+                for b in range(a + 1, len(inc)):
+                    d = float(np.dot(heading_in(drawn[inc[a][0]], inc[a][1]), heading_in(drawn[inc[b][0]], inc[b][1])))
+                    if d < best:
+                        best, pair = d, (inc[a], inc[b])
+            if pair is None:
+                continue
+            (pa, ea), (pb, eb) = pair
+            if pa == pb:
+                pts = drawn[pa][0] if ea == 1 else drawn[pa][0][::-1]
+                drawn[pa] = [np.vstack([pts, ring_arc(ni, pts[-1], pts[0])]), True, [None, None]]
+            else:
+                A, B = drawn[pa], drawn[pb]
+                ptsA = A[0] if ea == 1 else A[0][::-1]
+                ptsB = B[0] if eb == 0 else B[0][::-1]
+                nA = A[2][0] if ea == 1 else A[2][1]
+                nB = B[2][1] if eb == 0 else B[2][0]
+                drawn[pa] = [np.vstack([ptsA, ring_arc(ni, ptsA[-1], ptsB[0]), ptsB]), False, [nA, nB]]
+                drawn[pb] = None
+            drawn = [ch for ch in drawn if ch is not None]
+            merged = True
+            break
+
+    # the finished lines as curves; the longest closed line is the outline
+    finished = []
+    for pts, closed, snapped in drawn:
+        if closed:
+            length = float(np.hypot(*(np.diff(np.vstack([pts, pts[:1]]), axis=0)).T).sum())
+        else:
+            length = float(np.hypot(*(np.diff(pts, axis=0)).T).sum())
+        finished.append((pts, closed, length))
+    outline_i = max((i for i, f in enumerate(finished) if f[1]), key=lambda i: finished[i][2], default=None)
+    outline = bezier(finished[outline_i][0][:, ::-1], True) if outline_i is not None else ""
+    lines = [bezier(f[0][:, ::-1], f[1]) for i, f in enumerate(finished) if i != outline_i]
+    # the circles, each node a true circle, drawn over the lines
     circles = [f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{ro - width / 2:.1f}"/>' for cy, cx, h, ro in nodes]
     m = W * MARGIN
     vb = f"{-m:.1f} {-m:.1f} {W + 2 * m:.1f} {H + 2 * m:.1f}"
     head = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + vb + '" role="img" aria-label="VisualNeuroscience">\n'
             "<title>VisualNeuroscience</title>\n")
-    body = "".join(f'<path d="{d}"/>' for d in lines) + "".join(circles)
+    body = (f'<path id="outline" d="{outline}"/>'
+            + '<g id="traces">' + "".join(f'<path d="{d}"/>' for d in lines) + "</g>"
+            + '<g id="nodes">' + "".join(circles) + "</g>")
     style = f'fill="none" stroke-width="{width:.1f}" stroke-linecap="round" stroke-linejoin="round"'
     with open(OUT_MONO, "w") as out:
         out.write(head + f'<g {style} stroke="currentColor">' + body + "</g>\n</svg>\n")
@@ -426,7 +534,7 @@ def main():
         uses.append(f'<use href="#brain" clip-path="url(#w{i})" stroke="{palette_at((i + 0.5) / WEDGES)}"/>')
     with open(OUT_COLOUR, "w") as out:
         out.write(head + "<defs>" + "".join(defs) + "</defs>\n" + "\n".join(uses) + "\n</svg>\n")
-    sys.stderr.write(f"{len(lines)} lines, {len(nodes)} nodes, stroke {width:.1f} on a {W}x{H} field; wrote {os.path.relpath(OUT_MONO)} and {os.path.relpath(OUT_COLOUR)}\n")
+    sys.stderr.write(f"one outline, {len(lines)} traces, {len(nodes)} nodes, stroke {width:.1f} on a {W}x{H} field; wrote {os.path.relpath(OUT_MONO)} and {os.path.relpath(OUT_COLOUR)}\n")
 
 
 if __name__ == "__main__":

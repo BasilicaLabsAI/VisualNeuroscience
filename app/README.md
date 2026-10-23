@@ -46,7 +46,7 @@ position. Account comes last and gathers what is not a section of the site.
 | Library | `books.vertical` | Visualizing Studies, Digital Textbook |
 | Practice | `checklist` | Neuroscience Practice |
 | About | `info.circle` | the MCP server, the developer's message, YouTube, Instagram, LinkedIn and email |
-| Account | `person` | the account page (sign-in, your data, deletion), Appearance (dark or light), support and the privacy page, the credits |
+| Account | `person` | the account page (sign-in, your data, deletion), Appearance (dark or light), App icon (a white or a black tile), support and the privacy page, the credits |
 
 There is no badge, because nothing in the app is waiting to be done:
 practice is adaptive and keeps no queue of due questions. If it ever does,
@@ -172,6 +172,17 @@ inside the middle 66% of the canvas. The script also cuts the Android launcher
 sets and the splash drawables at the sizes `npx capacitor-assets generate
 --ios --android` would cut them from `resources/`, so that command is optional
 now and gives the same files when run after `npm run icons`.
+
+The iOS app carries a second icon, `AppIcon-Black.appiconset`, the same
+brain on the paper black, drawn by the same script. The project names it in
+`ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES`, which is all the catalog
+needs for `setAlternateIconName`, and the Account tab's App icon switch
+(`IconTile` and `AppStore.iconTile` in `Shell.swift`) asks the system for it;
+the system keeps the choice itself, shows its own notice as the icon changes,
+and the switch reads the icon back on every launch. The box shows only where
+the system supports alternate icons, the iPhone and the iPad. Android's
+launcher and the web app's home screen take one icon at install, the white
+one.
 
 ## Apple's Guideline 4.2
 
