@@ -188,6 +188,15 @@ struct AboutTab: View {
                     text: "Ask the atlas from Claude, ChatGPT or any assistant that speaks the Model Context Protocol: what a region does, where a receptor is densest, how the brain changes in a state. Each answer links to the view it describes.",
                     meta: "9 tools · no key needed · sign in only for your own models",
                     go: "How to connect")
+            Box(kicker: "On the way", title: "Coming soon",
+                text: "Three things being built now, none of them ready to open yet.") {
+                VStack(alignment: .leading, spacing: 0) {
+                    SoonRow(name: "Circuit Atlas", text: "The 3D Region Atlas with the traffic drawn on: animated paths run from region to region, so a circuit such as the Hallucinations study’s plays out on the brain.")
+                    SoonRow(name: "Regions in depth", text: "A detailed functional breakdown of every region, written from the research, beyond the line the atlas gives each one now.")
+                    SoonRow(name: "The MCP server, extended", text: "New tools for an assistant: the Circuit Atlas’s paths and the detailed breakdowns, answered in Claude or any assistant that speaks the protocol.")
+                }
+                .padding(.top, 10)
+            }
             PageBox(page: .about, kicker: "From the developer", title: "Message from the Developer",
                     shot: Shot("assets/portrait/portrait.webp", framed: true),
                     meta: "Fadil Karim · built by one engineer · free to use",
@@ -239,6 +248,32 @@ struct OutLink: View {
             .buttonStyle(PressStyle())
             .accessibilityElement(children: .combine)
         }
+    }
+}
+
+/// A row that names something on its way: the Coming soon box's rows, in
+/// OutLink's manner with no arrow and nothing to press.
+struct SoonRow: View {
+    let name: String
+    let text: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(name.uppercased())
+                .font(Faces.brand(11, .footnote))
+                .tracking(2.4)
+                .foregroundColor(Palette.ink)
+            Text(text)
+                .font(Faces.serif(16, .body))
+                .foregroundColor(Palette.ink60)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 12)
+        .overlay(alignment: .top) {
+            Rectangle().fill(Palette.ink35).frame(height: 1)
+        }
+        .accessibilityElement(children: .combine)
     }
 }
 

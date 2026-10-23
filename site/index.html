@@ -175,24 +175,30 @@ img{ max-width:100%; height:auto; display:block; }
 .m-textbook{ grid-column:span 6; }
 .m-posters{ grid-column:span 12; }
 .m-mcp    { grid-column:span 12; }
+.m-soon   { grid-column:span 12; }
 .m-about  { grid-column:span 12; }
+.m-channels{ grid-column:span 12; }
 .m-ledger { grid-column:span 12; }
 
-/* ── the two hubs ───────────────────────────────────────────────────────
-   On the website the mosaic is two pages of boxes, as the app's Atlases
-   and Library tabs are (Shell.swift; the island's tabs in navbar.js open
-   them): the six atlases with the figures beneath, and under #library the
+/* ── the three hubs ─────────────────────────────────────────────────────
+   On the website the mosaic is three pages of boxes, as the app's Atlases,
+   Library and About tabs are (Shell.swift; the island's tabs in navbar.js
+   open them): the six atlases with the figures beneath; under #library the
    papers, the book and the posters, the book and the posters side by side
-   where the atlases pair up. Practice, the MCP server and the developer's
-   message have tabs of their own, so their boxes show on neither hub. In
-   the Android app, whose bar lists the sections, the whole mosaic shows. */
-:root:not([data-native]) .mosaic:not(.hub-library) > .m-studies,
-:root:not([data-native]) .mosaic:not(.hub-library) > .m-textbook,
-:root:not([data-native]) .mosaic:not(.hub-library) > .m-posters,
-:root:not([data-native]) .mosaic:not(.hub-library) > .m-practice,
-:root:not([data-native]) .mosaic:not(.hub-library) > .m-mcp,
-:root:not([data-native]) .mosaic:not(.hub-library) > .m-about{ display:none; }
+   where the atlases pair up; and under #about the MCP server, what is
+   coming, the developer's message and the channels. Practice has a tab of
+   its own, so its box shows on none. In the Android app, whose bar lists
+   the sections, the whole mosaic shows. */
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-studies,
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-textbook,
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-posters,
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-practice,
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-mcp,
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-soon,
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-about,
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-channels{ display:none; }
 .mosaic.hub-library > :not(.m-studies):not(.m-textbook):not(.m-posters){ display:none; }
+.mosaic.hub-about > :not(.m-mcp):not(.m-soon):not(.m-about):not(.m-channels){ display:none; }
 .mosaic.hub-library .m-posters{ grid-column:span 6; grid-template-columns:minmax(0,1fr); }
 .mosaic.hub-library .m-posters .plate{ order:-1; }
 
@@ -258,6 +264,27 @@ img{ max-width:100%; height:auto; display:block; }
 
 
 /* the ring is the mark itself, drawn on nothing, so it needs no plate */
+
+/* ── rows in a box ──────────────────────────────────────────────────────
+   The Coming soon box names what is on its way, a name over a line each,
+   nothing to press; the Channels box lists where to follow and write, each
+   a link with its handle and an arrow. Both are set as the app sets the
+   same rows: a hairline over each, the name in the brand face, the line in
+   the serif. */
+.soon-list, .chan-list{ list-style:none; margin:.9rem 0 0; padding:0; }
+.soon-list li, .chan-list a{
+  display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:baseline; column-gap:.8rem;
+  padding:.7rem 0 .75rem; border-top:1px solid var(--ink-35);
+}
+.chan-list a{ color:var(--ink); text-decoration:none; }
+.soon-list b, .chan-list b{
+  grid-column:1; font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink);
+}
+.soon-list span, .chan-list span{ grid-column:1; font-size:.95rem; line-height:1.5; color:var(--ink-60); margin-top:.15rem; }
+.chan-list i{ grid-column:2; grid-row:1 / span 2; font-style:normal; font-family:var(--font-brand); color:var(--ink); }
+@media (hover: hover){ .chan-list a:hover b{ text-decoration:underline; text-underline-offset:3px; } }
+.chan-list a:active{ opacity:.7; }
 
 /* the wide box lays its figure beside the text rather than above it */
 .box-h{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(16px,1.7vw,26px); align-items:stretch; }
@@ -332,7 +359,9 @@ img{ max-width:100%; height:auto; display:block; }
   .m-textbook{ grid-column:span 3; }
   .m-posters{ grid-column:span 6; }
   .m-mcp    { grid-column:span 6; }
+  .m-soon   { grid-column:span 6; }
   .m-about  { grid-column:span 6; }
+  .m-channels{ grid-column:span 6; }
   .m-ledger { grid-column:span 6; }
   .mosaic.hub-library .m-posters{ grid-column:span 3; }
 }
@@ -340,7 +369,7 @@ img{ max-width:100%; height:auto; display:block; }
 /* ── phone: one box on each line, and the wide box stacks ── */
 @media (max-width:760px){
   .mosaic{ grid-template-columns:minmax(0,1fr); }
-  .m-atlas, .m-brodmann, .m-network, .m-tracts, .m-studies, .m-cells, .m-molecular, .m-practice, .m-textbook, .m-posters, .m-mcp, .m-about, .m-ledger{
+  .m-atlas, .m-brodmann, .m-network, .m-tracts, .m-studies, .m-cells, .m-molecular, .m-practice, .m-textbook, .m-posters, .m-mcp, .m-soon, .m-about, .m-channels, .m-ledger{
     grid-column:1 / -1; grid-row:auto;
   }
   .ledger{ grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -518,6 +547,18 @@ img{ max-width:100%; height:auto; display:block; }
       </div>
     </a>
 
+    <!-- ── on the way: no link, only the word ───────────────────────── -->
+    <div class="box m-soon">
+      <div class="kicker">On the way</div>
+      <h2>Coming soon</h2>
+      <p>Three things being built now, none of them ready to open yet.</p>
+      <ul class="soon-list">
+        <li><b>Circuit Atlas</b><span>The 3D Region Atlas with the traffic drawn on: animated paths run from region to region, so a circuit such as the Hallucinations study&rsquo;s plays out on the brain.</span></li>
+        <li><b>Regions in depth</b><span>A detailed functional breakdown of every region, written from the research, beyond the line the atlas gives each one now.</span></li>
+        <li><b>The MCP server, extended</b><span>New tools for an assistant: the Circuit Atlas&rsquo;s paths and the detailed breakdowns, answered in Claude or any assistant that speaks the protocol.</span></li>
+      </ul>
+    </div>
+
     <!-- ── the maker ──────────────────────────────────────────────── -->
     <a class="box m-about box-h" href="about.html">
       <div class="side">
@@ -532,6 +573,18 @@ img{ max-width:100%; height:auto; display:block; }
         <img class="ribbon" src="assets/portrait/ribbon.webp" alt="" loading="lazy" decoding="async" width="704" height="857">
       </div></div>
     </a>
+
+    <!-- ── where to follow and write ──────────────────────────────── -->
+    <div class="box m-channels">
+      <div class="kicker">Follow and write</div>
+      <h2>Channels</h2>
+      <ul class="chan-list">
+        <li><a href="https://www.youtube.com/@VisualNeuroscienceAI" target="_blank" rel="noopener"><b>YouTube</b><span>@VisualNeuroscienceAI</span><i aria-hidden="true">&nearr;</i></a></li>
+        <li><a href="https://www.instagram.com/fid_900/" target="_blank" rel="noopener"><b>Instagram</b><span>fid_900</span><i aria-hidden="true">&nearr;</i></a></li>
+        <li><a href="https://www.linkedin.com/in/fadil-karim/" target="_blank" rel="noopener"><b>LinkedIn</b><span>Fadil Karim</span><i aria-hidden="true">&nearr;</i></a></li>
+        <li><a href="mailto:fkarim@visualneuroscience.ai"><b>Email</b><span>fkarim@visualneuroscience.ai</span><i aria-hidden="true">&nearr;</i></a></li>
+      </ul>
+    </div>
 
     <!-- ── the figures ────────────────────────────────────────────── -->
     <div class="m-ledger ledger">
@@ -571,16 +624,20 @@ themeBtn.addEventListener("click", () => {
 <script src="assets/navbar.js"></script>
 <script>
 "use strict";
-/* The two hubs. The mosaic shows the atlases, or with #library the papers,
-   the book and the posters, as the island's Atlases and Library tabs do in
-   the app (navbar.js). A tab for this page switches the hub in place and
-   returns to the top rather than loading the page again; the browser's
-   back steps between the two. In the Android app the whole mosaic shows
-   and nothing here runs. */
+/* The three hubs. The mosaic shows the atlases, with #library the papers,
+   the book and the posters, and with #about the MCP server, what is coming,
+   the developer's message and the channels, as the island's Atlases,
+   Library and About tabs do in the app (navbar.js). A tab for this page
+   switches the hub in place and returns to the top rather than loading the
+   page again; the browser's back steps between them. In the Android app
+   the whole mosaic shows and nothing here runs. */
 (function(){
   var mosaic = document.querySelector(".mosaic");
   if (!mosaic || document.documentElement.hasAttribute("data-native")) return;
-  function hub(){ mosaic.classList.toggle("hub-library", location.hash === "#library"); }
+  function hub(){
+    mosaic.classList.toggle("hub-library", location.hash === "#library");
+    mosaic.classList.toggle("hub-about", location.hash === "#about");
+  }
   function mark(){ if (window.VN_ISLE) VN_ISLE.mark(); }
   hub();
   window.addEventListener("hashchange", function(){ hub(); mark(); window.scrollTo(0, 0); });

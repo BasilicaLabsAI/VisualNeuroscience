@@ -42,9 +42,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (`assets/home/*-light.jpg`, `assets/studies/hallucinations-light.png`), shot from the live pages by
   `app/scripts/shoot-home-pictures.js` (the atlas's by `shoot-home-atlas.js`); the website swaps them by theme
   (`.shot.themed` and `.plate.themed` in `index.html`, the plate following the paper) and the app through
-  `Shot(dark, light:)`. Retake a twin whenever its page's look changes. The About tab leads with the MCP server since v11.36, and the website's About
-  page opens with the same box (`.mcp-box` in `about.html`, hidden inside the app's tabs), as the Vision Pro console's
-  About window does with a card of its own (`vision-about.html`, since v11.37). Android keeps the web bar. On an iPad the pages fill the screen: the shell
+  `Shot(dark, light:)`. Retake a twin whenever its page's look changes. The About tab leads with the MCP server since
+  v11.36, then (v11.68) a Coming soon box with nothing to press, three `SoonRow`s naming what is being built (the Circuit
+  Atlas, Regions in depth, the MCP server extended), then the developer's message and the Channels; its twin on the
+  website is the home page's About hub (`index.html#about`: `.m-mcp`, `.m-soon`, `.m-about`, `.m-channels`), and
+  `about.html` is the developer's message alone since v11.68 (its MCP box left with the hub). The Vision Pro console's
+  About window has a card of its own (`vision-about.html`, since v11.37). Android keeps the web bar. On an iPad the pages fill the screen: the shell
   also marks them `data-shell-pad`, the system bar shows no title there, and the page's title strip steps aside
   (`viewer.css`), keeping any buttons it carries. The stack's swipes back (from the edge, and iOS 26's from
   anywhere) are off on the pages, since a sideways drag on a scan set them off; Back is the bar's button
@@ -57,10 +60,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   layout: one line from 1001px, the island on a line of its own below that, spanning the width on a phone; the header
   scrolls away on a phone held sideways). The page a file belongs to is the `OF` map in `navbar.js`: the atlases to
   Atlases; studies, hallucinations, textbook and posters to Library; about and mcp to About; account, privacy, terms,
-  delete-account and connect to Account. Atlases and Library open the home page on one of its two hubs: `index.html`
-  shows the six atlas boxes and the figures, `index.html#library` the papers, the book and the posters
-  (`.mosaic.hub-library`, switched in place by the page's hub script; the practice, MCP and developer boxes show on
-  neither, their tabs leading there; the Android app, whose bar lists the sections, shows the whole mosaic). The
+  delete-account and connect to Account. Atlases, Library and About open the home page on one of its three hubs:
+  `index.html` shows the six atlas boxes and the figures, `index.html#library` the papers, the book and the posters,
+  and `index.html#about` (v11.68) the MCP server, the Coming soon box, the developer's message and the channels
+  (`.mosaic.hub-library`, `.mosaic.hub-about`, switched in place by the page's hub script; the practice box shows on
+  none, its tab leading there; the Android app, whose bar lists the sections, shows the whole mosaic). The
   social links left the header with it; the About page lists them. A new page gets the island by carrying the same
   masthead markup as the others; `get.html` carries none on purpose.
 - `site/sw.js` precaches pages and assets: **bump `VERSION`** (`vn-NN`) whenever a precached file changes.

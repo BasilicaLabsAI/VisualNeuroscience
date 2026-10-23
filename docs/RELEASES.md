@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.68 — 23 October 2026 — About, as the app has it
+Commit · Make the website's About tab the app's page of boxes, with a Coming soon box under the MCP server in both
+
+The About tab on the website now opens the page of boxes the app's About tab is: the MCP server, a new Coming soon box, the developer's message and the channels to follow and write to. The Coming soon box has nothing to press, only word of three things being built: the Circuit Atlas, the 3D Region Atlas with animated paths running from region to region so a study's circuit plays out on the brain; Regions in depth, a detailed functional breakdown of every region written from the research; and the MCP server extended with tools for both. The same box stands under the MCP server in the app's About tab. The developer's message is a page of its own behind its box, without the MCP box it used to open with.
+
 ## v11.67 — 23 October 2026 — Pictures for the light theme
-Commit · Give every home-page picture a twin drawn on the paper for the light theme, on the website and in the app
+Commit `b29ecfc` · Give every home-page picture a twin drawn on the paper for the light theme, on the website and in the app
 
 The boxes on the home page and in the app's tabs showed renders on black whichever theme was on, and in the light theme the black plates sat heavily on the paper. Every picture now has a twin for the light theme, drawn on white from the live pages: the Brodmann map in its lobes' colours with ink lines, the network ring and the brain on the light scan, the neuron on paper, the receptor on the viewer's light gradient, the tractogram on white, the Hallucinations study's views in the light theme, the practice page in its light dress and the book's cover on white. The website and the app each show the twin that matches the theme, and the plate under it follows the paper, as the 3D Region Atlas's picture has since v10.
 

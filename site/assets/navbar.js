@@ -27,9 +27,10 @@
    name, the one the page belongs to lit. The island is built here after
    the brand, the buttons are moved out of the page's row of section links
    and the row is hidden (viewer.css, the island section), its links still
-   in the page to be read. Atlases and Library open the home page on one
-   of its two hubs, the pages of boxes the app's tabs hold (index.html
-   switches between them on #library); the other three tabs are pages.
+   in the page to be read. Atlases, Library and About open the home page
+   on one of its three hubs, the pages of boxes the app's tabs hold
+   (index.html switches between them on #library and #about); Practice and
+   Account are pages.
    The bar draws in to a translucent material once the page has scrolled.
    Nothing here runs inside the native app, which has the bar below instead. */
 (function(){
@@ -60,7 +61,7 @@
   /* on the home page itself the hubs keep its address, so a clean / stays / */
   var homeHref = home ? (p || "index.html") : "index.html";
   var TABS = [["atlases", "Atlases", homeHref], ["library", "Library", homeHref + "#library"],
-    ["practice", "Practice", "practice.html"], ["about", "About", "about.html"], ["account", "Account", "account.html"]];
+    ["practice", "Practice", "practice.html"], ["about", "About", homeHref + "#about"], ["account", "Account", "account.html"]];
   /* the tab each page belongs to: the same pages the app's tabs hold */
   var OF = {
     "": "atlases", "index.html": "atlases", "regions.html": "atlases", "brodmann.html": "atlases",
@@ -69,7 +70,10 @@
     "practice.html": "practice", "about.html": "about", "mcp.html": "about",
     "account.html": "account", "privacy.html": "account", "terms.html": "account", "delete-account.html": "account", "connect.html": "account"
   };
-  function current(){ return home && location.hash === "#library" ? "library" : (OF[here] || ""); }
+  function current(){
+    if (home) return location.hash === "#library" ? "library" : location.hash === "#about" ? "about" : "atlases";
+    return OF[here] || "";
+  }
 
   var isle = document.createElement("nav");
   isle.className = "vn-isle";
