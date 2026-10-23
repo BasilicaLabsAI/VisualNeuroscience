@@ -153,16 +153,23 @@ the two switches that put the same build on the Mac App Store.
 
 ## Icons and splash
 
-`npm run icons` redraws every size from `../site/assets/logo.svg`, then
-`npx capacitor-assets generate --ios --android` cuts the platform sets from
-`resources/`.
+`npm run icons` draws every icon and splash the three targets use from the
+app mark, `../site/assets/app-mark.svg`: the brain wired with circuit traces
+and nodes, traced from the owner's drawing by `../scripts/appmark/trace.py`
+(the drawing is `brain.jpg` beside it; run the script again if the drawing
+changes). The web mark in the masthead and the browser tab is still the ring,
+`../site/assets/logo.svg`.
 
-The web mark has no background — it is the ring alone, so it works on a light
-page and a dark one. An app icon cannot be that: **Apple rejects an icon with
-an alpha channel outright**, and Android masks the foreground layer into
-whatever shape the launcher wants. So the store icons put the ring on the
-site's own paper black, and the platform draws the tile around it. This is not
-the black disc the web mark used to carry; it is the ground every app icon has.
+The mark carries no ground and is filled with currentColor, so the script
+chooses both: the site's ink on a white tile for every app icon (since
+v11.85), and white on the paper black of the splash screens. **Apple rejects
+an icon with an alpha channel outright**, and Android masks the foreground
+layer into whatever shape the launcher wants, so the opaque tiles carry their
+ground themselves and the maskable and adaptive foregrounds keep the brain
+inside the middle 66% of the canvas. The script also cuts the Android launcher
+sets and the splash drawables at the sizes `npx capacitor-assets generate
+--ios --android` would cut them from `resources/`, so that command is optional
+now and gives the same files when run after `npm run icons`.
 
 ## Apple's Guideline 4.2
 

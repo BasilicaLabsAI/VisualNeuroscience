@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.85 — 23 October 2026 — The brain on the app's icon
+Commit · Give the app a white icon carrying the brain drawing, and draw every icon and splash from it
+
+The app's icon is new: a brain wired with circuit traces and nodes, drawn in black on a white tile, on the iPhone, the iPad, the Mac, Android and the home screens of the web app alike, in place of the coloured ring on black. The splash screens show the same brain in white on the paper black. The website's masthead and browser tab keep the ring.
+
 ## v11.84 — 23 October 2026 — Receptor and Receptor types on the bar
-Commit · Make room on the bar for the new buttons up to an iPad upright
+Commit `ee41fe5` · Make room on the bar for the new buttons up to an iPad upright
 
 The 3D Region Atlas's bar now carries a button for each of the receptor window's tabs that had none: Receptor, which opens the window on the drawing of the receptor picked, and Receptor types, which opens it on the cards and the table, beside Receptor graph and Neurotransmitters, each lit while its tab is open and closing the window on a second press. The Reference drawer's list of sources ends with a line that opens the receptor window on its Sources tab, where the notes on reading the numbers and the receptors with no open human data live.
 

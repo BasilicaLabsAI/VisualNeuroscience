@@ -70,6 +70,16 @@ Read this first in every session. It is the handover; nothing else needs pasting
   social links left the header with it; the About page lists them. A new page gets the island by carrying the same
   masthead markup as the others; `get.html` carries none on purpose.
 - `site/sw.js` precaches pages and assets: **bump `VERSION`** (`vn-NN`) whenever a precached file changes.
+- The app icon (v11.85, at the owner's word) is the brain wired with circuit traces and nodes, in the site's ink on a white
+  tile, on every platform: `site/assets/app-mark.svg`, traced from the owner's drawing `scripts/appmark/brain.jpg` by
+  `scripts/appmark/trace.py` (marching squares over the enlarged, thresholded drawing, simplified and smoothed into one
+  evenodd path filled with currentColor). `app/scripts/make-icons.mjs` (`npm run icons` on the Mac; here, link the global
+  modules first, `ln -s "$(npm root -g)" app/node_modules`, and remove the link after) draws every icon and splash from it:
+  the web app's icons and `apple-touch-icon.png`, the iOS catalog's 1024, `app/resources/`, the Play icon, the Android
+  launcher sets at every density and the splash screens (the brain in white on the paper black, 22% of the longer side),
+  so `capacitor-assets` is optional. The website's masthead and browser tab keep the ring, `site/assets/logo.svg`, and
+  the Play feature graphic (`app/store/play/feature-graphic.html`) still carries the ring inline; re-render it with
+  `app/scripts/shoot-play.js` if it should change.
 - Shared receptor drawings live in `site/assets/rxfig.js` + `rxfig.css`, built from `site/assets/rx/receptors.json`
   (`scripts/receptors/build.py`) and `site/assets/nt/molecules.json` (`scripts/neurotransmitters/build.py`).
   The textbook is built by `scripts/textbook/build.py` from the OpenStax source (not in the repo; CC BY-NC-SA 4.0).
