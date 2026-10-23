@@ -519,6 +519,13 @@ body.ba-land{ padding-bottom:0; }
 .pbtn:active{ color:var(--ink); }
 @media (pointer:coarse){ .pbtn{ min-height:44px; } }
 @media (prefers-reduced-motion: reduce){ .pbtn{ transition:none; } }
+/* upright on a phone the five tabs share the width, so they stand closer and
+   drop the atlas's minimum width, and the bar never has to scroll */
+.ba-screen.one .panelbar{ gap:.3rem; padding-left:.35rem; padding-right:.35rem; }
+.ba-screen.one .pbtn{ min-width:0; padding:.3rem .4rem .25rem; }
+.ba-screen.one .panelbar-views{ padding-right:.3rem; margin-right:.1rem; }
+.ba-screen.one .panelbar-end{ padding-left:.3rem; }
+.ba-screen.one .pbtn.pbtn-ref{ margin-left:.1rem; padding-left:.5rem; }
 /* held sideways: a column at the right edge, the groups one under another */
 .ba-screen.land .panelbar{
   flex-direction:column; align-items:stretch; justify-content:flex-start; gap:0; min-height:0;
@@ -748,7 +755,9 @@ body.ba-land{ padding-bottom:0; }
        too so the two take no more than three fifths of the height, the rest
        being the brain's; sideways, what fills the height */
     var fh = faceH(), both = faceView === "both", gap = both ? g : 0;
-    var cartW = tall ? Math.min(0.55 * W, (0.62 * H - gap) / fh) : Math.min(0.55 * W, (H - gap) / fh);
+    /* the bar's row at the foot is not the faces' to fill */
+    var room = H - (bar ? bar.offsetHeight + g : 0);
+    var cartW = tall ? Math.min(0.55 * W, (0.62 * room - gap) / fh) : Math.min(0.55 * W, (room - gap) / fh);
     cartW = Math.max(220, Math.floor(cartW));
     screenEl.style.setProperty("--cart-w", cartW + "px");
     screenEl.style.setProperty("--faces-h", Math.ceil(cartW * fh + gap) + "px");

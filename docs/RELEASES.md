@@ -12,7 +12,7 @@ text below. Both can also be run from a clone on a machine that can push.
 Versions before v8.6 were released without a ledger and are not recorded.
 
 ## v11.75 — 23 October 2026 — The Brodmann Atlas's bar of tabs
-Commit · Give the Brodmann Area Atlas the atlases' bar of tab buttons: the faces, What it does and About
+Commit · Fit the Brodmann bar's five tabs across a phone upright, finishing the bar of tabs
 
 The Brodmann Area Atlas now carries the bar of tab buttons the 3D Region Atlas and the molecular viewer have, along the foot of the screen, or along the right edge on a phone held sideways: each an icon over its word, the one in use drawn in ink. Outside, Inside and Both pick what the faces show at every width now, not only sideways, one face alone drawn larger; What it does raises the reading on a phone, where the strip along the foot keeps the area's name (a tap on the strip does the same); and About, at the far right behind a line, raises the page's notes, what the map is and where it came from, as a window over the brain, so the page is one screen at every width.
 
