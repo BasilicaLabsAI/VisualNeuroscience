@@ -285,7 +285,9 @@ svg{ display:block; }
    it is wide (an iPad held upright) stacks the faces beside the reading and
    gives the brain the whole width beneath them; a wider one (an iPad held
    sideways, a computer) stacks the faces down the right at the width that
-   fills the height, the brain under the reading at the left. The script
+   fills the height, the brain under the reading at the left, the reading's
+   box a set share of the height so the brain's box is the same size
+   whichever area is picked and a long reading scrolls inside its own. The script
    marks the screen .tall or .wide and sets --cart-w, the faces' width, and
    --faces-h, the two faces' height together. A phone held sideways is the
    bar's layout below, not this one. */
@@ -296,7 +298,7 @@ svg{ display:block; }
     grid-template-areas:"read maps" "scan scan";
   }
   .ba-screen.wide{
-    grid-template-columns:minmax(0,1fr) var(--cart-w, 50%); grid-template-rows:auto minmax(240px,1fr);
+    grid-template-columns:minmax(0,1fr) var(--cart-w, 50%); grid-template-rows:clamp(220px, 38%, 360px) minmax(240px,1fr);
     grid-template-areas:"read maps" "scan maps";
   }
   .ba-screen.tall .reading, .ba-screen.wide .reading{ grid-area:read; }

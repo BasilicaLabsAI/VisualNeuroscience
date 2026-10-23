@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.70 — 23 October 2026 — A brain that holds its size
+Commit · Give the Brodmann reading a set share of the height sideways, so the brain's box is one size whichever area is picked
+
+On an iPad held sideways, or a computer, the brain in 3D under the Brodmann reading grew and shrank with the reading: a long account of an area pushed the brain down, a short one let it up. The reading's box is now a set share of the height, a long reading scrolling inside it, so the brain's box is the same size whichever area is picked.
+
 ## v11.69 — 23 October 2026 — The app's name
-Commit · Record the app's new App Store name, Visual Neuroscience: 3D Human Brain Atlas, in the listing notes
+Commit `cef7470` · Record the app's new App Store name, Visual Neuroscience: 3D Human Brain Atlas, in the listing notes
 
 The listing notes for the next App Store submission now carry the app's new name, Visual Neuroscience: 3D Human Brain Atlas, as the store takes it: the name Visual Neuroscience and the subtitle 3D Human Brain Atlas, one under the other, since the store allows a name thirty characters long and the line is forty-one. The Play notes say why the same cannot be typed there whole. Nothing on the site changes.
 

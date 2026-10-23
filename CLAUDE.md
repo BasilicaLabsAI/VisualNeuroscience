@@ -233,7 +233,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `applyScanMode` (`openScan(true)`, never collapsed, Escape ignored, the foot's button and the collapse button hidden):
   `arrange()` marks the screen `.tall` (taller than wide, an iPad upright: the faces beside the reading, the brain the
   whole width beneath, `grid-template-areas "read maps" "scan scan"`) or `.wide` (an iPad sideways, a computer: the
-  faces down the right at the width that fills the height, the brain under the reading, `"read maps" "scan maps"`), and
+  faces down the right at the width that fills the height, the brain under the reading, `"read maps" "scan maps"`, the
+  reading's row a set share of the height, `clamp(220px, 38%, 360px)` since v11.70, so the brain's box never changes
+  with the pick and a long reading scrolls inside its box), and
   sets `--cart-w`, the faces' width (at most 55% of the screen; upright, capped so the two take 62% of the height at
   most), and `--faces-h`, their height together; each `.cart` is cut to its drawing (`height:calc(var(--cart-w) * .6667)`,
   the medial face `.6367`, from the outline's 600×400 and 600×382 boxes). The page carries viewer.css's `.ts-btn` inline and
