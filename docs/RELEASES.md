@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.97 — 23 October 2026 — The whole tractogram in its picture
+Commit · Take the zoom buttons off the Tractography page and show the whole tractogram in its home picture
+
+The Tractography page loses the plus and minus on its view, the wheel and a pinch zooming the tractogram as they did, and its picture on the home page pulls back to show the whole brain in either theme, where it used to fill the frame and lose its edges.
+
 ## v11.96 — 23 October 2026 — Tractography in the light theme, and the store images
-Commit · Draw the tractogram on white in the light theme, as the atlases' stages are
+Commit `96cd27e` · Draw the tractogram on white in the light theme, as the atlases' stages are
 
 In the light theme the Tractography page still drew its streamlines on the dark theme's black, one black box on a white page. The tractogram's ground now follows the theme, the page's black or white, and switches the moment the theme does, with the loading message in the page's own colours. The repository also carries the App Store images made so far: nine for the 13-inch iPad and nine for the iPhone, each a capture of the app under its statement, the status bar painted over in the capture's own ground.
 

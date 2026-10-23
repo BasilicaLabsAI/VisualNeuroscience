@@ -190,9 +190,6 @@ main.screen{
    black, inline, as it attaches. */
 :root[data-theme="dark"] .views .view[data-box="Ren"] .mri-stage{ background:#111111 !important; }
 :root:not([data-theme="dark"]) .views .view[data-box="Ren"] .mri-stage{ background:#FFFFFF !important; }
-@container view (max-width:300px){
-  .screen .views .view .view-tools{ display:none; }
-}
 .panelbar{
   flex:none; display:flex; align-items:center; gap:.6rem;
   padding:.45rem var(--gap) calc(.45rem + env(safe-area-inset-bottom, 0px));
@@ -314,9 +311,12 @@ main.screen.one.land{ flex-direction:row; }
 }
 .screen.one.land .pbtn svg{ width:22px; height:22px; }
 .screen.one.land .pop{ max-height:100%; }
+/* with no tools at the cap's start (the zoom buttons went in v11.97), the
+   empty start the wide layout hides stays, as wide as the end, so the name
+   sits in the middle at every width; sideways it goes, the name at the end */
+.views .view-cap::before{ display:block; }
 .screen.one.land .views .view-cap{ flex-wrap:nowrap; justify-content:flex-start; }
 .screen.one.land .views .view-cap::before{ display:none; }
-.screen.one.land .views .view-cap .view-tools{ order:0; flex:none; }
 .screen.one.land .views .view-cap .view-end{ order:1; flex:none; justify-content:flex-start; }
 .screen.one.land .views .view-cap b{ order:2; margin-left:auto; margin-right:0; }
 :root[data-shell]:not([data-shell-pad]) .screen.one.land .views .view-cap{ padding-left:56px; }
@@ -359,7 +359,7 @@ main.screen.one.land{ flex-direction:row; }
       <div class="views-wrap">
         <div class="views">
           <div class="view" data-box="Ren">
-            <div class="view-cap"><b>Tractogram</b><div class="view-tools"><button class="ts-btn centre-btn zoom-btn" data-zoom="out" type="button" aria-label="Zoom out">&minus;</button><button class="ts-btn zoom-btn" data-zoom="in" type="button" aria-label="Zoom in">+</button></div><div class="view-end"><button class="ts-btn centre-btn" data-reset type="button" aria-label="Reset the view">Reset<span class="lbl-more"> view</span></button></div></div>
+            <div class="view-cap"><b>Tractogram</b><div class="view-end"><button class="ts-btn centre-btn" data-reset type="button" aria-label="Reset the view">Reset<span class="lbl-more"> view</span></button></div></div>
             <div class="mri-stage"><canvas id="tkRen"></canvas><div class="stage-msg" id="stageMsg"><span class="caps" id="msgTitle">Loading the tractogram</span><div class="progress"><i id="msgBar"></i></div><p id="msgText">Several megabytes of streamlines are on their way.</p></div></div>
           </div>
         </div>
@@ -696,7 +696,7 @@ main.screen.one.land{ flex-direction:row; }
     if (spinning) lastTouch = 0;
   });
 
-  /* ── zoom: the + and − on the box, the wheel, or a pinch ── */
+  /* ── zoom: the wheel, or a pinch (the box's + and − went in v11.97) ── */
   var HOME_ZOOM = 1.4, zoom = HOME_ZOOM;
   function applyZoom(v){
     zoom = Math.min(4, Math.max(0.3, Number(v) || HOME_ZOOM));
@@ -704,13 +704,20 @@ main.screen.one.land{ flex-direction:row; }
     byKey.Ren.scene.volScaleMultiplier = zoom;
     byKey.Ren.drawScene();
   }
-  document.querySelectorAll("[data-zoom]").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      var step = btn.getAttribute("data-zoom") === "in" ? 1.18 : 1 / 1.18;
-      applyZoom(zoom * step);
+  /* the page's door for the shoot script: the zoom, the home angle, and
+     the revolve stopped through its own button */
+  window.MN_TRACTS = {
+    zoom: applyZoom,
+    home: function(){
+      var nv = byKey.Ren;
+      if (!nv) return;
+      nv.scene.renderAzimuth = HOME[0];
+      nv.scene.renderElevation = HOME[1];
       touched();
-    });
-  });
+      nv.drawScene();
+    },
+    still: function(){ if (spinning && spinBtn) spinBtn.click(); }
+  };
 
   var radiusEl = document.getElementById("radius");
   var radiusVal = document.getElementById("radiusVal");

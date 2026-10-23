@@ -199,7 +199,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   the What-this-is text and the credits. `network-atlas.js` is untouched (every id it reads kept its name), and
   `app/scripts/shoot-home-pictures.js` raises the sheet before it shoots the ring.
 - The Tractography page (`site/tracts.html`) is one screen too since v11.94, with the study's chrome less its drawer and
-  view switch: the tractogram fills the stage (its cap: zoom, the name, Reset), and the bar carries Streamlines
+  view switch: the tractogram fills the stage (its cap: the name and Reset; the zoom buttons went in v11.97, at the owner's
+  word, the wheel and a pinch zooming as before), and the bar carries Streamlines
   (`#popLines`: the Direction/Single colour and the thickness), View from (`#popView`: the cube of faces and Reset view),
   Revolve (`#spinBtn`, a `.pbtn` lit while it turns), Export (`#popExport`: the density and the 3D model) and About
   (`#popAbout`: what you are looking at, the colour key, the credits). Its own viewer script is untouched but for the
@@ -207,7 +208,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   dark and white light (`ground()` beside the viewer list, the stage's two rules by theme, an observer on `data-theme`
   repainting the viewers at once), the loading message in the page's paper and ink, and `shoot-home-pictures.js` no longer
   forces a white back for the light twin; it is the one atlas that draws its ground itself rather than through
-  `scan-look.js`, whose dark ground is a scan's pure black. The chrome now
+  `scan-look.js`, whose dark ground is a scan's pure black. The page opens a door to the shoot script, `MN_TRACTS` (`zoom`,
+  `home`, `still`), through which `shoot-home-pictures.js` shoots both twins at zoom 1.2, the revolve stopped and the home
+  angle set, in a frame of the picture's proportion, so the whole brain is in the picture (v11.97; the page itself still
+  opens at 1.4, the brain filling the view). The chrome now
   lives in six pages (the 3D Region Atlas, the Brodmann Area Atlas, the Hallucinations study, the molecular viewer, the
   Network Atlas and Tractography); a change to it belongs in all of them.
 - The Region Atlas is called the 3D Region Atlas wherever its name shows (nav, titles, home page, the app) since
