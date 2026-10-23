@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.95 — 23 October 2026 — A store image with the sell above it
+Commit · Set the owner's statement over the 3D Region Atlas store image
+
+The repository gains the way the App Store images are made from a capture of the app: a statement in the brand face above, the capture framed beneath at the store's size with the device's status bar painted over rather than cut away. The first, for the 13-inch iPad, shows the 3D Region Atlas with three regions highlighted under the words Detailed 3D Human Brain Atlas.
+
 ## v11.94 — 23 October 2026 — Tractography and the Network Atlas on the bar
-Commit · Make the Tractography page and the Network Atlas one screen each, with the bar of buttons the other atlases have
+Commit `6fd439d` · Make the Tractography page and the Network Atlas one screen each, with the bar of buttons the other atlases have
 
 Tractography and the Network Atlas now work as the other atlases do: one screen, nothing to scroll, with a bar of buttons along the foot. On Tractography the tractogram fills the screen, and Streamlines, View from, Revolve, Export and About each slide up out of the bar as a sheet. On the Network Atlas the brain state sits in a box at the corner, the four scans fill the rest, and the circular network graph itself is a sheet the bar's Network button raises, the reading, the key and the thread weight beside it, with Export and About on the bar as well.
 
