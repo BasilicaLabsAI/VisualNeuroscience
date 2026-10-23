@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.67 — 23 October 2026 — Pictures for the light theme
+Commit · Give every home-page picture a twin drawn on the paper for the light theme, on the website and in the app
+
+The boxes on the home page and in the app's tabs showed renders on black whichever theme was on, and in the light theme the black plates sat heavily on the paper. Every picture now has a twin for the light theme, drawn on white from the live pages: the Brodmann map in its lobes' colours with ink lines, the network ring and the brain on the light scan, the neuron on paper, the receptor on the viewer's light gradient, the tractogram on white, the Hallucinations study's views in the light theme, the practice page in its light dress and the book's cover on white. The website and the app each show the twin that matches the theme, and the plate under it follows the paper, as the 3D Region Atlas's picture has since v10.
+
 ## v11.66 — 23 October 2026 — The brain always on show
-Commit · Keep the Brodmann Area Atlas's brain in 3D on show on an iPad and a computer, the faces cut to their drawings
+Commit `60eaad4` · Keep the Brodmann Area Atlas's brain in 3D on show on an iPad and a computer, the faces cut to their drawings
 
 On an iPad or a computer the Brodmann Area Atlas no longer hides its brain behind a button: the picked area lit on the MNI152 brain in 3D is a box of its own, always on show, loaded with the page. The two faces of the map are cut to their drawings, each box the shape of its face, so the room they left empty goes to the brain. Held upright, the faces stand beside the reading and the brain takes the whole width beneath them; held sideways, or on a computer, the faces stand down the right at the width that fills the height, smaller than before, and the brain sits under the reading at the left. A phone keeps Show in 3D and the panel that rises over the map.
 

@@ -244,13 +244,14 @@ img{ max-width:100%; height:auto; display:block; }
   border:1px solid var(--ink-35); background:#000000;
 }
 .shot img{ width:100%; height:auto; display:block; }
-/* The Region Atlas draws on white in the light theme, so its picture has a
-   twin for each theme and its plate follows the paper. The twin not shown
-   is not fetched until the theme turns to it. */
-.shot .for-light{ display:none; }
-:root:not([data-theme="dark"]) .shot.themed{ background:var(--paper); }
-:root:not([data-theme="dark"]) .shot .for-dark{ display:none; }
-:root:not([data-theme="dark"]) .shot .for-light{ display:block; }
+/* Every picture has a twin for the light theme, drawn on the paper (the
+   atlas's by app/scripts/shoot-home-atlas.js, the rest by
+   shoot-home-pictures.js), and the plate it sits on follows the paper. The
+   twin not shown is not fetched until the theme turns to it. */
+.shot .for-light, .plate .for-light{ display:none; }
+:root:not([data-theme="dark"]) .shot.themed, :root:not([data-theme="dark"]) .plate.themed{ background:var(--paper); }
+:root:not([data-theme="dark"]) .shot.themed .for-dark, :root:not([data-theme="dark"]) .plate.themed .for-dark{ display:none; }
+:root:not([data-theme="dark"]) .shot.themed .for-light, :root:not([data-theme="dark"]) .plate.themed .for-light{ display:block; }
 /* the lead box is as tall as the two beside it; with a short standfirst
    the figure follows the text and the slack sits beneath it */
 .m-atlas .fig{ margin-top:1.4rem; align-items:flex-start; }
@@ -404,7 +405,7 @@ img{ max-width:100%; height:auto; display:block; }
         <div class="meta">41 areas &middot; both faces &middot; what each one does</div>
         <div class="go">Open the map &rarr;</div>
       </div>
-      <div class="plate"><img src="assets/home/brodmann.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+      <div class="plate themed"><img class="for-dark" src="assets/home/brodmann.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/home/brodmann-light.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
     </a>
 
     <!-- ── the ring ───────────────────────────────────────────────── -->
@@ -412,7 +413,7 @@ img{ max-width:100%; height:auto; display:block; }
       <div class="kicker">Systems</div>
       <h2>Network Atlas</h2>
       <p>The brain&rsquo;s large-scale networks in six states, from flow to meditation, mapped onto the scan.</p>
-      <div class="plate"><img src="assets/home/network.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+      <div class="plate themed"><img class="for-dark" src="assets/home/network.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/home/network-light.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
       <div class="meta">6 states &middot; 7 systems &middot; 20 nodes</div>
       <div class="go">Open the ring &rarr;</div>
     </a>
@@ -423,7 +424,7 @@ img{ max-width:100%; height:auto; display:block; }
       <h2>Tractography</h2>
       <p>The white matter&rsquo;s million fibre pathways, from the HCP1065 population average, in full 3D.</p>
       <div class="fig" aria-hidden="true">
-        <span class="shot"><img src="assets/home/tracts.jpg" alt="" loading="lazy" decoding="async" width="1200" height="700"></span>
+        <span class="shot themed"><img class="for-dark" src="assets/home/tracts.jpg" alt="" loading="lazy" decoding="async" width="1200" height="700"><img class="for-light" src="assets/home/tracts-light.jpg" alt="" loading="lazy" decoding="async" width="1200" height="700"></span>
       </div>
       <div class="meta">Direction-coloured streamlines &middot; free rotation</div>
       <div class="go">Open the tractogram &rarr;</div>
@@ -439,7 +440,7 @@ img{ max-width:100%; height:auto; display:block; }
         <div class="meta">1 study drawn &middot; more to come</div>
         <div class="go">Open the shelf &rarr;</div>
       </div>
-      <div class="plate"><img src="assets/studies/hallucinations.png" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+      <div class="plate themed"><img class="for-dark" src="assets/studies/hallucinations.png" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/studies/hallucinations-light.png" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
     </a>
 
     <!-- ── the cells ──────────────────────────────────────────────── -->
@@ -451,7 +452,7 @@ img{ max-width:100%; height:auto; display:block; }
         <div class="meta">2 cells drawn &middot; 37 structures &middot; explore and test modes</div>
         <div class="go">Open the cell &rarr;</div>
       </div>
-      <div class="plate"><img src="assets/home/cells.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+      <div class="plate themed"><img class="for-dark" src="assets/home/cells.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/home/cells-light.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
     </a>
 
     <!-- ── the molecules ──────────────────────────────────────────── -->
@@ -463,7 +464,7 @@ img{ max-width:100%; height:auto; display:block; }
         <div class="meta">17 receptors &middot; 39 structures &middot; 24 drugs &middot; binding tour &middot; compare</div>
         <div class="go">Open the receptors &rarr;</div>
       </div>
-      <div class="plate"><img src="assets/home/molecular.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+      <div class="plate themed"><img class="for-dark" src="assets/home/molecular.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/home/molecular-light.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
     </a>
 
     <!-- ── the practice ───────────────────────────────────────────── -->
@@ -472,7 +473,7 @@ img{ max-width:100%; height:auto; display:block; }
       <h2>Neuroscience Practice</h2>
       <p>Adaptive multiple-choice revision built for the KCL MSc Neuroscience syllabus.</p>
       <div class="fig" aria-hidden="true">
-        <span class="shot"><img src="assets/home/practice.jpg" alt="" loading="lazy" decoding="async" width="1100" height="500"></span>
+        <span class="shot themed"><img class="for-dark" src="assets/home/practice.jpg" alt="" loading="lazy" decoding="async" width="1100" height="500"><img class="for-light" src="assets/home/practice-light.jpg" alt="" loading="lazy" decoding="async" width="1100" height="500"></span>
       </div>
       <div class="meta">Adaptive questions &middot; session score &middot; explanations</div>
       <div class="go">Start practising &rarr;</div>
@@ -484,7 +485,7 @@ img{ max-width:100%; height:auto; display:block; }
       <h2>Digital Textbook</h2>
       <p>OpenStax&rsquo;s complete <em>Introduction to Behavioral Neuroscience</em>, in the site&rsquo;s own pages.</p>
       <div class="fig" aria-hidden="true">
-        <span class="shot"><img src="assets/home/textbook.jpg" alt="" loading="lazy" decoding="async" width="1100" height="508"></span>
+        <span class="shot themed"><img class="for-dark" src="assets/home/textbook.jpg" alt="" loading="lazy" decoding="async" width="1100" height="508"><img class="for-light" src="assets/home/textbook-light.jpg" alt="" loading="lazy" decoding="async" width="1100" height="508"></span>
       </div>
       <div class="meta">19 chapters &middot; 85 sections &middot; 506 figures &middot; CC BY-NC-SA</div>
       <div class="go">Open the book &rarr;</div>

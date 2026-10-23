@@ -116,27 +116,27 @@ struct AtlasTab: View {
                     go: "Open the atlas")
             PageBox(page: .brodmann, kicker: "Cytoarchitecture",
                     text: "Brodmann’s 41 areas of the cortex on a map of both faces of the hemisphere. Tap one and what it does appears beside it.",
-                    shot: Shot("assets/home/brodmann.jpg"),
+                    shot: Shot("assets/home/brodmann.jpg", light: "assets/home/brodmann-light.jpg"),
                     meta: "41 areas · both faces · what each one does",
                     go: "Open the map")
             PageBox(page: .microanatomy, kicker: "Under the microscope",
                     text: "The neuron and its synapses at the cell’s scale, down to the neurotransmitters and their receptors.",
-                    shot: Shot("assets/home/cells.jpg"),
+                    shot: Shot("assets/home/cells.jpg", light: "assets/home/cells-light.jpg"),
                     meta: "2 cells drawn · 37 structures · explore and test modes",
                     go: "Open the cell")
             PageBox(page: .molecular, kicker: "The molecules",
                     text: "The dopamine and serotonin receptors in three dimensions, with the transmitters and drugs that bind them.",
-                    shot: Shot("assets/home/molecular.jpg"),
+                    shot: Shot("assets/home/molecular.jpg", light: "assets/home/molecular-light.jpg"),
                     meta: "17 receptors · 39 structures · 24 drugs · binding tour · compare",
                     go: "Open the receptors")
             PageBox(page: .tractography, kicker: "White matter",
                     text: "The white matter’s million fibre pathways, from the HCP1065 population average, in full 3D.",
-                    shot: Shot("assets/home/tracts.jpg"),
+                    shot: Shot("assets/home/tracts.jpg", light: "assets/home/tracts-light.jpg"),
                     meta: "Direction-coloured streamlines · free rotation",
                     go: "Open the tractogram")
             PageBox(page: .networkAtlas, kicker: "Systems",
                     text: "The brain’s large-scale networks in six states, from flow to meditation, mapped onto the scan.",
-                    shot: Shot("assets/home/network.jpg"),
+                    shot: Shot("assets/home/network.jpg", light: "assets/home/network-light.jpg"),
                     meta: "6 states · 7 systems · 20 nodes",
                     go: "Open the ring")
         }
@@ -149,12 +149,12 @@ struct LibraryTab: View {
         TabPage {
             PageBox(page: .studies, kicker: "The Papers",
                     text: "Published neuroimaging studies drawn directly on the brain, region by region.",
-                    shot: Shot("assets/studies/hallucinations.png"),
+                    shot: Shot("assets/studies/hallucinations.png", light: "assets/studies/hallucinations-light.png"),
                     meta: "1 study drawn · more to come",
                     go: "Open the shelf")
             PageBox(page: .textbook, kicker: "The Book",
                     text: "OpenStax’s complete Introduction to Behavioral Neuroscience, in the site’s own pages.",
-                    shot: Shot("assets/home/textbook.jpg"),
+                    shot: Shot("assets/home/textbook.jpg", light: "assets/home/textbook-light.jpg"),
                     meta: "19 chapters · 85 sections · 506 figures · CC BY-NC-SA",
                     go: "Open the book")
             PageBox(page: .posters, kicker: "On paper",
@@ -172,7 +172,7 @@ struct PracticeTab: View {
         TabPage {
             PageBox(page: .practice, kicker: "Revision", title: "Neuroscience Practice",
                     text: "Adaptive multiple-choice revision built for the KCL MSc Neuroscience syllabus.",
-                    shot: Shot("assets/home/practice.jpg"),
+                    shot: Shot("assets/home/practice.jpg", light: "assets/home/practice-light.jpg"),
                     meta: "Adaptive questions · session score · explanations",
                     go: "Start practising")
         }

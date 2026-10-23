@@ -25,19 +25,19 @@
    Nothing cross-origin is touched at all — since the typefaces moved
    in-house there is no outside request left to think about. */
 
-var VERSION = "vn-190";
+var VERSION = "vn-191";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
 /* the pages and the small files they need to draw at all */
 var PRECACHE = [
-  "/", "/index.html", "/regions.html", "/brodmann.html", "/assets/home/brodmann.jpg",
+  "/", "/index.html", "/regions.html", "/brodmann.html", "/assets/home/brodmann.jpg", "/assets/home/brodmann-light.jpg",
   "/network-atlas.html", "/tracts.html", "/studies.html", "/hallucinations.html",
-  "/privacy.html", "/terms.html", "/delete-account.html", "/account.html", "/about.html", "/mcp.html", "/connect.html", "/practice.html", "/assets/home/practice.jpg",
-  "/textbook.html", "/assets/home/textbook.jpg", "/assets/textbook.css", "/assets/textbook.js",
+  "/privacy.html", "/terms.html", "/delete-account.html", "/account.html", "/about.html", "/mcp.html", "/connect.html", "/practice.html", "/assets/home/practice.jpg", "/assets/home/practice-light.jpg",
+  "/textbook.html", "/assets/home/textbook.jpg", "/assets/home/textbook-light.jpg", "/assets/textbook.css", "/assets/textbook.js",
   "/posters.html", "/assets/posters/neurotransmitters.jpg", "/assets/posters/receptors.jpg", "/assets/posters/home.jpg",
-  "/microanatomy.html", "/assets/home/cells.jpg", "/assets/cells.js",
-  "/molecular.html", "/assets/home/molecular.jpg", "/assets/home/network.jpg",
+  "/microanatomy.html", "/assets/home/cells.jpg", "/assets/home/cells-light.jpg", "/assets/cells.js",
+  "/molecular.html", "/assets/home/molecular.jpg", "/assets/home/molecular-light.jpg", "/assets/home/network.jpg", "/assets/home/network-light.jpg",
   "/assets/cells/multipolar-neuron.svg", "/assets/cells/multipolar-neuron.json",
   "/assets/nt.js", "/assets/nt/molecules.json",
   "/assets/rx.js", "/assets/rxfig.js", "/assets/rxfig.css", "/assets/rx/receptors.json",

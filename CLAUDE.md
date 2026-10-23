@@ -38,7 +38,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   Account, each a page of boxes in the home page's words with no header of its own (the tab bar names it), each box
   pushing a web page in a Capacitor bridge of its own. A page inside the tabs carries `data-shell="tabs"` and draws
   no web bar (`navbar.js`); the theme is the shell's (Account). When a home-page box's text or picture changes,
-  change its twin in `Shell.swift` too. The About tab leads with the MCP server since v11.36, and the website's About
+  change its twin in `Shell.swift` too. Every box's picture has a twin for the light theme since v11.67
+  (`assets/home/*-light.jpg`, `assets/studies/hallucinations-light.png`), shot from the live pages by
+  `app/scripts/shoot-home-pictures.js` (the atlas's by `shoot-home-atlas.js`); the website swaps them by theme
+  (`.shot.themed` and `.plate.themed` in `index.html`, the plate following the paper) and the app through
+  `Shot(dark, light:)`. Retake a twin whenever its page's look changes. The About tab leads with the MCP server since v11.36, and the website's About
   page opens with the same box (`.mcp-box` in `about.html`, hidden inside the app's tabs), as the Vision Pro console's
   About window does with a card of its own (`vision-about.html`, since v11.37). Android keeps the web bar. On an iPad the pages fill the screen: the shell
   also marks them `data-shell-pad`, the system bar shows no title there, and the page's title strip steps aside
