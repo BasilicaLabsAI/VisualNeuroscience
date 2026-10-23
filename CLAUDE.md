@@ -289,7 +289,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
 - App Store: version 1.0 was approved and released on 25 September 2026 (https://apps.apple.com/app/id6805618686)
   after an expedited review. The project is at 1.1 for the next submission; its What's New text, the App Privacy
   changes the newsletter and the usage counts need, and the steps are in `app/store/LISTING.md`, the screenshots in
-  `app/store/screenshots/`. `GoogleService-Info.plist` was downloaded again on 21 October 2026 and was identical to the
+  `app/store/screenshots/`. The listing's new name is *Visual Neuroscience: 3D Human Brain Atlas* (the owner, 23 October
+  2026), which the store's 30-character cap splits into the name `Visual Neuroscience` and the subtitle `3D Human Brain
+  Atlas`; it goes in with 1.1. `GoogleService-Info.plist` was downloaded again on 21 October 2026 and was identical to the
   repo's copy (`IS_ANALYTICS_ENABLED` false); the key does not gate collection in current SDKs, so the apps count
   unless `Info.plist` says otherwise. Confirm the iOS stream in the Firebase console's Realtime view with a TestFlight
   build before submitting; if no iOS data stream is listed, link Analytics under Integrations and download again.

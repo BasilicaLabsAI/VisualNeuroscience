@@ -74,6 +74,10 @@ and height as the website does.
 Visual Neuroscience
 ```
 
+Play has no subtitle field and the same 30-character cap, so the App
+Store's *Visual Neuroscience: 3D Human Brain Atlas* cannot be typed here
+whole; the name stays as above and the short description carries the rest.
+
 **Short description** (78/80)
 
 ```

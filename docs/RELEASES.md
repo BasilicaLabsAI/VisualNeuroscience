@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.69 — 23 October 2026 — The app's name
+Commit · Record the app's new App Store name, Visual Neuroscience: 3D Human Brain Atlas, in the listing notes
+
+The listing notes for the next App Store submission now carry the app's new name, Visual Neuroscience: 3D Human Brain Atlas, as the store takes it: the name Visual Neuroscience and the subtitle 3D Human Brain Atlas, one under the other, since the store allows a name thirty characters long and the line is forty-one. The Play notes say why the same cannot be typed there whole. Nothing on the site changes.
+
 ## v11.68 — 23 October 2026 — About, as the app has it
-Commit · Make the website's About tab the app's page of boxes, with a Coming soon box under the MCP server in both
+Commit `ab92e10` · Make the website's About tab the app's page of boxes, with a Coming soon box under the MCP server in both
 
 The About tab on the website now opens the page of boxes the app's About tab is: the MCP server, a new Coming soon box, the developer's message and the channels to follow and write to. The Coming soon box has nothing to press, only word of three things being built: the Circuit Atlas, the 3D Region Atlas with animated paths running from region to region so a study's circuit plays out on the brain; Regions in depth, a detailed functional breakdown of every region written from the research; and the MCP server extended with tools for both. The same box stands under the MCP server in the app's About tab. The developer's message is a page of its own behind its box, without the MCP box it used to open with.
 

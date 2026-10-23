@@ -14,18 +14,23 @@ headings.
 Visual Neuroscience
 ```
 
-Was VisualNeuroscience.AI for 1.0. The name can only be changed while a new
-version is being prepared, so this goes in with 1.1 and shows once 1.1 is
-released. With the space, "neuroscience" is a word of its own for search.
-NOURAKU – Visual Neuroscience is on the store too, and the 4.3(a) notes
-name that likeness as a possible trigger, so the subtitle should say what
-no other listing could.
-
-**Subtitle** (23/30)
+**Subtitle** (20/30)
 
 ```
-Interactive brain atlas
+3D Human Brain Atlas
 ```
+
+The listing is to read *Visual Neuroscience: 3D Human Brain Atlas* (the
+owner's choice, 23 October 2026). App Store Connect caps the name at 30
+characters and that line is 41, so it goes in as the two fields above,
+which the store sets one under the other on the product page and in
+search; the colon is the store's own break, not typed anywhere. Was
+VisualNeuroscience.AI for 1.0, with the subtitle *Interactive brain atlas*.
+The name can only be changed while a new version is being prepared, so
+this goes in with 1.1 and shows once 1.1 is released. With the space,
+"neuroscience" is a word of its own for search. NOURAKU – Visual
+Neuroscience is on the store too, and the 4.3(a) notes name that likeness
+as a possible trigger, so the subtitle says what no other listing could.
 
 **Category**: Education, secondary Medical.
 
@@ -212,9 +217,9 @@ The description on the version page is 1.0's. Its WHAT IS INSIDE list predates M
    description's bullets from `PLAY-STORE.md`, check the keywords (add
    `MNI152` and `AAL` as §8 suggests), the Support and Marketing URLs and the
    copyright.
-5. **App Information**: the name `Visual Neuroscience` and the subtitle (the
-   one above, or §8's `MRI atlas, tracts, Brodmann`), the privacy policy URL;
-   the licence agreement field stays empty.
+5. **App Information**: the name `Visual Neuroscience` and the subtitle
+   `3D Human Brain Atlas` (the two together are the listing's new name), the
+   privacy policy URL; the licence agreement field stays empty.
 6. **App Privacy**: add *Developer's Advertising or Marketing* to Contact Info
    → Email Address, and make sure Usage Data → Product Interaction and
    Identifiers → Device ID are declared as the section above says (1.0
