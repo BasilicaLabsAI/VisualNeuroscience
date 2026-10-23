@@ -25,7 +25,7 @@
    Nothing cross-origin is touched at all — since the typefaces moved
    in-house there is no outside request left to think about. */
 
-var VERSION = "vn-201";
+var VERSION = "vn-202";
 var SHELL   = VERSION + "-shell";
 var BULK    = VERSION + "-bulk";
 
@@ -35,6 +35,7 @@ var PRECACHE = [
   "/network-atlas.html", "/tracts.html", "/studies.html", "/hallucinations.html",
   "/privacy.html", "/terms.html", "/delete-account.html", "/account.html", "/about.html", "/mcp.html", "/connect.html", "/practice.html", "/assets/home/practice.jpg", "/assets/home/practice-light.jpg",
   "/textbook.html", "/assets/home/textbook.jpg", "/assets/home/textbook-light.jpg", "/assets/textbook.css", "/assets/textbook.js",
+  "/posters.html", "/poster-neurotransmitters.html", "/poster-receptors.html", "/assets/posters/neurotransmitters.jpg", "/assets/posters/receptors.jpg", "/assets/posters/home.jpg",
   "/microanatomy.html", "/assets/home/cells.jpg", "/assets/home/cells-light.jpg", "/assets/cells.js",
   "/molecular.html", "/assets/home/molecular.jpg", "/assets/home/molecular-light.jpg", "/assets/home/network.jpg", "/assets/home/network-light.jpg",
   "/assets/cells/multipolar-neuron.svg", "/assets/cells/multipolar-neuron.json",

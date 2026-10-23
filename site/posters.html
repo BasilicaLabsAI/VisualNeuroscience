@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="robots" content="noindex, nofollow">
 <title>Posters — VisualNeuroscience.AI</title>
 <meta name="description" content="Two A1 prints from the atlas: The Neurotransmitters, every molecule drawn to one scale, and The Receptors, a hundred and eight of them with how tightly each holds its transmitter. Printed and posted by a print-on-demand shop.">
 <!-- link previews. The card is built by site/share.html and rendered to
@@ -142,7 +141,7 @@ svg{ display:block; }
    card never shows a scale before its numbers are in. */
 .posters{ display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); max-width:1180px; }
 .poster{ border:1px solid var(--hair); background:var(--paper); display:flex; flex-direction:column; }
-.poster-fig{ border-bottom:1px solid var(--hair); background:#FFFFFF; aspect-ratio:1400 / 382; overflow:hidden; }
+.poster-fig{ display:block; border-bottom:1px solid var(--hair); background:#FFFFFF; aspect-ratio:1400 / 382; overflow:hidden; }
 .poster-fig img{ width:100%; height:100%; object-fit:cover; display:block; }
 .poster-body{ padding:1rem 1.05rem 1.15rem; display:flex; flex-direction:column; flex:1 1 auto; }
 .poster-kicker{ font-family:var(--font-brand); font-weight:500; font-size:.55rem; letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60); }
@@ -191,12 +190,12 @@ svg{ display:block; }
   <span class="anno">the atlas on paper</span>
 </div>
 
-<p class="lede">Two prints from the Microanatomy page, drawn by the same code that draws the site, at A1 &mdash; 594 &times; 841 mm &mdash; on white matte paper, each carrying the credits its sources ask for. They are printed and posted to order by a print-on-demand shop; the Buy buttons open it.</p>
+<p class="lede">Two prints from the Microanatomy page, drawn by the same code that draws the site, at A1 &mdash; 594 &times; 841 mm &mdash; on white matte paper, each carrying the credits its sources ask for. They will be printed and posted to order by a print-on-demand shop; until it opens, each poster has a page of its own, which the Buy button and the picture open.</p>
 
 <div class="posters">
 
   <article class="poster" id="neurotransmitters">
-    <div class="poster-fig"><img src="assets/posters/neurotransmitters.jpg" alt="The head of The Neurotransmitters poster: its title and the line beneath it." loading="lazy" decoding="async" width="1400" height="382"></div>
+    <a class="poster-fig" data-open="neurotransmitters" href="poster-neurotransmitters.html"><img src="assets/posters/neurotransmitters.jpg" alt="The head of The Neurotransmitters poster: its title and the line beneath it." loading="lazy" decoding="async" width="1400" height="382"></a>
     <div class="poster-body">
       <div class="poster-kicker">Microanatomy &middot; skeletal formulas</div>
       <h2>The Neurotransmitters</h2>
@@ -207,7 +206,7 @@ svg{ display:block; }
   </article>
 
   <article class="poster" id="receptors">
-    <div class="poster-fig"><img src="assets/posters/receptors.jpg" alt="The head of The Receptors poster: its title and the line beneath it." loading="lazy" decoding="async" width="1400" height="382"></div>
+    <a class="poster-fig" data-open="receptors" href="poster-receptors.html"><img src="assets/posters/receptors.jpg" alt="The head of The Receptors poster: its title and the line beneath it." loading="lazy" decoding="async" width="1400" height="382"></a>
     <div class="poster-body">
       <div class="poster-kicker">Microanatomy &middot; affinities</div>
       <h2>The Receptors</h2>
@@ -228,23 +227,29 @@ svg{ display:block; }
 <script>
 "use strict";
 /* The shop's addresses, one per poster: fill them in as the shop opens and
-   the Buy buttons go live, opening it outside the page; until then each
-   button stands as the word that the shop is coming. */
+   the Buy buttons go live, opening it outside the page. Until then a Buy
+   button, like the picture, opens the poster's own page, a placeholder, and
+   each opening is counted as poster_click, with where it was pressed, so
+   the interest in each poster can be read off the usage counts. */
 const SHOP = { neurotransmitters: "", receptors: "" };
+function count(name, params){ try{ if (window.VN_AUTH && VN_AUTH.track) VN_AUTH.track(name, params); }catch(e){} }
 document.querySelectorAll("[data-shop]").forEach(a => {
-  const url = SHOP[a.dataset.shop];
+  const id = a.dataset.shop, url = SHOP[id];
   if (url){
     a.href = url; a.target = "_blank"; a.rel = "noopener";
     /* inside the app, the system browser's sheet rather than the page's own web view */
     a.addEventListener("click", e => {
+      count("shop_open", { poster: id });
       const B = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser;
       if (B && B.open){ e.preventDefault(); B.open({ url }); }
     });
     return;
   }
-  const tag = document.createElement("span");
-  tag.className = "tag"; tag.textContent = "Shop opening soon";
-  a.replaceWith(tag);
+  a.href = "poster-" + id + ".html";
+  a.addEventListener("click", () => count("poster_click", { poster: id, where: "buy" }));
+});
+document.querySelectorAll("[data-open]").forEach(a => {
+  a.addEventListener("click", () => count("poster_click", { poster: a.dataset.open, where: "picture" }));
 });
 </script>
 

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.79 — 23 October 2026 — The posters are back, with a page each
+Commit · Bring the posters back and give each a placeholder page whose openings are counted
+
+On second thought the posters stay: everything v11.78 took out is back, the box on the home page and in the app's Library tab, the section in the terms, the item in the privacy policy, the page in the nav and the precache. Each poster now has a page of its own, a placeholder while the shop is set up, with the head of the poster, its words, a note that it is not on sale yet, a button, I would buy this, that counts the wish once per browser, and on the website a line to hear when it is on sale. The Buy button and the picture on the posters page open it, and each opening is counted, so the interest in each poster can be read off the usage counts in the Firebase console.
+
 ## v11.78 — 23 October 2026 — The posters wait for their shop
-Commit · Take every mention of the posters out of the site and the app until the shop opens
+Commit `8a5306e` · Take every mention of the posters out of the site and the app until the shop opens
 
 The posters are not on sale yet, so nothing mentions them for now: the Posters section has left the terms and the privacy policy's list of services, the posters box has left the home page's Library hub and the app's Library tab, the page itself is unlisted, out of the nav and the precache and marked for search engines not to index, and the App Store review notes no longer describe a shop. The page and its pictures stay in the repository, ready to come back when the shop opens.
 

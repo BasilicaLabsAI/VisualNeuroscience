@@ -116,12 +116,16 @@ Read this first in every session. It is the handover; nothing else needs pasting
   links and the rest marked coming soon: it carries `noindex, nofollow`, stands apart from the site's chrome, and must
   stay out of the nav, the foot, the apps' tabs, the precache list and any sitemap. Its address alone reaches it
   (`/get`). As a platform ships, swap its Coming soon tag for a link there.
-- Posters (v11.56) are unlisted since v11.78, at the owner's word that they are not in yet: `site/posters.html` stays in the
-  repository, marked `noindex, nofollow` and reached by its address alone, out of the nav (`navbar.js`'s `OF` and title
-  maps), the home page's Library hub (the `.m-posters` box and its rules), the app's Library tab (`Shell.swift`'s box and
-  `ShellWeb.swift`'s `Page.posters`), the precache list, the terms, the privacy policy's list of services and the App
-  Store review notes; the v11.78 commit holds all of it to bring back when the shop opens. The page offers the two A1
-  prints `scripts/posters/build.sh` draws. The shop is not open: `SHOP` at the foot
+- Posters (v11.56): `site/posters.html` offers the two A1 prints `scripts/posters/build.sh` draws, with a box on the home
+  page (`.m-posters`, its twin in `Shell.swift`'s Library tab, `Page.posters`). v11.78 took every mention out and v11.79
+  put it all back the same day, at the owner's second thought, adding a placeholder page per poster to measure interest:
+  `poster-neurotransmitters.html` and `poster-receptors.html` (built from the posters page's chrome, `noindex`, in the
+  nav maps and the precache), each with the poster's head and words, a Not-on-sale-yet box, the button I would buy this
+  (counted once per browser as `poster_interest` through `VN_AUTH.track`, remembered as `vn-poster-want-<id>`) and, on
+  the website only, a Hear-when-it-is-on-sale line (`?newsletter=1`). On the posters page the Buy button and the picture
+  (`.poster-fig`, an `<a data-open>` now) open that page while `SHOP` is empty, each opening counted as `poster_click`
+  with `poster` and `where` (buy or picture); a filled shop address opens the shop instead and counts `shop_open`. Read
+  the counts in the Firebase console under Analytics, with the pages' own views. The shop is not open: `SHOP` at the foot
   of the page holds one address per poster, empty, and each Buy button stands as "Shop opening soon" until its address
   is filled in; filled, the button opens the shop in a new tab and, in the app, through Capacitor's Browser plugin when
   it is installed (`npm i @capacitor/browser` and `npx cap sync` on the Mac; without it the link opens in the page's own
@@ -130,9 +134,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `site/assets/posters/` are the head of each poster, cut from the build's PNGs with ImageMagick (`convert … -crop
   2245x612+0+0 … -resize 1400x382!`; the home plate is `-crop 2245x1020+0+0 … -resize 1100x500!`), so they show nothing
   provisional: the receptor poster renders as a layout proof until the affinity step in `scripts/posters/README.md` is
-  run, which the guidetopharmacology.org download blocks from a session. The terms' Posters section, the privacy
-  policy's `#posters` item and the review notes' paragraph on physical goods and 3.1.5(a) left with v11.78 and are in
-  that commit for when the shop opens.
+  run, which the guidetopharmacology.org download blocks from a session. The terms (Posters section) and the privacy
+  policy (`#posters`) describe the shop; `app/store/LISTING.md`'s review notes name the physical goods and 3.1.5(a).
 - Legal pages (since v11.41): `site/privacy.html`, `site/terms.html` and `site/delete-account.html`, linked from the foot of
   every page beside the privacy policy and from the app's Account tab (`PageRow` rows in `Shell.swift`: privacy, terms,
   and Delete your account, which opens `account.html#delete`); the Play listing's deletion link is the deletion page and
