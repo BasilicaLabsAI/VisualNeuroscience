@@ -197,7 +197,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   sideways hint and keeps a room-taking scrollbar out of the graph's height before it measures; the table's lede is one concise paragraph ending in a live example read off the table (`heatExample`); the
   bar's receptor buttons each stand for a family of tabs (`data-tabs`), lit for any of them, and close the window on a second
   press: since v11.84 four of them, Receptor graph for the Graph and Sources tabs, Receptor for the Receptor tab, Neurotransmitters
-  for its tab and Receptor types for the cards and the table); then Saved
+  for its tab and Receptor types for the cards and the table; up to 1000px wide the readouts make room for them, the count
+  hidden, the probe's hint hidden and its name capped, the buttons' padding and the bar's gaps a little tighter, and under
+  800px the name shorter still, so the bar fits an iPad upright without scrolling); then Saved
   maps, Export and, at the far right behind a line,
   Reference (`.pbtn-ref`, since v11.31; since v11.83 its window lists every source in full rather than sending the reader to the
   receptor window: the two receptor lines are written into `#ref-sources` by `renderSources()` from the receptor data, the

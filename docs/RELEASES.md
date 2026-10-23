@@ -12,7 +12,7 @@ text below. Both can also be run from a clone on a machine that can push.
 Versions before v8.6 were released without a ledger and are not recorded.
 
 ## v11.84 — 23 October 2026 — Receptor and Receptor types on the bar
-Commit · Give the receptor window's Receptor and Receptor types tabs buttons on the bar, and link the Reference to its Sources tab
+Commit · Make room on the bar for the new buttons up to an iPad upright
 
 The 3D Region Atlas's bar now carries a button for each of the receptor window's tabs that had none: Receptor, which opens the window on the drawing of the receptor picked, and Receptor types, which opens it on the cards and the table, beside Receptor graph and Neurotransmitters, each lit while its tab is open and closing the window on a second press. The Reference drawer's list of sources ends with a line that opens the receptor window on its Sources tab, where the notes on reading the numbers and the receptors with no open human data live.
 

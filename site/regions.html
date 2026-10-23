@@ -1035,11 +1035,18 @@ main.screen{
 @media (hover: hover){ .pbtn:hover{ color:var(--ink); } }
 .pbtn:active{ color:var(--ink); }
 @media (pointer:coarse){ .pbtn{ min-height:44px; } }
-@media (max-width:760px){
+/* up to an iPad upright the readouts make room for the bar's buttons: the
+   count hidden, the probe short (the cap was 760px until v11.84, when the
+   Receptor and Receptor types buttons joined the bar) */
+@media (max-width:1000px){
   .panelbar-stats .stat:first-child{ display:none; }
-  .panelbar .probe-v small{ display:none; }
+  .panelbar .stat .probe-v small{ display:none; }
   .panelbar .probe-v{ max-width:9rem; }
+  .panelbar{ gap:.4rem; }
+  .pbtn{ padding:.3rem .4rem .25rem; }
 }
+/* the oldest iPads upright, 768 wide: the probe's name shorter still */
+@media (max-width:800px){ .panelbar .probe-v{ max-width:6rem; } }
 
 /* a pop-up: one at a time, rising over the views above the bar; a chart
    or a list scrolls inside it, the page never */
