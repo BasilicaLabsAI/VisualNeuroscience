@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.94 — 23 October 2026 — Tractography and the Network Atlas on the bar
+Commit · Make the Tractography page and the Network Atlas one screen each, with the bar of buttons the other atlases have
+
+Tractography and the Network Atlas now work as the other atlases do: one screen, nothing to scroll, with a bar of buttons along the foot. On Tractography the tractogram fills the screen, and Streamlines, View from, Revolve, Export and About each slide up out of the bar as a sheet. On the Network Atlas the brain state sits in a box at the corner, the four scans fill the rest, and the circular network graph itself is a sheet the bar's Network button raises, the reading, the key and the thread weight beside it, with Export and About on the bar as well.
+
 ## v11.93 — 23 October 2026 — The atlases remember your last pick
-Commit · Keep the last selection on the 3D Region Atlas and the Brodmann Area Atlas between visits
+Commit `3c24630` · Keep the last selection on the 3D Region Atlas and the Brodmann Area Atlas between visits
 
 Leave the 3D Region Atlas for another page and come back, and the regions you had highlighted are there again, with the opacity and the mirror switch as you left them, with nothing to save; the Brodmann Area Atlas opens on the area you last picked the same way. A link that names regions or an area still opens on those instead, and Clear all leaves the page empty next time.
 

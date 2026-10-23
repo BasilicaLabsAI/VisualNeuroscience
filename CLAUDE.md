@@ -189,7 +189,22 @@ Read this first in every session. It is the handover; nothing else needs pasting
   and the states (`network-states.js`), with its tab after Molecular. The page's scans open their door to the script
   as `MN_SCAN` (`setLayer`, `repaint`, `centre`, `centreMm`, `onLocation`, `instance`). It opens on the first state;
   `#state=<id>` opens another, and the address follows the state picked. The Region Atlas's old `regions.html#network`
-  and `#network=<state>` links forward there.
+  and `#network=<state>` links forward there. Since v11.94, at the owner's word, it is one screen with the study's chrome
+  (copied with the same names; keys `vn-net-drawer` and `vn-net-view`): the drawer holds the Brain state select with its
+  blurb and the scan's opacity, the four views fill the stage, the bar carries the State and Probe readouts, the phone's
+  view buttons, Network, Export and About, and the ring stands in the sheet Network raises (`#popRing`, `.ring-sheet`: on a
+  desktop and a phone held sideways a grid with the ring at the sheet's height on the left and, beside it, the reading
+  `#netKicker`/`#netName`/`#netNote`/`#netWhere`, Clear the pick, the key, the thread weight and the state's source;
+  upright the ring the width of the screen with the rest beneath). Export holds the 3D model and the PNG snapshot, About
+  the What-this-is text and the credits. `network-atlas.js` is untouched (every id it reads kept its name), and
+  `app/scripts/shoot-home-pictures.js` raises the sheet before it shoots the ring.
+- The Tractography page (`site/tracts.html`) is one screen too since v11.94, with the study's chrome less its drawer and
+  view switch: the tractogram fills the stage (its cap: zoom, the name, Reset), and the bar carries Streamlines
+  (`#popLines`: the Direction/Single colour and the thickness), View from (`#popView`: the cube of faces and Reset view),
+  Revolve (`#spinBtn`, a `.pbtn` lit while it turns), Export (`#popExport`: the density and the 3D model) and About
+  (`#popAbout`: what you are looking at, the colour key, the credits). Its own viewer script is untouched. The chrome now
+  lives in six pages (the 3D Region Atlas, the Brodmann Area Atlas, the Hallucinations study, the molecular viewer, the
+  Network Atlas and Tractography); a change to it belongs in all of them.
 - The Region Atlas is called the 3D Region Atlas wherever its name shows (nav, titles, home page, the app) since
   v11.12; its file stays `regions.html`. Since v11.22, at the owner's request, it is one screen in the manner of an
   anatomy app (`body.atlas-screen`, `main.screen`, the style block "the screen" and the script "the screen" at the end

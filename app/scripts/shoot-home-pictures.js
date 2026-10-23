@@ -80,7 +80,10 @@ function done(file, problems){ const [w, h] = size(file); console.log(path.basen
     const { ctx, page, problems } = await open(browser, 'light', 'network-atlas.html', { width: 1440, height: 1100 });
     await page.waitForFunction(() => document.getElementById('status').classList.contains('hidden'), null, { timeout: 400000 });
     await page.waitForTimeout(3000);
+    /* the ring stands in a sheet the bar's Network button raises (v11.94): up for its shot, down for the render's */
+    await page.evaluate(() => document.querySelector('.panelbar [data-pop="popRing"]').click()); await page.waitForTimeout(900);
     await shotOf(page, '#ring', tmp('ring.png'));
+    await page.evaluate(() => document.querySelector('.panelbar [data-pop="popRing"]').click()); await page.waitForTimeout(700);
     await shotOf(page, '.view[data-box="render"] .mri-stage', tmp('net-ren.png'));
     const out = path.join(HOME, 'network-light.jpg');
     sh(`convert \\( "${tmp('ring.png')}" -resize 818x818^ -gravity center -extent 818x818 \\) \\( "${tmp('net-ren.png')}" -shave 3x3 -resize 986x818^ -gravity center -extent 986x818 \\) -background white +append -resize 902x409! -quality 88 "${out}"`);

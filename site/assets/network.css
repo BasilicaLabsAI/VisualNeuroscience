@@ -50,11 +50,10 @@
 .fit.exact{ border-color:var(--ink); color:var(--ink); }
 
 /* ── the ring ────────────────────────────────────────────────────────── */
-.ring-stage{
-  border:1px solid var(--hair); padding:.6rem; background:var(--paper);
-  display:flex; align-items:center; justify-content:center;
-}
-#ring{ width:100%; height:auto; max-width:640px; margin:0 auto; }
+/* the ring stands in the sheet the bar's Network button raises (since
+   v11.94); network-atlas.html sizes it to the sheet */
+.ring-stage{ display:flex; align-items:center; justify-content:center; }
+#ring{ width:100%; height:auto; margin:0 auto; }
 .regionarc{ fill:none; stroke-width:11; stroke-linecap:butt; cursor:pointer; }
 .regionarc.nomap{ stroke-dasharray:7 6; }
 /* the group names are buttons too: one picks the whole network */
@@ -82,7 +81,6 @@
   .grouplabel{ font-size:10.5px; letter-spacing:.2em; }
 }
 @media (max-width:760px){
-  .ring-stage{ padding:.25rem; }
   .nodelabel{ font-size:17px; letter-spacing:.08em; }
   .grouplabel{ font-size:13px; letter-spacing:.16em; }
 }

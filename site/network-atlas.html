@@ -127,72 +127,6 @@ svg{ display:block; }
   background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
 }
 
-/* ── title strip, as on the other pages ── */
-.title-strip{
-  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
-  gap:.5rem 1.3rem; border:1px solid var(--hair);
-  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
-}
-.title-strip .name{
-  font-family:var(--font-display); font-size:1.35rem;
-  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
-}
-.title-strip .anno{
-  font-family:var(--font-serif); font-style:italic;
-  font-size:.88rem; color:var(--ink-60);
-}
-
-/* ── the rail: one box, each part under its own heading, as on the Region
-   Atlas ── */
-.rail-box{ display:grid; grid-template-columns:minmax(0,1fr); row-gap:1.4rem; align-items:start; }
-.rail-note{
-  font-family:var(--font-serif); font-style:italic;
-  font-size:.8rem; color:var(--ink-60); margin:.6rem 0 0;
-}
-.rail-blurb{ font-size:.94rem; line-height:1.55; margin:.6rem 0 0; }
-.rail-row{ display:flex; align-items:center; gap:.5rem; margin:.6rem 0 0; }
-.rail-row .tool-label{ flex:none; }
-.rail-row input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); }
-.rail-row .val{
-  min-width:44px; text-align:right; font-family:var(--font-brand);
-  font-size:.8rem; font-variant-numeric:tabular-nums;
-}
-.btn{
-  display:inline-block; font-family:var(--font-brand); font-weight:500;
-  font-size:.72rem; letter-spacing:.28em; text-transform:uppercase;
-  border:1px solid var(--ink); background:var(--paper); color:var(--ink);
-  padding:.7rem 1.3rem .62rem; cursor:pointer;
-}
-@media (hover: hover){ .btn:hover{ background:var(--ink); color:var(--paper); text-decoration:none; } }
-.card .btn{ width:100%; text-align:center; }
-.btns{ display:flex; gap:.6rem; margin-top:.6rem; }
-.btns .btn{ flex:1; padding:.55rem .4rem .48rem; letter-spacing:.18em; font-size:.66rem; }
-.net-reading p{ font-size:.94rem; line-height:1.55; margin:0; }
-@media (max-width:1100px) and (orientation:portrait), (max-width:900px) and (orientation:landscape){
-  .rail .rail-box{ grid-column:1 / -1; grid-template-columns:repeat(2, minmax(0,1fr)); column-gap:1.6rem; }
-}
-@media (max-width:760px){ .rail .rail-box{ grid-template-columns:minmax(0,1fr); } }
-/* On a phone the state leads in a box of its own, the scans and the ring
-   come next, and the rest of the rail follows them in a second box. The
-   rail and its box step aside (display:contents) so that their parts can
-   stand round the scans in the page's one column. */
-@media (max-width:760px){
-  .studio{ row-gap:0; }
-  .studio .rail, .studio .rail .rail-box{ display:contents; }
-  .studio .rail-part{
-    order:2; min-width:0; background:var(--paper);
-    border:1px solid var(--hair); border-width:0 1px; padding:1.4rem 1.05rem 0;
-  }
-  .studio .rail-part:first-child{ order:0; border-width:1px; padding:1rem 1.05rem 1.1rem; margin-bottom:var(--gap); }
-  .studio .rail-part:nth-child(2){ border-top-width:1px; padding-top:1rem; }
-  .studio .rail-part:last-child{ border-bottom-width:1px; padding-bottom:1.1rem; }
-  .studio .centre{ order:1; margin-bottom:var(--gap); }
-}
-
-/* ── the views, and the readouts under them ── */
-.views-wrap{ position:relative; }
-.views .view{ min-width:0; }
-.stats{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; margin-top:var(--gap); }
 .stat{ border:1px solid var(--hair); padding:.5rem .6rem .55rem; text-align:left; min-width:0; }
 .stat .k{
   font-family:var(--font-brand); font-size:.58rem; font-weight:500;
@@ -205,9 +139,6 @@ svg{ display:block; }
 .stat .v small{ font-size:.62rem; color:var(--ink-60); margin-left:.15rem; }
 .probe-v{ font-size:.9rem; }
 .probe-v small{ display:block; margin-left:0; margin-top:.12rem; }
-
-/* the ring in its own frame under the readouts */
-.ring-frame{ margin-top:var(--gap); }
 
 /* loading, and the message if the scans cannot be drawn */
 .status{
@@ -240,10 +171,266 @@ svg{ display:block; }
 }
 .credits p{ margin:0 0 .5rem; }
 </style>
-</head>
-<body>
-<a class="skip" href="#main">Skip to content</a>
+<style>
+/* ════════ the screen: the views are the page ════════
+   Since v11.94 the Network Atlas is one screen in the 3D Region Atlas's
+   manner: the four views fill the room between the header and a bar
+   along the bottom, nothing scrolls, the brain state and the scan's
+   opacity are a drawer on the left that folds away on its tab, and the
+   ring, the export and the notes rise from the bar's buttons as sheets
+   over the views, one at a time. The chrome is the study's
+   (hallucinations.html, "the screen"), carried here with the same names;
+   a change to it belongs in every page that carries it. --screen-top is
+   the header's height, measured by the page's script; --bar-h is the
+   bar's. */
+body.atlas-screen{ overflow:hidden; margin:0; padding-bottom:0; }
+html:has(> body.atlas-screen){ overflow:hidden; }
+:root[data-shell][data-shell-pad] body.atlas-screen{ padding-top:max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px)); }
+main.screen{
+  max-width:none; padding:0; margin:0;
+  height:calc(100vh - var(--screen-top, 0px)); height:calc(100dvh - var(--screen-top, 0px));
+  display:flex; flex-direction:column; min-height:0; overflow:hidden;
+}
+.screen .vh{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }
+.deck{ flex:1 1 auto; min-height:0; display:flex; position:relative; }
+.drawer{
+  --box-w:300px;
+  position:relative; flex:0 0 calc(var(--box-w) + var(--gap)); width:calc(var(--box-w) + var(--gap)); min-width:0; min-height:0;
+  display:flex; flex-direction:column; align-items:flex-start; padding:var(--gap) 0 var(--gap) var(--gap);
+  transition:flex-basis .32s cubic-bezier(.32,.72,0,1), width .32s cubic-bezier(.32,.72,0,1), padding .32s cubic-bezier(.32,.72,0,1), visibility 0s 0s;
+}
+.drawer-box{
+  position:relative; flex:0 1 auto; width:var(--box-w); max-height:100%; min-height:0;
+  display:flex; flex-direction:column;
+  border:1px solid var(--hair); border-radius:16px; background:var(--paper);
+  box-shadow:0 1px 2px rgba(0,0,0,.08), 0 10px 30px rgba(0,0,0,.14);
+  transition:transform .32s cubic-bezier(.32,.72,0,1);
+}
+.drawer-in.card{ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; border:0; padding:var(--gap) var(--gap) 1.4rem; }
+.deck.shut .drawer{ flex-basis:0; width:0; padding-left:0; visibility:hidden; transition-delay:0s, 0s, 0s, .32s; }
+.deck.shut .drawer-box{ transform:translateX(calc(-100% - var(--gap) - 22px)); }
+.drawer-tab{
+  position:absolute; z-index:16; top:50%; transform:translateY(-50%);
+  width:22px; height:64px; padding:0; display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--hair); border-left:0; background:var(--paper); color:var(--ink); cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.drawer-tab::after{ content:""; position:absolute; inset:-8px -10px; }
+.drawer-tab svg{ width:10px; height:16px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:square; }
+.drawer-hide{ right:-22px; border-radius:0 10px 10px 0; }
+.drawer-show{ left:0; border-radius:0 10px 10px 0; visibility:hidden; opacity:0; transition:opacity .2s ease, visibility 0s .2s; }
+.drawer-show svg{ transform:rotate(180deg); }
+.deck.shut .drawer-show{ visibility:visible; opacity:1; transition-delay:.14s, .14s; }
+@media (hover: hover){ .drawer-tab:hover{ background:var(--ink); color:var(--paper); } }
+.drawer-tab:active{ background:var(--ink); color:var(--paper); }
+.stage{ flex:1 1 auto; min-width:0; min-height:0; display:flex; flex-direction:column; position:relative; overflow:hidden; padding:var(--gap) var(--gap) var(--gap) calc(var(--gap) + 10px); }
+.screen .views-wrap{ position:relative; flex:1 1 auto; min-height:0; }
+.screen .views{ height:100%; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:var(--gap); }
+.screen .views .view{ min-height:0; min-width:0; }
+.screen .views-wrap .views .view .mri-stage{ flex:1 1 auto; min-height:0; height:auto; max-height:none; aspect-ratio:auto; }
+@container view (max-width:300px){
+  .screen .views .view:not(.open) .view-tools, .screen .views .view:not(.open) .centre-btn{ display:none; }
+}
+.panelbar{
+  flex:none; display:flex; align-items:center; gap:.6rem;
+  padding:.45rem var(--gap) calc(.45rem + env(safe-area-inset-bottom, 0px));
+  border-top:1px solid var(--hair);
+  background:color-mix(in srgb, var(--paper) 84%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
+  overflow-x:auto; overflow-y:hidden; scrollbar-width:none; white-space:nowrap;
+}
+.panelbar::-webkit-scrollbar{ display:none; }
+.panelbar-stats{ display:flex; gap:1.1rem; flex:none; }
+.panelbar .stat{ border:0; padding:0; min-width:0; }
+.panelbar .stat .v{ white-space:nowrap; }
+.panelbar .stat .v small{ display:inline; margin-left:.35rem; }
+.panelbar .probe-v{ max-width:22rem; overflow:hidden; text-overflow:ellipsis; }
+.panelbar-views, .panelbar-all{ display:none; }
+.panelbar-btns{ display:flex; gap:.15rem; flex:none; margin-left:.4rem; }
+.panelbar-end{ display:flex; gap:.15rem; flex:none; margin-left:auto; padding-left:.6rem; }
+.pbtn.pbtn-ref{ margin-left:.3rem; padding-left:.65rem; border-left:1px solid var(--hair); }
+.pbtn{
+  flex:none; display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:.28rem;
+  min-width:3.9rem; padding:.3rem .55rem .25rem; border:0; background:none; color:var(--ink-60); cursor:pointer;
+  -webkit-tap-highlight-color:transparent; transition:color .18s;
+}
+.pbtn svg{ width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.pbtn span{ font-family:var(--font-brand); font-weight:500; font-size:.5rem; letter-spacing:.14em; text-transform:uppercase; white-space:nowrap; }
+.pbtn.active{ color:var(--ink); }
+.pbtn.active span{ font-weight:600; }
+@media (hover: hover){ .pbtn:hover{ color:var(--ink); } }
+.pbtn:active{ color:var(--ink); }
+@media (pointer:coarse){ .pbtn{ min-height:44px; } }
+@media (max-width:760px){
+  .panelbar-stats .stat:first-child{ display:none; }
+  .panelbar .probe-v small{ display:none; }
+  .panelbar .probe-v{ max-width:9rem; }
+}
+.pop{
+  position:absolute; left:calc(var(--gap) + 10px); right:var(--gap); bottom:var(--gap); z-index:20;
+  max-height:min(80%, calc(100% - 2 * var(--gap))); display:flex; flex-direction:column; overflow:hidden;
+  border:1px solid var(--hair); border-radius:16px;
+  background:color-mix(in srgb, var(--paper) 90%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(24px); backdrop-filter:saturate(180%) blur(24px);
+  box-shadow:0 18px 60px rgba(0,0,0,.35);
+  transform:translateY(calc(100% + var(--gap) + 40px));
+  transition:transform .36s cubic-bezier(.32,.72,0,1);
+}
+.pop[hidden]{ display:none; }
+.pop.in{ transform:none; transition-duration:.5s; }
+.pop-sm{ left:auto; width:min(440px, calc(100% - 2 * var(--gap) - 10px)); }
+.pop-md{ left:auto; width:min(680px, calc(100% - 2 * var(--gap) - 10px)); }
+.pop-head{ flex:none; display:flex; align-items:center; gap:.7rem; padding:.5rem .6rem .5rem .9rem; border-bottom:1px solid var(--hair); }
+.pop-head b{ font-family:var(--font-brand); font-weight:500; font-size:.68rem; letter-spacing:.28em; text-transform:uppercase; white-space:nowrap; }
+.pop-head small{ font-family:var(--font-serif); font-style:italic; font-size:.78rem; color:var(--ink-60); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pop-x{
+  margin-left:auto; flex:none; width:1.8rem; height:1.8rem; padding:0;
+  border:1px solid var(--hair); background:none; color:var(--ink); cursor:pointer;
+  font-size:1.15rem; line-height:1; -webkit-tap-highlight-color:transparent;
+  border-radius:50%; }
+@media (hover: hover){ .pop-x:hover{ background:var(--ink); color:var(--paper); } }
+.pop-x:active{ background:var(--ink); color:var(--paper); }
+@media (pointer:coarse){ .pop-x{ width:44px; height:44px; } }
+.pop-body{ flex:1 1 auto; min-height:0; overflow:auto; overscroll-behavior:contain; padding:.9rem 1rem 1.1rem; }
 
+/* ── a phone: one view at a time, the drawer from the right ── */
+.screen.one .stage{ padding:0; }
+.screen.one:not(.all) .slice-edge.right{ right:26px; }
+.screen.one:not(.all) .slice-edge.bottom{ right:74px; }
+.screen.one .views{ display:block; height:100%; }
+.screen.one .views .view{ display:none; height:100%; border:0; }
+.screen.one .views .view.shown{ display:flex; }
+.screen.one .views .view.open{ display:flex; }
+.screen.one .view-expand{ display:none; }
+.screen.one.all .views{ display:grid; gap:6px; }
+.screen.one.all .views .view{ display:flex; height:auto; border:1px solid var(--hair); }
+.screen.one.all .view-expand{ display:inline-flex; }
+.screen.one .panelbar-stats{ display:none; }
+.screen.one .panelbar-views, .screen.one .panelbar-all{ display:flex; gap:.15rem; flex:none; padding-right:.45rem; margin-right:.3rem; border-right:1px solid var(--hair); }
+.screen.one .panelbar-btns{ margin-left:0; }
+.screen.one .panelbar-end{ margin-left:0; padding-left:0; }
+.screen.one .pop{ left:0; right:0; bottom:0; max-height:76%; border-left:0; border-right:0; border-bottom:0; border-radius:18px 18px 0 0; }
+/* a phone upright: the bar stays while a pop-up is open, the pop-up
+   standing above it with its button lit, so a tap on the button, the
+   cross or Escape closes it and another button swaps it (v11.82) */
+.screen.one .pop-sm, .screen.one .pop-md{ width:100%; }
+.screen.one .drawer{ left:auto; right:0; padding:0; }
+.screen.one .drawer-box{ flex:1 1 auto; max-height:none; border-width:0 0 0 1px; border-radius:0; box-shadow:-8px 0 30px rgba(0,0,0,.25); }
+.screen.one .deck.shut .drawer-box{ transform:translateX(calc(100% + 22px)); }
+.screen.one .drawer-tab{ border-left:1px solid var(--hair); border-right:0; }
+.screen.one .drawer-hide{ right:auto; left:-22px; border-radius:10px 0 0 10px; }
+.screen.one .drawer-hide svg{ transform:rotate(180deg); }
+.screen.one .drawer-show{ left:auto; right:0; border-radius:10px 0 0 10px; }
+.screen.one .drawer-show svg{ transform:none; }
+
+/* ── a phone held sideways: the bar along the right edge ── */
+body.atlas-screen:has(> main.screen.one.land) .masthead{ display:none; }
+:root[data-shell]:not([data-shell-pad]) body.atlas-screen:has(> main.screen.one.land){ padding-top:0; }
+main.screen.one.land{ flex-direction:row; }
+.screen.one.land .deck{ flex:1 1 auto; min-width:0; }
+.screen.one.land .panelbar{
+  flex:none; flex-direction:column; align-items:stretch; justify-content:flex-start; gap:0;
+  padding:.3rem .25rem calc(.3rem + env(safe-area-inset-bottom, 0px));
+  border-top:0; border-left:1px solid var(--hair); overflow-x:hidden; overflow-y:auto; white-space:normal; scrollbar-width:none;
+}
+.screen.one.land .panelbar::-webkit-scrollbar{ display:none; }
+/* the groups stand in the middle of the bar while they fit, and the bar scrolls when they do not */
+.screen.one.land .panelbar > :first-child{ margin-top:auto; }
+.screen.one.land .panelbar > :last-child{ margin-bottom:auto; }
+/* two to a row, each button its icon over its name, as the bar has them upright */
+.screen.one.land .panelbar-all, .screen.one.land .panelbar-views, .screen.one.land .panelbar-btns, .screen.one.land .panelbar-end{
+  display:grid; grid-template-columns:66px 66px; gap:0; flex:none;
+  margin:0 0 .25rem; padding:0 0 .25rem; border-right:0; border-bottom:1px solid var(--hair);
+}
+.screen.one.land .panelbar-all{ grid-template-columns:132px; justify-items:center; }
+.screen.one.land .panelbar-end{ padding-bottom:0; border-bottom:0; }
+.screen.one.land .pbtn{ position:relative; min-width:0; width:66px; min-height:48px; padding:.25rem .15rem .2rem; gap:.2rem; }
+.screen.one.land .pbtn.pbtn-ref{ margin-left:0; padding-left:.15rem; border-left:0; }
+.screen.one.land .pbtn span{
+  font-size:.46rem; letter-spacing:.08em; line-height:1.15; white-space:normal; text-align:center; max-width:100%;
+  -webkit-hyphens:manual; hyphens:manual;
+}
+.screen.one.land .pbtn svg{ width:22px; height:22px; }
+.screen.one.land .pop{ max-height:100%; }
+.screen.one.land.all .views{ grid-template-columns:repeat(4, minmax(0, 1fr)); grid-template-rows:minmax(0, 1fr); }
+.screen.one.land:not(.all) .views .view-cap{ flex-wrap:nowrap; justify-content:flex-start; }
+.screen.one.land:not(.all) .views .view-cap::before{ display:none; }
+.screen.one.land:not(.all) .views .view-cap .view-tools{ order:0; flex:none; }
+.screen.one.land:not(.all) .views .view-cap .view-end{ order:1; flex:none; justify-content:flex-start; }
+.screen.one.land:not(.all) .views .view-cap b{ order:2; margin-left:auto; margin-right:0; }
+:root[data-shell]:not([data-shell-pad]) .screen.one.land:not(.all) .views .view-cap{ padding-left:56px; }
+
+@media (max-width:900px){
+  .drawer{ --box-w:min(320px, 100vw - 60px); position:absolute; left:0; top:0; bottom:0; z-index:15; flex:none; width:auto; transition:visibility 0s 0s; }
+  .deck.shut .drawer{ width:auto; padding-left:var(--gap); visibility:hidden; transition-delay:.32s; }
+  .drawer-box{ box-shadow:0 10px 30px rgba(0,0,0,.25); }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more){
+  .panelbar, .pop{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
+}
+@media (prefers-reduced-motion: reduce){
+  .drawer, .drawer-box, .drawer-tab, .drawer-tab svg{ transition:none; }
+  .pop{ transform:none; opacity:0; transition:opacity .18s ease; }
+  .pop.in{ opacity:1; transition-duration:.18s; }
+}
+/* the drawer's two parts, under their own headings, as the atlas's box */
+.rail-box{ display:grid; grid-template-columns:minmax(0,1fr); row-gap:1.4rem; align-items:start; }
+.drawer-in .mode-group{ display:flex; gap:.4rem; }
+.drawer-in .mode-group .ts-btn{ flex:1; text-align:center; }
+.drawer-in .rail-note{ margin-top:.75rem; }
+
+/* ── the controls in the drawer and the sheets, as the rail had them ── */
+.rail-note{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.8rem; color:var(--ink-60); margin:.6rem 0 0;
+}
+.rail-blurb{ font-size:.94rem; line-height:1.55; margin:.6rem 0 0; }
+.rail-row{ display:flex; align-items:center; gap:.5rem; margin:.6rem 0 0; }
+.rail-row .tool-label{ flex:none; }
+.rail-row input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); }
+.rail-row .val{
+  min-width:44px; text-align:right; font-family:var(--font-brand);
+  font-size:.8rem; font-variant-numeric:tabular-nums;
+}
+.btn{
+  display:inline-block; font-family:var(--font-brand); font-weight:500;
+  font-size:.72rem; letter-spacing:.28em; text-transform:uppercase;
+  border:1px solid var(--ink); background:var(--paper); color:var(--ink);
+  padding:.7rem 1.3rem .62rem; cursor:pointer;
+}
+@media (hover: hover){ .btn:hover{ background:var(--ink); color:var(--paper); text-decoration:none; } }
+.btns{ display:flex; gap:.6rem; margin-top:.8rem; }
+.btns .btn{ flex:1; padding:.55rem .4rem .48rem; letter-spacing:.18em; font-size:.66rem; text-align:center; }
+.net-reading p{ font-size:.94rem; line-height:1.55; margin:0; }
+.pop-body > p, .pop-body .prose p{ margin:0 0 .8rem; font-size:.95rem; line-height:1.55; }
+.pop .credits{ border-top:1px solid var(--hair); margin-top:1rem; padding-top:.8rem; font-family:var(--font-serif); font-size:.82rem; color:var(--ink-60); }
+.pop .credits p{ margin:0 0 .5rem; font-size:.82rem; }
+.pop h2.sheet-h{
+  font-family:var(--font-brand); font-weight:600; font-size:.6rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
+  border-bottom:1px solid var(--ink); padding:.2rem .1rem .45rem; margin:1.1rem 0 .7rem;
+}
+/* ── the ring's sheet: the ring at the sheet's height on the left, the
+   reading, the key and the thread weight beside it; on a phone the ring
+   the width of the screen with the rest beneath, scrolling ── */
+#popRing{ height:min(88%, calc(100% - 2 * var(--gap))); max-height:none; }
+.ring-sheet{ display:grid; grid-template-columns:minmax(0, auto) minmax(250px, 330px); grid-template-rows:minmax(0, 1fr); gap:var(--gap) 1.4rem; overflow:hidden; padding:.6rem 1rem .9rem; }
+.ring-sheet .ring-stage{ min-height:0; min-width:0; display:flex; align-items:center; justify-content:center; }
+.ring-sheet #ring{ height:100%; width:auto; max-width:100%; max-height:100%; aspect-ratio:1 / 1; }
+.ring-side{ min-width:0; min-height:0; overflow:auto; overscroll-behavior:contain; padding-right:.2rem; }
+.ring-side .net-reading{ padding-top:.2rem; }
+.screen.one #popRing{ height:auto; max-height:76%; }
+.screen.one .ring-sheet{ display:block; overflow:auto; }
+.screen.one .ring-sheet #ring{ width:100%; height:auto; max-width:none; }
+.screen.one .ring-side{ overflow:visible; padding-top:.4rem; }
+/* held sideways there is height for the desktop's arrangement and not for a ring the width of the screen */
+.screen.one.land #popRing{ height:100%; }
+.screen.one.land .ring-sheet{ display:grid; grid-template-columns:minmax(0, auto) minmax(200px, 1fr); grid-template-rows:minmax(0, 1fr); overflow:hidden; }
+.screen.one.land .ring-sheet #ring{ height:100%; width:auto; max-width:100%; }
+.screen.one.land .ring-side{ overflow:auto; padding-top:0; }
+</style>
+</head>
+<body class="atlas-screen">
 <header class="masthead wrap">
   <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
   <nav class="nav-row" aria-label="Site">
@@ -261,55 +448,36 @@ svg{ display:block; }
   </nav>
 </header>
 
-<main id="main" class="wrap">
+<main id="main" class="screen" aria-label="Network Atlas">
+  <h1 class="vh">Network Atlas</h1>
 
-  <div class="title-strip">
-    <h1 class="name">Network Atlas</h1>
-    <span class="anno">six brain states &middot; fourteen regions in seven networks &middot; MNI152 template, AAL-116 parcels</span>
-  </div>
+  <div class="deck" id="deck">
 
-  <div class="studio">
-
-    <aside class="rail" aria-label="Network controls">
-      <h2 class="sec-h">Networks <small>ring and scan</small></h2>
-
-      <div class="card rail-box">
+    <!-- the brain state and the scan's opacity: a box over the deck's corner,
+         folding away on the tab at its edge and coming back on the handle
+         left at the screen's, as the 3D Region Atlas's region picker does -->
+    <aside class="drawer" id="drawer" aria-label="Brain state">
+      <div class="drawer-box" id="drawerBox">
+        <button class="drawer-tab drawer-hide" id="drawerHide" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Hide the state" title="Hide the state"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
+        <div class="drawer-in card rail-box">
         <section class="rail-part">
           <h2>Brain state</h2>
           <div class="selwrap"><select id="netState" aria-label="Brain state"></select></div>
           <p class="rail-blurb" id="netBlurb"></p>
-          <p class="rail-note">Click a region on the ring and it lights up on the scan in its own colour, with the regions it couples to held at half strength; click a network&rsquo;s name for all of it. Move the crosshair on the scan and the ring follows it back.</p>
-        </section>
-        <section class="rail-part net-reading">
-          <h2>Reading</h2>
-          <div class="panel-kicker" id="netKicker">The ring</div>
-          <div class="panel-title" id="netName">Explore the ring</div>
-          <p id="netNote">Click a region &mdash; coloured threads strengthen, grey dashed threads fall quiet, and hollow markers power down.</p>
-          <div class="where" id="netWhere" hidden><b>On the scan</b><span id="netWhereText"></span></div>
-        </section>
-        <section class="rail-part">
-          <h2>Key</h2>
-          <div class="key-list">
-            <span><i class="key grad"></i>Strengthens in this state</span>
-            <span><i class="key quiet"></i>Falls quiet in this state</span>
-            <span><i class="key dot"></i>More active</span>
-            <span><i class="key hollow"></i>Less active</span>
-            <span><i class="key solidarc"></i>Drawn on the atlas</span>
-            <span><i class="key dasharc"></i>No atlas parcel</span>
-          </div>
-          <div class="rail-row"><span class="tool-label">Thread</span><input type="range" id="netWt" min="0.28" max="1" step="0.04" value="1" aria-label="Thread weight"></div>
+          <p class="rail-note">Every region with a parcel in the atlas lights up on the scan in its ring colour. The bar&rsquo;s Network opens the ring: press a region there and it comes forward on the scan with the regions it couples to held at half strength, or a network&rsquo;s name for all of it. Move the crosshair on the scan and the ring follows it back.</p>
         </section>
         <section class="rail-part">
           <h2>On the scan</h2>
           <div class="rail-row"><span class="tool-label">Opacity</span><input type="range" id="opacity" min="10" max="100" value="90" aria-label="How strongly the regions cover the scan"><span class="val" id="opacityVal">90%</span></div>
-          <div class="btns"><button class="btn" id="netClear" type="button">Clear the pick</button></div>
-          <div id="export3d"></div>
-          <div class="btns" id="shotRow"><button class="btn" id="shotBtn" type="button">Save PNG snapshot</button></div>
         </section>
+        </div>
       </div>
     </aside>
+    <button class="drawer-tab drawer-show" id="drawerTab" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Show the state" title="Show the state"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
 
-    <section class="centre" aria-label="Brain viewports and the network ring">
+    <!-- the views, and the sheets the bar raises over them: the ring, the
+         export and the notes, each behind a button of its own -->
+    <section class="stage" aria-label="Brain viewports">
       <div class="views-wrap">
         <div class="views" id="viewsGrid">
           <div class="view" data-box="axial">
@@ -335,28 +503,81 @@ svg{ display:block; }
         </div>
       </div>
 
-      <div class="stats">
-        <div class="stat"><div class="k">State</div><div class="v" id="statState">&mdash;</div></div>
-        <div class="stat"><div class="k">Probe</div><div class="v probe-v"><span id="cursorRegion">&mdash;</span><small id="cursorCoords">hover a view &middot; drag = crosshair</small></div></div>
+      <div class="pop" id="popRing" hidden aria-labelledby="popRingH">
+        <header class="pop-head"><b id="popRingH">Network</b><small>the state&rsquo;s couplings as a ring &middot; press a region, or a network&rsquo;s name</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body ring-sheet">
+          <div class="ring-stage"><svg id="ring" viewBox="0 0 720 720" role="img" aria-label="Circular graph of how brain regions couple in the chosen state, linked to the scan"></svg></div>
+          <aside class="ring-side" aria-label="The reading and the key">
+            <section class="net-reading">
+              <div class="panel-kicker" id="netKicker">The ring</div>
+              <div class="panel-title" id="netName">Explore the ring</div>
+              <p id="netNote">Click a region &mdash; coloured threads strengthen, grey dashed threads fall quiet, and hollow markers power down.</p>
+              <div class="where" id="netWhere" hidden><b>On the scan</b><span id="netWhereText"></span></div>
+              <div class="btns"><button class="btn" id="netClear" type="button">Clear the pick</button></div>
+            </section>
+            <section>
+              <h2 class="sheet-h">Key</h2>
+              <div class="key-list">
+                <span><i class="key grad"></i>Strengthens in this state</span>
+                <span><i class="key quiet"></i>Falls quiet in this state</span>
+                <span><i class="key dot"></i>More active</span>
+                <span><i class="key hollow"></i>Less active</span>
+                <span><i class="key solidarc"></i>Drawn on the atlas</span>
+                <span><i class="key dasharc"></i>No atlas parcel</span>
+              </div>
+              <div class="rail-row"><span class="tool-label">Thread</span><input type="range" id="netWt" min="0.28" max="1" step="0.04" value="1" aria-label="Thread weight"></div>
+            </section>
+            <p class="net-source" id="netSource" hidden></p>
+          </aside>
+        </div>
       </div>
 
-      <div class="ring-frame">
-        <div class="ring-stage"><svg id="ring" viewBox="0 0 720 720" role="img" aria-label="Circular graph of how brain regions couple in the chosen state, linked to the scan"></svg></div>
-        <p class="net-source" id="netSource" hidden></p>
+      <div class="pop pop-sm" id="popExport" hidden aria-labelledby="popExportH">
+        <header class="pop-head"><b id="popExportH">Export</b><small>the state as a 3D model, and a picture of the views</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+          <p class="rail-note" style="margin-top:0">Each region with a parcel as its surface in its ring colour, carried as far as its emphasis on the scan; the three without one as a sphere at their published coordinate; the couplings as tubes between them; the brain around them.</p>
+          <div id="export3d"></div>
+          <div class="btns" id="shotRow"><button class="btn" id="shotBtn" type="button">Save PNG snapshot</button></div>
+        </div>
+      </div>
+
+      <div class="pop pop-md" id="popAbout" hidden aria-labelledby="popAboutH">
+        <header class="pop-head"><b id="popAboutH">About</b><small>what this is, and what it is drawn from</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+          <p>Six brain states &mdash; flow, rest, focused attention, threat, reward pursuit and meditation &mdash; each drawn as a ring of fourteen regions in seven networks, with the couplings that strengthen in that state as coloured threads and the ones that fall quiet as grey dashes. Pick a state and every region that has a parcel in the atlas lights up on the scan in its ring colour; press a region or a whole network on the ring and the planes centre on it.</p>
+          <p>The couplings are composites read off the imaging literature, not measured connectomes, and each state names its sources beneath the ring. Regions keep their place and colour in every state, so switching states moves the threads and nothing else. Three of the fourteen regions have no parcel in AAL-116 and wear a dashed arc: picking one parks the crosshair at a published coordinate instead.</p>
+          <div class="credits">
+            <p>Rendered with NiiVue (Rorden lab). MNI152 template, McConnell Brain Imaging Centre. AAL parcellation, Tzourio-Mazoyer et al. 2002.</p>
+            <p>&copy; 2026 VisualNeuroscience.AI &middot; <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a> &middot; <a href="terms.html">Terms of use</a></p>
+          </div>
+        </div>
       </div>
     </section>
 
   </div>
 
-  <section class="below prose" aria-labelledby="about-h">
-    <h2 id="about-h">What this is</h2>
-    <p>Six brain states &mdash; flow, rest, focused attention, threat, reward pursuit and meditation &mdash; each drawn as a ring of fourteen regions in seven networks, with the couplings that strengthen in that state as coloured threads and the ones that fall quiet as grey dashes. Pick a state and every region that has a parcel in the atlas lights up on the scan in its ring colour; click a region or a whole network and the planes centre on it.</p>
-    <p>The couplings are composites read off the imaging literature, not measured connectomes, and each state names its sources beneath the ring. Regions keep their place and colour in every state, so switching states moves the threads and nothing else. Three of the fourteen regions have no parcel in AAL-116 and wear a dashed arc: picking one parks the crosshair at a published coordinate instead.</p>
-    <div class="credits">
-      <p>Rendered with NiiVue (Rorden lab). MNI152 template, McConnell Brain Imaging Centre. AAL parcellation, Tzourio-Mazoyer et al. 2002.</p>
+  <nav class="panelbar" aria-label="Network panels">
+    <div class="panelbar-stats">
+      <div class="stat"><div class="k">State</div><div class="v" id="statState">&mdash;</div></div>
+      <div class="stat"><div class="k">Probe</div><div class="v probe-v"><span id="cursorRegion">&mdash;</span><small id="cursorCoords">hover a view &middot; drag = crosshair</small></div></div>
     </div>
-  </section>
-
+    <div class="panelbar-all">
+      <button class="pbtn" type="button" data-view="all" aria-pressed="true" aria-label="All four views"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg><span>All</span></button>
+    </div>
+    <div class="panelbar-views" role="group" aria-label="One view">
+      <button class="pbtn" type="button" data-view="render" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>3D</span></button>
+      <button class="pbtn" type="button" data-view="axial" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16"/></svg><span>Axial</span></button>
+      <button class="pbtn" type="button" data-view="coronal" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8"/></svg><span>Coronal</span></button>
+      <button class="pbtn" type="button" data-view="sagittal" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 4v16"/></svg><span>Sagittal</span></button>
+    </div>
+    <div class="panelbar-btns" role="group" aria-label="Panels">
+      <button class="pbtn" type="button" data-pop="popRing" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M5.8 8.2 12 12l6.2-3.8M7.5 18.5 12 12l5.5 6M12 3.5V12"/></svg><span>Network</span></button>
+    </div>
+    <div class="panelbar-end" role="group" aria-label="Export and about">
+      <button class="pbtn" type="button" data-pop="popExport" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15V4M8 8l4-4 4 4M5 13v7h14v-7"/></svg><span>Export</span></button>
+      <button class="pbtn pbtn-ref" type="button" data-pop="popAbout" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/></svg><span>About</span></button>
+    </div>
+  </nav>
 </main>
 
 <script src="assets/native.js"></script>
@@ -692,6 +913,138 @@ svg{ display:block; }
     }
   }
   boot();
+})();
+</script>
+<script>
+/* ── the screen ──────────────────────────────────────────────────────────
+   The 3D Region Atlas's screen, carried here: the header's height is
+   measured into --screen-top so the views fill the rest, the drawer folds
+   away on its tab (and is remembered), on a phone one view shows at a time
+   and the bar's first buttons pick it, sideways the bar stands at the
+   right edge, and the bar's buttons raise one pop-up at a time over the
+   views. */
+(function(){
+  var root = document.documentElement, main = document.getElementById("main");
+  var head = document.querySelector(".masthead"), bar = document.querySelector(".panelbar");
+  var queued = 0;
+  function fit(){
+    queued = 0;
+    var top = main.getBoundingClientRect().top + (window.pageYOffset || 0);
+    root.style.setProperty("--screen-top", Math.max(0, Math.round(top)) + "px");
+    if (bar) root.style.setProperty("--bar-h", Math.round(bar.getBoundingClientRect().height) + "px");
+  }
+  function soon(){ if (!queued) queued = requestAnimationFrame(fit); }
+  fit();
+  if (window.ResizeObserver){
+    var ro = new ResizeObserver(soon);
+    if (head) ro.observe(head);
+    if (bar) ro.observe(bar);
+    ro.observe(document.body);
+  }
+  window.addEventListener("resize", soon);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(soon);
+
+  /* the drawer */
+  var deck = document.getElementById("deck"), tab = document.getElementById("drawerTab"), hideBtn = document.getElementById("drawerHide");
+  var narrow = window.matchMedia ? window.matchMedia("(max-width:900px)") : null;
+  var one = window.matchMedia ? window.matchMedia("(max-width:760px), (pointer:coarse) and (max-height:500px)") : null;
+  var land = window.matchMedia ? window.matchMedia("(orientation: landscape) and (pointer: coarse)") : null;
+  var open;
+  try{
+    var kept = localStorage.getItem("vn-net-drawer");
+    open = kept === "open" ? true : kept === "shut" ? false : !(narrow && narrow.matches);
+  } catch(e){ open = !(narrow && narrow.matches); }
+  if (one && one.matches) open = false;
+  function setDrawer(on, keep){
+    open = on;
+    deck.classList.toggle("shut", !on);
+    tab.setAttribute("aria-expanded", String(on));
+    if (hideBtn) hideBtn.setAttribute("aria-expanded", String(on));
+    if (keep){ try{ localStorage.setItem("vn-net-drawer", on ? "open" : "shut"); }catch(e){} }
+    if (window.MN_LIFE) MN_LIFE.remeasure();
+  }
+  function focusSoon(el){ setTimeout(function(){ try{ el.focus({preventScroll: true}); }catch(e){} }, 360); }
+  setDrawer(open, false);
+  tab.addEventListener("click", function(){ setDrawer(true, true); if (hideBtn) focusSoon(hideBtn); });
+  if (hideBtn) hideBtn.addEventListener("click", function(){ setDrawer(false, true); focusSoon(tab); });
+
+  /* one view at a time on a phone */
+  var viewBtns = document.querySelectorAll(".panelbar [data-view]");
+  var views = document.querySelectorAll(".views .view[data-box]");
+  var shown = "all";
+  try{ var k = localStorage.getItem("vn-net-view"); if (k && (k === "all" || document.querySelector('.views .view[data-box="' + k + '"]'))) shown = k; }catch(e){}
+  function showView(key, keep){
+    shown = key;
+    main.classList.toggle("all", key === "all");
+    views.forEach(function(v){ v.classList.toggle("shown", key === "all" || v.getAttribute("data-box") === key); });
+    viewBtns.forEach(function(b){
+      var on = b.getAttribute("data-view") === key;
+      b.classList.toggle("active", on); b.setAttribute("aria-pressed", String(on));
+    });
+    if (keep){ try{ localStorage.setItem("vn-net-view", key); }catch(e){} }
+    if (window.MN_LIFE) MN_LIFE.remeasure();
+  }
+  function oneView(){
+    var on = !!(one && one.matches);
+    main.classList.toggle("one", on);
+    main.classList.toggle("land", on && !!(land && land.matches));
+    if (on) showView(shown, false); else if (window.MN_LIFE) MN_LIFE.remeasure();
+    soon();
+  }
+  oneView();
+  [one, land].forEach(function(q){ if (!q) return; if (q.addEventListener) q.addEventListener("change", oneView); else if (q.addListener) q.addListener(oneView); });
+  viewBtns.forEach(function(b){ b.addEventListener("click", function(){ showView(b.getAttribute("data-view"), true); }); });
+  document.addEventListener("click", function(e){
+    if (!main.classList.contains("one")) return;
+    var btn = e.target.closest ? e.target.closest(".view-expand") : null;
+    if (!btn) return;
+    var view = btn.closest(".view[data-box]");
+    if (!view) return;
+    e.preventDefault(); e.stopPropagation();
+    showView(view.getAttribute("data-box"), true);
+  }, true);
+
+  /* the pop-ups */
+  var pops = {}, current = null;
+  document.querySelectorAll(".stage .pop").forEach(function(p){ pops[p.id] = p; });
+  var buttons = document.querySelectorAll(".panelbar [data-pop]");
+  function press(){
+    buttons.forEach(function(b){
+      var on = !!current && b.getAttribute("data-pop") === current;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-pressed", String(on));
+    });
+  }
+  var screenEl = document.querySelector("main.screen");
+  function popped(on){ if (screenEl) screenEl.classList.toggle("popped", on); }
+  function hide(){
+    if (!current) return;
+    var p = pops[current];
+    current = null;
+    p.classList.remove("in");
+    clearTimeout(p._leaving);
+    p._leaving = setTimeout(function(){ if (!p.classList.contains("in")) p.hidden = true; }, 400);
+    popped(false);
+    press();
+  }
+  function openPop(id){
+    if (current === id) return;
+    if (current) hide();
+    var p = pops[id];
+    if (!p) return;
+    clearTimeout(p._leaving);
+    p.hidden = false;
+    current = id;
+    void p.offsetWidth;
+    p.classList.add("in");
+    popped(true);
+    requestAnimationFrame(function(){ window.dispatchEvent(new Event("resize")); });
+    press();
+  }
+  function show(id){ if (current === id) hide(); else openPop(id); }
+  buttons.forEach(function(b){ b.addEventListener("click", function(){ show(b.getAttribute("data-pop")); }); });
+  document.querySelectorAll(".pop .pop-x").forEach(function(x){ x.addEventListener("click", hide); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && current) hide(); });
 })();
 </script>
 <script src="assets/network-atlas.js"></script>
