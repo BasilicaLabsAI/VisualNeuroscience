@@ -393,7 +393,7 @@ main.screen{
 .deck.shut .drawer-show{ visibility:visible; opacity:1; transition-delay:.14s, .14s; }
 @media (hover: hover){ .drawer-tab:hover{ background:var(--ink); color:var(--paper); } }
 .drawer-tab:active{ background:var(--ink); color:var(--paper); }
-.stage{ flex:1 1 auto; min-width:0; min-height:0; display:flex; flex-direction:column; position:relative; padding:var(--gap) var(--gap) var(--gap) calc(var(--gap) + 10px); }
+.stage{ flex:1 1 auto; min-width:0; min-height:0; display:flex; flex-direction:column; position:relative; overflow:hidden; padding:var(--gap) var(--gap) var(--gap) calc(var(--gap) + 10px); }
 .screen .views-wrap{ position:relative; flex:1 1 auto; min-height:0; }
 .screen .views{ height:100%; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:var(--gap); }
 .screen .views .view{ min-height:0; min-width:0; }
@@ -443,11 +443,11 @@ main.screen{
   background:color-mix(in srgb, var(--paper) 90%, transparent);
   -webkit-backdrop-filter:saturate(180%) blur(24px); backdrop-filter:saturate(180%) blur(24px);
   box-shadow:0 18px 60px rgba(0,0,0,.35);
-  opacity:0; transform:translateY(14px);
-  transition:opacity .22s cubic-bezier(.32,.72,0,1), transform .26s cubic-bezier(.32,.72,0,1);
+  transform:translateY(calc(100% + var(--gap) + 40px));
+  transition:transform .36s cubic-bezier(.32,.72,0,1);
 }
 .pop[hidden]{ display:none; }
-.pop.in{ opacity:1; transform:none; }
+.pop.in{ transform:none; transition-duration:.5s; }
 .pop-sm{ left:auto; width:min(440px, calc(100% - 2 * var(--gap) - 10px)); }
 .pop-md{ left:auto; width:min(640px, calc(100% - 2 * var(--gap) - 10px)); }
 .pop-head{ flex:none; display:flex; align-items:center; gap:.7rem; padding:.5rem .6rem .5rem .9rem; border-bottom:1px solid var(--hair); }
@@ -539,7 +539,9 @@ main.screen.one.land{ flex-direction:row; }
   .panelbar, .pop{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
 }
 @media (prefers-reduced-motion: reduce){
-  .drawer, .drawer-box, .drawer-tab, .drawer-tab svg, .pop{ transition:none; }
+  .drawer, .drawer-box, .drawer-tab, .drawer-tab svg{ transition:none; }
+  .pop{ transform:none; opacity:0; transition:opacity .18s ease; }
+  .pop.in{ opacity:1; transition-duration:.18s; }
 }
 </style>
 </head>
@@ -1648,7 +1650,7 @@ ensureScan();
     current = null;
     p.classList.remove("in");
     clearTimeout(p._leaving);
-    p._leaving = setTimeout(function(){ if (!p.classList.contains("in")) p.hidden = true; }, 280);
+    p._leaving = setTimeout(function(){ if (!p.classList.contains("in")) p.hidden = true; }, 400);
     popped(false);
     press();
   }

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.89 — 23 October 2026 — Windows that slide out of the bar
+Commit · Slide every window the bar raises up out of it, and back into it when closed
+
+Press a button on the bar at the foot of the 3D Region Atlas, the Hallucinations study, the Brodmann Area Atlas or the molecular viewer and its window now slides up out of the bar, and slides back down into it when you close it, where before it faded in with a small lift. On the Brodmann page the reading's text rises from behind its strip the same way, and the About window and the brain in 3D from behind the bar. With reduced motion on, every window fades instead.
+
 ## v11.88 — 23 October 2026 — A black tile to choose, and the brain's lines made whole
-Commit · Give the iOS app a black icon to choose under Account, and trace the brain as one outline, separate traces and true circles
+Commit `235ae99` · Give the iOS app a black icon to choose under Account, and trace the brain as one outline, separate traces and true circles
 
 The app's icon can be black now: under Account, beside Appearance, an App icon switch puts the brain on a black tile in place of the white one, on the iPhone and the iPad, and the system keeps the choice. The brain itself is traced afresh. Its outline is one continuous line running through the nodes on its edge, every trace inside is a line of its own, joined where it meets another, and every node is a true circle with a round hole, where the last tracing had dented the holes and left a few lines short of their rings.
 

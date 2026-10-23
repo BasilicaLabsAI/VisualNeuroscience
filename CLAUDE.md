@@ -350,6 +350,16 @@ Read this first in every session. It is the handover; nothing else needs pasting
   and menus are translucent materials with `prefers-reduced-transparency` and `prefers-contrast` fallbacks, a thrown
   3D view coasts and the next touch takes over (`zoom.js`, momentum), and `prefers-reduced-motion` turns all of it
   into plain fades and dead stops. Keep new controls and panels to those rules.
+- Every window the bar raises is a sheet that slides up out of the bar and back into it (v11.89, at the owner's word).
+  On the 3D Region Atlas and the Hallucinations study `.pop` rests at `translateY(calc(100% + var(--gap) + 40px))` and
+  `.pop.in` at none, half a second up and `.36s` down on the sheet curve `cubic-bezier(.32,.72,0,1)`, `.stage{overflow:hidden}`
+  clips it at the bar's edge, and the pop script hides a window 400ms after its `in` goes. The Brodmann page's About
+  window, its 3D panel and the reading's text (`r-rise` and `r-sink`; `setRead` keeps `.leaving` on the reading for
+  380ms; the cross `#readX` stands in `.reading`, outside the sliding text) slide the same way behind the bar
+  (`z-index:30`) and the strip (`z-index:22` upright, `27` sideways, each with a paper `box-shadow` over the grid gap
+  above it), `.ba-screen{overflow:hidden}` taking the rest. The molecular viewer's `#panel.pop` slides from `100vh` on
+  a wide screen and from behind the bar on a phone, and `t4_engine2.js` lays the model out again 540ms after the window
+  rises. `prefers-reduced-motion` makes every one of them a plain fade.
 - Swift: both Xcode projects build with Approachable Concurrency, main-actor isolation by default and complete
   concurrency checking in the Swift 5 language mode; the visionOS data layer is `nonisolated` and its slow work is
   `@concurrent`, never a detached task. Nothing here can compile Swift, so a Swift change is verified by the owner's

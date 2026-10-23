@@ -187,12 +187,13 @@
     if (c) {
       panel.classList.remove('in'); panel.classList.add('leaving');
       foldBtn.setAttribute('aria-expanded', 'false');
-      panelGone = setTimeout(function () { panel.classList.remove('leaving'); panel.hidden = true; layout(); }, 280);
+      panelGone = setTimeout(function () { panel.classList.remove('leaving'); panel.hidden = true; layout(); }, 400);
     } else {
       panel.hidden = false; panel.classList.remove('leaving');
       void panel.offsetWidth;
       panel.classList.add('in');
       foldBtn.setAttribute('aria-expanded', 'true');
+      panelGone = setTimeout(layout, 540);   // the model centres in the room the window takes once it has slid up
     }
     syncTabBtns(); layout();
   }

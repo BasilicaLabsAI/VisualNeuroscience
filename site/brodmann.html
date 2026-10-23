@@ -263,7 +263,7 @@ svg{ display:block; }
    marks the screen .tall or .wide and sets --cart-w, the faces' width, and
    --faces-h, the two faces' height together. A phone, upright or sideways,
    has the layouts further below, with the same brain in them. */
-.ba-screen{ position:relative; }
+.ba-screen{ position:relative; overflow:hidden; }   /* a sheet sliding out below the bar goes unseen */
 @media (min-width:761px){
   .ba-screen.tall{
     grid-template-columns:minmax(250px,1fr) var(--cart-w, 55%); grid-template-rows:var(--faces-h, auto) minmax(240px,1fr) auto;
@@ -453,11 +453,20 @@ svg{ display:block; }
    3D raises it, and lowered the same way */
 .ba-screen.one .scan{
   grid-area:1 / 1 / 2 / 2; position:relative; z-index:20; visibility:hidden;
-  transform:translateY(calc(100% + 24px)); opacity:0;
-  transition:transform .3s cubic-bezier(.32,.72,0,1), opacity .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .3s;
+  transform:translateY(calc(100% + 40px));
+  transition:transform .36s cubic-bezier(.32,.72,0,1), visibility 0s linear .36s;
 }
-.ba-screen.one .scan.in{ visibility:visible; transform:none; opacity:1; transition:transform .3s cubic-bezier(.32,.72,0,1), opacity .22s cubic-bezier(.32,.72,0,1), visibility 0s; }
-@media (prefers-reduced-motion: reduce){ .ba-screen.one .scan, .ba-screen.one .scan.in{ transition:none; } }
+.ba-screen.one .scan.in{ visibility:visible; transform:none; transition:transform .5s cubic-bezier(.32,.72,0,1), visibility 0s; }
+@media (prefers-reduced-motion: reduce){
+  .ba-screen.one .scan{ transform:none; opacity:0; transition:opacity .18s ease, visibility 0s linear .18s; }
+  .ba-screen.one .scan.in{ opacity:1; transition:opacity .18s ease, visibility 0s; }
+}
+/* the strip stands over the sheets sliding past it, with paper over the gap
+   above it; upright it is under the windows that take its row, sideways over
+   the About window sliding out of the brain's cell */
+.ba-screen.one .reading, .ba-screen.land .reading{ position:relative; background:var(--paper); box-shadow:0 -10px 0 var(--paper); }
+.ba-screen.one .reading{ z-index:22; }
+.ba-screen.land .reading{ z-index:27; }
 /* upright the faces are both on show at the full width, so the picks have
    nothing to give; elsewhere the brain is on show, so 3D has nothing to raise */
 .ba-screen.one .panelbar-views{ display:none; }
@@ -492,14 +501,24 @@ svg{ display:block; }
 .ba-screen.one .reading.open, .ba-screen.land .reading.open{ z-index:25; background:var(--paper); }
 .r-x{ display:none; }
 .ba-screen.one .reading.open .r-x, .ba-screen.land .reading.open .r-x{ display:inline-flex; align-items:center; justify-content:center; position:absolute; top:.55rem; right:.6rem; margin:0; z-index:1; }
-.ba-screen.one .reading.open, .ba-screen.land .reading.open{ position:relative; }
+.ba-screen.one .reading.open, .ba-screen.land .reading.open{ position:relative; overflow:hidden; }
+.ba-screen.one .reading.open .r-head, .ba-screen.land .reading.open .r-head{ position:relative; z-index:1; background:var(--paper); }
 .ba-screen.one .reading.open .r-text, .ba-screen.land .reading.open .r-text{
   display:flex; order:-1; flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding-right:3rem;
   touch-action:pan-y; -webkit-overflow-scrolling:touch; padding:.2rem 0 .7rem; margin-bottom:.6rem; border-bottom:1px solid var(--hair);
-  animation:r-rise .28s cubic-bezier(.32,.72,0,1);
+  animation:r-rise .5s cubic-bezier(.32,.72,0,1);
 }
-@keyframes r-rise{ from{ opacity:0; transform:translateY(12px); } to{ opacity:1; transform:none; } }
-@media (prefers-reduced-motion: reduce){ .ba-screen.one .reading.open .r-text, .ba-screen.land .reading.open .r-text{ animation:none; } }
+.ba-screen.one .reading.open .r-x, .ba-screen.land .reading.open .r-x{ animation:r-fade .5s cubic-bezier(.32,.72,0,1); }
+/* put away: the text sinks behind the strip, then the layout closes over it */
+.ba-screen.one .reading.leaving .r-text, .ba-screen.land .reading.leaving .r-text{ animation:r-sink .36s cubic-bezier(.32,.72,0,1) forwards; }
+.ba-screen.one .reading.leaving .r-x, .ba-screen.land .reading.leaving .r-x{ animation:r-fade .36s cubic-bezier(.32,.72,0,1) reverse forwards; }
+@keyframes r-rise{ from{ transform:translateY(100%); } to{ transform:none; } }
+@keyframes r-sink{ from{ transform:none; } to{ transform:translateY(100%); } }
+@keyframes r-fade{ from{ opacity:0; } to{ opacity:1; } }
+@media (prefers-reduced-motion: reduce){
+  .ba-screen.one .reading.open .r-text, .ba-screen.land .reading.open .r-text{ animation:r-fade .18s ease; }
+  .ba-screen.one .reading.leaving .r-text, .ba-screen.land .reading.leaving .r-text{ animation:r-fade .18s ease reverse forwards; }
+}
 .ba-screen.one .r-h, .ba-screen.land .r-h{ margin-top:.1rem; }
 .ba-screen.one .r-body, .ba-screen.land .r-body{ font-size:.92rem; line-height:1.5; }
 .ba-screen.one .r-note, .ba-screen.land .r-note{ font-size:.82rem; margin-top:.6rem; }
@@ -519,9 +538,10 @@ body.ba-land{ padding-bottom:0; }
    page's notes as a window over the brain. Held sideways the bar stands along
    the right edge, its buttons one to a row. A material, like the header's. */
 .panelbar{
-  grid-area:bar; display:flex; align-items:center; gap:.6rem; min-width:0;
+  grid-area:bar; display:flex; align-items:center; gap:.6rem; min-width:0; position:relative; z-index:30;
   padding:.35rem .6rem calc(.35rem + env(safe-area-inset-bottom, 0px));
   border:1px solid var(--hair);
+  box-shadow:0 -14px 0 var(--paper);   /* the gap above it, paper over a sheet sliding behind */
   background:color-mix(in srgb, var(--paper) 84%, transparent);
   -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
   overflow-x:auto; overflow-y:hidden; scrollbar-width:none; white-space:nowrap;
@@ -575,11 +595,11 @@ body.ba-land{ padding-bottom:0; }
 .pop{
   grid-area:scan; z-index:26; display:flex; flex-direction:column; min-height:0; min-width:0; overflow:hidden;
   border:1px solid var(--hair); background:var(--paper);
-  opacity:0; transform:translateY(14px);
-  transition:opacity .22s cubic-bezier(.32,.72,0,1), transform .26s cubic-bezier(.32,.72,0,1);
+  transform:translateY(calc(100% + 40px));
+  transition:transform .36s cubic-bezier(.32,.72,0,1);
 }
 .pop[hidden]{ display:none; }
-.pop.in{ opacity:1; transform:none; }
+.pop.in{ transform:none; transition-duration:.5s; }
 .ba-screen.one .pop{ grid-area:1 / 1 / 3 / 2; }
 .pop-head{ flex:none; display:flex; align-items:center; gap:.7rem; padding:.5rem .6rem .5rem .9rem; border-bottom:1px solid var(--hair); }
 .pop-head b{ font-family:var(--font-brand); font-weight:500; font-size:.66rem; letter-spacing:.28em; text-transform:uppercase; white-space:nowrap; }
@@ -592,7 +612,7 @@ body.ba-land{ padding-bottom:0; }
 .pop-x:active{ background:var(--ink); color:var(--paper); }
 .pop-body{ flex:1 1 auto; min-height:0; overflow:auto; overscroll-behavior:contain; touch-action:pan-y; -webkit-overflow-scrolling:touch; padding:.9rem 1rem 1.1rem; }
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more){ .panelbar{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; } }
-@media (prefers-reduced-motion: reduce){ .pop{ transition:none; } }
+@media (prefers-reduced-motion: reduce){ .pop{ transform:none; opacity:0; transition:opacity .18s ease; } .pop.in{ opacity:1; transition-duration:.18s; } }
 
 /* ── what the page is, and its sources: the window the bar's About raises ── */
 .prose h2{
@@ -643,8 +663,8 @@ body.ba-land{ padding-bottom:0; }
         <h2 class="r-name" id="rName">Tap an area on either face</h2>
         <p class="r-where" id="rWhere"></p>
       </div>
+      <button class="pop-x r-x" type="button" id="readX" aria-label="Close the text">&times;</button>
       <div class="r-text" id="rText">
-        <button class="pop-x r-x" type="button" id="readX" aria-label="Close the text">&times;</button>
         <h3 class="r-h" id="rForH" hidden>What it does</h3>
         <p class="r-body" id="rBody"></p>
         <p class="r-note" id="rNote" hidden></p>
@@ -874,16 +894,30 @@ body.ba-land{ padding-bottom:0; }
      one of the two at a time. */
   var readOpen = false, readBtn = document.getElementById("readBtn");
   var aboutOpen = false, popAbout = document.getElementById("popAbout"), aboutBtn = document.getElementById("aboutBtn");
+  var readGone = null;
   function setRead(open){
     open = !!open;
     if (open && aboutOpen) setAbout(false);
     if (open && scanOpen && isOne()) setScan(false);
     readOpen = open;
-    reading.classList.toggle("open", readOpen);
-    screenEl.classList.toggle("read-open", readOpen);
+    clearTimeout(readGone);
     readBtn.setAttribute("aria-expanded", String(readOpen));
-    if (readOpen) rText.scrollTop = 0;
-    if (window.MN && open) MN.tap("light");
+    if (readOpen){
+      reading.classList.remove("leaving");
+      reading.classList.add("open");
+      screenEl.classList.add("read-open");
+      rText.scrollTop = 0;
+      if (window.MN) MN.tap("light");
+    } else if (reading.classList.contains("open")){
+      /* the text sinks behind the strip first, then the layout closes over it */
+      reading.classList.add("leaving");
+      readGone = setTimeout(function(){
+        if (readOpen) return;
+        reading.classList.remove("open", "leaving");
+        screenEl.classList.remove("read-open");
+        fitSoon();
+      }, 380);
+    }
     fitSoon();
   }
   function setAbout(open){
@@ -900,7 +934,7 @@ body.ba-land{ padding-bottom:0; }
       popAbout.querySelector(".pop-body").scrollTop = 0;
     } else {
       popAbout.classList.remove("in");
-      popAbout._leaving = setTimeout(function(){ if (!aboutOpen) popAbout.hidden = true; }, 280);
+      popAbout._leaving = setTimeout(function(){ if (!aboutOpen) popAbout.hidden = true; }, 400);
     }
     aboutBtn.setAttribute("aria-expanded", String(open));
     if (window.MN && open) MN.tap("light");
