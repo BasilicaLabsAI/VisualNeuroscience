@@ -11,7 +11,8 @@
            is painted over in the paper black rather than cut off, so the
            capture keeps its shape
 
-   The statement breaks over up to two lines; a "|" in it forces the break.
+   The statement breaks over up to two lines, a "|" in it forcing the break,
+   and a longer one is set smaller until it fits the band above the capture.
    Runs here with Playwright from the global modules (NODE_PATH) and the
    site's own fonts, inlined. */
 const path = require('path'), fs = require('fs'), { execSync } = require('child_process');
@@ -51,6 +52,8 @@ html, body{ width:${W}px; height:${H}px; background:#111111; overflow:hidden; }
   const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
   await page.setContent(html);
   await page.evaluate(() => document.fonts.ready);
+  /* a long statement takes a third line at a smaller size rather than running out of the band */
+  await page.evaluate((room) => { const h = document.querySelector('.sell h1'); let px = parseFloat(getComputedStyle(h).fontSize); while (h.getBoundingClientRect().height > room && px > 36){ px -= 2; h.style.fontSize = px + 'px'; } }, band - 56);
   await page.waitForTimeout(300);
   fs.mkdirSync(path.dirname(out), { recursive: true });
   await page.screenshot({ path: out });
