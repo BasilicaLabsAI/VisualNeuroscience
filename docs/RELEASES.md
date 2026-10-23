@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.93 — 23 October 2026 — The atlases remember your last pick
+Commit · Keep the last selection on the 3D Region Atlas and the Brodmann Area Atlas between visits
+
+Leave the 3D Region Atlas for another page and come back, and the regions you had highlighted are there again, with the opacity and the mirror switch as you left them, with nothing to save; the Brodmann Area Atlas opens on the area you last picked the same way. A link that names regions or an area still opens on those instead, and Clear all leaves the page empty next time.
+
 ## v11.92 — 23 October 2026 — No zoom from a double tap
-Commit · Take the double-tap zoom off every page, and pin the viewport inside the app
+Commit `301e1a5` · Take the double-tap zoom off every page, and pin the viewport inside the app
 
 A double tap on a region's row once magnified a whole atlas page in the app, the way a web page zooms to a paragraph. It cannot now: the pages tell the browser that a double tap is never a zoom, on the website too, and inside the app the page cannot be enlarged at all, since the views pinch on their own. On the website a pinch still enlarges a page for whoever needs it.
 

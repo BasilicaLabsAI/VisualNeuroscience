@@ -330,6 +330,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `slice-tool.js`. The 3D Region Atlas keeps its own Brodmann list, and no map since v11.30; since v11.38
   the areas are picked through the same dropdown panel as the AAL regions (`dropPicker` in `regions.html`, shared by
   `#rpick` and `#bapick`: button `#bapickBtn`, panel `#bapickPop`, list `#balist` a `.rpick-list` grouped by lobe).
+  Both atlases remember the last selection on the device without a save (v11.93, at the owner's word): the 3D Region
+  Atlas writes `vn-atlas-last`, the saved-model capture (`modelApi.capture`, shared with Saved maps) without the camera,
+  crosshair, cuts and view, whenever the selection, the opacity or the mirror switch changes (`rememberSoon`, armed only
+  once the address has been read at boot), and restores it there when the address picks nothing; the Brodmann Area Atlas
+  writes `vn-ba-last` in `markAddress` and `select`s it at boot when the address names no area.
 - The Hallucinations study (`site/hallucinations.html`, the visualisation of Boksa 2009 that the owner calls the
   schizophrenia visualisation) is one screen in the 3D Region Atlas's manner since v11.43: `body.atlas-screen`,
   `main#main.screen`, the drawer (`#drawerBox`: Brain state, then Regions with the system filters, the list and the

@@ -952,6 +952,8 @@ body.ba-land{ padding-bottom:0; }
   /* the address follows the pick, so a link opens on the same area */
   function markAddress(){
     var want = selected != null ? "#ba=" + selected : "";
+    /* and the device keeps the pick, so the page opens on it next time */
+    try{ if (selected != null) localStorage.setItem("vn-ba-last", String(selected)); else localStorage.removeItem("vn-ba-last"); }catch(e){}
     if ((location.hash || "") === want) return;
     try{ history.replaceState(history.state, "", location.pathname + location.search + want); }catch(e){}
   }
@@ -1190,6 +1192,8 @@ body.ba-land{ padding-bottom:0; }
   }
   read();
   fromHash();
+  /* no area in the address: the last one picked comes back */
+  if (selected == null){ try{ var kept = Number(localStorage.getItem("vn-ba-last")); if (kept && B.BY_BA[kept]) select(kept, true); }catch(e){} }
   window.addEventListener("hashchange", fromHash);
   onLand();
   fit();

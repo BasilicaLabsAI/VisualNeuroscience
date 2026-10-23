@@ -1899,6 +1899,7 @@ main.screen.one.land{ flex-direction:row; }
      pop-up stacks the same regions. A layer with nothing lit in it is left
      out rather than headed empty. */
   function renderChips(){
+    rememberSoon();
     notifySel();
     chipsEl.querySelectorAll(".rchip, .rchip-head").forEach(function(c){ c.remove(); });
     emptyMsg.classList.toggle("hidden", selections.size > 0);
@@ -2381,7 +2382,7 @@ main.screen.one.land{ flex-direction:row; }
     selectEl.value = "";
   });
 
-  mirrorEl.addEventListener("change", renderDropdown);
+  mirrorEl.addEventListener("change", function(){ renderDropdown(); rememberSoon(); });
 
   /* ── which atlas the picker offers ────────────────────────────────────
      The AAL parcels, or the Brodmann areas with their map beneath the
@@ -2436,6 +2437,7 @@ main.screen.one.land{ flex-direction:row; }
     });
   }
   opacityEl.addEventListener("input", function(){
+    rememberSoon();
     opacityVal.textContent = opacityEl.value + "%";
     if (opacityTimer) return;
     opacityTimer = setTimeout(function(){ requestAnimationFrame(applyOpacity); },
@@ -2801,10 +2803,24 @@ main.screen.one.land{ flex-direction:row; }
   /* the layout is always the grid now; the field stays in the saved
      shape so older models and the MCP server's still read the same */
   function activeView(){ return "grid"; }
-  if (window.MN_MODELS){
-    MN_MODELS.attach({
-      tool: "regions", noun: "model",
-      host: document.getElementById("models"),
+  /* the last selection, kept on this device without saving: whatever is
+     highlighted as the page is left is highlighted again when it is next
+     opened, with the opacity and the mirror switch, unless the address
+     asks for something else; read once here, before anything can write */
+  var lastKept = null, keepReady = false, keepTimer = 0;
+  try{ lastKept = JSON.parse(localStorage.getItem("vn-atlas-last") || "null"); }catch(e){}
+  function rememberSoon(){
+    if (!keepReady) return;
+    clearTimeout(keepTimer);
+    keepTimer = setTimeout(function(){
+      try{
+        var m = modelApi.capture();
+        delete m.camera; delete m.crosshair; delete m.cuts; delete m.view;
+        localStorage.setItem("vn-atlas-last", JSON.stringify(m));
+      }catch(e){}
+    }, 150);
+  }
+  var modelApi = {
       capture: function(){
         var ren = INSTANCES.render, sels = [];
         selections.forEach(function(s, key){
@@ -2845,9 +2861,15 @@ main.screen.one.land{ flex-direction:row; }
         }
         if (Array.isArray(m.crosshair) && m.crosshair.length === 3)
           allNV().forEach(function(nv){ nv.scene.crosshairPos = m.crosshair.map(Number); });
-        if (sliceTool && sliceTool.setState) sliceTool.setState(m.cuts);
+        if (m.cuts !== undefined && sliceTool && sliceTool.setState) sliceTool.setState(m.cuts);
         allNV().forEach(function(nv){ try{ nv.drawScene(); }catch(e){} });
       }
+  };
+  if (window.MN_MODELS){
+    MN_MODELS.attach({
+      tool: "regions", noun: "model",
+      host: document.getElementById("models"),
+      capture: modelApi.capture, restore: modelApi.restore
     });
   }
 
@@ -2912,6 +2934,10 @@ main.screen.one.land{ flex-direction:row; }
       }
       applyColormap();
       applyHashSelections();
+      /* nothing asked for by the address: the last selection comes back */
+      if (!selections.size && lastKept){ try{ modelApi.restore(lastKept); }catch(e){} }
+      keepReady = true;
+      rememberSoon();   /* what the address or the memory put up is itself remembered */
       notifySel();      /* both label volumes are in, so the chart can place a Brodmann area */
       statusEl.classList.add("hidden");
     } catch(err){
