@@ -8,8 +8,9 @@
            app/store/screenshots/ have them
    bar     the height of the device's status bar in the capture, in the
            capture's own pixels (default 57, an iPad's at 2420 wide), which
-           is painted over in the paper black rather than cut off, so the
-           capture keeps its shape
+           is painted over rather than cut off, so the capture keeps its
+           shape; the paint is the capture's own ground, read at its top-left
+           corner, so a light capture keeps its white
 
    The statement breaks over up to two lines, a "|" in it forcing the break,
    and a longer one is set smaller until it fits the band above the capture.
@@ -26,6 +27,8 @@ const FONTS = path.join(__dirname, '..', '..', 'site', 'fonts');
 const font = (file) => 'data:font/woff2;base64,' + fs.readFileSync(path.join(FONTS, file)).toString('base64');
 const png = 'data:image/png;base64,' + fs.readFileSync(capture).toString('base64');
 const size = execSync(`identify -format "%w %h" "${capture}"`).toString().trim().split(' ').map(Number);
+/* the status bar's cover is the capture's own ground, read at its top-left corner */
+const ground = '#' + execSync(`convert "${capture}" -depth 8 -format "%[hex:p{2,2}]" info:`).toString().trim().slice(0, 6);
 const landscape = W > H;
 /* the capture's width in the frame, and the room the statement has above it */
 const side = Math.round(W * 0.05);
@@ -43,7 +46,7 @@ html, body{ width:${W}px; height:${H}px; background:#111111; overflow:hidden; }
 .sell h1{ font-family:'Afacad Flux', sans-serif; font-weight:500; font-size:${fontPx}px; line-height:1.12; letter-spacing:.005em; color:#FFFFFF; max-width:${Math.round(capW * 0.92)}px; }
 .cap{ position:absolute; left:${side}px; top:${band}px; width:${capW}px; height:${capH}px; border:2px solid rgba(255,255,255,.38); overflow:hidden; }
 .cap img{ display:block; width:${capW}px; height:${capH}px; }
-.cap .bar{ position:absolute; left:0; right:0; top:0; height:${Math.ceil(bar * capW / size[0])}px; background:#111111; }
+.cap .bar{ position:absolute; left:0; right:0; top:0; height:${Math.ceil(bar * capW / size[0])}px; background:${ground}; }
 </style>
 <div class="sell"><h1>${lines.map(l => l.replace(/&/g, '&amp;').replace(/</g, '&lt;')).join('<br>')}</h1></div>
 <div class="cap"><img src="${png}" alt=""><div class="bar"></div></div>`;
@@ -58,5 +61,5 @@ html, body{ width:${W}px; height:${H}px; background:#111111; overflow:hidden; }
   fs.mkdirSync(path.dirname(out), { recursive: true });
   await page.screenshot({ path: out });
   await browser.close();
-  console.log(path.basename(out), W + 'x' + H, 'band', band, 'capture', capW + 'x' + capH, 'bar covered', Math.ceil(bar * capW / size[0]) + 'px');
+  console.log(path.basename(out), W + 'x' + H, 'band', band, 'capture', capW + 'x' + capH, 'bar covered', Math.ceil(bar * capW / size[0]) + 'px in', ground);
 })().catch((e) => { console.error(e); process.exit(1); });
