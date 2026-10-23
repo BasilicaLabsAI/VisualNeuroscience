@@ -189,28 +189,15 @@ svg{ display:block; }
   font-style:italic; font-size:.88rem; line-height:1.5; color:var(--ink-60);
   border-left:2px solid var(--ink-35); padding-left:.7rem; margin-top:.8rem;
 }
-/* the button on a phone's strip that raises the text above it: the site's
-   button with a chevron, filled while the text is up; hidden where the
-   whole reading shows */
-.r-more{
-  display:none; align-items:center; gap:.5rem; border:1px solid var(--hair); background:var(--paper); color:var(--ink);
-  padding:.5rem .7rem .45rem .8rem; font-family:var(--font-brand); font-weight:500; font-size:.6rem; letter-spacing:.2em;
-  text-transform:uppercase; line-height:1; white-space:nowrap; cursor:pointer; -webkit-tap-highlight-color:transparent;
-  transition:transform .12s cubic-bezier(.32,.72,0,1), background .12s, color .12s;
-}
-.r-more svg{ width:.8rem; height:.8rem; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; transition:transform .2s cubic-bezier(.32,.72,0,1); }
-.r-more[aria-expanded="true"]{ background:var(--ink); color:var(--paper); }
-.r-more[aria-expanded="true"] svg{ transform:rotate(180deg); }
-.r-more:active{ transform:scale(.97); }
-@media (pointer:coarse){ .r-more{ min-height:44px; } }
-@media (prefers-reduced-motion: reduce){ .r-more, .r-more svg{ transition:none; } .r-more:active{ transform:none; } }
 .r-pick{
   background:none; border:0; padding:0; color:inherit; font:inherit; cursor:pointer;
   text-decoration:underline; text-underline-offset:3px;
 }
 
-/* the two faces */
+/* the two faces, or one alone when the bar picks it */
 .maps{ display:grid; grid-template-rows:minmax(0,1fr) minmax(0,1fr); gap:var(--gap); min-height:0; min-width:0; }
+.maps.only-lateral .cart[data-face="medial"], .maps.only-medial .cart[data-face="lateral"]{ display:none; }
+.maps.only-lateral, .maps.only-medial{ grid-template-rows:minmax(0,1fr); }
 .maps.side{ grid-template-rows:minmax(0,1fr); grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
 .cart{ position:relative; border:1px solid var(--hair); margin:0; min-height:0; min-width:0; }
 /* the name of each face sits in its corner over the drawing, where the
@@ -279,12 +266,12 @@ svg{ display:block; }
 .ba-screen{ position:relative; }
 @media (min-width:761px){
   .ba-screen.tall{
-    grid-template-columns:minmax(250px,1fr) var(--cart-w, 55%); grid-template-rows:var(--faces-h, auto) minmax(240px,1fr);
-    grid-template-areas:"read maps" "scan scan";
+    grid-template-columns:minmax(250px,1fr) var(--cart-w, 55%); grid-template-rows:var(--faces-h, auto) minmax(240px,1fr) auto;
+    grid-template-areas:"read maps" "scan scan" "bar bar";
   }
   .ba-screen.wide{
-    grid-template-columns:minmax(0,1fr) var(--cart-w, 50%); grid-template-rows:clamp(220px, 38%, 360px) minmax(240px,1fr);
-    grid-template-areas:"read maps" "scan maps";
+    grid-template-columns:minmax(0,1fr) var(--cart-w, 50%); grid-template-rows:clamp(220px, 38%, 360px) minmax(240px,1fr) auto;
+    grid-template-areas:"read maps" "scan maps" "bar bar";
   }
   .ba-screen.tall .reading, .ba-screen.wide .reading{ grid-area:read; }
   .ba-screen.tall .maps, .ba-screen.wide .maps{
@@ -292,7 +279,7 @@ svg{ display:block; }
   }
   .ba-screen.tall .cart, .ba-screen.wide .cart{ width:100%; height:calc(var(--cart-w, 300px) * .6667); }
   .ba-screen.tall .cart[data-face="medial"], .ba-screen.wide .cart[data-face="medial"]{ height:calc(var(--cart-w, 300px) * .6367); }
-  .ba-screen.tall .r-more, .ba-screen.wide .r-more{ display:none; }
+  .ba-screen.tall .panelbar-btns, .ba-screen.wide .panelbar-btns{ display:none; }
 }
 
 /* ── the slice tool, as viewer.css sets it for the atlases: a cut on each
@@ -448,16 +435,16 @@ svg{ display:block; }
    in reach; the faces are drawn at three by two, and the script sets
    --cart-w, the faces' column, when held sideways. */
 .ba-screen.one{
-  grid-template-columns:minmax(0,1fr); grid-template-rows:auto minmax(0,1fr) auto;
-  grid-template-areas:"maps" "scan" "read"; gap:10px; min-height:400px; margin-top:10px;
+  grid-template-columns:minmax(0,1fr); grid-template-rows:auto minmax(0,1fr) auto auto;
+  grid-template-areas:"maps" "scan" "read" "bar"; gap:10px; min-height:400px; margin-top:10px;
   height:calc(100vh - var(--screen-top, 110px) - 10px);
   height:calc(100dvh - var(--screen-top, 110px) - 10px);
 }
 .ba-screen.one .maps, .ba-screen.one .maps.side{ grid-area:maps; order:0; grid-template-columns:minmax(0,1fr) minmax(0,1fr); grid-template-rows:auto; gap:10px; }
+.ba-screen.one .maps.only-lateral, .ba-screen.one .maps.only-medial{ grid-template-columns:minmax(0,1fr); }
 .ba-screen.one .cart, .ba-screen.land .cart{ width:100%; height:auto; aspect-ratio:3 / 2; }
 .ba-screen.one .reading{ grid-area:read; }
 .ba-screen.one .reading.open{ grid-area:2 / 1 / 4 / 2; }
-.babar{ display:none; }
 .ba-screen.land{
   grid-template-columns:var(--cart-w, 230px) minmax(0,1fr) 92px; grid-template-rows:minmax(0,1fr) auto;
   grid-template-areas:"maps scan bar" "read read bar";
@@ -466,7 +453,6 @@ svg{ display:block; }
   height:calc(100dvh - var(--screen-top, 0px) - 8px);
 }
 .ba-screen.land .maps, .ba-screen.land .maps.side{ grid-area:maps; order:0; grid-template-rows:auto auto; grid-template-columns:minmax(0,1fr); align-content:start; gap:8px; }
-.ba-screen.land .maps.only-lateral .cart[data-face="medial"], .ba-screen.land .maps.only-medial .cart[data-face="lateral"]{ display:none; }
 .ba-screen.land .reading{ grid-area:read; }
 .ba-screen.land.read-open .maps{ grid-row:1 / 3; }
 .ba-screen.land .reading.open{ grid-area:1 / 2 / 3 / 3; }
@@ -475,11 +461,11 @@ svg{ display:block; }
 .ba-screen.one .reading, .ba-screen.land .reading{
   padding:.55rem .85rem .6rem; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end;
 }
-.ba-screen.one .r-head, .ba-screen.land .r-head{ display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-rows:auto auto auto; column-gap:.7rem; align-items:center; }
-.ba-screen.one .r-more, .ba-screen.land .r-more{ display:inline-flex; grid-column:2; grid-row:1 / 4; align-self:center; }
-.ba-screen.one .r-kick, .ba-screen.land .r-kick{ grid-column:1; font-size:.56rem; }
-.ba-screen.one .r-name, .ba-screen.land .r-name{ grid-column:1; font-size:1.08rem; margin:.3rem 0 .1rem; }
-.ba-screen.one .r-where, .ba-screen.land .r-where{ grid-column:1; font-size:.8rem; margin:0; }
+/* a tap on the strip raises the text too, as the bar's What it does does */
+.ba-screen.one .r-head, .ba-screen.land .r-head{ cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.ba-screen.one .r-kick, .ba-screen.land .r-kick{ font-size:.56rem; }
+.ba-screen.one .r-name, .ba-screen.land .r-name{ font-size:1.08rem; margin:.3rem 0 .1rem; }
+.ba-screen.one .r-where, .ba-screen.land .r-where{ font-size:.8rem; margin:0; }
 .ba-screen.one .r-text, .ba-screen.land .r-text{ display:none; }
 .ba-screen.one .reading.open, .ba-screen.land .reading.open{ z-index:25; background:var(--paper); }
 .ba-screen.one .reading.open .r-text, .ba-screen.land .reading.open .r-text{
@@ -492,29 +478,91 @@ svg{ display:block; }
 .ba-screen.one .r-h, .ba-screen.land .r-h{ margin-top:.1rem; }
 .ba-screen.one .r-body, .ba-screen.land .r-body{ font-size:.92rem; line-height:1.5; }
 .ba-screen.one .r-note, .ba-screen.land .r-note{ font-size:.82rem; margin-top:.6rem; }
-.ba-screen.land .babar{
-  grid-area:bar; display:flex; flex-direction:column; align-items:stretch; gap:6px; min-height:0;
-  padding:6px 0 6px 6px; border-left:1px solid var(--hair); overflow-y:auto; scrollbar-width:none;
-}
-.babar::-webkit-scrollbar{ display:none; }
-.bbtn{
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
-  min-height:54px; padding:6px 2px; border:1px solid transparent; background:none; color:var(--ink-60); cursor:pointer;
-  font-family:var(--font-brand); font-weight:500; font-size:.5rem; letter-spacing:.14em; text-transform:uppercase;
-  line-height:1.1; text-align:center; -webkit-tap-highlight-color:transparent; transition:color .12s, border-color .12s;
-}
-.bbtn svg{ width:24px; height:24px; fill:none; stroke:currentColor; stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; }
-.bbtn[aria-pressed="true"], .bbtn[aria-expanded="true"]{ color:var(--ink); border-color:var(--hair); }
-.bbtn:active{ color:var(--ink); }
-body.ba-land .masthead, body.ba-land .title-strip, body.ba-land .below{ display:none; }
+body.ba-land .masthead, body.ba-land .title-strip{ display:none; }
 body.ba-land{ padding-bottom:0; }
 /* in the app the shell keeps its back button over the top left: the first face's name makes room */
 :root[data-shell]:not([data-shell-pad]) body.ba-land{ padding-top:0; }
 :root[data-shell]:not([data-shell-pad]) .ba-screen.land .maps .cart:not([style*="display: none"]) figcaption{ left:56px; }
-@media (prefers-reduced-motion: reduce){ .bbtn{ transition:none; } }
 
-/* ── what the page is, and its sources, below ── */
-.below{ margin-top:calc(var(--gap) * 2); }
+/* ── the bar of tab buttons, as the 3D Region Atlas and the molecular viewer
+   carry it ──────────────────────────────────────────────────────────────
+   A row of buttons along the foot of the screen, each an icon over its word,
+   the one in use drawn in ink and the rest in the quieter grey: Outside,
+   Inside and Both pick what the faces show at every width (one face alone is
+   drawn larger), What it does raises the reading on a phone (hidden where the
+   whole reading shows), and About, at the far right behind a line, raises the
+   page's notes as a window over the brain. Held sideways the bar stands along
+   the right edge, its buttons one to a row. A material, like the header's. */
+.panelbar{
+  grid-area:bar; display:flex; align-items:center; gap:.6rem; min-width:0;
+  padding:.35rem .6rem calc(.35rem + env(safe-area-inset-bottom, 0px));
+  border:1px solid var(--hair);
+  background:color-mix(in srgb, var(--paper) 84%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
+  overflow-x:auto; overflow-y:hidden; scrollbar-width:none; white-space:nowrap;
+}
+.panelbar::-webkit-scrollbar{ display:none; }
+.panelbar-views, .panelbar-btns, .panelbar-end{ display:flex; gap:.15rem; flex:none; }
+.panelbar-views{ padding-right:.45rem; margin-right:.3rem; border-right:1px solid var(--hair); }
+.panelbar-end{ margin-left:auto; padding-left:.6rem; }
+.pbtn.pbtn-ref{ margin-left:.3rem; padding-left:.65rem; border-left:1px solid var(--hair); }
+.pbtn{
+  flex:none; display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:.28rem;
+  min-width:3.9rem; padding:.3rem .55rem .25rem; border:0; background:none; color:var(--ink-60); cursor:pointer;
+  -webkit-tap-highlight-color:transparent; transition:color .18s;
+}
+.pbtn svg{ width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.pbtn span{ font-family:var(--font-brand); font-weight:500; font-size:.5rem; letter-spacing:.14em; text-transform:uppercase; white-space:nowrap; }
+.pbtn[aria-pressed="true"], .pbtn[aria-expanded="true"]{ color:var(--ink); }
+.pbtn[aria-pressed="true"] span, .pbtn[aria-expanded="true"] span{ font-weight:600; }
+@media (hover: hover){ .pbtn:hover{ color:var(--ink); } }
+.pbtn:active{ color:var(--ink); }
+@media (pointer:coarse){ .pbtn{ min-height:44px; } }
+@media (prefers-reduced-motion: reduce){ .pbtn{ transition:none; } }
+/* held sideways: a column at the right edge, the groups one under another */
+.ba-screen.land .panelbar{
+  flex-direction:column; align-items:stretch; justify-content:flex-start; gap:0; min-height:0;
+  padding:.3rem .2rem calc(.3rem + env(safe-area-inset-bottom, 0px));
+  overflow-x:hidden; overflow-y:auto; white-space:normal;
+}
+.ba-screen.land .panelbar > :first-child{ margin-top:auto; }
+.ba-screen.land .panelbar > :last-child{ margin-bottom:auto; }
+.ba-screen.land .panelbar-views, .ba-screen.land .panelbar-btns, .ba-screen.land .panelbar-end{
+  display:grid; grid-template-columns:minmax(0,1fr); gap:0; flex:none;
+  margin:0 0 .25rem; padding:0 0 .25rem; border-right:0; border-bottom:1px solid var(--hair);
+}
+.ba-screen.land .panelbar-end{ margin-left:0; padding-left:0; padding-bottom:0; border-bottom:0; }
+.ba-screen.land .pbtn{ min-width:0; width:100%; min-height:48px; padding:.25rem .1rem .2rem; gap:.2rem; }
+.ba-screen.land .pbtn.pbtn-ref{ margin-left:0; padding-left:.1rem; border-left:0; }
+.ba-screen.land .pbtn span{ font-size:.46rem; letter-spacing:.08em; line-height:1.15; white-space:normal; text-align:center; max-width:100%; }
+
+/* ── the window of notes ────────────────────────────────────────────────
+   What this is and the credits, over the brain's box, raised and put away
+   by the bar's About, its own cross or Escape; it takes the reading's place
+   on a phone upright, and the brain's cell everywhere else. */
+.pop{
+  grid-area:scan; z-index:26; display:flex; flex-direction:column; min-height:0; min-width:0; overflow:hidden;
+  border:1px solid var(--hair); background:var(--paper);
+  opacity:0; transform:translateY(14px);
+  transition:opacity .22s cubic-bezier(.32,.72,0,1), transform .26s cubic-bezier(.32,.72,0,1);
+}
+.pop[hidden]{ display:none; }
+.pop.in{ opacity:1; transform:none; }
+.ba-screen.one .pop{ grid-area:2 / 1 / 4 / 2; }
+.pop-head{ flex:none; display:flex; align-items:center; gap:.7rem; padding:.5rem .6rem .5rem .9rem; border-bottom:1px solid var(--hair); }
+.pop-head b{ font-family:var(--font-brand); font-weight:500; font-size:.66rem; letter-spacing:.28em; text-transform:uppercase; white-space:nowrap; }
+.pop-head small{ font-family:var(--font-serif); font-style:italic; font-size:.82rem; color:var(--ink-60); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pop-x{
+  margin-left:auto; flex:none; width:40px; height:40px; padding:0; border:1px solid var(--hair); border-radius:50%;
+  background:none; color:var(--ink); cursor:pointer; font-size:1.15rem; line-height:1; -webkit-tap-highlight-color:transparent;
+}
+@media (hover: hover){ .pop-x:hover{ background:var(--ink); color:var(--paper); } }
+.pop-x:active{ background:var(--ink); color:var(--paper); }
+.pop-body{ flex:1 1 auto; min-height:0; overflow:auto; overscroll-behavior:contain; touch-action:pan-y; -webkit-overflow-scrolling:touch; padding:.9rem 1rem 1.1rem; }
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more){ .panelbar{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; } }
+@media (prefers-reduced-motion: reduce){ .pop{ transition:none; } }
+
+/* ── what the page is, and its sources: the window the bar's About raises ── */
 .prose h2{
   font-family:var(--font-brand); font-weight:600; font-size:.66rem;
   letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
@@ -562,8 +610,6 @@ body.ba-land{ padding-bottom:0; }
         <div class="r-kick" id="rKick">Nothing picked</div>
         <h2 class="r-name" id="rName">Tap an area on either face</h2>
         <p class="r-where" id="rWhere"></p>
-        <!-- on a phone the reading is this strip, and the button raises the text above it -->
-        <button class="r-more" id="rMore" type="button" aria-expanded="false" aria-controls="rText"><span>More</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 10l5-5 5 5"/></svg></button>
       </div>
       <div class="r-text" id="rText">
         <h3 class="r-h" id="rForH" hidden>What it does</h3>
@@ -587,22 +633,37 @@ body.ba-land{ padding-bottom:0; }
       <header class="scan-head"><b>In 3D</b><small id="scanNote">the MNI152 brain, the picked area lit</small><span class="scan-tools" id="scanTools"></span><button class="ts-btn" id="scanReset" type="button" aria-label="Reset the view and the cuts">Reset</button></header>
       <div class="scan-stage"><canvas id="baRen"></canvas></div>
     </aside>
-    <!-- a phone held sideways: the bar along the right edge picks what the faces' column shows -->
-    <nav class="babar" id="baBar" aria-label="The faces shown">
-      <button class="bbtn" type="button" data-view="outside" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13c0-4.4 3.8-8 8.5-8S21 8.6 21 13c0 2.6-1.6 4.6-4.1 5.3l-.7 2.2h-6.4l-.7-2.2C6.1 17.6 4 15.6 4 13z"/><path d="M9 10.5c1.5-1.4 3.4-1.9 5.4-1.3"/></svg><span>Outside</span></button>
-      <button class="bbtn" type="button" data-view="inside" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13c0-4.4 3.8-8 8.5-8S21 8.6 21 13c0 2.6-1.6 4.6-4.1 5.3l-.7 2.2h-6.4l-.7-2.2C6.1 17.6 4 15.6 4 13z"/><path d="M9.5 15.5c0-3 1.9-5 4.5-5.5M8 12.5c2.3-.2 4.5.4 6.3 2" stroke-dasharray="2 1.6"/></svg><span>Inside</span></button>
-      <button class="bbtn" type="button" data-view="both" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12.5c0-3 2.4-5.5 5.4-5.5s5.1 2.5 5.1 5.5c0 1.9-1 3.3-2.6 3.8l-.4 1.7H6l-.5-1.7c-1.6-.5-3-1.9-3-3.8z"/><path d="M13.5 12.5c0-3 2.3-5.5 5.1-5.5s4.9 2.5 4.9 5.5c0 1.9-1.3 3.3-2.9 3.8l-.5 1.7h-3.9l-.4-1.7c-1.6-.5-2.3-1.9-2.3-3.8z"/></svg><span>Both</span></button>
-    </nav>
-  </section>
-
-  <section class="below prose" aria-labelledby="about-h">
+    <!-- the page's notes, a window over the brain raised from the bar's About -->
+    <aside class="pop" id="popAbout" hidden aria-labelledby="about-h">
+      <header class="pop-head"><b>About</b><small>the map, and where it came from</small><button class="pop-x" type="button" id="aboutX" aria-label="Close the notes">&times;</button></header>
+      <div class="pop-body prose">
     <h2 id="about-h">What this is</h2>
     <p>The two faces are a line map of the classic Brodmann scheme, descending from Brodmann&rsquo;s own 1909 figures: every area outlined and numbered, nothing drawn beneath. Tap an area and it fills in its lobe&rsquo;s colour on the face that shows it, and what it does appears beside the map; tap it again to let it go, and pinch a face to look closer. Anterior is on the left in the external view and, as the scheme is conventionally drawn, on the right in the internal one. The drawing is a schematic; where each area actually sits in a real head, with the atlas&rsquo;s own boundaries, is what the brain in 3D shows: the area lit on the MNI152 brain, which turns under a finger, always on show beside the map on an iPad or a computer and raised over it by <b>Show in 3D</b> on a phone. Brodmann Areas diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN &ndash; Institute for EEG-Neurofeedback / Neurofeedback Academy</a>.</p>
     <p>Brodmann numbered the cortex in 1909 by how its cells are layered, not by what it does, which is why the numbers wander about the brain and why several of his 52 have no agreed human counterpart. The 41 here are those the atlas labels; 12, 31 and 33 are drawn dashed because the atlas does not carry them, and 48, the peri-Sylvian and insular territory, is buried and reaches neither face. Each area is bilateral: Brodmann described cortical types, not hemispheres, so where a function is strongly one-sided the note says so. The boundaries are an approximation to begin with: they were drawn from a handful of post-mortem brains, and no two people&rsquo;s cortex is folded the same way. Read a boundary as a neighbourhood, not a border. Educational, not diagnostic.</p>
     <div class="credits">
       <p>Brodmann diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN</a>. Area data from the Brodmann atlas in <a href="https://github.com/neurolabusc/MRIcron" target="_blank" rel="noopener">MRIcron</a> (BSD), on the MNI152 template.</p>
     </div>
+  </div>
+    </aside>
+    <!-- the bar of tab buttons, as the 3D Region Atlas and the molecular viewer carry it: along the
+         foot, or along the right edge on a phone held sideways. Outside, Inside and Both pick what
+         the faces show; What it does raises the reading on a phone; About raises the notes -->
+    <nav class="panelbar" id="baBar" aria-label="The faces, the reading and the notes">
+      <div class="panelbar-views" role="group" aria-label="The faces shown">
+        <button class="pbtn" type="button" data-view="outside" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 13c0-4.4 3.8-8 8.5-8S21 8.6 21 13c0 2.6-1.6 4.6-4.1 5.3l-.7 2.2h-6.4l-.7-2.2C6.1 17.6 4 15.6 4 13z"/><path d="M9 10.5c1.5-1.4 3.4-1.9 5.4-1.3"/></svg><span>Outside</span></button>
+        <button class="pbtn" type="button" data-view="inside" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 13c0-4.4 3.8-8 8.5-8S21 8.6 21 13c0 2.6-1.6 4.6-4.1 5.3l-.7 2.2h-6.4l-.7-2.2C6.1 17.6 4 15.6 4 13z"/><path d="M9.5 15.5c0-3 1.9-5 4.5-5.5M8 12.5c2.3-.2 4.5.4 6.3 2" stroke-dasharray="2 1.6"/></svg><span>Inside</span></button>
+        <button class="pbtn" type="button" data-view="both" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12.5c0-3 2.4-5.5 5.4-5.5s5.1 2.5 5.1 5.5c0 1.9-1 3.3-2.6 3.8l-.4 1.7H6l-.5-1.7c-1.6-.5-3-1.9-3-3.8z"/><path d="M13.5 12.5c0-3 2.3-5.5 5.1-5.5s4.9 2.5 4.9 5.5c0 1.9-1.3 3.3-2.9 3.8l-.5 1.7h-3.9l-.4-1.7c-1.6-.5-2.3-1.9-2.3-3.8z"/></svg><span>Both</span></button>
+      </div>
+      <div class="panelbar-btns">
+        <button class="pbtn" type="button" id="readBtn" aria-expanded="false" aria-controls="rText"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></svg><span>What it does</span></button>
+      </div>
+      <div class="panelbar-end">
+        <button class="pbtn pbtn-ref" type="button" id="aboutBtn" aria-expanded="false" aria-controls="popAbout"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/></svg><span>About</span></button>
+      </div>
+    </nav>
   </section>
+
+  
 
 </main>
 
@@ -658,6 +719,8 @@ body.ba-land{ padding-bottom:0; }
   var wideQ = window.matchMedia ? window.matchMedia("(min-width: 761px)") : null;
   function isWide(){ return !!(wideQ && wideQ.matches) && !isLand(); }
   var FACE_H = 400 / 600 + 382 / 600;          /* the two faces' heights, stacked, for one width */
+  /* the faces' height for one width, by the bar's pick: both stacked, or one alone */
+  function faceH(){ return faceView === "both" ? FACE_H : faceView === "outside" ? 400 / 600 : 382 / 600; }
   function arrange(){
     var land = isLand(), wide = isWide(), one = !land && !wide;
     var W = screenEl.clientWidth, H = screenEl.clientHeight, g = 14;
@@ -684,10 +747,11 @@ body.ba-land{ padding-bottom:0; }
     /* the faces' width: just over half the width at most; upright, capped
        too so the two take no more than three fifths of the height, the rest
        being the brain's; sideways, what fills the height */
-    var cartW = tall ? Math.min(0.55 * W, (0.62 * H - g) / FACE_H) : Math.min(0.55 * W, (H - g) / FACE_H);
+    var fh = faceH(), both = faceView === "both", gap = both ? g : 0;
+    var cartW = tall ? Math.min(0.55 * W, (0.62 * H - gap) / fh) : Math.min(0.55 * W, (H - gap) / fh);
     cartW = Math.max(220, Math.floor(cartW));
     screenEl.style.setProperty("--cart-w", cartW + "px");
-    screenEl.style.setProperty("--faces-h", Math.ceil(cartW * FACE_H + g) + "px");
+    screenEl.style.setProperty("--faces-h", Math.ceil(cartW * fh + gap) + "px");
   }
   function fit(){
     var top = screenEl.getBoundingClientRect().top + (window.scrollY || window.pageYOffset || 0);
@@ -715,7 +779,7 @@ body.ba-land{ padding-bottom:0; }
       rWhere = document.getElementById("rWhere"), rForH = document.getElementById("rForH"),
       rBody = document.getElementById("rBody"), rNote = document.getElementById("rNote"),
       reading = document.getElementById("reading"), rHead = document.getElementById("rHead"),
-      rMore = document.getElementById("rMore"), rText = document.getElementById("rText");
+      rText = document.getElementById("rText");
   var tiles = {lateral: {}, medial: {}};
 
   function read(){
@@ -734,7 +798,6 @@ body.ba-land{ padding-bottom:0; }
       b.addEventListener("click", function(){ select(48); });
       rNote.appendChild(b);
       rNote.appendChild(document.createTextNode(", the peri-Sylvian and insular territory, is buried and reaches neither face."));
-      rMore.querySelector("span").textContent = "More";
       return;
     }
     var a = B.BY_BA[selected], lobe = lobeOf(a);
@@ -747,7 +810,6 @@ body.ba-land{ padding-bottom:0; }
     rBody.textContent = a.fn;
     rNote.hidden = !a.note;
     rNote.textContent = a.note || "";
-    rMore.querySelector("span").textContent = "What it does";
     reading.scrollTop = 0; rText.scrollTop = 0;
     markMore();
   }
@@ -756,23 +818,53 @@ body.ba-land{ padding-bottom:0; }
   }
   reading.addEventListener("scroll", markMore, { passive: true });
 
-  /* ── the reading on a phone ────────────────────────────────────────────
-     The reading is a strip along the foot carrying the area's name, and its
-     button raises the text above it, over the brain, the strip staying put
-     and the faces in reach; the button again, or Escape, puts it away. On
-     an iPad or a computer the whole reading shows and the button is hidden. */
-  var readOpen = false;
+  /* ── the reading on a phone, and the notes ─────────────────────────────
+     On a phone the reading is a strip along the foot carrying the area's
+     name, and the bar's What it does (or a tap on the strip) raises the text
+     above it, over the brain, the strip staying put and the faces in reach;
+     the button again, or Escape, puts it away. On an iPad or a computer the
+     whole reading shows and the button is hidden. About, at the bar's far
+     right, raises the page's notes as a window over the brain the same way;
+     one of the two at a time. */
+  var readOpen = false, readBtn = document.getElementById("readBtn");
+  var aboutOpen = false, popAbout = document.getElementById("popAbout"), aboutBtn = document.getElementById("aboutBtn");
   function setRead(open){
-    readOpen = !!open;
+    open = !!open;
+    if (open && aboutOpen) setAbout(false);
+    readOpen = open;
     reading.classList.toggle("open", readOpen);
     screenEl.classList.toggle("read-open", readOpen);
-    rMore.setAttribute("aria-expanded", String(readOpen));
+    readBtn.setAttribute("aria-expanded", String(readOpen));
     if (readOpen) rText.scrollTop = 0;
     if (window.MN && open) MN.tap("light");
     fitSoon();
   }
-  rMore.addEventListener("click", function(){ setRead(!readOpen); });
-  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && readOpen && !e.defaultPrevented) setRead(false); });
+  function setAbout(open){
+    open = !!open;
+    if (open === aboutOpen) return;
+    if (open && readOpen) setRead(false);
+    aboutOpen = open;
+    clearTimeout(popAbout._leaving);
+    if (open){
+      popAbout.hidden = false;
+      void popAbout.offsetWidth;
+      popAbout.classList.add("in");
+      popAbout.querySelector(".pop-body").scrollTop = 0;
+    } else {
+      popAbout.classList.remove("in");
+      popAbout._leaving = setTimeout(function(){ if (!aboutOpen) popAbout.hidden = true; }, 280);
+    }
+    aboutBtn.setAttribute("aria-expanded", String(open));
+    if (window.MN && open) MN.tap("light");
+  }
+  readBtn.addEventListener("click", function(){ setRead(!readOpen); });
+  rHead.addEventListener("click", function(){ if (!isWide()) setRead(!readOpen); });
+  aboutBtn.addEventListener("click", function(){ setAbout(!aboutOpen); });
+  document.getElementById("aboutX").addEventListener("click", function(){ setAbout(false); });
+  document.addEventListener("keydown", function(e){
+    if (e.key !== "Escape" || e.defaultPrevented) return;
+    if (aboutOpen) setAbout(false); else if (readOpen) setRead(false);
+  });
 
   /* the address follows the pick, so a link opens on the same area */
   function markAddress(){
@@ -788,11 +880,11 @@ body.ba-land{ padding-bottom:0; }
     if (selected != null && window.MN && !quiet) MN.tap("light");
   }
 
-  /* ── a phone held sideways ──────────────────────────────────────────────
-     The bar along the right edge: Outside, Inside and Both pick what the
-     faces' column shows, remembered between visits. The query is the 3D
-     Region Atlas's: a coarse pointer in landscape, on a screen too short
-     to be a tablet. */
+  /* ── the faces the bar picks, and a phone held sideways ────────────────
+     Outside, Inside and Both pick what the faces show at every width,
+     remembered between visits; held sideways the bar stands along the right
+     edge. The query is the 3D Region Atlas's: a coarse pointer in landscape,
+     on a screen too short to be a tablet. */
   var landQ = window.matchMedia ? window.matchMedia("(pointer: coarse) and (orientation: landscape) and (max-height: 500px)") : null;
   var faceView = "both";
   try{ faceView = localStorage.getItem("vn-ba-view") || "both"; }catch(e){}
@@ -800,9 +892,8 @@ body.ba-land{ padding-bottom:0; }
   var bar = document.getElementById("baBar");
   function isLand(){ return !!(landQ && landQ.matches); }
   function layFaces(){
-    var land = isLand();
-    mapsEl.classList.toggle("only-lateral", land && faceView === "outside");
-    mapsEl.classList.toggle("only-medial", land && faceView === "inside");
+    mapsEl.classList.toggle("only-lateral", faceView === "outside");
+    mapsEl.classList.toggle("only-medial", faceView === "inside");
     bar.querySelectorAll("[data-view]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-view") === faceView)); });
   }
   function onLand(){

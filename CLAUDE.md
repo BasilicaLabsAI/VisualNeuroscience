@@ -246,19 +246,26 @@ Read this first in every session. It is the handover; nothing else needs pasting
   the medial face `.6367`, from the outline's 600×400 and 600×382 boxes). On a phone (v11.74, at the owner's request;
   upright `.one`, the script's mark for `max-width:760px` and not `.land`; sideways `.land`, since v11.57 the script's
   `landQ`, a coarse pointer in landscape under 500px tall, with `body.ba-land` and the masthead hidden) the three views
-  show too and the reading is a strip along the foot (`.r-head`, a grid: kick, name and where at the left, the button
-  `#rMore` at the right, reading What it does, or More with nothing picked) whose button raises the text (`#rText`) over
-  the brain: `.reading.open` spans the brain's cell with the text above the strip (`order:-1`, scrolling inside, the
-  `r-rise` keyframes), the strip staying put and the faces in reach, put away by the button or Escape (`setRead`,
-  `readOpen`, `.read-open` on the screen); on an iPad or a computer the button is hidden and the whole reading shows.
+  show too and the reading is a strip along the foot (`.r-head`: kick, name and where) and the bar's What it does, or a
+  tap on the strip, raises the text (`#rText`) over the brain: `.reading.open` spans the brain's cell with the text above
+  the strip (`order:-1`, scrolling inside, the `r-rise` keyframes), the strip staying put and the faces in reach, put
+  away by the button or Escape (`setRead`, `readOpen`, `.read-open` on the screen); on an iPad or a computer the
+  button's group is hidden and the whole reading shows.
   Upright the faces stand side by side across the top (`"maps" "scan" "read"`, each `.cart` at `aspect-ratio:3 / 2`) and
   the brain takes the room beneath; sideways the faces are stacked down the left at `--cart-w` (`arrange()`: the width
   whose two faces fill the height over the strip, at most 42% of the room beside the bar, one face alone up to 55%), the
   brain beside them, the strip across both (`"maps scan bar" "read read bar"`; open, the text takes the brain's column
-  and the faces span both rows), and the bar along the right edge (`.babar`, `.bbtn`): Outside, Inside and Both pick what
-  the faces' column shows (`faceView`, remembered as `vn-ba-view`; `.maps.only-lateral`, `.only-medial`). The bar's 3D
-  button, the Show in 3D button at the reading's foot (`#rTo3d`) and the panel that rose over the faces left in v11.74,
-  the brain being always on show. In the app the first face's name makes 56px of room for the shell's back button. The
+  and the faces span both rows), and the bar along the right edge. Since v11.75 the bar is the atlases' bar of tab
+  buttons (`.panelbar`, `.pbtn`, copied from `regions.html`; the row `bar` at the foot of every layout's grid, a column
+  at the right edge sideways, one button to a row): Outside, Inside and Both pick what the faces show at every width
+  (`faceView`, remembered as `vn-ba-view`; `.maps.only-lateral`, `.only-medial`; one face alone is drawn larger, its
+  height from `faceH()` in `arrange()`), What it does (`#readBtn` in `.panelbar-btns`, hidden on `.tall` and `.wide`)
+  raises the reading, and About (`#aboutBtn`, `.pbtn-ref` at the far right behind a line) raises `#popAbout`, a `.pop`
+  window over the brain's cell (the reading's place on a phone upright) holding What this is and the credits, which
+  left the foot of the page (`setAbout`, `aboutOpen`; one of the two windows at a time; Escape closes About first).
+  The old bar's 3D button, the Show in 3D button at the reading's foot (`#rTo3d`), the strip's own button (`#rMore`,
+  v11.74 only) and the panel that rose over the faces are gone, the brain being always on show. In the app the first
+  face's name makes 56px of room for the shell's back button. The
   page carries viewer.css's `.ts-btn` inline and loads `stage-lifecycle.js`, `scan-look.js`, `zoom.js` and
   `slice-tool.js`. The 3D Region Atlas keeps its own Brodmann list, and no map since v11.30; since v11.38
   the areas are picked through the same dropdown panel as the AAL regions (`dropPicker` in `regions.html`, shared by

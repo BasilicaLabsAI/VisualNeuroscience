@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.75 — 23 October 2026 — The Brodmann Atlas's bar of tabs
+Commit · Give the Brodmann Area Atlas the atlases' bar of tab buttons: the faces, What it does and About
+
+The Brodmann Area Atlas now carries the bar of tab buttons the 3D Region Atlas and the molecular viewer have, along the foot of the screen, or along the right edge on a phone held sideways: each an icon over its word, the one in use drawn in ink. Outside, Inside and Both pick what the faces show at every width now, not only sideways, one face alone drawn larger; What it does raises the reading on a phone, where the strip along the foot keeps the area's name (a tap on the strip does the same); and About, at the far right behind a line, raises the page's notes, what the map is and where it came from, as a window over the brain, so the page is one screen at every width.
+
 ## v11.74 — 23 October 2026 — Three views on a phone
-Commit · Keep the Brodmann faces' column steady sideways while the text is up, finishing the phone's three views
+Commit `f54cf09` · Keep the Brodmann faces' column steady sideways while the text is up, finishing the phone's three views
 
 On a phone the Brodmann Area Atlas now shows all three views at once, as an iPad does. Held upright, the two faces stand side by side across the top with the brain in 3D beneath them; held sideways, the faces are stacked down the left with the brain beside them, and one face alone is drawn larger when the bar picks it. The reading is a strip along the foot carrying the area's name, with a button, What it does, that raises the text over the brain and puts it away again, the faces staying in reach throughout. The Show in 3D button and the panel it raised are gone, the brain being always on show.
 
