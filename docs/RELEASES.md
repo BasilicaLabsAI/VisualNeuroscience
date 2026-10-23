@@ -12,7 +12,7 @@ text below. Both can also be run from a clone on a machine that can push.
 Versions before v8.6 were released without a ledger and are not recorded.
 
 ## v11.85 — 23 October 2026 — The brain on the app's icon
-Commit · Say in the handover how the Play feature graphic is re-rendered, there being no shoot-play script
+Commit · Give the app a white icon carrying the brain drawing, and draw every icon and splash from it
 
 The app's icon is new: a brain wired with circuit traces and nodes, drawn in black on a white tile, on the iPhone, the iPad, the Mac, Android and the home screens of the web app alike, in place of the coloured ring on black. The splash screens show the same brain in white on the paper black. The website's masthead and browser tab keep the ring.
 
