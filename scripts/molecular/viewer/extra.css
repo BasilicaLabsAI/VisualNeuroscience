@@ -99,3 +99,16 @@ h2, h3, legend, #info .t, .drug .nm, .end .e1 { font-family: var(--display); fon
 .lab.res { font-size: 13.5px; }
 table.pocket { font-size: 13.5px; }
 table.pocket.wide { font-size: 12.5px; }
+
+/* two levels of explanation on the Binding tour: plain words for a first reader, the full
+   account for a student, picked under the progress bar and kept between visits; the plain
+   account of the signal lays out where and when the ions move as a small table */
+.level { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin: 8px 0 2px; }
+.level .lvl-l { font-family: var(--sans); font-size: 13px; color: var(--ink-soft); }
+.level .seg2 { display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--line); }
+.level .lv { border: 0; background: transparent; border-radius: 7px; padding: 4px 12px 5px; font-family: var(--sans); font-weight: 600; font-size: 13.5px; color: var(--ink-soft); cursor: pointer; white-space: nowrap; }
+.level .lv[aria-pressed="true"] { background: var(--seg-on); color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16); }
+.level .lv:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+@media (pointer: coarse) { .level .lv { padding: 7px 14px 8px; } }
+.prose .facts { margin: 4px 0 12px; }
+.prose .facts.plain dd { font-weight: 400; }

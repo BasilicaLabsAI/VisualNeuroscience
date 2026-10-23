@@ -86,7 +86,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `mn-rx-picker` on wide screens), and Binding, Drugs, Compare, Display and About (far right) open `#panel.pop`, the
   window of text, one section at a time, the open section's button closing it; the model centres in the room the
   column leaves (`layout()`). The page's former introduction and credits live in the About pane. The host API gained
-  `picker: "shown"|"hidden"` beside `panel`.
+  `picker: "shown"|"hidden"` beside `panel`. Since v11.73 the Binding tour reads at two levels, Simple (the default) and
+  Detailed, switched under the progress bar (`.level` in `t4_markup.html`; `LEVEL`, `setLevel` and the `simple` body each
+  stop carries beside `body` in `t4_engine.js`, `SIGSIMPLE` the plain line on each receptor's job, `LOOPSIMPLE` the
+  unseen parts, `fnCaptionSimple` the slider's captions; kept as `mn-rx-level`; `level` in the deep links and the host
+  API). The plain account calls the ions salt and, at the signal stop, lays out what moves, where, when and what it
+  means in a `.facts.plain` table, by G protein family. Only the tour has two levels; Drugs and Compare keep one.
 - Verify changes headlessly before releasing: serve `site/` on port 8412
   (`setsid nohup python3 -m http.server 8412 --bind 127.0.0.1 --directory site &`; it dies often, restart it)
   and run Playwright from `app/` with `executablePath: '/opt/pw-browsers/chromium'`. Check phone (390px) and

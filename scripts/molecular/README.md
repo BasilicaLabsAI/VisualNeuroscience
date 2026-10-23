@@ -44,6 +44,7 @@ through, so every form below also works on `molecular.html`.
 | `stop` | 0-based step of the Binding-tab tour (`0` = ligand outside, last = loops) | `?receptor=D2&tab=binding&stop=2` |
 | `panel` | `hidden` collapses the text panel; `shown` opens it | `?receptor=5-HT7&panel=hidden` |
 | `picker` | `hidden` folds the receptor picker away; `shown` brings it out | `?receptor=D3&picker=hidden` |
+| `level` | `simple` or `detailed`: how the Binding tour is written, in plain words or in full. The pick is kept in `localStorage` as `mn-rx-level`; Simple is the default. | `?receptor=D2&level=detailed` |
 
 Hash form, same meaning: `#5-HT2A/drugs/LSD` (`#receptor/tab/drug`). With no
 parameters: dopamine, D2, Binding tab, tour at step 0. The section page keeps
@@ -58,7 +59,8 @@ const v = document.querySelector('iframe').contentWindow.receptorViewer;
 v.show({ receptor: '5-HT1A', tab: 'drugs', drug: 'aripiprazole' });   // any subset of the deep-link keys
 v.show({ panel: 'hidden', picker: 'hidden' });                     // the window and the picker away, the model alone
 v.show({ receptor: 'D3', tab: 'binding', stop: 2 });
-v.state();                // { family, receptor, tab, drug, stop, stops }
+v.show({ level: 'detailed' });                                      // the tour in full; 'simple' for plain words
+v.state();                // { family, receptor, tab, drug, stop, stops, level }
 v.families();             // ['dopamine', 'serotonin']
 v.receptors('serotonin'); // ['5-HT1A', ...]
 v.drugs();                // drugs available for the current receptor
@@ -77,7 +79,7 @@ own URL as the reader navigates; the host keeps the address.
 
 ## What the content covers
 
-- **Binding tab**: the receptor's neurotransmitter (or a stand-in agonist) arrives, docks, switches the receptor on, and the G protein docks, in a four-to-six-step tour generated from measured geometry (contact distances, TM6 movement, ionic lock). Stand-ins where no neurotransmitter-bound structure exists: rotigotine (D3, D4, D5), donitriptan (5-HT1B), BRL-54443 (5-HT1E), lasmiditan (5-HT1F), LSD (5-HT2B), ergotamine (5-HT2C), 5-CT (5-HT5A, 5-HT7). 5-HT2A's serotonin structure has no G protein, so its tour skips the docking step and points to the Gq complex on the Drugs tab.
+- **Binding tab**: the receptor's neurotransmitter (or a stand-in agonist) arrives, docks, switches the receptor on, and the G protein docks, in a four-to-six-step tour generated from measured geometry (contact distances, TM6 movement, ionic lock). Stand-ins where no neurotransmitter-bound structure exists: rotigotine (D3, D4, D5), donitriptan (5-HT1B), BRL-54443 (5-HT1E), lasmiditan (5-HT1F), LSD (5-HT2B), ergotamine (5-HT2C), 5-CT (5-HT5A, 5-HT7). 5-HT2A's serotonin structure has no G protein, so its tour skips the docking step and points to the Gq complex on the Drugs tab. Every stop is written at two levels, Simple and Detailed, switched by the buttons under the progress bar (`LEVEL` in `t4_engine.js`; each stop carries a `simple` body beside its `body`, the loops stop a plain title too): the plain account uses no measurements and few names, calls the ions what they are, salt, and at the signal stop lays out what moves, where, when and what it means as a small table, with a line on the receptor's job in the brain (`SIGSIMPLE`); the slider's captions follow the level (`fnCaptionSimple`).
 - **Drugs tab**: 24 ligands in their own structures (antipsychotics, Parkinson's agonists, triptans and ergots, lasmiditan, LSD, psilocin, tool compounds). 5-HT1D, 5-HT4 and 5-HT6 have no drug-bound structure and say so.
 - **Compare tab**: every subtype of the family in a comparable agonist-bound state, with a Ballesteros-Weinstein pocket table and facts (helix identity to D2 or 5-HT2A, loop-3 and tail length, TM6 shift).
 - **Display tab**: membrane, neurotransmitter, drugs, unresolved beads, labels, slow spin, side-chain mode, D2 isoform.

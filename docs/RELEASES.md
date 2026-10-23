@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.73 — 23 October 2026 — The receptors explained two ways
+Commit · Write the molecular viewer's Binding tour at two levels, Simple and Detailed, with where and when the ions move spelt out
+
+The Binding tour in the molecular viewer now reads at two levels, picked under its progress bar: Simple, in plain words for anyone meeting a receptor for the first time, and Detailed, the full account as before. The plain version tells the same story with few names and no measurements, and at the stop where the signal is sent it sets out in a small table what moves, where, when and what it means: the ions, the charged particles of salt water, flowing out through potassium channels beside a receptor that brakes the cell, released from the cell's internal store by one that wakes it, or let in more readily after one that raises cAMP, and in every case not through the receptor itself, which has no hole. The slider's captions follow the level, the choice is kept, and a link can ask for either.
+
 ## v11.72 — 23 October 2026 — Slicing the Brodmann brain on a phone
-Commit · Fit the Brodmann brain's slice buttons into its head on a phone, with one Reset for the view and the cuts
+Commit `07ae0e2` · Fit the Brodmann brain's slice buttons into its head on a phone, with one Reset for the view and the cuts
 
 The slice tool on the Brodmann Area Atlas's brain now fits a phone. Once Slice was pressed, the head of the brain's panel ran out of room and its Reset and collapse buttons were pushed off the edge. The head now keeps one Reset, the page's, which puts the view home and the brain whole in one press, the tool's own Reset cuts stays out of sight, and on a phone the panel's name and note step aside while slicing is on, the Area button reading its one word, so Slice, Area, Reset and the collapse button all stay in reach. In the apps the page is the one built in, so the tool arrives there with the next build.
 

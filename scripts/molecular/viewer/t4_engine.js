@@ -177,7 +177,22 @@
     if (!FN.anim) return; var a = FN.anim, q = clamp((now - a.t0) / a.dur, 0, 1), e = 0.5 - 0.5 * Math.cos(Math.PI * q);
     fnApply(a.from + (a.to - a.from) * e); if (q >= 1) FN.anim = null;
   }
+  /* the slider's caption in plain words, when the tour is read at that level */
+  function fnCaptionSimple(p) {
+    var lig = M.fn, LN = disp(lig), gk = M.gpOf(M.D.function), gn = gk ? M.GPM[gk].kind : null, hasRest = M.D.rest !== null;
+    if (p < 0.02) return hasRest ? 'Resting: ' + LN + ' is still outside the cell. The faint copy shows where it will land.' : 'No picture of ' + M.key + ' at rest exists, so it is shown already switched on. ' + LN + ' waits outside.';
+    if (hasRest) {
+      if (p < 0.4) return LN + ' slips down into its pocket. The path is a guess.';
+      if (p < 0.62) return 'Landed: ' + M.resName(M.resAt('3.32')) + ' holds its charged end' + (M.D.facts.tm6 >= 2.5 ? ' and the helices start to shift.' : '.');
+      if (p < 0.98) return gn ? 'Helix TM6 swings out and ' + gn + ' slides in to dock.' : (M.D.facts.tm6 >= 2.5 ? 'Helix TM6 swings out.' : 'The helices settle around it.');
+    } else {
+      if (p < 0.55) return LN + ' slips down into its pocket. The path is a guess.';
+      if (p < 0.98) return 'Landed: ' + M.resName(M.resAt('3.32')) + ' holds its charged end' + (gn ? ', and ' + gn + ' slides in to dock.' : '.');
+    }
+    return (gn ? 'Signalling: ' : 'Landed: ') + LN + ' in' + (gn ? ', receptor on, ' + gn + ' docked' : '') + '.';
+  }
   function fnCaption(p) {
+    if (LEVEL === 'simple') return fnCaptionSimple(p);
     var lig = M.fn, LN = disp(lig), gk = M.gpOf(M.D.function), gn = gk ? M.GPM[gk].kind : null, hasRest = M.D.rest !== null, pdb = M.D.confs[M.D.function].key;
     if (p < 0.02) return hasRest ? 'Resting: ' + LN + ' is still in the synapse. The faint copy shows where it will bind.' : 'No resting structure of ' + M.key + ' exists, so it is shown already in its active shape. ' + LN + ' waits outside.';
     if (hasRest) {
@@ -239,6 +254,38 @@
     '5-HT6': 'Found almost only in the brain, where it tunes acetylcholine and glutamate release; 5-HT6 antagonists have been tried, so far without success, for Alzheimer’s disease.',
     '5-HT7': 'In the suprachiasmatic nucleus this signal shifts the circadian clock; 5-HT7 also shapes mood and body temperature, and is blocked by the antidepressant vortioxetine.'
   };
+  /* the plain-words versions: a stand-in named for what it is, a line on each receptor's job
+     in the brain, and the unseen parts, all without the names and measurements above */
+  var STANDIN_SIMPLE = {
+    rotigotine: 'a Parkinson’s medicine that acts like dopamine', donitriptan: 'a migraine drug of the triptan kind, built to act like serotonin', 'BRL-54443': 'a research chemical built to act like serotonin',
+    lasmiditan: 'a migraine medicine that switches it on', LSD: 'the psychedelic, which switches it on', ergotamine: 'a migraine medicine from the ergot fungus, which switches it on', '5-CT': 'a research chemical that is serotonin with one small change'
+  };
+  var SIGSIMPLE = {
+    D1: 'In the striatum, the part of the brain that starts movements, D1 sits on the cells that say go; at the front of the brain it helps hold things in mind.',
+    D2: 'D2 is the brake dopamine uses on cells across the brain. On the cell that released the dopamine it also stops more being released. The medicines for schizophrenia work by blocking it.',
+    D3: 'D3 is packed into the nucleus accumbens, the brain’s reward centre, where this brake shapes wanting and motivation.',
+    D4: 'D4 is packed into the prefrontal cortex, at the front of the brain, where this brake shapes attention and holding things in mind.',
+    D5: 'D5 does what D1 does in its own places, such as the hippocampus, the memory centre, and the thalamus, the brain’s relay. It is partly on even with no dopamine about.',
+    '5-HT1A': 'On the cells that make serotonin this brake stops them releasing more; elsewhere, in the cortex and the hippocampus, it calms cells down. The anxiety medicine buspirone works here, and antidepressants slowly make this brake less sensitive.',
+    '5-HT1B': 'On the endings of serotonin cells it is a brake on release; on the blood vessels of the head and the nerves that carry headache pain it is where the triptan migraine medicines act.',
+    '5-HT1D': 'On the nerve endings that carry headache pain this brake stops them releasing the chemicals that drive a migraine, part of how the triptans stop one.',
+    '5-HT1E': 'What 5-HT1E does in the cortex and the hippocampus is still unknown: no medicine picks it out, so it cannot yet be tested.',
+    '5-HT1F': 'On the nerves that carry headache pain this brake damps the pain signal without tightening blood vessels, which is how the migraine medicine lasmiditan works.',
+    '5-HT2A': 'On the big cells of the cortex this wake-up signal is behind the psychedelic experience of LSD and magic mushrooms; blocking it is part of what makes the newer schizophrenia medicines different.',
+    '5-HT2B': 'On heart valves and the vessels of the lungs this signal makes cells grow, which is why medicines that switch it on, such as the old diet drug fenfluramine, damaged heart valves.',
+    '5-HT2C': 'In the hypothalamus, the brain’s appetite control, this signal makes you feel full, which the withdrawn diet drug lorcaserin used. 5-HT2C is unusual too: the cell edits its instructions before building it.',
+    '5-HT4': 'In the gut this accelerator speeds things along, which the constipation medicine prucalopride uses; in the hippocampus it helps memory.',
+    '5-HT5A': 'What 5-HT5A does is still being worked out; it is found in the cortex and the hippocampus, and no medicine targets it.',
+    '5-HT6': 'Found almost only in the brain, where it tunes the release of other messengers; medicines that block it were tried for Alzheimer’s disease, so far without success.',
+    '5-HT7': 'In the brain’s body clock this signal shifts the clock; 5-HT7 also shapes mood and body temperature, and the antidepressant vortioxetine blocks it.'
+  };
+  var LOOPSIMPLE = {
+    D1: ['A long tail', '<p>D1’s tail inside the cell runs for about a hundred building blocks, and no experiment has seen it clearly, so it is drawn as beads on a made-up path. The tail carries the switches the cell uses to turn the receptor off again.</p>'],
+    D2: ['The floppy loop, and two versions of D2', '<p>Between two of the helices hangs a long floppy loop that no experiment has seen clearly, so it is drawn as beads on a made-up path.</p><p>D2 comes in two versions that differ by a short stretch of this loop (highlighted). The long version, D2L, mostly works on the cell receiving the dopamine; the short one, D2S, mostly sits on the cell that sends it, as a brake on release.</p><div class="inline-iso"><button type="button" class="pill" data-iso="L">Show D2L</button><button type="button" class="pill" data-iso="S">Show D2S</button></div>'],
+    D3: ['A long loop', '<p>Between two of the helices hangs a long loop that no experiment has seen clearly, so it is drawn as beads on a made-up path. D3’s tail inside the cell, by contrast, is tiny.</p>'],
+    D4: ['The loop that varies between people', '<p>Part of D4’s loop inside the cell is a short stretch repeated between two and eleven times, depending on the person; the seven-repeat form has been linked to ADHD. None of the loop has been seen clearly, so it is drawn as beads.</p>'],
+    D5: ['A long tail and long loops', '<p>D5’s tail inside the cell runs for about a hundred building blocks, none seen clearly, and one of its loops outside the cell is unusually long. The unseen parts are drawn as beads on made-up paths.</p>']
+  };
   function stopsFor(M) {
     var MD = M.D, F = MD.facts, rx = M.key, mono = M.mono, lig = MD.funcLig, L = MD.lig[lig], LN = disp(lig), ln = lowerName(lig);
     var gk = M.gpOf(MD.function), G = gk ? MD.gprot[gk] : null, gn = G ? G.kind : null, hasRest = MD.rest !== null, gfam = MD.gp;
@@ -250,24 +297,24 @@
     var depth = Math.round(19.2 - M.EP[2][1]), restPdb = hasRest ? MD.confs[MD.rest].key : null, restLig = hasRest ? MD.confs[MD.rest].name : null;
     var standin = lig === mono ? '' : 'No ' + mono + '-bound structure of ' + rx + ' exists' + (rx === '5-HT2A' ? ' with a G protein' : '') + ', so ' + ln + ', ' + (STANDIN[lig] || 'a drug that activates it') + ', stands in for it. ';
     var stops = [];
-    if (hasRest) stops.push({ p: 0, cam: 'arrive', sc: [], labels: [], title: LN + ' arrives',
+    if (hasRest) stops.push({ kind: 'arrive', p: 0, cam: 'arrive', sc: [], labels: [], title: LN + ' arrives',
       body: '<p>' + rx + ' sits in the membrane of a neuron, its seven helices (TM1 to TM7) crossing from the synapse to the cytoplasm. Here it is resting, in its inactive shape, taken from ' + restPdb + ' with ' + lowerName(restLig) + ' removed.</p><p>The amber molecule is ' + ln + ', not yet bound. ' + standin + 'The faint copy inside the receptor marks its binding site, about ' + depth + '\u00a0Å below the membrane surface, and the dotted line shows a route in (illustrative). Press Bind ' + ln + ' to watch it dock.</p>' });
-    else stops.push({ p: 0, cam: 'arrive', sc: [], labels: [], title: 'Switched on by ' + ln,
+    else stops.push({ kind: 'arrive', p: 0, cam: 'arrive', sc: [], labels: [], title: 'Switched on by ' + ln,
       body: '<p>No structure of ' + rx + ' in its resting state has been solved, so the receptor is shown already in its active shape, from ' + L.pdb + '. Its seven helices cross the membrane from the synapse to the cytoplasm.</p><p>The amber molecule is ' + ln + ', not yet bound. ' + standin + 'The faint copy inside marks its binding site, about ' + depth + '\u00a0Å below the membrane surface, and the dotted line shows a route in (illustrative). Press Bind ' + ln + ' to bring it in' + (gn ? ' and dock ' + gn : '') + '.</p>' });
-    stops.push({ p: 1, cam: 'pocket', sc: L.contacts, labels: [R(d332)].concat(others.slice(0, 4).map(function (r) { return R(r); })), title: LN + ' docks',
+    stops.push({ kind: 'dock', p: 1, cam: 'pocket', sc: L.contacts, labels: [R(d332)].concat(others.slice(0, 4).map(function (r) { return R(r); })), title: LN + ' docks',
       body: '<p>' + LN + '’s protonated amine pairs with ' + rn('3.32') + ' on TM3 (' + L.asp.toFixed(1) + '\u00a0Å).' + hb + '</p><p>' + standin + 'The dashed lines are its polar contacts. The pose comes straight from ' + L.pdb + '.</p>' });
     if (hasRest && F.tm6 >= 2.5) {
       var lockT = F.lock != null && F.lock <= 4.5 ? ' The ionic lock between ' + rn('3.50') + ' of the DRY motif and ' + rn('6.30') + (F.lock_f != null ? ' breaks, opening from ' + F.lock + '\u00a0Å to ' + Math.round(F.lock_f) + '\u00a0Å.' : ' (' + F.lock + '\u00a0Å at rest) breaks.') : '';
       var yT = F.y753 != null && F.y753 >= 1.5 ? ' and ' + rn('7.53') + ' of NPxxY, which moves ' + F.y753 + '\u00a0Å' : '';
       var primed = restLig && DRUGTEXT[restLig] && DRUGTEXT[restLig].act === 'act' ? ' compared with the ' + lowerName(restLig) + ' structure, an agonist-bound crystal whose outer half had already started to move' : '';
-      stops.push({ p: 1, cam: 'switch', sc: ['2.50', '3.40', '3.49', '3.50', '3.51', '5.50', '6.30', '6.44', '6.48', '6.50', '7.49', '7.50', '7.53'].map(M.resAt), labels: [R(M.resAt('3.50')), R(M.resAt('6.30')), R(M.resAt('6.48')), R(M.resAt('6.44')), R(M.resAt('7.53')), R(M.resAt('5.50'))], title: 'Switching on',
+      stops.push({ kind: 'switch', p: 1, cam: 'switch', sc: ['2.50', '3.40', '3.49', '3.50', '3.51', '5.50', '6.30', '6.44', '6.48', '6.50', '7.49', '7.50', '7.53'].map(M.resAt), labels: [R(M.resAt('3.50')), R(M.resAt('6.30')), R(M.resAt('6.48')), R(M.resAt('6.44')), R(M.resAt('7.53')), R(M.resAt('5.50'))], title: 'Switching on',
         body: '<p>The grip on TM5 and TM6 at the top of the pocket propagates down the helices, and the cytoplasmic end of TM6 swings out by about ' + Math.round(F.tm6) + '\u00a0Å' + primed + '.' + lockT + '</p><p>Conserved micro-switches repack on the way: ' + rn('6.48') + ' of CWxP, the PIF motif (' + rn('5.50') + ', ' + rn('3.40') + ', ' + rn('6.44') + ')' + yT + '.</p>' });
     }
     if (G) {
       var couple = gfam === 'Gs' ? rx + ' couples to Gs' + (M.family === 'dopamine' ? ', and in the striatum to its close relative Golf' : '') + '.' : gfam === 'Gq' ? rx + ' couples to Gq and G11.' : rx + ' couples to Gi and Go proteins.';
       var which = gn === 'Go' ? 'This structure has Go' + (G.mini ? ', as an engineered mini-Go' : rx === 'D2' ? ', one of the most abundant G proteins in the brain' : '') + '.' : gn === 'Gq' ? 'This structure has an engineered mini-Gq: the GTPase domain of Gαq, with its helical domain removed, on a Gβγ dimer.' : gn === 'Gs' ? '' : 'This structure has Gi1.';
       var extra = gn === 'Gs' ? 'The Gs here was captured with the nanobody Nb35, which is left out. Its helical domain is only partly resolved.' : gn === 'Go' && rx === 'D2' ? 'Unusually, both domains of Gαo are resolved, including the helical domain that is normally too mobile to see.' : G.mini ? 'The stabilising antibody scFv16 is left out.' : 'Gα’s helical domain moves too much to be resolved, so only its Ras-like domain is shown; the stabilising antibody scFv16 is left out.';
-      stops.push({ p: 1, cam: 'go', sc: G.a5, labels: [R(M.resAt('3.50'))].concat(G.a5.filter(function (r) { return r !== M.resAt('3.50'); }).slice(0, 3).map(function (r) { return R(r); })), title: gn + ' docks',
+      stops.push({ kind: 'gdock', p: 1, cam: 'go', sc: G.a5, labels: [R(M.resAt('3.50'))].concat(G.a5.filter(function (r) { return r !== M.resAt('3.50'); }).slice(0, 3).map(function (r) { return R(r); })), title: gn + ' docks',
         body: '<p>' + [couple, which, 'The α5 helix at the tip of Gα slots into the cavity opened by TM6, reaching ' + rn('3.50') + ' (' + G.r350 + '\u00a0Å) and packing against intracellular loop 2.'].filter(Boolean).join(' ') + '</p><p>' + extra + '</p>' });
     }
     var dock = G ? 'Docking pries GDP out of ' : 'Once ' + (gfam === 'Gs' ? 'Gs' : gfam === 'Gq' ? 'Gq' : 'a Gi or Go protein') + ' docks, the receptor pries GDP out of ';
@@ -275,17 +322,71 @@
       : gfam === 'Gq' ? '<p>' + dock + 'Gαq, which takes up GTP and separates from Gβγ. Gαq switches on phospholipase Cβ, which splits PIP2 into IP3 and diacylglycerol: IP3 releases calcium from internal stores and diacylglycerol activates protein kinase C.</p>'
       : '<p>' + dock + 'Gα, which then takes up GTP and separates from Gβγ. Gαi/o subunits inhibit adenylyl cyclase and lower cAMP, while the freed Gβγ opens GIRK potassium channels and damps voltage-gated calcium channels, quietening the neuron.</p>';
     var noG = !G ? '<p>No structure catches ' + rx + ' with ' + (lig === mono ? mono + ' and a G protein' : 'a G protein') + (rx === '5-HT2A' ? ': the Gq-coupled receptor, captured with the research psychedelic 25-CN-NBOH, is in the Drugs tab.' : ' yet, so the G protein is not shown here.') + '</p>' : '';
-    stops.push({ p: 1, cam: G ? 'signal' : 'switch', sc: [], labels: [], title: 'What the signal does', body: sig + '<p>' + (SIGNOTE[rx] || '') + '</p>' + (gn === 'Go' && rx === 'D2' ? '<p>This Gαo carries K46E, a GNAO1 mutation found in a neurodevelopmental disorder. It holds the complex in this nucleotide-free moment, which made it easier to capture.</p>' : '') + noG });
+    stops.push({ kind: 'signal', p: 1, cam: G ? 'signal' : 'switch', sc: [], labels: [], title: 'What the signal does', body: sig + '<p>' + (SIGNOTE[rx] || '') + '</p>' + (gn === 'Go' && rx === 'D2' ? '<p>This Gαo carries K46E, a GNAO1 mutation found in a neurodevelopmental disorder. It holds the complex in this nucleotide-free moment, which made it easier to capture.</p>' : '') + noG });
     var lt = LOOPTEXT[rx];
     if (!lt) {
       var parts = [];
       M.chains.forEach(function (c) { if (c.isoS) return; var nm = c.key === 'nterm' ? 'the N-terminus' : c.key === 'cterm' ? 'the C-terminal tail' : (segNameS(MD.seg, c.res[0]) || 'a loop').toLowerCase(); parts.push(nm + ' (' + c.n + (c.n === 1 ? ' residue' : ' residues') + ')'); });
       lt = ['Loops and tails', '<p>Parts missing from every structure of ' + rx + ' are drawn as beads on illustrative paths: ' + listJoin(parts) + '. The fusion proteins and antibodies used to solve the structures are left out.</p>'];
     }
-    stops.push({ p: 0, cam: 'loops', sc: [], labels: [], insert: rx === 'D2', ghosts: true, title: lt[0], body: lt[1] });
+    stops.push({ kind: 'loops', p: 0, cam: 'loops', sc: [], labels: [], insert: rx === 'D2', ghosts: true, title: lt[0], body: lt[1] });
+    /* the same tour in plain words, for a reader new to all of this: fewer names, no
+       measurements, the ions called what they are, salt, and where and when they move
+       spelt out; the Simple button in the pane shows these in place of the full account */
+    var sIn = lig === mono ? '' : 'No picture of ' + rx + ' holding ' + mono + ' itself exists' + (rx === '5-HT2A' ? ' with its G protein' : '') + ', so ' + ln + ', ' + (STANDIN_SIMPLE[lig] || 'a drug that switches it on') + ', stands in for it. ';
+    var gWord = gfam === 'Gs' ? 'the kind called Gs, which turns the cell’s activity up' : gfam === 'Gq' ? 'the kind called Gq, which stirs the cell into action with calcium' : 'the kind called Gi and Go, which turn the cell’s activity down';
+    var ions = gfam === 'Gs' ? [
+        ['What moves', 'No ions at once. cAMP, a messenger chemical, rises inside the cell.'],
+        ['Where', 'Inside the cell, just under the receptor. The doorways it goes on to tune, ion channels, are in the cell’s skin nearby.'],
+        ['When', 'Over seconds. The next signals then let sodium and calcium ions, the charged particles of salt water, into the cell more readily.'],
+        ['What it means', 'The cell becomes easier to fire. ' + rx + ' is an accelerator.']]
+      : gfam === 'Gq' ? [
+        ['What moves', 'Calcium ions, charged particles of salt, pour out of the cell’s internal store into its fluid.'],
+        ['Where', 'Inside the cell: a messenger made at the membrane opens doorways on the store, the endoplasmic reticulum. The receptor itself has no hole.'],
+        ['When', 'Within a second or two of the G protein docking, for as long as ' + mono + ' stays bound.'],
+        ['What it means', 'Calcium sets off enzymes and the cell becomes easier to fire. ' + rx + ' wakes the cell up.']]
+      : [
+        ['What moves', 'Potassium ions, charged particles of salt, flow out of the cell, taking positive charge with them.'],
+        ['Where', 'Through potassium channels, doorways in the cell’s skin beside the receptor. The receptor itself has no hole; nothing passes through it.'],
+        ['When', 'A fraction of a second after the G protein docks, for as long as ' + mono + ' stays bound.'],
+        ['What it means', 'The inside of the cell turns more negative and the cell is harder to fire. ' + rx + ' is a brake.']];
+    var sigLead = gfam === 'Gs' ? 'One half switches on an enzyme that makes more cAMP, a messenger that wakes the cell up and sets a chain of other proteins going.'
+      : gfam === 'Gq' ? 'One half switches on an enzyme that cuts a fat in the membrane into two messengers; one of them goes to open doorways on a store inside the cell.'
+      : 'One half turns down the cell’s supply of cAMP, a messenger chemical that keeps it active. The other half goes to open potassium channels, separate doorways in the cell’s skin beside the receptor.';
+    var sDock = (G ? 'Docking cocks the G protein' : 'Once a G protein of ' + (gfam === 'Gs' ? 'the Gs kind' : gfam === 'Gq' ? 'the Gq kind' : 'the Gi or Go kind') + ' docks, the receptor cocks it') + ': it swaps one small fuel molecule, GDP, for a charged one, GTP, and splits in two, each half going to work. ';
+    var sNoG = !G ? '<p>No picture catches ' + rx + ' together with ' + (lig === mono ? mono + ' and ' : '') + 'a G protein' + (rx === '5-HT2A' ? ': the one caught switched on by a research psychedelic, G protein and all, is under Drugs.' : ' yet, so none is shown here.') + '</p>' : '';
+    var sLoop = LOOPSIMPLE[rx];
+    if (!sLoop) {
+      var names = [];
+      M.chains.forEach(function (c) { if (c.isoS) return; names.push(c.key === 'nterm' ? 'its start outside the cell, the N-terminus' : c.key === 'cterm' ? 'its tail inside the cell' : (segNameS(MD.seg, c.res[0]) || 'a loop').toLowerCase()); });
+      sLoop = ['The parts no one has seen', '<p>Parts of ' + rx + ' move about too much for any experiment to see them clearly, so they are drawn as beads on made-up paths: ' + listJoin(names) + '. The helper molecules the experiments needed are left out.</p>'];
+    }
+    var sRx = rx + ' is a receptor: a protein that sits in the skin of a brain cell, the membrane, drawn here as the beads. The outside of the cell is above it and the inside below, and its seven coiled helices, TM1 to TM7, cross from one side to the other.';
+    var sLig = 'The amber molecule is ' + ln + ', the chemical messenger one brain cell releases to speak to the next. It has not landed yet. ' + sIn + 'The faint copy inside the receptor shows where it will go, a pocket between the helices, and the dotted line is one way in. ';
+    stops.forEach(function (s) {
+      if (s.kind === 'arrive') s.simple = hasRest
+        ? '<p>' + sRx + ' It is resting, switched off.</p><p>' + sLig + 'Press Bind ' + ln + ' to watch it land.</p>'
+        : '<p>' + sRx + ' No experiment has caught it empty and at rest, so it is shown already switched on.</p><p>' + sLig + 'Press Bind ' + ln + ' to bring it in' + (gn ? ' and dock ' + gn : '') + '.</p>';
+      else if (s.kind === 'dock') s.simple = '<p>' + LN + ' slips into the pocket and is held there like a key in a lock. One building block of the receptor, ' + rn('3.32') + ' on helix TM3, grips the molecule’s charged end, and the dashed lines are the other spots where the two hold on to each other.</p><p>' + sIn + 'This is just where the experiment found it, in structure ' + L.pdb + '.</p>';
+      else if (s.kind === 'switch') s.simple = '<p>Holding the key turns the lock: the receptor changes shape. The pull at the top of the pocket runs down the helices, and the bottom end of helix TM6 swings outward. It is a tiny move, less than a millionth of a millimetre, but enough to open a slot on the inside face of the cell.' + (F.lock != null && F.lock <= 4.5 ? ' A salt bridge that held the helices together at rest, the ionic lock, breaks open.' : '') + '</p><p>The highlighted building blocks are the small hinges that turn as it does.</p>';
+      else if (s.kind === 'gdock') s.simple = '<p>Inside the cell a G protein is waiting, the pale molecule below. One finger of it, a short helix at its tip, slides into the slot the receptor has opened and locks the two together.</p><p>' + rx + ' works with ' + gWord + '.' + (gfam !== 'Gs' && gfam !== 'Gq' ? ' This picture has ' + gn + '.' : '') + (G.mini ? ' The one here is a trimmed-down version made for the experiment.' : '') + ' The helper antibodies the experiment needed are left out.</p>';
+      else if (s.kind === 'signal') s.simple = '<p>' + sDock + sigLead + '</p><p>The cell sits in salt water, and its inside is salt water too: charged particles, ions, on both sides of its skin. This is the moment they move.</p><dl class="facts plain">' + ions.map(function (r) { return '<dt>' + r[0] + '</dt><dd>' + r[1] + '</dd>'; }).join('') + '</dl><p>' + (SIGSIMPLE[rx] || '') + '</p>' + (gn === 'Go' && rx === 'D2' ? '<p>The G protein in this picture carries a small change, K46E, found in a rare childhood brain disorder. It freezes the pair at this moment, which is what let the experimenters capture it.</p>' : '') + sNoG;
+      else if (s.kind === 'loops') { s.stitle = sLoop[0]; s.simple = sLoop[1]; }
+    });
     return stops;
   }
   var STOPS = [], stopIdx = 0, stepsEl = $('#steps');
+  // ------------------------------------------------------------------ two levels of explanation: plain words for a first reader, the full account for a student; the pick is kept
+  var LEVEL = 'simple';
+  try { var kl = localStorage.getItem('mn-rx-level'); if (kl === 'simple' || kl === 'detailed') LEVEL = kl; } catch (e) {}
+  function paintLevel() { document.querySelectorAll('.level .lv').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-level') === LEVEL)); }); }
+  function setLevel(l) {
+    LEVEL = String(l).toLowerCase() === 'detailed' ? 'detailed' : 'simple'; paintLevel();
+    try { localStorage.setItem('mn-rx-level', LEVEL); } catch (e) {}
+    if (M && STOPS.length) { renderStop(stopIdx); capKind = ''; syncFnUI(); }
+  }
+  document.querySelectorAll('.level .lv').forEach(function (b) { b.addEventListener('click', function () { setLevel(b.getAttribute('data-level')); }); });
+  paintLevel();
   function buildTour() {
     STOPS = stopsFor(M); stopIdx = Math.min(stopIdx, STOPS.length - 1); stepsEl.innerHTML = ''; stepsEl.style.gridTemplateColumns = 'repeat(' + STOPS.length + ', 1fr)';
     STOPS.forEach(function (s, i) {
@@ -303,7 +404,7 @@
   }
   function renderStop(i) {
     stopIdx = i; var s = STOPS[i];
-    $('#stop-title').textContent = s.title; $('#stop-body').innerHTML = s.body;
+    $('#stop-title').textContent = LEVEL === 'simple' && s.stitle ? s.stitle : s.title; $('#stop-body').innerHTML = LEVEL === 'simple' && s.simple ? s.simple : s.body;
     $('#stop-count').textContent = (i + 1) + ' of ' + STOPS.length;
     $('#prev').disabled = i === 0; $('#next').textContent = i === STOPS.length - 1 ? 'Start again' : 'Next';
     Array.prototype.forEach.call(stepsEl.children, function (b, k) { if (k === i) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); b.classList.toggle('done', k < i); });

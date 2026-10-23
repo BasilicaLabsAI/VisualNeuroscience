@@ -314,7 +314,7 @@
     if (el) { el.checked = true; el.dispatchEvent(new Event('change')); } else applyDrug(hit, true);
     return true;
   }
-  function show(o, instant) {   // o: { family, receptor, tab, drug, stop, panel }
+  function show(o, instant) {   // o: { family, receptor, tab, drug, stop, panel, picker, level }
     o = o || {};
     var rx = findKey(o.receptor), fam = rx ? D.models[rx].family : (o.family && FAMINFO[String(o.family).toLowerCase()] ? String(o.family).toLowerCase() : null);
     if (fam) setFamily(fam, instant);
@@ -322,6 +322,7 @@
     var tab = TABALIAS[String(o.tab || '').toLowerCase()]; if (tab) selectTab(tab);
     if (o.drug) { if (curTab() !== 'drugs') selectTab('drugs'); setDrug(o.drug); }
     if (o.stop != null && MODE === 'da') setStop(Math.max(0, Math.min(STOPS.length - 1, parseInt(o.stop, 10) || 0)), instant);
+    if (o.level) setLevel(o.level);
     if (o.panel === 'hidden') setFolded(true);
     if (o.panel === 'shown') setFolded(false);
     if (o.picker === 'hidden') setPicker(false, false);
@@ -329,13 +330,13 @@
   }
   function fromLocation() {
     var q = new URLSearchParams(location.search), o = {};
-    ['family', 'receptor', 'tab', 'drug', 'stop', 'panel', 'picker'].forEach(function (k) { if (q.has(k)) o[k] = q.get(k); });
+    ['family', 'receptor', 'tab', 'drug', 'stop', 'panel', 'picker', 'level'].forEach(function (k) { if (q.has(k)) o[k] = q.get(k); });
     if (q.has('rx')) o.receptor = q.get('rx');
     var h = location.hash.replace(/^#\/?/, '');   // #5-HT2A/drugs/LSD
     if (h && !o.receptor) { var p = h.split('/'); o.receptor = decodeURIComponent(p[0]); if (p[1]) o.tab = p[1]; if (p[2]) o.drug = decodeURIComponent(p[2]); }
     return o;
   }
-  function viewerState() { return { family: FAMILY, receptor: RX, tab: curTab(), drug: curTab() === 'drugs' ? curDrug : null, stop: stopIdx, stops: STOPS.length }; }
+  function viewerState() { return { family: FAMILY, receptor: RX, tab: curTab(), drug: curTab() === 'drugs' ? curDrug : null, stop: stopIdx, stops: STOPS.length, level: LEVEL }; }
   var emitQ = null;
   function emit() { if (window.parent === window || emitQ) return; emitQ = setTimeout(function () { emitQ = null; try { window.parent.postMessage(Object.assign({ type: 'receptor-viewer' }, viewerState()), '*'); } catch (e) {} }, 0); }
   window.receptorViewer = {
