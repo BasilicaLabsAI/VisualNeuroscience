@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.80 — 23 October 2026 — Boxes that line up sideways
+Commit · Fill the Brodmann faces' boxes to the column's height on a phone held sideways, so they line up with the brain's
+
+On a phone held sideways, picking one face of the Brodmann map left its box shorter than the brain's beside it, with a gap beneath, since the box took the drawing's own proportion while the brain's box filled the row. The faces' boxes now fill the column's height, the drawing centred in each, so they line up with the brain's box whichever faces show, and with the text up the column fills the height beside it.
+
 ## v11.79 — 23 October 2026 — The posters are back, with a page each
-Commit · Bring the posters back and give each a placeholder page whose openings are counted
+Commit `75c040e` · Bring the posters back and give each a placeholder page whose openings are counted
 
 On second thought the posters stay: everything v11.78 took out is back, the box on the home page and in the app's Library tab, the section in the terms, the item in the privacy policy, the page in the nav and the precache. Each poster now has a page of its own, a placeholder while the shop is set up, with the head of the poster, its words, a note that it is not on sale yet, a button, I would buy this, that counts the wish once per browser, and on the website a line to hear when it is on sale. The Buy button and the picture on the posters page open it, and each opening is counted, so the interest in each poster can be read off the usage counts in the Firebase console.
 

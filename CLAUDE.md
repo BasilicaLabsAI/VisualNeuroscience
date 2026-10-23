@@ -262,7 +262,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   button's group is hidden and the whole reading shows.
   Upright the faces stand side by side across the top (`"maps" "scan" "read"`, each `.cart` at `aspect-ratio:3 / 2`) and
   the brain takes the room beneath; sideways the faces are stacked down the left at `--cart-w` (`arrange()`: the width
-  whose two faces fill the height over the strip, at most 42% of the room beside the bar, one face alone up to 55%), the
+  whose two faces fill the height over the strip, at most 42% of the room beside the bar, one face alone up to 55%; since
+  v11.80 the boxes fill the column's height, `grid-template-rows:minmax(0,1fr)` per face and `aspect-ratio:auto`, the
+  drawing centred in each, so they line up with the brain's box whichever faces show), the
   brain beside them, the strip across both (`"maps scan bar" "read read bar"`; open, the text takes the brain's column
   and the faces span both rows), and the bar along the right edge. Since v11.75 the bar is the atlases' bar of tab
   buttons (`.panelbar`, `.pbtn`, copied from `regions.html`; the row `bar` at the foot of every layout's grid, a column
