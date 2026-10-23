@@ -159,6 +159,7 @@ svg{ display:block; }
 .reading{
   border:1px solid var(--hair); padding:1rem 1.1rem 1.1rem; min-height:0; min-width:0;
   overflow-y:auto; overscroll-behavior:contain; display:flex; flex-direction:column;
+  touch-action:pan-y; -webkit-overflow-scrolling:touch;
 }
 /* where the reading runs on past its box, its foot fades, so it reads as
    something to scroll rather than something cut off */
@@ -314,6 +315,109 @@ svg{ display:block; }
   .ba-screen.tall .scan-x, .ba-screen.wide .scan-x{ display:none; }
   .ba-screen.tall .r-foot, .ba-screen.wide .r-foot{ display:none; }
 }
+
+/* ── the slice tool, as viewer.css sets it for the atlases: a cut on each
+   axis run from the stage's edges, through the lit area with the brain ── */
+/* ── slice tool: a cut on each axis, run from the edges ─────────────────
+   Each control sits on the edge it works along — up–down down one side,
+   front–back down the other, left–right along the bottom — so the middle of
+   the box stays clear and the brain is never behind a slider. Each name
+   reads in the direction its own cut travels. */
+.slice-panel{
+  position:absolute; inset:0; z-index:2;
+  display:none; pointer-events:none;
+}
+.slice-panel.on{ display:block; }
+
+.slice-edge{
+  position:absolute; pointer-events:auto;
+  display:flex; align-items:center; gap:.35rem;
+}
+.slice-edge .ax{
+  font-family:var(--font-brand); font-weight:500; font-size:.48rem;
+  letter-spacing:.2em; text-transform:uppercase; white-space:nowrap;
+  color:#9A9A9A; transition:color .2s ease;
+  text-shadow:0 0 4px #000, 0 0 4px #000;
+}
+.slice-edge.cutting .ax{ color:#FFFFFF; }
+
+/* the two vertical edges */
+.slice-edge.left, .slice-edge.right{
+  top:10px; bottom:10px; width:30px;
+  flex-direction:column; justify-content:center;
+}
+.slice-edge.left{ left:3px; }
+.slice-edge.right{ right:3px; }
+.slice-edge.left .ax{ writing-mode:vertical-rl; transform:rotate(180deg); }
+.slice-edge.right .ax{ writing-mode:vertical-rl; }
+
+/* the bottom edge, held clear of both verticals */
+.slice-edge.bottom{ left:36px; right:36px; bottom:5px; height:20px; }
+
+.slice-range{
+  -webkit-appearance:none; appearance:none;
+  background:transparent; cursor:pointer; margin:0;
+}
+.slice-edge.bottom .slice-range{ flex:1; min-width:0; height:18px; }
+.slice-edge.left .slice-range, .slice-edge.right .slice-range{
+  writing-mode:vertical-lr; direction:rtl;
+  width:18px; flex:1; min-height:0;
+}
+.slice-range::-webkit-slider-runnable-track{
+  background:rgba(255,255,255,.28); border-radius:2px;
+}
+.slice-edge.bottom .slice-range::-webkit-slider-runnable-track{ height:2px; }
+.slice-edge.left .slice-range::-webkit-slider-runnable-track,
+.slice-edge.right .slice-range::-webkit-slider-runnable-track{ width:2px; }
+.slice-range::-moz-range-track{ background:rgba(255,255,255,.28); border-radius:2px; }
+.slice-range::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none;
+  width:12px; height:12px; border-radius:50%;
+  background:#FFFFFF; border:1px solid #000000; margin-top:-5px;
+}
+.slice-edge.left .slice-range::-webkit-slider-thumb,
+.slice-edge.right .slice-range::-webkit-slider-thumb{ margin:0 0 0 -5px; }
+.slice-range::-moz-range-thumb{
+  width:12px; height:12px; border-radius:50%;
+  background:#FFFFFF; border:1px solid #000000;
+}
+.slice-range:focus-visible{ outline:1px solid #FFFFFF; outline-offset:3px; }
+
+/* Slice, and Slice regions beside it, ink in while pressed; with Reset
+   cuts they stand as tall as the Centre planes button they share a row
+   with, so the row reads as one line */
+.slice-btn.active, .slice-regions.active{ background:var(--ink); color:var(--paper); }
+.slice-btn, .slice-regions, .slice-reset{ height:1.8rem; padding:0 .6rem; white-space:nowrap; }
+
+@media (max-width:760px){
+  .slice-edge.left, .slice-edge.right{ width:24px; top:6px; bottom:6px; }
+  .slice-edge.bottom{ left:28px; right:28px; bottom:3px; }
+  .slice-edge .ax{ font-size:.42rem; letter-spacing:.14em; }
+  .slice-btn, .slice-regions, .slice-reset{ height:1.6rem; padding:0 .45rem; font-size:.5rem; }
+}
+/* under a finger each slider is a strip 44 points across, its thumb 24 and
+   its track 4, the bottom one held clear of the two at the sides; the
+   label keeps its size, the strip's width around the track is the target */
+@media (pointer:coarse){
+  .slice-edge.left, .slice-edge.right{ width:44px; top:4px; bottom:4px; }
+  .slice-edge.left{ left:0; }
+  .slice-edge.right{ right:0; }
+  .slice-edge.bottom{ left:48px; right:48px; bottom:0; height:44px; }
+  .slice-edge.bottom .slice-range{ height:44px; }
+  .slice-edge.left .slice-range, .slice-edge.right .slice-range{ width:44px; }
+  .slice-edge.bottom .slice-range::-webkit-slider-runnable-track{ height:4px; }
+  .slice-edge.left .slice-range::-webkit-slider-runnable-track,
+  .slice-edge.right .slice-range::-webkit-slider-runnable-track{ width:4px; }
+  .slice-range::-webkit-slider-thumb{ width:24px; height:24px; margin-top:-10px; }
+  .slice-edge.left .slice-range::-webkit-slider-thumb,
+  .slice-edge.right .slice-range::-webkit-slider-thumb{ margin:0 0 0 -10px; }
+  .slice-range::-moz-range-track{ height:4px; }
+  .slice-edge.left .slice-range::-moz-range-track, .slice-edge.right .slice-range::-moz-range-track{ width:4px; height:auto; }
+  .slice-range::-moz-range-thumb{ width:24px; height:24px; }
+}
+.scan-tools{ display:inline-flex; align-items:center; gap:.35rem; flex:none; }
+.scan-head .slice-btn, .scan-head .slice-regions, .scan-head .slice-reset{ height:auto; padding:.5rem .7rem .42rem; }
+@media (pointer:coarse){ .scan-head .slice-btn, .scan-head .slice-regions, .scan-head .slice-reset{ min-height:44px; } }
 
 /* ── the brain in 3D ─────────────────────────────────────────────────────
    The picked area lit on the MNI152 brain, rendered in 3D and nothing else.
@@ -477,7 +581,7 @@ body.ba-land{ padding-bottom:0; }
          show, on an iPad or a computer; a panel rising over the faces on a
          phone, the viewer fetched on first use -->
     <aside class="scan" id="baScan" hidden aria-label="The picked area on the brain in 3D">
-      <header class="scan-head"><b>In 3D</b><small id="scanNote">the MNI152 brain, the picked area lit</small><button class="ts-btn" id="scanReset" type="button" aria-label="Reset the view">Reset</button><button class="scan-x" type="button" id="scanDown" aria-label="Collapse the brain"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg></button></header>
+      <header class="scan-head"><b>In 3D</b><small id="scanNote">the MNI152 brain, the picked area lit</small><span class="scan-tools" id="scanTools"></span><button class="ts-btn" id="scanReset" type="button" aria-label="Reset the view">Reset</button><button class="scan-x" type="button" id="scanDown" aria-label="Collapse the brain"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg></button></header>
       <div class="scan-stage"><canvas id="baRen"></canvas></div>
     </aside>
     <!-- a phone held sideways: the bar along the right edge -->
@@ -509,6 +613,7 @@ body.ba-land{ padding-bottom:0; }
 <script src="assets/stage-lifecycle.js"></script>
 <script src="assets/scan-look.js"></script>
 <script src="assets/zoom.js"></script>
+<script src="assets/slice-tool.js"></script>
 <script src="assets/diagram-gestures.js"></script>
 <script>
 "use strict";
@@ -770,6 +875,10 @@ body.ba-land{ padding-bottom:0; }
       /* the wheel and a pinch zoom the brain, a drag turns it */
       var Z = window.MN_ZOOM || window.MN_WHEEL;
       if (Z) Z.attach({ stage: scanEl.querySelector(".scan-stage"), nv: ren });
+      /* the cuts, as the atlases have them: Slice in the head puts a slider
+         on each edge of the stage, and Slice area takes the cuts through
+         the lit area with the brain */
+      if (window.MN_SLICE) MN_SLICE.attach({ stage: scanEl.querySelector(".scan-stage"), tools: document.getElementById("scanTools"), nv: ren, regions: "Slice area" });
       scanState = "ready";
       scanNote.textContent = "the MNI152 brain, the picked area lit";
       paintScan();

@@ -226,8 +226,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   placed over the faces' cell (`grid-column:1 / 2; grid-row:1 / 2`, both lines named so the cell is its containing
   block), over the two faces and nothing else, a panel with one NiiVue render (`ren`, fetched on first open, `show3Dcrosshair:false`, the MNI152
   template with `assets/brodmann.nii.gz` over it at 0.9), the picked area lit by `paintScan` from `MN_LOOK.labelTable`
-  and the lobe colour, zoom and rotation from `zoom.js`, Reset (`resetView`, the angle and scale kept in `home`) and a
-  collapse button (`#scanDown`); it rises from below and collapses back down (`.scan.in`), closes on Escape too, and
+  and the lobe colour, zoom and rotation from `zoom.js`, Reset (`resetView`, the angle and scale kept in `home`), the
+  atlases' Slice tool (v11.71: `slice-tool.js`, attached as the scan becomes ready with its buttons in `#scanTools` in
+  the head, `regions: "Slice area"` cutting the lit area with the brain; its styles carried inline as `.ts-btn`'s are)
+  and a collapse button (`#scanDown`); it rises from below and collapses back down (`.scan.in`), closes on Escape too, and
   the reading and the bar stay in view, so a new pick repaints it. On an iPad or a computer (v11.66: `isWide()`, the
   `(min-width: 761px)` query and not `.land`) the brain is always on show instead, opened with the page by
   `applyScanMode` (`openScan(true)`, never collapsed, Escape ignored, the foot's button and the collapse button hidden):
@@ -239,7 +241,7 @@ Read this first in every session. It is the handover; nothing else needs pasting
   sets `--cart-w`, the faces' width (at most 55% of the screen; upright, capped so the two take 62% of the height at
   most), and `--faces-h`, their height together; each `.cart` is cut to its drawing (`height:calc(var(--cart-w) * .6667)`,
   the medial face `.6367`, from the outline's 600×400 and 600×382 boxes). The page carries viewer.css's `.ts-btn` inline and
-  loads `stage-lifecycle.js`, `scan-look.js` and `zoom.js`. On a phone held sideways (since v11.57: the script's
+  loads `stage-lifecycle.js`, `scan-look.js`, `zoom.js` and `slice-tool.js`. On a phone held sideways (since v11.57: the script's
   `landQ`, a coarse pointer in landscape under 500px tall, `#baScreen.land` and `body.ba-land`, the masthead hidden) a
   bar of named buttons stands along the right edge (`.babar`, `.bbtn`): Outside, Inside and Both pick what the faces
   show (`faceView`, remembered as `vn-ba-view`; `.maps.only-lateral`, `.only-medial`, `.side`) across the top of the

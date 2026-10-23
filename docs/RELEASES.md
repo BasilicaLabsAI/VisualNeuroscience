@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.71 — 23 October 2026 — Cuts through the Brodmann brain
+Commit · Give the Brodmann Area Atlas's brain the atlases' Slice tool, and make the reading's box a touch scroller
+
+The brain in 3D on the Brodmann Area Atlas now has the Slice tool the 3D Region Atlas carries: Slice, in the brain's head beside Reset, puts a slider on each edge of the stage, one cut per axis run from the centre, and Slice area takes the cuts through the lit area with the brain, so the picked area can be seen where it runs inside. Reset cuts puts the head back whole. The reading's box, which scrolls when an area's account runs past it, now says so to a finger as well as a mouse.
+
 ## v11.70 — 23 October 2026 — A brain that holds its size
-Commit · Give the Brodmann reading a set share of the height sideways, so the brain's box is one size whichever area is picked
+Commit `cfc2236` · Give the Brodmann reading a set share of the height sideways, so the brain's box is one size whichever area is picked
 
 On an iPad held sideways, or a computer, the brain in 3D under the Brodmann reading grew and shrank with the reading: a long account of an area pushed the brain down, a short one let it up. The reading's box is now a set share of the height, a long reading scrolling inside it, so the brain's box is the same size whichever area is picked.
 
