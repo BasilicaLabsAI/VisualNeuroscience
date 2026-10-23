@@ -223,42 +223,44 @@ Read this first in every session. It is the handover; nothing else needs pasting
   Atlas.
   Since v11.15, at the owner's request, it is one screen and nothing else: the two faces of the map
   (`brodmann-outline.js`) and the reading of the picked area (`brodmann-areas.js`), fitted to the window under the
-  header (the script measures `--screen-top`). On a phone the faces stack with the reading beneath; wider, the reading
-  is a column on the left and the faces sit side by side or stacked, whichever draws them larger. No list, scans,
-  graph or export; BA48, on neither face, is reached from the empty reading, and every reading links to the area on
-  the scan in the 3D Region Atlas. `#ba=<n>` opens on an area, the address follows the pick, and the MCP server's
-  `brodmann_area` answers link there. The page never links away to the 3D Region Atlas (the owner's wish, v11.59):
-  on a phone, Show in 3D at the reading's foot (`#rTo3d`, a bordered button with the cube glyph, filled and reading Back
-  to the map while the brain is up; `markScan` sets its word and `aria-expanded`) raises `#baScan`, a child of `#baScreen`
-  placed over the faces' cell (`grid-column:1 / 2; grid-row:1 / 2`, both lines named so the cell is its containing
-  block), over the two faces and nothing else, a panel with one NiiVue render (`ren`, fetched on first open, `show3Dcrosshair:false`, the MNI152
-  template with `assets/brodmann.nii.gz` over it at 0.9), the picked area lit by `paintScan` from `MN_LOOK.labelTable`
-  and the lobe colour, zoom and rotation from `zoom.js`, Reset (`resetView`, the angle and scale kept in `home`), the
-  atlases' Slice tool (v11.71: `slice-tool.js`, attached as the scan becomes ready with its buttons in `#scanTools` in
-  the head, `regions: "Slice area"` cutting the lit area with the brain; its styles carried inline as `.ts-btn`'s are;
-  since v11.72 the tool's Reset cuts is hidden and the head's one Reset, `resetView`, puts back the view and the cuts
-  together, and on a phone, `max-width:760px`, the head's name and note hide while slicing is on,
-  `:has(.slice-btn.active)`, and `.lbl-more` hides so the Area button reads its one word, since four buttons overran
-  the head) and a collapse button (`#scanDown`); it rises from below and collapses back down (`.scan.in`), closes on Escape too, and
-  the reading and the bar stay in view, so a new pick repaints it. On an iPad or a computer (v11.66: `isWide()`, the
-  `(min-width: 761px)` query and not `.land`) the brain is always on show instead, opened with the page by
-  `applyScanMode` (`openScan(true)`, never collapsed, Escape ignored, the foot's button and the collapse button hidden):
-  `arrange()` marks the screen `.tall` (taller than wide, an iPad upright: the faces beside the reading, the brain the
-  whole width beneath, `grid-template-areas "read maps" "scan scan"`) or `.wide` (an iPad sideways, a computer: the
-  faces down the right at the width that fills the height, the brain under the reading, `"read maps" "scan maps"`, the
-  reading's row a set share of the height, `clamp(220px, 38%, 360px)` since v11.70, so the brain's box never changes
-  with the pick and a long reading scrolls inside its box), and
+  header (the script measures `--screen-top`). On every screen the three views show together, the two faces, the
+  brain in 3D and the reading of the picked area. The brain (`#baScan`) is a grid item, `grid-area:scan`, shown once the
+  script marks the screen's layout (`.one`, `.land`, `.tall` or `.wide`), with one NiiVue render (`ren`, fetched as the
+  page opens by `applyScanMode` and `ensureScan`, `show3Dcrosshair:false`, the MNI152 template with
+  `assets/brodmann.nii.gz` over it at 0.9), the picked area lit by `paintScan` from `MN_LOOK.labelTable` and the lobe
+  colour, zoom and rotation from `zoom.js`, Reset (`resetView`, the angle and scale kept in `home`, clearing the cuts
+  too since v11.72) and the atlases' Slice tool (v11.71: `slice-tool.js`, attached as the scan becomes ready with its
+  buttons in `#scanTools` in the head, `regions: "Slice area"` cutting the lit area with the brain; its styles carried
+  inline as `.ts-btn`'s are; the tool's Reset cuts hidden, and on a phone, `max-width:760px`, the head's name and note
+  hide while slicing is on, `:has(.slice-btn.active)`, and `.lbl-more` hides so the Area button reads its one word, since
+  four buttons overran the head). No list, graph or export; BA48, on neither face, is reached from the empty reading,
+  and the page never links away to the 3D Region Atlas (the owner's wish, v11.59). `#ba=<n>` opens on an area, the
+  address follows the pick, and the MCP server's `brodmann_area` answers link there. On an iPad or a computer (v11.66:
+  `isWide()`, the `(min-width: 761px)` query and not `.land`) `arrange()` marks the screen `.tall` (taller than wide, an
+  iPad upright: the faces beside the reading, the brain the whole width beneath, `grid-template-areas "read maps" "scan
+  scan"`) or `.wide` (an iPad sideways, a computer: the faces down the right at the width that fills the height, the
+  brain under the reading, `"read maps" "scan maps"`, the reading's row a set share of the height, `clamp(220px, 38%,
+  360px)` since v11.70, so the brain's box never changes with the pick and a long reading scrolls inside its box), and
   sets `--cart-w`, the faces' width (at most 55% of the screen; upright, capped so the two take 62% of the height at
   most), and `--faces-h`, their height together; each `.cart` is cut to its drawing (`height:calc(var(--cart-w) * .6667)`,
-  the medial face `.6367`, from the outline's 600×400 and 600×382 boxes). The page carries viewer.css's `.ts-btn` inline and
-  loads `stage-lifecycle.js`, `scan-look.js`, `zoom.js` and `slice-tool.js`. On a phone held sideways (since v11.57: the script's
-  `landQ`, a coarse pointer in landscape under 500px tall, `#baScreen.land` and `body.ba-land`, the masthead hidden) a
-  bar of named buttons stands along the right edge (`.babar`, `.bbtn`): Outside, Inside and Both pick what the faces
-  show (`faceView`, remembered as `vn-ba-view`; `.maps.only-lateral`, `.only-medial`, `.side`) across the top of the
-  screen, the reading beneath them in two columns (since v11.60: the grid's rows 62:38, `.r-head` left and `.r-text`
-  right; upright the two are stacked in the reading's flex column), the bar spanning both rows at the edge, and 3D
-  (`#scanBtn`) raises the same panel over the faces alone. In the app the first face's name makes
-  56px of room for the shell's back button. The 3D Region Atlas keeps its own Brodmann list, and no map since v11.30; since v11.38
+  the medial face `.6367`, from the outline's 600×400 and 600×382 boxes). On a phone (v11.74, at the owner's request;
+  upright `.one`, the script's mark for `max-width:760px` and not `.land`; sideways `.land`, since v11.57 the script's
+  `landQ`, a coarse pointer in landscape under 500px tall, with `body.ba-land` and the masthead hidden) the three views
+  show too and the reading is a strip along the foot (`.r-head`, a grid: kick, name and where at the left, the button
+  `#rMore` at the right, reading What it does, or More with nothing picked) whose button raises the text (`#rText`) over
+  the brain: `.reading.open` spans the brain's cell with the text above the strip (`order:-1`, scrolling inside, the
+  `r-rise` keyframes), the strip staying put and the faces in reach, put away by the button or Escape (`setRead`,
+  `readOpen`, `.read-open` on the screen); on an iPad or a computer the button is hidden and the whole reading shows.
+  Upright the faces stand side by side across the top (`"maps" "scan" "read"`, each `.cart` at `aspect-ratio:3 / 2`) and
+  the brain takes the room beneath; sideways the faces are stacked down the left at `--cart-w` (`arrange()`: the width
+  whose two faces fill the height over the strip, at most 42% of the room beside the bar, one face alone up to 55%), the
+  brain beside them, the strip across both (`"maps scan bar" "read read bar"`; open, the text takes the brain's column
+  and the faces span both rows), and the bar along the right edge (`.babar`, `.bbtn`): Outside, Inside and Both pick what
+  the faces' column shows (`faceView`, remembered as `vn-ba-view`; `.maps.only-lateral`, `.only-medial`). The bar's 3D
+  button, the Show in 3D button at the reading's foot (`#rTo3d`) and the panel that rose over the faces left in v11.74,
+  the brain being always on show. In the app the first face's name makes 56px of room for the shell's back button. The
+  page carries viewer.css's `.ts-btn` inline and loads `stage-lifecycle.js`, `scan-look.js`, `zoom.js` and
+  `slice-tool.js`. The 3D Region Atlas keeps its own Brodmann list, and no map since v11.30; since v11.38
   the areas are picked through the same dropdown panel as the AAL regions (`dropPicker` in `regions.html`, shared by
   `#rpick` and `#bapick`: button `#bapickBtn`, panel `#bapickPop`, list `#balist` a `.rpick-list` grouped by lobe).
 - The Hallucinations study (`site/hallucinations.html`, the visualisation of Boksa 2009 that the owner calls the

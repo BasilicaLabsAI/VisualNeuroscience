@@ -189,25 +189,21 @@ svg{ display:block; }
   font-style:italic; font-size:.88rem; line-height:1.5; color:var(--ink-60);
   border-left:2px solid var(--ink-35); padding-left:.7rem; margin-top:.8rem;
 }
-.r-foot{
-  margin-top:auto; padding-top:.9rem; font-family:var(--font-brand); font-weight:500;
-  font-size:.6rem; letter-spacing:.22em; text-transform:uppercase;
-}
-.r-foot a{ text-decoration:underline; text-underline-offset:3px; }
-/* the button that raises the brain: the site's button, the cube beside its
-   word, filled while the brain is up */
-.r-3d{
-  display:inline-flex; align-items:center; gap:.55rem; border:1px solid var(--hair); background:var(--paper); color:var(--ink);
-  padding:.55rem .95rem .5rem .8rem; font-family:var(--font-brand); font-weight:500; font-size:.62rem; letter-spacing:.22em;
-  text-transform:uppercase; line-height:1; cursor:pointer; text-decoration:none; -webkit-tap-highlight-color:transparent;
+/* the button on a phone's strip that raises the text above it: the site's
+   button with a chevron, filled while the text is up; hidden where the
+   whole reading shows */
+.r-more{
+  display:none; align-items:center; gap:.5rem; border:1px solid var(--hair); background:var(--paper); color:var(--ink);
+  padding:.5rem .7rem .45rem .8rem; font-family:var(--font-brand); font-weight:500; font-size:.6rem; letter-spacing:.2em;
+  text-transform:uppercase; line-height:1; white-space:nowrap; cursor:pointer; -webkit-tap-highlight-color:transparent;
   transition:transform .12s cubic-bezier(.32,.72,0,1), background .12s, color .12s;
 }
-.r-3d svg{ width:.95rem; height:.95rem; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
-.r-3d[aria-expanded="true"]{ background:var(--ink); color:var(--paper); }
-@media (hover: hover){ .r-3d:hover{ background:var(--ink); color:var(--paper); } }
-.r-3d:active{ transform:scale(.97); }
-@media (pointer:coarse){ .r-3d{ min-height:44px; } }
-@media (prefers-reduced-motion: reduce){ .r-3d{ transition:none; } .r-3d:active{ transform:none; } }
+.r-more svg{ width:.8rem; height:.8rem; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; transition:transform .2s cubic-bezier(.32,.72,0,1); }
+.r-more[aria-expanded="true"]{ background:var(--ink); color:var(--paper); }
+.r-more[aria-expanded="true"] svg{ transform:rotate(180deg); }
+.r-more:active{ transform:scale(.97); }
+@media (pointer:coarse){ .r-more{ min-height:44px; } }
+@media (prefers-reduced-motion: reduce){ .r-more, .r-more svg{ transition:none; } .r-more:active{ transform:none; } }
 .r-pick{
   background:none; border:0; padding:0; color:inherit; font:inherit; cursor:pointer;
   text-decoration:underline; text-underline-offset:3px;
@@ -253,27 +249,15 @@ svg{ display:block; }
 .ba-tile.mute .num{ fill-opacity:.45; }
 @media (prefers-reduced-motion: reduce){ .ba-tile .shape{ transition:none; } }
 
-/* On a phone the page is the screen: the title stays for a screen reader,
-   the faces stack at the top and the reading takes the third beneath. */
+/* On a phone the page is the screen: the title stays for a screen reader
+   and the type is a size smaller; the layout is the screen's .one or .land
+   rules below, which the script sets. */
 @media (max-width:760px){
   .title-strip{
     position:absolute; width:1px; height:1px; margin:-1px; padding:0; border:0;
     overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;
   }
-  .ba-screen{
-    grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(0,68fr) minmax(0,32fr);
-    gap:10px; min-height:400px; margin-top:10px;
-    height:calc(100vh - var(--screen-top, 110px) - 10px);
-    height:calc(100dvh - var(--screen-top, 110px) - 10px);
-  }
-  .maps, .maps.side{ order:-1; grid-column:1; grid-row:1; gap:10px; grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(0,1fr) minmax(0,1fr); }
-  .reading{ grid-column:1; grid-row:2; padding:.7rem .85rem .8rem; }
-  .r-kick{ font-size:.56rem; }
-  .r-name{ font-size:1.12rem; margin:.35rem 0 .15rem; }
-  .r-where{ font-size:.8rem; margin-bottom:.45rem; }
-  .r-body{ font-size:.92rem; line-height:1.5; }
-  .r-note{ font-size:.82rem; margin-top:.6rem; }
-  .r-foot{ padding-top:.6rem; }
+  .ba-screen{ min-height:400px; }
   .cart figcaption{ left:.5rem; top:.35rem; }
   .cart figcaption span{ display:none; }
   .cart-stage{ padding:.3rem; }
@@ -290,8 +274,8 @@ svg{ display:block; }
    box a set share of the height so the brain's box is the same size
    whichever area is picked and a long reading scrolls inside its own. The script
    marks the screen .tall or .wide and sets --cart-w, the faces' width, and
-   --faces-h, the two faces' height together. A phone held sideways is the
-   bar's layout below, not this one. */
+   --faces-h, the two faces' height together. A phone, upright or sideways,
+   has the layouts further below, with the same brain in them. */
 .ba-screen{ position:relative; }
 @media (min-width:761px){
   .ba-screen.tall{
@@ -308,12 +292,7 @@ svg{ display:block; }
   }
   .ba-screen.tall .cart, .ba-screen.wide .cart{ width:100%; height:calc(var(--cart-w, 300px) * .6667); }
   .ba-screen.tall .cart[data-face="medial"], .ba-screen.wide .cart[data-face="medial"]{ height:calc(var(--cart-w, 300px) * .6367); }
-  .ba-screen.tall .scan, .ba-screen.wide .scan{
-    grid-area:scan; position:static; transform:none; opacity:1; border-radius:0; box-shadow:none;
-    background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; transition:none;
-  }
-  .ba-screen.tall .scan-x, .ba-screen.wide .scan-x{ display:none; }
-  .ba-screen.tall .r-foot, .ba-screen.wide .r-foot{ display:none; }
+  .ba-screen.tall .r-more, .ba-screen.wide .r-more{ display:none; }
 }
 
 /* ── the slice tool, as viewer.css sets it for the atlases: a cut on each
@@ -431,25 +410,17 @@ svg{ display:block; }
 }
 
 /* ── the brain in 3D ─────────────────────────────────────────────────────
-   The picked area lit on the MNI152 brain, rendered in 3D and nothing else.
-   On a phone it is a panel that rises over the two faces and collapses back
-   down, reached from the reading's foot upright and from the bar's 3D
-   button held sideways, the reading and the bar staying in view so the pick
-   can change while the brain shows; the viewer and the brain are fetched
-   the first time it opens. On an iPad or a computer it is a box of its own,
-   always on show, fetched with the page (the rules above). The panel is a
-   child of the screen placed over the faces' cell, so it can be either. */
+   The picked area lit on the MNI152 brain, rendered in 3D and nothing else,
+   in a box of its own on show in every layout: under the reading or across
+   the foot on an iPad or a computer, under the faces on a phone upright,
+   beside them held sideways. It takes the screen's scan area once the
+   script has laid the screen out, and the viewer and the brain are fetched
+   as the page opens. */
 .scan{
-  position:absolute; inset:0; grid-column:1 / 2; grid-row:1 / 2; z-index:20; display:flex; flex-direction:column; min-height:0;
-  border:1px solid var(--hair); border-radius:16px; overflow:hidden;
-  background:color-mix(in srgb, var(--paper) 92%, transparent);
-  -webkit-backdrop-filter:saturate(180%) blur(24px); backdrop-filter:saturate(180%) blur(24px);
-  box-shadow:0 18px 60px rgba(0,0,0,.35);
-  transform:translateY(calc(100% + 24px)); opacity:0;
-  transition:transform .3s cubic-bezier(.32,.72,0,1), opacity .22s cubic-bezier(.32,.72,0,1);
+  display:none; grid-area:scan; flex-direction:column; min-height:0; min-width:0;
+  border:1px solid var(--hair); overflow:hidden; background:var(--paper);
 }
-.scan[hidden]{ display:none; }
-.scan.in{ transform:none; opacity:1; }
+.ba-screen.one .scan, .ba-screen.land .scan, .ba-screen.tall .scan, .ba-screen.wide .scan{ display:flex; }
 .scan-head{ flex:none; display:flex; align-items:center; gap:.6rem; padding:.4rem .5rem .4rem .9rem; border-bottom:1px solid var(--hair); }
 .scan-head b{ font-family:var(--font-brand); font-weight:500; font-size:.66rem; letter-spacing:.28em; text-transform:uppercase; white-space:nowrap; }
 .scan-head small{ font-family:var(--font-serif); font-style:italic; font-size:.82rem; color:var(--ink-60); flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -457,50 +428,72 @@ svg{ display:block; }
 .ts-btn{ border:1px solid var(--hair); background:var(--paper); color:var(--ink); font-family:var(--font-brand); font-weight:500; font-size:.62rem; letter-spacing:.2em; text-transform:uppercase; cursor:pointer; padding:.5rem .7rem .42rem; text-decoration:none; line-height:1; }
 @media (hover: hover){ .ts-btn:hover{ background:var(--ink); color:var(--paper); } }
 @media (pointer:coarse){ .ts-btn{ min-height:44px; } }
-.scan-x{ flex:none; width:40px; height:40px; border:1px solid var(--hair); border-radius:50%; background:none; color:var(--ink); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; -webkit-tap-highlight-color:transparent; }
-.scan-x svg{ width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
-.scan-x:active{ background:var(--ink); color:var(--paper); }
 .scan-stage{ position:relative; flex:1 1 auto; min-height:0; background:#000000; touch-action:none; }
 .scan-stage canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; outline:none; }
 /* light, the brain stands on white; the viewer paints its parent black as it attaches */
 :root:not([data-theme="dark"]) .scan-stage{ background:#FFFFFF !important; }
-@media (prefers-reduced-transparency: reduce), (prefers-contrast: more){ .scan{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; } }
-@media (prefers-reduced-motion: reduce){ .scan{ transition:none; } }
-@media (max-width:760px){ .scan{ border-radius:12px; } }
 
-/* ── a phone held sideways: a bar of named buttons stands along the right
-   edge and picks the outside face, the inside face or both side by side,
-   and slides the scan panel out; the faces take the left, the reading a
-   column between them and the bar, and the masthead steps aside for the
-   room, as on the 3D Region Atlas ── */
+/* ── a phone: the three views and a strip ───────────────────────────────
+   Upright (.one, the script's mark for a screen no wider than a phone that
+   is not held sideways) the two faces stand side by side across the top,
+   the brain takes the room beneath them, and the reading is a strip along
+   the foot carrying the area's name and a button. Sideways (.land) the two
+   faces are stacked down the left at the width that fills the height over
+   the strip, the brain beside them with the rest, the strip along the foot
+   under both, and the bar along the right edge, where Outside, Inside and
+   Both pick what the faces' column shows (one face alone drawn larger, the
+   brain narrower beside it) and the masthead steps aside for the room, as
+   on the 3D Region Atlas. Either way the strip's button raises the text
+   above it, over the brain, the strip staying where it is and the faces
+   in reach; the faces are drawn at three by two, and the script sets
+   --cart-w, the faces' column, when held sideways. */
+.ba-screen.one{
+  grid-template-columns:minmax(0,1fr); grid-template-rows:auto minmax(0,1fr) auto;
+  grid-template-areas:"maps" "scan" "read"; gap:10px; min-height:400px; margin-top:10px;
+  height:calc(100vh - var(--screen-top, 110px) - 10px);
+  height:calc(100dvh - var(--screen-top, 110px) - 10px);
+}
+.ba-screen.one .maps, .ba-screen.one .maps.side{ grid-area:maps; order:0; grid-template-columns:minmax(0,1fr) minmax(0,1fr); grid-template-rows:auto; gap:10px; }
+.ba-screen.one .cart, .ba-screen.land .cart{ width:100%; height:auto; aspect-ratio:3 / 2; }
+.ba-screen.one .reading{ grid-area:read; }
+.ba-screen.one .reading.open{ grid-area:2 / 1 / 4 / 2; }
 .babar{ display:none; }
 .ba-screen.land{
-  grid-template-columns:minmax(0,1fr) 92px; grid-template-rows:minmax(0,62fr) minmax(0,38fr);
+  grid-template-columns:var(--cart-w, 230px) minmax(0,1fr) 92px; grid-template-rows:minmax(0,1fr) auto;
+  grid-template-areas:"maps scan bar" "read read bar";
   gap:8px 10px; min-height:0; margin-top:0;
   height:calc(100vh - var(--screen-top, 0px) - 8px);
   height:calc(100dvh - var(--screen-top, 0px) - 8px);
 }
-/* the faces across the top, side by side or one alone, as upright has them first */
-.ba-screen.land .maps{ grid-column:1; grid-row:1; order:0; grid-template-rows:minmax(0,1fr); grid-template-columns:minmax(0,1fr); gap:10px; }
-.ba-screen.land .maps.side{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+.ba-screen.land .maps, .ba-screen.land .maps.side{ grid-area:maps; order:0; grid-template-rows:auto auto; grid-template-columns:minmax(0,1fr); align-content:start; gap:8px; }
 .ba-screen.land .maps.only-lateral .cart[data-face="medial"], .ba-screen.land .maps.only-medial .cart[data-face="lateral"]{ display:none; }
-/* the reading beneath them, its head to the left of its text so the function shows in the room there is */
-.ba-screen.land .reading{
-  grid-column:1; grid-row:2; order:1; padding:.55rem .85rem .6rem;
-  display:grid; grid-template-columns:minmax(170px, 230px) minmax(0,1fr); column-gap:1.1rem; align-content:start;
-}
-.ba-screen.land .r-head{ grid-column:1; }
-.ba-screen.land .r-text{ grid-column:2; display:block; }
-.ba-screen.land .r-kick{ font-size:.56rem; }
-.ba-screen.land .r-name{ font-size:1.08rem; margin:.3rem 0 .12rem; }
-.ba-screen.land .r-where{ font-size:.8rem; margin-bottom:0; }
-.ba-screen.land .r-h{ margin-top:.1rem; }
-.ba-screen.land .r-body{ font-size:.9rem; line-height:1.48; }
-.ba-screen.land .r-note{ font-size:.8rem; margin-top:.5rem; }
-.ba-screen.land .r-foot{ margin-top:.6rem; padding-top:0; }
+.ba-screen.land .reading{ grid-area:read; }
+.ba-screen.land.read-open .maps{ grid-row:1 / 3; }
+.ba-screen.land .reading.open{ grid-area:1 / 2 / 3 / 3; }
 .ba-screen.land .cart figcaption span{ display:none; }
+/* the strip, and the text above it on demand, the same both ways a phone is held */
+.ba-screen.one .reading, .ba-screen.land .reading{
+  padding:.55rem .85rem .6rem; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end;
+}
+.ba-screen.one .r-head, .ba-screen.land .r-head{ display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-rows:auto auto auto; column-gap:.7rem; align-items:center; }
+.ba-screen.one .r-more, .ba-screen.land .r-more{ display:inline-flex; grid-column:2; grid-row:1 / 4; align-self:center; }
+.ba-screen.one .r-kick, .ba-screen.land .r-kick{ grid-column:1; font-size:.56rem; }
+.ba-screen.one .r-name, .ba-screen.land .r-name{ grid-column:1; font-size:1.08rem; margin:.3rem 0 .1rem; }
+.ba-screen.one .r-where, .ba-screen.land .r-where{ grid-column:1; font-size:.8rem; margin:0; }
+.ba-screen.one .r-text, .ba-screen.land .r-text{ display:none; }
+.ba-screen.one .reading.open, .ba-screen.land .reading.open{ z-index:25; background:var(--paper); }
+.ba-screen.one .reading.open .r-text, .ba-screen.land .reading.open .r-text{
+  display:flex; order:-1; flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain;
+  touch-action:pan-y; -webkit-overflow-scrolling:touch; padding:.2rem 0 .7rem; margin-bottom:.6rem; border-bottom:1px solid var(--hair);
+  animation:r-rise .28s cubic-bezier(.32,.72,0,1);
+}
+@keyframes r-rise{ from{ opacity:0; transform:translateY(12px); } to{ opacity:1; transform:none; } }
+@media (prefers-reduced-motion: reduce){ .ba-screen.one .reading.open .r-text, .ba-screen.land .reading.open .r-text{ animation:none; } }
+.ba-screen.one .r-h, .ba-screen.land .r-h{ margin-top:.1rem; }
+.ba-screen.one .r-body, .ba-screen.land .r-body{ font-size:.92rem; line-height:1.5; }
+.ba-screen.one .r-note, .ba-screen.land .r-note{ font-size:.82rem; margin-top:.6rem; }
 .ba-screen.land .babar{
-  grid-column:2; grid-row:1 / span 2; order:2; display:flex; flex-direction:column; align-items:stretch; gap:6px; min-height:0;
+  grid-area:bar; display:flex; flex-direction:column; align-items:stretch; gap:6px; min-height:0;
   padding:6px 0 6px 6px; border-left:1px solid var(--hair); overflow-y:auto; scrollbar-width:none;
 }
 .babar::-webkit-scrollbar{ display:none; }
@@ -513,7 +506,6 @@ svg{ display:block; }
 .bbtn svg{ width:24px; height:24px; fill:none; stroke:currentColor; stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; }
 .bbtn[aria-pressed="true"], .bbtn[aria-expanded="true"]{ color:var(--ink); border-color:var(--hair); }
 .bbtn:active{ color:var(--ink); }
-.babar .rule{ flex:none; height:1px; margin:4px 6px; background:var(--hair); opacity:.6; }
 body.ba-land .masthead, body.ba-land .title-strip, body.ba-land .below{ display:none; }
 body.ba-land{ padding-bottom:0; }
 /* in the app the shell keeps its back button over the top left: the first face's name makes room */
@@ -566,16 +558,17 @@ body.ba-land{ padding-bottom:0; }
 
   <section class="ba-screen" id="baScreen" aria-label="The Brodmann map and what the picked area does">
     <div class="reading" id="reading" aria-live="polite">
-      <div class="r-head">
+      <div class="r-head" id="rHead">
         <div class="r-kick" id="rKick">Nothing picked</div>
         <h2 class="r-name" id="rName">Tap an area on either face</h2>
         <p class="r-where" id="rWhere"></p>
+        <!-- on a phone the reading is this strip, and the button raises the text above it -->
+        <button class="r-more" id="rMore" type="button" aria-expanded="false" aria-controls="rText"><span>More</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 10l5-5 5 5"/></svg></button>
       </div>
-      <div class="r-text">
+      <div class="r-text" id="rText">
         <h3 class="r-h" id="rForH" hidden>What it does</h3>
         <p class="r-body" id="rBody"></p>
         <p class="r-note" id="rNote" hidden></p>
-        <div class="r-foot" id="rFoot"></div>
       </div>
     </div>
     <div class="maps" id="baMaps">
@@ -588,20 +581,17 @@ body.ba-land{ padding-bottom:0; }
         <div class="cart-stage" id="cartMedial"></div>
       </figure>
     </div>
-    <!-- the picked area lit on the brain in 3D: a box of its own, always on
-         show, on an iPad or a computer; a panel rising over the faces on a
-         phone, the viewer fetched on first use -->
-    <aside class="scan" id="baScan" hidden aria-label="The picked area on the brain in 3D">
-      <header class="scan-head"><b>In 3D</b><small id="scanNote">the MNI152 brain, the picked area lit</small><span class="scan-tools" id="scanTools"></span><button class="ts-btn" id="scanReset" type="button" aria-label="Reset the view and the cuts">Reset</button><button class="scan-x" type="button" id="scanDown" aria-label="Collapse the brain"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg></button></header>
+    <!-- the picked area lit on the brain in 3D: a box of its own, on show in
+         every layout, the viewer fetched as the page opens -->
+    <aside class="scan" id="baScan" aria-label="The picked area on the brain in 3D">
+      <header class="scan-head"><b>In 3D</b><small id="scanNote">the MNI152 brain, the picked area lit</small><span class="scan-tools" id="scanTools"></span><button class="ts-btn" id="scanReset" type="button" aria-label="Reset the view and the cuts">Reset</button></header>
       <div class="scan-stage"><canvas id="baRen"></canvas></div>
     </aside>
-    <!-- a phone held sideways: the bar along the right edge -->
-    <nav class="babar" id="baBar" aria-label="Views and the scan">
+    <!-- a phone held sideways: the bar along the right edge picks what the faces' column shows -->
+    <nav class="babar" id="baBar" aria-label="The faces shown">
       <button class="bbtn" type="button" data-view="outside" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13c0-4.4 3.8-8 8.5-8S21 8.6 21 13c0 2.6-1.6 4.6-4.1 5.3l-.7 2.2h-6.4l-.7-2.2C6.1 17.6 4 15.6 4 13z"/><path d="M9 10.5c1.5-1.4 3.4-1.9 5.4-1.3"/></svg><span>Outside</span></button>
       <button class="bbtn" type="button" data-view="inside" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13c0-4.4 3.8-8 8.5-8S21 8.6 21 13c0 2.6-1.6 4.6-4.1 5.3l-.7 2.2h-6.4l-.7-2.2C6.1 17.6 4 15.6 4 13z"/><path d="M9.5 15.5c0-3 1.9-5 4.5-5.5M8 12.5c2.3-.2 4.5.4 6.3 2" stroke-dasharray="2 1.6"/></svg><span>Inside</span></button>
       <button class="bbtn" type="button" data-view="both" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12.5c0-3 2.4-5.5 5.4-5.5s5.1 2.5 5.1 5.5c0 1.9-1 3.3-2.6 3.8l-.4 1.7H6l-.5-1.7c-1.6-.5-3-1.9-3-3.8z"/><path d="M13.5 12.5c0-3 2.3-5.5 5.1-5.5s4.9 2.5 4.9 5.5c0 1.9-1.3 3.3-2.9 3.8l-.5 1.7h-3.9l-.4-1.7c-1.6-.5-2.3-1.9-2.3-3.8z"/></svg><span>Both</span></button>
-      <span class="rule" aria-hidden="true"></span>
-      <button class="bbtn" type="button" id="scanBtn" aria-expanded="false" aria-controls="baScan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12L4 7.5M12 12v9"/></svg><span>3D</span></button>
     </nav>
   </section>
 
@@ -669,13 +659,24 @@ body.ba-land{ padding-bottom:0; }
   function isWide(){ return !!(wideQ && wideQ.matches) && !isLand(); }
   var FACE_H = 400 / 600 + 382 / 600;          /* the two faces' heights, stacked, for one width */
   function arrange(){
-    var land = isLand(), wide = isWide();
+    var land = isLand(), wide = isWide(), one = !land && !wide;
     var W = screenEl.clientWidth, H = screenEl.clientHeight, g = 14;
     var tall = wide && H > W;
     screenEl.classList.toggle("tall", tall);
     screenEl.classList.toggle("wide", wide && !tall);
-    if (land) return;                          /* held sideways, the bar's pick decides */
+    screenEl.classList.toggle("one", one);
+    if (wide && readOpen) setRead(false);      /* the whole reading shows here */
     mapsEl.classList.remove("side");
+    if (land){
+      /* the faces' column: the width whose stacked faces, three by two each,
+         fill the height over the strip, at most two fifths of the room
+         beside the bar; one face alone may take just over half of it */
+      var room = W - 92 - 10, strip = rHead.offsetHeight + 20, free = H - strip - 8;
+      var cartW = faceView === "both" ? Math.min(0.42 * room, (free - 8) * 0.75) : Math.min(0.55 * room, free * 1.5);
+      screenEl.style.setProperty("--cart-w", Math.max(150, Math.floor(cartW)) + "px");
+      screenEl.style.removeProperty("--faces-h");
+      return;
+    }
     if (!wide){ screenEl.style.removeProperty("--cart-w"); screenEl.style.removeProperty("--faces-h"); return; }
     /* the faces' width: just over half the width at most; upright, capped
        too so the two take no more than three fifths of the height, the rest
@@ -710,11 +711,11 @@ body.ba-land{ padding-bottom:0; }
   var rKick = document.getElementById("rKick"), rName = document.getElementById("rName"),
       rWhere = document.getElementById("rWhere"), rForH = document.getElementById("rForH"),
       rBody = document.getElementById("rBody"), rNote = document.getElementById("rNote"),
-      rFoot = document.getElementById("rFoot"), reading = document.getElementById("reading");
+      reading = document.getElementById("reading"), rHead = document.getElementById("rHead"),
+      rMore = document.getElementById("rMore"), rText = document.getElementById("rText");
   var tiles = {lateral: {}, medial: {}};
 
   function read(){
-    rFoot.innerHTML = "";
     if (selected == null){
       rKick.textContent = "Nothing picked";
       rKick.style.borderLeftColor = "transparent";
@@ -730,6 +731,7 @@ body.ba-land{ padding-bottom:0; }
       b.addEventListener("click", function(){ select(48); });
       rNote.appendChild(b);
       rNote.appendChild(document.createTextNode(", the peri-Sylvian and insular territory, is buried and reaches neither face."));
+      rMore.querySelector("span").textContent = "More";
       return;
     }
     var a = B.BY_BA[selected], lobe = lobeOf(a);
@@ -742,19 +744,31 @@ body.ba-land{ padding-bottom:0; }
     rBody.textContent = a.fn;
     rNote.hidden = !a.note;
     rNote.textContent = a.note || "";
-    var to3d = document.createElement("button");
-    to3d.type = "button"; to3d.className = "r-3d"; to3d.id = "rTo3d";
-    to3d.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12L4 7.5M12 12v9"/></svg><span></span>';
-    to3d.addEventListener("click", function(){ if (scanOpen) closeScan(); else openScan(); });
-    rFoot.appendChild(to3d);
-    markScan();
-    reading.scrollTop = 0;
+    rMore.querySelector("span").textContent = "What it does";
+    reading.scrollTop = 0; rText.scrollTop = 0;
     markMore();
   }
   function markMore(){
     reading.classList.toggle("more", reading.scrollTop + reading.clientHeight < reading.scrollHeight - 2);
   }
   reading.addEventListener("scroll", markMore, { passive: true });
+
+  /* ── the reading on a phone ────────────────────────────────────────────
+     The reading is a strip along the foot carrying the area's name, and its
+     button raises the text above it, over the brain, the strip staying put
+     and the faces in reach; the button again, or Escape, puts it away. On
+     an iPad or a computer the whole reading shows and the button is hidden. */
+  var readOpen = false;
+  function setRead(open){
+    readOpen = !!open;
+    reading.classList.toggle("open", readOpen);
+    screenEl.classList.toggle("read-open", readOpen);
+    rMore.setAttribute("aria-expanded", String(readOpen));
+    if (readOpen) rText.scrollTop = 0;
+    if (window.MN && open) MN.tap("light");
+  }
+  rMore.addEventListener("click", function(){ setRead(!readOpen); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && readOpen && !e.defaultPrevented) setRead(false); });
 
   /* the address follows the pick, so a link opens on the same area */
   function markAddress(){
@@ -772,28 +786,26 @@ body.ba-land{ padding-bottom:0; }
 
   /* ── a phone held sideways ──────────────────────────────────────────────
      The bar along the right edge: Outside, Inside and Both pick what the
-     faces show, remembered between visits, and Scan slides the panel out.
-     The query is the 3D Region Atlas's: a coarse pointer in landscape, on a
-     screen too short to be a tablet. */
+     faces' column shows, remembered between visits. The query is the 3D
+     Region Atlas's: a coarse pointer in landscape, on a screen too short
+     to be a tablet. */
   var landQ = window.matchMedia ? window.matchMedia("(pointer: coarse) and (orientation: landscape) and (max-height: 500px)") : null;
   var faceView = "both";
   try{ faceView = localStorage.getItem("vn-ba-view") || "both"; }catch(e){}
   if (["outside", "inside", "both"].indexOf(faceView) < 0) faceView = "both";
-  var bar = document.getElementById("baBar"), scanEl = document.getElementById("baScan"),
-      scanBtn = document.getElementById("scanBtn"), scanNote = document.getElementById("scanNote");
+  var bar = document.getElementById("baBar");
   function isLand(){ return !!(landQ && landQ.matches); }
   function layFaces(){
     var land = isLand();
     mapsEl.classList.toggle("only-lateral", land && faceView === "outside");
     mapsEl.classList.toggle("only-medial", land && faceView === "inside");
-    if (land) mapsEl.classList.toggle("side", faceView === "both");
     bar.querySelectorAll("[data-view]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-view") === faceView)); });
   }
   function onLand(){
     var land = isLand();
     screenEl.classList.toggle("land", land);
     document.body.classList.toggle("ba-land", land);
-    if (!land && scanOpen) closeScan();
+    if (readOpen) setRead(false);
     layFaces();
     fitSoon();
     if (window.MN_LIFE) MN_LIFE.remeasure();
@@ -802,19 +814,19 @@ body.ba-land{ padding-bottom:0; }
     b.addEventListener("click", function(){
       faceView = b.getAttribute("data-view");
       try{ localStorage.setItem("vn-ba-view", faceView); }catch(e){}
-      layFaces();
+      layFaces(); fitSoon();
       if (window.MN) MN.tap("light");
     });
   });
 
   /* ── the brain in 3D ─────────────────────────────────────────────────────
      The MNI152 template rendered in 3D with the Brodmann atlas volume over
-     it, the picked area lit in its lobe's colour, in a panel that rises over
-     the faces. The viewer and the brain are fetched the first time it opens.
-     One pick at a time, so the table lights one label and clears the rest. */
-  var scanOpen = false, scanState = "idle", ren = null, home = null, slice = null;
-  var scanEl = document.getElementById("baScan"), scanBtn = document.getElementById("scanBtn"),
-      scanNote = document.getElementById("scanNote");
+     it, the picked area lit in its lobe's colour, in a box of its own on
+     show in every layout; the viewer and the brain are fetched as the page
+     opens. One pick at a time, so the table lights one label and clears the
+     rest. */
+  var scanState = "idle", ren = null, home = null, slice = null;
+  var scanEl = document.getElementById("baScan"), scanNote = document.getElementById("scanNote");
   function loadScript(src){
     return new Promise(function(res, rej){
       var el = document.createElement("script");
@@ -823,43 +835,7 @@ body.ba-land{ padding-bottom:0; }
       document.head.appendChild(el);
     });
   }
-  function markScan(){
-    scanBtn.setAttribute("aria-expanded", String(scanOpen));
-    var b = document.getElementById("rTo3d");
-    if (b){ b.querySelector("span").textContent = scanOpen ? "Back to the map" : "Show in 3D"; b.setAttribute("aria-expanded", String(scanOpen)); }
-  }
-  function openScan(quiet){
-    if (scanOpen) return;
-    scanOpen = true;
-    clearTimeout(scanEl._leaving);
-    scanEl.hidden = false;
-    void scanEl.offsetWidth;
-    scanEl.classList.add("in");
-    markScan();
-    ensureScan();
-    if (window.MN_LIFE) requestAnimationFrame(function(){ MN_LIFE.remeasure(); });
-    if (window.MN && !quiet) MN.tap("light");
-  }
-  /* on an iPad or a computer the brain is always on show, opened with the
-     page and never collapsed; it is raised and collapsed only on a phone */
-  var alwaysOn = false;
-  function applyScanMode(){
-    var on = isWide();
-    if (on && !scanOpen) openScan(true);
-    else if (!on && alwaysOn && scanOpen) closeScan();
-    alwaysOn = on;
-  }
-  function closeScan(){
-    if (!scanOpen) return;
-    scanOpen = false;
-    scanEl.classList.remove("in");
-    markScan();
-    clearTimeout(scanEl._leaving);
-    scanEl._leaving = setTimeout(function(){ if (!scanOpen) scanEl.hidden = true; }, 320);
-  }
-  scanBtn.addEventListener("click", function(){ if (scanOpen) closeScan(); else openScan(); });
-  document.getElementById("scanDown").addEventListener("click", closeScan);
-  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && scanOpen && !isWide() && !e.defaultPrevented) closeScan(); });
+  function applyScanMode(){ ensureScan(); }
 
   function ensureScan(){
     if (scanState !== "idle") return;

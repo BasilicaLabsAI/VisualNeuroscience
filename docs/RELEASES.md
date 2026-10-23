@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.74 — 23 October 2026 — Three views on a phone
+Commit · Show a phone the Brodmann Atlas's three views at once, the reading a strip with the text behind a button
+
+On a phone the Brodmann Area Atlas now shows all three views at once, as an iPad does. Held upright, the two faces stand side by side across the top with the brain in 3D beneath them; held sideways, the faces are stacked down the left with the brain beside them, and one face alone is drawn larger when the bar picks it. The reading is a strip along the foot carrying the area's name, with a button, What it does, that raises the text over the brain and puts it away again, the faces staying in reach throughout. The Show in 3D button and the panel it raised are gone, the brain being always on show.
+
 ## v11.73 — 23 October 2026 — The receptors explained two ways
-Commit · Write the molecular viewer's Binding tour at two levels, Simple and Detailed, with where and when the ions move spelt out
+Commit `f27f4ee` · Write the molecular viewer's Binding tour at two levels, Simple and Detailed, with where and when the ions move spelt out
 
 The Binding tour in the molecular viewer now reads at two levels, picked under its progress bar: Simple, in plain words for anyone meeting a receptor for the first time, and Detailed, the full account as before. The plain version tells the same story with few names and no measurements, and at the stop where the signal is sent it sets out in a small table what moves, where, when and what it means: the ions, the charged particles of salt water, flowing out through potassium channels beside a receptor that brakes the cell, released from the cell's internal store by one that wakes it, or let in more readily after one that raises cAMP, and in every case not through the receptor itself, which has no hole. The slider's captions follow the level, the choice is kept, and a link can ask for either.
 
