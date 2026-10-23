@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.84 — 23 October 2026 — Receptor and Receptor types on the bar
+Commit · Give the receptor window's Receptor and Receptor types tabs buttons on the bar, and link the Reference to its Sources tab
+
+The 3D Region Atlas's bar now carries a button for each of the receptor window's tabs that had none: Receptor, which opens the window on the drawing of the receptor picked, and Receptor types, which opens it on the cards and the table, beside Receptor graph and Neurotransmitters, each lit while its tab is open and closing the window on a second press. The Reference drawer's list of sources ends with a line that opens the receptor window on its Sources tab, where the notes on reading the numbers and the receptors with no open human data live.
+
 ## v11.83 — 23 October 2026 — Every source inside the Reference drawer
-Commit · Underline the links in the atlas's Reference drawer, as the study's are
+Commit `c4efd62` · Underline the links in the atlas's Reference drawer, as the study's are
 
 The Reference button on the 3D Region Atlas used to send you to the receptor window for the receptor sources. It now lists them itself: the PET compilation and the autoradiography series with their papers, licences and sample, beside the template, the AAL regions and the Brodmann atlas, each with its citation. The Hallucinations study's Reference writes out the thirteen papers its readings name, with a link to each, under the editorial itself. And the Brodmann Area Atlas's About names the brain's renderer and describes the 3D tab as it now works.
 

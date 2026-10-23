@@ -195,11 +195,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   left, narrowing first, and the two button pairs, source and axis, together in `.rx-switches` at the far right) and
   in rows on a phone (source, by receptor or region, dropdown), with no sentence above; `renderChart()` toggles the
   sideways hint and keeps a room-taking scrollbar out of the graph's height before it measures; the table's lede is one concise paragraph ending in a live example read off the table (`heatExample`); the
-  bar's two buttons each stand for a family of tabs (`data-tabs`), lit for any of them); then Saved
+  bar's receptor buttons each stand for a family of tabs (`data-tabs`), lit for any of them, and close the window on a second
+  press: since v11.84 four of them, Receptor graph for the Graph and Sources tabs, Receptor for the Receptor tab, Neurotransmitters
+  for its tab and Receptor types for the cards and the table); then Saved
   maps, Export and, at the far right behind a line,
   Reference (`.pbtn-ref`, since v11.31; since v11.83 its window lists every source in full rather than sending the reader to the
   receptor window: the two receptor lines are written into `#ref-sources` by `renderSources()` from the receptor data, the
-  same text the receptor window's Sources tab carries, through `sourceLines()`); the Brodmann map left the page in v11.30, the Brodmann Area Atlas having it). The readouts sit at the bar's start; since v11.51 the Probe readout's names are buttons (`.probe-btn`, built in `onLoc`
+  same text the receptor window's Sources tab carries, through `sourceLines()`, and ends with a line that opens the receptor
+  window on its Sources tab, `[data-open-pop]`/`[data-open-tab]` bound by the pop script, v11.84); the Brodmann map left the page in v11.30, the Brodmann Area Atlas having it). The readouts sit at the bar's start; since v11.51 the Probe readout's names are buttons (`.probe-btn`, built in `onLoc`
   only as the names change): the region's lights the side under the crosshair, or the pair while Mirror is ticked, and puts
   out whatever entry covers the label (`toggleProbe`, `litBy`), the area's lights or puts out the Brodmann area
   (`toggleProbeBA`), and `paintProbe` keeps their pressed state and colour dot in step through `selWatchers`. Every element id the script uses is unchanged, so the pop-ups' contents

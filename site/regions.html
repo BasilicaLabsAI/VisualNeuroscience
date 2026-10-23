@@ -1482,6 +1482,7 @@ main.screen.one.land{ flex-direction:row; }
           <p class="ref-line"><b>Regions</b> AAL-116: Tzourio-Mazoyer N, Landeau B, Papathanassiou D, et al. Automated anatomical labeling of activations in SPM using a macroscopic anatomical parcellation of the MNI MRI single-subject brain. <i>NeuroImage</i> 2002;15:273&ndash;289.</p>
           <p class="ref-line"><b>Brodmann areas</b> 41 areas from the Brodmann atlas in <a href="https://github.com/neurolabusc/MRIcron" target="_blank" rel="noopener">MRIcron</a> (BSD), on the MNI152 template; the drawn map on the Brodmann Area Atlas is adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN</a>.</p>
           <div id="ref-sources"><p class="ref-line"><b>Receptors</b> The receptor dataset did not load, and its sources with it.</p></div>
+          <p class="ref-line"><b>More</b> How the numbers should be read, and which receptors have no open human data, in <a href="#sources" data-open-pop="popRx" data-open-tab="sources">the receptor window&rsquo;s Sources tab</a>.</p>
           <p class="estab">Runs fully offline · single file · no server</p>
           <p class="credits">© 2026 VisualNeuroscience.AI · set in Flux, Newsreader &amp; Prata &middot; <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></p>
         </div>
@@ -1523,8 +1524,10 @@ main.screen.one.land{ flex-direction:row; }
     </div>
     <div class="panelbar-btns" role="group" aria-label="Panels">
       <button class="pbtn" type="button" data-pop="popNotes" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></svg><span>What they do</span></button>
-      <button class="pbtn" type="button" data-pop="popRx" data-tab="chart" data-tabs="chart figs sources" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20h16M7 20v-7M12 20V6M17 20v-10"/></svg><span>Receptor graph</span></button>
-      <button class="pbtn" type="button" data-pop="popRx" data-tab="types" data-tabs="types primer" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4h16v16H4zM4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"/></svg><span>Neuro&shy;transmitters</span></button>
+      <button class="pbtn" type="button" data-pop="popRx" data-tab="chart" data-tabs="chart sources" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20h16M7 20v-7M12 20V6M17 20v-10"/></svg><span>Receptor graph</span></button>
+      <button class="pbtn" type="button" data-pop="popRx" data-tab="figs" data-tabs="figs" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.5 3.5v5.2a4.5 4.5 0 0 0 9 0V3.5M12 13.2V20M5 20h14"/></svg><span>Receptor</span></button>
+      <button class="pbtn" type="button" data-pop="popRx" data-tab="types" data-tabs="types" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4h16v16H4zM4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"/></svg><span>Neuro&shy;transmitters</span></button>
+      <button class="pbtn" type="button" data-pop="popRx" data-tab="primer" data-tabs="primer" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="8" width="12.5" height="12" rx="1.5"/><path d="M8 8V5.5A1.5 1.5 0 0 1 9.5 4h9A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H16"/></svg><span>Receptor types</span></button>
     </div>
     <div class="panelbar-end" role="group" aria-label="Saving and reference">
       <button class="pbtn" type="button" data-pop="popSaved" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3.5h10v17l-5-3.6-5 3.6z"/></svg><span>Saved maps</span></button>
@@ -4020,6 +4023,11 @@ if (location.hash === "#receptors") {
   });
   document.querySelectorAll(".pop .pop-x").forEach(function(x){ x.addEventListener("click", hide); });
   document.querySelectorAll("#popRx [data-tab]").forEach(function(t){ t.addEventListener("click", press); });
+  /* a link inside a window that opens another window on one of its tabs:
+     the Reference's line to the receptor window's Sources tab (v11.84) */
+  document.querySelectorAll(".pop [data-open-pop]").forEach(function(a){
+    a.addEventListener("click", function(e){ e.preventDefault(); show(a.getAttribute("data-open-pop"), a.getAttribute("data-open-tab") || null); });
+  });
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && current) hide(); });
 })();
 </script>
