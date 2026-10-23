@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.91 — 23 October 2026 — The icon's tiles pictured
+Commit · Picture the two tiles under App icon, with a box around the one in use
+
+Under Account, the App icon choice now shows the two tiles themselves, the brain on white and the brain on black, drawn as the Home Screen draws them, with a box around the one in use; press the other to change over. The pictures are drawn by the icon script with the rest.
+
 ## v11.90 — 23 October 2026 — The brain's corners rounded
-Commit · Round every bend and fillet every joint of the app's brain, and close its outline into one path
+Commit `9d6f4f7` · Round every bend and fillet every joint of the app's brain, and close its outline into one path
 
 Every corner of the icon's brain is rounded now: each bend in a line turns on a curve of its own, and wherever a line meets a ring or another line the corner between them is filled with a small fillet, so the drawing reads as one soft line rather than strokes laid over each other. The outline is also one closed path in the file at last, where before its pieces only met at the rings. Every icon and splash is drawn again from it.
 

@@ -46,7 +46,7 @@ position. Account comes last and gathers what is not a section of the site.
 | Library | `books.vertical` | Visualizing Studies, Digital Textbook |
 | Practice | `checklist` | Neuroscience Practice |
 | About | `info.circle` | the MCP server, the developer's message, YouTube, Instagram, LinkedIn and email |
-| Account | `person` | the account page (sign-in, your data, deletion), Appearance (dark or light), App icon (a white or a black tile), support and the privacy page, the credits |
+| Account | `person` | the account page (sign-in, your data, deletion), Appearance (dark or light), App icon (the white and the black tile pictured, the one in use boxed), support and the privacy page, the credits |
 
 There is no badge, because nothing in the app is waiting to be done:
 practice is adaptive and keeps no queue of due questions. If it ever does,
@@ -179,8 +179,11 @@ now and gives the same files when run after `npm run icons`.
 The iOS app carries a second icon, `AppIcon-Black.appiconset`, the same
 brain on the paper black, drawn by the same script. The project names it in
 `ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES`, which is all the catalog
-needs for `setAlternateIconName`, and the Account tab's App icon switch
-(`IconTile` and `AppStore.iconTile` in `Shell.swift`) asks the system for it;
+needs for `setAlternateIconName`, and the Account tab's App icon choice
+(`IconTileChoice`, `IconTile` and `AppStore.iconTile` in `Shell.swift`: the two
+tiles pictured from `IconTileWhite.imageset` and `IconTileBlack.imageset`,
+which this script draws, with a box around the one in use) asks the system
+for it;
 the system keeps the choice itself, shows its own notice as the icon changes,
 and the switch reads the icon back on every launch. The box shows only where
 the system supports alternate icons, the iPhone and the iPad. Android's

@@ -51,6 +51,8 @@ tile('site/assets/apple-touch-icon.png',        180,  TILE, WHITE);
 tile('app/resources/ios-icon-1024.png',                                      1024, TILE, WHITE);
 tile('app/ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png', 1024, TILE, WHITE);
 tile('app/ios/App/App/Assets.xcassets/AppIcon-Black.appiconset/AppIcon-512@2x.png', 1024, TILE, PAPER);   // the alternate icon, chosen under Account
+tile('app/ios/App/App/Assets.xcassets/IconTileWhite.imageset/tile.png', 360, TILE, WHITE);   // the Account tab's pictures of the two tiles
+tile('app/ios/App/App/Assets.xcassets/IconTileBlack.imageset/tile.png', 360, TILE, PAPER);
 tile('app/resources/icon.png',                                               1024, TILE, WHITE);
 tile('app/resources/icon-only.png',                                          1024, TILE, WHITE);
 tile('app/resources/icon-foreground.png',                                    1024, SAFE, null);

@@ -373,13 +373,8 @@ struct AccountTab: View {
             }
             if UIApplication.shared.supportsAlternateIcons {
                 Box(kicker: "Preferences", title: "App icon",
-                    text: "The brain on a white tile or on a black one, on the Home Screen.") {
-                    Picker("App icon", selection: $store.iconTile) {
-                        Text("White").tag(IconTile.white)
-                        Text("Black").tag(IconTile.black)
-                    }
-                    .pickerStyle(.segmented)
-                    .padding(.top, 14)
+                    text: "The brain on a white tile or on a black one, on the Home Screen. The one in use is boxed; press the other to change over.") {
+                    IconTileChoice(tile: $store.iconTile)
                 }
             }
             Box(kicker: "Support", title: "Help, privacy and terms",
@@ -394,6 +389,54 @@ struct AccountTab: View {
             }
             Credits()
         }
+    }
+}
+
+/// The two tiles the app's icon can wear, pictured as the Home Screen draws
+/// them, with a box around the one in use; pressing the other asks the
+/// system for it. The pictures are the icon script's, in the asset catalog
+/// (IconTileWhite and IconTileBlack).
+struct IconTileChoice: View {
+    @Binding var tile: IconTile
+
+    init(tile: Binding<IconTile>) {
+        _tile = tile
+    }
+
+    var body: some View {
+        HStack(spacing: 10) {
+            option(.white, name: "White", picture: "IconTileWhite")
+            option(.black, name: "Black", picture: "IconTileBlack")
+            Spacer(minLength: 0)
+        }
+        .padding(.top, 14)
+    }
+
+    private func option(_ value: IconTile, name: String, picture: String) -> some View {
+        let chosen = tile == value
+        return Button {
+            tile = value
+        } label: {
+            VStack(spacing: 9) {
+                Image(picture)
+                    .resizable()
+                    .interpolation(.high)
+                    .frame(width: 72, height: 72)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(Palette.ink35, lineWidth: 1))
+                Text(name.uppercased())
+                    .font(Faces.brand(10, .caption2))
+                    .tracking(2.4)
+                    .foregroundColor(chosen ? Palette.ink : Palette.ink60)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .overlay(Rectangle().strokeBorder(chosen ? Palette.ink : Color.clear, lineWidth: 1.5))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(PressStyle())
+        .accessibilityLabel(Text("\(name) tile"))
+        .accessibilityAddTraits(chosen ? .isSelected : [])
     }
 }
 

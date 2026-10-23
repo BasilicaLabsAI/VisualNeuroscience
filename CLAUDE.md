@@ -94,9 +94,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   the web app's icons and `apple-touch-icon.png`, the iOS catalog's 1024, `app/resources/`, the Play icon, the Android
   launcher sets at every density and the splash screens (the coloured brain on the paper black, 22% of the longer side),
   so `capacitor-assets` is optional. Since v11.88 the iOS app also carries `AppIcon-Black.appiconset`, the brain on the
-  paper black, named in the project's `ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES`; the Account tab's App icon switch
-  (`IconTile`, `AppStore.iconTile` in `Shell.swift`, shown only where `supportsAlternateIcons`) asks the system for it, and
-  the system keeps the choice. Android and the web app keep the white tile, their launchers taking one icon at install. The website's masthead and browser tab keep the ring, `site/assets/logo.svg`, and
+  paper black, named in the project's `ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES`; the Account tab's App icon choice
+  (`IconTileChoice`, `IconTile`, `AppStore.iconTile` in `Shell.swift`, shown only where `supportsAlternateIcons`; since
+  v11.91 the two tiles pictured, `IconTileWhite.imageset` and `IconTileBlack.imageset` drawn by the icon script at 360px,
+  with a box around the one in use) asks the system for it, and the system keeps the choice. Android and the web app keep the white tile, their launchers taking one icon at install. The website's masthead and browser tab keep the ring, `site/assets/logo.svg`, and
   the Play feature graphic (`app/store/play/feature-graphic.html`) still carries the ring inline; its comment names a
   `shoot-play.js` that is not in the repository, so shoot it with Playwright at 1024×500 if it should change.
 - Shared receptor drawings live in `site/assets/rxfig.js` + `rxfig.css`, built from `site/assets/rx/receptors.json`
