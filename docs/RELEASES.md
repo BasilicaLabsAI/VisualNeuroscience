@@ -12,7 +12,7 @@ text below. Both can also be run from a clone on a machine that can push.
 Versions before v8.6 were released without a ledger and are not recorded.
 
 ## v11.83 — 23 October 2026 — Every source inside the Reference drawer
-Commit · Carry every source inside the Reference drawers themselves, on the atlas, the study and the Brodmann map
+Commit · Underline the links in the atlas's Reference drawer, as the study's are
 
 The Reference button on the 3D Region Atlas used to send you to the receptor window for the receptor sources. It now lists them itself: the PET compilation and the autoradiography series with their papers, licences and sample, beside the template, the AAL regions and the Brodmann atlas, each with its citation. The Hallucinations study's Reference writes out the thirteen papers its readings name, with a link to each, under the editorial itself. And the Brodmann Area Atlas's About names the brain's renderer and describes the 3D tab as it now works.
 
