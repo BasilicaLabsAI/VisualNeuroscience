@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.81 — 23 October 2026 — Full-width faces on a phone, the brain on a tab
+Commit · Stack the Brodmann faces at the full width on a phone upright, with a 3D tab that slides the brain up over them
+
+On a phone held upright the two faces of the Brodmann map were too small side by side. They now stand one over the other at the full width of the screen, as large as the height allows over the strip and the bar, and the brain in 3D is a panel the bar's 3D tab slides up over them and down again, as the sideways bar once did, fetched the first time it rises. What it does and About open over it as before. Sideways, on an iPad and on a computer the brain stays on show beside the faces.
+
 ## v11.80 — 23 October 2026 — Boxes that line up sideways
-Commit · Fill the Brodmann faces' boxes to the column's height on a phone held sideways, so they line up with the brain's
+Commit `9f71f88` · Fill the Brodmann faces' boxes to the column's height on a phone held sideways, so they line up with the brain's
 
 On a phone held sideways, picking one face of the Brodmann map left its box shorter than the brain's beside it, with a gap beneath, since the box took the drawing's own proportion while the brain's box filled the row. The faces' boxes now fill the column's height, the drawing centred in each, so they line up with the brain's box whichever faces show, and with the text up the column fills the height beside it.
 

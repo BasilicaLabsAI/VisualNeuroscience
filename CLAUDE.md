@@ -260,8 +260,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   the strip (`order:-1`, scrolling inside, the `r-rise` keyframes), the strip staying put and the faces in reach, put
   away by the button or Escape (`setRead`, `readOpen`, `.read-open` on the screen); on an iPad or a computer the
   button's group is hidden and the whole reading shows.
-  Upright the faces stand side by side across the top (`"maps" "scan" "read"`, each `.cart` at `aspect-ratio:3 / 2`) and
-  the brain takes the room beneath; sideways the faces are stacked down the left at `--cart-w` (`arrange()`: the width
+  Upright (since v11.81) the faces stand one over the other at the full width, or at the width whose two faces fill the
+  height left over the strip and the bar (`arrange()` sets `--cart-w`; `"maps" "read" "bar"`, each `.cart` at
+  `aspect-ratio:3 / 2`, centred), and the brain is a panel over the faces' cell (`.ba-screen.one .scan`, `grid-area:1 /
+  1 / 2 / 2`, below the screen and `visibility:hidden` until `.in`) that the bar's 3D tab (`#scanBtn`, `setScan`,
+  `scanOpen`; hidden on `.land`, `.tall` and `.wide`) slides up and down, fetched the first time it rises
+  (`applyScanMode` leaves `.one` alone), Escape lowering it after About and the text; the Outside, Inside and Both group
+  is hidden upright, the faces both being on show at the full width. Sideways the faces are stacked down the left at
+  `--cart-w` (`arrange()`: the width
   whose two faces fill the height over the strip, at most 42% of the room beside the bar, one face alone up to 55%; since
   v11.80 the boxes fill the column's height, `grid-template-rows:minmax(0,1fr)` per face and `aspect-ratio:auto`, the
   drawing centred in each, so they line up with the brain's box whichever faces show), the
