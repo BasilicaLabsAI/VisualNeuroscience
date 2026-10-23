@@ -123,19 +123,12 @@ function done(file, problems){ const [w, h] = size(file); console.log(path.basen
     done(out, problems); await ctx.close();
   }
 
-  /* the tractogram on white: the page registers each viewer with
-     MN_LIFE as it attaches, so a wrapper on that register catches them,
-     and once the streamlines are in they are asked for a white back */
+  /* the tractogram on white: the page's ground follows the theme since
+     v11.96, so opening it in the light theme is the whole of it */
   if (want('tracts')){
-    const catchLife = `(() => { let real; Object.defineProperty(window, 'MN_LIFE', { configurable: true, get(){ return real; }, set(v){ real = v; if (v && typeof v.register === 'function'){ const reg = v.register; v.register = function(nv){ (window.__nvs = window.__nvs || []).push(nv); return reg.apply(this, arguments); }; } } }); })();`;
-    const { ctx, page, problems } = await open(browser, 'light', 'tracts.html', { width: 1240, height: 1100 }, catchLife);
+    const { ctx, page, problems } = await open(browser, 'light', 'tracts.html', { width: 1240, height: 1100 });
     await page.waitForFunction(() => document.getElementById('stageMsg').classList.contains('hidden'), null, { timeout: 500000 });
-    await page.waitForTimeout(2000);
-    await page.evaluate(() => {
-      const s = document.createElement('style'); s.textContent = '.views .view[data-box="Ren"] .mri-stage{background:#FFFFFF!important}'; document.head.appendChild(s);
-      (window.__nvs || []).forEach(nv => { nv.opts.backColor = [1, 1, 1, 1]; nv.drawScene(); });
-    });
-    await page.waitForTimeout(1500);
+    await page.waitForTimeout(3500);
     await shotOf(page, '.view[data-box="Ren"] .mri-stage', tmp('tracts.png'));
     const out = path.join(HOME, 'tracts-light.jpg');
     sh(`convert "${tmp('tracts.png')}" -resize 1200x700^ -gravity center -extent 1200x700 -quality 88 "${out}"`);

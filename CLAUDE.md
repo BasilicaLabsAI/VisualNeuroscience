@@ -202,7 +202,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   view switch: the tractogram fills the stage (its cap: zoom, the name, Reset), and the bar carries Streamlines
   (`#popLines`: the Direction/Single colour and the thickness), View from (`#popView`: the cube of faces and Reset view),
   Revolve (`#spinBtn`, a `.pbtn` lit while it turns), Export (`#popExport`: the density and the 3D model) and About
-  (`#popAbout`: what you are looking at, the colour key, the credits). Its own viewer script is untouched. The chrome now
+  (`#popAbout`: what you are looking at, the colour key, the credits). Its own viewer script is untouched but for the
+  ground (v11.96, at the owner's word): the tractogram's back follows the theme as the atlases' stages do, the page's black
+  dark and white light (`ground()` beside the viewer list, the stage's two rules by theme, an observer on `data-theme`
+  repainting the viewers at once), the loading message in the page's paper and ink, and `shoot-home-pictures.js` no longer
+  forces a white back for the light twin; it is the one atlas that draws its ground itself rather than through
+  `scan-look.js`, whose dark ground is a scan's pure black. The chrome now
   lives in six pages (the 3D Region Atlas, the Brodmann Area Atlas, the Hallucinations study, the molecular viewer, the
   Network Atlas and Tractography); a change to it belongs in all of them.
 - The Region Atlas is called the 3D Region Atlas wherever its name shows (nav, titles, home page, the app) since

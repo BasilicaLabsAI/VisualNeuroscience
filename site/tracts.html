@@ -132,12 +132,12 @@ svg{ display:block; }
 .cube-k{ grid-area:3/2; }
 .cube-b{ grid-area:3/1; }
 .cube-i{ grid-area:3/3; }
-/* loading and failure states, drawn over the black stage */
+/* loading and failure states, drawn over the stage in the page's paper and ink */
 .stage-msg{
   position:absolute; inset:0; z-index:5;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:.9rem; padding:1.5rem; text-align:center; color:#FFFFFF;
-  background:#111111;
+  gap:.9rem; padding:1.5rem; text-align:center; color:var(--ink);
+  background:var(--paper);
 }
 .stage-msg.hidden{ display:none; }
 .stage-msg .caps{
@@ -145,16 +145,16 @@ svg{ display:block; }
   letter-spacing:.3em; text-transform:uppercase;
 }
 .stage-msg p{
-  font-family:var(--font-serif); font-style:italic; color:#A9A9A9;
+  font-family:var(--font-serif); font-style:italic; color:var(--ink-60);
   max-width:34rem; font-size:.95rem;
 }
 .stage-msg code{
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-style:normal;
-  font-size:.82rem; color:#FFFFFF; background:#000000;
-  border:1px solid #3A3A3A; padding:.35rem .55rem; display:inline-block;
+  font-size:.82rem; color:var(--ink); background:var(--paper);
+  border:1px solid var(--hair); padding:.35rem .55rem; display:inline-block;
 }
-.progress{ width:min(280px,60%); height:2px; background:#3A3A3A; }
-.progress i{ display:block; height:100%; width:0%; background:#FFFFFF; }
+.progress{ width:min(280px,60%); height:2px; background:var(--ink-35); }
+.progress i{ display:block; height:100%; width:0%; background:var(--ink); }
 
 
 /* ════════ the screen: the tractogram is the page ════════
@@ -183,11 +183,13 @@ main.screen{
 .screen .views{ height:100%; display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(0,1fr); gap:0; min-width:0; }
 .screen .views .view{ min-height:0; min-width:0; display:flex; flex-direction:column; border:1px solid var(--hair); }
 .screen .views-wrap .views .view .mri-stage{ flex:1 1 auto; min-height:0; height:auto; max-height:none; aspect-ratio:auto; }
-/* on the page's own black, the dark theme's paper, rather than the pure
-   black of a scan, so view and page are one ground (the viewer clears to
-   the same, and the loading message is drawn on it too). NiiVue paints its
-   canvas's parent black, inline, as it attaches. */
-.views .view[data-box="Ren"] .mri-stage{ background:#111111 !important; }
+/* on the page's own ground: dark, the theme's paper rather than the pure
+   black of a scan, and light, white as the atlases' stages are, so view and
+   page are one ground (the viewer clears to the same, by theme, and the
+   loading message is drawn on it too). NiiVue paints its canvas's parent
+   black, inline, as it attaches. */
+:root[data-theme="dark"] .views .view[data-box="Ren"] .mri-stage{ background:#111111 !important; }
+:root:not([data-theme="dark"]) .views .view[data-box="Ren"] .mri-stage{ background:#FFFFFF !important; }
 @container view (max-width:300px){
   .screen .views .view .view-tools{ display:none; }
 }
@@ -625,6 +627,19 @@ main.screen.one.land{ flex-direction:row; }
     iso:   HOME
   };
   var byKey = {}, instances = [], meshIds = {};
+
+  /* the tractogram's ground follows the theme as the atlases' stages do:
+     the page's black, or white in the light theme, the cut plane's faint
+     pane the opposite shade; a press on the theme switch reaches the
+     viewers at once */
+  function ground(){
+    var dark = document.documentElement.getAttribute("data-theme") === "dark";
+    return {back: dark ? [17/255, 17/255, 17/255, 1] : [1, 1, 1, 1], clip: dark ? [1, 1, 1, 0.04] : [0, 0, 0, 0.04]};
+  }
+  new MutationObserver(function(){
+    var g = ground();
+    instances.forEach(function(nv){ nv.opts.backColor = g.back; nv.opts.clipPlaneColor = g.clip; try{ nv.drawScene(); }catch(e){} });
+  }).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
   var colourMode = "Local";
 
   function wireViewControls(){
@@ -789,7 +804,7 @@ main.screen.one.land{ flex-direction:row; }
       for (var p = 0; p < PLANES.length; p++){
         var plane = PLANES[p];
         var nv = new niivue.Niivue({
-          backColor: [17/255, 17/255, 17/255, 1],   /* #111111, the page's black */
+          backColor: ground().back,   /* the page's black, or white in the light theme */
           crosshairColor: [1, 1, 1, 1],
           show3Dcrosshair: false,
           isColorbar: false,
@@ -797,7 +812,7 @@ main.screen.one.land{ flex-direction:row; }
           invertScrollDirection: true,
           sliceType: niivue.SLICE_TYPE[plane.st],
           /* the cut plane itself is a faint pane of glass, not a magenta slab */
-          clipPlaneColor: [1, 1, 1, 0.04],
+          clipPlaneColor: ground().clip,
           textHeight: 0.04
         });
         await nv.attachToCanvas(document.getElementById(plane.canvasId));

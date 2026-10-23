@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.96 — 23 October 2026 — Tractography in the light theme, and the store images
+Commit · Draw the tractogram on white in the light theme, as the atlases' stages are
+
+In the light theme the Tractography page still drew its streamlines on the dark theme's black, one black box on a white page. The tractogram's ground now follows the theme, the page's black or white, and switches the moment the theme does, with the loading message in the page's own colours. The repository also carries the App Store images made so far: nine for the 13-inch iPad and nine for the iPhone, each a capture of the app under its statement, the status bar painted over in the capture's own ground.
+
 ## v11.95 — 23 October 2026 — A store image with the sell above it
-Commit · Set the owner's statement over the 3D Region Atlas store image
+Commit `3f28f25` · Set the owner's statement over the 3D Region Atlas store image
 
 The repository gains the way the App Store images are made from a capture of the app: a statement in the brand face above, the capture framed beneath at the store's size with the device's status bar painted over rather than cut away. The first, for the 13-inch iPad, shows the 3D Region Atlas with three regions highlighted under the words Detailed 3D Human Brain Atlas.
 
