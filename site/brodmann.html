@@ -670,7 +670,10 @@ body.ba-land{ padding-bottom:0; }
     if (land){
       /* the faces' column: the width whose stacked faces, three by two each,
          fill the height over the strip, at most two fifths of the room
-         beside the bar; one face alone may take just over half of it */
+         beside the bar; one face alone may take just over half of it. While
+         the text is up the faces span the height and the strip stands in
+         the brain's column, so the column keeps its width until it closes */
+      if (readOpen) return;
       var room = W - 92 - 10, strip = rHead.offsetHeight + 20, free = H - strip - 8;
       var cartW = faceView === "both" ? Math.min(0.42 * room, (free - 8) * 0.75) : Math.min(0.55 * room, free * 1.5);
       screenEl.style.setProperty("--cart-w", Math.max(150, Math.floor(cartW)) + "px");
@@ -766,6 +769,7 @@ body.ba-land{ padding-bottom:0; }
     rMore.setAttribute("aria-expanded", String(readOpen));
     if (readOpen) rText.scrollTop = 0;
     if (window.MN && open) MN.tap("light");
+    fitSoon();
   }
   rMore.addEventListener("click", function(){ setRead(!readOpen); });
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && readOpen && !e.defaultPrevented) setRead(false); });

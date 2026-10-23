@@ -12,7 +12,7 @@ text below. Both can also be run from a clone on a machine that can push.
 Versions before v8.6 were released without a ledger and are not recorded.
 
 ## v11.74 — 23 October 2026 — Three views on a phone
-Commit · Show a phone the Brodmann Atlas's three views at once, the reading a strip with the text behind a button
+Commit · Keep the Brodmann faces' column steady sideways while the text is up, finishing the phone's three views
 
 On a phone the Brodmann Area Atlas now shows all three views at once, as an iPad does. Held upright, the two faces stand side by side across the top with the brain in 3D beneath them; held sideways, the faces are stacked down the left with the brain beside them, and one face alone is drawn larger when the bar picks it. The reading is a strip along the foot carrying the area's name, with a button, What it does, that raises the text over the brain and puts it away again, the faces staying in reach throughout. The Show in 3D button and the panel it raised are gone, the brain being always on show.
 
