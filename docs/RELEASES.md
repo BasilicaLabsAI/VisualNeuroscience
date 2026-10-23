@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.64 — 23 October 2026 — A note that holds still
+Commit · Give each brain state of the Hallucinations study a short note of its own, laid so the Regions beneath never move
+
+The Brain state box of the Hallucinations study carried a paragraph in both states and a second one in the hallucinating state only, so the Regions section beneath jumped as the state changed. Each state now has one short note of its own, the healthy ear and the hallucinating one as Boksa's editorial maps them, and the two are laid in the same room so the box stands at one height whichever shows.
+
 ## v11.63 — 22 October 2026 — The island
-Commit · Give the website the iOS app's bar of tabs, an island of five in place of the header's row of links
+Commit `50ac00e` · Give the website the iOS app's bar of tabs, an island of five in place of the header's row of links
 
 The website's header was a masthead with a row of ten section links beneath it, folding into a menu on a phone. It is now the iOS app's: a slim bar with the brand at the left, the theme and account buttons at the right and, floating between them, an island of the app's five tabs, Atlases, Library, Practice, About and Account, each an icon over its name, the page's own tab lit. On an iPad or a computer the three stand on one line; on a phone the island has a line of its own and spans the width, as the app's does. Atlases and Library open the home page on one of two hubs, the six atlases with the figures beneath, or the papers, the book and the posters, switching in place as the app's tabs do; the other three tabs are the pages themselves. The bar pins to the top and turns to a material as the page scrolls, and on a phone held sideways it scrolls away. The social links left the header with the row; the About page lists them. The apps are untouched: the iOS shell draws its own tabs and the Android app keeps its bar and sections menu.
 

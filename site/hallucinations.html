@@ -290,6 +290,12 @@ td.hl{ color:var(--over); }
 .drawer-in .mode-group{ display:flex; gap:.4rem; }
 .drawer-in .mode-group .ts-btn{ flex:1; text-align:center; }
 .drawer-in .rail-note{ margin-top:.75rem; }
+/* the state's note, one for each state, both laid in the same cell so the
+   box stands at the taller's height whichever shows and the Regions
+   beneath never move as the state changes */
+.state-notes{ display:grid; margin-top:.75rem; }
+.state-notes .state-note{ grid-area:1 / 1; margin-top:0; }
+.state-notes .state-note.off{ visibility:hidden; }
 .drawer-in .rlist{ margin-top:.6rem; }
 .drawer-in .rail-row{ margin-top:.7rem; }
 /* the reading: the region's name, where it sits, what it does and what
@@ -572,8 +578,10 @@ main.screen.one.land{ flex-direction:row; }
             <button class="ts-btn active" id="btn-healthy" type="button" aria-pressed="true">Normal audition</button>
             <button class="ts-btn" id="btn-halluc" type="button" aria-pressed="false">Hallucinating</button>
           </div>
-          <p class="rail-note">Perceptions in the absence of a stimulus, as Boksa&rsquo;s editorial of 2009 maps them: hearing is intact, and what breaks is the handling of the brain&rsquo;s own inner speech.</p>
-          <p class="rail-note" id="legendKey">In the hallucinating state the overactive regions come forward and the weakened ones fall back. Each keeps its own colour throughout.</p>
+          <div class="state-notes">
+            <p class="rail-note state-note" id="note-healthy">As Boksa&rsquo;s 2009 editorial maps health: hearing intact, inner speech known as the brain&rsquo;s own, the whole circuit evenly lit.</p>
+            <p class="rail-note state-note off" id="note-halluc" aria-hidden="true">As Boksa&rsquo;s 2009 editorial maps hallucination: inner speech taken for a voice, the overactive regions forward, the weakened back.</p>
+          </div>
         </section>
         <section class="rail-part">
           <h2>Regions</h2>
@@ -1277,7 +1285,10 @@ function renderAll(){
     btn.setAttribute("aria-pressed", String(btn.dataset.id === selected));
     btn.classList.toggle("dimmed", roleFilter.length > 0 && roleFilter.indexOf(region.role) < 0);
   });
-  $("legendKey").classList.toggle("hidden", state !== "halluc");
+  [["note-healthy", "healthy"], ["note-halluc", "halluc"]].forEach(([id, s]) => {
+    $(id).classList.toggle("off", state !== s);
+    $(id).setAttribute("aria-hidden", String(state !== s));
+  });
   renderPanel();
   paintMechanism();
   repaint();
