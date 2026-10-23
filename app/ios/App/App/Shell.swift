@@ -185,7 +185,7 @@ struct AboutTab: View {
     var body: some View {
         TabPage {
             PageBox(page: .mcp, kicker: "For AI assistants",
-                    text: "Ask the atlas from Claude, ChatGPT or any assistant that speaks the Model Context Protocol: what a region does, where a receptor is densest, how the brain changes in a state. Each answer links to the view it describes.",
+                    text: "Ask the atlas from Claude, ChatGPT, Kimi or any assistant that speaks the Model Context Protocol: what a region does, where a receptor is densest, how the brain changes in a state. Each answer links to the view it describes.",
                     meta: "9 tools · no key needed · sign in only for your own models",
                     go: "How to connect")
             Box(kicker: "On the way", title: "Coming soon",
@@ -193,7 +193,7 @@ struct AboutTab: View {
                 VStack(alignment: .leading, spacing: 0) {
                     SoonRow(name: "Circuit Atlas", text: "The 3D Region Atlas with the traffic drawn on: animated paths run from region to region, so a circuit such as the Hallucinations study’s plays out on the brain.")
                     SoonRow(name: "Regions in depth", text: "A detailed functional breakdown of every region, written from the research, beyond the line the atlas gives each one now.")
-                    SoonRow(name: "The MCP server, extended", text: "New tools for an assistant: the Circuit Atlas’s paths and the detailed breakdowns, answered in Claude or any assistant that speaks the protocol.")
+                    SoonRow(name: "The MCP server, extended", text: "New tools for an assistant: the Circuit Atlas’s paths and the detailed breakdowns, answered in Claude, ChatGPT, Kimi or any assistant that speaks the protocol.")
                 }
                 .padding(.top, 10)
             }

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.77 — 23 October 2026 — Claude, ChatGPT and Kimi, named together
+Commit · Name ChatGPT and Kimi beside Claude wherever the MCP server is introduced
+
+The MCP server's box, in the app's About tab and on the website's About hub, now names Kimi beside Claude and ChatGPT, and the Coming soon row on the server's extension names all three where it named Claude alone, as the MCP page and the privacy policy already did. The Vision Pro console's About card and the website's About page say the same.
+
 ## v11.76 — 23 October 2026 — A Slice button that stays put
-Commit · Keep the Brodmann brain's Slice button in its place, with Slice area appearing to its left
+Commit `32f9bf3` · Keep the Brodmann brain's Slice button in its place, with Slice area appearing to its left
 
 In the head of the Brodmann brain, pressing Slice brought Slice area out to its right and pushed Slice along to make room. Slice and Reset now keep their places: the Slice area button appears to the left of Slice while slicing is on and goes again when it is off, so the button a finger is on never moves under it.
 
