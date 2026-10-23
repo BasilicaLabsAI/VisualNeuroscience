@@ -391,12 +391,12 @@ svg{ display:block; }
    together, so the tool's own Reset cuts stays hidden here */
 .scan-head .slice-reset{ display:none; }
 /* on a phone the head is short of room once the slice buttons join it: the
-   Area button shows its last word alone, and the panel's name and note step
-   aside while slicing is on, so Slice, Area, Reset and the collapse button
-   all stay in reach */
+   Area button shows its last word alone and the note steps aside while
+   slicing is on, the name staying, so the head changes as little as it can
+   and Slice and Reset never move */
 @media (max-width:760px){
   .scan-head .lbl-more{ display:none; }
-  .scan-head:has(.slice-btn.active) b, .scan-head:has(.slice-btn.active) small{ display:none; }
+  .scan-head:has(.slice-btn.active) small{ display:none; }
 }
 
 /* ── the brain in 3D ─────────────────────────────────────────────────────

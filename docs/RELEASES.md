@@ -12,9 +12,9 @@ text below. Both can also be run from a clone on a machine that can push.
 Versions before v8.6 were released without a ledger and are not recorded.
 
 ## v11.81 — 23 October 2026 — Full-width faces on a phone, the brain on a tab
-Commit · Stack the Brodmann faces at the full width on a phone upright, with a 3D tab that slides the brain up over them
+Commit · Keep the Brodmann brain's name in its head while slicing on a phone, finishing the phone's full-width faces and 3D tab
 
-On a phone held upright the two faces of the Brodmann map were too small side by side. They now stand one over the other at the full width of the screen, as large as the height allows over the strip and the bar, and the brain in 3D is a panel the bar's 3D tab slides up over them and down again, as the sideways bar once did, fetched the first time it rises. What it does and About open over it as before. Sideways, on an iPad and on a computer the brain stays on show beside the faces.
+On a phone held upright the two faces of the Brodmann map were too small side by side. They now stand one over the other at the full width of the screen, as large as the height allows over the strip and the bar, and the brain in 3D is a panel the bar's 3D tab slides up over them and down again, as the sideways bar once did, fetched the first time it rises. What it does and About open over it as before. Sideways, on an iPad and on a computer the brain stays on show beside the faces. In the brain's head on a phone the name now stays while slicing is on, only the note stepping aside, so Slice and Reset keep their places and Slice area appears beside them rather than the row starting again from the left.
 
 ## v11.80 — 23 October 2026 — Boxes that line up sideways
 Commit `9f71f88` · Fill the Brodmann faces' boxes to the column's height on a phone held sideways, so they line up with the brain's
