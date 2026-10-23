@@ -141,7 +141,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   like the molecular viewer's boxes since v11.33, as are the pop-ups and their tabs; `#drawer` is the
   column the views make room for, `#drawerBox` the box, as tall as its content up to the room, scrolling inside in
   `.drawer-in`; hidden on the tab at its edge, `#drawerHide`, shown again on the handle `#drawerTab` at the screen's
-  edge; beside the views from 901px and over them below, remembered in `localStorage` as `vn-atlas-drawer`). The
+  edge; beside the views from 901px and over them below, remembered in `localStorage` as `vn-atlas-drawer`). The box's
+  Highlighted rows (`#chips`, `renderChips`) stand under a subheading per layer (`.rchip-head`, v11.65) in the order of
+  `MN_NOTES.TIERS` (the cortex, labelled so since v11.65 under the id `cerebrum`, limbic midbrain, reptilian core; each region's `tier` in `region-notes.js`), the Brodmann
+  areas in a block of their own beneath, as the What-they-do pop-up stacks them. The
   Add-a-region panel (`#rpickPop`) is placed by the script from its button relative to `#drawerBox` (`--pop-left`,
   `--pop-top`, `--pop-w`), outside the box's scroller, so its list is one scroller and not one inside another, which
   the iPad would not always let scroll; the box's own scroll closes it. Its search field takes the focus on opening

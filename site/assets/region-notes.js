@@ -13,7 +13,7 @@
 window.MN_NOTES = (function(){
 
 var TIERS = [
-  {id:"cerebrum",  label:"Cerebrum",
+  {id:"cerebrum",  label:"Cortex",
    sub:"the neocortical sheet — perception, language, planning, deliberate action"},
   {id:"midbrain",  label:"Midbrain &middot; limbic",
    sub:"memory, emotion and the body's inner report"},

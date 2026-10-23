@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.65 — 23 October 2026 — The highlighted list by layer
+Commit · Head the 3D Region Atlas's highlighted list by layer of the brain, the Brodmann areas in a block of their own
+
+The highlighted list in the 3D Region Atlas's box was one run of rows in the order they were added. It now stands under a subheading for each layer of the brain, the cortex at the top, the limbic midbrain beneath it and the reptilian core at the bottom, the order the What-they-do window stacks the same regions, with a count beside each and the Brodmann areas in a block of their own beneath. A layer with nothing lit is left out rather than headed empty, and the top layer is now named the cortex wherever the three are named, in the list, the window and the MCP server's answers.
+
 ## v11.64 — 23 October 2026 — A note that holds still
-Commit · Give each brain state of the Hallucinations study a short note of its own, laid so the Regions beneath never move
+Commit `aedec14` · Give each brain state of the Hallucinations study a short note of its own, laid so the Regions beneath never move
 
 The Brain state box of the Hallucinations study carried a paragraph in both states and a second one in the hallucinating state only, so the Regions section beneath jumped as the state changed. Each state now has one short note of its own, the healthy ear and the hallucinating one as Boksa's editorial maps them, and the two are laid in the same room so the box stands at one height whichever shows.
 

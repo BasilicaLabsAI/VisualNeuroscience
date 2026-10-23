@@ -236,7 +236,7 @@ a{ color:var(--ink); text-decoration:none; }
 .band small{ font-family:var(--font-serif); font-style:italic; font-size:.92rem; color:var(--ink-60); }
 
 /* ── what the highlighted regions do, stacked by layer ─────────────────
-   Fixed order, always: cerebrum on top, limbic midbrain in the middle, the
+   Fixed order, always: the cortex on top, limbic midbrain in the middle, the
    reptilian core at the bottom, so the stack reads the same way every time
    whichever regions happen to be lit. */
 .notes{ margin-top:var(--gap); }
@@ -691,6 +691,15 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
   font-size:1rem; line-height:1; padding:.05rem .3rem;
 }
 .rchip .x:hover{ background:var(--ink); color:var(--paper); }
+/* the subheading over each layer's rows, set as the picker heads its lobes */
+.rchip-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:.5rem;
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+  border-bottom:1px solid var(--ink-35); padding:.55rem .1rem .3rem; margin-top:.35rem;
+}
+#emptyMsg + .rchip-head{ margin-top:0; }
+.rchip-head .n{ letter-spacing:.1em; }
 .empty-note{ font-family:var(--font-serif); font-style:italic; font-size:.9rem; color:var(--ink-60); }
 
 /* the viewports — each plane a framed radiograph: canvases stay ink-black in both themes */
@@ -1366,7 +1375,7 @@ main.screen.one.land{ flex-direction:row; }
         <header class="pop-head"><b id="popNotesH">What they do</b><small id="notesCount"></small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
         <div class="pop-body">
           <section class="notes" id="notesSec" aria-label="Highlighted regions">
-            <p class="notes-empty" id="notesEmpty">Add a region or a Brodmann area above and what it does appears here, stacked by layer: cerebrum at the top, the limbic midbrain beneath it, the reptilian core at the bottom, and the Brodmann areas in a block of their own.</p>
+            <p class="notes-empty" id="notesEmpty">Add a region or a Brodmann area above and what it does appears here, stacked by layer: the cortex at the top, the limbic midbrain beneath it, the reptilian core at the bottom, and the Brodmann areas in a block of their own.</p>
     <div id="notesTiers"></div>
     <p class="notes-caveat">The three layers are MacLean's triune scheme. It stacks a brain map tidily and it is poor evolutionary history — the &ldquo;reptilian&rdquo; structures are not reptilian, and every layer here is present in every vertebrate with a brain. The grouping is a way of reading the map, not a claim about how it was built.</p>
           </section>
@@ -1770,7 +1779,7 @@ main.screen.one.land{ flex-direction:row; }
 
 
   /* ── what the highlighted regions do ──────────────────────────────────
-     Stacked by layer in a fixed order — cerebrum, limbic midbrain,
+     Stacked by layer in a fixed order — cortex, limbic midbrain,
      reptilian core — so the stack reads the same way whichever regions are
      lit. A layer with nothing selected in it is left out rather than shown
      empty. */
@@ -1868,15 +1877,32 @@ main.screen.one.land{ flex-direction:row; }
   function notifySel(){
     selWatchers.forEach(function(cb){ try{ cb(); }catch(e){} });
   }
+  /* The rows stand under a subheading for each layer of the brain, in the
+     notes' fixed order — cortex, limbic midbrain, reptilian core — with
+     the Brodmann areas in a block of their own beneath, as the What-they-do
+     pop-up stacks the same regions. A layer with nothing lit in it is left
+     out rather than headed empty. */
   function renderChips(){
     notifySel();
-    chipsEl.querySelectorAll(".rchip").forEach(function(c){ c.remove(); });
+    chipsEl.querySelectorAll(".rchip, .rchip-head").forEach(function(c){ c.remove(); });
     emptyMsg.classList.toggle("hidden", selections.size > 0);
     statCount.innerHTML = selections.size
       ? countText().replace(/(\d+) ([a-z]+)/g, "$1 <small>$2</small>")
       : "0 <small>highlighted</small>";
+    var notes = typeof MN_NOTES !== "undefined" ? MN_NOTES : null;
+    var bucket = {}, areas = [], loose = [];
     selections.forEach(function(s, key){
-      var chip = document.createElement("div"); chip.className = "rchip";
+      if (isBA(s)){ areas.push([key, s]); return; }
+      var note = notes && notes.NOTES[s.base], tier = note && note.tier;
+      if (tier) (bucket[tier] = bucket[tier] || []).push([key, s]); else loose.push([key, s]);
+    });
+    function heading(label, n){
+      var h = document.createElement("div"); h.className = "rchip-head";
+      h.innerHTML = "<span>" + label + "</span><span class=\"n\">" + n + "</span>";
+      chipsEl.appendChild(h);
+    }
+    function chip(key, s){
+      var row = document.createElement("div"); row.className = "rchip";
       var dot = document.createElement("span"); dot.className = "dot"; dot.style.background = s.color;
       var name = document.createElement("span"); name.className = "name"; name.textContent = s.name;
       name.title = s.name;
@@ -1886,9 +1912,20 @@ main.screen.one.land{ flex-direction:row; }
       x.addEventListener("click", function(){
         selections.delete(key); renderChips(); applyColormap();
       });
-      chip.appendChild(dot); chip.appendChild(name); chip.appendChild(side); chip.appendChild(x);
-      chipsEl.appendChild(chip);
+      row.appendChild(dot); row.appendChild(name); row.appendChild(side); row.appendChild(x);
+      chipsEl.appendChild(row);
+    }
+    (notes ? notes.TIERS : []).forEach(function(tier){
+      var rows = bucket[tier.id];
+      if (!rows || !rows.length) return;
+      heading(tier.label, rows.length);
+      rows.forEach(function(r){ chip(r[0], r[1]); });
     });
+    loose.forEach(function(r){ chip(r[0], r[1]); });
+    if (areas.length){
+      heading("Brodmann areas", areas.length);
+      areas.forEach(function(r){ chip(r[0], r[1]); });
+    }
     renderNotes();
   }
 
