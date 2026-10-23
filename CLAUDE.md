@@ -71,11 +71,13 @@ Read this first in every session. It is the handover; nothing else needs pasting
   masthead markup as the others; `get.html` carries none on purpose.
 - `site/sw.js` precaches pages and assets: **bump `VERSION`** (`vn-NN`) whenever a precached file changes.
 - The app icon (v11.85, at the owner's word) is the brain wired with circuit traces and nodes on a white tile, on every
-  platform, wearing the ring's colours since v11.86: `scripts/appmark/trace.py` traces the owner's drawing
-  `scripts/appmark/brain.jpg` (marching squares over the enlarged, thresholded drawing, simplified and smoothed into one
-  evenodd path) and writes `site/assets/app-mark-colour.svg`, the path in `make_logo.py`'s palette swept clockwise from
-  the top as the ring carries it, in ninety flat wedges (`PALETTE`, `WEDGES`, `palette_at`), and `site/assets/app-mark.svg`,
-  the path alone filled with currentColor, which only the mono icon uses. `app/scripts/make-icons.mjs` (`npm run icons` on the Mac; here, link the global
+  platform, wearing the ring's colours since v11.86 and drawn as line vectors since v11.87: `scripts/appmark/trace.py`
+  reads the owner's drawing `scripts/appmark/brain.jpg`, thins its strokes to their centre lines (Zhang-Suen), cuts the
+  skeleton into lines between its junctions, joins the two that run on through each junction so the outline is one
+  curve, smooths and simplifies them into cubic curves, turns the small holes into true circles the lines are carried
+  straight into, and reads the stroke's width off the drawing; it writes `site/assets/app-mark-colour.svg`, the lines in
+  `make_logo.py`'s palette swept clockwise from the top as the ring carries it, in ninety flat wedges (`PALETTE`, `WEDGES`,
+  `palette_at`), and `site/assets/app-mark.svg`, the lines in currentColor, which only the mono icon uses. `app/scripts/make-icons.mjs` (`npm run icons` on the Mac; here, link the global
   modules first, `ln -s "$(npm root -g)" app/node_modules`, and remove the link after) draws every icon and splash from it:
   the web app's icons and `apple-touch-icon.png`, the iOS catalog's 1024, `app/resources/`, the Play icon, the Android
   launcher sets at every density and the splash screens (the coloured brain on the paper black, 22% of the longer side),

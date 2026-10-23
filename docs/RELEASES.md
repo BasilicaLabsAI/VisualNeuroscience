@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.87 — 23 October 2026 — The brain drawn in clean lines
+Commit · Draw the app's brain as line vectors, one stroke along each line's centre and a true circle at each node
+
+The icon's brain is redrawn as line vectors. Where the first tracing followed the edges of the drawing, wobble and all, every line is now one smooth stroke of the same width along its centre with round ends, each node a true circle the lines run straight into, so the edges are clean at every size. The colours and the layout are as before.
+
 ## v11.86 — 23 October 2026 — The ring's colours on the brain
-Commit · Paint the app's brain in the ring's colours, swept round it as the ring carries them
+Commit `063d146` · Paint the app's brain in the ring's colours, swept round it as the ring carries them
 
 The app's icon keeps the colours of the mark it replaced: the brain's traces and nodes now run through the ring's fourteen colours, purple at the top, pink and red down the right, orange and yellow at the stem, green and cyan round the left and blue back to the top, on the white tile of every platform and on the paper black of the splash screens.
 

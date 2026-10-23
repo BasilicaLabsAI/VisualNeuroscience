@@ -154,8 +154,8 @@ the two switches that put the same build on the Mac App Store.
 ## Icons and splash
 
 `npm run icons` draws every icon and splash the three targets use from the
-app mark: the brain wired with circuit traces and nodes, traced from the
-owner's drawing by `../scripts/appmark/trace.py` (the drawing is `brain.jpg`
+app mark: the brain wired with circuit traces and nodes, drawn as line
+vectors from the owner's drawing by `../scripts/appmark/trace.py` (the drawing is `brain.jpg`
 beside it; run the script again if the drawing changes) into
 `../site/assets/app-mark-colour.svg`, which wears the ring's colours swept
 round it as the ring carries them, and `../site/assets/app-mark.svg`, the
