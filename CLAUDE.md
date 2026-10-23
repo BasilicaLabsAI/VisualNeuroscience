@@ -78,8 +78,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   the web app's icons and `apple-touch-icon.png`, the iOS catalog's 1024, `app/resources/`, the Play icon, the Android
   launcher sets at every density and the splash screens (the brain in white on the paper black, 22% of the longer side),
   so `capacitor-assets` is optional. The website's masthead and browser tab keep the ring, `site/assets/logo.svg`, and
-  the Play feature graphic (`app/store/play/feature-graphic.html`) still carries the ring inline; re-render it with
-  `app/scripts/shoot-play.js` if it should change.
+  the Play feature graphic (`app/store/play/feature-graphic.html`) still carries the ring inline; its comment names a
+  `shoot-play.js` that is not in the repository, so shoot it with Playwright at 1024×500 if it should change.
 - Shared receptor drawings live in `site/assets/rxfig.js` + `rxfig.css`, built from `site/assets/rx/receptors.json`
   (`scripts/receptors/build.py`) and `site/assets/nt/molecules.json` (`scripts/neurotransmitters/build.py`).
   The textbook is built by `scripts/textbook/build.py` from the OpenStax source (not in the repo; CC BY-NC-SA 4.0).
