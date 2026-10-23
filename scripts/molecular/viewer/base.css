@@ -48,6 +48,7 @@ button { font: inherit; color: inherit; }
 a { color: var(--accent); text-underline-offset: 2px; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+html { touch-action: manipulation; }   /* no double-tap zoom: the model pinches on its own */
 #gl { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; outline: none; cursor: grab; }
 #gl:active { cursor: grabbing; }
 #gl:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }

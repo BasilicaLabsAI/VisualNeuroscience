@@ -415,6 +415,10 @@ body{
    for touch already, and a blanket range rule would break their vertical
    writing mode. */
 button, .ts-btn, .seg-btn, .barow{ touch-action:manipulation; }
+/* a double tap anywhere zooms nothing: the pages are screens, with their own
+   pinch on the views; the page itself still pinches on the website, for whoever
+   needs it larger, and not at all inside the apps (the shell's viewport) */
+html{ touch-action:manipulation; }
 @media (pointer:coarse){
   .ts-btn{ min-height:44px; }
   .seg-btn{ width:44px; height:44px; }

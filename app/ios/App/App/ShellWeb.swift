@@ -246,15 +246,21 @@ final class PageBridgeController: CAPBridgeViewController {
 
     /// Runs before anything on the page: marks the page as one of the
     /// shell's, and on an iPad as one that fills the screen (as soon as its
-    /// root element exists, which WebKit makes before this runs), writes the
-    /// shell's theme where the page reads its own, opens it on its fragment,
-    /// and once it is built has it say which theme it came up in.
+    /// root element exists, which WebKit makes before this runs), pins the
+    /// viewport so the page cannot zoom (a double tap on a region once
+    /// magnified a whole atlas page; the views pinch on their own), writes
+    /// the shell's theme where the page reads its own, opens it on its
+    /// fragment, and once it is built has it say which theme it came up in.
     private var startScript: String {
         let pad = UIDevice.current.userInterfaceIdiom == .pad
         var lines = [
             "var pad = \(pad);",
             "var mark = function () { var root = document.documentElement; if (root) { root.setAttribute('data-shell', 'tabs'); if (pad) root.setAttribute('data-shell-pad', ''); } return !!root; };",
-            "if (!mark()) new MutationObserver(function (records, watch) { if (mark()) watch.disconnect(); }).observe(document, { childList: true });"
+            "if (!mark()) new MutationObserver(function (records, watch) { if (mark()) watch.disconnect(); }).observe(document, { childList: true });",
+            "var still = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';",
+            "var pin = function () { var m = document.querySelector('meta[name=viewport]'); if (!m) return false; if (m.content !== still) m.content = still; return true; };",
+            "if (!pin()) new MutationObserver(function (records, watch) { if (pin()) watch.disconnect(); }).observe(document, { childList: true, subtree: true });",
+            "document.addEventListener('DOMContentLoaded', function () { if (!pin() && document.head) { var m = document.createElement('meta'); m.name = 'viewport'; m.content = still; document.head.appendChild(m); } });"
         ]
         if let theme = startTheme {
             lines.append("try { localStorage.setItem('mn-theme', '\(theme.rawValue)'); } catch (e) {}")

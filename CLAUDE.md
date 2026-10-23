@@ -39,7 +39,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `ShellWeb.swift`; `app/README.md` has the tab list and the shared pieces): Atlases, Library, Practice, About,
   Account, each a page of boxes in the home page's words with no header of its own (the tab bar names it), each box
   pushing a web page in a Capacitor bridge of its own. A page inside the tabs carries `data-shell="tabs"` and draws
-  no web bar (`navbar.js`); the theme is the shell's (Account). When a home-page box's text or picture changes,
+  no web bar (`navbar.js`); the theme is the shell's (Account). The shell's start script (`startScript` in
+  `ShellWeb.swift`, at document start) also pins every page's viewport to `maximum-scale=1, user-scalable=no` (v11.92: a
+  double tap on a region row once magnified the whole atlas page), and `viewer.css` sets `touch-action:manipulation` on
+  `html` (the molecular viewer's `base.css` too), which takes WebKit's double-tap zoom off every page on the website as
+  well, where a pinch still enlarges the page for whoever needs it. When a home-page box's text or picture changes,
   change its twin in `Shell.swift` too. Every box's picture has a twin for the light theme since v11.67
   (`assets/home/*-light.jpg`, `assets/studies/hallucinations-light.png`), shot from the live pages by
   `app/scripts/shoot-home-pictures.js` (the atlas's by `shoot-home-atlas.js`); the website swaps them by theme

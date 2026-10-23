@@ -101,6 +101,11 @@ after the update reports the theme the web app last used, and the shell keeps
 that, so nobody's choice is lost. A page knows it is in the tabs by
 `data-shell="tabs"` on its root element: `site/assets/navbar.js` then draws no
 bar of its own and `site/assets/viewer.css` drops the room it kept for one.
+The same script pins each page's viewport to `maximum-scale=1,
+user-scalable=no`, so nothing a finger does can enlarge a page in the app (a
+double tap on a region's row once did; the views pinch on their own), and
+`viewer.css` sets `touch-action: manipulation` on the root of every page, which
+takes WebKit's double-tap zoom off the website too.
 Android, which has no tab bar, keeps the web bar and its sections menu.
 
 Nothing in this repository can compile Swift, so a change here is proven by

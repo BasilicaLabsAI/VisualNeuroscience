@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.92 — 23 October 2026 — No zoom from a double tap
+Commit · Take the double-tap zoom off every page, and pin the viewport inside the app
+
+A double tap on a region's row once magnified a whole atlas page in the app, the way a web page zooms to a paragraph. It cannot now: the pages tell the browser that a double tap is never a zoom, on the website too, and inside the app the page cannot be enlarged at all, since the views pinch on their own. On the website a pinch still enlarges a page for whoever needs it.
+
 ## v11.91 — 23 October 2026 — The icon's tiles pictured
-Commit · Picture the two tiles under App icon, with a box around the one in use
+Commit `870a933` · Picture the two tiles under App icon, with a box around the one in use
 
 Under Account, the App icon choice now shows the two tiles themselves, the brain on white and the brain on black, drawn as the Home Screen draws them, with a box around the one in use; press the other to change over. The pictures are drawn by the icon script with the rest.
 
