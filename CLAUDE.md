@@ -197,7 +197,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   sideways hint and keeps a room-taking scrollbar out of the graph's height before it measures; the table's lede is one concise paragraph ending in a live example read off the table (`heatExample`); the
   bar's two buttons each stand for a family of tabs (`data-tabs`), lit for any of them); then Saved
   maps, Export and, at the far right behind a line,
-  Reference (`.pbtn-ref`, since v11.31); the Brodmann map left the page in v11.30, the Brodmann Area Atlas having it). The readouts sit at the bar's start; since v11.51 the Probe readout's names are buttons (`.probe-btn`, built in `onLoc`
+  Reference (`.pbtn-ref`, since v11.31; since v11.83 its window lists every source in full rather than sending the reader to the
+  receptor window: the two receptor lines are written into `#ref-sources` by `renderSources()` from the receptor data, the
+  same text the receptor window's Sources tab carries, through `sourceLines()`); the Brodmann map left the page in v11.30, the Brodmann Area Atlas having it). The readouts sit at the bar's start; since v11.51 the Probe readout's names are buttons (`.probe-btn`, built in `onLoc`
   only as the names change): the region's lights the side under the crosshair, or the pair while Mirror is ticked, and puts
   out whatever entry covers the label (`toggleProbe`, `litBy`), the area's lights or puts out the Brodmann area
   (`toggleProbeBA`), and `paintProbe` keeps their pressed state and colour dot in step through `selWatchers`. Every element id the script uses is unchanged, so the pop-ups' contents
@@ -279,7 +281,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (`faceView`, remembered as `vn-ba-view`; `.maps.only-lateral`, `.only-medial`; one face alone is drawn larger, its
   height from `faceH()` in `arrange()`), What it does (`#readBtn` in `.panelbar-btns`, hidden on `.tall` and `.wide`)
   raises the reading, and About (`#aboutBtn`, `.pbtn-ref` at the far right behind a line) raises `#popAbout`, a `.pop`
-  window over the brain's cell (the reading's place on a phone upright) holding What this is and the credits, which
+  window over the brain's cell (the reading's place on a phone upright) holding What this is and the credits (the brain's
+  renderer named and the 3D tab described since v11.83), which
   left the foot of the page (`setAbout`, `aboutOpen`; one of the two windows at a time; Escape closes About first).
   The old bar's 3D button, the Show in 3D button at the reading's foot (`#rTo3d`), the strip's own button (`#rMore`,
   v11.74 only) and the panel that rose over the faces are gone, the brain being always on show. In the app the first
@@ -295,7 +298,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   below the scans (`#popPaper` first, since v11.45, introducing the editorial with its citation and links at its foot;
   `#popReading`, which `HX_SCREEN.open` raises as a region is picked from the list; `#popCircuit` with
   the two circuit drawings and their tabs; `#popWho`, `#popImaging`, `#popWindows`, `#popLimits`; `#popExport` with
-  `#export3d`; `#popRef` with the paper and `#scan-note`), with the readouts `#statState` and `#statRegion`. The box's
+  `#export3d`; `#popRef` with the paper, `#scan-note` and, since v11.83, the thirteen papers the readings name written out in full with a
+  link to each, `.ref-studies`, matched to their PubMed records), with the readouts `#statState` and `#statRegion`. The box's
   state buttons and the circuit's tabs are one `state` (v11.44; `renderAll` paints the circuit too), and the reading
   gives both states, `#m-healthy` and `#m-halluc`, the one showing marked `.on`. The box's note under the state
   buttons is a pair, `#note-healthy` and `#note-halluc` in `.state-notes`, both laid in one grid cell with the other

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.83 — 23 October 2026 — Every source inside the Reference drawer
+Commit · Carry every source inside the Reference drawers themselves, on the atlas, the study and the Brodmann map
+
+The Reference button on the 3D Region Atlas used to send you to the receptor window for the receptor sources. It now lists them itself: the PET compilation and the autoradiography series with their papers, licences and sample, beside the template, the AAL regions and the Brodmann atlas, each with its citation. The Hallucinations study's Reference writes out the thirteen papers its readings name, with a link to each, under the editorial itself. And the Brodmann Area Atlas's About names the brain's renderer and describes the 3D tab as it now works.
+
 ## v11.82 — 23 October 2026 — The bar stays while a drawer is up
-Commit · Keep the bar of tabs on show while a pop-up is open on a phone, and make the Brodmann page's drawers one at a time
+Commit `48d6cd3` · Keep the bar of tabs on show while a pop-up is open on a phone, and make the Brodmann page's drawers one at a time
 
 On every page with the bar of tab buttons, the bar now stays on show while a drawer is up, on a phone as everywhere else: on the 3D Region Atlas and the Hallucinations study the pop-up stands above the bar instead of taking its room, its button lit, so a tap on that button closes it, another button swaps it, and the cross at the top right and Escape close it too, as the molecular viewer has always done. On the Brodmann Area Atlas the reading's text carries a cross of its own now, and the text, the notes and the brain's panel open one at a time.
 

@@ -1131,6 +1131,7 @@ main.screen{
 .screen.one #chart-pane .legend-item{ flex:none; }
 .pop .ref-line{ font-family:var(--font-serif); font-size:.95rem; line-height:1.55; margin:0 0 .35rem; }
 .pop .ref-line b{ font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); margin-right:.5rem; }
+.pop .ref-line a{ color:var(--ink); }
 .pop .estab{ margin-top:1rem; }
 .chart-tooltip{ z-index:60; }
 /* the newsletter card keeps clear of the bar */
@@ -1474,11 +1475,15 @@ main.screen.one.land{ flex-direction:row; }
       <div class="pop" id="popRef" hidden aria-labelledby="popRefH">
         <header class="pop-head"><b id="popRefH">Reference</b><small>what the atlas is drawn from</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
         <div class="pop-body">
-          <p class="ref-line"><b>Template</b> MNI152 T1, 0.74&thinsp;mm isotropic.</p>
-          <p class="ref-line"><b>Atlases</b> AAL, 116 regions &middot; Brodmann, 41 areas.</p>
-          <p class="ref-line"><b>Receptors</b> the sources are listed with the receptor density, under the graph.</p>
+          <!-- every source the atlas draws on, in full: the receptor lines are
+               written by renderSources() from the receptor data, the same
+               text the receptor window's Sources tab carries (v11.83) -->
+          <p class="ref-line"><b>Template</b> MNI152 T1, 0.74&thinsp;mm isotropic, rendered with <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a> (Rorden lab).</p>
+          <p class="ref-line"><b>Regions</b> AAL-116: Tzourio-Mazoyer N, Landeau B, Papathanassiou D, et al. Automated anatomical labeling of activations in SPM using a macroscopic anatomical parcellation of the MNI MRI single-subject brain. <i>NeuroImage</i> 2002;15:273&ndash;289.</p>
+          <p class="ref-line"><b>Brodmann areas</b> 41 areas from the Brodmann atlas in <a href="https://github.com/neurolabusc/MRIcron" target="_blank" rel="noopener">MRIcron</a> (BSD), on the MNI152 template; the drawn map on the Brodmann Area Atlas is adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN</a>.</p>
+          <div id="ref-sources"><p class="ref-line"><b>Receptors</b> The receptor dataset did not load, and its sources with it.</p></div>
           <p class="estab">Runs fully offline · single file · no server</p>
-          <p class="credits">© 2026 VisualNeuroscience.AI · rendered with <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a> (Rorden lab) · MNI152 template · AAL atlas · Brodmann atlas from <a href="https://github.com/neurolabusc/MRIcron" target="_blank" rel="noopener">MRIcron</a> (BSD) · Brodmann diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN</a> · set in Flux, Newsreader &amp; Prata &middot; <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></p>
+          <p class="credits">© 2026 VisualNeuroscience.AI · set in Flux, Newsreader &amp; Prata &middot; <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></p>
         </div>
       </div>
 
@@ -3808,13 +3813,29 @@ function renderCoverage() {
     el.textContent = "The lists carry all " + rs.length + " receptor sub-types and transporters; " + withData + " were measured in this series, in " + reached + " of the " + REG.length + " regions, reached from 44 cytoarchitectonic areas of the cortex, and the rest say so. Where an area is part of a gyrus, or spans two, the match is marked approximate. Nothing subcortical, and no insula, hippocampus or amygdala, was measured in this series.";
   }
 }
+/* the two receptor sources, written once from the data: the Sources tab
+   and the bar's Reference window both carry them (v11.83) */
+function sourceLines() {
+  const pet = RX.pet.source, au = RX.autoradiography.source;
+  const doi = d => "<a href=\"https://doi.org/" + d + "\" target=\"_blank\" rel=\"noopener\">doi:" + d + "</a>";
+  const sample = RX.autoradiography.sample;
+  return {
+    pet: escapeHtml(pet.cite) + " " + doi(pet.doi) + ". Group-average maps from the compilation's <a href=\"" + pet.repo + "\" target=\"_blank\" rel=\"noopener\">repository</a>, licensed " + pet.licence + "; the study that collected each map is cited on its receptor. This site's parcellated table is shared under the same licence.",
+    auto: escapeHtml(au.cite) + " " + doi(au.doi) + ", " + au.licence + ", " + escapeHtml(au.via) + ". " + escapeHtml(sample.charAt(0).toUpperCase() + sample.slice(1)) + ".",
+    regions: "AAL-116, Tzourio-Mazoyer N et al., <i>NeuroImage</i> 2002;15:273–289, on the MNI152 template; the maps were resampled to it at the nearest voxel."
+  };
+}
 function renderSources() {
-  const g = RX.gaps;
+  const g = RX.gaps, L = sourceLines();
+  const ref = document.getElementById("ref-sources");
+  if (ref) ref.innerHTML =
+    "<p class=\"ref-line\"><b>Receptors, PET</b> " + L.pet + "</p>" +
+    "<p class=\"ref-line\"><b>Receptors, autoradiography</b> " + L.auto + " The maps were resampled onto the regions at the nearest voxel.</p>";
   document.getElementById("rx-sources").innerHTML =
     "<h3>Sources</h3>" +
-    "<p><b>In vivo PET.</b> " + escapeHtml(RX.pet.source.cite) + " <a href=\"https://doi.org/" + RX.pet.source.doi + "\" target=\"_blank\" rel=\"noopener\">doi:" + RX.pet.source.doi + "</a>. Group-average maps from the compilation's <a href=\"" + RX.pet.source.repo + "\" target=\"_blank\" rel=\"noopener\">repository</a>, licensed " + RX.pet.source.licence + "; the study that collected each map is cited on its receptor. This site's parcellated table is shared under the same licence.</p>" +
-    "<p><b>Ex vivo autoradiography.</b> " + escapeHtml(RX.autoradiography.source.cite) + " <a href=\"https://doi.org/" + RX.autoradiography.source.doi + "\" target=\"_blank\" rel=\"noopener\">doi:" + RX.autoradiography.source.doi + "</a>, " + RX.autoradiography.source.licence + ", " + escapeHtml(RX.autoradiography.source.via) + ". " + escapeHtml(RX.autoradiography.sample.charAt(0).toUpperCase() + RX.autoradiography.sample.slice(1)) + ".</p>" +
-    "<p><b>Regions.</b> AAL-116, Tzourio-Mazoyer N et al., <i>NeuroImage</i> 2002;15:273–289, on the MNI152 template; the maps were resampled to it at the nearest voxel.</p>" +
+    "<p><b>In vivo PET.</b> " + L.pet + "</p>" +
+    "<p><b>Ex vivo autoradiography.</b> " + L.auto + "</p>" +
+    "<p><b>Regions.</b> " + L.regions + "</p>" +
     "<h3>Read with care</h3><ul>" +
     "<li>PET binding is not a receptor count. Binding potential, distribution volume and uptake ratio depend on the tracer's affinity, on competition from the transmitter itself and on the model, which is why PET is charted as a share of each receptor's densest region and never against autoradiography.</li>" +
     "<li>Each PET map is its own cohort: some are small (H3, eight people; D1, thirteen), and the DAT and VAChT cohorts are older than the rest.</li>" +

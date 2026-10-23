@@ -329,6 +329,10 @@ td.hl{ color:var(--over); }
 .pop .empty-note{ font-family:var(--font-serif); font-style:italic; font-size:.9rem; color:var(--ink-60); margin:0 0 .8rem; }
 .pop .ref-line{ font-family:var(--font-serif); font-size:.95rem; line-height:1.55; margin:0 0 .35rem; }
 .pop .ref-line b{ font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); margin-right:.5rem; }
+.pop .ref-line a{ color:var(--ink); }
+.pop .ref-studies{ margin:.1rem 0 .9rem 1.1rem; padding:0; font-family:var(--font-serif); font-size:.88rem; line-height:1.5; color:var(--ink-60); }
+.pop .ref-studies li{ margin:0 0 .4rem; }
+.pop .ref-studies a{ color:var(--ink); white-space:nowrap; }
 .stat{ border:1px solid var(--hair); padding:.5rem .6rem .55rem; text-align:left; }
 .stat .k{ font-family:var(--font-brand); font-size:.58rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); }
 .stat .v{ font-family:var(--font-brand); font-size:1.06rem; margin-top:.1rem; font-variant-numeric:tabular-nums; }
@@ -845,6 +849,24 @@ main.screen.one.land{ flex-direction:row; }
         <div class="pop-body">
           <p class="ref-line"><b>Scan</b> <span id="scan-note">MNI152 template &middot; AAL-116 parcellation</span></p>
           <p class="ref-line"><b>Regions</b> the ten of Allen&rsquo;s model, each drawn on the atlas parcels it occupies, approximate where the list says so.</p>
+          <!-- the papers the readings name, written out here so the reference
+               window carries every source itself (v11.83) -->
+          <p class="ref-line"><b>Studies</b> the papers the readings name, in full.</p>
+          <ul class="ref-studies">
+            <li>Aleman A, Sommer IE, Kahn RS. Efficacy of slow repetitive transcranial magnetic stimulation in the treatment of resistant auditory hallucinations in schizophrenia: a meta-analysis. <i>J Clin Psychiatry</i> 2007;68(3):416&ndash;421. <a href="https://doi.org/10.4088/jcp.v68n0310" target="_blank" rel="noopener">doi:10.4088/jcp.v68n0310</a></li>
+            <li>Allen P, Lar&oslash;i F, McGuire PK, Aleman A. The hallucinating brain: a review of structural and functional neuroimaging studies of hallucinations. <i>Neurosci Biobehav Rev</i> 2008;32(1):175&ndash;191. <a href="https://doi.org/10.1016/j.neubiorev.2007.07.012" target="_blank" rel="noopener">doi:10.1016/j.neubiorev.2007.07.012</a></li>
+            <li>Behrendt RP. Dysregulation of thalamic sensory &ldquo;transmission&rdquo; in schizophrenia: neurochemical vulnerability to hallucinations. <i>J Psychopharmacol</i> 2006;20(3):356&ndash;372. <a href="https://doi.org/10.1177/0269881105057696" target="_blank" rel="noopener">doi:10.1177/0269881105057696</a></li>
+            <li>Blakemore SJ, Frith CD, Wolpert DM. Spatio-temporal prediction modulates the perception of self-produced stimuli. <i>J Cogn Neurosci</i> 1999;11(5):551&ndash;559. <a href="https://doi.org/10.1162/089892999563607" target="_blank" rel="noopener">doi:10.1162/089892999563607</a></li>
+            <li>Blakemore SJ, Smith J, Steel R, Johnstone CE, Frith CD. The perception of self-produced sensory stimuli in patients with auditory hallucinations and passivity experiences: evidence for a breakdown in self-monitoring. <i>Psychol Med</i> 2000;30(5):1131&ndash;1139. <a href="https://doi.org/10.1017/s0033291799002676" target="_blank" rel="noopener">doi:10.1017/s0033291799002676</a></li>
+            <li>Ford JM, Mathalon DH. Corollary discharge dysfunction in schizophrenia: can it explain auditory hallucinations? <i>Int J Psychophysiol</i> 2005;58(2&ndash;3):179&ndash;189. <a href="https://doi.org/10.1016/j.ijpsycho.2005.01.014" target="_blank" rel="noopener">doi:10.1016/j.ijpsycho.2005.01.014</a></li>
+            <li>Lawrie SM, Buechel C, Whalley HC, Frith CD, Friston KJ, Johnstone EC. Reduced frontotemporal functional connectivity in schizophrenia associated with auditory hallucinations. <i>Biol Psychiatry</i> 2002;51(12):1008&ndash;1011. <a href="https://doi.org/10.1016/s0006-3223(02)01316-1" target="_blank" rel="noopener">doi:10.1016/s0006-3223(02)01316-1</a></li>
+            <li>Lodge DJ, Behrens MM, Grace AA. A loss of parvalbumin-containing interneurons is associated with diminished oscillatory activity in an animal model of schizophrenia. <i>J Neurosci</i> 2009;29(8):2344&ndash;2354. <a href="https://doi.org/10.1523/JNEUROSCI.5419-08.2009" target="_blank" rel="noopener">doi:10.1523/JNEUROSCI.5419-08.2009</a></li>
+            <li>Raz A, Fan J, Posner MI. Hypnotic suggestion reduces conflict in the human brain. <i>Proc Natl Acad Sci USA</i> 2005;102(28):9978&ndash;9983. <a href="https://doi.org/10.1073/pnas.0503064102" target="_blank" rel="noopener">doi:10.1073/pnas.0503064102</a></li>
+            <li>Sohal VS, Zhang F, Yizhar O, Deisseroth K. Parvalbumin neurons and gamma rhythms enhance cortical circuit performance. <i>Nature</i> 2009;459(7247):698&ndash;702. <a href="https://doi.org/10.1038/nature07991" target="_blank" rel="noopener">doi:10.1038/nature07991</a></li>
+            <li>Stephan KE, Friston KJ, Frith CD. Dysconnection in schizophrenia: from abnormal synaptic plasticity to failures of self-monitoring. <i>Schizophr Bull</i> 2009;35(3):509&ndash;527. <a href="https://doi.org/10.1093/schbul/sbn176" target="_blank" rel="noopener">doi:10.1093/schbul/sbn176</a></li>
+            <li>Szechtman H, Woody E, Bowers KS, Nahmias C. Where the imaginal appears real: a positron emission tomography study of auditory hallucinations. <i>Proc Natl Acad Sci USA</i> 1998;95(4):1956&ndash;1960. <a href="https://doi.org/10.1073/pnas.95.4.1956" target="_blank" rel="noopener">doi:10.1073/pnas.95.4.1956</a></li>
+            <li>Waters F, Jablensky A. Time discrimination deficits in schizophrenia patients with first-rank (passivity) symptoms. <i>Psychiatry Res</i> 2009;167(1&ndash;2):12&ndash;20. <a href="https://doi.org/10.1016/j.psychres.2008.04.004" target="_blank" rel="noopener">doi:10.1016/j.psychres.2008.04.004</a></li>
+          </ul>
 <p class="page-foot">An educational visualization of Boksa P, &ldquo;On the neurobiology of hallucinations,&rdquo; <em>Journal of Psychiatry &amp; Neuroscience</em> 2009;34(4):260&ndash;262 &mdash; <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2702442/">open access at PMC2702442</a>. Regions are drawn on the MNI152 template using the AAL-116 parcellation; each named region is matched to its nearest atlas parcel, and where that match is approximate the panel says so. The editorial concerns auditory hallucinations in schizophrenia almost throughout and does not address serotonergic, glutamatergic or default-mode accounts. It is now well over fifteen years old, and the field has moved. Not a diagnostic tool. <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a> &middot; <a href="terms.html">Terms of use</a>.</p>
         </div>
       </div>
