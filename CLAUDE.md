@@ -80,7 +80,16 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `site/assets/app-mark-colour.svg`, the lines in `make_logo.py`'s palette swept clockwise from the top as the ring carries
   it, in ninety flat wedges (`PALETTE`, `WEDGES`, `palette_at`), and `site/assets/app-mark.svg`, the lines in currentColor,
   which only the mono icon uses; in both the outline is one `<path id="outline">`, the traces separate paths in `#traces`,
-  each ending on a ring or on another line, and the nodes `<circle>`s in `#nodes`. `app/scripts/make-icons.mjs` (`npm run icons` on the Mac; here, link the global
+  each ending on a ring or on another line, the nodes `<circle>`s in `#nodes` and, since v11.90, the corners' fillets small
+  filled shapes in `#fillets` (the colour file sets `color` on each wedge's `<use>`, the lines and fillets taking
+  `currentColor`). v11.90 smoothed every corner at the owner's word: each bend in a line is rounded to a radius of at least
+  `BEND` (0.7) of the stroke's width (`round_corners`, on each piece after its simplification), and the corners where lines
+  meet each other and the rings are filled with fillets of `FILLET` (0.4) of the width (`fillets`: the drawn lines
+  rasterised at four times the field, closed by that radius with each ring's hole cut back out, and what the closing added
+  traced by marching squares into the shapes, each reaching a little under the lines; a shape that would bridge a gap
+  between two lines, touching ink in two pieces, is left out). The pieces join at the nodes by the way each piece's whole
+  length arrives (`heads`, carried through the joins), which is what closes the outline: until v11.90 the pairing read the
+  joined chain's own ends, the outline path came out empty and its pieces were drawn as traces. `app/scripts/make-icons.mjs` (`npm run icons` on the Mac; here, link the global
   modules first, `ln -s "$(npm root -g)" app/node_modules`, and remove the link after) draws every icon and splash from it:
   the web app's icons and `apple-touch-icon.png`, the iOS catalog's 1024, `app/resources/`, the Play icon, the Android
   launcher sets at every density and the splash screens (the coloured brain on the paper black, 22% of the longer side),

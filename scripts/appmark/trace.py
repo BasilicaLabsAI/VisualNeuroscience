@@ -20,9 +20,11 @@ the paper black for the splash screens.
 How: the drawing is cropped to its ink, enlarged three times and softened, the
 glow is cut off at the stroke's core, the strokes are thinned to their
 skeleton (Zhang-Suen), the skeleton is cut into lines between its junctions,
-each line is smoothed and simplified into cubic curves, the small holes mark
-the nodes, which become circles the lines are snapped to, and the stroke's
-width is read off the drawing.
+each line is smoothed and simplified into cubic curves with every bend
+rounded, the small holes mark the nodes, which become circles the lines are
+snapped to, the stroke's width is read off the drawing, and the corners where
+the lines meet each other and the rings are filled with fillets, traced from
+a closing of the drawn lines and kept as small filled shapes beside them.
 
 Needs numpy, scipy and Pillow (python3.13 here).
 """
@@ -46,6 +48,8 @@ SMOOTH = 7.0       # the lines' smoothing, in enlarged pixels
 SIMPLIFY = 1.2     # Douglas-Peucker tolerance, in enlarged pixels
 MARGIN = 0.04      # breathing room around the ink, as a share of its width
 WEDGES = 90        # the sweep of colour, in flat steps of four degrees
+BEND = 0.7         # the least radius of a bend in a line, as a share of the stroke's width
+FILLET = 0.4       # the fillet in every corner where lines meet, as a share of the stroke's width
 
 # the ring's palette, as scripts/make_logo.py has it, clockwise from the top
 PALETTE = ["#915AD8", "#CD5AD8", "#E250A9", "#FF507A", "#FF704E", "#F89F3A",
@@ -262,6 +266,200 @@ def bezier(pts, closed):
     return "".join(d)
 
 
+def round_corners(pts, R, closed=False):
+    """A bend sharper than R is drawn as an arc of radius R, or of the radius
+    its two segments allow, in place of the spline's tight turn through one
+    point: the drawing's corners are rounded, and the simplified line's were
+    not."""
+    n = len(pts)
+    if n < 3:
+        return pts
+    out = [] if closed else [pts[0]]
+    for i in (range(n) if closed else range(1, n - 1)):
+        p0, p1, p2 = pts[(i - 1) % n], pts[i], pts[(i + 1) % n]
+        a, b = p0 - p1, p2 - p1
+        la, lb = math.hypot(*a), math.hypot(*b)
+        if la < 1e-6 or lb < 1e-6:
+            out.append(p1)
+            continue
+        ua, ub = a / la, b / lb
+        theta = math.acos(max(-1.0, min(1.0, float(np.dot(ua, ub)))))   # the angle inside the bend
+        turn = math.pi - theta
+        if turn < math.radians(8):
+            out.append(p1)
+            continue
+        t = min(R * math.tan(turn / 2), 0.5 * min(la, lb))     # the tangent length, within its segments
+        r = t / math.tan(turn / 2)
+        A, B = p1 + ua * t, p1 + ub * t
+        bis = ua + ub
+        bis = bis / math.hypot(*bis)
+        C = p1 + bis * (r / math.sin(theta / 2))
+        a0 = math.atan2(A[0] - C[0], A[1] - C[1])
+        a1 = math.atan2(B[0] - C[0], B[1] - C[1])
+        d = (a1 - a0 + math.pi) % (2 * math.pi) - math.pi
+        k = max(2, int(abs(d) * r / 3))
+        for f in np.linspace(0, 1, k + 1):
+            out.append(np.array([C[0] + r * math.sin(a0 + d * f), C[1] + r * math.cos(a0 + d * f)]))
+    if not closed:
+        out.append(pts[-1])
+    return np.array(out)
+
+
+def spline_points(pts, closed, step):
+    """Points every step along the curves bezier() draws through pts."""
+    n = len(pts)
+    if n < 2:
+        return pts
+    if n == 2 and not closed:
+        k = max(2, int(math.hypot(*(pts[1] - pts[0])) / step))
+        return pts[0] + (pts[1] - pts[0]) * np.linspace(0, 1, k + 1)[:, None]
+    out = []
+    last = n if closed else n - 1
+    for i in range(last):
+        if closed:
+            p0, p1, p2, p3 = pts[(i - 1) % n], pts[i], pts[(i + 1) % n], pts[(i + 2) % n]
+        else:
+            p0, p1, p2, p3 = pts[max(i - 1, 0)], pts[i], pts[i + 1], pts[min(i + 2, n - 1)]
+        if np.hypot(*(p2 - p1)) < 1e-6:
+            continue
+        c1 = p1 + (p2 - p0) / 6.0
+        c2 = p2 - (p3 - p1) / 6.0
+        k = max(2, int((np.hypot(*(c1 - p1)) + np.hypot(*(c2 - c1)) + np.hypot(*(p2 - c2))) / step))
+        t = np.linspace(0, 1, k, endpoint=False)[:, None]
+        out.append((1 - t) ** 3 * p1 + 3 * (1 - t) ** 2 * t * c1 + 3 * (1 - t) * t ** 2 * c2 + t ** 3 * p2)
+    out.append(pts[0:1] if closed else pts[-1:])
+    return np.vstack(out)
+
+
+# marching squares: the edges of a cell, 0 top, 1 right, 2 bottom, 3 left
+SEGS = {
+    1: [(3, 2)], 2: [(2, 1)], 3: [(3, 1)], 4: [(0, 1)], 6: [(0, 2)], 7: [(3, 0)],
+    8: [(3, 0)], 9: [(0, 2)], 11: [(0, 1)], 12: [(3, 1)], 13: [(2, 1)], 14: [(3, 2)],
+}
+
+
+def contours(f):
+    """Marching squares at level .5 over a field: closed loops of (x, y)."""
+    b = f >= 0.5
+    tl, tr, br, bl = b[:-1, :-1], b[:-1, 1:], b[1:, 1:], b[1:, :-1]
+    idx = tl.astype(np.uint8) * 8 + tr.astype(np.uint8) * 4 + br.astype(np.uint8) * 2 + bl.astype(np.uint8)
+    cells = np.argwhere((idx > 0) & (idx < 15))
+
+    def cross(a, bv):
+        d = bv - a
+        return 0.5 if d == 0 else (0.5 - a) / d
+
+    def point(i, j, e):
+        if e == 0:
+            return (j + cross(f[i, j], f[i, j + 1]), float(i))
+        if e == 1:
+            return (float(j + 1), i + cross(f[i, j + 1], f[i + 1, j + 1]))
+        if e == 2:
+            return (j + cross(f[i + 1, j], f[i + 1, j + 1]), float(i + 1))
+        return (float(j), i + cross(f[i, j], f[i + 1, j]))
+
+    segs = []
+    for i, j in cells:
+        c = int(idx[i, j])
+        if c == 5 or c == 10:
+            centre = (f[i, j] + f[i, j + 1] + f[i + 1, j] + f[i + 1, j + 1]) / 4 >= 0.5
+            if c == 5:
+                pairs = [(3, 0), (1, 2)] if centre else [(0, 1), (3, 2)]
+            else:
+                pairs = [(0, 1), (3, 2)] if centre else [(3, 0), (1, 2)]
+        else:
+            pairs = SEGS[c]
+        for e0, e1 in pairs:
+            segs.append((point(i, j, e0), point(i, j, e1)))
+    key = lambda p: (round(p[0] * 64), round(p[1] * 64))
+    at = {}
+    for si, (p, q) in enumerate(segs):
+        at.setdefault(key(p), []).append(si)
+        at.setdefault(key(q), []).append(si)
+    used = [False] * len(segs)
+    loops = []
+    for s0 in range(len(segs)):
+        if used[s0]:
+            continue
+        used[s0] = True
+        p, q = segs[s0]
+        loop, cur = [p, q], q
+        while True:
+            nxt = next((si for si in at.get(key(cur), []) if not used[si]), None)
+            if nxt is None:
+                break
+            used[nxt] = True
+            a, bq = segs[nxt]
+            cur = bq if key(a) == key(cur) else a
+            if key(cur) == key(loop[0]):
+                break
+            loop.append(cur)
+        if len(loop) >= 3:
+            loops.append(loop)
+    return loops
+
+
+def fillets(finished, nodes, width, W, H):
+    """The corners where a line meets a ring or another line, filled with a
+    fillet of radius FILLET * width, as the drawing's softness filled them:
+    the lines are drawn on a raster four times the field, the drawing is
+    closed (grown by the radius and shrunk again, each ring's hole cut back
+    out), and what the closing added is traced as small filled shapes to
+    draw beside the lines. Each reaches a little way under the lines, so no
+    hairline shows where they meet."""
+    S, f, m = 4, FILLET * width, width
+    shape = (int(round((H + 2 * m) * S)), int(round((W + 2 * m) * S)))
+    seeds = np.zeros(shape, dtype=bool)
+
+    def plant(p):
+        yy = np.clip(np.round((p[:, 0] + m) * S).astype(int), 0, shape[0] - 1)
+        xx = np.clip(np.round((p[:, 1] + m) * S).astype(int), 0, shape[1] - 1)
+        seeds[yy, xx] = True
+    for pts, closed, length in finished:
+        plant(spline_points(pts, closed, 1.0 / S))
+    for cy, cx, h, ro in nodes:
+        rc = ro - width / 2
+        a = np.linspace(0, 2 * np.pi, int(2 * np.pi * rc * S) + 1)
+        plant(np.stack([cy + rc * np.sin(a), cx + rc * np.cos(a)], axis=1))
+    d = ndimage.distance_transform_edt(~seeds)
+    ink = d <= width / 2 * S
+    grown = d <= (width / 2 + f) * S
+    shut = ndimage.distance_transform_edt(grown) > f * S + 0.75
+    for cy, cx, h, ro in nodes:
+        r = (ro - width) * S
+        R = int(r) + 2
+        y0, x0 = int(round((cy + m) * S)), int(round((cx + m) * S))
+        ys, xs = np.ogrid[-R:R + 1, -R:R + 1]
+        shut[y0 - R:y0 + R + 1, x0 - R:x0 + R + 1][ys * ys + xs * xs <= r * r] = False
+    added = shut & ~ink
+    added |= (ndimage.distance_transform_edt(~added) <= 1.5 * S) & ink
+    lab, n = ndimage.label(added)
+    out = []
+    for i, sl in enumerate(ndimage.find_objects(lab), start=1):
+        pad = 3
+        sl = tuple(slice(max(0, a.start - pad), a.stop + pad) for a in sl)
+        blob = lab[sl] == i
+        if blob.sum() < 6 * S * S:
+            continue
+        # a fillet fills a corner, where the ink it touches is one piece; a
+        # bridge across a gap between two lines touches two, and is not drawn
+        touch = ndimage.binary_dilation(blob, structure=EIGHT) & ink[sl] & ~blob
+        if ndimage.label(touch, structure=EIGHT)[1] != 1:
+            continue
+        field = blob.astype(np.float32)
+        field = ndimage.gaussian_filter(field, 1.0)
+        loops = contours(field)
+        if not loops:
+            continue
+        loop = max(loops, key=len)
+        pts = np.array([[(y + sl[0].start) / S - m, (x + sl[1].start) / S - m] for x, y in loop])
+        pts = smooth_chain(resample(np.vstack([pts, pts[:1]]), 0.3)[:-1], True, 2.0)
+        pts = simplify(np.vstack([pts, pts[:1]]), 0.1)[:-1]
+        if len(pts) >= 3:
+            out.append(bezier(pts[:, ::-1], True))
+    return out
+
+
 def main():
     mask = ink_mask()
     H, W = mask.shape
@@ -425,11 +623,17 @@ def main():
         # below stays the sharp corner it is drawn as
         if closed:
             pts = smooth_chain(resample(np.vstack([pts, pts[:1]]))[:-1], True, SMOOTH * 0.6)
-            pts = simplify(np.vstack([pts, pts[:1]]), SIMPLIFY)[:-1]
+            pts = round_corners(simplify(np.vstack([pts, pts[:1]]), SIMPLIFY)[:-1], BEND * width, True)
         else:
             pts = smooth_chain(resample(pts), False, SMOOTH * 0.6)
-            pts = simplify(pts, SIMPLIFY)
-        drawn.append([pts, closed, snapped])
+            pts = round_corners(simplify(pts, SIMPLIFY), BEND * width)
+        # each end's way in, read over the whole piece: two pieces of one line
+        # arrive at a node from opposite ways, even where both come down into
+        # it from the bumps on either side; kept with the piece through the
+        # joins below, where a joined chain's own ends would say nothing
+        v = pts[-1] - pts[0]
+        v = v / (np.hypot(*v) or 1)
+        drawn.append([pts, closed, snapped, [-v, v]])
 
     # where a line runs straight on through a node, join its two pieces into
     # one, riding the ring's own centre line from where one piece enters to
@@ -456,12 +660,7 @@ def main():
         return np.vstack([[p_from], arc, [p_to]])
 
     def heading_in(ch, e):
-        pts = ch[0]
-        k = min(len(pts) - 1, max(2, int(width * 1.2)))
-        a, b = (pts[k], pts[0]) if e == 0 else (pts[-1 - k], pts[-1])
-        v = b - a
-        n = np.hypot(*v)
-        return v / n if n else v
+        return ch[3][e]
     merged = True
     while merged:
         merged = False
@@ -475,7 +674,9 @@ def main():
         for ni, inc in at_node.items():
             if len(inc) < 2:
                 continue
-            best, pair = -0.6, None
+            # two lines at a node are one line running through it; of three
+            # or more, the two most nearly opposite run through and the rest end
+            best, pair = (1.0 if len(inc) == 2 else -0.2), None
             for a in range(len(inc)):
                 for b in range(a + 1, len(inc)):
                     d = float(np.dot(heading_in(drawn[inc[a][0]], inc[a][1]), heading_in(drawn[inc[b][0]], inc[b][1])))
@@ -486,14 +687,16 @@ def main():
             (pa, ea), (pb, eb) = pair
             if pa == pb:
                 pts = drawn[pa][0] if ea == 1 else drawn[pa][0][::-1]
-                drawn[pa] = [np.vstack([pts, ring_arc(ni, pts[-1], pts[0])]), True, [None, None]]
+                drawn[pa] = [np.vstack([pts, ring_arc(ni, pts[-1], pts[0])]), True, [None, None], [None, None]]
             else:
                 A, B = drawn[pa], drawn[pb]
                 ptsA = A[0] if ea == 1 else A[0][::-1]
                 ptsB = B[0] if eb == 0 else B[0][::-1]
                 nA = A[2][0] if ea == 1 else A[2][1]
                 nB = B[2][1] if eb == 0 else B[2][0]
-                drawn[pa] = [np.vstack([ptsA, ring_arc(ni, ptsA[-1], ptsB[0]), ptsB]), False, [nA, nB]]
+                hA = A[3][0] if ea == 1 else A[3][1]
+                hB = B[3][1] if eb == 0 else B[3][0]
+                drawn[pa] = [np.vstack([ptsA, ring_arc(ni, ptsA[-1], ptsB[0]), ptsB]), False, [nA, nB], [hA, hB]]
                 drawn[pb] = None
             drawn = [ch for ch in drawn if ch is not None]
             merged = True
@@ -501,7 +704,7 @@ def main():
 
     # the finished lines as curves; the longest closed line is the outline
     finished = []
-    for pts, closed, snapped in drawn:
+    for pts, closed, snapped, heads in drawn:
         if closed:
             length = float(np.hypot(*(np.diff(np.vstack([pts, pts[:1]]), axis=0)).T).sum())
         else:
@@ -512,16 +715,18 @@ def main():
     lines = [bezier(f[0][:, ::-1], f[1]) for i, f in enumerate(finished) if i != outline_i]
     # the circles, each node a true circle, drawn over the lines
     circles = [f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{ro - width / 2:.1f}"/>' for cy, cx, h, ro in nodes]
+    corners = fillets(finished, nodes, width, W, H)
     m = W * MARGIN
     vb = f"{-m:.1f} {-m:.1f} {W + 2 * m:.1f} {H + 2 * m:.1f}"
     head = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + vb + '" role="img" aria-label="VisualNeuroscience">\n'
             "<title>VisualNeuroscience</title>\n")
-    body = (f'<path id="outline" d="{outline}"/>'
+    body = ('<g id="fillets" fill="currentColor" stroke="none">' + "".join(f'<path d="{d}"/>' for d in corners) + "</g>"
+            + f'<path id="outline" d="{outline}"/>'
             + '<g id="traces">' + "".join(f'<path d="{d}"/>' for d in lines) + "</g>"
             + '<g id="nodes">' + "".join(circles) + "</g>")
-    style = f'fill="none" stroke-width="{width:.1f}" stroke-linecap="round" stroke-linejoin="round"'
+    style = f'fill="none" stroke="currentColor" stroke-width="{width:.1f}" stroke-linecap="round" stroke-linejoin="round"'
     with open(OUT_MONO, "w") as out:
-        out.write(head + f'<g {style} stroke="currentColor">' + body + "</g>\n</svg>\n")
+        out.write(head + f'<g {style}>' + body + "</g>\n</svg>\n")
     cx0, cy0, R = W / 2.0, H / 2.0, math.hypot(W, H)
     step = 360.0 / WEDGES
     defs = [f'<g id="brain" {style}>' + body + "</g>"]
@@ -531,10 +736,10 @@ def main():
         a1 = math.radians(-90 + (i + 1) * step + 0.35)
         poly = f"{cx0:.1f},{cy0:.1f} {cx0 + R * math.cos(a0):.1f},{cy0 + R * math.sin(a0):.1f} {cx0 + R * math.cos(a1):.1f},{cy0 + R * math.sin(a1):.1f}"
         defs.append(f'<clipPath id="w{i}"><polygon points="{poly}"/></clipPath>')
-        uses.append(f'<use href="#brain" clip-path="url(#w{i})" stroke="{palette_at((i + 0.5) / WEDGES)}"/>')
+        uses.append(f'<use href="#brain" clip-path="url(#w{i})" color="{palette_at((i + 0.5) / WEDGES)}"/>')
     with open(OUT_COLOUR, "w") as out:
         out.write(head + "<defs>" + "".join(defs) + "</defs>\n" + "\n".join(uses) + "\n</svg>\n")
-    sys.stderr.write(f"one outline, {len(lines)} traces, {len(nodes)} nodes, stroke {width:.1f} on a {W}x{H} field; wrote {os.path.relpath(OUT_MONO)} and {os.path.relpath(OUT_COLOUR)}\n")
+    sys.stderr.write(f"one outline, {len(lines)} traces, {len(nodes)} nodes, {len(corners)} fillets, stroke {width:.1f} on a {W}x{H} field; wrote {os.path.relpath(OUT_MONO)} and {os.path.relpath(OUT_COLOUR)}\n")
 
 
 if __name__ == "__main__":

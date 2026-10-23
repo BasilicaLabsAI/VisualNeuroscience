@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.90 — 23 October 2026 — The brain's corners rounded
+Commit · Round every bend and fillet every joint of the app's brain, and close its outline into one path
+
+Every corner of the icon's brain is rounded now: each bend in a line turns on a curve of its own, and wherever a line meets a ring or another line the corner between them is filled with a small fillet, so the drawing reads as one soft line rather than strokes laid over each other. The outline is also one closed path in the file at last, where before its pieces only met at the rings. Every icon and splash is drawn again from it.
+
 ## v11.89 — 23 October 2026 — Windows that slide out of the bar
-Commit · Slide every window the bar raises up out of it, and back into it when closed
+Commit `0da3586` · Slide every window the bar raises up out of it, and back into it when closed
 
 Press a button on the bar at the foot of the 3D Region Atlas, the Hallucinations study, the Brodmann Area Atlas or the molecular viewer and its window now slides up out of the bar, and slides back down into it when you close it, where before it faded in with a small lift. On the Brodmann page the reading's text rises from behind its strip the same way, and the About window and the brain in 3D from behind the bar. With reduced motion on, every window fades instead.
 

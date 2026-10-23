@@ -160,7 +160,10 @@ beside it; run the script again if the drawing changes) into
 `../site/assets/app-mark-colour.svg`, which wears the ring's colours swept
 round it as the ring carries them, and `../site/assets/app-mark.svg`, the
 path alone in currentColor for the mono icon. The web mark in the masthead
-and the browser tab is still the ring, `../site/assets/logo.svg`.
+and the browser tab is still the ring, `../site/assets/logo.svg`. In both
+files the outline is one closed path, each trace a path of its own, each
+node a circle and, since v11.90, the corners where they meet small filled
+fillets, so the drawing reads as one soft line.
 
 The mark carries no ground, so the script chooses it: white for every app
 icon (since v11.85, in colour since v11.86), the paper black for the splash
