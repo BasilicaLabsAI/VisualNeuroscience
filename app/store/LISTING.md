@@ -160,6 +160,14 @@ the pages in a browser (`scripts/shoot-store.js`) and show the web app's own
 bar, not the tab bar the app has had since v11. Retake the iOS sets from the
 simulator or a device before submitting 1.1; the Android sets stand.
 
+A capture from a device becomes a store image with the sell above it through
+`app/scripts/store-sell.js`: the statement in the brand face on the paper
+black, the capture framed beneath at the store's size (the 13-inch iPad
+sideways by default, upright and the 6.9-inch iPhone by name), its status bar
+painted over rather than cut off, so the capture keeps its shape. A "|" in
+the statement forces the line break. The images made this way live in
+`app/store/sell/`.
+
 Check the build number on the 1.0 page first. If 1.0 went out as build 14
 rather than 15, the second block is new to App Store users as well and goes
 above the first. 4,000 characters allowed; both together are well under.
