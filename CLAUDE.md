@@ -32,7 +32,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
 
 ## The site
 - Static site in `site/`, deployed by Cloudflare Workers Builds on every push (preview builds on every branch).
-  Native shells: Capacitor in `app/` (iOS, iPad, Mac, Android) and a visionOS app in `app/visionos`.
+  Native shells: Capacitor in `app/` (iOS, iPad, Mac, Android) and a visionOS app in `app/visionos`; the apps carry
+  `site/` as their bundle (`webDir` in `app/capacitor.config.json`, no server address), so a page change reaches an
+  installed app only with the next build, never with the push.
 - Since v11 the iOS app opens on a SwiftUI tab bar (`app/ios/App/App/Shell.swift`, `ShellKit.swift`,
   `ShellWeb.swift`; `app/README.md` has the tab list and the shared pieces): Atlases, Library, Practice, About,
   Account, each a page of boxes in the home page's words with no header of its own (the tab bar names it), each box
@@ -228,8 +230,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   template with `assets/brodmann.nii.gz` over it at 0.9), the picked area lit by `paintScan` from `MN_LOOK.labelTable`
   and the lobe colour, zoom and rotation from `zoom.js`, Reset (`resetView`, the angle and scale kept in `home`), the
   atlases' Slice tool (v11.71: `slice-tool.js`, attached as the scan becomes ready with its buttons in `#scanTools` in
-  the head, `regions: "Slice area"` cutting the lit area with the brain; its styles carried inline as `.ts-btn`'s are)
-  and a collapse button (`#scanDown`); it rises from below and collapses back down (`.scan.in`), closes on Escape too, and
+  the head, `regions: "Slice area"` cutting the lit area with the brain; its styles carried inline as `.ts-btn`'s are;
+  since v11.72 the tool's Reset cuts is hidden and the head's one Reset, `resetView`, puts back the view and the cuts
+  together, and on a phone, `max-width:760px`, the head's name and note hide while slicing is on,
+  `:has(.slice-btn.active)`, and `.lbl-more` hides so the Area button reads its one word, since four buttons overran
+  the head) and a collapse button (`#scanDown`); it rises from below and collapses back down (`.scan.in`), closes on Escape too, and
   the reading and the bar stay in view, so a new pick repaints it. On an iPad or a computer (v11.66: `isWide()`, the
   `(min-width: 761px)` query and not `.land`) the brain is always on show instead, opened with the page by
   `applyScanMode` (`openScan(true)`, never collapsed, Escape ignored, the foot's button and the collapse button hidden):

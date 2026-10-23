@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.72 — 23 October 2026 — Slicing the Brodmann brain on a phone
+Commit · Fit the Brodmann brain's slice buttons into its head on a phone, with one Reset for the view and the cuts
+
+The slice tool on the Brodmann Area Atlas's brain now fits a phone. Once Slice was pressed, the head of the brain's panel ran out of room and its Reset and collapse buttons were pushed off the edge. The head now keeps one Reset, the page's, which puts the view home and the brain whole in one press, the tool's own Reset cuts stays out of sight, and on a phone the panel's name and note step aside while slicing is on, the Area button reading its one word, so Slice, Area, Reset and the collapse button all stay in reach. In the apps the page is the one built in, so the tool arrives there with the next build.
+
 ## v11.71 — 23 October 2026 — Cuts through the Brodmann brain
-Commit · Give the Brodmann Area Atlas's brain the atlases' Slice tool, and make the reading's box a touch scroller
+Commit `e4669aa` · Give the Brodmann Area Atlas's brain the atlases' Slice tool, and make the reading's box a touch scroller
 
 The brain in 3D on the Brodmann Area Atlas now has the Slice tool the 3D Region Atlas carries: Slice, in the brain's head beside Reset, puts a slider on each edge of the stage, one cut per axis run from the centre, and Slice area takes the cuts through the lit area with the brain, so the picked area can be seen where it runs inside. Reset cuts puts the head back whole. The reading's box, which scrolls when an area's account runs past it, now says so to a finger as well as a mouse.
 

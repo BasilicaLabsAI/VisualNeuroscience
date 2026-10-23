@@ -416,8 +416,19 @@ svg{ display:block; }
   .slice-range::-moz-range-thumb{ width:24px; height:24px; }
 }
 .scan-tools{ display:inline-flex; align-items:center; gap:.35rem; flex:none; }
-.scan-head .slice-btn, .scan-head .slice-regions, .scan-head .slice-reset{ height:auto; padding:.5rem .7rem .42rem; }
-@media (pointer:coarse){ .scan-head .slice-btn, .scan-head .slice-regions, .scan-head .slice-reset{ min-height:44px; } }
+.scan-head .slice-btn, .scan-head .slice-regions{ height:auto; padding:.5rem .7rem .42rem; }
+@media (pointer:coarse){ .scan-head .slice-btn, .scan-head .slice-regions{ min-height:44px; } }
+/* the head has one Reset, the page's, which puts back the view and the cuts
+   together, so the tool's own Reset cuts stays hidden here */
+.scan-head .slice-reset{ display:none; }
+/* on a phone the head is short of room once the slice buttons join it: the
+   Area button shows its last word alone, and the panel's name and note step
+   aside while slicing is on, so Slice, Area, Reset and the collapse button
+   all stay in reach */
+@media (max-width:760px){
+  .scan-head .lbl-more{ display:none; }
+  .scan-head:has(.slice-btn.active) b, .scan-head:has(.slice-btn.active) small{ display:none; }
+}
 
 /* ── the brain in 3D ─────────────────────────────────────────────────────
    The picked area lit on the MNI152 brain, rendered in 3D and nothing else.
@@ -581,7 +592,7 @@ body.ba-land{ padding-bottom:0; }
          show, on an iPad or a computer; a panel rising over the faces on a
          phone, the viewer fetched on first use -->
     <aside class="scan" id="baScan" hidden aria-label="The picked area on the brain in 3D">
-      <header class="scan-head"><b>In 3D</b><small id="scanNote">the MNI152 brain, the picked area lit</small><span class="scan-tools" id="scanTools"></span><button class="ts-btn" id="scanReset" type="button" aria-label="Reset the view">Reset</button><button class="scan-x" type="button" id="scanDown" aria-label="Collapse the brain"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg></button></header>
+      <header class="scan-head"><b>In 3D</b><small id="scanNote">the MNI152 brain, the picked area lit</small><span class="scan-tools" id="scanTools"></span><button class="ts-btn" id="scanReset" type="button" aria-label="Reset the view and the cuts">Reset</button><button class="scan-x" type="button" id="scanDown" aria-label="Collapse the brain"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg></button></header>
       <div class="scan-stage"><canvas id="baRen"></canvas></div>
     </aside>
     <!-- a phone held sideways: the bar along the right edge -->
@@ -801,7 +812,7 @@ body.ba-land{ padding-bottom:0; }
      it, the picked area lit in its lobe's colour, in a panel that rises over
      the faces. The viewer and the brain are fetched the first time it opens.
      One pick at a time, so the table lights one label and clears the rest. */
-  var scanOpen = false, scanState = "idle", ren = null, home = null;
+  var scanOpen = false, scanState = "idle", ren = null, home = null, slice = null;
   var scanEl = document.getElementById("baScan"), scanBtn = document.getElementById("scanBtn"),
       scanNote = document.getElementById("scanNote");
   function loadScript(src){
@@ -877,8 +888,8 @@ body.ba-land{ padding-bottom:0; }
       if (Z) Z.attach({ stage: scanEl.querySelector(".scan-stage"), nv: ren });
       /* the cuts, as the atlases have them: Slice in the head puts a slider
          on each edge of the stage, and Slice area takes the cuts through
-         the lit area with the brain */
-      if (window.MN_SLICE) MN_SLICE.attach({ stage: scanEl.querySelector(".scan-stage"), tools: document.getElementById("scanTools"), nv: ren, regions: "Slice area" });
+         the lit area with the brain; the head's Reset clears them with the view */
+      if (window.MN_SLICE) slice = MN_SLICE.attach({ stage: scanEl.querySelector(".scan-stage"), tools: document.getElementById("scanTools"), nv: ren, regions: "Slice area" });
       scanState = "ready";
       scanNote.textContent = "the MNI152 brain, the picked area lit";
       paintScan();
@@ -902,8 +913,11 @@ body.ba-land{ padding-bottom:0; }
     if (ren.volumes && ren.volumes.length > 1){ ren.volumes[1].setColormapLabel(cm); ren.updateGLVolume(); }
   }
   /* the brain back at the angle and size it arrived at */
+  /* the view home and the brain whole: the one Reset in the head puts back
+     the angle and the scale, and clears any cuts the slice tool has made */
   function resetView(){
     if (!ren || !home) return;
+    if (slice) slice.reset();
     try{
       if (ren.setRenderAzimuthElevation) ren.setRenderAzimuthElevation(home.az, home.el);
       else { ren.scene.renderAzimuth = home.az; ren.scene.renderElevation = home.el; }
