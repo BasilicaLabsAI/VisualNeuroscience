@@ -381,7 +381,10 @@ svg{ display:block; }
   .slice-edge.left .slice-range::-moz-range-track, .slice-edge.right .slice-range::-moz-range-track{ width:4px; height:auto; }
   .slice-range::-moz-range-thumb{ width:24px; height:24px; }
 }
-.scan-tools{ display:inline-flex; align-items:center; gap:.35rem; flex:none; }
+/* the group hugs Reset, and Slice area stands to the left of Slice, so Slice
+   keeps its place as the Area button comes and goes */
+.scan-tools{ display:inline-flex; align-items:center; gap:.35rem; flex:none; margin-left:auto; }
+.scan-head .slice-regions{ order:-1; }
 .scan-head .slice-btn, .scan-head .slice-regions{ height:auto; padding:.5rem .7rem .42rem; }
 @media (pointer:coarse){ .scan-head .slice-btn, .scan-head .slice-regions{ min-height:44px; } }
 /* the head has one Reset, the page's, which puts back the view and the cuts

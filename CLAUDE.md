@@ -233,7 +233,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   buttons in `#scanTools` in the head, `regions: "Slice area"` cutting the lit area with the brain; its styles carried
   inline as `.ts-btn`'s are; the tool's Reset cuts hidden, and on a phone, `max-width:760px`, the head's name and note
   hide while slicing is on, `:has(.slice-btn.active)`, and `.lbl-more` hides so the Area button reads its one word, since
-  four buttons overran the head). No list, graph or export; BA48, on neither face, is reached from the empty reading,
+  four buttons overran the head; since v11.76 the group hugs Reset, `.scan-tools{margin-left:auto}`, and Slice area
+  stands to the left of Slice, `.slice-regions{order:-1}`, so Slice keeps its place as the Area button comes and goes). No list, graph or export; BA48, on neither face, is reached from the empty reading,
   and the page never links away to the 3D Region Atlas (the owner's wish, v11.59). `#ba=<n>` opens on an area, the
   address follows the pick, and the MCP server's `brodmann_area` answers link there. On an iPad or a computer (v11.66:
   `isWide()`, the `(min-width: 761px)` query and not `.land`) `arrange()` marks the screen `.tall` (taller than wide, an
