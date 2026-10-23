@@ -66,7 +66,7 @@
   var OF = {
     "": "atlases", "index.html": "atlases", "regions.html": "atlases", "brodmann.html": "atlases",
     "microanatomy.html": "atlases", "molecular.html": "atlases", "tracts.html": "atlases", "network-atlas.html": "atlases",
-    "studies.html": "library", "hallucinations.html": "library", "textbook.html": "library", "posters.html": "library",
+    "studies.html": "library", "hallucinations.html": "library", "textbook.html": "library",
     "practice.html": "practice", "about.html": "about", "mcp.html": "about",
     "account.html": "account", "privacy.html": "account", "terms.html": "account", "delete-account.html": "account", "connect.html": "account"
   };
@@ -123,7 +123,7 @@
     "molecular.html": "Molecular",
     "network-atlas.html": "Network Atlas",
     "studies.html": "Visualizing Studies", "hallucinations.html": "Hallucinations",
-    "practice.html": "Practice", "textbook.html": "Digital Textbook", "posters.html": "Posters",
+    "practice.html": "Practice", "textbook.html": "Digital Textbook",
     "about.html": "About", "privacy.html": "Privacy & Support",
     "terms.html": "Terms of Use", "delete-account.html": "Delete your account"
   };

@@ -32,7 +32,6 @@ nonisolated struct Page: Sendable {
     static let tractography = Page(file: "tracts.html", title: "Tractography")
     static let studies = Page(file: "studies.html", title: "Visualizing Studies")
     static let textbook = Page(file: "textbook.html", title: "Digital Textbook")
-    static let posters = Page(file: "posters.html", title: "Posters")
     static let practice = Page(file: "practice.html", title: "Practice")
     static let about = Page(file: "about.html", title: "About")
     static let mcp = Page(file: "mcp.html", title: "MCP Server")

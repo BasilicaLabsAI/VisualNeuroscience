@@ -173,7 +173,6 @@ img{ max-width:100%; height:auto; display:block; }
 .m-molecular{ grid-column:span 12; }
 .m-practice{ grid-column:span 6; }
 .m-textbook{ grid-column:span 6; }
-.m-posters{ grid-column:span 12; }
 .m-mcp    { grid-column:span 12; }
 .m-soon   { grid-column:span 12; }
 .m-about  { grid-column:span 12; }
@@ -184,23 +183,27 @@ img{ max-width:100%; height:auto; display:block; }
    On the website the mosaic is three pages of boxes, as the app's Atlases,
    Library and About tabs are (Shell.swift; the island's tabs in navbar.js
    open them): the six atlases with the figures beneath; under #library the
-   papers, the book and the posters, the book and the posters side by side
-   where the atlases pair up; and under #about the MCP server, what is
+   papers and the book; and under #about the MCP server, what is
    coming, the developer's message and the channels. Practice has a tab of
    its own, so its box shows on none. In the Android app, whose bar lists
    the sections, the whole mosaic shows. */
 :root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-studies,
 :root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-textbook,
-:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-posters,
 :root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-practice,
 :root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-mcp,
 :root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-soon,
 :root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-about,
 :root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-channels{ display:none; }
-.mosaic.hub-library > :not(.m-studies):not(.m-textbook):not(.m-posters){ display:none; }
+.mosaic.hub-library > :not(.m-studies):not(.m-textbook){ display:none; }
+/* under #library the book takes a row of its own, its cover beside its
+   words as the papers' box is laid out, since nothing stands beside it */
+.mosaic.hub-library .m-textbook{
+  grid-column:span 12; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); grid-template-rows:auto auto 1fr auto auto;
+  column-gap:clamp(16px,1.7vw,26px); align-items:start;
+}
+.mosaic.hub-library .m-textbook .fig{ grid-column:2; grid-row:1 / 6; margin:0; align-self:stretch; }
+.mosaic.hub-library .m-textbook .meta, .mosaic.hub-library .m-textbook .go{ align-self:end; }
 .mosaic.hub-about > :not(.m-mcp):not(.m-soon):not(.m-about):not(.m-channels){ display:none; }
-.mosaic.hub-library .m-posters{ grid-column:span 6; grid-template-columns:minmax(0,1fr); }
-.mosaic.hub-library .m-posters .plate{ order:-1; }
 
 /* ── a box ──────────────────────────────────────────────────────────────
    Hairline rule, kicker, display headline, standfirst, then the figure.
@@ -357,19 +360,20 @@ img{ max-width:100%; height:auto; display:block; }
   .m-molecular{ grid-column:span 6; }
   .m-practice{ grid-column:span 3; }
   .m-textbook{ grid-column:span 3; }
-  .m-posters{ grid-column:span 6; }
+  .mosaic.hub-library .m-textbook{ grid-column:span 6; }
   .m-mcp    { grid-column:span 6; }
   .m-soon   { grid-column:span 6; }
   .m-about  { grid-column:span 6; }
   .m-channels{ grid-column:span 6; }
   .m-ledger { grid-column:span 6; }
-  .mosaic.hub-library .m-posters{ grid-column:span 3; }
 }
 
 /* ── phone: one box on each line, and the wide box stacks ── */
 @media (max-width:760px){
   .mosaic{ grid-template-columns:minmax(0,1fr); }
-  .m-atlas, .m-brodmann, .m-network, .m-tracts, .m-studies, .m-cells, .m-molecular, .m-practice, .m-textbook, .m-posters, .m-mcp, .m-soon, .m-about, .m-channels, .m-ledger{
+  .mosaic.hub-library .m-textbook{ display:flex; grid-column:1 / -1; }
+  .mosaic.hub-library .m-textbook .meta, .mosaic.hub-library .m-textbook .go{ align-self:auto; }
+  .m-atlas, .m-brodmann, .m-network, .m-tracts, .m-studies, .m-cells, .m-molecular, .m-practice, .m-textbook, .m-mcp, .m-soon, .m-about, .m-channels, .m-ledger{
     grid-column:1 / -1; grid-row:auto;
   }
   .ledger{ grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -520,18 +524,6 @@ img{ max-width:100%; height:auto; display:block; }
       <div class="go">Open the book &rarr;</div>
     </a>
 
-    <!-- ── the posters ────────────────────────────────────────────── -->
-    <a class="box m-posters box-h" href="posters.html">
-      <div class="side">
-        <div class="kicker">On paper</div>
-        <h2>Posters</h2>
-        <p>Two A1 prints from the Microanatomy page: every neurotransmitter drawn to one scale, and the receptors with how tightly each holds its transmitter.</p>
-        <div class="meta">2 posters &middot; A1 &middot; shop opening soon</div>
-        <div class="go">See the posters &rarr;</div>
-      </div>
-      <div class="plate"><img src="assets/posters/home.jpg" alt="" loading="lazy" decoding="async" width="1100" height="500"></div>
-    </a>
-
     <!-- ── the assistants ─────────────────────────────────────────── -->
     <a class="box m-mcp box-h" href="mcp.html">
       <div class="side">
@@ -624,8 +616,8 @@ themeBtn.addEventListener("click", () => {
 <script src="assets/navbar.js"></script>
 <script>
 "use strict";
-/* The three hubs. The mosaic shows the atlases, with #library the papers,
-   the book and the posters, and with #about the MCP server, what is coming,
+/* The three hubs. The mosaic shows the atlases, with #library the papers
+   and the book, and with #about the MCP server, what is coming,
    the developer's message and the channels, as the island's Atlases,
    Library and About tabs do in the app (navbar.js). A tab for this page
    switches the hub in place and returns to the top rather than loading the

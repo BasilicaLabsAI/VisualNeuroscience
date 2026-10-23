@@ -254,8 +254,6 @@ The anatomy works with the network off: the MNI152 template, the AAL and Brodman
 
 It is not a diagnostic or clinical tool. Every page says so and cites its sources.
 
-The Posters page (Library tab) offers printed posters, which are physical goods: its Buy buttons open a print-on-demand shop in the system browser, outside the app, with no in-app purchase (guideline 3.1.5(a)). Until that shop opens the buttons read "Shop opening soon".
-
 Contact: fkarim@visualneuroscience.ai
 ```
 

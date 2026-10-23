@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.78 — 23 October 2026 — The posters wait for their shop
+Commit · Take every mention of the posters out of the site and the app until the shop opens
+
+The posters are not on sale yet, so nothing mentions them for now: the Posters section has left the terms and the privacy policy's list of services, the posters box has left the home page's Library hub and the app's Library tab, the page itself is unlisted, out of the nav and the precache and marked for search engines not to index, and the App Store review notes no longer describe a shop. The page and its pictures stay in the repository, ready to come back when the shop opens.
+
 ## v11.77 — 23 October 2026 — Claude, ChatGPT and Kimi, named together
-Commit · Name ChatGPT and Kimi beside Claude wherever the MCP server is introduced
+Commit `939ebda` · Name ChatGPT and Kimi beside Claude wherever the MCP server is introduced
 
 The MCP server's box, in the app's About tab and on the website's About hub, now names Kimi beside Claude and ChatGPT, and the Coming soon row on the server's extension names all three where it named Claude alone, as the MCP page and the privacy policy already did. The Vision Pro console's About card and the website's About page say the same.
 
