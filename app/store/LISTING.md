@@ -158,13 +158,27 @@ put an address on the newsletter's list.
 The iPhone and iPad screenshots in `app/store/screenshots/` were taken from
 the pages in a browser (`scripts/shoot-store.js`, every set retaken on the
 v12.9 pages) and show the website's own header, not the tab bar the app has
-had since v11. The App Store's images are the eighteen in `app/store/sell/`
-below, made from captures of the app itself, which show the app as it was
-when the captures were taken (24 October 2026, before the grey island bars,
-the transparency sliders and the scans on the page's black of v12.0 to
-v12.8): take the captures again from a build that carries those and remake
-them with `store-sell.js` before submitting 1.1. The Android sets, for Play,
-are the browser's and stand.
+had since v11; the Android sets among them are what Play takes. The App
+Store's images are the eighteen in `app/store/sell/` below. They began as
+captures of the app on the owner's iPad and iPhone (23 October 2026) under a
+statement each; since v12.10 `app/scripts/remake-store-images.js` remakes
+them from the live pages whenever the pages change, with no device in hand:
+each page is rendered as the app shows it, at the web view those captures
+had and in the same state as the capture (the same regions lit in the same
+colours, the same window open, the same question dealt), joined to the app's
+own chrome cut from the captures and kept in `app/store/chrome/` (the bar
+with the back button and the island on the iPad, the bar with the page's
+title and the tab bar on the iPhone), and set under its statement by
+`store-sell.js`. The Atlases tab in light mode is the app's own screen, so
+that image keeps its capture whole and only the atlas box's picture, the
+home page's light twin, is set in afresh. The renders are a browser's rather
+than the device's, and the device's safe areas are not reproduced, which
+stands the page's bar a little closer to the tab bar than the app does; a
+capture from a device is still the truest image, and `store-sell.js` takes
+one as before. Run it with the site served on port 8412, from `app/`:
+`node scripts/remake-store-images.js`, half an hour for the set, or name
+the shots (`ipad-01` to `ipad-09`, `iphone-01` to `iphone-09`) to remake a
+few.
 
 A capture from a device becomes a store image with the sell above it through
 `app/scripts/store-sell.js`: the statement in Flux, the site's brand face, on

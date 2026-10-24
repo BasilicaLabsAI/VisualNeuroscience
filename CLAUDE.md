@@ -522,9 +522,19 @@ Read this first in every session. It is the handover; nothing else needs pasting
   after an expedited review. The project is at 1.1 for the next submission; its What's New text, the App Privacy
   changes the newsletter and the usage counts need, and the steps are in `app/store/LISTING.md`, the screenshots in
   `app/store/screenshots/` (the browser's, every set retaken on the v12.9 pages by `app/scripts/shoot-store.js`, whose
-  Brodmann shot is the Brodmann Area Atlas page since v12.9) and the App Store's own images in `app/store/sell/`, made
-  by `store-sell.js` from the owner's device captures of 24 October 2026, which show the app before v12.0 to v12.8:
-  new captures from a build that carries them are needed before 1.1 goes in, and the images remade from them. The listing's new name is *Visual Neuroscience: 3D Human Brain Atlas* (the owner, 23 October
+  Brodmann shot is the Brodmann Area Atlas page since v12.9) and the App Store's own images in `app/store/sell/`: since
+  v12.10 `app/scripts/remake-store-images.js` remakes all eighteen from the live pages (served on 8412, run from `app/`,
+  half an hour; name shots `ipad-01`…`iphone-09` for a few), each page rendered as the app shows it (the shell's marks and
+  a Capacitor stub set at document start) at the web view of the owner's captures of 23 October 2026, an 11-inch iPad
+  sideways (1210×748 CSS px at 2×, the page 172 px down the 2420×1668 capture) and an iPhone 16 Pro (402×675 at 3×, rows
+  348 to 2373 of 1206×2622), in the capture's state (the regions in the order the owner added them, `P:Amygdala|P:Thalamus|
+  P:Frontal_Mid` on the iPad and `P:Thalamus|P:Amygdala|P:Frontal_Mid` on the iPhone, so the gyrus is pink on both; the
+  probe on the caudate by a tap found on the crosshair; the receptor window on D2; the practice page dealt again until
+  the capture's question comes up), joined in a Playwright page to the app's chrome strips cut from those captures and
+  kept in `app/store/chrome/` (the iPad's top bar by tab and theme, the iPhone's top bar by page title and its tab bar
+  by tab; the light Atlases tab whole, the app's own screen, whose atlas picture is the home twin set in afresh), and set
+  under the owner's statements by `store-sell.js`. Run it again whenever the pages change; a device capture is still the
+  truest image and `store-sell.js` takes one as before. The listing's new name is *Visual Neuroscience: 3D Human Brain Atlas* (the owner, 23 October
   2026), which the store's 30-character cap splits into the name `Visual Neuroscience` and the subtitle `3D Human Brain
   Atlas`; it goes in with 1.1. `GoogleService-Info.plist` was downloaded again on 21 October 2026 and was identical to the
   repo's copy (`IS_ANALYTICS_ENABLED` false); the key does not gate collection in current SDKs, so the apps count

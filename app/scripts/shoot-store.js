@@ -20,8 +20,9 @@
    the bar's 3D tab; the pages being one screen each since v11.22 and after,
    the framing rules below scroll nothing on them and stay for the pages
    that still scroll. The sets are retaken whenever the pages' look
-   changes; the App Store's own images, in app/store/sell/, are made from
-   the owner's device captures by store-sell.js and are not touched here. */
+   changes; the App Store's own images, in app/store/sell/, are made by
+   remake-store-images.js, from the live pages under the app's own chrome,
+   and are not touched here. */
 const path = require('path'), { execSync } = require('child_process');
 const { chromium } = require(path.join(execSync('npm root -g').toString().trim(), 'playwright'));
 
