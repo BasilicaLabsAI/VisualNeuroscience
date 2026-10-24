@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.5 — 24 October 2026 — The receptor sheet's words checked
+Commit · Correct the Microanatomy sheets' introductions
+
+The introduction to the Receptors sheet had the binding the wrong way round and overstated a few things; it now says that a neurotransmitter has to bind to something and names what it binds to, that ionotropic receptors shut when the transmitter leaves or desensitise sooner, which transmitters have receptors of both speeds and which work through metabotropic receptors alone, and that the receptor names are the pharmacologists'. The Neurotransmitters sheet's introduction no longer claims the brain makes its transmitters in milliseconds: it keeps a stock ready and releases and clears them that fast.
+
 ## v12.4 — 24 October 2026 — The transmitter filter on three lines
-Commit · Lay the Microanatomy page's transmitter filters out on three lines
+Commit `f66cf98` · Lay the Microanatomy page's transmitter filters out on three lines
 
 In the Receptors and Neurotransmitters sheets on the Microanatomy page the row of transmitter buttons now reads on three lines: All on a line of its own, then the monoamines behind their label, then everything else behind its, rather than one run of buttons with the labels lost among them.
 

@@ -104,7 +104,7 @@
 "Ionotropic": [
 "A receptor that is itself an ion channel",
 "Transmitter binds, pore opens, ions flow: under a millisecond",
-"Shuts as soon as the transmitter leaves",
+"Shuts when the transmitter leaves, or desensitises sooner while it is still bound",
 "The fast, electrical side of signalling"
 ],
 "Metabotropic": [
