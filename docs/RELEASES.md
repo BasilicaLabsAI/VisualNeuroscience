@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.18 — 24 October 2026 — Brain region explanations, and the 1.1 listing
+Commit · Make the region images' statement Brain region explanations alone and write the 1.1 listing text
+
+The two App Store images of the atlas's region explanations now carry the owner's statement alone, Brain region explanations, on the iPad and on both iPhone sizes. The listing notes hold the text for version 1.1: the What's New list brought up to date with the AI Connector, the full-screen atlases and the update popup, a new promotional line, and a description that adds the AI Connector and the cell and molecule pages to what is inside.
+
 ## v12.17 — 24 October 2026 — Word of an update, and the developer's page retitled
-Commit · Tell iOS users when a newer version is on the App Store and title the developer's page Message from the Developer
+Commit `adb21f7` · Tell iOS users when a newer version is on the App Store and title the developer's page Message from the Developer
 
 The iPhone, iPad and Mac app now says when a newer version is on the App Store: a popup offers Update, which opens the app's page in the App Store, or Not Now, and it asks at most once a day, never for a version the device's system is too old to run. The app's next build carries it, so it first asks once the version after that is out. The page with the developer's letter is titled Message from the Developer, on the website and in the app's bar, and the privacy page describes the check: the app asks Apple's App Store which version is the newest, and the request carries nothing about you.
 

@@ -212,36 +212,93 @@ ten for the iPad and ten for each iPhone size.
 
 Check the build number on the 1.0 page first. If 1.0 went out as build 14
 rather than 15, the second block is new to App Store users as well and goes
-above the first. 4,000 characters allowed; both together are well under.
+at the end of the first. 4,000 characters allowed; both together come to
+3,180.
+
+**What's New in This Version** (2,812/4000)
 
 ```
-• A new icon: the brain wired with circuit traces, on a white tile or, from a switch under Account, a black one.
-• The receptor density window is tabbed: the graph on show with nothing to scroll, the table of every receptor against every region, the receptor's own drawings, the receptor types and the sources each on a tab of their own.
-• Brodmann areas are added the way the regions are, from one searchable dropdown, by number, name or what they do.
-• Turn the phone sideways in the 3D Region Atlas and the views take the whole height: the bar moves to the right edge and the four views stand in one row.
-• The Hallucinations study is a screen like the atlas: the scans fill it, the brain state and the regions are a box in the corner, and the paper, the reading, the circuit, the figures, the imaging, the mechanism and the limits each open from a button of their own.
-• Terms of use, a page on deleting your account, and a Delete your account row under Account. Deleting an account signed in with Apple revokes the Sign in with Apple authorisation as well.
-• A tab bar. The atlases, the library, practice, about and your account each have a tab that opens on a page of its own, and whatever you open stays in its tab when you switch away and back. Light or dark is chosen under Account.
-• Microanatomy: a neuron drawn part by part, with twenty structures to click and a quiz to learn them, seventeen neurotransmitters drawn the way chemists draw them, and a hundred and fifty receptors, channels and transporters, each with the drugs that act on it.
-• Molecular: the dopamine and serotonin receptors themselves in 3D, built from thirty-nine experimental structures. Watch the neurotransmitter dock and switch the receptor on, see where antipsychotics, triptans, LSD and psilocin sit in the same pocket, and compare the subtypes.
-• Receptor densities now come from published PET and autoradiography, with a source behind every number. Pick a region to see its receptors ranked against the rest of the brain, or pick a receptor to see where it is densest and light those regions up on the scan.
-• The Brodmann Area Atlas: the classic map of both faces of the cortex on one screen, with what each area does beside it. The areas light up on the scan in the 3D Region Atlas too, searchable by number, name or what they do.
+• A tab bar: Atlases, Library, Practice, About and Account, each a page of its own that keeps its place when you switch away and back. Light or dark is chosen under Account.
+• AI Connector: ask the atlas from Claude, ChatGPT, Kimi or any assistant that supports the Model Context Protocol. Each answer links to the view it describes, and the About tab shows how to connect.
+• Every atlas fills the screen like an anatomy app: the views take the room, the tools run along a bar at the foot, and the regions sit in a drawer you can hide. Each atlas remembers where you left it, cuts and all.
+• Microanatomy: a neuron drawn part by part, with twenty structures to tap and a quiz to learn them, seventeen neurotransmitters drawn the way chemists draw them, and a hundred and fifty receptors, channels and transporters, each with the drugs that act on it.
+• Molecular: the dopamine and serotonin receptors themselves in 3D, built from thirty-nine experimental structures. Watch the neurotransmitter dock and switch the receptor on, see where antipsychotics, triptans, LSD and psilocin sit in the same pocket, and compare the subtypes. The binding tour reads at two levels, Simple and Detailed.
+• The Brodmann Area Atlas: both faces of the cortex on one screen, with the brain in 3D and what each area does beside it. The areas light up on the scan in the 3D Region Atlas too, searchable by number, name or what they do.
+• Receptor densities now come from published PET and autoradiography, with a source behind every number, in a tabbed window: the graph, the table of every receptor against every region, the receptor's own drawings, the receptor types and the sources.
+• Tractography fills the screen and can be sliced like the atlas, and the Network Atlas shows its ring of connections beside the scans.
+• The slice tool marks the centre of each slider, and Reset slice puts every cut back.
+• Turn the phone sideways in the 3D Region Atlas and the views take the whole height.
+• The Hallucinations study is a screen like the atlas, with the paper, the reading, the circuit, the imaging and the limits each a button away.
 • The Digital Textbook is now OpenStax's Introduction to Behavioral Neuroscience in full, nineteen chapters, with its citations opening where they stand.
-• The side view opens on the brain itself rather than the gap between its halves, and picking a region brings every view to it.
-• A highlighted region lights up on the receptor chart in its own colour.
-• Your account has a page of its own: everything it holds, a copy to download, and deletion. A new account can ask for feature announcements by email, and there is a new contact address: fkarim@visualneuroscience.ai.
-• Change your password from the app: a row under Account opens the account page on it.
+• A new icon: the brain wired with circuit traces, on a white tile or, from a switch under Account, a black one.
+• Your account has a page of its own: everything it holds, a copy to download, a new password and deletion. Deleting an account signed in with Apple revokes Sign in with Apple as well. A new account can ask for feature announcements by email.
+• Terms of use and a page on deleting your account, both under Account, and a message from the developer under About.
+• The app now tells you when a newer version is on the App Store.
 ```
 
 Only if 1.0 went out as build 14:
 
 ```
-• Export the brain in 3D. Every 3D view now saves as a model file: glTF (.glb), USDZ for Apple Quick Look, OBJ, STL for printing, PLY, VRML and X3D. Open a USDZ from Files to see the brain in your room.
+• Export the brain in 3D. Every 3D view saves as a model file: glTF (.glb), USDZ for Apple Quick Look, OBJ, STL for printing, PLY, VRML and X3D. Open a USDZ from Files to see the brain in your room.
 • Saved models. Name a 3D Region Atlas view, with its regions, colours, camera and cuts, and open it again later. Signed in, models follow your account to every device.
-• An About page says who made the app and why, and the Brodmann map is now a line drawing, credited to IFEN, whose diagram it is adapted from.
 ```
 
-The description on the version page is 1.0's. Its WHAT IS INSIDE list predates Microanatomy and Molecular; the Play listing in `PLAY-STORE.md` carries the current list with an Apple-worded account line (Sign in with Apple or email), so paste its bullets into the App Store description with 1.1.
+**Promotional Text** (162/170), which can be changed at any time
+without a new version:
+
+```
+New in 1.1: ask the atlas from your AI assistant, explore a neuron and its receptors in 3D, and see the Brodmann areas on a brain you can turn. Free, with no ads.
+```
+
+**Description** (3,952/4000). 1.0's description predated
+Microanatomy, Molecular and the AI Connector and said its developer had not
+finished the postgraduate certificate, which was finished; this one follows
+the Play listing's list, adds the AI Connector, words the account line for
+Apple (Sign in with Apple, Google or email) and takes its developer line
+from the owner's letter on the About page.
+
+```
+Visual Neuroscience is an interactive 3D atlas of the human brain, built for anyone learning neuroanatomy without a lab or a licence. Turn a real MNI152 brain, tap through its regions, search Brodmann areas by what they do, follow the white-matter tracts, go down to the cell and the molecule, and see published studies drawn on the scan itself. Everything ships inside the app and renders on your device, so it works on a train, at the back of a lecture theatre, or in aeroplane mode.
+
+WHAT IS INSIDE
+
+• 3D Region Atlas: the MNI152 template with the AAL-116 parcellation. Pick any region, highlight it in three planes and in 3D, and read what it does.
+• Brodmann Area Atlas: the classic cortical map, both faces of the hemisphere on one screen beside the brain in 3D. Tap any area to read what it does.
+• Tractography: the HCP1065 whole-brain tractogram. Rotate it, slice it, follow the bundles.
+• Receptor density: where the major neurotransmitter receptors sit, from published PET and autoradiography, with a source behind every number.
+• Network Atlas: the brain's large-scale networks in six states, from flow to meditation.
+• Microanatomy: a neuron drawn part by part with a quiz to learn it, the neurotransmitters as chemists draw them, and a hundred and fifty receptors, channels and transporters with the drugs that act on them.
+• Molecular: the dopamine and serotonin receptors in 3D, from experimental structures. Watch the neurotransmitter dock, see where antipsychotics, triptans, LSD and psilocin sit in the same pocket, and compare the subtypes.
+• Visualising Studies: published papers drawn onto the scan, beginning with a study of auditory hallucinations in schizophrenia.
+• Digital Textbook: OpenStax's Introduction to Behavioral Neuroscience in full, nineteen chapters, with every figure and reference.
+• Practice: adaptive questions that score as you go, lean toward what you keep getting wrong, and explain every answer. The first bank follows the KCL MSc Neuroscience syllabus.
+
+AI CONNECTOR
+
+Ask the atlas from Claude, ChatGPT, Kimi or any assistant that supports the Model Context Protocol: what a region does, where a receptor is densest, how the brain changes in a state. Each answer links to the view it describes; the About tab shows how to connect.
+
+MADE FOR TOUCH, AND FOR A DESK
+
+Pinch to zoom on every scan and diagram, two fingers to pan, one to rotate; on a Mac the same works with a trackpad. Save a view as a picture, or the brain as a 3D model to open in your room.
+
+AN ACCOUNT, ONLY IF YOU WANT ONE
+
+Sign in with Apple, Google or email to keep your practice progress and saved models across iPhone, iPad, Mac and the web. Nothing requires an account, nothing is sold, and there is no advertising and no tracking. Delete the account from inside the app at any time.
+
+BUILT ON OPEN DATA
+
+The MNI152 template, the AAL parcellation, the MRIcron Brodmann atlas and the HCP1065 tractogram, rendered with NiiVue; receptor structures from the Protein Data Bank. Each page says where its data came from and where the evidence stops. Brodmann Areas diagram adapted with permission from IFEN – Institute for EEG-Neurofeedback / Neurofeedback Academy.
+
+WHO IT IS FOR
+
+Students revising between lectures. Lecturers who want a live brain on the screen instead of a slide. And anyone who wanted to study this and was priced out.
+
+Built by one developer, with the help of AI and a PG Cert in Applied Neuroscience from King's College London Online, so that the next generation of neuroscientists and psychologists has a map of the brain that is easy to use and understand. The website and the app share the same code and the same author. If something is missing for your course, write, and it usually ships within the week.
+
+Not a medical device and not a diagnostic tool. An educational reference that summarises published work and draws published atlases, with its sources on every page.
+
+Also on the web at visualneuroscience.ai
+```
 
 ## Submitting 1.1, in order
 
