@@ -423,7 +423,13 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (`z-index:30`) and the strip (`z-index:22` upright, `27` sideways, each with a paper `box-shadow` over the grid gap
   above it), `.ba-screen{overflow:hidden}` taking the rest. The molecular viewer's `#panel.pop` slides from `100vh` on
   a wide screen and from behind the bar on a phone, and `t4_engine2.js` lays the model out again 540ms after the window
-  rises. `prefers-reduced-motion` makes every one of them a plain fade. Since v11.98, at the owner's word, a lit bar button
+  rises. `prefers-reduced-motion` makes every one of them a plain fade. Since v12.0, at the owner's word, the bar and every
+  slider on the six pages wear the molecular viewer's style through `site/assets/bar.css`, linked last in each page's head
+  so it has the last word on the bar and the sliders and on nothing else: the viewer's panel material and hairline, its ink
+  and soft ink for the buttons, Flux at the viewer's size for their names, a lit button a block of its ink, and its slider
+  (a rounded track, a round thumb in its accent bordered in the panel's solid; the slice tool's edge sliders take the same
+  colours and keep their strips). The variables are `--bar-panel`, `--bar-solid`, `--bar-ink`, `--bar-soft`, `--bar-line`,
+  `--bar-track` and `--bar-accent`, by theme; the viewer itself keeps its own rules. Since v11.98, at the owner's word, a lit bar button
   (`.pbtn.active`, `[aria-pressed="true"]`, the Brodmann page's `[aria-expanded="true"]`: a sheet open or a mode on) is a
   block of ink, `background:var(--ink); color:var(--paper)` with 10px corners, in all six chromes (the viewer's `base.css`
   takes `--panel-solid` for the paper), the rule standing after the hover rule so a hovered lit button keeps its paper.

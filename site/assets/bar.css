@@ -1,0 +1,69 @@
+/* ── the bars and sliders of every atlas, in the molecular viewer's style ──
+   Since v12.0, at the owner's word, the viewer (scripts/molecular/viewer/
+   base.css) is the model for the bar along the foot of every atlas and for
+   every slider: its panel material and hairline, its ink and soft ink for
+   the buttons, its sans (Flux, the site's own) at its size for their names,
+   a lit button a block of its ink, and its slider, a rounded track with a
+   big round thumb in its accent, bordered in the panel's solid. The file is
+   linked after each page's own styles so it has the last word on the bar
+   and the sliders, and on nothing else: the sheets keep their places and
+   their look. The viewer keeps its own rules. */
+:root{
+  --bar-panel:rgba(246,250,251,.86); --bar-solid:#F6FAFB; --bar-ink:#1B2A33; --bar-soft:#4E5E67;
+  --bar-line:rgba(27,42,51,.13); --bar-track:rgba(27,42,51,.22); --bar-accent:#28666F; --bar-accent-ink:#FFFFFF;
+}
+:root[data-theme="dark"]{
+  --bar-panel:rgba(15,23,29,.84); --bar-solid:#121B21; --bar-ink:#E3ECEF; --bar-soft:#A7B6BD;
+  --bar-line:rgba(227,236,239,.14); --bar-track:rgba(227,236,239,.26); --bar-accent:#7FC3CB; --bar-accent-ink:#0D1B20;
+}
+
+/* the bar */
+.panelbar{
+  color:var(--bar-ink); background:var(--bar-panel); border-color:var(--bar-line);
+  -webkit-backdrop-filter:blur(16px) saturate(1.15); backdrop-filter:blur(16px) saturate(1.15);
+}
+.panelbar .panelbar-all, .panelbar .panelbar-views, .panelbar .panelbar-btns, .panelbar .panelbar-end, .panelbar .pbtn.pbtn-ref{ border-color:var(--bar-line); }
+.panelbar .pbtn{ color:var(--bar-soft); }
+.panelbar .pbtn span{ font-family:'Flux','Afacad Flux',system-ui,-apple-system,sans-serif; font-weight:400; font-size:.6rem; letter-spacing:.14em; line-height:1; }
+@media (hover: hover){ .panelbar .pbtn:hover{ color:var(--bar-ink); } }
+.panelbar .pbtn:active{ color:var(--bar-ink); }
+.panelbar .pbtn.active, .panelbar .pbtn[aria-pressed="true"], .panelbar .pbtn[aria-expanded="true"]{ background:var(--bar-ink); color:var(--bar-solid); }
+.panelbar .pbtn.active span, .panelbar .pbtn[aria-pressed="true"] span, .panelbar .pbtn[aria-expanded="true"] span{ font-weight:600; }
+/* the readouts at the bar's start, in the bar's inks */
+.panelbar .stat .k, .panelbar .stat .v small, .panelbar .probe-hint{ color:var(--bar-soft); }
+.panelbar .stat .v{ color:var(--bar-ink); }
+.panelbar .probe-btn{ border-bottom-color:var(--bar-line); }
+.panelbar .probe-btn[aria-pressed="true"], .panelbar .probe-btn .dot{ border-color:var(--bar-ink); }
+@media (hover: hover){ .panelbar .probe-btn:hover{ border-bottom-color:var(--bar-ink); } }
+.screen.one.land .pbtn span{ font-size:.5rem; }
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more){
+  .panelbar{ background:var(--bar-solid); -webkit-backdrop-filter:none; backdrop-filter:none; }
+}
+
+/* the sliders: the viewer's, a rounded track and a big round thumb in the
+   accent with the panel's solid about it */
+input[type="range"]:not(.slice-range){
+  -webkit-appearance:none; appearance:none; height:30px; margin:0; padding:0;
+  background:transparent; cursor:pointer; accent-color:var(--bar-accent);
+}
+input[type="range"]:not(.slice-range)::-webkit-slider-runnable-track{ height:6px; border-radius:3px; background:var(--bar-track); }
+input[type="range"]:not(.slice-range)::-webkit-slider-thumb{
+  -webkit-appearance:none; width:24px; height:24px; margin-top:-9px; border-radius:50%;
+  background:var(--bar-accent); border:4px solid var(--bar-solid); box-shadow:0 1px 5px rgba(0,0,0,.35);
+}
+input[type="range"]:not(.slice-range)::-moz-range-track{ height:6px; border-radius:3px; background:var(--bar-track); }
+input[type="range"]:not(.slice-range)::-moz-range-thumb{
+  width:16px; height:16px; border-radius:50%;
+  background:var(--bar-accent); border:4px solid var(--bar-solid); box-shadow:0 1px 5px rgba(0,0,0,.35);
+}
+input[type="range"]:not(.slice-range):focus-visible{ outline:2px solid var(--bar-accent); outline-offset:2px; border-radius:8px; }
+/* the slice tool's edge sliders take the same track and thumb; their strips
+   and sizes stay viewer.css's, so a finger still finds them */
+.slice-range::-webkit-slider-runnable-track{ background:var(--bar-track); border-radius:3px; }
+.slice-range::-moz-range-track{ background:var(--bar-track); border-radius:3px; }
+.slice-range::-webkit-slider-thumb{ background:var(--bar-accent); border:3px solid var(--bar-solid); box-shadow:0 1px 5px rgba(0,0,0,.35); }
+.slice-range::-moz-range-thumb{ background:var(--bar-accent); border:3px solid var(--bar-solid); box-shadow:0 1px 5px rgba(0,0,0,.35); }
+.slice-range:focus-visible{ outline:2px solid var(--bar-accent); }
+:root:not([data-theme="dark"]) .slice-range::-webkit-slider-runnable-track{ background:var(--bar-track); }
+:root:not([data-theme="dark"]) .slice-range::-moz-range-track{ background:var(--bar-track); }
+:root:not([data-theme="dark"]) .slice-range:focus-visible{ outline-color:var(--bar-accent); }

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.0 — 24 October 2026 — Every bar and slider in the viewer's style
+Commit · Give every atlas's bar and sliders the molecular viewer's style, colours and type
+
+The bars along the foot of the atlases and every slider on them now match the molecular viewer's: its slate panel and hairline, its soft ink for the buttons and a block of its ink for the one that is on, its type at its size, and its slider, a rounded track with a round thumb in its teal. The sheets stay where they were.
+
 ## v11.99 — 24 October 2026 — Microanatomy on the bar
-Commit · Make the Microanatomy page one screen on the atlases' bar, the drawing filling the view and the structures a drawer
+Commit `a541e11` · Make the Microanatomy page one screen on the atlases' bar, the drawing filling the view and the structures a drawer
 
 The Microanatomy page now works as the other atlases do: one screen, the cell's drawing filling it, with a bar of buttons along the foot. The structures are a box over the drawing's corner that folds away on its tab, open the first time you come, and Cells, Neurotransmitters, Receptors and About each slide up from the bar as a sheet; Test yourself on the bar turns the box into the test. The zoom buttons are gone: pinch or scroll over the drawing to zoom, drag it about, and Reset view fits it again.
 
