@@ -210,7 +210,19 @@ Read this first in every session. It is the handover; nothing else needs pasting
   dark and white light (`ground()` beside the viewer list, the stage's two rules by theme, an observer on `data-theme`
   repainting the viewers at once), the loading message in the page's paper and ink, and `shoot-home-pictures.js` no longer
   forces a white back for the light twin; it is the one atlas that draws its ground itself rather than through
-  `scan-look.js`, whose dark ground is a scan's pure black. The page opens a door to the shoot script, `MN_TRACTS` (`zoom`,
+  `scan-look.js`, whose dark ground is a scan's pure black. The Microanatomy page (`site/microanatomy.html`, run by
+  `site/assets/cells.js` with `nt.js`, `rxfig.js` and `rx.js`) is one screen too since v11.99, at the owner's word, on the
+  study's chrome with the Tractography page's one view: the cell's drawing (`section.view.plate`, the `#scroller` holding
+  `svg#plate`) fills the stage, fitted to the view as wide or as tall (`fitWidth` in `cells.js` sets `--fit`, the width;
+  `--z` the zoom, by the wheel or a pinch about the pointer through `zoomTo`, a drag panning it when larger than the view;
+  the + and − went; the cap's Reset view, `#plateReset`, fits it again); the structures are the drawer (`#side`, the
+  `drawer-in`: `#explore` with the picked structure, the index and Colour every structure, or `#quiz` the test), open on
+  the first visit at every width and remembered as `vn-cells-drawer` after; and the bar carries Cells (`#popCells`, the
+  tiles, a pick closing the sheet), Test yourself (`#quizBtn`, a mode lit while on, switched through `MN_CELLS.setMode`,
+  the drawer opened for it), Neurotransmitters (`#popNt`) and Receptors (`#popRx`), both full-width sheets holding what the
+  two folded sections held, and About (`#popAbout`: the lede, `#plateNote`, the credits). The screen script exposes
+  `MN_SCREEN` (`open`, `hide`, `current`, `drawer`), and `VN_reveal` opens the sheet a hash names a tile in. The page
+  opens a door to the shoot script, `MN_TRACTS` (`zoom`,
   `home`, `still`), through which `shoot-home-pictures.js` shoots both twins at zoom 1.2, the revolve stopped and the home
   angle set, in a frame of the picture's proportion, so the whole brain is in the picture (v11.97; the page itself still
   opens at 1.4, the brain filling the view). Since v11.98 the view carries the atlases' Slice tool (`slice-tool.js`, loaded by

@@ -28,6 +28,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="assets/atlas-views.css">
 <link rel="stylesheet" href="assets/rxfig.css">
 <link rel="stylesheet" href="fonts/fonts.css">
 <meta name="color-scheme" content="dark light">
@@ -132,31 +133,12 @@ button{ font:inherit; color:inherit; }
   background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
 }
 
-.title-strip{
-  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
-  gap:.5rem 1.3rem; border:1px solid var(--hair);
-  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
-}
-.title-strip .name{
-  font-family:var(--font-display); font-size:1.35rem;
-  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
-}
-.title-strip .anno{
-  font-family:var(--font-serif); font-style:italic;
-  font-size:.88rem; color:var(--ink-60);
-}
-
-.lede{
-  font-family:var(--font-serif); font-size:1.02rem; line-height:1.6;
-  margin:0 0 calc(var(--gap) * 1.6);
-}
-
 /* ── the cells ──────────────────────────────────────────────────────────
    One tile per cell, the way the studies shelf lists its papers: the
    drawn one is a solid tile and the current page, the rest are dashed so
    the section has its shape without claiming any of them is drawn yet. */
 .cells{
-  display:grid; gap:var(--gap); list-style:none; margin:0 0 var(--gap); padding:0;
+  display:grid; gap:var(--gap); list-style:none; margin:0; padding:0;
   grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));
 }
 .cells > li{ display:flex; min-width:0; }
@@ -283,47 +265,6 @@ li > .cellt{ cursor:pointer; }
 .rx{ border:1px solid var(--hair); background:var(--paper); display:flex; flex-direction:column; min-width:0; }
 .rx[hidden], .nt[hidden], .nt-group[hidden]{ display:none; }
 
-/* ── the two sections fold, shut until opened ─────────────────────────
-   The heading is the summary: its rule and spacing stay, and a plus at
-   the far right turns to a minus when the section is open. A link into a
-   tile inside opens the fold itself. */
-.sec-fold > summary{ list-style:none; cursor:pointer; }
-.sec-fold > summary::-webkit-details-marker{ display:none; }
-.sec-fold > summary .sec-h{ margin-bottom:0; }
-.sec-fold[open] > summary .sec-h{ margin-bottom:var(--gap); }
-.sec-fold > summary .sec-h::after{
-  content:"Open +"; margin-left:auto; font-size:.58rem; letter-spacing:.2em; font-weight:500;
-  border:1px solid var(--ink); padding:.3rem .55rem; white-space:nowrap; transition:background .15s, color .15s;
-}
-.sec-fold[open] > summary .sec-h::after{ content:"Close \2212"; }
-.sec-fold > summary .sec-h small{ margin-left:0; }
-@media (hover: hover){ .sec-fold > summary:hover .sec-h::after{ background:var(--ink); color:var(--paper); } }
-/* the peek under a closed heading: a few of the drawings inside, a line on
-   what the section holds, and a plain invitation to open it */
-.sec-peek{ display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--gap) calc(var(--gap) * 1.5); align-items:center; padding:.9rem 0 .3rem; }
-.sec-fold[open] > summary .sec-peek{ display:none; }
-.sec-preview{ display:flex; gap:8px; }
-.sec-preview .sec-tile{
-  display:block; width:clamp(84px, 9vw, 120px); aspect-ratio:1; border:1px solid var(--hair); background:var(--paper);
-  padding:6px; box-sizing:border-box; overflow:hidden; pointer-events:none;
-}
-.sec-preview .sec-tile svg{ display:block; width:100%; height:100%; }
-.sec-preview .sec-tile svg.mol{ transform:scale(1.6); }       /* the formulas carry their own margins; fill the tile */
-.sec-preview .sec-tile svg.rxd{ transform:scale(1.15); }
-.sec-preview .sec-tile .rx-draw{ height:100%; display:flex; align-items:center; }
-.sec-preview .sec-tile:empty{ background:color-mix(in srgb, var(--ink) 4%, transparent); }
-.sec-peek-text{ display:flex; flex-direction:column; gap:.45rem; align-items:flex-start; }
-.sec-peek-line{ font-family:var(--font-serif); font-size:.96rem; line-height:1.5; color:var(--ink-60); }
-.sec-open{
-  font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink);
-  border-bottom:1px solid var(--ink); padding-bottom:.1rem;
-}
-.sec-open::after{ content:" \2193"; }
-@media (hover: hover){ .sec-fold > summary:hover .sec-open{ border-bottom-width:2px; } }
-@media (max-width:640px){
-  .sec-peek{ grid-template-columns:1fr; gap:.7rem; }
-  .sec-preview .sec-tile{ width:calc((100% - 24px) / 4); }
-}
 .rx-draw{ padding:.5rem .5rem 0; }
 .rx-cap{ padding:.45rem .9rem .35rem; }
 .rx-cap .ck{
@@ -350,44 +291,6 @@ li > .cellt{ cursor:pointer; }
 }
 @media (max-width:430px){ .rx-kinds, .rx-grid{ grid-template-columns:1fr; } }
 
-/* ── the stage: the plate and its rail ──────────────────────────────── */
-.stage{
-  display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:var(--gap);
-  align-items:start; margin-bottom:var(--gap);
-}
-.plate{ position:relative; min-width:0; border:1px solid var(--hair); background:var(--paper); }
-.plate-cap{
-  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center;
-  gap:.35rem .8rem; padding:.5rem .8rem; border-bottom:1px solid var(--hair);
-}
-.plate-cap b{
-  font-family:var(--font-brand); font-weight:500; font-size:.68rem;
-  letter-spacing:.28em; text-transform:uppercase;
-}
-.modes{ display:inline-flex; border:1px solid var(--hair); }
-.modes button{
-  border:0; border-left:1px solid var(--hair); border-radius:0;
-  background:var(--paper); color:var(--ink); cursor:pointer;
-  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
-  letter-spacing:.2em; text-transform:uppercase; line-height:1;
-  padding:.5rem .7rem .42rem;
-}
-.modes button:first-child{ border-left:0; }
-.modes button[aria-pressed="true"]{ background:var(--ink); color:var(--paper); }
-@media (hover: hover){ .modes button:hover{ background:var(--ink); color:var(--paper); } }
-
-.scroller{ overflow:hidden; aspect-ratio:var(--ar, 1200/780); width:100%; overscroll-behavior:contain; }
-.scroller.zoomed{ overflow:auto; cursor:grab; }
-.scroller.zoomed.drag{ cursor:grabbing; }
-.scroller svg{ width:calc(var(--z,1)*100%); }
-.plate-foot{
-  display:flex; align-items:center; gap:.9rem; flex-wrap:wrap;
-  border-top:1px solid var(--hair); padding:.45rem .8rem;
-}
-.plate-foot p{
-  font-family:var(--font-serif); font-style:italic; font-size:.82rem;
-  line-height:1.4; color:var(--ink-60); margin:0; flex:1 1 20rem;
-}
 .tip{
   position:absolute; pointer-events:none; z-index:3;
   background:var(--ink); color:var(--paper); padding:.18rem .55rem;
@@ -395,9 +298,6 @@ li > .cellt{ cursor:pointer; }
   transform:translate(-50%,calc(-100% - 14px));
 }
 
-/* the rail: what is picked, then the index of everything that can be */
-.rail{ display:flex; flex-direction:column; gap:var(--gap); min-width:0; }
-.card{ border:1px solid var(--hair); padding:1rem 1.05rem 1.1rem; background:var(--paper); }
 .card h2.card-h{
   font-family:var(--font-brand); font-weight:500; font-size:.68rem;
   letter-spacing:.3em; text-transform:uppercase; text-align:center;
@@ -447,30 +347,6 @@ li > .cellt{ cursor:pointer; }
 .q-ticks i.hit{ background:var(--acc); border-color:var(--acc); }
 .q-ticks i.miss{ background:var(--acc); border-color:var(--acc); opacity:.38; }
 
-.attrib{
-  font-family:var(--font-serif); font-style:italic;
-  font-size:.85rem; color:var(--ink-60);
-  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2rem;
-}
-
-@media (max-width:1100px) and (orientation:portrait),
-       (max-width:900px) and (orientation:landscape){
-  .stage{ grid-template-columns:1fr; }
-  .rail{ display:grid; grid-template-columns:1fr 1fr; align-items:start; }
-  .index{ columns:3; }
-}
-@media (max-width:760px){
-  .rail{ grid-template-columns:1fr; }
-  /* the tiles pair up rather than stack, so the drawing is not a screen
-     and a half below the fold */
-  .cells{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
-  .cellt{ padding:.6rem .7rem .7rem; }
-  .cellt .cn{ font-size:.98rem; }
-  .scroller{ aspect-ratio:auto; height:min(62svh,30rem); }
-  .index{ columns:2; }
-  .detail{ min-height:0; }
-  .tip{ display:none; }
-}
 @media (prefers-reduced-motion:reduce){ *{ transition:none!important; animation:none!important; } }
 
 /* ── the drawing ────────────────────────────────────────────────────────
@@ -559,9 +435,210 @@ li > .cellt{ cursor:pointer; }
 .mn-lab-l{ stroke:var(--pen); stroke-width:1.1px; vector-effect:non-scaling-stroke; }
 .mn-lab-h{ stroke:var(--paper); stroke-width:4px; opacity:.9; vector-effect:non-scaling-stroke; }
 .mn-lab-d{ fill:var(--pen); stroke:var(--paper); stroke-width:1.2px; vector-effect:non-scaling-stroke; }
+
+/* ════════ the screen: the drawing is the page ════════
+   Since v11.99, at the owner's word, this page is one screen in the 3D
+   Region Atlas's manner: the cell's drawing fills the room between the
+   header and a bar along the bottom, nothing scrolls, the structures (the
+   one picked, the index of all of them, Colour every structure, and the
+   test) are a drawer on the left that folds away on its tab, open on the
+   first visit, and the cells, the neurotransmitters, the receptors and
+   the notes that stood above and below the drawing rise from the bar's
+   buttons as sheets over it, one at a time. The chrome is the study's
+   (hallucinations.html, "the screen") with the Tractography page's one
+   view; a change to it belongs in every page that carries it.
+   --screen-top is the header's height, measured by the page's script;
+   --bar-h is the bar's. */
+body.atlas-screen{ overflow:hidden; margin:0; padding-bottom:0; }
+html:has(> body.atlas-screen){ overflow:hidden; }
+:root[data-shell][data-shell-pad] body.atlas-screen{ padding-top:max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px)); }
+main.screen{
+  max-width:none; padding:0; margin:0;
+  height:calc(100vh - var(--screen-top, 0px)); height:calc(100dvh - var(--screen-top, 0px));
+  display:flex; flex-direction:column; min-height:0; overflow:hidden;
+}
+.screen .vh{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }
+.deck{ flex:1 1 auto; min-height:0; display:flex; position:relative; }
+.drawer{
+  --box-w:320px;
+  position:relative; flex:0 0 calc(var(--box-w) + var(--gap)); width:calc(var(--box-w) + var(--gap)); min-width:0; min-height:0;
+  display:flex; flex-direction:column; align-items:flex-start; padding:var(--gap) 0 var(--gap) var(--gap);
+  transition:flex-basis .32s cubic-bezier(.32,.72,0,1), width .32s cubic-bezier(.32,.72,0,1), padding .32s cubic-bezier(.32,.72,0,1), visibility 0s 0s;
+}
+.drawer-box{
+  position:relative; flex:0 1 auto; width:var(--box-w); max-height:100%; min-height:0;
+  display:flex; flex-direction:column;
+  border:1px solid var(--hair); border-radius:16px; background:var(--paper);
+  box-shadow:0 1px 2px rgba(0,0,0,.08), 0 10px 30px rgba(0,0,0,.14);
+  transition:transform .32s cubic-bezier(.32,.72,0,1);
+}
+.drawer-in.card{ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; border:0; padding:var(--gap) var(--gap) 1.4rem; background:var(--paper); }
+.deck.shut .drawer{ flex-basis:0; width:0; padding-left:0; visibility:hidden; transition-delay:0s, 0s, 0s, .32s; }
+.deck.shut .drawer-box{ transform:translateX(calc(-100% - var(--gap) - 22px)); }
+.drawer-tab{
+  position:absolute; z-index:16; top:50%; transform:translateY(-50%);
+  width:22px; height:64px; padding:0; display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--hair); border-left:0; background:var(--paper); color:var(--ink); cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.drawer-tab::after{ content:""; position:absolute; inset:-8px -10px; }
+.drawer-tab svg{ width:10px; height:16px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:square; }
+.drawer-hide{ right:-22px; border-radius:0 10px 10px 0; }
+.drawer-show{ left:0; border-radius:0 10px 10px 0; visibility:hidden; opacity:0; transition:opacity .2s ease, visibility 0s .2s; }
+.drawer-show svg{ transform:rotate(180deg); }
+.deck.shut .drawer-show{ visibility:visible; opacity:1; transition-delay:.14s, .14s; }
+@media (hover: hover){ .drawer-tab:hover{ background:var(--ink); color:var(--paper); } }
+.drawer-tab:active{ background:var(--ink); color:var(--paper); }
+.stage{ flex:1 1 auto; min-width:0; min-height:0; display:flex; flex-direction:column; position:relative; overflow:hidden; padding:var(--gap) var(--gap) var(--gap) calc(var(--gap) + 10px); }
+.screen .views-wrap{ position:relative; flex:1 1 auto; min-height:0; }
+/* one view, the whole stage */
+.screen .views{ height:100%; display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(0,1fr); gap:0; min-width:0; }
+.screen .views .view{ min-height:0; min-width:0; display:flex; flex-direction:column; position:relative; border:1px solid var(--hair); background:var(--paper); }
+@container view (max-width:300px){
+  .screen .views .view .view-tools{ display:none; }
+}
+/* the drawing fits its view, as wide as the view or as tall, and is centred
+   in it; zoomed (--z above 1, by the wheel or a pinch) it grows past the view
+   and scrolls, a drag panning it. --fit is the fitted width, set by cells.js. */
+.scroller{
+  flex:1 1 auto; min-height:0; min-width:0; overflow:hidden; overscroll-behavior:contain;
+  display:flex; align-items:safe center; justify-content:safe center;
+  touch-action:pan-x pan-y;
+}
+.scroller.zoomed{ overflow:auto; cursor:grab; }
+.scroller.zoomed.drag{ cursor:grabbing; }
+.scroller svg{ flex:none; width:calc(var(--fit, 100%) * var(--z, 1)); height:auto; }
+.panelbar{
+  flex:none; display:flex; align-items:center; gap:.6rem;
+  padding:.45rem var(--gap) calc(.45rem + env(safe-area-inset-bottom, 0px));
+  border-top:1px solid var(--hair);
+  background:color-mix(in srgb, var(--paper) 84%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
+  overflow-x:auto; overflow-y:hidden; scrollbar-width:none; white-space:nowrap;
+}
+.panelbar::-webkit-scrollbar{ display:none; }
+.panelbar-btns{ display:flex; gap:.15rem; flex:none; }
+.panelbar-end{ display:flex; gap:.15rem; flex:none; margin-left:auto; padding-left:.6rem; }
+.pbtn.pbtn-ref{ margin-left:.3rem; padding-left:.65rem; border-left:1px solid var(--hair); }
+.pbtn{
+  flex:none; display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:.28rem;
+  min-width:3.9rem; padding:.3rem .55rem .25rem; border:0; background:none; color:var(--ink-60); cursor:pointer;
+  -webkit-tap-highlight-color:transparent; transition:color .18s, background-color .18s;
+}
+.pbtn svg{ width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.pbtn span{ font-family:var(--font-brand); font-weight:500; font-size:.5rem; letter-spacing:.14em; text-transform:uppercase; white-space:nowrap; }
+@media (hover: hover){ .pbtn:hover{ color:var(--ink); } }
+.pbtn:active{ color:var(--ink); }
+/* lit, a window open or a mode on: a block of ink, as the view buttons are (v11.98) */
+.pbtn.active, .pbtn[aria-pressed="true"]{ background:var(--ink); color:var(--paper); border-radius:10px; }
+.pbtn.active span, .pbtn[aria-pressed="true"] span{ font-weight:600; }
+@media (pointer:coarse){ .pbtn{ min-height:44px; } }
+/* a sheet: one at a time, sliding up out of the bar over the view and back
+   into it when closed (the stage clips it at the bar's edge) */
+.pop{
+  position:absolute; left:calc(var(--gap) + 10px); right:var(--gap); bottom:var(--gap); z-index:20;
+  max-height:min(84%, calc(100% - 2 * var(--gap))); display:flex; flex-direction:column; overflow:hidden;
+  border:1px solid var(--hair); border-radius:16px;
+  background:color-mix(in srgb, var(--paper) 90%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(24px); backdrop-filter:saturate(180%) blur(24px);
+  box-shadow:0 18px 60px rgba(0,0,0,.35);
+  transform:translateY(calc(100% + var(--gap) + 40px));
+  transition:transform .36s cubic-bezier(.32,.72,0,1);
+}
+.pop[hidden]{ display:none; }
+.pop.in{ transform:none; transition-duration:.5s; }
+.pop-sm{ left:auto; width:min(440px, calc(100% - 2 * var(--gap) - 10px)); }
+.pop-md{ left:auto; width:min(680px, calc(100% - 2 * var(--gap) - 10px)); }
+.pop-head{ flex:none; display:flex; align-items:center; gap:.7rem; padding:.5rem .6rem .5rem .9rem; border-bottom:1px solid var(--hair); }
+.pop-head b{ font-family:var(--font-brand); font-weight:500; font-size:.68rem; letter-spacing:.28em; text-transform:uppercase; white-space:nowrap; }
+.pop-head small{ font-family:var(--font-serif); font-style:italic; font-size:.78rem; color:var(--ink-60); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pop-x{
+  margin-left:auto; flex:none; width:1.8rem; height:1.8rem; padding:0;
+  border:1px solid var(--hair); background:none; color:var(--ink); cursor:pointer;
+  font-size:1.15rem; line-height:1; -webkit-tap-highlight-color:transparent;
+  border-radius:50%; }
+@media (hover: hover){ .pop-x:hover{ background:var(--ink); color:var(--paper); } }
+.pop-x:active{ background:var(--ink); color:var(--paper); }
+@media (pointer:coarse){ .pop-x{ width:44px; height:44px; } }
+.pop-body{ flex:1 1 auto; min-height:0; overflow:auto; overscroll-behavior:contain; padding:.9rem 1rem 1.1rem; }
+.pop-body > .lede{ margin-bottom:var(--gap); }
+.pop-body p{ font-size:.95rem; line-height:1.55; }
+.pop .credits{
+  border-top:1px solid var(--hair); margin-top:1rem; padding-top:.8rem;
+  font-family:var(--font-serif); font-size:.82rem; color:var(--ink-60);
+}
+.pop .credits p{ margin:0 0 .5rem; font-size:.82rem; }
+.pop .cells{ margin:0; }
+/* the drawer's two parts: the structure picked and the index, or the test */
+.drawer-in #explore, .drawer-in #quiz{ display:block; }
+.drawer-in #explore[hidden], .drawer-in #quiz[hidden]{ display:none; }
+
+/* ── a phone: the view edge to edge, the drawer from the right, the sheets the width of the screen ── */
+.screen.one .stage{ padding:0; }
+.screen.one .views .view{ border:0; }
+.screen.one .panelbar-end{ margin-left:0; padding-left:0; }
+.screen.one .pop{ left:0; right:0; bottom:0; max-height:76%; border-left:0; border-right:0; border-bottom:0; border-radius:18px 18px 0 0; }
+.screen.one .pop-sm, .screen.one .pop-md{ width:100%; left:0; right:0; }
+.screen.one .drawer{ left:auto; right:0; padding:0; }
+.screen.one .drawer-box{ flex:1 1 auto; max-height:none; border-width:0 0 0 1px; border-radius:0; box-shadow:-8px 0 30px rgba(0,0,0,.25); }
+.screen.one .deck.shut .drawer-box{ transform:translateX(calc(100% + 22px)); }
+.screen.one .drawer-tab{ border-left:1px solid var(--hair); border-right:0; }
+.screen.one .drawer-hide{ right:auto; left:-22px; border-radius:10px 0 0 10px; }
+.screen.one .drawer-hide svg{ transform:rotate(180deg); }
+.screen.one .drawer-show{ left:auto; right:0; border-radius:10px 0 0 10px; }
+.screen.one .drawer-show svg{ transform:none; }
+.screen.one .tip{ display:none; }
+
+/* ── a phone held sideways: the bar along the right edge ── */
+body.atlas-screen:has(> main.screen.one.land) .masthead{ display:none; }
+:root[data-shell]:not([data-shell-pad]) body.atlas-screen:has(> main.screen.one.land){ padding-top:0; }
+main.screen.one.land{ flex-direction:row; }
+.screen.one.land .deck{ flex:1 1 auto; min-width:0; }
+.screen.one.land .panelbar{
+  flex:none; flex-direction:column; align-items:stretch; justify-content:flex-start; gap:0;
+  padding:.3rem .25rem calc(.3rem + env(safe-area-inset-bottom, 0px));
+  border-top:0; border-left:1px solid var(--hair); overflow-x:hidden; overflow-y:auto; white-space:normal; scrollbar-width:none;
+}
+.screen.one.land .panelbar::-webkit-scrollbar{ display:none; }
+.screen.one.land .panelbar > :first-child{ margin-top:auto; }
+.screen.one.land .panelbar > :last-child{ margin-bottom:auto; }
+.screen.one.land .panelbar-btns, .screen.one.land .panelbar-end{
+  display:grid; grid-template-columns:66px 66px; gap:0; flex:none;
+  margin:0 0 .25rem; padding:0 0 .25rem; border-right:0; border-bottom:1px solid var(--hair);
+}
+.screen.one.land .panelbar-end{ padding-bottom:0; border-bottom:0; }
+.screen.one.land .pbtn{ position:relative; min-width:0; width:66px; min-height:48px; padding:.25rem .15rem .2rem; gap:.2rem; }
+.screen.one.land .pbtn.pbtn-ref{ margin-left:0; padding-left:.15rem; border-left:0; }
+.screen.one.land .pbtn span{
+  font-size:.46rem; letter-spacing:.08em; line-height:1.15; white-space:normal; text-align:center; max-width:100%;
+  -webkit-hyphens:manual; hyphens:manual;
+}
+.screen.one.land .pbtn svg{ width:22px; height:22px; }
+.screen.one.land .pop{ max-height:100%; }
+.screen.one.land .views .view-cap{ flex-wrap:nowrap; justify-content:flex-start; }
+.screen.one.land .views .view-cap::before{ display:none; }
+.screen.one.land .views .view-cap .view-tools{ order:0; flex:none; }
+.screen.one.land .views .view-cap .view-end{ order:1; flex:none; justify-content:flex-start; }
+.screen.one.land .views .view-cap b{ order:2; margin-left:auto; margin-right:0; }
+:root[data-shell]:not([data-shell-pad]) .screen.one.land .views .view-cap{ padding-left:56px; }
+
+@media (max-width:900px){
+  .drawer{ --box-w:min(320px, 100vw - 60px); position:absolute; left:0; top:0; bottom:0; z-index:15; flex:none; width:auto; transition:visibility 0s 0s; }
+  .deck.shut .drawer{ width:auto; padding-left:var(--gap); visibility:hidden; transition-delay:.32s; }
+  .drawer-box{ box-shadow:0 10px 30px rgba(0,0,0,.25); }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more){
+  .panelbar, .pop{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
+}
+@media (prefers-reduced-motion: reduce){
+  .drawer, .drawer-box, .drawer-tab, .drawer-tab svg{ transition:none; }
+  .pop{ transform:none; opacity:0; transition:opacity .18s ease; }
+  .pop.in{ opacity:1; transition-duration:.18s; }
+}
+
 </style>
 </head>
-<body>
+<body class="atlas-screen">
 
 <header class="masthead wrap">
   <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
@@ -580,118 +657,227 @@ li > .cellt{ cursor:pointer; }
   </nav>
 </header>
 
-<main class="wrap">
+<main id="main" class="screen" aria-label="Microanatomy">
+  <h1 class="vh">Microanatomy</h1>
 
-<div class="title-strip">
-  <h1 class="name">Microanatomy</h1>
-  <span class="anno">the brain at the microscope&rsquo;s scale</span>
-</div>
+  <div class="deck" id="deck">
 
-<p class="lede">The atlas pages draw the brain a region at a time. This one goes down to the cell, and below that to the molecules that pass between cells and the receptors they land on. Each drawing is an original schematic built from code, with every structure a click target: pick one and read what it does, colour them all to see how the cell is put together, or switch to <em>Test yourself</em> and find each one from memory. One is drawn so far: a large multipolar neuron, the commonest kind in the brain and spinal cord, with the axons that reach it, an astrocyte, two labelled synapses, and its own axon leaving under a myelin sheath. The cortex&rsquo;s own cell, the pyramidal neuron, is next.</p>
-
-<h2 class="sec-h">Cells <small>one drawn, more to follow</small></h2>
-
-<ul class="cells">
-  <li><button class="cellt" type="button" data-cell="multipolar-neuron" data-name="Multipolar neuron" aria-current="page">
-    <span class="ck">Neuron</span>
-    <span class="cn">Multipolar neuron</span>
-    <span class="cs">20 structures</span>
-  </button></li>
-  <li class="cellt soon"><span class="ck">Neuron &middot; cortex</span><span class="cn">Pyramidal cell</span><span class="cs">Coming soon</span></li>
-  <li class="cellt soon"><span class="ck">Neuron</span><span class="cn">Purkinje cell</span><span class="cs">Coming soon</span></li>
-  <li class="cellt soon"><span class="ck">Glia</span><span class="cn">Astrocyte</span><span class="cs">Coming soon</span></li>
-  <li class="cellt soon"><span class="ck">Glia</span><span class="cn">Oligodendrocyte</span><span class="cs">Coming soon</span></li>
-  <li class="cellt soon"><span class="ck">Glia</span><span class="cn">Microglia</span><span class="cs">Coming soon</span></li>
-</ul>
-
-<div class="stage">
-
-  <section class="plate" aria-label="Drawing of a large multipolar neuron">
-    <div class="plate-cap">
-      <b id="plateName">Multipolar neuron</b>
-      <div class="modes" role="group" aria-label="Mode">
-        <button type="button" data-mode="explore" aria-pressed="true">Explore</button>
-        <button type="button" data-mode="quiz" aria-pressed="false">Test yourself</button>
+    <!-- the structures: the one picked and the index of all of them, or the
+         test, in a box over the deck's corner that folds away on the tab at
+         its edge and comes back on the handle left at the screen's, as the 3D
+         Region Atlas's region picker does; open on the first visit -->
+    <aside class="drawer" id="drawer" aria-label="Structures">
+      <div class="drawer-box" id="drawerBox">
+        <button class="drawer-tab drawer-hide" id="drawerHide" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Hide the structures" title="Hide the structures"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
+        <div class="drawer-in card rail" id="side">
+          <div id="explore">
+            <h2 class="card-h">Structures</h2>
+            <div class="detail" id="detail" aria-live="polite"></div>
+            <ul class="index" id="index"></ul>
+            <label class="all-toggle"><input type="checkbox" id="allon"> Colour every structure</label>
+          </div>
+          <div id="quiz" hidden>
+            <h2 class="card-h">Test yourself</h2>
+            <p class="q-count" id="qcount"></p>
+            <h2 class="q-prompt"><span class="q-find" id="qfind">Find</span><span id="qname"></span></h2>
+            <p class="q-fb" id="qfb" role="status" aria-live="polite"></p>
+            <div class="q-actions">
+              <button type="button" class="ts-btn active" id="qnext" hidden>Next structure</button>
+              <button type="button" class="ts-btn" id="qreveal">Show me</button>
+              <button type="button" class="ts-btn" id="qagain" hidden>Start again</button>
+            </div>
+            <div class="q-ticks" id="qticks" aria-hidden="true"></div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="scroller" id="scroller">
-      <svg class="mn" id="plate" data-cell="multipolar-neuron" viewBox="0 0 1200 780" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Multipolar neuron"></svg>
-    </div>
-    <div class="plate-foot">
-      <div class="seg" aria-label="Zoom"><button type="button" class="seg-btn seg-arrow" id="zout" aria-label="Zoom out">&minus;</button><button type="button" class="seg-btn seg-arrow" id="zin" aria-label="Zoom in">+</button></div>
-      <p id="plateNote">A schematic, not to scale: the organelles are drawn larger and far fewer than in a real cell, and the axon runs on well past the edge of the frame. <span class="verb">Click</span> any part of the drawing to find out what it is.</p>
-    </div>
-    <div class="tip" id="tip" hidden></div>
-  </section>
+    </aside>
+    <button class="drawer-tab drawer-show" id="drawerTab" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Show the structures" title="Show the structures"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
 
-  <aside class="rail" id="side">
-    <div id="explore" class="card">
-      <h2 class="card-h">Structure</h2>
-      <div class="detail" id="detail" aria-live="polite"></div>
-      <ul class="index" id="index"></ul>
-      <label class="all-toggle"><input type="checkbox" id="allon"> Colour every structure</label>
-    </div>
-    <div id="quiz" class="card" hidden>
-      <h2 class="card-h">Test yourself</h2>
-      <p class="q-count" id="qcount"></p>
-      <h2 class="q-prompt"><span class="q-find" id="qfind">Find</span><span id="qname"></span></h2>
-      <p class="q-fb" id="qfb" role="status" aria-live="polite"></p>
-      <div class="q-actions">
-        <button type="button" class="ts-btn active" id="qnext" hidden>Next structure</button>
-        <button type="button" class="ts-btn" id="qreveal">Show me</button>
-        <button type="button" class="ts-btn" id="qagain" hidden>Start again</button>
+    <!-- the drawing, and the sheets the bar raises over it -->
+    <section class="stage" aria-label="The drawing">
+      <div class="views-wrap">
+        <div class="views">
+          <section class="view plate" data-box="Plate" aria-label="Drawing of a brain cell">
+            <div class="view-cap"><b id="plateName">Multipolar neuron</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" id="plateReset" type="button" aria-label="Fit the drawing to the view again">Reset<span class="lbl-more"> view</span></button></div></div>
+            <div class="scroller" id="scroller">
+              <svg class="mn" id="plate" data-cell="multipolar-neuron" viewBox="0 0 1200 780" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Multipolar neuron"></svg>
+            </div>
+            <div class="tip" id="tip" hidden></div>
+          </section>
+        </div>
       </div>
-      <div class="q-ticks" id="qticks" aria-hidden="true"></div>
-    </div>
-  </aside>
 
-</div>
+      <div class="pop pop-md" id="popCells" hidden aria-labelledby="popCellsH">
+        <header class="pop-head"><b id="popCellsH">Cells</b><small>one drawn, more to follow</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+          <ul class="cells">
+            <li><button class="cellt" type="button" data-cell="multipolar-neuron" data-name="Multipolar neuron" aria-current="page">
+              <span class="ck">Neuron</span>
+              <span class="cn">Multipolar neuron</span>
+              <span class="cs">20 structures</span>
+            </button></li>
+            <li class="cellt soon"><span class="ck">Neuron &middot; cortex</span><span class="cn">Pyramidal cell</span><span class="cs">Coming soon</span></li>
+            <li class="cellt soon"><span class="ck">Neuron</span><span class="cn">Purkinje cell</span><span class="cs">Coming soon</span></li>
+            <li class="cellt soon"><span class="ck">Glia</span><span class="cn">Astrocyte</span><span class="cs">Coming soon</span></li>
+            <li class="cellt soon"><span class="ck">Glia</span><span class="cn">Oligodendrocyte</span><span class="cs">Coming soon</span></li>
+            <li class="cellt soon"><span class="ck">Glia</span><span class="cn">Microglia</span><span class="cs">Coming soon</span></li>
+          </ul>
+        </div>
+      </div>
 
-<section class="nt-sec" id="neurotransmitters" aria-labelledby="ntH">
-<details class="sec-fold" id="ntFold">
-  <summary>
-    <h2 class="sec-h" id="ntH">Neurotransmitters <small>the messengers, drawn</small></h2>
-    <span class="sec-peek">
-      <span class="sec-preview" id="ntPreview" aria-hidden="true"></span>
-      <span class="sec-peek-text">
-        <span class="sec-peek-line">Seventeen molecules drawn as skeletal formulas, in seven groups, each with what it does &mdash; and a row of transmitters to look at one alone.</span>
-        <span class="sec-open">Open the section</span>
-      </span>
-    </span>
-  </summary>
-  <p class="lede">What crosses the synapse. Each is drawn as a skeletal formula: every corner and line-end a carbon, hydrogens on carbon left out, the other elements named. Most are small, a single amino acid or something made from one in a step or two, which is why the brain can make, release and clear them in milliseconds. Pick a transmitter to see it on its own &mdash; the monoamines first, since they are what most drugs act on &mdash; and open <em>What it does</em> under any of them.</p>
-  <div class="rx-filter" id="ntFilter" role="group" aria-label="Isolate one transmitter"></div>
-  <div id="ntGroups"></div>
-</details>
-</section>
+      <div class="pop" id="popNt" hidden aria-labelledby="popNtH">
+        <header class="pop-head"><b id="popNtH">Neurotransmitters</b><small>the messengers, drawn</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+          <p class="lede">What crosses the synapse. Each is drawn as a skeletal formula: every corner and line-end a carbon, hydrogens on carbon left out, the other elements named. Most are small, a single amino acid or something made from one in a step or two, which is why the brain can make, release and clear them in milliseconds. Pick a transmitter to see it on its own &mdash; the monoamines first, since they are what most drugs act on &mdash; and open <em>What it does</em> under any of them.</p>
+          <div class="rx-filter" id="ntFilter" role="group" aria-label="Isolate one transmitter"></div>
+          <div id="ntGroups"></div>
+        </div>
+      </div>
 
-<section class="nt-sec" id="receptors" aria-labelledby="rxH">
-<details class="sec-fold" id="rxFold">
-  <summary>
-    <h2 class="sec-h" id="rxH">Receptors and channels <small>what the messengers land on</small></h2>
-    <span class="sec-peek">
-      <span class="sec-preview" id="rxPreview" aria-hidden="true"></span>
-      <span class="sec-peek-text">
-        <span class="sec-peek-line">A hundred and fifty receptors, channels and transporters as ten kinds of machine, every part explaining its step on a hover &mdash; with a transmitter filter and a search box.</span>
-        <span class="sec-open">Open the section</span>
-      </span>
-    </span>
-  </summary>
-  <p class="lede">A transmitter does nothing until something binds it. Here is what does: the receptors for the molecules above, with the ion channels and transporters that work alongside them, a hundred and fifty in all. There are only ten kinds of machine among them, drawn first, and the first thing to know is that they come in two speeds. An <button type="button" class="rx-term" data-term="Ionotropic">ionotropic</button> receptor is a channel: the transmitter opens it in under a millisecond and it shuts as soon as the transmitter leaves. A <button type="button" class="rx-term" data-term="Metabotropic">metabotropic</button> receptor has no pore; it works through a G protein and chemical messengers inside the cell, so it is slower to act and keeps acting for seconds or minutes after the transmitter has gone. Most transmitters have both kinds, and most drugs that act on the brain act on one of the machines below. Pick a transmitter below to see only its receptors &mdash; the monoamines first, since they are what most drugs act on &mdash; and search inside it by name, drug or effect. Every word in a tile&rsquo;s small capitals, and <button type="button" class="rx-term" data-term="affinity">affinity</button>, <button type="button" class="rx-term" data-term="agonist">agonist</button>, <button type="button" class="rx-term" data-term="antagonist">antagonist</button> and <button type="button" class="rx-term" data-term="autoreceptor">autoreceptor</button> here, opens a plain explanation on a hover or a tap. Each tile gives the code chemists use with the plain name under it, what binds it and how tightly, the drugs people have heard of that act on it, what happens when it is bound, and under <em>What the kind means</em> the kind&rsquo;s explanation again with a line of context.</p>
-  <div class="rx-filter" id="rxFilter" role="group" aria-label="Isolate one transmitter"></div>
-  <div class="rx-search">
-    <input type="search" id="rxSearch" placeholder="Search by name, transmitter, drug, kind or effect&hellip;" aria-label="Search the receptors, channels and transporters" autocomplete="off" spellcheck="false">
-    <span id="rxCount" class="rx-count" aria-live="polite"></span>
+      <div class="pop" id="popRx" hidden aria-labelledby="popRxH">
+        <header class="pop-head"><b id="popRxH">Receptors and channels</b><small>what the messengers land on</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+          <p class="lede">A transmitter does nothing until something binds it. Here is what does: the receptors for the molecules in the Neurotransmitters sheet, with the ion channels and transporters that work alongside them, a hundred and fifty in all. There are only ten kinds of machine among them, drawn first, and the first thing to know is that they come in two speeds. An <button type="button" class="rx-term" data-term="Ionotropic">ionotropic</button> receptor is a channel: the transmitter opens it in under a millisecond and it shuts as soon as the transmitter leaves. A <button type="button" class="rx-term" data-term="Metabotropic">metabotropic</button> receptor has no pore; it works through a G protein and chemical messengers inside the cell, so it is slower to act and keeps acting for seconds or minutes after the transmitter has gone. Most transmitters have both kinds, and most drugs that act on the brain act on one of the machines below. Pick a transmitter below to see only its receptors &mdash; the monoamines first, since they are what most drugs act on &mdash; and search inside it by name, drug or effect. Every word in a tile&rsquo;s small capitals, and <button type="button" class="rx-term" data-term="affinity">affinity</button>, <button type="button" class="rx-term" data-term="agonist">agonist</button>, <button type="button" class="rx-term" data-term="antagonist">antagonist</button> and <button type="button" class="rx-term" data-term="autoreceptor">autoreceptor</button> here, opens a plain explanation on a hover or a tap. Each tile gives the code chemists use with the plain name under it, what binds it and how tightly, the drugs people have heard of that act on it, what happens when it is bound, and under <em>What the kind means</em> the kind&rsquo;s explanation again with a line of context.</p>
+          <div class="rx-filter" id="rxFilter" role="group" aria-label="Isolate one transmitter"></div>
+          <div class="rx-search">
+            <input type="search" id="rxSearch" placeholder="Search by name, transmitter, drug, kind or effect&hellip;" aria-label="Search the receptors, channels and transporters" autocomplete="off" spellcheck="false">
+            <span id="rxCount" class="rx-count" aria-live="polite"></span>
+          </div>
+          <div id="rxKinds" class="rx-kinds"></div>
+          <div id="rxGroups"></div>
+        </div>
+      </div>
+
+      <div class="pop pop-md" id="popAbout" hidden aria-labelledby="popAboutH">
+        <header class="pop-head"><b id="popAboutH">About</b><small>what this is, and where it comes from</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+          <p class="lede">The atlas pages draw the brain a region at a time. This one goes down to the cell, and below that to the molecules that pass between cells and the receptors they land on. Each drawing is an original schematic built from code, with every structure a click target: pick one in the box and read what it does, colour them all to see how the cell is put together, or press Test yourself on the bar and find each one from memory. One cell is drawn so far: a large multipolar neuron, the commonest kind in the brain and spinal cord, with the axons that reach it, an astrocyte, two labelled synapses, and its own axon leaving under a myelin sheath. The cortex&rsquo;s own cell, the pyramidal neuron, is next.</p>
+          <p id="plateNote">A schematic, not to scale: the organelles are drawn larger and far fewer than in a real cell, and the axon runs on well past the edge of the frame. <span class="verb">Click</span> any part of the drawing to find out what it is.</p>
+          <p>Pinch or scroll over the drawing to zoom, drag it to move about when it is larger than the view, and Reset view fits it again.</p>
+          <div class="credits">
+            <p>Each drawing is an original schematic generated from code rather than traced from a micrograph, so it owes nothing to any published plate. The descriptions are standard textbook anatomy and do not yet carry citations; the <a href="textbook.html">digital textbook</a> is where each claim gets its paper. The molecules are drawn from their chemical structures by RDKit, an open-source toolkit, and coloured by the page.</p>
+            <p>&copy; 2026 VisualNeuroscience.AI &middot; <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a> &middot; <a href="terms.html">Terms of use</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </div>
-  <div id="rxKinds" class="rx-kinds"></div>
-  <div id="rxGroups"></div>
-</details>
-</section>
 
-<p class="attrib">Each drawing is an original schematic generated from code rather than traced from a micrograph, so it owes nothing to any published plate. The descriptions are standard textbook anatomy and do not yet carry citations; the <a href="textbook.html">digital textbook</a> is where each claim gets its paper. <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a> &middot; <a href="terms.html">Terms of use</a>. The molecules are drawn from their chemical structures by RDKit, an open-source toolkit, and coloured by the page.</p>
-
+  <nav class="panelbar" aria-label="Microanatomy panels">
+    <div class="panelbar-btns" role="group" aria-label="Panels">
+      <button class="pbtn" type="button" data-pop="popCells" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="13" r="3.4"/><path d="M8.6 10.6 5.2 6.4M4 8.2l1.2-1.8 2 .6M13.4 10.6l3.4-4.2M18.6 8.2l-1.2-1.8-2 .6M11 16.4V21M8.3 19.2 11 21l2.7-1.8"/></svg><span>Cells</span></button>
+      <button class="pbtn" type="button" id="quizBtn" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M9.4 9.6a2.6 2.6 0 1 1 3.8 2.3c-.8.4-1.2 1-1.2 1.9M12 16.8v.01"/></svg><span>Test yourself</span></button>
+      <button class="pbtn" type="button" data-pop="popNt" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="6" r="2.6"/><circle cx="6" cy="17" r="2.6"/><circle cx="18" cy="17" r="2.6"/><path d="M10.8 8.3 7.2 14.7M13.2 8.3l3.6 6.4M8.6 17h6.8"/></svg><span>Neurotransmitters</span></button>
+      <button class="pbtn" type="button" data-pop="popRx" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21v-7.5M12 13.5 6.5 6M12 13.5 17.5 6"/><circle cx="6.5" cy="5" r="1.7"/><circle cx="17.5" cy="5" r="1.7"/></svg><span>Receptors</span></button>
+    </div>
+    <div class="panelbar-end" role="group" aria-label="About">
+      <button class="pbtn pbtn-ref" type="button" data-pop="popAbout" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/></svg><span>About</span></button>
+    </div>
+  </nav>
 </main>
 
+<script src="assets/native.js"></script>
+<script src="assets/navbar.js"></script>
+<script src="assets/newsletter.js" defer></script>
+<script>
+/* ── the screen ──────────────────────────────────────────────────────────
+   The study's screen (hallucinations.html): the header's height is
+   measured into --screen-top so the drawing fills the rest, the drawer
+   folds away on its tab (open on the first visit, remembered after), on a
+   phone the screen is marked one and, held sideways, land, with the bar at
+   the right edge, and the bar's buttons raise one sheet at a time over the
+   view. The page's own script reaches it as MN_SCREEN. */
+(function(){
+  var root = document.documentElement, main = document.getElementById("main");
+  var head = document.querySelector(".masthead"), bar = document.querySelector(".panelbar");
+  var queued = 0;
+  function fit(){
+    queued = 0;
+    var top = main.getBoundingClientRect().top + (window.pageYOffset || 0);
+    root.style.setProperty("--screen-top", Math.max(0, Math.round(top)) + "px");
+    if (bar) root.style.setProperty("--bar-h", Math.round(bar.getBoundingClientRect().height) + "px");
+  }
+  function soon(){ if (!queued) queued = requestAnimationFrame(fit); }
+  fit();
+  if (window.ResizeObserver){
+    var ro = new ResizeObserver(soon);
+    if (head) ro.observe(head);
+    if (bar) ro.observe(bar);
+    ro.observe(document.body);
+  }
+  window.addEventListener("resize", soon);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(soon);
+
+  /* the drawer: open the first time, as the owner asked, then as it was left */
+  var deck = document.getElementById("deck"), tab = document.getElementById("drawerTab"), hideBtn = document.getElementById("drawerHide");
+  var one = window.matchMedia ? window.matchMedia("(max-width:760px), (pointer:coarse) and (max-height:500px)") : null;
+  var land = window.matchMedia ? window.matchMedia("(orientation: landscape) and (pointer: coarse)") : null;
+  var open = true;
+  try{ var kept = localStorage.getItem("vn-cells-drawer"); if (kept === "shut") open = false; } catch(e){}
+  function setDrawer(on, keep){
+    open = on;
+    deck.classList.toggle("shut", !on);
+    tab.setAttribute("aria-expanded", String(on));
+    if (hideBtn) hideBtn.setAttribute("aria-expanded", String(on));
+    if (keep){ try{ localStorage.setItem("vn-cells-drawer", on ? "open" : "shut"); }catch(e){} }
+  }
+  function focusSoon(el){ setTimeout(function(){ try{ el.focus({preventScroll: true}); }catch(e){} }, 360); }
+  setDrawer(open, false);
+  tab.addEventListener("click", function(){ setDrawer(true, true); if (hideBtn) focusSoon(hideBtn); });
+  if (hideBtn) hideBtn.addEventListener("click", function(){ setDrawer(false, true); focusSoon(tab); });
+
+  /* a phone, and a phone held sideways */
+  function oneView(){
+    var on = !!(one && one.matches);
+    main.classList.toggle("one", on);
+    main.classList.toggle("land", on && !!(land && land.matches));
+    soon();
+  }
+  oneView();
+  [one, land].forEach(function(q){ if (!q) return; if (q.addEventListener) q.addEventListener("change", oneView); else if (q.addListener) q.addListener(oneView); });
+
+  /* the sheets */
+  var pops = {}, current = null;
+  document.querySelectorAll(".stage .pop").forEach(function(p){ pops[p.id] = p; });
+  var buttons = document.querySelectorAll(".panelbar [data-pop]");
+  function press(){
+    buttons.forEach(function(b){
+      var on = !!current && b.getAttribute("data-pop") === current;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-pressed", String(on));
+    });
+  }
+  function hide(){
+    if (!current) return;
+    var p = pops[current];
+    current = null;
+    p.classList.remove("in");
+    clearTimeout(p._leaving);
+    p._leaving = setTimeout(function(){ if (!p.classList.contains("in")) p.hidden = true; }, 400);
+    main.classList.remove("popped");
+    press();
+  }
+  function openPop(id){
+    if (current === id) return;
+    if (current) hide();
+    var p = pops[id];
+    if (!p) return;
+    clearTimeout(p._leaving);
+    p.hidden = false;
+    current = id;
+    void p.offsetWidth;
+    p.classList.add("in");
+    main.classList.add("popped");
+    press();
+  }
+  function show(id){ if (current === id) hide(); else openPop(id); }
+  buttons.forEach(function(b){ b.addEventListener("click", function(){ show(b.getAttribute("data-pop")); }); });
+  document.querySelectorAll(".pop .pop-x").forEach(function(x){ x.addEventListener("click", hide); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && current) hide(); });
+  window.MN_SCREEN = { open: openPop, hide: hide, current: function(){ return current; }, drawer: setDrawer };
+})();
+</script>
 <script>
 "use strict";
 /* theme, shared with the rest of the site */
@@ -710,25 +896,35 @@ themeBtn.addEventListener("click", () => {
   try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
 });
 
-/* a link into a folded section opens it — the section itself, or a tile
-   the scripts draw inside it once their data has arrived */
+/* a link into a sheet opens it: the sheet itself, or a tile the scripts
+   draw inside one once their data has arrived */
 function revealHash(){
   const id = decodeURIComponent(location.hash.slice(1));
-  const t = id && document.getElementById(id);
+  if (!id || /^cell=/.test(id)) return false;
+  const t = document.getElementById(id);
   if (!t) return false;
-  const fold = t.closest("details.sec-fold") || t.querySelector("details.sec-fold");
-  if (fold && !fold.open) fold.open = true;
-  if (fold) requestAnimationFrame(() => t.scrollIntoView({ block: "start" }));
+  const pop = t.closest(".pop");
+  if (pop && window.MN_SCREEN) MN_SCREEN.open(pop.id);
+  requestAnimationFrame(() => t.scrollIntoView({ block: "start" }));
   return true;
 }
 window.VN_reveal = revealHash;
 revealHash();
 window.addEventListener("hashchange", revealHash);
+
+/* the bar's Test yourself is a mode: on, the drawer shows the test and the
+   drawing takes the answers; off, the structures come back */
+const quizBtn = document.getElementById("quizBtn");
+quizBtn.addEventListener("click", () => {
+  if (!window.MN_CELLS) return;
+  const on = MN_CELLS.mode() !== "quiz";
+  MN_CELLS.setMode(on ? "quiz" : "explore");
+  if (on && window.MN_SCREEN) MN_SCREEN.drawer(true, false);
+});
+/* a cell picked in the Cells sheet closes it over the new drawing */
+document.querySelectorAll(".cellt[data-cell]").forEach(b => b.addEventListener("click", () => { if (window.MN_SCREEN) MN_SCREEN.hide(); }));
 </script>
 
-<script src="assets/native.js"></script>
-<script src="assets/navbar.js"></script>
-<script src="assets/newsletter.js" defer></script>
 <script src="assets/cells.js"></script>
 <script src="assets/nt.js"></script>
 <script src="assets/rxfig.js"></script>

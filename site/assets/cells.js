@@ -1,5 +1,7 @@
 /* The cell plate: one drawing of a brain cell, with its structures
-   clickable, an index beside it, a test-yourself mode, and zoom and pan.
+   clickable, an index beside it, a test-yourself mode, and zoom and pan
+   (since v11.99 the drawing fits its view and the wheel or a pinch zooms
+   it, the page's bar switching the mode through MN_CELLS).
 
    A cell is two files in assets/cells/: the drawing itself, an SVG whose
    click targets carry data-part and whose recolourable pieces carry
@@ -16,7 +18,8 @@
    the cell in the address, so a particular cell can be linked to.
 
    The page supplies the rest of the DOM by id: plate, scroller, tip, side,
-   detail, index, allon, explore, quiz, and the quiz controls. */
+   detail, index, allon, explore, quiz, the quiz controls, plateReset and,
+   on the bar, quizBtn. */
 (function(){
   "use strict";
   var NS = "http://www.w3.org/2000/svg";
@@ -159,21 +162,32 @@
     });
   }
 
-  /* ---------- zoom + pan */
-  var ZOOMS = [1, 1.6, 2.4, 3.4], zi = 0, dragging = false, moved = false, start = null;
-  var zin = document.getElementById("zin"), zout = document.getElementById("zout");
-  function setZoom(i, cx, cy){
-    i = Math.max(0, Math.min(ZOOMS.length - 1, i));
-    var r = scroller.getBoundingClientRect(), old = ZOOMS[zi], z = ZOOMS[i];
+  /* ---------- zoom + pan: the drawing fits its view, as wide as the view or
+     as tall, and the wheel or a pinch zooms it about the pointer; a drag
+     pans it once it is larger than the view (the + and − went with the
+     page's rebuild, v11.99) */
+  var ZMIN = 1, ZMAX = 4, z = 1, dragging = false, moved = false, start = null;
+  function fitWidth(){
+    var r = scroller.getBoundingClientRect();
+    var w = Math.min(r.width, r.height * box[0] / box[1]);
+    scroller.style.setProperty("--fit", Math.max(1, Math.floor(w)) + "px");
+  }
+  function zoomTo(next, cx, cy){
+    next = Math.max(ZMIN, Math.min(ZMAX, Number(next) || 1));
+    var r = scroller.getBoundingClientRect(), sw = svg.getBoundingClientRect();
     if (cx == null){ cx = r.width / 2; cy = r.height / 2; }
-    var fx = (scroller.scrollLeft + cx) / (r.width * old), sw = svg.getBoundingClientRect();
-    var fy = (scroller.scrollTop + cy) / Math.max(sw.height, 1);
-    zi = i; scroller.style.setProperty("--z", z); scroller.classList.toggle("zoomed", z > 1 || scroller.scrollWidth > scroller.clientWidth + 2 || svg.getBoundingClientRect().height > r.height + 2);
-    var nh = svg.getBoundingClientRect().height;
-    scroller.scrollLeft = fx * r.width * z - cx; scroller.scrollTop = fy * nh - cy;
-    zout.disabled = zi === 0; zin.disabled = zi === ZOOMS.length - 1;
+    /* the point under the pointer, as a share of the drawing, stays put */
+    var fx = (cx - (sw.left - r.left)) / Math.max(sw.width, 1), fy = (cy - (sw.top - r.top)) / Math.max(sw.height, 1);
+    z = next;
+    scroller.style.setProperty("--z", z);
+    scroller.classList.toggle("zoomed", z > 1.001);
+    var nw = svg.getBoundingClientRect();
+    var ox = nw.left - r.left + scroller.scrollLeft, oy = nw.top - r.top + scroller.scrollTop;
+    scroller.scrollLeft = ox + fx * nw.width - cx;
+    scroller.scrollTop = oy + fy * nw.height - cy;
     if (sel) drawCallout(byId[sel]);
   }
+  function resetZoom(){ zoomTo(1); scroller.scrollLeft = 0; scroller.scrollTop = 0; }
   function centreOn(x, y){
     var w = svg.getBoundingClientRect(), r = scroller.getBoundingClientRect();
     scroller.scrollLeft = x / box[0] * w.width - r.width / 2; scroller.scrollTop = y / box[1] * w.height - r.height / 2;
@@ -184,8 +198,28 @@
     var px = p.anchor[0] / box[0] * w.width - scroller.scrollLeft, py = p.anchor[1] / box[1] * w.height - scroller.scrollTop;
     if (px < 40 || py < 40 || px > r.width - 40 || py > r.height - 40) centreOn((p.anchor[0] + p.label[0]) / 2, (p.anchor[1] + p.label[1]) / 2);
   }
-  zin.addEventListener("click", function(){ setZoom(zi + 1); });
-  zout.addEventListener("click", function(){ setZoom(zi - 1); });
+  scroller.addEventListener("wheel", function(e){
+    e.preventDefault();
+    var r = scroller.getBoundingClientRect();
+    var k = Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0022));
+    zoomTo(z * k, e.clientX - r.left, e.clientY - r.top);
+  }, {passive: false});
+  var pinch = null;
+  function span(t){ return Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY); }
+  scroller.addEventListener("touchstart", function(e){
+    if (e.touches.length === 2){ pinch = { d: span(e.touches), z: z }; tip.hidden = true; }
+  }, {passive: true});
+  scroller.addEventListener("touchmove", function(e){
+    if (!pinch || e.touches.length !== 2) return;
+    e.preventDefault();
+    var r = scroller.getBoundingClientRect();
+    var cx = (e.touches[0].clientX + e.touches[1].clientX) / 2 - r.left, cy = (e.touches[0].clientY + e.touches[1].clientY) / 2 - r.top;
+    zoomTo(pinch.z * span(e.touches) / Math.max(pinch.d, 1), cx, cy);
+  }, {passive: false});
+  scroller.addEventListener("touchend", function(e){ if (e.touches.length < 2) pinch = null; }, {passive: true});
+  var resetBtn = document.getElementById("plateReset");
+  if (resetBtn) resetBtn.addEventListener("click", resetZoom);
+  if (window.ResizeObserver) new ResizeObserver(function(){ if (!box) return; fitWidth(); zoomTo(z); }).observe(scroller);
   scroller.addEventListener("pointerdown", function(e){
     if (e.pointerType !== "mouse" || e.button !== 0 || !scroller.classList.contains("zoomed")) return;
     start = { x: e.clientX, y: e.clientY, l: scroller.scrollLeft, t: scroller.scrollTop }; moved = false;
@@ -256,6 +290,8 @@
   function setMode(m){
     mode = m;
     document.querySelectorAll(".modes button").forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-mode") === m)); });
+    var quizBtn = document.getElementById("quizBtn");
+    if (quizBtn){ quizBtn.setAttribute("aria-pressed", String(m === "quiz")); quizBtn.classList.toggle("active", m === "quiz"); }
     document.getElementById("explore").hidden = m !== "explore";
     document.getElementById("quiz").hidden = m !== "quiz";
     tip.hidden = true; setHover(null, false);
@@ -325,9 +361,9 @@
       }
       svg.classList.add("ready");
       buildIndex(); renderDetail();
-      zi = 0; scroller.scrollLeft = 0; scroller.scrollTop = 0;
-      if (window.matchMedia("(max-width: 40rem)").matches){ setZoom(2); centreOn(centre[0], centre[1]); }
-      else setZoom(0);
+      fitWidth();
+      if (window.matchMedia("(max-width: 40rem)").matches){ zoomTo(2.4); centreOn(centre[0], centre[1]); }
+      else resetZoom();
       if (fromTile){
         try { history.replaceState(history.state, "", "#cell=" + name); } catch (e){}
         var t = tiles.filter(function(b){ return b.getAttribute("data-cell") === name; })[0];
@@ -341,6 +377,9 @@
       if (want && want !== cell) load(want, true);
     });
   });
+
+  /* the page's bar reaches the mode, and a check the zoom */
+  window.MN_CELLS = { setMode: setMode, mode: function(){ return mode; }, zoomTo: zoomTo, reset: resetZoom, zoom: function(){ return z; } };
 
   /* a cell named in the address opens on that cell */
   var asked = (location.hash.match(/^#cell=([\w-]+)$/) || [])[1];

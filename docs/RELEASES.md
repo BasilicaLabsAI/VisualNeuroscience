@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.99 — 24 October 2026 — Microanatomy on the bar
+Commit · Make the Microanatomy page one screen on the atlases' bar, the drawing filling the view and the structures a drawer
+
+The Microanatomy page now works as the other atlases do: one screen, the cell's drawing filling it, with a bar of buttons along the foot. The structures are a box over the drawing's corner that folds away on its tab, open the first time you come, and Cells, Neurotransmitters, Receptors and About each slide up from the bar as a sheet; Test yourself on the bar turns the box into the test. The zoom buttons are gone: pinch or scroll over the drawing to zoom, drag it about, and Reset view fits it again.
+
 ## v11.98 — 24 October 2026 — Slicing the tractogram, and the bars' lit buttons
-Commit · Cut the tractogram with the atlases' slice tool, start it still, and light the bars' buttons as blocks of ink
+Commit `868aad0` · Cut the tractogram with the atlases' slice tool, start it still, and light the bars' buttons as blocks of ink
 
 The Tractography page gains the atlases' Slice tool: a slider on each edge of the view cuts the streamlines away from that side, in pieces where a fibre crosses the cut and back, and Reset view puts them back. The tractogram now opens still, Revolve on the bar setting it turning, and the Streamlines sheet's Single colour is the page's ink, white on black or black on white, following the theme. On every atlas the bar's lit button, a sheet open or a mode on, is a block of ink rather than a thin stroke that read grey in the light theme.
 
