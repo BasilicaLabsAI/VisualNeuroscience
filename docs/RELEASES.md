@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v11.98 — 24 October 2026 — Slicing the tractogram, and the bars' lit buttons
+Commit · Cut the tractogram with the atlases' slice tool, start it still, and light the bars' buttons as blocks of ink
+
+The Tractography page gains the atlases' Slice tool: a slider on each edge of the view cuts the streamlines away from that side, in pieces where a fibre crosses the cut and back, and Reset view puts them back. The tractogram now opens still, Revolve on the bar setting it turning, and the Streamlines sheet's Single colour is the page's ink, white on black or black on white, following the theme. On every atlas the bar's lit button, a sheet open or a mode on, is a block of ink rather than a thin stroke that read grey in the light theme.
+
 ## v11.97 — 23 October 2026 — The whole tractogram in its picture
-Commit · Take the zoom buttons off the Tractography page and show the whole tractogram in its home picture
+Commit `ab637cf` · Take the zoom buttons off the Tractography page and show the whole tractogram in its home picture
 
 The Tractography page loses the plus and minus on its view, the wheel and a pinch zooming the tractogram as they did, and its picture on the home page pulls back to show the whole brain in either theme, where it used to fill the frame and lose its edges.
 

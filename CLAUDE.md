@@ -199,10 +199,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   the What-this-is text and the credits. `network-atlas.js` is untouched (every id it reads kept its name), and
   `app/scripts/shoot-home-pictures.js` raises the sheet before it shoots the ring.
 - The Tractography page (`site/tracts.html`) is one screen too since v11.94, with the study's chrome less its drawer and
-  view switch: the tractogram fills the stage (its cap: the name and Reset; the zoom buttons went in v11.97, at the owner's
-  word, the wheel and a pinch zooming as before), and the bar carries Streamlines
+  view switch: the tractogram fills the stage (its cap: the Slice tool's buttons at the start since v11.98, the name, Reset
+  view at the end; the zoom buttons went in v11.97, at the owner's word, the wheel and a pinch zooming as before), and the bar
+  carries Streamlines
   (`#popLines`: the Direction/Single colour and the thickness), View from (`#popView`: the cube of faces and Reset view),
-  Revolve (`#spinBtn`, a `.pbtn` lit while it turns), Export (`#popExport`: the density and the 3D model) and About
+  Revolve (`#spinBtn`, a `.pbtn` lit while it turns; off at launch since v11.98, at the owner's word), Export (`#popExport`:
+  the density and the 3D model) and About
   (`#popAbout`: what you are looking at, the colour key, the credits). Its own viewer script is untouched but for the
   ground (v11.96, at the owner's word): the tractogram's back follows the theme as the atlases' stages do, the page's black
   dark and white light (`ground()` beside the viewer list, the stage's two rules by theme, an observer on `data-theme`
@@ -211,7 +213,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `scan-look.js`, whose dark ground is a scan's pure black. The page opens a door to the shoot script, `MN_TRACTS` (`zoom`,
   `home`, `still`), through which `shoot-home-pictures.js` shoots both twins at zoom 1.2, the revolve stopped and the home
   angle set, in a frame of the picture's proportion, so the whole brain is in the picture (v11.97; the page itself still
-  opens at 1.4, the brain filling the view). The chrome now
+  opens at 1.4, the brain filling the view). Since v11.98 the view carries the atlases' Slice tool (`slice-tool.js`, loaded by
+  the page, attached in `attachSlice` once the mesh is in): the viewer's clip planes act on volumes alone, so the tool is
+  given a stand-in viewer, `cutter`, whose `setClipPlanes` reads each plane as the viewer would (`planeNormal`, the viewer's
+  own azimuth-and-elevation maths; the side away from the normal goes by the slider's share), takes the box the three cuts
+  leave (`cutBox`) and rebuilds the mesh from the pieces of each streamline inside it (`applyCut`: `mesh.pts`,
+  `mesh.offsetPt0`, `fiberLengths` cleared, `updateMesh`), one rebuild a frame, the whole tractogram kept in `whole` to
+  restore; Reset view clears the cuts. The Streamlines sheet's Single colour is the page's ink by theme (`inkColour`,
+  re-applied by the theme observer), and `MN_TRACTS.nv()` hands the viewer to a check. The chrome now
   lives in six pages (the 3D Region Atlas, the Brodmann Area Atlas, the Hallucinations study, the molecular viewer, the
   Network Atlas and Tractography); a change to it belongs in all of them.
 - The Region Atlas is called the 3D Region Atlas wherever its name shows (nav, titles, home page, the app) since
@@ -402,7 +411,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (`z-index:30`) and the strip (`z-index:22` upright, `27` sideways, each with a paper `box-shadow` over the grid gap
   above it), `.ba-screen{overflow:hidden}` taking the rest. The molecular viewer's `#panel.pop` slides from `100vh` on
   a wide screen and from behind the bar on a phone, and `t4_engine2.js` lays the model out again 540ms after the window
-  rises. `prefers-reduced-motion` makes every one of them a plain fade.
+  rises. `prefers-reduced-motion` makes every one of them a plain fade. Since v11.98, at the owner's word, a lit bar button
+  (`.pbtn.active`, `[aria-pressed="true"]`, the Brodmann page's `[aria-expanded="true"]`: a sheet open or a mode on) is a
+  block of ink, `background:var(--ink); color:var(--paper)` with 10px corners, in all six chromes (the viewer's `base.css`
+  takes `--panel-solid` for the paper), the rule standing after the hover rule so a hovered lit button keeps its paper.
 - Swift: both Xcode projects build with Approachable Concurrency, main-actor isolation by default and complete
   concurrency checking in the Swift 5 language mode; the visionOS data layer is `nonisolated` and its slow work is
   `@concurrent`, never a detached task. Nothing here can compile Swift, so a Swift change is verified by the owner's

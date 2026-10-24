@@ -162,13 +162,14 @@ legend { font-family: var(--serif); font-weight: 600; font-size: 16px; padding: 
 .bar-pick { display: flex; flex: none; padding-right: 0.45rem; margin-right: 0.3rem; border-right: 1px solid var(--line); }
 #bar .tabs { display: flex; gap: 0.15rem; flex: 1 1 auto; min-width: 0; }
 .pbtn { flex: none; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.28rem; min-width: 3.9rem;
-  padding: 0.3rem 0.55rem 0.25rem; border: 0; background: none; color: var(--ink-soft); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  padding: 0.3rem 0.55rem 0.25rem; border: 0; background: none; color: var(--ink-soft); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: color 0.18s, background-color 0.18s; }
 .pbtn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; display: block; }
 .pbtn span { font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; line-height: 1; }
-.pbtn.active, .pbtn[aria-pressed="true"] { color: var(--ink); }
-.pbtn.active span, .pbtn[aria-pressed="true"] span { font-weight: 600; }
 .pbtn.pbtn-ref { margin-left: auto; padding-left: 0.65rem; border-left: 1px solid var(--line); }
 @media (hover: hover) { .pbtn:hover { color: var(--ink); } }
+/* lit, a window open or the picker shown: a block of ink, as the site's view buttons are (v11.98) */
+.pbtn.active, .pbtn[aria-pressed="true"] { background: var(--ink); color: var(--panel-solid); border-radius: 10px; }
+.pbtn.active span, .pbtn[aria-pressed="true"] span { font-weight: 600; }
 @media (pointer: coarse) { .pbtn { min-height: 44px; } }
 
 /* the room above the bar: the column at the left holds the box and the window */

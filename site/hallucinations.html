@@ -422,14 +422,15 @@ main.screen{
 .pbtn{
   flex:none; display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:.28rem;
   min-width:3.9rem; padding:.3rem .55rem .25rem; border:0; background:none; color:var(--ink-60); cursor:pointer;
-  -webkit-tap-highlight-color:transparent; transition:color .18s;
+  -webkit-tap-highlight-color:transparent; transition:color .18s, background-color .18s;
 }
 .pbtn svg{ width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
 .pbtn span{ font-family:var(--font-brand); font-weight:500; font-size:.5rem; letter-spacing:.14em; text-transform:uppercase; white-space:nowrap; }
-.pbtn.active{ color:var(--ink); }
-.pbtn.active span{ font-weight:600; }
 @media (hover: hover){ .pbtn:hover{ color:var(--ink); } }
 .pbtn:active{ color:var(--ink); }
+/* lit, a window open or a mode on: a block of ink, as the view buttons are (v11.98) */
+.pbtn.active, .pbtn[aria-pressed="true"]{ background:var(--ink); color:var(--paper); border-radius:10px; }
+.pbtn.active span, .pbtn[aria-pressed="true"] span{ font-weight:600; }
 @media (pointer:coarse){ .pbtn{ min-height:44px; } }
 @media (max-width:760px){
   .panelbar-stats .stat:first-child{ display:none; }

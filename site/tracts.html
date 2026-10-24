@@ -190,6 +190,9 @@ main.screen{
    black, inline, as it attaches. */
 :root[data-theme="dark"] .views .view[data-box="Ren"] .mri-stage{ background:#111111 !important; }
 :root:not([data-theme="dark"]) .views .view[data-box="Ren"] .mri-stage{ background:#FFFFFF !important; }
+@container view (max-width:300px){
+  .screen .views .view .view-tools{ display:none; }
+}
 .panelbar{
   flex:none; display:flex; align-items:center; gap:.6rem;
   padding:.45rem var(--gap) calc(.45rem + env(safe-area-inset-bottom, 0px));
@@ -205,14 +208,15 @@ main.screen{
 .pbtn{
   flex:none; display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:.28rem;
   min-width:3.9rem; padding:.3rem .55rem .25rem; border:0; background:none; color:var(--ink-60); cursor:pointer;
-  -webkit-tap-highlight-color:transparent; transition:color .18s;
+  -webkit-tap-highlight-color:transparent; transition:color .18s, background-color .18s;
 }
 .pbtn svg{ width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
 .pbtn span{ font-family:var(--font-brand); font-weight:500; font-size:.5rem; letter-spacing:.14em; text-transform:uppercase; white-space:nowrap; }
-.pbtn.active, .pbtn[aria-pressed="true"]{ color:var(--ink); }
-.pbtn.active span, .pbtn[aria-pressed="true"] span{ font-weight:600; }
 @media (hover: hover){ .pbtn:hover{ color:var(--ink); } }
 .pbtn:active{ color:var(--ink); }
+/* lit, a window open or a mode on: a block of ink, as the view buttons are (v11.98) */
+.pbtn.active, .pbtn[aria-pressed="true"]{ background:var(--ink); color:var(--paper); border-radius:10px; }
+.pbtn.active span, .pbtn[aria-pressed="true"] span{ font-weight:600; }
 @media (pointer:coarse){ .pbtn{ min-height:44px; } }
 /* a sheet: one at a time, sliding up out of the bar over the view and back
    into it when closed (the stage clips it at the bar's edge) */
@@ -311,12 +315,9 @@ main.screen.one.land{ flex-direction:row; }
 }
 .screen.one.land .pbtn svg{ width:22px; height:22px; }
 .screen.one.land .pop{ max-height:100%; }
-/* with no tools at the cap's start (the zoom buttons went in v11.97), the
-   empty start the wide layout hides stays, as wide as the end, so the name
-   sits in the middle at every width; sideways it goes, the name at the end */
-.views .view-cap::before{ display:block; }
 .screen.one.land .views .view-cap{ flex-wrap:nowrap; justify-content:flex-start; }
 .screen.one.land .views .view-cap::before{ display:none; }
+.screen.one.land .views .view-cap .view-tools{ order:0; flex:none; }
 .screen.one.land .views .view-cap .view-end{ order:1; flex:none; justify-content:flex-start; }
 .screen.one.land .views .view-cap b{ order:2; margin-left:auto; margin-right:0; }
 :root[data-shell]:not([data-shell-pad]) .screen.one.land .views .view-cap{ padding-left:56px; }
@@ -359,7 +360,7 @@ main.screen.one.land{ flex-direction:row; }
       <div class="views-wrap">
         <div class="views">
           <div class="view" data-box="Ren">
-            <div class="view-cap"><b>Tractogram</b><div class="view-end"><button class="ts-btn centre-btn" data-reset type="button" aria-label="Reset the view">Reset<span class="lbl-more"> view</span></button></div></div>
+            <div class="view-cap"><b>Tractogram</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" data-reset type="button" aria-label="Reset the view">Reset<span class="lbl-more"> view</span></button></div></div>
             <div class="mri-stage"><canvas id="tkRen"></canvas><div class="stage-msg" id="stageMsg"><span class="caps" id="msgTitle">Loading the tractogram</span><div class="progress"><i id="msgBar"></i></div><p id="msgText">Several megabytes of streamlines are on their way.</p></div></div>
           </div>
         </div>
@@ -371,7 +372,7 @@ main.screen.one.land{ flex-direction:row; }
           <h2>Colour</h2>
           <div class="mode-group" role="group" aria-label="Streamline colour">
             <button class="ts-btn active" data-colour="Local" type="button" title="Colour each segment by the direction it runs">Direction</button>
-            <button class="ts-btn" data-colour="accent" type="button" title="A single accent colour">Single</button>
+            <button class="ts-btn" data-colour="accent" type="button" title="A single colour, the page's ink">Single</button>
           </div>
           <h2>Thickness</h2>
           <div class="rail-row">
@@ -425,7 +426,7 @@ main.screen.one.land{ flex-direction:row; }
             <span class="key-item"><span class="key-swatch" style="background:#4FB06A"></span>front &ndash; back</span>
             <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
           </div>
-          <p>Drag to turn the brain; zoom with the + and &minus; above it, or scroll over the view. It revolves on its own until you take hold of it, and Reset view puts it back where it started. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
+          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Revolve on the bar sets it turning until you take hold of it, Slice above the view puts a cut on each axis and takes the streamlines away from that side, and Reset view puts everything back where it started. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
           <div class="credits">
             <p>Tractography: HCP1065 atlas, Yeh FC, <em>Nat Commun</em> 13:4933 (2022), CC BY-SA 4.0.</p>
             <p>Data were provided in part by the Human Connectome Project, WU-Minn Consortium (Principal Investigators: David Van Essen and Kamil Ugurbil; 1U54MH091657) funded by the 16 NIH Institutes and Centers that support the NIH Blueprint for Neuroscience Research; and by the McDonnell Center for Systems Neuroscience at Washington University.</p>
@@ -441,7 +442,7 @@ main.screen.one.land{ flex-direction:row; }
     <div class="panelbar-btns" role="group" aria-label="Panels">
       <button class="pbtn" type="button" data-pop="popLines" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 7c3-3 6 3 9 0s6-3 9 0M3 12c3-3 6 3 9 0s6-3 9 0M3 17c3-3 6 3 9 0s6-3 9 0"/></svg><span>Streamlines</span></button>
       <button class="pbtn" type="button" data-pop="popView" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>View from</span></button>
-      <button class="pbtn" type="button" id="spinBtn" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 3v5.5h-5.5"/></svg><span>Revolve</span></button>
+      <button class="pbtn" type="button" id="spinBtn" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 3v5.5h-5.5"/></svg><span>Revolve</span></button>
     </div>
     <div class="panelbar-end" role="group" aria-label="Export and about">
       <button class="pbtn" type="button" data-pop="popExport" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15V4M8 8l4-4 4 4M5 13v7h14v-7"/></svg><span>Export</span></button>
@@ -454,6 +455,7 @@ main.screen.one.land{ flex-direction:row; }
 <script src="assets/navbar.js"></script>
 <script src="assets/newsletter.js" defer></script>
 <script src="assets/stage-lifecycle.js"></script>
+<script src="assets/slice-tool.js"></script>
 <script src="assets/zoom.js"></script>
 <script src="assets/export3d.js"></script>
 <script>
@@ -545,7 +547,8 @@ main.screen.one.land{ flex-direction:row; }
   /* .trx is what ships; a rebuild from the published atlas writes .trk,
      so accept either rather than breaking on the file that is there. */
   var TRACT_URLS = ["assets/tracts/hcp1065.trx", "assets/tracts/hcp1065.trk"];
-  var ACCENT = [237, 158, 107, 255];   /* a warm single colour, for the plain view */
+  /* the single colour is the page's ink: white on the dark theme's black, black on white (v11.98) */
+  function inkColour(){ return document.documentElement.getAttribute("data-theme") === "dark" ? [255, 255, 255, 255] : [17, 17, 17, 255]; }
 
   var stageMsg = document.getElementById("stageMsg");
   var msgTitle = document.getElementById("msgTitle");
@@ -639,6 +642,10 @@ main.screen.one.land{ flex-direction:row; }
   new MutationObserver(function(){
     var g = ground();
     instances.forEach(function(nv){ nv.opts.backColor = g.back; nv.opts.clipPlaneColor = g.clip; try{ nv.drawScene(); }catch(e){} });
+    if (colourMode === "accent") instances.forEach(function(nv){
+      var id = meshIds[nv.canvas.id];
+      if (id !== undefined){ try{ nv.setMeshProperty(id, "rgba255", inkColour()); }catch(e){} }
+    });
   }).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
   var colourMode = "Local";
 
@@ -667,7 +674,7 @@ main.screen.one.land{ flex-direction:row; }
   /* ── idle rotation of the 3D box ── */
   /* anyone who has asked their device for less motion gets a brain that
      holds still until they turn it, with Revolve there to switch on */
-  var spinning = !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  var spinning = false;   /* still at launch (v11.98, at the owner's word); the bar's Revolve sets it turning */
   var lastTouch = 0;
   var spinBtn = null;
   var IDLE_MS = 2500, DEG_PER_SEC = 14;
@@ -716,7 +723,8 @@ main.screen.one.land{ flex-direction:row; }
       touched();
       nv.drawScene();
     },
-    still: function(){ if (spinning && spinBtn) spinBtn.click(); }
+    still: function(){ if (spinning && spinBtn) spinBtn.click(); },
+    nv: function(){ return byKey.Ren; }
   };
 
   var radiusEl = document.getElementById("radius");
@@ -738,7 +746,7 @@ main.screen.one.land{ flex-direction:row; }
         if (id === undefined) return;
         if (colourMode === "accent"){
           nv.setMeshProperty(id, "fiberColor", "Fixed");
-          nv.setMeshProperty(id, "rgba255", ACCENT);
+          nv.setMeshProperty(id, "rgba255", inkColour());
         } else {
           nv.setMeshProperty(id, "fiberColor", "Local");
         }
@@ -746,6 +754,88 @@ main.screen.one.land{ flex-direction:row; }
       });
     });
   });
+
+
+  /* ── slice: the atlases' Slice tool, cutting the streamlines themselves (v11.98) ──
+     The viewer's clip planes act on volumes alone, so the tool is given a
+     stand-in viewer: its planes come here, each read as the viewer would read
+     it (the plane's normal from its azimuth and elevation, the side away from
+     the normal going by the slider's share), the three cuts leave a box, and
+     the mesh is rebuilt from the pieces of each streamline that lie inside
+     it, the whole tractogram kept aside to restore. A rebuild waits for the
+     next frame, so a slider dragged fast costs one a frame. */
+  var slice = null, whole = null, pendingPlanes = null, cutFrame = 0;
+  function planeNormal(azi, elev){
+    /* the viewer's own maths for a clip plane given as depth, azimuth, elevation */
+    var a = -elev * Math.PI / 180, g = ((((azi + 180 - 90) % 360) + 360) % 360) * Math.PI / 180;
+    return [Math.cos(a) * Math.cos(g), Math.cos(a) * Math.sin(g), Math.sin(a)];
+  }
+  function cutBox(planes){
+    var lo = [whole.min[0], whole.min[1], whole.min[2]], hi = [whole.max[0], whole.max[1], whole.max[2]];
+    planes.forEach(function(p){
+      var n = planeNormal(p[1], p[2]), f = Math.max(0, Math.min(1, (1 - p[0]) / 2));   /* depth 1 whole, -1 all gone */
+      var k = 0;
+      for (var i = 1; i < 3; i++) if (Math.abs(n[i]) > Math.abs(n[k])) k = i;
+      var span = whole.max[k] - whole.min[k];
+      if (n[k] > 0) lo[k] = Math.max(lo[k], whole.min[k] + f * span);
+      else hi[k] = Math.min(hi[k], whole.max[k] - f * span);
+    });
+    return {lo: lo, hi: hi};
+  }
+  function applyCut(planes){
+    var nv = byKey.Ren, mesh = nv && nv.meshes && nv.meshes[0];
+    if (!mesh || !whole) return;
+    if (!whole.lengths && mesh.pts === whole.pts) whole.lengths = mesh.fiberLengths || null;
+    if (!planes.length){
+      if (mesh.pts !== whole.pts){
+        mesh.pts = whole.pts; mesh.offsetPt0 = whole.off; mesh.fiberLengths = whole.lengths;
+        try{ mesh.updateMesh(nv.gl); }catch(e){}
+        nv.drawScene();
+      }
+      return;
+    }
+    var box = cutBox(planes), lo = box.lo, hi = box.hi;
+    var P = whole.pts, O = whole.off, n = O.length - 1;
+    var pts = new Float32Array(P.length), m = 0, offs = [0];
+    for (var s = 0; s < n; s++){
+      var run = 0;
+      for (var i = O[s]; i < O[s + 1]; i++){
+        var x = P[i * 3], y = P[i * 3 + 1], z = P[i * 3 + 2];
+        if (x >= lo[0] && x <= hi[0] && y >= lo[1] && y <= hi[1] && z >= lo[2] && z <= hi[2]){
+          pts[m++] = x; pts[m++] = y; pts[m++] = z; run++;
+        } else if (run){
+          if (run >= 2) offs.push(m / 3); else m -= 3 * run;   /* a lone point is no line */
+          run = 0;
+        }
+      }
+      if (run){ if (run >= 2) offs.push(m / 3); else m -= 3 * run; }
+    }
+    mesh.pts = pts.subarray(0, m);
+    mesh.offsetPt0 = Uint32Array.from(offs);
+    mesh.fiberLengths = null;
+    try{ mesh.updateMesh(nv.gl); }catch(e){}
+    nv.drawScene();
+  }
+  var cutter = {
+    opts: {},
+    setClipPlaneColor: function(){},
+    setClipPlanes: function(planes){
+      pendingPlanes = planes;
+      if (!cutFrame) cutFrame = requestAnimationFrame(function(){ cutFrame = 0; applyCut(pendingPlanes); });
+    }
+  };
+  function attachSlice(){
+    var nv = byKey.Ren, mesh = nv && nv.meshes && nv.meshes[0];
+    if (!mesh || !window.MN_SLICE || slice) return;
+    var P = mesh.pts, mn = mesh.extentsMin, mx = mesh.extentsMax;
+    if (!mn || !mx || mn.length < 3){
+      mn = [Infinity, Infinity, Infinity]; mx = [-Infinity, -Infinity, -Infinity];
+      for (var i = 0; i < P.length; i += 3) for (var k = 0; k < 3; k++){ if (P[i + k] < mn[k]) mn[k] = P[i + k]; if (P[i + k] > mx[k]) mx[k] = P[i + k]; }
+    }
+    whole = { pts: P, off: mesh.offsetPt0, min: [mn[0], mn[1], mn[2]], max: [mx[0], mx[1], mx[2]], lengths: null };
+    var renBox = document.querySelector('.view[data-box="Ren"]');
+    slice = MN_SLICE.attach({ stage: renBox.querySelector(".mri-stage"), tools: renBox.querySelector(".view-tools"), nv: cutter });
+  }
 
   /* How deep a slab of streamlines each plane box draws: this is the section
      itself, thin for a clean cut through the fibres, thicker to build back
@@ -772,7 +862,7 @@ main.screen.one.land{ flex-direction:row; }
         var sample = MN_EXPORT3D.sampleLines(mesh.pts, mesh.offsetPt0, cap);
         var part = MN_EXPORT3D.lines(sample.pts, sample.offsets, {
           name: "HCP1065 streamlines (" + sample.count + " of " + (mesh.offsetPt0.length - 1) + ")",
-          colour: colourMode === "accent" ? [ACCENT[0] / 255, ACCENT[1] / 255, ACCENT[2] / 255] : null
+          colour: colourMode === "accent" ? inkColour().slice(0, 3).map(function(v){ return v / 255; }) : null
         });
         return { name: "VisualNeuroscience tractogram", parts: [part], tubeRadius: 0.3 };
       }
@@ -787,6 +877,7 @@ main.screen.one.land{ flex-direction:row; }
     nv.scene.pan2Dxyzmm = [0, 0, 0, 1];
     if (nv.position) nv.position = [0, 0, 0];
     applyZoom(HOME_ZOOM);
+    if (slice) slice.reset();
     touched();
   }
   document.querySelectorAll("[data-reset]").forEach(function(btn){
@@ -841,6 +932,7 @@ main.screen.one.land{ flex-direction:row; }
           nv.setMeshProperty(nv.meshes[0].id, "fiberDither", 0.1);
         }
       });
+      attachSlice();
 
       wireViewControls();
       document.querySelectorAll(".mri-stage").forEach(function(stage){
