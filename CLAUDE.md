@@ -52,7 +52,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   v11.36, then (v11.68) a Coming soon box with nothing to press, three `SoonRow`s naming what is being built (the Circuit
   Atlas, Regions in depth, the MCP server extended), then the developer's message and the Channels; its twin on the
   website is the home page's About hub (`index.html#about`: `.m-mcp`, `.m-soon`, `.m-about`, `.m-channels`), and
-  `about.html` is the developer's message alone since v11.68 (its MCP box left with the hub), and since v12.16 that message
+  `about.html` is the developer's message alone since v11.68 (its MCP box left with the hub), titled Message from the
+  Developer since v12.17 (its title strip, its `<title>` and the shell's bar, `Page.about`), and since v12.16 that message
   is the owner's letter, word for word as they gave it on 24 October 2026: under the portrait, from Thank you for
   downloading Visual Neuroscience (the lede) to Write to fkarim@visualneuroscience.ai and I read it myself, then the
   signature, the links and the stamp, with no headings (v12.15 had cut the six sections that stood there). Keep the
@@ -61,7 +62,15 @@ Read this first in every session. It is the handover; nothing else needs pasting
   also marks them `data-shell-pad`, the system bar shows no title there, and the page's title strip steps aside
   (`viewer.css`), keeping any buttons it carries. The stack's swipes back (from the edge, and iOS 26's from
   anywhere) are off on the pages, since a sideways drag on a scan set them off; Back is the bar's button
-  (`PageBridgeController.viewDidAppear`).
+  (`PageBridgeController.viewDidAppear`). Since v12.17, at the owner's word, the shell tells the person when the App Store
+  has a newer version (`UpdateCheck` and `StoreListing` in `Shell.swift`, raised by `ShellRoot`): it asks Apple's lookup
+  service (`itunes.apple.com/lookup?id=6805618686`, the device region's storefront first, then the default) as the app
+  opens and on each return to the front, at most once an hour, and when the store's version is newer than the build's
+  `CFBundleShortVersionString` shows a native alert, Update (the store page) or Not Now, at most once a day for the same
+  version (`vn-update-asked-on`, `vn-update-asked-for`) and never when that version needs a newer iOS than the device has
+  (skipped on a Mac, whose numbers are macOS's). A build newer than the store's, on TestFlight or in review, is never
+  asked. Only builds that carry it can ask: 1.0 never will, and 1.1 is the first to ask, once 1.2 is out. The privacy
+  page names the request.
 - The website's header is the iOS app's since v11.63: a slim pinned bar with the brand at the left, the theme and
   account buttons at the right and, between them, a floating island of the app's five tabs, Atlases, Library, Practice,
   About and Account, each an icon over its name, the page's own tab lit. `navbar.js` (its website section) builds the

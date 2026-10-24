@@ -87,10 +87,119 @@ final class AppStore: ObservableObject {
     }
 }
 
+// MARK: - Updates
+
+/// What the App Store's lookup service says of the app: the version it
+/// offers, and the oldest system that version runs on.
+nonisolated struct StoreListing: Decodable, Sendable {
+    let results: [Entry]
+
+    nonisolated struct Entry: Decodable, Sendable {
+        let version: String
+        let minimumOsVersion: String?
+    }
+}
+
+/// Tells the person, in a popup, when the App Store has a newer version of
+/// the app than the one they are running. The store is asked as the app
+/// opens and whenever it comes back to the front, at most once an hour; the
+/// person is asked at most once a day for the same version, and not at all
+/// when that version needs a newer system than the device has. A build
+/// newer than the store's, on TestFlight or in review, is never asked.
+final class UpdateCheck: ObservableObject {
+    /// True while the popup is up.
+    @Published var asking = false
+    /// The version the store offers, once it is known to be newer.
+    @Published private(set) var newer: String?
+
+    /// The app's number on the App Store.
+    static let appID = "6805618686"
+    /// The app's page on the App Store, which opens in the App Store app.
+    static let storePage = URL(string: "https://apps.apple.com/app/id6805618686")!
+    /// The version this build carries.
+    static let installed = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0"
+
+    private static let askedOnKey = "vn-update-asked-on"
+    private static let askedForKey = "vn-update-asked-for"
+    private var lookedAt: Date?
+    private var looking = false
+
+    /// Asks the store which version it offers and raises the popup if that
+    /// one is newer, unless the store was asked within the hour.
+    func look() async {
+        if looking || asking { return }
+        if let last = lookedAt, Date().timeIntervalSince(last) < 60 * 60 { return }
+        looking = true
+        defer { looking = false }
+        guard let entry = await Self.listing() else { return }
+        lookedAt = Date()
+        guard Self.order(entry.version, Self.installed) == .orderedDescending else { return }
+        // On a Mac the iPad app runs under macOS, whose numbers are not iOS's,
+        // and the Mac App Store decides what can be installed there.
+        if let needs = entry.minimumOsVersion, !ProcessInfo.processInfo.isiOSAppOnMac {
+            let os = ProcessInfo.processInfo.operatingSystemVersion
+            if Self.order(needs, "\(os.majorVersion).\(os.minorVersion).\(os.patchVersion)") == .orderedDescending { return }
+        }
+        let defaults = UserDefaults.standard
+        if defaults.string(forKey: Self.askedForKey) == entry.version,
+           let on = defaults.object(forKey: Self.askedOnKey) as? Date,
+           Date().timeIntervalSince(on) < 24 * 60 * 60 { return }
+        defaults.set(Date(), forKey: Self.askedOnKey)
+        defaults.set(entry.version, forKey: Self.askedForKey)
+        newer = entry.version
+        asking = true
+    }
+
+    /// The store's entry for the app: from the storefront of the device's
+    /// region where it names one, else from the store's default.
+    private static func listing() async -> StoreListing.Entry? {
+        let region: String?
+        if #available(iOS 16, *) {
+            region = Locale.current.region?.identifier
+        } else {
+            region = Locale.current.regionCode
+        }
+        var countries: [String?] = [nil]
+        if let region, region.count == 2 { countries.insert(region.lowercased(), at: 0) }
+        for country in countries {
+            guard var parts = URLComponents(string: "https://itunes.apple.com/lookup") else { return nil }
+            var query = [URLQueryItem(name: "id", value: appID)]
+            if let country { query.append(URLQueryItem(name: "country", value: country)) }
+            parts.queryItems = query
+            guard let url = parts.url else { continue }
+            let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 15)
+            guard let answer = try? await URLSession.shared.data(for: request) else { continue }
+            let (data, response) = answer
+            guard (response as? HTTPURLResponse)?.statusCode == 200,
+                  let listing = try? JSONDecoder().decode(StoreListing.self, from: data),
+                  let entry = listing.results.first
+            else { continue }
+            return entry
+        }
+        return nil
+    }
+
+    /// Two version numbers compared part by part, a missing part counting as
+    /// nought, so that 1.10 is newer than 1.9 and 1.1 the same as 1.1.0.
+    static func order(_ a: String, _ b: String) -> ComparisonResult {
+        let x = a.split(separator: ".").map { Int($0) ?? 0 }
+        let y = b.split(separator: ".").map { Int($0) ?? 0 }
+        for i in 0..<max(x.count, y.count) {
+            let p = i < x.count ? x[i] : 0
+            let q = i < y.count ? y[i] : 0
+            if p != q { return p < q ? .orderedAscending : .orderedDescending }
+        }
+        return .orderedSame
+    }
+}
+
 /// The root the scene's window holds: the store, the ink tint for the
-/// selected tab and every control, set once here, and the theme.
+/// selected tab and every control, set once here, the theme, and the popup
+/// that says when a newer version is on the App Store.
 struct ShellRoot: View {
     @StateObject private var store = AppStore()
+    @StateObject private var update = UpdateCheck()
+    @Environment(\.openURL) private var openURL
 
     init() {}
 
@@ -99,6 +208,16 @@ struct ShellRoot: View {
             .environmentObject(store)
             .tint(Palette.ink)
             .preferredColorScheme(store.theme == .dark ? .dark : .light)
+            .task { await update.look() }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                Task { await update.look() }
+            }
+            .alert("Update Available", isPresented: $update.asking, presenting: update.newer) { _ in
+                Button("Update") { openURL(UpdateCheck.storePage) }
+                Button("Not Now", role: .cancel) {}
+            } message: { version in
+                Text("Version \(version) of Visual Neuroscience is on the App Store, and this device has \(UpdateCheck.installed). Update to get the latest atlases and fixes.")
+            }
     }
 }
 
