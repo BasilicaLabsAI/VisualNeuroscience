@@ -239,7 +239,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   v12.8, at the owner's word, the dark slices let that black through as well: `darkScale(w)` in `scan-look.js` is the
   plain gray ramp with its zero clear (`I:[0, floor, 255]`, `A:[0, 255, 255]`, the floor the old window's) and
   `isAlphaClipDark` is on for every slice in either theme, so the template's empty voxels outside the head, which the
-  viewer's own gray scale painted opaque black, drop out and the stage shows (the twins were retaken again). The Microanatomy page (`site/microanatomy.html`, run by
+  viewer's own gray scale painted opaque black, drop out and the stage shows (the twins were retaken again); since
+  v12.13, at the owner's word, the scale's black end is the page's black itself (`PAGE_BLACK`, 17, at index 0 and at
+  the floor, so the ventricles, the fluid and the head's rim are the stage's shade and nothing in a slice is darker
+  than it; every picture showing a slice was retaken: the dark home twins, the store sets' atlas and network shots and
+  the App Store images of the atlas and the study). The Microanatomy page (`site/microanatomy.html`, run by
   `site/assets/cells.js` with `nt.js`, `rxfig.js` and `rx.js`) is one screen too since v11.99, at the owner's word, on the
   study's chrome with the Tractography page's one view: the cell's drawing (`section.view.plate`, the `#scroller` holding
   `svg#plate`) is the whole stage since v12.1, at the owner's word, nothing framing it (no border, no stage padding; the

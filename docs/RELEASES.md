@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.13 — 24 October 2026 — One black through the scans
+Commit · Make the page's black the darkest shade in every slice
+
+In the dark theme the slices stood on the page's black since v12.8, but inside the head the ventricles, the fluid and the rim of the brain still went down to a scan's pure black, a darker shade than the page around them. The dark scale now bottoms out at the page's own black, so nothing in a slice is darker than the stage it stands on, on the 3D Region Atlas, the Network Atlas and the Hallucinations study alike. Every picture that shows a slice was retaken: the home pictures, the store screenshots and the App Store images.
+
 ## v12.12 — 24 October 2026 — Brain region explanations
-Commit · Reword the two region images' statement to Brain region explanations
+Commit `ee85544` · Reword the two region images' statement to Brain region explanations
 
 The two App Store images that show the atlas's What they do window now carry the owner's statement Brain region explanations, over Detailed breakdowns coming soon, in place of Quick region summaries, on the iPad and the iPhone alike.
 

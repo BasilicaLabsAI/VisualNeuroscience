@@ -8,7 +8,10 @@
    the template is zero outside the head, and since v12.8 (at the owner's
    word: the slices still stood in boxes of pure black) the dark scale is
    clear at zero too, with the viewer told to drop a clear voxel, so the
-   page's black shows through there. Light, they are white and the crosshair is ink, and on white
+   page's black shows through there; since v12.13 (at the owner's word: the
+   ventricles and the rim of the head still read darker than the page) the
+   scale's darkest shade is the page's black itself, so nothing in a slice
+   is darker than the stage it stands on. Light, they are white and the crosshair is ink, and on white
    nothing in the slices is black: the template is zero outside the brain,
    so in the light theme its scale is clear at zero, letting the white
    through, and above zero it reads like a stained section rather than a
@@ -44,11 +47,17 @@ function lightScale(w){
 }
 
 /* dark: the plain scale with its zero clear (v12.8), so the head stands on
-   the page's black and not in a box of pure black: index 0 clear, black up
-   to the window's floor, then the ramp to white, the window as it was */
+   the page's black and not in a box of pure black: index 0 clear, the
+   page's black (#111111, 17) up to the window's floor and from there the
+   ramp to white, the window as it was. The black end is the page's own
+   shade and not a scan's pure black since v12.13, so the ventricles, the
+   fluid and the rim of the head, all at or under the floor, are the stage's
+   colour, and the voxels between zero and the floor, which the viewer blends
+   in by their alpha, blend that same shade over the same shade */
+var PAGE_BLACK = 17;
 function darkScale(w){
-  var floor = Math.max(1, Math.min(254, Math.round(255 * w.min / w.max)));
-  return {R: [0, 0, 255], G: [0, 0, 255], B: [0, 0, 255], A: [0, 255, 255], I: [0, floor, 255]};
+  var floor = Math.max(1, Math.min(254, Math.round(255 * w.min / w.max))), k = PAGE_BLACK;
+  return {R: [k, k, 255], G: [k, k, 255], B: [k, k, 255], A: [0, 255, 255], I: [0, floor, 255]};
 }
 
 function paint(views){
