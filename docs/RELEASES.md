@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.11 — 24 October 2026 — The Brodmann Area Atlas upright: nothing scrolls, and the faces are yours to pick
+Commit · Stop the Brodmann Area Atlas scrolling on a phone and keep the face picks on its bar upright
+
+On a phone held upright the Brodmann Area Atlas could still be dragged up and down by a few lines: the page's body kept a margin beneath a screen that already filled the window. Nothing scrolls now, as on the other atlases. The bar upright also keeps Outside, Inside and Both: a face picked on an iPad or with the phone held sideways was remembered, and upright the bar had hidden the way back to both faces, leaving one face over an empty room. A face alone now stands in the middle of that room, and the picks are there to change it.
+
 ## v12.10 — 24 October 2026 — The App Store images remade on the new pages
-Commit · Remake the App Store images from the live pages under the app's own chrome
+Commit `93f1726` · Remake the App Store images from the live pages under the app's own chrome
 
 The eighteen App Store images now show the app as it is after v12.9. Each is its page rendered as the app shows it, at the web view of the iPad and the iPhone the captures came from and in the same state as the capture, the same three regions lit in the same colours, the same window open, the same question dealt, joined to the app's own bar and tab bar cut from those captures and set under the owner's statements. A script in the repository remakes all eighteen in one run whenever the pages change, so the store keeps up without a device in hand.
 

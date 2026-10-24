@@ -410,7 +410,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   1 / 2 / 2`, below the screen and `visibility:hidden` until `.in`) that the bar's 3D tab (`#scanBtn`, `setScan`,
   `scanOpen`; hidden on `.land`, `.tall` and `.wide`) slides up and down, fetched the first time it rises
   (`applyScanMode` leaves `.one` alone), Escape lowering it after About and the text; the Outside, Inside and Both group
-  is hidden upright, the faces both being on show at the full width. Sideways the faces are stacked down the left at
+  stays on the bar upright since v12.11, at the owner's word (hidden there from v11.81, which left a face remembered from
+  an iPad or a phone held sideways, `vn-ba-view`, with no way back to Both; a face alone stands centred in the faces'
+  room, `align-content:center`, and may take the whole height in `arrange()`; the bar's six buttons fit a 360px phone
+  with `.3rem` side padding). Nothing scrolls on the page since v12.11: `html, body{overflow:hidden}` and the body's old
+  `2rem` bottom padding gone, which stood beneath the screen and gave a phone a few lines of scroll. Sideways the faces are stacked down the left at
   `--cart-w` (`arrange()`: the width
   whose two faces fill the height over the strip, at most 42% of the room beside the bar, one face alone up to 55%; since
   v11.80 the boxes fill the column's height, `grid-template-rows:minmax(0,1fr)` per face and `aspect-ratio:auto`, the
