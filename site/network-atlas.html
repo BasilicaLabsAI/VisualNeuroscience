@@ -599,6 +599,8 @@ main.screen.one.land{ flex-direction:row; }
     </div>
     <div class="panelbar-btns" role="group" aria-label="Panels">
       <button class="pbtn" type="button" data-pop="popRing" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M5.8 8.2 12 12l6.2-3.8M7.5 18.5 12 12l5.5 6M12 3.5V12"/></svg><span>Network</span></button>
+      <!-- Reset slice shows while slicing is on, hidden by the tool otherwise (v12.9) -->
+      <button class="pbtn" type="button" id="sliceResetBtn" hidden title="Put the three cuts back to the centre, the brain whole"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 10h11a5 5 0 0 1 0 10h-5"/><path d="M8 6l-4 4 4 4"/></svg><span>Reset slice</span></button>
     </div>
     <div class="panelbar-end" role="group" aria-label="Export and about">
       <button class="pbtn" type="button" data-pop="popExport" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15V4M8 8l4-4 4 4M5 13v7h14v-7"/></svg><span>Export</span></button>
@@ -926,7 +928,8 @@ main.screen.one.land{ flex-direction:row; }
       var renBox = document.querySelector('.view[data-box="render"]');
       if (window.MN_SLICE && renBox) MN_SLICE.attach({
         stage: renBox.querySelector(".mri-stage"), tools: renBox.querySelector(".view-tools"),
-        nv: INSTANCES.render, regions: "Slice regions"
+        nv: INSTANCES.render, regions: "Slice regions",
+        reset: document.getElementById("sliceResetBtn")   /* the bar's Reset slice (v12.9) */
       });
       /* the wheel zooms the 3D model; the slices answer to drag and touch */
       if (window.MN_WHEEL){

@@ -217,6 +217,15 @@ in with Apple again, revokes with the authorization code Apple hands back (the p
 SDK's `revokeAccessToken`. Nothing to set up beyond this section: the revocation uses the
 same Services ID and key.
 
+### Changing a password
+An account that logs in with an email address and a password changes it on the account page
+(`site/account.html#password`, the Change your password row under the app's Account tab):
+`changePassword` in `site/assets/auth.js` signs the person in again with the current password
+(`reauthenticateWithCredential` with an `EmailAuthProvider` credential, which is what Firebase
+asks for before `updatePassword`) and sets the new one. Both names are exported by the bundle
+(`scripts/firebase/entry.js`). An account made with Google, Apple or a sign-in link has no
+password of its own and is told so; the reset email stays the way for a forgotten password.
+
 ## 7 · LinkedIn sign-in
 
 LinkedIn is not a built-in Firebase provider. Two workable designs:

@@ -172,8 +172,15 @@ Read this first in every session. It is the handover; nothing else needs pasting
   policy (`#posters`) describe the shop; `app/store/LISTING.md`'s review notes name the physical goods and 3.1.5(a).
 - Legal pages (since v11.41): `site/privacy.html`, `site/terms.html` and `site/delete-account.html`, linked from the foot of
   every page beside the privacy policy and from the app's Account tab (`PageRow` rows in `Shell.swift`: privacy, terms,
-  and Delete your account, which opens `account.html#delete`); the Play listing's deletion link is the deletion page and
-  the App Store notes name it (`app/store/LISTING.md`, `PLAY-STORE.md`). Account deletion (`deleteAccount` in
+  Change your password since v12.9, which opens `account.html#password`, and Delete your account, which opens
+  `account.html#delete`); the Play listing's deletion link is the deletion page and
+  the App Store notes name it (`app/store/LISTING.md`, `PLAY-STORE.md`). Since v12.9, at the owner's word, the account
+  page has a Password section (`#password`; `#acctPwWrap` the form, shown for an account whose sign-in is a password,
+  `#acctPwNone` the line for the rest): `changePassword(current, next, confirm)` in `auth.js` signs the person in again
+  with the current password (`reauthenticateWithCredential` with an `EmailAuthProvider` credential, a wrong one answered
+  as `vn/current-wrong`) and calls `updatePassword`, both names added to the bundle's entry and the bundle rebuilt;
+  `hasPassword(u)` says whether there is one, and the form's second button sends the reset email (`sendReset`). The
+  page jumps to the section once when opened on `#password`, which the app's row does. Account deletion (`deleteAccount` in
   `site/assets/auth.js`) revokes Sign in with Apple as the account goes: in the apps the native layer signs in with
   Apple again, revokes with the authorization code (`revokeAccessToken`) and deletes the user, on the web the popup's
   access token goes to the SDK's `revokeAccessToken`; a Google account Firebase asks to sign in again does so on the
@@ -218,7 +225,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (`#popLines`: the Direction/Single colour and the thickness), View from (`#popView`: the cube of faces and Reset view),
   Revolve (`#spinBtn`, a `.pbtn` lit while it turns; off at launch since v11.98, at the owner's word), Slice (`#sliceBtn`,
   v12.1: the slice tool's switch, lit while the edge sliders are out, disabled until `attachSlice` has the mesh; the tool's
-  own buttons land unseen in `.slice-holder` inside the view), Export (`#popExport`:
+  own buttons land unseen in `.slice-holder` inside the view), Reset slice (`#sliceResetBtn`, v12.9, on every page that
+  slices: see the slice tool under the 3D Region Atlas), Export (`#popExport`:
   the density and the 3D model) and About
   (`#popAbout`: what you are looking at, the colour key, the credits). Its own viewer script is untouched but for the
   ground (v11.96, at the owner's word): the tractogram's back follows the theme as the atlases' stages do, the page's black
@@ -342,7 +350,15 @@ Read this first in every session. It is the handover; nothing else needs pasting
   whatever `vn-atlas-drawer` holds (since v11.25), and the pop-ups span the width. The slice tool's edge sliders
   (`slice-tool.js`, styled in `viewer.css`) are 44px strips with 24px thumbs under a coarse pointer (v11.32); on a
   phone the right-hand one stands 26px in from the edge, clear of the drawer's handle, and the bottom one stops short
-  of it (`.screen.one`). Held sideways (v11.42: `main.screen.one.land`, the script's `land` query, a coarse pointer in
+  of it (`.screen.one`). Since v12.9, at the owner's word, each slider carries a mark at its centre, a 2px line across
+  the track at the middle drawn as `.slice-range`'s own background (`viewer.css`, the Brodmann page's inline copy, and
+  `--slice-mark` set to the bar's soft ink in `bar.css`; 18px long, 32px under a coarse pointer), a mark alone with no
+  snapping, and every page that slices (the 3D Region Atlas, the Brodmann Area Atlas, the Hallucinations study, the
+  Network Atlas, Tractography) carries Reset slice on its bar: `#sliceResetBtn`, a `.pbtn` with `hidden` on it until
+  slicing is on (`.panelbar .pbtn[hidden]` in `bar.css`, since `.pbtn`'s display would otherwise win), handed to
+  `MN_SLICE.attach` as `reset`, which the tool then shows, hides and binds to putting every cut back and draws no Reset
+  cuts of its own (the cap's Reset cuts went with it; the Brodmann page's head keeps its Reset, which puts back the view
+  and the cuts together). Held sideways (v11.42: `main.screen.one.land`, the script's `land` query, a coarse pointer in
   landscape) the bar stands along the right edge, its buttons two to a row, each its icon over its name as upright (since
   v11.58; 66px cells in a 141px bar, the groups centred while they fit and the bar scrolling when they do not; the
   longest name carries a soft hyphen), the
@@ -505,7 +521,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
 - App Store: version 1.0 was approved and released on 25 September 2026 (https://apps.apple.com/app/id6805618686)
   after an expedited review. The project is at 1.1 for the next submission; its What's New text, the App Privacy
   changes the newsletter and the usage counts need, and the steps are in `app/store/LISTING.md`, the screenshots in
-  `app/store/screenshots/`. The listing's new name is *Visual Neuroscience: 3D Human Brain Atlas* (the owner, 23 October
+  `app/store/screenshots/` (the browser's, every set retaken on the v12.9 pages by `app/scripts/shoot-store.js`, whose
+  Brodmann shot is the Brodmann Area Atlas page since v12.9) and the App Store's own images in `app/store/sell/`, made
+  by `store-sell.js` from the owner's device captures of 24 October 2026, which show the app before v12.0 to v12.8:
+  new captures from a build that carries them are needed before 1.1 goes in, and the images remade from them. The listing's new name is *Visual Neuroscience: 3D Human Brain Atlas* (the owner, 23 October
   2026), which the store's 30-character cap splits into the name `Visual Neuroscience` and the subtitle `3D Human Brain
   Atlas`; it goes in with 1.1. `GoogleService-Info.plist` was downloaded again on 21 October 2026 and was identical to the
   repo's copy (`IS_ANALYTICS_ENABLED` false); the key does not gate collection in current SDKs, so the apps count

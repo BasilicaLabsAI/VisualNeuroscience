@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.9 — 24 October 2026 — The centre on every slice slider, Reset slice on the bar, and a password you can change
+Commit · Mark the centre of every slice slider, put Reset slice on the bar and let a password be changed from the account page
+
+Every slice slider on the 3D Region Atlas, the Brodmann Area Atlas, the Network Atlas, the Hallucinations study and Tractography now carries a short line across its track at the middle, where nothing is cut, so a slider that has been moved shows how far it is from the centre; it is a mark alone, and the thumb runs past it without catching. While slicing is on, a Reset slice button stands on the bar of each of those pages and puts the three cuts back at once; the Reset cuts that stood beside Slice in the 3D view's cap goes, the bar having the one. An account that logs in with an email address and a password can change it on the account page, in the app as well as on the site: a Change your password row under the app's Account tab opens the page on it, the current password proves it is you, and a forgotten one is reset by email from the same place. The store screenshot sets are retaken on these pages, the Brodmann shot now of the Brodmann Area Atlas itself.
+
 ## v12.8 — 24 October 2026 — The scans on the page's black
-Commit · Let the page's black through the scans' empty voxels in the dark theme
+Commit `06543e8` · Let the page's black through the scans' empty voxels in the dark theme
 
 In the dark theme the slices of every atlas stood in boxes of pure black: the template's empty voxels outside the head painted black over the page's own black. They are clear now, so the page's black shows through them and a scan sits in the page as the light theme's always has on white, on the 3D Region Atlas, the Network Atlas and the Hallucinations study alike; the home pictures were retaken on it.
 

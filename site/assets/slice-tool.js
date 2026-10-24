@@ -12,17 +12,27 @@
 
    Every slider starts in the centre, meaning nothing cut. Pushing it one way
    takes the head away from one side, pushing it the other way takes it from
-   the other — the distance from centre is how deep the cut goes.
+   the other — the distance from centre is how deep the cut goes. The centre
+   is marked on each slider (v12.9, at the owner's word: a short line across
+   the track, drawn by the stylesheet), a mark and nothing more: the thumb
+   runs past it without catching, so a cut can be as shallow as the hand
+   likes.
 
    Shared by every page carrying a volume render, so the tool behaves the
    same wherever it appears. Wire one up with:
 
      MN_SLICE.attach({ stage: <.mri-stage>, tools: <.view-tools>, nv: <Niivue>,
-                       regions: "Slice regions" });
+                       regions: "Slice regions", reset: <button> });
        → { open, close, reset, state, setState }
    onChange is optional: given, it is called with state() whenever the
    cuts, the switch or the regions choice change, so a page can keep them
    (v12.1: every atlas remembers its last cuts on the device)
+
+   reset is optional: a button of the page's own, on its bar, that the tool
+   shows while slicing is on, hides while it is off and binds to putting
+   every cut back (v12.9, at the owner's word: Reset slice stands on the bar
+   of every page that slices). Without it the tool puts a Reset cuts button
+   of its own beside Slice.
 
    regions is optional: given, a button of that name joins Slice and Reset
    cuts while slicing is on, and pressed it takes the cuts through the
@@ -85,7 +95,7 @@ function attach(o){
     slider.value = "0";
     slider.className = "slice-range";
     slider.setAttribute("aria-label", ax.label + " cut, " + ax.hint +
-                        ". Centre is uncut; either direction cuts from that side.");
+                        ". The mark at the middle is the centre, uncut; either direction cuts from that side.");
 
     slider.addEventListener("input", function(){
       cuts[ax.id] = Number(slider.value);
@@ -109,13 +119,18 @@ function attach(o){
   btn.textContent = "Slice";
   btn.setAttribute("aria-pressed", "false");
 
-  /* where a bar is short of room the pages show the first word alone
-     (.lbl-more is hidden there); the full name stays the button's name */
-  var resetBtn = document.createElement("button");
-  resetBtn.type = "button";
-  resetBtn.className = "ts-btn slice-reset";
-  resetBtn.innerHTML = 'Reset<span class="lbl-more"> cuts</span>';
-  resetBtn.setAttribute("aria-label", "Reset cuts");
+  /* the page's own Reset slice on its bar, or a Reset cuts of the tool's
+     beside Slice; where a bar is short of room the pages show the first
+     word alone (.lbl-more is hidden there); the full name stays the
+     button's name */
+  var resetBtn = o.reset || null, ownReset = !resetBtn;
+  if (ownReset){
+    resetBtn = document.createElement("button");
+    resetBtn.type = "button";
+    resetBtn.className = "ts-btn slice-reset";
+    resetBtn.innerHTML = 'Reset<span class="lbl-more"> cuts</span>';
+    resetBtn.setAttribute("aria-label", "Reset cuts");
+  }
   resetBtn.hidden = true;
 
   /* the cuts through the painted regions too, or through the scan alone:
@@ -156,7 +171,7 @@ function attach(o){
   /* before the Centre planes button where it shares the row, which holds
      the right-hand end */
   var centre = tools.querySelector(".centre-btn");
-  [btn, regionsBtn, resetBtn].forEach(function(b){
+  [btn, regionsBtn, ownReset ? resetBtn : null].forEach(function(b){
     if (!b) return;
     if (centre) tools.insertBefore(b, centre); else tools.appendChild(b);
   });

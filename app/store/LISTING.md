@@ -156,9 +156,15 @@ Privacy as the section below says, since 1.1 is the first version that can
 put an address on the newsletter's list.
 
 The iPhone and iPad screenshots in `app/store/screenshots/` were taken from
-the pages in a browser (`scripts/shoot-store.js`) and show the web app's own
-bar, not the tab bar the app has had since v11. Retake the iOS sets from the
-simulator or a device before submitting 1.1; the Android sets stand.
+the pages in a browser (`scripts/shoot-store.js`, every set retaken on the
+v12.9 pages) and show the website's own header, not the tab bar the app has
+had since v11. The App Store's images are the eighteen in `app/store/sell/`
+below, made from captures of the app itself, which show the app as it was
+when the captures were taken (24 October 2026, before the grey island bars,
+the transparency sliders and the scans on the page's black of v12.0 to
+v12.8): take the captures again from a build that carries those and remake
+them with `store-sell.js` before submitting 1.1. The Android sets, for Play,
+are the browser's and stand.
 
 A capture from a device becomes a store image with the sell above it through
 `app/scripts/store-sell.js`: the statement in Flux, the site's brand face, on
@@ -191,6 +197,7 @@ above the first. 4,000 characters allowed; both together are well under.
 • The side view opens on the brain itself rather than the gap between its halves, and picking a region brings every view to it.
 • A highlighted region lights up on the receptor chart in its own colour.
 • Your account has a page of its own: everything it holds, a copy to download, and deletion. A new account can ask for feature announcements by email, and there is a new contact address: fkarim@visualneuroscience.ai.
+• Change your password from the app: a row under Account opens the account page on it.
 ```
 
 Only if 1.0 went out as build 14:

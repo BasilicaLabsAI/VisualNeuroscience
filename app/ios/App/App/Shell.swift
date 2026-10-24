@@ -360,7 +360,7 @@ struct AccountTab: View {
     var body: some View {
         TabPage {
             PageBox(page: .account, kicker: "Your account", title: "Account",
-                    text: "Log in to see your details, your saved models and your practice progress, download a copy of all of it, or delete the account. An account is optional: everything works without one.",
+                    text: "Log in to see your details, your saved models and your practice progress, change your password, download a copy of all of it, or delete the account. An account is optional: everything works without one.",
                     go: "Open your account")
             Box(kicker: "Preferences", title: "Appearance",
                 text: "Light or dark, for these pages, the atlas pages and the scans.") {
@@ -378,11 +378,12 @@ struct AccountTab: View {
                 }
             }
             Box(kicker: "Support", title: "Help, privacy and terms",
-                text: "Questions and problems go straight to the developer. The account is deleted from its own page, in two presses.") {
+                text: "Questions and problems go straight to the developer. The password is changed, and the account deleted, from the account's own page.") {
                 VStack(alignment: .leading, spacing: 0) {
                     OutLink(name: "Email", handle: "fkarim@visualneuroscience.ai", url: "mailto:fkarim@visualneuroscience.ai")
                     PageRow(name: "Privacy & Support", text: "What the app keeps, and how to reach the developer", page: .privacy)
                     PageRow(name: "Terms of Use", text: "What you may do here, and what we promise and do not", page: .terms)
+                    PageRow(name: "Change your password", text: "A new password for an account that logs in with an email address", page: .password)
                     PageRow(name: "Delete your account", text: "Remove the account, its saved models and its progress, for good", page: .deleteAccount)
                 }
                 .padding(.top, 10)

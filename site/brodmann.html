@@ -320,14 +320,20 @@ svg{ display:block; }
 /* the bottom edge, held clear of both verticals */
 .slice-edge.bottom{ left:36px; right:36px; bottom:5px; height:20px; }
 
+/* the centre, marked (v12.9, at the owner's word): a short line across the
+   track at the middle of each slider, where nothing is cut, drawn on the
+   input itself so it stands under the track and the thumb; a mark and
+   nothing more, which the thumb runs past without catching */
 .slice-range{
   -webkit-appearance:none; appearance:none;
-  background:transparent; cursor:pointer; margin:0;
+  --slice-mark:rgba(255,255,255,.7);
+  background:linear-gradient(var(--slice-mark), var(--slice-mark)) center / 2px 18px no-repeat;
+  cursor:pointer; margin:0;
 }
 .slice-edge.bottom .slice-range{ flex:1; min-width:0; height:18px; }
 .slice-edge.left .slice-range, .slice-edge.right .slice-range{
   writing-mode:vertical-lr; direction:rtl;
-  width:18px; flex:1; min-height:0;
+  width:18px; flex:1; min-height:0; background-size:18px 2px;
 }
 .slice-range::-webkit-slider-runnable-track{
   background:rgba(255,255,255,.28); border-radius:2px;
@@ -371,6 +377,8 @@ svg{ display:block; }
   .slice-edge.bottom{ left:48px; right:48px; bottom:0; height:44px; }
   .slice-edge.bottom .slice-range{ height:44px; }
   .slice-edge.left .slice-range, .slice-edge.right .slice-range{ width:44px; }
+  .slice-range{ background-size:2px 32px; }
+  .slice-edge.left .slice-range, .slice-edge.right .slice-range{ background-size:32px 2px; }
   .slice-edge.bottom .slice-range::-webkit-slider-runnable-track{ height:4px; }
   .slice-edge.left .slice-range::-webkit-slider-runnable-track,
   .slice-edge.right .slice-range::-webkit-slider-runnable-track{ width:4px; }
@@ -388,8 +396,7 @@ svg{ display:block; }
 .scan-head .slice-btn, .scan-head .slice-regions{ height:auto; padding:.5rem .7rem .42rem; }
 @media (pointer:coarse){ .scan-head .slice-btn, .scan-head .slice-regions{ min-height:44px; } }
 /* the head has one Reset, the page's, which puts back the view and the cuts
-   together, so the tool's own Reset cuts stays hidden here */
-.scan-head .slice-reset{ display:none; }
+   together; the cuts alone go back from the bar's Reset slice (v12.9) */
 /* on a phone the head is short of room once the slice buttons join it: the
    Area button shows its last word alone and the note steps aside while
    slicing is on, the name staying, so the head changes as little as it can
@@ -740,6 +747,8 @@ body.ba-land{ padding-bottom:0; }
         <button class="pbtn" type="button" id="scanBtn" aria-expanded="false" aria-controls="baScan"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12L4 7.5M12 12v9"/></svg><span>3D</span></button>
       </div>
       <div class="panelbar-end">
+        <!-- Reset slice shows while slicing is on, hidden by the tool otherwise (v12.9) -->
+        <button class="pbtn" type="button" id="sliceResetBtn" hidden title="Put the three cuts back to the centre, the brain whole"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 10h11a5 5 0 0 1 0 10h-5"/><path d="M8 6l-4 4 4 4"/></svg><span>Reset slice</span></button>
         <button class="pbtn pbtn-ref" type="button" id="aboutBtn" aria-expanded="false" aria-controls="popAbout"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/></svg><span>About</span></button>
       </div>
     </nav>
@@ -1098,6 +1107,7 @@ body.ba-land{ padding-bottom:0; }
       if (window.MN_SLICE){
         /* the cuts are kept on the device with the pick (v12.1, at the owner's word) */
         slice = MN_SLICE.attach({ stage: scanEl.querySelector(".scan-stage"), tools: document.getElementById("scanTools"), nv: ren, regions: "Slice area",
+          reset: document.getElementById("sliceResetBtn"),   /* the bar's Reset slice (v12.9) */
           onChange: function(st){ try{ localStorage.setItem("vn-ba-cuts", JSON.stringify(st)); }catch(e){} } });
         try{ var keptCuts = JSON.parse(localStorage.getItem("vn-ba-cuts") || "null"); if (keptCuts && slice) slice.setState(keptCuts); }catch(e){}
       }

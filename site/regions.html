@@ -1546,6 +1546,8 @@ main.screen.one.land{ flex-direction:row; }
       <button class="pbtn" type="button" data-pop="popRx" data-tab="figs" data-tabs="figs" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.5 3.5v5.2a4.5 4.5 0 0 0 9 0V3.5M12 13.2V20M5 20h14"/></svg><span>Receptor</span></button>
       <button class="pbtn" type="button" data-pop="popRx" data-tab="types" data-tabs="types" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4h16v16H4zM4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"/></svg><span>Neuro&shy;transmitters</span></button>
       <button class="pbtn" type="button" data-pop="popRx" data-tab="primer" data-tabs="primer" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="8" width="12.5" height="12" rx="1.5"/><path d="M8 8V5.5A1.5 1.5 0 0 1 9.5 4h9A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H16"/></svg><span>Receptor types</span></button>
+      <!-- Reset slice shows while slicing is on, hidden by the tool otherwise (v12.9) -->
+      <button class="pbtn" type="button" id="sliceResetBtn" hidden title="Put the three cuts back to the centre, the brain whole"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 10h11a5 5 0 0 1 0 10h-5"/><path d="M8 6l-4 4 4 4"/></svg><span>Reset slice</span></button>
     </div>
     <div class="panelbar-end" role="group" aria-label="Saving and reference">
       <button class="pbtn" type="button" data-pop="popSaved" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3.5h10v17l-5-3.6-5 3.6z"/></svg><span>Saved maps</span></button>
@@ -2928,6 +2930,7 @@ main.screen.one.land{ flex-direction:row; }
           tools: renBox.querySelector(".view-tools"),
           nv: INSTANCES.render,
           regions: "Slice regions",
+          reset: document.getElementById("sliceResetBtn"),   /* the bar's Reset slice (v12.9) */
           onChange: function(){ rememberSoon(); }   /* the cuts are remembered with the selection (v12.1) */
         });
       }

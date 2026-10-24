@@ -369,7 +369,7 @@ function mount(){
     /* the whole account, a copy of it and support live on a page of their own */
     const page = document.createElement("a");
     page.className = "vn-page"; page.href = "account.html";
-    page.textContent = "Everything your account holds, a copy of it, and support";
+    page.textContent = "Everything your account holds, your password, a copy of it all, and support";
     const warn = document.createElement("p");
     warn.className = "vn-who";
     warn.textContent = "Deleting the account removes it for good, along with the profile and every saved file. There is no undo.";

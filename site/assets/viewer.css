@@ -168,14 +168,20 @@ select{
 /* the bottom edge, held clear of both verticals */
 .slice-edge.bottom{ left:36px; right:36px; bottom:5px; height:20px; }
 
+/* the centre, marked (v12.9, at the owner's word): a short line across the
+   track at the middle of each slider, where nothing is cut, drawn on the
+   input itself so it stands under the track and the thumb; a mark and
+   nothing more, which the thumb runs past without catching */
 .slice-range{
   -webkit-appearance:none; appearance:none;
-  background:transparent; cursor:pointer; margin:0;
+  --slice-mark:rgba(255,255,255,.7);
+  background:linear-gradient(var(--slice-mark), var(--slice-mark)) center / 2px 18px no-repeat;
+  cursor:pointer; margin:0;
 }
 .slice-edge.bottom .slice-range{ flex:1; min-width:0; height:18px; }
 .slice-edge.left .slice-range, .slice-edge.right .slice-range{
   writing-mode:vertical-lr; direction:rtl;
-  width:18px; flex:1; min-height:0;
+  width:18px; flex:1; min-height:0; background-size:18px 2px;
 }
 .slice-range::-webkit-slider-runnable-track{
   background:rgba(255,255,255,.28); border-radius:2px;
@@ -219,6 +225,8 @@ select{
   .slice-edge.bottom{ left:48px; right:48px; bottom:0; height:44px; }
   .slice-edge.bottom .slice-range{ height:44px; }
   .slice-edge.left .slice-range, .slice-edge.right .slice-range{ width:44px; }
+  .slice-range{ background-size:2px 32px; }
+  .slice-edge.left .slice-range, .slice-edge.right .slice-range{ background-size:32px 2px; }
   .slice-edge.bottom .slice-range::-webkit-slider-runnable-track{ height:4px; }
   .slice-edge.left .slice-range::-webkit-slider-runnable-track,
   .slice-edge.right .slice-range::-webkit-slider-runnable-track{ width:4px; }

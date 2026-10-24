@@ -40,6 +40,7 @@ nonisolated struct Page: Sendable {
     static let privacy = Page(file: "privacy.html", title: "Privacy & Support")
     static let terms = Page(file: "terms.html", title: "Terms of Use")
     static let deleteAccount = Page(file: "account.html", fragment: "delete", title: "Account")
+    static let password = Page(file: "account.html", fragment: "password", title: "Account")
 
     /// The titles of the pages a link can lead to, as the app's bar named them.
     static let titles: [String: String] = [

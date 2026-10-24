@@ -13,7 +13,15 @@
    the other, which is why the phone frame is 9:18 rather than a real
    phone's 9:20. Every shot is dark theme, with the newsletter box already
    dismissed and, for the map, the crosshair 4 mm left of the midline as
-   store/APP-STORE.md records. */
+   store/APP-STORE.md records. Since v12.9 the Brodmann shot is the Brodmann
+   Area Atlas's own page (brodmann.html, since v11.12) on BA17, waiting for
+   the brain in 3D where the layout fetches it as the page opens (an iPad or
+   a tablet) and for the faces alone on a phone, where the brain waits for
+   the bar's 3D tab; the pages being one screen each since v11.22 and after,
+   the framing rules below scroll nothing on them and stay for the pages
+   that still scroll. The sets are retaken whenever the pages' look
+   changes; the App Store's own images, in app/store/sell/, are made from
+   the owner's device captures by store-sell.js and are not touched here. */
 const path = require('path'), { execSync } = require('child_process');
 const { chromium } = require(path.join(execSync('npm root -g').toString().trim(), 'playwright'));
 
@@ -39,11 +47,11 @@ const pages = PAGEARG ? PAGEARG.split(',') : PAGES;
    above it, a number of pixels, or 'bottom' */
 function framing(kind, page){
   const F = {
-    phone:  { home: ['.dateline', 8], atlas: ['#viewsGrid', 8], brodmann: ['#baMapSec', 8], tracts: ['.views', 8], network: 'bottom',
+    phone:  { home: ['.dateline', 8], atlas: ['#viewsGrid', 8], brodmann: 0, tracts: ['.views', 8], network: 'bottom',
               microanatomy: ['section.plate', 8], molecular: ['.frame', 8], practice: ['.qhead', 8], textbook: ['#ch1', 8] },
-    tablet: { home: 0, atlas: ['#viewsGrid', 8], brodmann: ['#baMapSec', 8], tracts: ['.views', 8], network: ['.ring-stage', 6],
+    tablet: { home: 0, atlas: ['#viewsGrid', 8], brodmann: 0, tracts: ['.views', 8], network: ['.ring-stage', 6],
               microanatomy: ['section.plate', 8], molecular: ['.frame', 8], practice: ['.qhead', 8], textbook: ['#ch1', 8] },
-    land:   { home: ['.m-atlas', 68], atlas: ['#viewsGrid', 10], brodmann: ['#baMapSec', 10], tracts: ['.views', 10], network: ['.ring-stage', 10],
+    land:   { home: ['.m-atlas', 68], atlas: ['#viewsGrid', 10], brodmann: 0, tracts: ['.views', 10], network: ['.ring-stage', 10],
               microanatomy: ['section.plate', 10], molecular: ['.frame', 10], practice: ['.qhead', 10], textbook: ['#ch1', 10] },
   };
   return F[kind][page];
@@ -66,8 +74,10 @@ const SHOTS = {
     after: (p) => p.waitForFunction(() => [...document.images].filter(i => { const r = i.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; }).every(i => i.complete), null, { timeout: 60000 }) },
   atlas: { url: 'regions.html#sel=' + encodeURIComponent('P:Hippocampus|P:Amygdala|P:Thalamus'),
     ready: (p) => p.waitForFunction(() => document.getElementById('status').classList.contains('hidden'), null, { timeout: 300000 }) },
-  brodmann: { url: 'regions.html#sel=' + encodeURIComponent('B:17|B:4|B:44'),
-    ready: (p) => p.waitForFunction(() => document.getElementById('status').classList.contains('hidden'), null, { timeout: 300000 }) },
+  brodmann: { url: 'brodmann.html#ba=17',
+    ready: (p) => p.waitForFunction(() => !!document.querySelector('#cartLateral svg'), null, { timeout: 120000 })
+      .then(() => p.waitForFunction(() => !!document.querySelector('#scanTools .slice-btn') || document.getElementById('baScreen').classList.contains('one'), null, { timeout: 300000 }))
+      .then(() => p.waitForTimeout(1500)) },
   tracts: { url: 'tracts.html',
     /* the revolve is switched off before the shot: a software renderer cannot both spin the tractogram and hand over a frame */
     ready: (p) => p.waitForFunction(() => document.getElementById('stageMsg').classList.contains('hidden'), null, { timeout: 300000 })
@@ -75,7 +85,7 @@ const SHOTS = {
       .then(() => p.evaluate(() => { const b = document.getElementById('spinBtn'); if (b && b.getAttribute('aria-pressed') === 'true') b.click(); }))
       .then(() => p.waitForTimeout(1500)) },
   network: { url: 'network-atlas.html',
-    ready: (p) => p.waitForFunction(() => /parcellation/.test((document.getElementById('scan-note') || {}).textContent || ''), null, { timeout: 300000 }).then(() => p.waitForTimeout(1500)) },
+    ready: (p) => p.waitForFunction(() => document.getElementById('status').classList.contains('hidden'), null, { timeout: 300000 }).then(() => p.waitForTimeout(1500)) },
   microanatomy: { url: 'microanatomy.html',
     ready: (p) => p.waitForFunction(() => { const s = document.getElementById('plate'); return s && s.children.length > 3; }, null, { timeout: 120000 }).then(() => p.waitForTimeout(1200)) },
   molecular: { url: 'molecular.html',

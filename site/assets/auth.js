@@ -69,6 +69,9 @@ const ERRORS = {
   "auth/provider-already-linked":  "That sign-in method is already connected to this account.",
   "auth/web-storage-unsupported":  "The browser is blocking site storage, which sign-in needs — private-browsing modes often do this.",
   "vn/passwords-differ":           "The two passwords don't match.",
+  "vn/current-wrong":              "That is not the current password. Try again, or have a reset emailed to you.",
+  "vn/same-password":              "That is the password already in use. Choose a new one.",
+  "vn/no-password":                "This account logs in without a password of its own, through Google, Apple or an emailed link, so there is none to change.",
   "vn/username-missing":           "Choose a username first.",
   "vn/username-format":            "A username is 3 to 20 characters: letters, numbers and underscores.",
   "vn/username-taken":             "That username is taken — try another.",
@@ -102,7 +105,7 @@ function dormant(){
     signInWithGoogle: off, signInWithApple: off, signInWithLinkedIn: off,
     signUpWithEmail: off, signInWithEmail: off, sendReset: off,
     sendSignInLink: off, completeSignInLink: off,
-    linkProvider: off, deleteAccount: off, signOut: () => Promise.resolve(),
+    linkProvider: off, deleteAccount: off, changePassword: off, hasPassword: () => false, signOut: () => Promise.resolve(),
     usernameFree: off, setUsername: off, setUniversity: off, loadProfile: () => Promise.resolve(null), profile: () => null,
     pendingEmailLink: false, pendingLink: null, db: null, sdk: null,
     track(){},
@@ -701,6 +704,36 @@ async function build(){
     if (plugin){ try{ await plugin.signOut(); }catch(_){} }
   }
 
+  /* ── change the password ──────────────────────────────────────────────
+     Only an account that logs in with an email address and a password has
+     one to change (v12.9, at the owner's word: from the app as well as the
+     site, on the account page). Firebase wants a recent sign-in before it
+     will change one, so the current password logs the person in again on
+     the spot, which is also the proof that it is them; a wrong one is
+     called the wrong current password rather than a wrong sign-in. The
+     reset email (sendReset) stays the way for whoever has forgotten it. */
+  function hasPassword(u){
+    u = u || auth.currentUser;
+    return !!(u && u.email && usesProvider(u, "password"));
+  }
+  async function changePassword(current, next, confirm){
+    const u = auth.currentUser;
+    if (!u) throw friendly({ code: "auth/requires-recent-login" });
+    if (!hasPassword(u)) throw friendly({ code: "vn/no-password" });
+    if (!current) throw friendly({ code: "auth/missing-password" });
+    if (!next || next.length < 6) throw friendly({ code: "auth/weak-password" });
+    if (next !== confirm) throw friendly({ code: "vn/passwords-differ" });
+    if (next === current) throw friendly({ code: "vn/same-password" });
+    try{ await sdk.reauthenticateWithCredential(u, sdk.EmailAuthProvider.credential(u.email, current)); }
+    catch(err){
+      const c = err && err.code;
+      const wrong = c === "auth/wrong-password" || c === "auth/invalid-credential" || c === "auth/invalid-login-credentials";
+      throw friendly(wrong ? { code: "vn/current-wrong" } : err);
+    }
+    try{ await sdk.updatePassword(u, next); }
+    catch(err){ throw friendly(err); }
+  }
+
   return {
     enabled: true,
     providers,
@@ -714,6 +747,7 @@ async function build(){
     linkProvider,
     signOut: doSignOut,
     deleteAccount,
+    changePassword, hasPassword,
     usernameFree, setUsername, setUniversity, loadProfile, profile,
     track,
     ready, db, sdk
