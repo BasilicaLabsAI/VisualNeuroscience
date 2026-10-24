@@ -743,3 +743,13 @@ a.box:active{ transform:scale(.992); }
   .vn-tab{ color:var(--ink); }
   .vn-tab[aria-current]{ background:var(--ink); color:var(--paper); box-shadow:none; }
 }
+
+/* ── a line at the top of a phone (v12.14, at the owner's word) ──────────
+   Best experienced on iPad in the iPhone app, Best experienced on desktop on
+   the website on a phone, set first in the body by navbar.js, in the
+   smallest type the app uses, the slice tool's axis labels' on a phone. */
+.vn-best{
+  font-family:var(--font-brand); font-weight:500; font-size:.42rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-60); text-align:center; line-height:1; margin:0; padding:.35rem .6rem .3rem;
+  -webkit-user-select:none; user-select:none;
+}

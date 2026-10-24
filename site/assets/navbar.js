@@ -291,3 +291,29 @@
   var menu = document.getElementById("vn-menu");
   if (menu) menu.appendChild(group("vn-social-menu", true));
 })();
+
+/* A line at the top of a phone (v12.14, at the owner's word): in the iPhone
+   app's tabs, Best experienced on iPad; on the website on a phone, Best
+   experienced on desktop; nowhere else, an iPad, a desktop and the Android
+   app included. It stands first in the body, above the masthead on the
+   website, in the smallest type the app uses (viewer.css, .vn-best), and the
+   one-screen pages measure their room from under it. A phone is a narrow
+   window or, held sideways, a short one with a coarse pointer. */
+(function(){
+  var root = document.documentElement, body = document.body;
+  if (!body || !window.matchMedia) return;
+  var phone = window.matchMedia("(max-width: 760px)").matches ||
+              window.matchMedia("(pointer: coarse) and (max-height: 500px)").matches;
+  if (!phone) return;
+  var say = null;
+  if (root.hasAttribute("data-native")){
+    if (root.hasAttribute("data-shell") && !root.hasAttribute("data-shell-pad")) say = "Best experienced on iPad";
+  } else if (window.matchMedia("(pointer: coarse)").matches){
+    say = "Best experienced on desktop";
+  }
+  if (!say) return;
+  var line = document.createElement("p");
+  line.className = "vn-best";
+  line.textContent = say;
+  body.insertBefore(line, body.firstChild);
+})();

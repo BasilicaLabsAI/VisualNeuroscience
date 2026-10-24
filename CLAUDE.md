@@ -72,7 +72,13 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (`.mosaic.hub-library`, `.mosaic.hub-about`, switched in place by the page's hub script; the practice box shows on
   none, its tab leading there; the Android app, whose bar lists the sections, shows the whole mosaic). The
   social links left the header with it; the About page lists them. A new page gets the island by carrying the same
-  masthead markup as the others; `get.html` carries none on purpose.
+  masthead markup as the others; `get.html` carries none on purpose. Since v12.14, at the owner's word, a phone carries
+  one line at the top: `navbar.js`'s last section sets `p.vn-best` first in the body, Best experienced on iPad in the
+  iPhone app's tabs (`data-shell` without `data-shell-pad`) and Best experienced on desktop on the website with a
+  coarse pointer, on a window 760px wide or less or, sideways, 500px tall or less, in the smallest type the app uses
+  (`.vn-best` in `viewer.css`, `.42rem` Flux caps); an iPad, a computer and the Android app get none, the one-screen
+  pages measure their room from under it, `shoot-store.js` hides it in the store sets, and the app's tab pages say the
+  same on an iPhone in SwiftUI (`TabPage` in `ShellKit.swift`, the kicker's type).
 - `site/sw.js` precaches pages and assets: **bump `VERSION`** (`vn-NN`) whenever a precached file changes.
 - The app icon (v11.85, at the owner's word) is the brain wired with circuit traces and nodes on a white tile, on every
   platform, wearing the ring's colours since v11.86 and drawn as line vectors since v11.87: `scripts/appmark/trace.py`

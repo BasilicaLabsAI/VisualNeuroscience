@@ -112,6 +112,8 @@ const SHOTS = {
       page.on('response', r => { if (r.status() >= 400) problems.push(name + ' HTTP ' + r.status() + ' ' + r.url()); });
       try {
         await page.goto('http://127.0.0.1:8412/' + S.url, { waitUntil: 'load' });
+        /* the website's line for a phone, Best experienced on desktop (v12.14), is not the apps' and is left out of their shots */
+        await page.addStyleTag({ content: '.vn-best{display:none}' });
         await S.ready(page);
         await settled(page);
         await frame(page, framing(F.kind, name));

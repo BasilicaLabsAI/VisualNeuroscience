@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.14 — 24 October 2026 — A line for the phone
+Commit · Put a one-line notice at the top of a phone, for the iPad in the app and the desktop on the web
+
+On an iPhone the app now carries one small line at the top of every tab and every page, Best experienced on iPad, and the website on a phone carries Best experienced on desktop, in the smallest type the app uses. An iPad, a computer and the Android app see nothing.
+
 ## v12.13 — 24 October 2026 — One black through the scans
-Commit · Make the page's black the darkest shade in every slice
+Commit `8737ab7` · Make the page's black the darkest shade in every slice
 
 In the dark theme the slices stood on the page's black since v12.8, but inside the head the ventricles, the fluid and the rim of the brain still went down to a scan's pure black, a darker shade than the page around them. The dark scale now bottoms out at the page's own black, so nothing in a slice is darker than the stage it stands on, on the 3D Region Atlas, the Network Atlas and the Hallucinations study alike. Every picture that shows a slice was retaken: the home pictures, the store screenshots and the App Store images.
 

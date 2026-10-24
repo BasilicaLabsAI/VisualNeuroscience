@@ -170,6 +170,16 @@ struct TabPage<Content: View>: View {
         TabStack {
             ScrollView {
                 VStack(spacing: 14) {
+                    /* on an iPhone a line at the top of every tab, in the kicker's type
+                       (v12.14, at the owner's word); the pages say it too (navbar.js) */
+                    if UIDevice.current.userInterfaceIdiom == .phone {
+                        Text("Best experienced on iPad".uppercased())
+                            .font(Faces.brand(10, .caption2))
+                            .tracking(2.6)
+                            .foregroundColor(Palette.ink60)
+                            .frame(maxWidth: .infinity)
+                            .padding(.top, 2)
+                    }
                     content
                 }
                 .padding(14)
