@@ -198,10 +198,18 @@ Read this first in every session. It is the handover; nothing else needs pasting
   upright the ring the width of the screen with the rest beneath). Export holds the 3D model and the PNG snapshot, About
   the What-this-is text and the credits. `network-atlas.js` is untouched (every id it reads kept its name), and
   `app/scripts/shoot-home-pictures.js` raises the sheet before it shoots the ring. Since v12.6, at the owner's word,
-  the drawer ends in a small bare copy of the ring (`#ringMini` in `.rail-ring`, a square the box's width, the diagram
-  alone: `MN_RING.create` with `bare:true` draws no names and binds the dots, and `.bare` in `network.css` thickens the
-  arcs), kept in step with the full one by the fan-out `ring` object in `network-atlas.js` (`main` and `mini`, both wired
-  alike through `wiring`); the drawer's note is one line, its detail moved into About.
+  the drawer carries a small bare copy of the ring (`#ringMini`, the diagram alone: `MN_RING.create` with `bare:true`
+  draws no names and binds the dots, and `.bare` in `network.css` thickens the arcs), kept in step with the full one by
+  the fan-out `ring` object in `network-atlas.js` (`main` and `mini`, both wired alike through `wiring`); the drawer's
+  note is one line, its detail moved into About. Since v12.7, at the owner's word, the ring is a window of its own under
+  the state's box (`#ringBox`, a second `.drawer-box` with `.ring-box`: the box's width and no taller than 40vh, 44dvh
+  on a phone, the square diagram centred in it; the drawer is a flex column with the gap between, the state's box
+  shrinking to make the room and scrolling inside), and the slider stands
+  in the box's foot (`.drawer-foot`, outside the scroller, no heading) as Region transparency: every opacity slider on
+  the Network Atlas, the 3D Region Atlas and the Hallucinations study reads as transparency since v12.7 (`.trans-row`,
+  the name and value on one line and the slider beneath; nought the regions solid, the range 0 to 90 where the opacity
+  ran 10 to 100), while the viewer, the saved models and the device's memory keep an opacity, a hundred apart
+  (`opacityOf()`).
 - The Tractography page (`site/tracts.html`) is one screen too since v11.94, with the study's chrome less its drawer and
   view switch: since v12.1, at the owner's word, the tractogram is the whole stage with nothing framing it and no cap (the
   view's border and the stage's padding are nought; the cap with its name, Reset view and the Slice tool's buttons went; the

@@ -196,7 +196,7 @@ main.screen{
 .drawer{
   --box-w:300px;
   position:relative; flex:0 0 calc(var(--box-w) + var(--gap)); width:calc(var(--box-w) + var(--gap)); min-width:0; min-height:0;
-  display:flex; flex-direction:column; align-items:flex-start; padding:var(--gap) 0 var(--gap) var(--gap);
+  display:flex; flex-direction:column; align-items:flex-start; gap:var(--gap); padding:var(--gap) 0 var(--gap) var(--gap);
   transition:flex-basis .32s cubic-bezier(.32,.72,0,1), width .32s cubic-bezier(.32,.72,0,1), padding .32s cubic-bezier(.32,.72,0,1), visibility 0s 0s;
 }
 .drawer-box{
@@ -316,7 +316,11 @@ main.screen{
    cross or Escape closes it and another button swaps it (v11.82) */
 .screen.one .pop-sm, .screen.one .pop-md{ width:100%; }
 .screen.one .drawer{ left:auto; right:0; padding:0; }
+.screen.one .drawer{ gap:0; }
 .screen.one .drawer-box{ flex:1 1 auto; max-height:none; border-width:0 0 0 1px; border-radius:0; box-shadow:-8px 0 30px rgba(0,0,0,.25); }
+/* on a phone the ring's window is the panel's width and no taller than
+   short of half the screen, so the state's box keeps room to read */
+.screen.one .ring-box{ flex:none; height:min(var(--box-w), 44dvh); border-top-width:1px; }
 .screen.one .deck.shut .drawer-box{ transform:translateX(calc(100% + 22px)); }
 .screen.one .drawer-tab{ border-left:1px solid var(--hair); border-right:0; }
 .screen.one .drawer-hide{ right:auto; left:-22px; border-radius:10px 0 0 10px; }
@@ -387,8 +391,16 @@ main.screen.one.land{ flex-direction:row; }
 }
 .rail-blurb{ font-size:.94rem; line-height:1.55; margin:.6rem 0 0; }
 /* the small ring at the box's foot: a square the width of the box, the diagram alone */
-.rail-ring{ margin:0; }
-.rail-ring svg{ display:block; width:100%; height:auto; aspect-ratio:1 / 1; }
+/* the box's foot: the transparency slider, outside the scroller, its name and
+   value on one line and the slider the width beneath */
+.drawer-foot{ flex:none; padding:.6rem var(--gap) .75rem; border-top:1px solid var(--hair); }
+.trans-row{ display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:.6rem; row-gap:.15rem; align-items:center; margin:0; }
+.trans-row input[type="range"]{ grid-column:1 / -1; width:100%; }
+.trans-row .val{ font-family:var(--font-brand); font-size:.78rem; color:var(--ink-60); font-variant-numeric:tabular-nums; }
+/* the small ring's window: a square the box's width, under the box, the
+   diagram alone; the box above shrinks to make its room and scrolls inside */
+.ring-box{ flex:none; display:block; height:min(var(--box-w), 40vh); padding:8px; overflow:hidden; }
+.ring-box svg{ display:block; height:100%; width:auto; max-width:100%; aspect-ratio:1 / 1; margin:0 auto; }
 .rail-row{ display:flex; align-items:center; gap:.5rem; margin:.6rem 0 0; }
 .rail-row .tool-label{ flex:none; }
 .rail-row input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); }
@@ -471,17 +483,20 @@ main.screen.one.land{ flex-direction:row; }
           <p class="rail-blurb" id="netBlurb"></p>
           <p class="rail-note">Press a region on the ring and it comes forward on the scan; the bar&rsquo;s Network opens the ring in full.</p>
         </section>
-        <section class="rail-part">
-          <h2>On the scan</h2>
-          <div class="rail-row"><span class="tool-label">Opacity</span><input type="range" id="opacity" min="10" max="100" value="90" aria-label="How strongly the regions cover the scan"><span class="val" id="opacityVal">90%</span></div>
-        </section>
-        <!-- the ring small, the diagram alone (v12.6, at the owner's word): the
-             same regions and threads as the sheet's, answering to a press the
-             same way, with no names on it; the full ring stays behind Network -->
-        <section class="rail-part rail-ring" aria-label="The ring, small">
-          <svg id="ringMini" viewBox="98 98 524 524" role="img" aria-label="The state's couplings as a small ring, linked to the scan; the bar's Network opens the ring in full"></svg>
-        </section>
         </div>
+        <!-- the slider is the box's foot, in view whatever the text above it
+             does, with no heading of its own (v12.7, at the owner's word): how
+             far the regions let the scan through, nought being solid -->
+        <div class="drawer-foot">
+          <div class="rail-row trans-row"><span class="tool-label">Region transparency</span><span class="val" id="opacityVal">10%</span><input type="range" id="opacity" min="0" max="90" value="10" aria-label="How far the regions let the scan through"></div>
+        </div>
+      </div>
+      <!-- the ring small, a window of its own under the box (v12.7; in the box
+           since v12.6): the diagram alone, the same regions and threads as the
+           sheet's, answering to a press the same way, with no names on it; the
+           full ring stays behind the bar's Network -->
+      <div class="drawer-box ring-box" id="ringBox" role="group" aria-label="The ring, small">
+        <svg id="ringMini" viewBox="98 98 524 524" role="img" aria-label="The state's couplings as a small ring, linked to the scan; the bar's Network opens the ring in full"></svg>
       </div>
     </aside>
     <button class="drawer-tab drawer-show" id="drawerTab" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Show the state" title="Show the state"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
@@ -822,12 +837,15 @@ main.screen.one.land{ flex-direction:row; }
      per view, so a drag is not held up by the viewer rebuilding its layers
      for every step; the last value always lands */
   var opacityTimer = 0, opacityLast = 0;
-  /* the device keeps the opacity with the state (v12.1) */
-  try{ var keptOpacity = Number(localStorage.getItem("vn-net-opacity")); if (keptOpacity >= 10 && keptOpacity <= 100){ opacityEl.value = String(keptOpacity); opacityVal.textContent = keptOpacity + "%"; } }catch(e){}
+  /* the slider reads as transparency since v12.7, at the owner's word, nought
+     the regions solid; the viewer wants an opacity, which is what the device
+     keeps with the state (v12.1), so the two are a hundred apart */
+  function opacityOf(){ return (100 - Number(opacityEl.value)) / 100; }
+  try{ var keptOpacity = Number(localStorage.getItem("vn-net-opacity")); if (keptOpacity >= 10 && keptOpacity <= 100){ opacityEl.value = String(100 - keptOpacity); opacityVal.textContent = opacityEl.value + "%"; } }catch(e){}
   function applyOpacity(){
     opacityTimer = 0; opacityLast = performance.now();
-    var v = opacityEl.value / 100;
-    try{ localStorage.setItem("vn-net-opacity", String(opacityEl.value)); }catch(e){}
+    var v = opacityOf();
+    try{ localStorage.setItem("vn-net-opacity", String(Math.round(v * 100))); }catch(e){}
     allNV().forEach(function(nv){
       if (!nv.volumes || nv.volumes.length < 2) return;
       nv.volumes[1].opacity = v;

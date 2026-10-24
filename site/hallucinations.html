@@ -156,6 +156,10 @@ svg{ display:block; }
   font-family:var(--font-brand); font-size:.6rem; letter-spacing:.1em;
   font-variant-numeric:tabular-nums; color:var(--ink-60); min-width:2.4rem; text-align:right;
 }
+/* the transparency slider: its name and value on one line, the slider the width beneath (v12.7) */
+.rail-row.trans-row{ display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:.6rem; row-gap:.15rem; align-items:center; }
+.rail-row.trans-row .tool-label{ width:auto; flex:none; }
+.rail-row.trans-row input[type="range"]{ grid-column:1 / -1; width:100%; margin:0; }
 
 /* the region list: what the schematic diagram used to be */
 .rlist{ display:flex; flex-direction:column; gap:2px; }
@@ -596,10 +600,11 @@ main.screen.one.land{ flex-direction:row; }
         <button class="ts-btn" data-role="lang" type="button" aria-pressed="false">Language</button>
         <button class="ts-btn" data-role="ctrl" type="button" aria-pressed="false">Control</button>
       </div>
-          <div class="rail-row">
-        <span class="tool-label">Opacity</span>
-        <input type="range" id="overlayOpacity" min="0" max="100" step="5" value="85" aria-label="Highlight opacity">
-        <span class="slider-val" id="overlayVal">85%</span>
+          <!-- the slider reads as transparency since v12.7, nought being solid -->
+          <div class="rail-row trans-row">
+        <span class="tool-label">Region transparency</span>
+        <span class="slider-val" id="overlayVal">15%</span>
+        <input type="range" id="overlayOpacity" min="0" max="100" step="5" value="15" aria-label="How far the highlighted regions let the scan through">
       </div>
           <div class="rlist" id="rlist" role="group" aria-label="Brain regions"></div>
           <p class="rail-note" id="coverage"></p>
@@ -1459,7 +1464,7 @@ const opacityEl = $("overlayOpacity"), opacityVal = $("overlayVal");
 let opacityTimer = 0, opacityLast = 0;
 function applyOpacity(){
   opacityTimer = 0; opacityLast = performance.now();
-  const v = Number(opacityEl.value) / 100;
+  const v = (100 - Number(opacityEl.value)) / 100;   /* transparency on the slider, opacity for the viewer (v12.7) */
   for (const nv of scanInstances){
     if (!nv.volumes || nv.volumes.length < 2) continue;
     nv.volumes[1].opacity = v;

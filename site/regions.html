@@ -315,6 +315,10 @@ a{ color:var(--ink); text-decoration:none; }
   min-width:44px; text-align:right; font-family:var(--font-brand);
   font-size:.8rem; font-variant-numeric:tabular-nums;
 }
+/* the transparency slider: its name and value on one line, the slider the width beneath (v12.7) */
+.row.trans-row{ display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:.6rem; row-gap:.15rem; align-items:center; }
+.row.trans-row label{ width:auto; flex:none; }
+.row.trans-row input[type="range"]{ grid-column:1 / -1; width:100%; margin:0; }
 input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); height:3px; touch-action:none; }
 .toggles{ display:grid; grid-template-columns:1fr 1fr; gap:.35rem .8rem; margin:.5rem 0 .1rem; }
 .toggle{
@@ -1335,12 +1339,14 @@ main.screen.one.land{ flex-direction:row; }
               </div>
             </div>
           </div>
-          <!-- how strongly the highlighted regions and areas cover the scan,
-               for either atlas, so it sits under both panes -->
-          <div class="row">
-            <label for="opacity">Opacity</label>
-            <input type="range" id="opacity" min="10" max="100" value="90">
-            <span class="val" id="opacityVal">90%</span>
+          <!-- how far the highlighted regions and areas let the scan through,
+               for either atlas, so it sits under both panes; the slider reads
+               as transparency since v12.7, nought being solid, while the model
+               keeps an opacity as it always did -->
+          <div class="row trans-row">
+            <label for="opacity">Region transparency</label>
+            <span class="val" id="opacityVal">10%</span>
+            <input type="range" id="opacity" min="0" max="90" value="10" aria-label="How far the highlighted regions let the scan through">
           </div>
         </section>
         <section class="rail-part">
@@ -2433,9 +2439,11 @@ main.screen.one.land{ flex-direction:row; }
      view, which leaves the frames between for the thumb to follow the
      finger; the last value always lands. */
   var opacityTimer = 0, opacityLast = 0;
+  /* the slider reads as transparency (v12.7); the viewer and the saved models want an opacity */
+  function opacityOf(){ return (100 - Number(opacityEl.value)) / 100; }
   function applyOpacity(){
     opacityTimer = 0; opacityLast = performance.now();
-    var v = opacityEl.value / 100;
+    var v = opacityOf();
     allNV().forEach(function(nv){
       if (!nv.volumes || nv.volumes.length < 2) return;
       for (var i = 1; i < nv.volumes.length; i++) nv.volumes[i].opacity = v;
@@ -2837,7 +2845,7 @@ main.screen.one.land{ flex-direction:row; }
         });
         return {
           v: 1, tool: "regions", selections: sels,
-          opacity: Number(opacityEl.value), mirror: mirrorEl.checked, view: activeView(),
+          opacity: Math.round(opacityOf() * 100), mirror: mirrorEl.checked, view: activeView(),
           camera: ren ? { azimuth: ren.scene.renderAzimuth, elevation: ren.scene.renderElevation,
                           zoom: Number(ren.scene.volScaleMultiplier) || 1 } : null,
           crosshair: ren && ren.scene.crosshairPos ? Array.prototype.slice.call(ren.scene.crosshairPos) : null,
@@ -2859,7 +2867,7 @@ main.screen.one.land{ flex-direction:row; }
                                   indices: s.indices.map(Number), color: colour });
         });
         renderChips(); applyColormap();
-        if (m.opacity){ opacityEl.value = String(m.opacity); opacityEl.dispatchEvent(new Event("input")); }
+        if (m.opacity){ opacityEl.value = String(100 - Number(m.opacity)); opacityEl.dispatchEvent(new Event("input")); }
         if (typeof m.mirror === "boolean" && mirrorEl.checked !== m.mirror){ mirrorEl.checked = m.mirror; renderDropdown(); }
         var ren = INSTANCES.render;
         if (ren && m.camera){

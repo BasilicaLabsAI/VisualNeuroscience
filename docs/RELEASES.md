@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.7 — 24 October 2026 — The ring's own window, and transparency sliders
+Commit · Give the small ring a window of its own and turn every opacity slider into a transparency slider
+
+On the Network Atlas the small ring now stands in a window of its own under the state's box; the box above it scrolls when its text runs long, with its slider in view at its foot whatever the text does. On that page, the 3D Region Atlas and the Hallucinations study the slider is now Region transparency: nought is the regions solid on the scan, and sliding right lets the scan through, with no heading over it. Saved models and the states the device keeps go on recording an opacity, so nothing saved reads differently.
+
 ## v12.6 — 24 October 2026 — The ring in the box
-Commit · Put a small ring in the Network Atlas's box, the diagram alone
+Commit `d8d6fc0` · Put a small ring in the Network Atlas's box, the diagram alone
 
 The Network Atlas's box now ends in a small copy of the ring, the diagram alone with no names on it, square and the width of the box. Press a region there and it comes forward on the scan exactly as in the full ring, which the bar's Network still opens, and whatever is picked in one shows in the other. The box's italic note is cut to a line, and what it said has moved into About.
 
