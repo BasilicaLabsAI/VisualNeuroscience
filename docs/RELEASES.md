@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.8 — 24 October 2026 — The scans on the page's black
+Commit · Let the page's black through the scans' empty voxels in the dark theme
+
+In the dark theme the slices of every atlas stood in boxes of pure black: the template's empty voxels outside the head painted black over the page's own black. They are clear now, so the page's black shows through them and a scan sits in the page as the light theme's always has on white, on the 3D Region Atlas, the Network Atlas and the Hallucinations study alike; the home pictures were retaken on it.
+
 ## v12.7 — 24 October 2026 — The ring's own window, and transparency sliders
-Commit · Give the small ring a window of its own and turn every opacity slider into a transparency slider
+Commit `52030b1` · Give the small ring a window of its own and turn every opacity slider into a transparency slider
 
 On the Network Atlas the small ring now stands in a window of its own under the state's box; the box above it scrolls when its text runs long, with its slider in view at its foot whatever the text does. On that page, the 3D Region Atlas and the Hallucinations study the slider is now Region transparency: nought is the regions solid on the scan, and sliding right lets the scan through, with no heading over it. Saved models and the states the device keeps go on recording an opacity, so nothing saved reads differently.
 

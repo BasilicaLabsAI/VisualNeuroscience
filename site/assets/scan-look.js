@@ -5,8 +5,10 @@
    Dark, the viewports are the page's own black, #111111, the paper the app
    and every page stand on (v12.1, at the owner's word; a scan's pure black
    until then), so a scan sits in the page rather than in a well of its own:
-   the template is zero outside the brain and its scale is clear there, so
-   the ground shows through. Light, they are white and the crosshair is ink, and on white
+   the template is zero outside the head, and since v12.8 (at the owner's
+   word: the slices still stood in boxes of pure black) the dark scale is
+   clear at zero too, with the viewer told to drop a clear voxel, so the
+   page's black shows through there. Light, they are white and the crosshair is ink, and on white
    nothing in the slices is black: the template is zero outside the brain,
    so in the light theme its scale is clear at zero, letting the white
    through, and above zero it reads like a stained section rather than a
@@ -41,6 +43,14 @@ function lightScale(w){
   return {R: L, G: L.slice(), B: L.slice(), A: A, I: I};
 }
 
+/* dark: the plain scale with its zero clear (v12.8), so the head stands on
+   the page's black and not in a box of pure black: index 0 clear, black up
+   to the window's floor, then the ramp to white, the window as it was */
+function darkScale(w){
+  var floor = Math.max(1, Math.min(254, Math.round(255 * w.min / w.max)));
+  return {R: [0, 0, 255], G: [0, 0, 255], B: [0, 0, 255], A: [0, 255, 255], I: [0, floor, 255]};
+}
+
 function paint(views){
   var c = colours();
   views.forEach(function(v){
@@ -49,13 +59,17 @@ function paint(views){
     nv.opts.backColor = c.back;
     nv.opts.crosshairColor = c.cross;
     var vol = nv.volumes && nv.volumes[0];
-    nv.opts.isAlphaClipDark = c.clear && v.slice;
+    /* a slice drops the voxels its scale leaves clear, in either theme */
+    nv.opts.isAlphaClipDark = !!v.slice;
     if (v.slice && vol){
       if (!vol.vnWindow) vol.vnWindow = {min: vol.cal_min, max: vol.cal_max};
       var w = vol.vnWindow;
       if (c.clear && w.max > 0){
         nv.addColormap("vn-gray-light", lightScale(w));
         vol.colormap = "vn-gray-light"; vol.cal_min = 0; vol.cal_max = w.max;
+      } else if (w.max > 0){
+        nv.addColormap("vn-gray-dark", darkScale(w));
+        vol.colormap = "vn-gray-dark"; vol.cal_min = 0; vol.cal_max = w.max;
       } else {
         vol.colormap = "gray"; vol.cal_min = w.min; vol.cal_max = w.max;
       }

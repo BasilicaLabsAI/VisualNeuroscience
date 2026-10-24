@@ -227,7 +227,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   forces a white back for the light twin; it is the one atlas that draws its ground itself rather than through
   `scan-look.js`, whose dark ground is the page's black too since v12.1, at the owner's word (`[0.067, 0.067, 0.067]`, with
   `atlas-views.css` painting the dark `.mri-stage` `#111111` over the black the viewer paints inline, and the Brodmann
-  page's `.scan-stage` the same; it was a scan's pure black until then, and the dark home twins were retaken). The Microanatomy page (`site/microanatomy.html`, run by
+  page's `.scan-stage` the same; it was a scan's pure black until then, and the dark home twins were retaken). Since
+  v12.8, at the owner's word, the dark slices let that black through as well: `darkScale(w)` in `scan-look.js` is the
+  plain gray ramp with its zero clear (`I:[0, floor, 255]`, `A:[0, 255, 255]`, the floor the old window's) and
+  `isAlphaClipDark` is on for every slice in either theme, so the template's empty voxels outside the head, which the
+  viewer's own gray scale painted opaque black, drop out and the stage shows (the twins were retaken again). The Microanatomy page (`site/microanatomy.html`, run by
   `site/assets/cells.js` with `nt.js`, `rxfig.js` and `rx.js`) is one screen too since v11.99, at the owner's word, on the
   study's chrome with the Tractography page's one view: the cell's drawing (`section.view.plate`, the `#scroller` holding
   `svg#plate`) is the whole stage since v12.1, at the owner's word, nothing framing it (no border, no stage padding; the
