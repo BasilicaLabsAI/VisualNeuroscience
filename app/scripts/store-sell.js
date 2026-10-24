@@ -1,6 +1,6 @@
 /* A store screenshot with the sell above it: a statement in Flux, the
-   site's brand face, on the molecular viewer's backdrop, and the capture
-   beneath, its status bar covered.
+   site's brand face, on the molecular viewer's light backdrop, and the
+   capture beneath, its status bar covered.
 
      node app/scripts/store-sell.js <capture.png> <out.png> "<statement>" [family] [bar]
 
@@ -22,10 +22,10 @@
    The statement's lines are balanced, and a "|" in it forces a break: the
    lines it marks are set a little smaller when that keeps each on one line,
    and a statement too long for the band is set smaller until it fits.
-   The ground is the viewer's backdrop (scripts/molecular/viewer/t4_common.js):
-   the extracellular teal above the horizon and the cytoplasm's plum below,
-   a sharp step with a faint glow about it, drawn here by the same formula
-   down the frame with the horizon at its middle.
+   The ground is the viewer's light backdrop (its two colours in
+   scripts/molecular/viewer/base.css): the pale blue of the extracellular
+   side running smoothly down into the pale lilac of the cytoplasm, the
+   viewer's sharp horizon left out at the owner's word.
    Runs here with Playwright from the global modules (NODE_PATH) and the
    site's own fonts, inlined. */
 const path = require('path'), fs = require('fs'), { execSync } = require('child_process');
@@ -55,32 +55,19 @@ if (landscape){
 const fontPx = landscape ? Math.round(W / 29) : Math.round(W / 15);
 const textW = landscape ? Math.round(capW * 0.92) : Math.round(W * 0.88);
 const lines = statement.split('|').map(s => s.trim()).filter(Boolean);
-/* the viewer's backdrop as a gradient: its two colours (base.css, dark), the shader's
-   smoothstep split at a 32° field's horizon and its glow, two hundredths here as the
-   device shows it, in stops down the frame */
-const TOP = [0x0F, 0x22, 0x2B], BOT = [0x1C, 0x15, 0x27];
-const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
-const tanHalf = Math.tan(16 * Math.PI / 180);
-const ts = [];
-for (let i = 0; i <= 96; i++) ts.push(i / 96);
-ts.push(0.5 - 0.01 / (2 * tanHalf), 0.5 + 0.01 / (2 * tanHalf));
-ts.sort((a, b) => a - b);
-const stops = ts.map(t => {
-  const dy = (0.5 - t) * 2 * tanHalf;
-  const s = smooth(-0.01, 0.01, dy), h = 1 - smooth(0, 0.75, Math.abs(dy));
-  const c = TOP.map((v, k) => Math.round(Math.min(255, BOT[k] + (v - BOT[k]) * s + h * 0.02 * 255)));
-  return `rgb(${c.join(',')}) ${(t * 100).toFixed(2)}%`;
-}).join(', ');
+/* the viewer's light backdrop: the extracellular side's pale blue at the top running
+   down into the cytoplasm's pale lilac (--c-extra and --c-cyto in base.css) */
+const TOP = '#DCE9EC', BOT = '#ECE5EF', INK = '#111111';
 const html = `<!doctype html><meta charset="utf-8"><style>
 @font-face{ font-family:'Flux'; font-weight:400; src:url(${font('Flux-Regular.woff2')}) format('woff2'); }
 @font-face{ font-family:'Afacad Flux'; font-weight:500; src:url(${font('afacad-flux-latin-500-normal.woff2')}) format('woff2'); }
 @font-face{ font-family:'Newsreader'; font-style:italic; font-weight:400; src:url(${font('newsreader-latin-400-italic.woff2')}) format('woff2'); }
 *{ margin:0; padding:0; box-sizing:border-box; }
-html, body{ width:${W}px; height:${H}px; background:#0F222B; overflow:hidden; }
-body{ background:linear-gradient(180deg, ${stops}); }
+html, body{ width:${W}px; height:${H}px; background:${TOP}; overflow:hidden; }
+body{ background:linear-gradient(180deg, ${TOP} 0%, ${BOT} 100%); }
 .sell{ position:absolute; left:0; right:0; top:0; height:${band}px; display:flex; align-items:center; justify-content:center; text-align:center; }
-.sell h1{ font-family:'Flux', 'Afacad Flux', sans-serif; font-weight:400; font-size:${fontPx}px; line-height:1.12; letter-spacing:.005em; color:#FFFFFF; max-width:${textW}px; text-wrap:balance; }
-.cap{ position:absolute; left:${side}px; top:${band}px; width:${capW}px; height:${capH}px; border:2px solid rgba(255,255,255,.38); overflow:hidden; }
+.sell h1{ font-family:'Flux', 'Afacad Flux', sans-serif; font-weight:400; font-size:${fontPx}px; line-height:1.12; letter-spacing:.005em; color:${INK}; max-width:${textW}px; text-wrap:balance; }
+.cap{ position:absolute; left:${side}px; top:${band}px; width:${capW}px; height:${capH}px; border:2px solid rgba(17,17,17,.28); overflow:hidden; }
 .cap canvas{ display:block; width:${capW}px; height:${capH}px; }
 #src{ position:absolute; left:-99999px; top:0; }
 </style>
