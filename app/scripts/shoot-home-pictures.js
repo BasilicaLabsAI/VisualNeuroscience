@@ -77,17 +77,21 @@ function done(file, problems){ const [w, h] = size(file); console.log(path.basen
 
   /* the Network Atlas: the ring and the brain, the scan on white in the light theme */
   if (want('network')){
-    const { ctx, page, problems } = await open(browser, 'light', 'network-atlas.html', { width: 1440, height: 1100 });
-    await page.waitForFunction(() => document.getElementById('status').classList.contains('hidden'), null, { timeout: 400000 });
-    await page.waitForTimeout(3000);
-    /* the ring stands in a sheet the bar's Network button raises (v11.94): up for its shot, down for the render's */
-    await page.evaluate(() => document.querySelector('.panelbar [data-pop="popRing"]').click()); await page.waitForTimeout(900);
-    await shotOf(page, '#ring', tmp('ring.png'));
-    await page.evaluate(() => document.querySelector('.panelbar [data-pop="popRing"]').click()); await page.waitForTimeout(700);
-    await shotOf(page, '.view[data-box="render"] .mri-stage', tmp('net-ren.png'));
-    const out = path.join(HOME, 'network-light.jpg');
-    sh(`convert \\( "${tmp('ring.png')}" -resize 818x818^ -gravity center -extent 818x818 \\) \\( "${tmp('net-ren.png')}" -shave 3x3 -resize 986x818^ -gravity center -extent 986x818 \\) -background white +append -resize 902x409! -quality 88 "${out}"`);
-    done(out, problems); await ctx.close();
+    /* both themes since v12.1: the dark ground is the page's black, the scans' since then */
+    for (const [theme, file] of [['dark', 'network.jpg'], ['light', 'network-light.jpg']]){
+      const { ctx, page, problems } = await open(browser, theme, 'network-atlas.html', { width: 1440, height: 1100 });
+      await page.waitForFunction(() => document.getElementById('status').classList.contains('hidden'), null, { timeout: 400000 });
+      await page.waitForTimeout(3000);
+      /* the ring stands in a sheet the bar's Network button raises (v11.94): up for its shot, down for the render's */
+      await page.evaluate(() => document.querySelector('.panelbar [data-pop="popRing"]').click()); await page.waitForTimeout(900);
+      await shotOf(page, '#ring', tmp('ring.png'));
+      await page.evaluate(() => document.querySelector('.panelbar [data-pop="popRing"]').click()); await page.waitForTimeout(700);
+      await shotOf(page, '.view[data-box="render"] .mri-stage', tmp('net-ren.png'));
+      const ground = theme === 'dark' ? '#111111' : 'white';
+      const out = path.join(HOME, file);
+      sh(`convert \\( "${tmp('ring.png')}" -resize 818x818^ -gravity center -extent 818x818 \\) \\( "${tmp('net-ren.png')}" -shave 3x3 -resize 986x818^ -gravity center -extent 986x818 \\) -background "${ground}" +append -resize 902x409! -quality 88 "${out}"`);
+      done(out, problems); await ctx.close();
+    }
   }
 
   /* the neuron, close on the cell body as the dark picture is */
@@ -152,7 +156,9 @@ function done(file, problems){ const [w, h] = size(file); console.log(path.basen
       await shotOf(page, '.view[data-box="axial"]', tmp('hx-ax.png'));
       const [w] = size(tmp('hx-ren.png')), H = Math.round(w / 1.1);
       const out = path.join(STUDIES, file);
-      sh(`convert \\( "${tmp('hx-ren.png')}" -gravity North -crop ${w}x${H}+0+0 +repage \\) \\( -size 8x10 xc:${theme === 'dark' ? 'black' : 'white'} \\) \\( "${tmp('hx-ax.png')}" -gravity North -crop ${w}x${H}+0+0 +repage \\) -background ${theme === 'dark' ? 'black' : 'white'} +append -resize 902x409! "${out}"`);
+      /* the seam between the two views is the page's black, the scans' ground since v12.1, or white */
+      const ground = theme === 'dark' ? '#111111' : 'white';
+      sh(`convert \\( "${tmp('hx-ren.png')}" -gravity North -crop ${w}x${H}+0+0 +repage \\) \\( -size 8x10 "xc:${ground}" \\) \\( "${tmp('hx-ax.png')}" -gravity North -crop ${w}x${H}+0+0 +repage \\) -background "${ground}" +append -resize 902x409! "${out}"`);
       done(out, problems); await ctx.close();
     }
   }

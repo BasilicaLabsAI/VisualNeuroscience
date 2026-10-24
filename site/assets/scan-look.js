@@ -2,8 +2,11 @@
    MNI152 template in four views (the 3D Region Atlas, the Network Atlas and
    the Hallucinations study).
 
-   Dark, the viewports are pure black, the scan's own background, so the
-   two blend. Light, they are white and the crosshair is ink, and on white
+   Dark, the viewports are the page's own black, #111111, the paper the app
+   and every page stand on (v12.1, at the owner's word; a scan's pure black
+   until then), so a scan sits in the page rather than in a well of its own:
+   the template is zero outside the brain and its scale is clear there, so
+   the ground shows through. Light, they are white and the crosshair is ink, and on white
    nothing in the slices is black: the template is zero outside the brain,
    so in the light theme its scale is clear at zero, letting the white
    through, and above zero it reads like a stained section rather than a
@@ -23,7 +26,7 @@ window.MN_LOOK = (function(){
 
 function colours(){
   var dark = document.documentElement.getAttribute("data-theme") === "dark";
-  return dark ? {back: [0, 0, 0, 1], cross: [1, 1, 1, 1], clear: false}
+  return dark ? {back: [0.067, 0.067, 0.067, 1], cross: [1, 1, 1, 1], clear: false}
               : {back: [1, 1, 1, 1], cross: [0.067, 0.067, 0.067, 1], clear: true};
 }
 

@@ -812,9 +812,12 @@ main.screen.one.land{ flex-direction:row; }
      per view, so a drag is not held up by the viewer rebuilding its layers
      for every step; the last value always lands */
   var opacityTimer = 0, opacityLast = 0;
+  /* the device keeps the opacity with the state (v12.1) */
+  try{ var keptOpacity = Number(localStorage.getItem("vn-net-opacity")); if (keptOpacity >= 10 && keptOpacity <= 100){ opacityEl.value = String(keptOpacity); opacityVal.textContent = keptOpacity + "%"; } }catch(e){}
   function applyOpacity(){
     opacityTimer = 0; opacityLast = performance.now();
     var v = opacityEl.value / 100;
+    try{ localStorage.setItem("vn-net-opacity", String(opacityEl.value)); }catch(e){}
     allNV().forEach(function(nv){
       if (!nv.volumes || nv.volumes.length < 2) return;
       nv.volumes[1].opacity = v;

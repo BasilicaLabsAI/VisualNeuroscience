@@ -5,7 +5,8 @@ the address to the newsletter's list at Mailchimp. Nothing about a reader is kep
 repository or the worker.
 
 ## The box
-- The website alone shows it: inside the apps (where Capacitor reports a native platform) the
+- The website alone shows it: inside the apps (where Capacitor reports a native platform, or where
+  the iOS shell has marked the page `data-shell` at document start, v12.1) the
   script stops before drawing anything, and the list is offered only by the tick box on a new
   account, described below.
 - Appears once a reader has been on a page for twenty seconds, or scrolled half of it; not on

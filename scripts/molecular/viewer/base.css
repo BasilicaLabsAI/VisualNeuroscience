@@ -5,6 +5,7 @@
   --ink: #1B2A33; --ink-soft: #4E5E67; --line: rgba(27, 42, 51, 0.13); --track: rgba(27, 42, 51, 0.22);
   --panel: rgba(246, 250, 251, 0.86); --panel-solid: #F6FAFB; --halo: rgba(236, 242, 244, 0.95);
   --accent: #28666F; --accent-ink: #FFFFFF;
+  --bar-fill: rgba(229, 231, 234, 0.9); --bar-fill-solid: #E5E7EA;
   --inact: #58789F; --act: #C8677A;
   --ghost: #8A86A6; --insert: #C8677A; --mod: #EAE6DC; --ligc: #383D44;
   --shadow: 0 1px 2px rgba(27, 42, 51, 0.08), 0 10px 30px rgba(27, 42, 51, 0.12);
@@ -22,6 +23,7 @@
     --ink: #E3ECEF; --ink-soft: #A7B6BD; --line: rgba(227, 236, 239, 0.14); --track: rgba(227, 236, 239, 0.26);
     --panel: rgba(15, 23, 29, 0.84); --panel-solid: #121B21; --halo: rgba(14, 21, 27, 0.95);
     --accent: #7FC3CB; --accent-ink: #0D1B20;
+    --bar-fill: rgba(42, 46, 50, 0.9); --bar-fill-solid: #2A2E32;
     --inact: #7E9DC4; --act: #E08A9B;
     --ghost: #9A95BA; --insert: #E08A9B; --mod: #3B3F48; --ligc: #E8ECEF;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
@@ -34,6 +36,7 @@
   --ink: #E3ECEF; --ink-soft: #A7B6BD; --line: rgba(227, 236, 239, 0.14); --track: rgba(227, 236, 239, 0.26);
   --panel: rgba(15, 23, 29, 0.84); --panel-solid: #121B21; --halo: rgba(14, 21, 27, 0.95);
   --accent: #7FC3CB; --accent-ink: #0D1B20;
+  --bar-fill: rgba(42, 46, 50, 0.9); --bar-fill-solid: #2A2E32;
   --inact: #7E9DC4; --act: #E08A9B;
   --ghost: #9A95BA; --insert: #E08A9B; --mod: #3B3F48; --ligc: #E8ECEF;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
@@ -124,7 +127,7 @@ legend { font-family: var(--serif); font-weight: 600; font-size: 16px; padding: 
 #info .s { font-size: 13px; color: var(--ink-soft); margin-top: 1px; }
 #info .n { font-size: 13.5px; line-height: 1.45; margin: 6px 0 0; }
 
-#hint { position: fixed; z-index: 3; right: 18px; bottom: calc(var(--bar-h, 60px) + 10px); margin: 0; font-size: 13px; color: var(--ink-soft); pointer-events: none; transition: opacity 0.6s;
+#hint { position: fixed; z-index: 3; right: 18px; bottom: calc(var(--bar-h, 60px) + var(--edge) + env(safe-area-inset-bottom, 0px) + 10px); margin: 0; font-size: 13px; color: var(--ink-soft); pointer-events: none; transition: opacity 0.6s;
   /* a pill of the panel's material, so the line reads over whatever label the model puts beneath it (v12.1) */
   padding: 0.3rem 0.7rem; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
 #fail { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 24px; background: var(--c-extra); }
@@ -140,6 +143,7 @@ legend { font-family: var(--serif); font-weight: 600; font-size: 16px; padding: 
    turn solid, and where they ask for more contrast their edges darken */
 @media (prefers-reduced-transparency: reduce) {
   #panel.pop, .drawer-box, #bar { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--panel-solid); }
+  #bar { background: var(--bar-fill-solid); }
 }
 @media (prefers-contrast: more) {
   #panel.pop, .drawer-box, #bar, .pop-x, .drawer-tab { border-color: var(--ink-soft); }
@@ -156,9 +160,12 @@ legend { font-family: var(--serif); font-weight: 600; font-size: 16px; padding: 
    model from the right edge and shut when the page opens, and the window
    rises the full width of the screen. */
 :root { --bar-h: 60px; --edge: 14px; }
-#bar { position: fixed; z-index: 5; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 0.6rem;
-  padding: 0.45rem var(--edge) calc(0.45rem + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line);
-  background: var(--panel); -webkit-backdrop-filter: blur(16px) saturate(1.15); backdrop-filter: blur(16px) saturate(1.15);
+/* the bar is an island since v12.1, at the owner's word: in a grey of its own, light
+   grey on the light theme and dark grey on the dark, standing in from the screen's
+   edges and its foot, bordered all round, as every atlas's bar now does */
+#bar { position: fixed; z-index: 5; left: var(--edge); right: var(--edge); bottom: calc(var(--edge) + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.45rem var(--edge); border: 1px solid var(--line);
+  background: var(--bar-fill); -webkit-backdrop-filter: blur(16px) saturate(1.15); backdrop-filter: blur(16px) saturate(1.15);
   overflow-x: auto; overflow-y: hidden; scrollbar-width: none; white-space: nowrap; }
 #bar::-webkit-scrollbar { display: none; }
 .bar-pick { display: flex; flex: none; padding-right: 0.45rem; margin-right: 0.3rem; border-right: 1px solid var(--line); }
@@ -170,12 +177,12 @@ legend { font-family: var(--serif); font-weight: 600; font-size: 16px; padding: 
 .pbtn.pbtn-ref { margin-left: auto; padding-left: 0.65rem; border-left: 1px solid var(--line); }
 @media (hover: hover) { .pbtn:hover { color: var(--ink); } }
 /* lit, a window open or the picker shown: a block of ink, as the site's view buttons are (v11.98) */
-.pbtn.active, .pbtn[aria-pressed="true"] { background: var(--ink); color: var(--panel-solid); border-radius: 10px; }
+.pbtn.active, .pbtn[aria-pressed="true"] { background: var(--ink); color: var(--bar-fill-solid); border-radius: 10px; }
 .pbtn.active span, .pbtn[aria-pressed="true"] span { font-weight: 600; }
 @media (pointer: coarse) { .pbtn { min-height: 44px; } }
 
 /* the room above the bar: the column at the left holds the box and the window */
-#col { position: fixed; z-index: 4; left: var(--edge); top: calc(var(--edge) + env(safe-area-inset-top, 0px)); bottom: calc(var(--bar-h) + var(--edge)); width: 372px;
+#col { position: fixed; z-index: 4; left: var(--edge); top: calc(var(--edge) + env(safe-area-inset-top, 0px)); bottom: calc(var(--bar-h) + 2 * var(--edge) + env(safe-area-inset-bottom, 0px)); width: 372px;
   display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
 .drawer { position: relative; flex: none; max-height: 320px; transition: max-height 0.32s cubic-bezier(0.32, 0.72, 0, 1), margin 0.32s cubic-bezier(0.32, 0.72, 0, 1), visibility 0s 0s; }
 .drawer-box { position: relative; pointer-events: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
@@ -212,7 +219,7 @@ legend { font-family: var(--serif); font-weight: 600; font-size: 16px; padding: 
 
 /* a phone: the drawer over the model from the right, the window the width of the screen */
 @media (max-width: 760px) {
-  #col { left: 0; right: 0; top: env(safe-area-inset-top, 0px); bottom: var(--bar-h); width: auto; display: block; }
+  #col { left: 0; right: 0; top: env(safe-area-inset-top, 0px); bottom: calc(var(--bar-h) + var(--edge) + env(safe-area-inset-bottom, 0px) - 12px); width: auto; display: block; }
   .drawer { position: absolute; right: 0; top: 0; bottom: 0; width: min(320px, 100vw - 60px); max-height: none; margin: 0; }
   #col.shut .drawer { max-height: none; margin: 0; }
   .drawer-box { height: 100%; display: flex; flex-direction: column; border-radius: 0; border-width: 0 0 0 1px; box-shadow: -8px 0 30px rgba(0, 0, 0, 0.25); }
@@ -222,7 +229,7 @@ legend { font-family: var(--serif); font-weight: 600; font-size: 16px; padding: 
   .drawer-hide svg { transform: rotate(180deg); }
   .drawer-show { left: auto; right: 0; border-right: 0; border-left: 1px solid var(--line); border-radius: 10px 0 0 10px; }
   .drawer-show svg { transform: none; }
-  #panel.pop { position: absolute; z-index: 7; left: 0; right: 0; bottom: 0; max-height: 76%; border-radius: 18px 18px 0 0; border-width: 1px 0 0; transform: translateY(calc(100% + 12px)); }
+  #panel.pop { position: absolute; z-index: 7; left: var(--edge); right: var(--edge); bottom: 0; max-height: 76%; border-radius: 18px 18px 0 0; border-width: 1px 1px 0; transform: translateY(calc(100% + 12px)); }
   #panel.pop.in { transform: none; }
   .end .e1 { font-size: 17px; }
   .cap { min-height: 0; font-size: 13px; }

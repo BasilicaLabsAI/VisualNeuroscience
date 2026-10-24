@@ -20,6 +20,9 @@
      MN_SLICE.attach({ stage: <.mri-stage>, tools: <.view-tools>, nv: <Niivue>,
                        regions: "Slice regions" });
        → { open, close, reset, state, setState }
+   onChange is optional: given, it is called with state() whenever the
+   cuts, the switch or the regions choice change, so a page can keep them
+   (v12.1: every atlas remembers its last cuts on the device)
 
    regions is optional: given, a button of that name joins Slice and Reset
    cuts while slicing is on, and pressed it takes the cuts through the
@@ -176,6 +179,7 @@ function attach(o){
     try{ nv.opts.isClipAllVolumes = on && cutRegions; }catch(e){}
     try{ nv.setClipPlanes(planes()); }
     catch(e){ /* a viewer without multi-plane clipping simply does nothing */ }
+    if (typeof o.onChange === "function"){ try{ o.onChange(state()); }catch(e){} }
   }
 
   function resetAxis(id){

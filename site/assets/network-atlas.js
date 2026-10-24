@@ -233,9 +233,11 @@ function showState(id){
   src.hidden = !st.source;
   unread(); repaint();
 }
-/* the address names the state, so a link opens the page on it */
+/* the address names the state, so a link opens the page on it, and the
+   device keeps it, so the page opens on it next time (v12.1) */
 function markAddress(id){
   try{ history.replaceState(history.state, "", location.pathname + location.search + "#state=" + id); }catch(e){}
+  try{ localStorage.setItem("vn-net-last", id); }catch(e){}
 }
 sel.addEventListener("change", function(){ showState(sel.value); markAddress(sel.value); });
 
@@ -299,9 +301,14 @@ if (window.MN_EXPORT3D && $("export3d")){
 }
 
 /* #state=<id> opens on that state (and #network=<id>, the Region Atlas's
-   old link, on the way through); otherwise the first */
+   old link, on the way through); otherwise the one the page was left on,
+   kept on the device (v12.1), or else the first */
 var m = location.hash.match(/^#(?:state|network)=([\w-]+)$/);
-showState(m && stateById(m[1]) ? m[1] : DATA.STATES[0].id);
+var kept = null;
+try{ kept = localStorage.getItem("vn-net-last"); }catch(e){}
+if (m && stateById(m[1])) showState(m[1]);
+else if (kept && stateById(kept)){ showState(kept); markAddress(kept); }
+else showState(DATA.STATES[0].id);
 
 return { showState: showState, state: function(){ return stateNow().id; } };
 })();

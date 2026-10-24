@@ -246,8 +246,9 @@
     W = window.innerWidth; H = window.innerHeight;
     if (sized !== W + 'x' + H) { renderer.setSize(W, H, false); sized = W + 'x' + H; }
     camera.aspect = W / H;
-    var barH = bar ? bar.offsetHeight : 0;
-    document.documentElement.style.setProperty('--bar-h', barH + 'px');
+    // the room the bar takes from the foot: the island and the gap under it (v12.1)
+    var barH = bar ? Math.max(0, Math.round(H - bar.getBoundingClientRect().top)) : 0;
+    document.documentElement.style.setProperty('--bar-h', (bar ? bar.offsetHeight : 0) + 'px');
     var open = panelOpen(), pickOpen = !side.classList.contains('shut');
     VO.tx = 0; VO.ty = 0;
     if (isMobile()) { freeW = W; freeH = Math.max(120, open ? panel.getBoundingClientRect().top : H - barH); VO.ty = (H - freeH) / 2; }

@@ -418,10 +418,11 @@ svg{ display:block; }
 .ts-btn{ border:1px solid var(--hair); background:var(--paper); color:var(--ink); font-family:var(--font-brand); font-weight:500; font-size:.62rem; letter-spacing:.2em; text-transform:uppercase; cursor:pointer; padding:.5rem .7rem .42rem; text-decoration:none; line-height:1; }
 @media (hover: hover){ .ts-btn:hover{ background:var(--ink); color:var(--paper); } }
 @media (pointer:coarse){ .ts-btn{ min-height:44px; } }
-.scan-stage{ position:relative; flex:1 1 auto; min-height:0; background:#000000; touch-action:none; }
+.scan-stage{ position:relative; flex:1 1 auto; min-height:0; background:#111111; touch-action:none; }   /* the page's black, as the scan's ground (v12.1) */
 .scan-stage canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; outline:none; }
-/* light, the brain stands on white; the viewer paints its parent black as it attaches */
+/* light, the brain stands on white, and dark on the page's black (v12.1); the viewer paints its parent pure black as it attaches */
 :root:not([data-theme="dark"]) .scan-stage{ background:#FFFFFF !important; }
+:root[data-theme="dark"] .scan-stage{ background:#111111 !important; }
 
 /* ── a phone: the faces, a strip and a bar ──────────────────────────────
    Upright (.one, the script's mark for a screen no wider than a phone that
@@ -1068,7 +1069,12 @@ body.ba-land{ padding-bottom:0; }
       /* the cuts, as the atlases have them: Slice in the head puts a slider
          on each edge of the stage, and Slice area takes the cuts through
          the lit area with the brain; the head's Reset clears them with the view */
-      if (window.MN_SLICE) slice = MN_SLICE.attach({ stage: scanEl.querySelector(".scan-stage"), tools: document.getElementById("scanTools"), nv: ren, regions: "Slice area" });
+      if (window.MN_SLICE){
+        /* the cuts are kept on the device with the pick (v12.1, at the owner's word) */
+        slice = MN_SLICE.attach({ stage: scanEl.querySelector(".scan-stage"), tools: document.getElementById("scanTools"), nv: ren, regions: "Slice area",
+          onChange: function(st){ try{ localStorage.setItem("vn-ba-cuts", JSON.stringify(st)); }catch(e){} } });
+        try{ var keptCuts = JSON.parse(localStorage.getItem("vn-ba-cuts") || "null"); if (keptCuts && slice) slice.setState(keptCuts); }catch(e){}
+      }
       scanState = "ready";
       scanNote.textContent = "the MNI152 brain, the picked area lit";
       paintScan();

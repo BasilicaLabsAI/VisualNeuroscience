@@ -199,24 +199,35 @@ Read this first in every session. It is the handover; nothing else needs pasting
   the What-this-is text and the credits. `network-atlas.js` is untouched (every id it reads kept its name), and
   `app/scripts/shoot-home-pictures.js` raises the sheet before it shoots the ring.
 - The Tractography page (`site/tracts.html`) is one screen too since v11.94, with the study's chrome less its drawer and
-  view switch: the tractogram fills the stage (its cap: the Slice tool's buttons at the start since v11.98, the name, Reset
-  view at the end; the zoom buttons went in v11.97, at the owner's word, the wheel and a pinch zooming as before), and the bar
+  view switch: since v12.1, at the owner's word, the tractogram is the whole stage with nothing framing it and no cap (the
+  view's border and the stage's padding are nought; the cap with its name, Reset view and the Slice tool's buttons went; the
+  zoom buttons had gone in v11.97, the wheel and a pinch zooming as before), and the bar
   carries Streamlines
   (`#popLines`: the Direction/Single colour and the thickness), View from (`#popView`: the cube of faces and Reset view),
-  Revolve (`#spinBtn`, a `.pbtn` lit while it turns; off at launch since v11.98, at the owner's word), Export (`#popExport`:
+  Revolve (`#spinBtn`, a `.pbtn` lit while it turns; off at launch since v11.98, at the owner's word), Slice (`#sliceBtn`,
+  v12.1: the slice tool's switch, lit while the edge sliders are out, disabled until `attachSlice` has the mesh; the tool's
+  own buttons land unseen in `.slice-holder` inside the view), Export (`#popExport`:
   the density and the 3D model) and About
   (`#popAbout`: what you are looking at, the colour key, the credits). Its own viewer script is untouched but for the
   ground (v11.96, at the owner's word): the tractogram's back follows the theme as the atlases' stages do, the page's black
   dark and white light (`ground()` beside the viewer list, the stage's two rules by theme, an observer on `data-theme`
   repainting the viewers at once), the loading message in the page's paper and ink, and `shoot-home-pictures.js` no longer
   forces a white back for the light twin; it is the one atlas that draws its ground itself rather than through
-  `scan-look.js`, whose dark ground is a scan's pure black. The Microanatomy page (`site/microanatomy.html`, run by
+  `scan-look.js`, whose dark ground is the page's black too since v12.1, at the owner's word (`[0.067, 0.067, 0.067]`, with
+  `atlas-views.css` painting the dark `.mri-stage` `#111111` over the black the viewer paints inline, and the Brodmann
+  page's `.scan-stage` the same; it was a scan's pure black until then, and the dark home twins were retaken). The Microanatomy page (`site/microanatomy.html`, run by
   `site/assets/cells.js` with `nt.js`, `rxfig.js` and `rx.js`) is one screen too since v11.99, at the owner's word, on the
   study's chrome with the Tractography page's one view: the cell's drawing (`section.view.plate`, the `#scroller` holding
-  `svg#plate`) fills the stage, fitted to the view as wide or as tall (`fitWidth` in `cells.js` sets `--fit`, the width;
-  `--z` the zoom, by the wheel or a pinch about the pointer through `zoomTo`, a drag panning it when larger than the view;
-  the + and − went; the cap's Reset view, `#plateReset`, fits it again); the structures are the drawer (`#side`, the
-  `drawer-in`: `#explore` with the picked structure, the index and Colour every structure, or `#quiz` the test), open on
+  `svg#plate`) is the whole stage since v12.1, at the owner's word, nothing framing it (no border, no stage padding; the
+  cap's Reset view `#plateReset` floats over the drawing's top right corner as a pill, and the cell's name `#plateName`
+  heads the structures window, where the drawer would have covered it), fitted to
+  the view as wide or as tall (`fitWidth` in `cells.js` sets `--fit`, the width; `--z` the zoom, by the wheel or a pinch
+  about the pointer through `zoomTo`; since v12.1 every gesture is pointer events on the scroller, which is
+  `touch-action:none`, one pointer panning it when larger than the view, two pinching it about their midpoint and
+  carrying it with them, so a pinch reaches the page whole in the app's web view too; the + and − went); the structures
+  are the drawer (`#side`, the `drawer-in`: `#explore` with the picked structure, the index and Colour every structure, or
+  `#quiz` the test), since v12.1 a window over the drawing at every width (`.drawer` absolute at the deck's left, z 15,
+  so the drawing keeps its size; it stood beside the drawing on a wide screen until then), open on
   the first visit at every width and remembered as `vn-cells-drawer` after; and the bar carries Cells (`#popCells`, the
   tiles, a pick closing the sheet), Test yourself (`#quizBtn`, a mode lit while on, switched through `MN_CELLS.setMode`,
   the drawer opened for it), Neurotransmitters (`#popNt`) and Receptors (`#popRx`), both full-width sheets holding what the
@@ -231,8 +242,15 @@ Read this first in every session. It is the handover; nothing else needs pasting
   own azimuth-and-elevation maths; the side away from the normal goes by the slider's share), takes the box the three cuts
   leave (`cutBox`) and rebuilds the mesh from the pieces of each streamline inside it (`applyCut`: `mesh.pts`,
   `mesh.offsetPt0`, `fiberLengths` cleared, `updateMesh`), one rebuild a frame, the whole tractogram kept in `whole` to
-  restore; Reset view clears the cuts. The Streamlines sheet's Single colour is the page's ink by theme (`inkColour`,
-  re-applied by the theme observer), and `MN_TRACTS.nv()` hands the viewer to a check. The chrome now
+  restore; Reset view clears the cuts. The Streamlines sheet's Single colour is white on the dark theme and, since v12.1 at
+  the owner's word, a dark grey (`[84, 84, 84]`) on the light theme lit by a shader of its own (`inkColour`, re-applied by
+  the theme observer; `SATIN`, a fragment shader the renderer takes through `setCustomMeshShader` once per viewer, set on
+  the mesh by `shade()` while Single is on in the light theme and Phong otherwise: the renderer draws the streamlines as
+  thin tubes lit by its Phong shader, which left a dark grey flat), and `MN_TRACTS.nv()` hands the viewer to a check. The
+  page keeps its last state on the device (v12.1): `vn-tracts-last`, the colour, the thickness, the cuts and the view
+  (azimuth, elevation, zoom), written by `rememberSoon` a moment after each change (the colour and thickness controls,
+  the cube, Reset view, the slice tool's `onChange`, and the hand letting go of the view) once the page is up, and read
+  back by `restoreKept` as the tractogram comes in. The chrome now
   lives in six pages (the 3D Region Atlas, the Brodmann Area Atlas, the Hallucinations study, the molecular viewer, the
   Network Atlas and Tractography); a change to it belongs in all of them.
 - The Region Atlas is called the 3D Region Atlas wherever its name shows (nav, titles, home page, the app) since
@@ -375,11 +393,21 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `slice-tool.js`. The 3D Region Atlas keeps its own Brodmann list, and no map since v11.30; since v11.38
   the areas are picked through the same dropdown panel as the AAL regions (`dropPicker` in `regions.html`, shared by
   `#rpick` and `#bapick`: button `#bapickBtn`, panel `#bapickPop`, list `#balist` a `.rpick-list` grouped by lobe).
+  `app/scripts/shoot-home-atlas.js` shoots the atlas's home twins through `MN_SEL.centreMm` and `MN_SEL.onLocation`, the
+  door the page keeps open for it (put back in v12.1 after the probe's rewrite had dropped it; `locWatchers` beside
+  `selWatchers`, called from `onLoc`).
   Both atlases remember the last selection on the device without a save (v11.93, at the owner's word): the 3D Region
   Atlas writes `vn-atlas-last`, the saved-model capture (`modelApi.capture`, shared with Saved maps) without the camera,
-  crosshair, cuts and view, whenever the selection, the opacity or the mirror switch changes (`rememberSoon`, armed only
-  once the address has been read at boot), and restores it there when the address picks nothing; the Brodmann Area Atlas
-  writes `vn-ba-last` in `markAddress` and `select`s it at boot when the address names no area.
+  crosshair and view, whenever the selection, the opacity, the mirror switch or (since v12.1, at the owner's word, the
+  cuts included) the slice tool changes (`rememberSoon`, armed only
+  once the address has been read at boot; the tool's `onChange` hook, new in v12.1, calls it), and restores it there when
+  the address picks nothing; the Brodmann Area Atlas
+  writes `vn-ba-last` in `markAddress` and `select`s it at boot when the address names no area, and keeps its cuts as
+  `vn-ba-cuts` through the same hook, set again as the scan attaches. Every atlas keeps its last state since v12.1: the
+  Network Atlas writes `vn-net-last` with the address in `markAddress` and opens on it when the address names no state,
+  and `vn-net-opacity` as the opacity is applied; Tractography `vn-tracts-last`; Microanatomy `vn-cells-last` (the cell,
+  the structure picked and Colour every structure, written in `select` and the switch, put back as the cell's drawing
+  comes in; a cell in the address wins); the molecular viewer keeps its picker and level as before.
 - The Hallucinations study (`site/hallucinations.html`, the visualisation of Boksa 2009 that the owner calls the
   schizophrenia visualisation) is one screen in the 3D Region Atlas's manner since v11.43: `body.atlas-screen`,
   `main#main.screen`, the drawer (`#drawerBox`: Brain state, then Regions with the system filters, the list and the
@@ -429,7 +457,19 @@ Read this first in every session. It is the handover; nothing else needs pasting
   and soft ink for the buttons, Flux at the viewer's size for their names, a lit button a block of its ink, and its slider
   (a rounded track, a round thumb in its accent bordered in the panel's solid; the slice tool's edge sliders take the same
   colours and keep their strips). The variables are `--bar-panel`, `--bar-solid`, `--bar-ink`, `--bar-soft`, `--bar-line`,
-  `--bar-track` and `--bar-accent`, by theme; the viewer itself keeps its own rules. Since v11.98, at the owner's word, a lit bar button
+  `--bar-track` and `--bar-accent`, by theme; the viewer itself keeps its own rules. Since v12.1, at the owner's word, the
+  bar is a grey island as the Brodmann page's bar always was: `--bar-fill` and `--bar-fill-solid` (light grey
+  `#E5E7EA` on the light theme, dark grey `#2A2E32` on the dark, the lit button's name in the solid), and on the pages whose
+  bar is the screen's last row `.screen > .panelbar` stands `--gap` in from the sides and the foot (the home indicator's
+  room added below) with a border all round, `position:relative; z-index:30`; the stage reaches down behind it (`.screen >
+  .deck > .stage`: a negative bottom margin of `--isle`, the bar's measured height with the gap and the safe area, and the
+  same padding plus the gap), so the views end the gap above the bar and the sheets still rise from behind it, standing
+  the gap above it on a wide screen (`bottom:calc(var(--gap) + var(--isle))`) and, upright on a phone, at the island's
+  width with their foot 12px behind it; held sideways the bar is the last column with the same margins and the sheets as
+  before; the newsletter card stands above the island. The viewer's `#bar` is the same island in its own `base.css`
+  (`--bar-fill` there too, `--edge` in from the sides and the foot, `#col` and `#hint` above it, the phone's `#panel.pop`
+  at its width; `layout()` in `t4_engine2.js` takes the room from the bar's top edge). The Brodmann page's bar keeps its
+  grid cell and takes the grey alone. Since v11.98, at the owner's word, a lit bar button
   (`.pbtn.active`, `[aria-pressed="true"]`, the Brodmann page's `[aria-expanded="true"]`: a sheet open or a mode on) is a
   block of ink, `background:var(--ink); color:var(--paper)` with 10px corners, in all six chromes (the viewer's `base.css`
   takes `--panel-solid` for the paper), the rule standing after the hover rule so a hovered lit button keeps its paper.

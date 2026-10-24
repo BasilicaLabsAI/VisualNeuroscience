@@ -50,8 +50,17 @@
     sel = id || null;
     if (sel) flag(sel, "on", true);
     drawCallout(sel ? byId[sel] : null);
-    if (mode === "explore"){ renderDetail(); markIndex(); }
+    if (mode === "explore"){ renderDetail(); markIndex(); remember(); }
     if (sel && opts.bringIntoView) bringIntoView(byId[sel]);
+  }
+  /* the last state, kept on the device (v12.1, at the owner's word): the
+     cell, the structure picked and whether every structure is coloured,
+     read once as the page opens and put back as the cell's drawing comes in */
+  var kept = null;
+  try{ kept = JSON.parse(localStorage.getItem("vn-cells-last") || "null"); }catch(e){}
+  function remember(){
+    if (!svg.classList.contains("ready")) return;
+    try{ localStorage.setItem("vn-cells-last", JSON.stringify({ cell: cell, sel: sel, all: !!(allon && allon.checked) })); }catch(e){}
   }
 
   function drawCallout(p){
@@ -163,10 +172,11 @@
   }
 
   /* ---------- zoom + pan: the drawing fits its view, as wide as the view or
-     as tall, and the wheel or a pinch zooms it about the pointer; a drag
-     pans it once it is larger than the view (the + and − went with the
-     page's rebuild, v11.99) */
-  var ZMIN = 1, ZMAX = 4, z = 1, dragging = false, moved = false, start = null;
+     as tall, and the wheel or a pinch zooms it about the pointer; a drag, by
+     a finger or the mouse, pans it once it is larger than the view (the + and
+     − went with the page's rebuild, v11.99; the gestures are pointer events
+     since v12.1) */
+  var ZMIN = 1, ZMAX = 4, z = 1, dragging = false, moved = false;
   function fitWidth(){
     var r = scroller.getBoundingClientRect();
     var w = Math.min(r.width, r.height * box[0] / box[1]);
@@ -204,38 +214,59 @@
     var k = Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0022));
     zoomTo(z * k, e.clientX - r.left, e.clientY - r.top);
   }, {passive: false});
-  var pinch = null;
-  function span(t){ return Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY); }
-  scroller.addEventListener("touchstart", function(e){
-    if (e.touches.length === 2){ pinch = { d: span(e.touches), z: z }; tip.hidden = true; }
-  }, {passive: true});
-  scroller.addEventListener("touchmove", function(e){
-    if (!pinch || e.touches.length !== 2) return;
-    e.preventDefault();
-    var r = scroller.getBoundingClientRect();
-    var cx = (e.touches[0].clientX + e.touches[1].clientX) / 2 - r.left, cy = (e.touches[0].clientY + e.touches[1].clientY) / 2 - r.top;
-    zoomTo(pinch.z * span(e.touches) / Math.max(pinch.d, 1), cx, cy);
-  }, {passive: false});
-  scroller.addEventListener("touchend", function(e){ if (e.touches.length < 2) pinch = null; }, {passive: true});
   var resetBtn = document.getElementById("plateReset");
   if (resetBtn) resetBtn.addEventListener("click", resetZoom);
   if (window.ResizeObserver) new ResizeObserver(function(){ if (!box) return; fitWidth(); zoomTo(z); }).observe(scroller);
+  /* every pointer on the drawing, a finger or the mouse (v12.1): one pans it
+     when it is larger than the view, two pinch it about their midpoint and
+     carry it wherever that midpoint goes, and a tap that moved picks nothing.
+     touch-action is none on the scroller, so the page never takes a gesture
+     first and a pinch reaches here whole, in the app's web view as well. */
+  var pts = {}, gesture = null;
+  function spread(){ var a = []; for (var k in pts) a.push(pts[k]); return a; }
+  function span(a){ return Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y); }
+  function midOf(a){ return { x: (a[0].x + a[1].x) / 2, y: (a[0].y + a[1].y) / 2 }; }
+  function endDrag(){ if (dragging){ dragging = false; scroller.classList.remove("drag"); } }
+  function panFrom(p){ return { mode: "pan", x: p.x, y: p.y, l: scroller.scrollLeft, t: scroller.scrollTop }; }
+  function pinchFrom(a){ var m = midOf(a); return { mode: "pinch", d: span(a), z: z, mx: m.x, my: m.y }; }
   scroller.addEventListener("pointerdown", function(e){
-    if (e.pointerType !== "mouse" || e.button !== 0 || !scroller.classList.contains("zoomed")) return;
-    start = { x: e.clientX, y: e.clientY, l: scroller.scrollLeft, t: scroller.scrollTop }; moved = false;
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    pts[e.pointerId] = { x: e.clientX, y: e.clientY };
+    var a = spread();
+    if (a.length >= 2){ gesture = pinchFrom(a); endDrag(); moved = true; tip.hidden = true; }
+    else { gesture = panFrom(a[0]); moved = false; }
   });
   window.addEventListener("pointermove", function(e){
-    if (!start) return;
-    var dx = e.clientX - start.x, dy = e.clientY - start.y;
-    if (!dragging && Math.abs(dx) + Math.abs(dy) > 5){ dragging = true; moved = true; scroller.classList.add("drag"); tip.hidden = true; }
-    if (dragging){ scroller.scrollLeft = start.l - dx; scroller.scrollTop = start.t - dy; }
+    if (!(e.pointerId in pts) || !gesture) return;
+    pts[e.pointerId] = { x: e.clientX, y: e.clientY };
+    var a = spread();
+    if (gesture.mode === "pinch"){
+      if (a.length < 2) return;
+      var r = scroller.getBoundingClientRect(), m = midOf(a);
+      scroller.scrollLeft -= m.x - gesture.mx; scroller.scrollTop -= m.y - gesture.my;
+      gesture.mx = m.x; gesture.my = m.y;
+      zoomTo(gesture.z * span(a) / Math.max(gesture.d, 1), m.x - r.left, m.y - r.top);
+    } else {
+      if (!scroller.classList.contains("zoomed")) return;
+      var dx = e.clientX - gesture.x, dy = e.clientY - gesture.y;
+      if (!dragging && Math.abs(dx) + Math.abs(dy) > 5){ dragging = true; moved = true; scroller.classList.add("drag"); tip.hidden = true; }
+      if (dragging){ scroller.scrollLeft = gesture.l - dx; scroller.scrollTop = gesture.t - dy; }
+    }
   });
-  window.addEventListener("pointerup", function(){ start = null; if (dragging){ dragging = false; scroller.classList.remove("drag"); } });
+  function lift(e){
+    if (!(e.pointerId in pts)) return;
+    delete pts[e.pointerId];
+    var a = spread();
+    if (!a.length){ gesture = null; endDrag(); }
+    else gesture = a.length === 1 ? panFrom(a[0]) : pinchFrom(a);
+  }
+  window.addEventListener("pointerup", lift);
+  window.addEventListener("pointercancel", lift);
   var rz; window.addEventListener("resize", function(){ clearTimeout(rz); rz = setTimeout(function(){ if (sel) drawCallout(byId[sel]); }, 120); });
 
   /* ---------- colour everything */
   var allon = document.getElementById("allon");
-  allon.addEventListener("change", function(){ svg.classList.toggle("all-on", allon.checked); side.classList.toggle("all", allon.checked); });
+  allon.addEventListener("change", function(){ svg.classList.toggle("all-on", allon.checked); side.classList.toggle("all", allon.checked); remember(); });
 
   /* ---------- test mode */
   var q = null;
@@ -361,6 +392,12 @@
       }
       svg.classList.add("ready");
       buildIndex(); renderDetail();
+      /* how the cell was left, the first time it is drawn again */
+      if (kept && kept.cell === name){
+        var back = kept; kept = null;
+        if (back.all){ allon.checked = true; svg.classList.add("all-on"); side.classList.add("all"); }
+        if (back.sel && byId[back.sel]) select(back.sel); else remember();
+      } else remember();
       fitWidth();
       if (window.matchMedia("(max-width: 40rem)").matches){ zoomTo(2.4); centreOn(centre[0], centre[1]); }
       else resetZoom();
@@ -381,8 +418,11 @@
   /* the page's bar reaches the mode, and a check the zoom */
   window.MN_CELLS = { setMode: setMode, mode: function(){ return mode; }, zoomTo: zoomTo, reset: resetZoom, zoom: function(){ return z; } };
 
-  /* a cell named in the address opens on that cell */
+  /* a cell named in the address opens on that cell, or else the one the
+     page was left on */
   var asked = (location.hash.match(/^#cell=([\w-]+)$/) || [])[1];
-  if (asked && tiles.some(function(b){ return b.getAttribute("data-cell") === asked; })) cell = asked;
+  var drawn = function(n){ return !!n && tiles.some(function(b){ return b.getAttribute("data-cell") === n; }); };
+  if (drawn(asked)) cell = asked;
+  else if (kept && drawn(kept.cell)) cell = kept.cell;
   load(cell, false);
 })();

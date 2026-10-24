@@ -8,8 +8,11 @@
    Light, the viewports are white rather than black (the viewers clear to
    white, assets/scan-look.js), and the cutting controls along the 3D box's
    edges, drawn for a black stage, take ink where they took light. */
-/* NiiVue paints its canvas's parent black, inline, as it attaches */
+/* NiiVue paints its canvas's parent black, inline, as it attaches; dark, the
+   stage is the page's own black, the paper's #111111, as the scan's ground is
+   since v12.1 (scan-look.js) */
 :root:not([data-theme="dark"]) .mri-stage{ background:#FFFFFF !important; }
+:root[data-theme="dark"] .mri-stage{ background:#111111 !important; }
 :root:not([data-theme="dark"]) .slice-edge .ax{ color:#5A5A5A; text-shadow:0 0 4px #FFFFFF, 0 0 4px #FFFFFF; }
 :root:not([data-theme="dark"]) .slice-edge.cutting .ax{ color:#111111; }
 :root:not([data-theme="dark"]) .slice-range::-webkit-slider-runnable-track{ background:rgba(0,0,0,.28); }

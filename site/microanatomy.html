@@ -459,21 +459,24 @@ main.screen{
 }
 .screen .vh{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }
 .deck{ flex:1 1 auto; min-height:0; display:flex; position:relative; }
+/* the structures are a window over the drawing at every width (v12.1, at the
+   owner's word: until then the box stood beside the drawing on a wide screen
+   and narrowed it), sliding away to the left on its tab */
 .drawer{
-  --box-w:320px;
-  position:relative; flex:0 0 calc(var(--box-w) + var(--gap)); width:calc(var(--box-w) + var(--gap)); min-width:0; min-height:0;
+  --box-w:min(320px, 100vw - 60px);
+  position:absolute; left:0; top:0; bottom:0; z-index:15; flex:none; width:auto; min-width:0; min-height:0;
   display:flex; flex-direction:column; align-items:flex-start; padding:var(--gap) 0 var(--gap) var(--gap);
-  transition:flex-basis .32s cubic-bezier(.32,.72,0,1), width .32s cubic-bezier(.32,.72,0,1), padding .32s cubic-bezier(.32,.72,0,1), visibility 0s 0s;
+  transition:visibility 0s 0s;
 }
 .drawer-box{
   position:relative; flex:0 1 auto; width:var(--box-w); max-height:100%; min-height:0;
   display:flex; flex-direction:column;
   border:1px solid var(--hair); border-radius:16px; background:var(--paper);
-  box-shadow:0 1px 2px rgba(0,0,0,.08), 0 10px 30px rgba(0,0,0,.14);
+  box-shadow:0 1px 2px rgba(0,0,0,.08), 0 10px 30px rgba(0,0,0,.25);
   transition:transform .32s cubic-bezier(.32,.72,0,1);
 }
 .drawer-in.card{ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; border:0; padding:var(--gap) var(--gap) 1.4rem; background:var(--paper); }
-.deck.shut .drawer{ flex-basis:0; width:0; padding-left:0; visibility:hidden; transition-delay:0s, 0s, 0s, .32s; }
+.deck.shut .drawer{ visibility:hidden; transition-delay:.32s; }
 .deck.shut .drawer-box{ transform:translateX(calc(-100% - var(--gap) - 22px)); }
 .drawer-tab{
   position:absolute; z-index:16; top:50%; transform:translateY(-50%);
@@ -489,11 +492,27 @@ main.screen{
 .deck.shut .drawer-show{ visibility:visible; opacity:1; transition-delay:.14s, .14s; }
 @media (hover: hover){ .drawer-tab:hover{ background:var(--ink); color:var(--paper); } }
 .drawer-tab:active{ background:var(--ink); color:var(--paper); }
-.stage{ flex:1 1 auto; min-width:0; min-height:0; display:flex; flex-direction:column; position:relative; overflow:hidden; padding:var(--gap) var(--gap) var(--gap) calc(var(--gap) + 10px); }
+.stage{ flex:1 1 auto; min-width:0; min-height:0; display:flex; flex-direction:column; position:relative; overflow:hidden; padding:0; }
 .screen .views-wrap{ position:relative; flex:1 1 auto; min-height:0; }
 /* one view, the whole stage */
 .screen .views{ height:100%; display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(0,1fr); gap:0; min-width:0; }
-.screen .views .view{ min-height:0; min-width:0; display:flex; flex-direction:column; position:relative; border:1px solid var(--hair); background:var(--paper); }
+.screen .views .view{ min-height:0; min-width:0; display:flex; flex-direction:column; position:relative; border:0; background:var(--paper); }
+/* the drawing is the whole stage, nothing framing it, as the molecular
+   viewer's model is (v12.1, at the owner's word): the cell's name heads the
+   structures window (#plateName) and the cap's Reset view floats over the
+   drawing's top right corner as a pill */
+.screen .views .view .view-cap{
+  position:absolute; z-index:6; top:var(--gap); left:var(--gap); right:var(--gap);
+  flex-wrap:nowrap; justify-content:flex-end; align-items:center; gap:.5rem;
+  padding:0; border:0; background:none; pointer-events:none;
+}
+.screen .views .view .view-cap::before, .screen .views .view .view-cap .view-tools{ display:none; }
+.screen .views .view .view-cap .view-end{ flex:none; order:0; }
+.screen .views .view .view-cap .centre-btn{
+  pointer-events:auto; margin:0; padding:.42rem .8rem; border-radius:999px; border:1px solid var(--hair);
+  background:color-mix(in srgb, var(--paper) 84%, transparent);
+  -webkit-backdrop-filter:blur(10px) saturate(1.15); backdrop-filter:blur(10px) saturate(1.15);
+}
 @container view (max-width:300px){
   .screen .views .view .view-tools{ display:none; }
 }
@@ -503,7 +522,7 @@ main.screen{
 .scroller{
   flex:1 1 auto; min-height:0; min-width:0; overflow:hidden; overscroll-behavior:contain;
   display:flex; align-items:safe center; justify-content:safe center;
-  touch-action:pan-x pan-y;
+  touch-action:none;   /* the page never takes a finger's gesture first: cells.js pans and pinches it */
 }
 .scroller.zoomed{ overflow:auto; cursor:grab; }
 .scroller.zoomed.drag{ cursor:grabbing; }
@@ -622,11 +641,6 @@ main.screen.one.land{ flex-direction:row; }
 .screen.one.land .views .view-cap b{ order:2; margin-left:auto; margin-right:0; }
 :root[data-shell]:not([data-shell-pad]) .screen.one.land .views .view-cap{ padding-left:56px; }
 
-@media (max-width:900px){
-  .drawer{ --box-w:min(320px, 100vw - 60px); position:absolute; left:0; top:0; bottom:0; z-index:15; flex:none; width:auto; transition:visibility 0s 0s; }
-  .deck.shut .drawer{ width:auto; padding-left:var(--gap); visibility:hidden; transition-delay:.32s; }
-  .drawer-box{ box-shadow:0 10px 30px rgba(0,0,0,.25); }
-}
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more){
   .panelbar, .pop{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
 }
@@ -664,15 +678,15 @@ main.screen.one.land{ flex-direction:row; }
   <div class="deck" id="deck">
 
     <!-- the structures: the one picked and the index of all of them, or the
-         test, in a box over the deck's corner that folds away on the tab at
-         its edge and comes back on the handle left at the screen's, as the 3D
-         Region Atlas's region picker does; open on the first visit -->
+         test, in a window over the drawing (v12.1) that folds away on the tab
+         at its edge and comes back on the handle left at the screen's, as the
+         3D Region Atlas's region picker does; open on the first visit -->
     <aside class="drawer" id="drawer" aria-label="Structures">
       <div class="drawer-box" id="drawerBox">
         <button class="drawer-tab drawer-hide" id="drawerHide" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Hide the structures" title="Hide the structures"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
         <div class="drawer-in card rail" id="side">
           <div id="explore">
-            <h2 class="card-h">Structures</h2>
+            <h2 class="card-h" id="plateName">Multipolar neuron</h2>
             <div class="detail" id="detail" aria-live="polite"></div>
             <ul class="index" id="index"></ul>
             <label class="all-toggle"><input type="checkbox" id="allon"> Colour every structure</label>
@@ -699,7 +713,8 @@ main.screen.one.land{ flex-direction:row; }
       <div class="views-wrap">
         <div class="views">
           <section class="view plate" data-box="Plate" aria-label="Drawing of a brain cell">
-            <div class="view-cap"><b id="plateName">Multipolar neuron</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" id="plateReset" type="button" aria-label="Fit the drawing to the view again">Reset<span class="lbl-more"> view</span></button></div></div>
+            <!-- the cell's name heads the structures window; Reset view floats over the drawing's corner -->
+            <div class="view-cap"><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" id="plateReset" type="button" aria-label="Fit the drawing to the view again">Reset<span class="lbl-more"> view</span></button></div></div>
             <div class="scroller" id="scroller">
               <svg class="mn" id="plate" data-cell="multipolar-neuron" viewBox="0 0 1200 780" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Multipolar neuron"></svg>
             </div>

@@ -177,11 +177,16 @@ main.screen{
 }
 .screen .vh{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }
 .deck{ flex:1 1 auto; min-height:0; display:flex; position:relative; }
-.stage{ flex:1 1 auto; min-width:0; min-height:0; display:flex; flex-direction:column; position:relative; overflow:hidden; padding:var(--gap); }
+.stage{ flex:1 1 auto; min-width:0; min-height:0; display:flex; flex-direction:column; position:relative; overflow:hidden; padding:0; }
 .screen .views-wrap{ position:relative; flex:1 1 auto; min-height:0; }
 /* one view, the whole stage */
 .screen .views{ height:100%; display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(0,1fr); gap:0; min-width:0; }
-.screen .views .view{ min-height:0; min-width:0; display:flex; flex-direction:column; border:1px solid var(--hair); }
+/* the tractogram is the whole stage, nothing framing it and no cap (v12.1, at
+   the owner's word): the bar holds every control, the slice tool's own
+   buttons standing unseen in .slice-holder */
+.screen .views .view{ min-height:0; min-width:0; display:flex; flex-direction:column; border:0; }
+.slice-holder{ display:none !important; }
+.pbtn:disabled{ opacity:.45; cursor:default; }
 .screen .views-wrap .views .view .mri-stage{ flex:1 1 auto; min-height:0; height:auto; max-height:none; aspect-ratio:auto; }
 /* on the page's own ground: dark, the theme's paper rather than the pure
    black of a scan, and light, white as the atlases' stages are, so view and
@@ -190,9 +195,6 @@ main.screen{
    black, inline, as it attaches. */
 :root[data-theme="dark"] .views .view[data-box="Ren"] .mri-stage{ background:#111111 !important; }
 :root:not([data-theme="dark"]) .views .view[data-box="Ren"] .mri-stage{ background:#FFFFFF !important; }
-@container view (max-width:300px){
-  .screen .views .view .view-tools{ display:none; }
-}
 .panelbar{
   flex:none; display:flex; align-items:center; gap:.6rem;
   padding:.45rem var(--gap) calc(.45rem + env(safe-area-inset-bottom, 0px));
@@ -315,12 +317,6 @@ main.screen.one.land{ flex-direction:row; }
 }
 .screen.one.land .pbtn svg{ width:22px; height:22px; }
 .screen.one.land .pop{ max-height:100%; }
-.screen.one.land .views .view-cap{ flex-wrap:nowrap; justify-content:flex-start; }
-.screen.one.land .views .view-cap::before{ display:none; }
-.screen.one.land .views .view-cap .view-tools{ order:0; flex:none; }
-.screen.one.land .views .view-cap .view-end{ order:1; flex:none; justify-content:flex-start; }
-.screen.one.land .views .view-cap b{ order:2; margin-left:auto; margin-right:0; }
-:root[data-shell]:not([data-shell-pad]) .screen.one.land .views .view-cap{ padding-left:56px; }
 
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more){
   .panelbar, .pop{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
@@ -361,7 +357,8 @@ main.screen.one.land{ flex-direction:row; }
       <div class="views-wrap">
         <div class="views">
           <div class="view" data-box="Ren">
-            <div class="view-cap"><b>Tractogram</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" data-reset type="button" aria-label="Reset the view">Reset<span class="lbl-more"> view</span></button></div></div>
+            <!-- the slice tool puts its own buttons here, unseen: Slice on the bar drives it (v12.1) -->
+            <div class="view-tools slice-holder" hidden></div>
             <div class="mri-stage"><canvas id="tkRen"></canvas><div class="stage-msg" id="stageMsg"><span class="caps" id="msgTitle">Loading the tractogram</span><div class="progress"><i id="msgBar"></i></div><p id="msgText">Several megabytes of streamlines are on their way.</p></div></div>
           </div>
         </div>
@@ -373,7 +370,7 @@ main.screen.one.land{ flex-direction:row; }
           <h2>Colour</h2>
           <div class="mode-group" role="group" aria-label="Streamline colour">
             <button class="ts-btn active" data-colour="Local" type="button" title="Colour each segment by the direction it runs">Direction</button>
-            <button class="ts-btn" data-colour="accent" type="button" title="A single colour, the page's ink">Single</button>
+            <button class="ts-btn" data-colour="accent" type="button" title="A single colour: a lit dark grey on the light theme, white on the dark">Single</button>
           </div>
           <h2>Thickness</h2>
           <div class="rail-row">
@@ -398,7 +395,7 @@ main.screen.one.land{ flex-direction:row; }
             <button class="ts-btn cube-i" data-face="iso" type="button" title="The three-quarter view the page opens with">Iso</button>
           </div>
           <button class="btn-wide ts-btn" data-reset type="button">Reset view</button>
-          <p class="rail-note">Drag the brain to turn it; zoom with the + and &minus; above it, or scroll over the view. Reset puts it back where it started, cuts and all.</p>
+          <p class="rail-note">Drag the brain to turn it, and pinch or scroll over the view to zoom. Reset puts it back where it started, cuts and all.</p>
         </div>
       </div>
 
@@ -427,7 +424,7 @@ main.screen.one.land{ flex-direction:row; }
             <span class="key-item"><span class="key-swatch" style="background:#4FB06A"></span>front &ndash; back</span>
             <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
           </div>
-          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Revolve on the bar sets it turning until you take hold of it, Slice above the view puts a cut on each axis and takes the streamlines away from that side, and Reset view puts everything back where it started. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
+          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Revolve on the bar sets it turning until you take hold of it, Slice on the bar puts a slider on each edge of the view, each a cut taking the streamlines away from that side, and Reset view under View from puts everything back where it started. The page remembers how you left it: the colour, the thickness, the cuts and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
           <div class="credits">
             <p>Tractography: HCP1065 atlas, Yeh FC, <em>Nat Commun</em> 13:4933 (2022), CC BY-SA 4.0.</p>
             <p>Data were provided in part by the Human Connectome Project, WU-Minn Consortium (Principal Investigators: David Van Essen and Kamil Ugurbil; 1U54MH091657) funded by the 16 NIH Institutes and Centers that support the NIH Blueprint for Neuroscience Research; and by the McDonnell Center for Systems Neuroscience at Washington University.</p>
@@ -444,6 +441,7 @@ main.screen.one.land{ flex-direction:row; }
       <button class="pbtn" type="button" data-pop="popLines" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 7c3-3 6 3 9 0s6-3 9 0M3 12c3-3 6 3 9 0s6-3 9 0M3 17c3-3 6 3 9 0s6-3 9 0"/></svg><span>Streamlines</span></button>
       <button class="pbtn" type="button" data-pop="popView" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>View from</span></button>
       <button class="pbtn" type="button" id="spinBtn" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 3v5.5h-5.5"/></svg><span>Revolve</span></button>
+      <button class="pbtn" type="button" id="sliceBtn" aria-pressed="false" disabled title="A slider on each edge of the view, each a cut taking the streamlines away from that side"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 21 8l-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5M3 16l9 5 9-5"/></svg><span>Slice</span></button>
     </div>
     <div class="panelbar-end" role="group" aria-label="Export and about">
       <button class="pbtn" type="button" data-pop="popExport" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15V4M8 8l4-4 4 4M5 13v7h14v-7"/></svg><span>Export</span></button>
@@ -548,8 +546,24 @@ main.screen.one.land{ flex-direction:row; }
   /* .trx is what ships; a rebuild from the published atlas writes .trk,
      so accept either rather than breaking on the file that is there. */
   var TRACT_URLS = ["assets/tracts/hcp1065.trx", "assets/tracts/hcp1065.trk"];
-  /* the single colour is the page's ink: white on the dark theme's black, black on white (v11.98) */
-  function inkColour(){ return document.documentElement.getAttribute("data-theme") === "dark" ? [255, 255, 255, 255] : [17, 17, 17, 255]; }
+  /* the single colour: white on the dark theme's black (v11.98), and on the light theme a dark
+     grey (v12.1, at the owner's word: the ink was too dark to read) lit with a shine of its own */
+  function inkColour(){ return document.documentElement.getAttribute("data-theme") === "dark" ? [255, 255, 255, 255] : [84, 84, 84, 255]; }
+  /* the shine: the renderer draws the streamlines as thin tubes and lights them with its
+     Phong shader, which leaves a dark grey flat, so the light theme's single colour takes a
+     shader of its own, satin: more light on the lit side and a brighter, tighter highlight
+     from a lamp above and to the left of the viewer. Direction keeps the renderer's own. */
+  var SATIN = "#version 300 es\nprecision highp int;\nprecision highp float;\nuniform float opacity;\nin vec4 vClr;\nin vec3 vN;\nout vec4 color;\n" +
+    "void main(){\n  vec3 r = vec3(0.0, 0.0, 1.0);\n  vec3 n = normalize(vN);\n  vec3 l = normalize(vec3(-0.4, 0.8, -0.5));\n" +
+    "  float d = max(dot(n, l), 0.0);\n  float s = 0.5 * pow(max(dot(reflect(l, n), r), 0.0), 18.0);\n" +
+    "  color = vec4(vClr.rgb * (0.45 + 0.55 * d) + s, opacity);\n}\n";
+  function shade(nv, id){
+    var satin = colourMode === "accent" && document.documentElement.getAttribute("data-theme") !== "dark";
+    try{
+      if (satin && nv.vnSatin === undefined) nv.vnSatin = nv.setCustomMeshShader(SATIN, "Satin");
+      nv.setMeshShader(id, satin ? nv.vnSatin : "Phong");
+    }catch(e){}
+  }
 
   var stageMsg = document.getElementById("stageMsg");
   var msgTitle = document.getElementById("msgTitle");
@@ -645,7 +659,7 @@ main.screen.one.land{ flex-direction:row; }
     instances.forEach(function(nv){ nv.opts.backColor = g.back; nv.opts.clipPlaneColor = g.clip; try{ nv.drawScene(); }catch(e){} });
     if (colourMode === "accent") instances.forEach(function(nv){
       var id = meshIds[nv.canvas.id];
-      if (id !== undefined){ try{ nv.setMeshProperty(id, "rgba255", inkColour()); }catch(e){} }
+      if (id !== undefined){ try{ nv.setMeshProperty(id, "rgba255", inkColour()); }catch(e){} shade(nv, id); }
     });
   }).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
   var colourMode = "Local";
@@ -666,6 +680,7 @@ main.screen.one.land{ flex-direction:row; }
     nv.scene.renderElevation = f[1];
     nv.drawScene();
     touched();
+    rememberSoon();
   }
   document.querySelectorAll("[data-face]").forEach(function(btn){
     btn.addEventListener("click", function(){ faceTo(btn.getAttribute("data-face")); });
@@ -736,24 +751,27 @@ main.screen.one.land{ flex-direction:row; }
       if (meshIds[nv.canvas.id] !== undefined) nv.setMeshProperty(meshIds[nv.canvas.id], "fiberRadius", Number(v));
     });
   }
-  radiusEl.addEventListener("input", function(){ applyRadius(radiusEl.value); });
+  radiusEl.addEventListener("input", function(){ applyRadius(radiusEl.value); rememberSoon(); });
 
-  document.querySelectorAll("[data-colour]").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      document.querySelectorAll("[data-colour]").forEach(function(b){ b.classList.toggle("active", b === btn); });
-      colourMode = btn.getAttribute("data-colour");
-      instances.forEach(function(nv){
-        var id = meshIds[nv.canvas.id];
-        if (id === undefined) return;
-        if (colourMode === "accent"){
-          nv.setMeshProperty(id, "fiberColor", "Fixed");
-          nv.setMeshProperty(id, "rgba255", inkColour());
-        } else {
-          nv.setMeshProperty(id, "fiberColor", "Local");
-        }
-        nv.drawScene();
-      });
+  function setColour(mode){
+    colourMode = mode;
+    document.querySelectorAll("[data-colour]").forEach(function(b){ b.classList.toggle("active", b.getAttribute("data-colour") === mode); });
+    instances.forEach(function(nv){
+      var id = meshIds[nv.canvas.id];
+      if (id === undefined) return;
+      if (mode === "accent"){
+        nv.setMeshProperty(id, "fiberColor", "Fixed");
+        nv.setMeshProperty(id, "rgba255", inkColour());
+      } else {
+        nv.setMeshProperty(id, "fiberColor", "Local");
+      }
+      shade(nv, id);
+      nv.drawScene();
     });
+    rememberSoon();
+  }
+  document.querySelectorAll("[data-colour]").forEach(function(btn){
+    btn.addEventListener("click", function(){ setColour(btn.getAttribute("data-colour")); });
   });
 
 
@@ -835,7 +853,57 @@ main.screen.one.land{ flex-direction:row; }
     }
     whole = { pts: P, off: mesh.offsetPt0, min: [mn[0], mn[1], mn[2]], max: [mx[0], mx[1], mx[2]], lengths: null };
     var renBox = document.querySelector('.view[data-box="Ren"]');
-    slice = MN_SLICE.attach({ stage: renBox.querySelector(".mri-stage"), tools: renBox.querySelector(".view-tools"), nv: cutter });
+    slice = MN_SLICE.attach({ stage: renBox.querySelector(".mri-stage"), tools: renBox.querySelector(".slice-holder"), nv: cutter,
+                              onChange: function(){ paintSliceBtn(); rememberSoon(); } });
+    if (sliceBtn) sliceBtn.disabled = !slice;
+    paintSliceBtn();
+  }
+  /* Slice on the bar is the tool's switch (v12.1): lit while the edge sliders are out */
+  var sliceBtn = document.getElementById("sliceBtn");
+  function paintSliceBtn(){
+    if (!sliceBtn) return;
+    var on = !!(slice && slice.state().on);
+    sliceBtn.setAttribute("aria-pressed", String(on));
+    sliceBtn.classList.toggle("active", on);
+  }
+  if (sliceBtn) sliceBtn.addEventListener("click", function(){
+    if (!slice) return;
+    if (slice.state().on) slice.close(); else slice.open();
+    paintSliceBtn();
+  });
+
+  /* ── the last state, kept on the device (v12.1, at the owner's word) ──
+     the colour, the thickness, the cuts and the view, written a moment after
+     each change once the page is up, and read back as the tractogram comes
+     in; nothing in the address asks for anything else on this page */
+  var keepReady = false, keepTimer = 0;
+  function rememberSoon(){
+    if (!keepReady) return;
+    clearTimeout(keepTimer);
+    keepTimer = setTimeout(function(){
+      var nv = byKey.Ren;
+      try{
+        localStorage.setItem("vn-tracts-last", JSON.stringify({
+          v: 1, colour: colourMode, radius: Number(radiusEl.value),
+          cuts: slice ? slice.state() : null,
+          view: nv ? { az: nv.scene.renderAzimuth, el: nv.scene.renderElevation, zoom: zoom } : null
+        }));
+      }catch(e){}
+    }, 300);
+  }
+  function restoreKept(){
+    var m = null;
+    try{ m = JSON.parse(localStorage.getItem("vn-tracts-last") || "null"); }catch(e){}
+    if (!m || typeof m !== "object") return;
+    if (m.radius > 0){ radiusEl.value = String(m.radius); applyRadius(radiusEl.value); }
+    if (m.colour === "accent" || m.colour === "Local") setColour(m.colour);
+    if (m.cuts && slice) slice.setState(m.cuts);
+    var nv = byKey.Ren;
+    if (nv && m.view){
+      if (isFinite(m.view.az)) nv.scene.renderAzimuth = Number(m.view.az);
+      if (isFinite(m.view.el)) nv.scene.renderElevation = Number(m.view.el);
+      if (m.view.zoom > 0) applyZoom(m.view.zoom);
+    }
   }
 
   /* How deep a slab of streamlines each plane box draws: this is the section
@@ -880,6 +948,7 @@ main.screen.one.land{ flex-direction:row; }
     applyZoom(HOME_ZOOM);
     if (slice) slice.reset();
     touched();
+    rememberSoon();
   }
   document.querySelectorAll("[data-reset]").forEach(function(btn){
     btn.addEventListener("click", resetView);
@@ -943,6 +1012,10 @@ main.screen.one.land{ flex-direction:row; }
           stage.addEventListener(evt, touched, {passive: true});
         });
         stage.addEventListener("pointermove", function(e){ if (e.buttons) touched(); }, {passive: true});
+        /* and where the hand lets go, the view is remembered */
+        ["pointerup", "wheel", "touchend"].forEach(function(evt){
+          stage.addEventListener(evt, rememberSoon, {passive: true});
+        });
       });
 
       /* the wheel and a pinch zoom the tractogram, two fingers pan it */
@@ -959,6 +1032,9 @@ main.screen.one.land{ flex-direction:row; }
       byKey.Ren.scene.renderAzimuth = HOME[0];
       byKey.Ren.scene.renderElevation = HOME[1];
       applyZoom(zoom);
+      restoreKept();          /* how the page was left, if it was left at all */
+      keepReady = true;
+      rememberSoon();
       instances.forEach(function(nv){ nv.drawScene(); });
 
       hideMessage();

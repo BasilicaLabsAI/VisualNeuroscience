@@ -2238,7 +2238,7 @@ main.screen.one.land{ flex-direction:row; }
      The chart is written against structure names and AAL parcel numbers;
      the atlas thinks in selection keys. This is the whole of the interface
      between them, so neither has to know how the other works. */
-  var selWatchers = [];
+  var selWatchers = [], locWatchers = [];
   var byIndex = {};
   REGIONS.forEach(function(r){
     if (r.L != null) byIndex[r.L] = r;
@@ -2354,7 +2354,11 @@ main.screen.one.land{ flex-direction:row; }
       var v = [sx/n, sy/n, sz/n];
       centreMm([0, 1, 2].map(function(r){ return A[r][0]*v[0] + A[r][1]*v[1] + A[r][2]*v[2] + A[r][3]; }));
     },
-    onChange: function(cb){ selWatchers.push(cb); }
+    onChange: function(cb){ selWatchers.push(cb); },
+    /* the shoot script's door (app/scripts/shoot-home-atlas.js): the crosshair
+       to a point in mm, and word of every location change */
+    centreMm: function(mm){ centreMm(mm); },
+    onLocation: function(cb){ locWatchers.push(cb); }
   };
   function centreMm(mm){
     allNV().forEach(function(nv){
@@ -2561,6 +2565,7 @@ main.screen.one.land{ flex-direction:row; }
   }
   selWatchers.push(paintProbe);
   function onLoc(loc){
+    locWatchers.forEach(function(cb){ try{ cb(loc); }catch(e){} });
     try{
       if (loc && loc.mm){
         coordsOut.textContent = "MNI " + loc.mm[0].toFixed(0) + " " + loc.mm[1].toFixed(0) + " " + loc.mm[2].toFixed(0) + " mm";
@@ -2807,8 +2812,9 @@ main.screen.one.land{ flex-direction:row; }
   function activeView(){ return "grid"; }
   /* the last selection, kept on this device without saving: whatever is
      highlighted as the page is left is highlighted again when it is next
-     opened, with the opacity and the mirror switch, unless the address
-     asks for something else; read once here, before anything can write */
+     opened, with the opacity, the mirror switch and, since v12.1 at the
+     owner's word, the cuts, unless the address asks for something else;
+     read once here, before anything can write */
   var lastKept = null, keepReady = false, keepTimer = 0;
   try{ lastKept = JSON.parse(localStorage.getItem("vn-atlas-last") || "null"); }catch(e){}
   function rememberSoon(){
@@ -2817,7 +2823,7 @@ main.screen.one.land{ flex-direction:row; }
     keepTimer = setTimeout(function(){
       try{
         var m = modelApi.capture();
-        delete m.camera; delete m.crosshair; delete m.cuts; delete m.view;
+        delete m.camera; delete m.crosshair; delete m.view;
         localStorage.setItem("vn-atlas-last", JSON.stringify(m));
       }catch(e){}
     }, 150);
@@ -2913,7 +2919,8 @@ main.screen.one.land{ flex-direction:row; }
           stage: renBox.querySelector(".mri-stage"),
           tools: renBox.querySelector(".view-tools"),
           nv: INSTANCES.render,
-          regions: "Slice regions"
+          regions: "Slice regions",
+          onChange: function(){ rememberSoon(); }   /* the cuts are remembered with the selection (v12.1) */
         });
       }
 
