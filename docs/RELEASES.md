@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.6 — 24 October 2026 — The ring in the box
+Commit · Put a small ring in the Network Atlas's box, the diagram alone
+
+The Network Atlas's box now ends in a small copy of the ring, the diagram alone with no names on it, square and the width of the box. Press a region there and it comes forward on the scan exactly as in the full ring, which the bar's Network still opens, and whatever is picked in one shows in the other. The box's italic note is cut to a line, and what it said has moved into About.
+
 ## v12.5 — 24 October 2026 — The receptor sheet's words checked
-Commit · Correct the Microanatomy sheets' introductions
+Commit `6b25a3e` · Correct the Microanatomy sheets' introductions
 
 The introduction to the Receptors sheet had the binding the wrong way round and overstated a few things; it now says that a neurotransmitter has to bind to something and names what it binds to, that ionotropic receptors shut when the transmitter leaves or desensitise sooner, which transmitters have receptors of both speeds and which work through metabotropic receptors alone, and that the receptor names are the pharmacologists'. The Neurotransmitters sheet's introduction no longer claims the brain makes its transmitters in milliseconds: it keeps a stock ready and releases and clears them that fast.
 

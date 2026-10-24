@@ -56,6 +56,10 @@
 #ring{ width:100%; height:auto; margin:0 auto; }
 .regionarc{ fill:none; stroke-width:11; stroke-linecap:butt; cursor:pointer; }
 .regionarc.nomap{ stroke-dasharray:7 6; }
+/* the small bare ring in the drawer (v12.6): drawn at half the size, so its
+   arcs are thicker to stay a finger's target, and its dots answer too */
+.bare .regionarc{ stroke-width:20; }
+.bare .nodedot{ pointer-events:auto; cursor:pointer; }
 /* the group names are buttons too: one picks the whole network */
 .grouplabel{
   font-family:var(--font-brand); font-size:9.5px; font-weight:500;

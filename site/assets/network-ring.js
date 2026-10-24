@@ -6,7 +6,9 @@
    Regions keep their ring position and colour whatever state is showing;
    only the threads between them are rebuilt when the state changes. The
    caller owns selection, because on the Network Atlas a selection also
-   drives the scan. */
+   drives the scan. A ring made with bare:true (v12.6) is the diagram alone,
+   no names on the regions or the networks, for a small copy of the ring:
+   its arcs are the whole target, and its dots answer to the pointer too. */
 window.MN_RING = (function(){
 
 var SVG_NS = "http://www.w3.org/2000/svg";
@@ -34,9 +36,10 @@ function arcPath(r, a0, a1){
 }
 
 function create(opts){
-  var svg = opts.svg, data = opts.data;
+  var svg = opts.svg, data = opts.data, bare = !!opts.bare;
   var NODES = data.NODES, GROUPS = data.GROUPS, PALETTE = data.PALETTE;
   var dashed = opts.dashed || function(){ return false; };
+  if (bare) svg.classList.add("bare");
 
   /* ── geometry, fixed for every state ─────────────────────────────────── */
   /* carry every field the data gives a group, not just id and label — the
@@ -67,7 +70,7 @@ function create(opts){
   var defs = el("defs");
   svg.appendChild(defs);
 
-  var groupLabels = byGroup.map(function(g){
+  var groupLabels = bare ? [] : byGroup.map(function(g){
     var mid = (g.a0 + g.a1)/2;
     var gx = CX + GROUP_R*Math.cos(mid), gy = CY + GROUP_R*Math.sin(mid);
     var rot = mid*180/Math.PI + 90;
@@ -91,12 +94,14 @@ function create(opts){
     return {n:n, path:path};
   });
 
-  var dots = {}, labels = NODES.map(function(n){
+  var dots = {}, labels = [];
+  NODES.forEach(function(n){
     var dot = el("circle", {"class":"nodedot",
-      cx: CX + DOT_R*Math.cos(n.angle), cy: CY + DOT_R*Math.sin(n.angle), r:4,
+      cx: CX + DOT_R*Math.cos(n.angle), cy: CY + DOT_R*Math.sin(n.angle), r: bare ? 7 : 4,
       fill:n.color, stroke:n.color});
     nodeLayer.appendChild(dot);
     dots[n.id] = dot;
+    if (bare) return;
 
     var lx = CX + LABEL_R*Math.cos(n.angle), ly = CY + LABEL_R*Math.sin(n.angle);
     var rot = n.angle*180/Math.PI, anchor = "start";
@@ -105,7 +110,7 @@ function create(opts){
       "text-anchor":anchor, transform:"rotate(" + rot + "," + lx + "," + ly + ")", dy:"0.35em"});
     text.textContent = n.id;
     nodeLayer.appendChild(text);
-    return {n:n, text:text};
+    labels.push({n:n, text:text});
   });
 
   /* ── the parts the state owns ────────────────────────────────────────── */
@@ -268,6 +273,7 @@ function create(opts){
   }
   arcs.forEach(function(x){ bind(x.path, x.n); });
   labels.forEach(function(x){ bind(x.text, x.n); });
+  if (bare) NODES.forEach(function(n){ bind(dots[n.id], n); });
   groupLabels.forEach(function(x){ bindGroup(x.text, x.g); });
   svg.addEventListener("click", function(){ if (opts.onBackground) opts.onBackground(); });
 

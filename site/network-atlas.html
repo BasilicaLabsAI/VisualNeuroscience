@@ -386,6 +386,9 @@ main.screen.one.land{ flex-direction:row; }
   font-size:.8rem; color:var(--ink-60); margin:.6rem 0 0;
 }
 .rail-blurb{ font-size:.94rem; line-height:1.55; margin:.6rem 0 0; }
+/* the small ring at the box's foot: a square the width of the box, the diagram alone */
+.rail-ring{ margin:0; }
+.rail-ring svg{ display:block; width:100%; height:auto; aspect-ratio:1 / 1; }
 .rail-row{ display:flex; align-items:center; gap:.5rem; margin:.6rem 0 0; }
 .rail-row .tool-label{ flex:none; }
 .rail-row input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); }
@@ -466,11 +469,17 @@ main.screen.one.land{ flex-direction:row; }
           <h2>Brain state</h2>
           <div class="selwrap"><select id="netState" aria-label="Brain state"></select></div>
           <p class="rail-blurb" id="netBlurb"></p>
-          <p class="rail-note">Every region with a parcel in the atlas lights up on the scan in its ring colour. The bar&rsquo;s Network opens the ring: press a region there and it comes forward on the scan with the regions it couples to held at half strength, or a network&rsquo;s name for all of it. Move the crosshair on the scan and the ring follows it back.</p>
+          <p class="rail-note">Press a region on the ring and it comes forward on the scan; the bar&rsquo;s Network opens the ring in full.</p>
         </section>
         <section class="rail-part">
           <h2>On the scan</h2>
           <div class="rail-row"><span class="tool-label">Opacity</span><input type="range" id="opacity" min="10" max="100" value="90" aria-label="How strongly the regions cover the scan"><span class="val" id="opacityVal">90%</span></div>
+        </section>
+        <!-- the ring small, the diagram alone (v12.6, at the owner's word): the
+             same regions and threads as the sheet's, answering to a press the
+             same way, with no names on it; the full ring stays behind Network -->
+        <section class="rail-part rail-ring" aria-label="The ring, small">
+          <svg id="ringMini" viewBox="98 98 524 524" role="img" aria-label="The state's couplings as a small ring, linked to the scan; the bar's Network opens the ring in full"></svg>
         </section>
         </div>
       </div>
@@ -547,6 +556,7 @@ main.screen.one.land{ flex-direction:row; }
         <header class="pop-head"><b id="popAboutH">About</b><small>what this is, and what it is drawn from</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
         <div class="pop-body">
           <p>Six brain states &mdash; flow, rest, focused attention, threat, reward pursuit and meditation &mdash; each drawn as a ring of fourteen regions in seven networks, with the couplings that strengthen in that state as coloured threads and the ones that fall quiet as grey dashes. Pick a state and every region that has a parcel in the atlas lights up on the scan in its ring colour; press a region or a whole network on the ring and the planes centre on it.</p>
+          <p>Every region with a parcel in the atlas lights up on the scan in its ring colour. Press a region on the ring &mdash; the small one in the box, or the full one the bar&rsquo;s Network opens &mdash; and it comes forward on the scan with the regions it couples to held at half strength, or press a network&rsquo;s name in the full ring for all of it. Move the crosshair on the scan and the ring follows it back.</p>
           <p>The couplings are composites read off the imaging literature, not measured connectomes, and each state names its sources beneath the ring. Regions keep their place and colour in every state, so switching states moves the threads and nothing else. Three of the fourteen regions have no parcel in AAL-116 and wear a dashed arc: picking one parks the crosshair at a published coordinate instead.</p>
           <div class="credits">
             <p>Rendered with NiiVue (Rorden lab). MNI152 template, McConnell Brain Imaging Centre. AAL parcellation, Tzourio-Mazoyer et al. 2002.</p>

@@ -87,8 +87,11 @@ var parcelToNode = {};
 DATA.NODES.forEach(function(n){ parcelsOf(n).forEach(function(idx){ parcelToNode[idx] = n.id; }); });
 
 /* ── the ring ──────────────────────────────────────────────────────────── */
-var ring = MN_RING.create({
-  svg: svg, data: DATA,
+/* the ring in full, in the sheet the bar's Network raises, and since v12.6
+   at the owner's word a small bare copy in the drawer's foot (#ringMini),
+   the diagram alone; both answer to the pointer the same way, and what one
+   is told the other hears, through the fan-out below */
+var wiring = {
   dashed: function(n){ return n.fit === "none"; },
   onHover: function(n){ if (!pinned()) read(n); },
   onLeave: function(){ if (!pinned()) unread(); },
@@ -97,7 +100,24 @@ var ring = MN_RING.create({
   onGroupLeave: function(){ if (!pinned()) unread(); },
   onGroupSelect: function(g){ if (selectedGroup === g.id) deselect(); else selectGroup(g); },
   onBackground: function(){ if (pinned()) deselect(); }
-});
+};
+function ringOn(el, bare){
+  var o = { svg: el, data: DATA, bare: !!bare };
+  for (var k in wiring) o[k] = wiring[k];
+  return MN_RING.create(o);
+}
+var main = ringOn(svg, false), svgMini = $("ringMini"), mini = svgMini ? ringOn(svgMini, true) : null;
+var rings = mini ? [main, mini] : [main];
+var ring = {
+  nodes: main.nodes, byId: main.byId, groups: main.groups,
+  get state(){ return main.state; },
+  isLinked: main.isLinked, membersOf: main.membersOf,
+  setState: function(st){ rings.forEach(function(r){ r.setState(st); }); },
+  setWeight: function(k){ rings.forEach(function(r){ r.setWeight(k); }); },
+  focus: function(id){ rings.forEach(function(r){ r.focus(id); }); },
+  focusGroup: function(gid){ var touched = []; rings.forEach(function(r){ touched = r.focusGroup(gid); }); return touched; },
+  clear: function(){ rings.forEach(function(r){ r.clear(); }); }
+};
 if (window.MN_DIAG) MN_DIAG.attach({ svg: svg });
 
 function stateNow(){ return ring.state || NONE; }
