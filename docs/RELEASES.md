@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.16 — 24 October 2026 — A letter from the developer
+Commit · Set the owner's letter on the About page as the developer's message
+
+The About page is now the developer's own letter, under the portrait: thanks for downloading, the hope that the next generation of neuroscientists and psychologists will use the atlases to understand the brain and its networks, how the atlas began in Python while studying at King's and was finished with AI, that the app is free and how to support it, and how to ask for a feature or send a correction, signed Fadil Karim, with the address to write to in the letter and the links to follow beneath it.
+
 ## v12.15 — 24 October 2026 — The developer's message, and the store's new iPhone size
-Commit · Open the About page with the owner's message and make the store images at the iPhone size App Store Connect now requires
+Commit `9c20bb7` · Open the About page with the owner's message and make the store images at the iPhone size App Store Connect now requires
 
 The About page now opens, under the portrait, with a short message from the developer: thank you for downloading Visual Neuroscience, built by one person with the help of AI and a PG Cert in Applied Neuroscience from King's College London Online, using models from Anthropic and Kimi. It goes straight on to how to write in, the signature and the links; the longer sections that stood between them are gone, and the Terms now send a reader looking for the posters' licences to the posters page. The App Store images are made again at the size App Store Connect now asks for on the iPhone, 1206 by 2622, as well as at the 6.9-inch size, without the Best experienced on iPad line the app shows at the top of an iPhone, and each set gains a tenth image, AI Connector: the MCP server's page as the About tab opens it, under the words Connect to your AI Provider with the MCP Server.
 
