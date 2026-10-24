@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.2 — 24 October 2026 — The test's prompt readable
+Commit · Set the Microanatomy test's prompt as a heading rather than a line of tiny caps
+
+In Test yourself on the Microanatomy page the structure to find now stands as a proper heading, with Find above it and the count and the instruction larger too; the card's small-caps rule had been shrinking it to a line of tiny letters.
+
 ## v12.1 — 24 October 2026 — Grey island bars, two pages full screen, and every atlas remembering itself
-Commit · Stand every bar as a grey island, fill the screen with the tractogram and the cell, and remember every atlas's last state
+Commit `6463085` · Stand every bar as a grey island, fill the screen with the tractogram and the cell, and remember every atlas's last state
 
 The bar along the foot of every atlas now stands as an island in from the screen's edges, bordered all round as the Brodmann Area Atlas's always was, in a light grey on the light theme and a dark grey on the dark; the molecular viewer's bar does the same. In the dark theme the scans stand on the page's own black rather than a deeper black of their own. Tractography fills the screen with nothing framing it, its Slice switch on the bar beside Revolve, and on the light theme its single colour is a dark grey with a satin shine instead of flat ink. The Microanatomy drawing fills the screen too, the structures a window over it rather than a column beside it, and a pinch or a drag works on it in the app as on the website. Every atlas remembers how it was left, cuts included: the 3D Region Atlas and the Brodmann Area Atlas keep their slices with the pick, Tractography its colour, thickness, cuts and angle, the Network Atlas its state and opacity, and Microanatomy its structure. The newsletter card now keeps to the website: inside the apps it no longer appears.
 

@@ -226,7 +226,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `touch-action:none`, one pointer panning it when larger than the view, two pinching it about their midpoint and
   carrying it with them, so a pinch reaches the page whole in the app's web view too; the + and − went); the structures
   are the drawer (`#side`, the `drawer-in`: `#explore` with the picked structure, the index and Colour every structure, or
-  `#quiz` the test), since v12.1 a window over the drawing at every width (`.drawer` absolute at the deck's left, z 15,
+  `#quiz` the test; its prompt `h2.q-prompt` is sized as a heading by `.card h2.q-prompt`, since viewer.css's `.card h2`
+  outranked `.q-prompt` and drew the structure's name as a tiny kicker until v12.2), since v12.1 a window over the drawing at every width (`.drawer` absolute at the deck's left, z 15,
   so the drawing keeps its size; it stood beside the drawing on a wide screen until then), open on
   the first visit at every width and remembered as `vn-cells-drawer` after; and the bar carries Cells (`#popCells`, the
   tiles, a pick closing the sheet), Test yourself (`#quizBtn`, a mode lit while on, switched through `MN_CELLS.setMode`,

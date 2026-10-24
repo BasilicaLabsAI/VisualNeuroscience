@@ -304,10 +304,14 @@ li > .cellt{ cursor:pointer; }
   border-bottom:1px solid var(--hair); padding-bottom:.55rem; margin-bottom:.75rem;
 }
 .detail{ min-height:13.5rem; }
-.detail h2, .q-prompt{
+.detail h2, .card h2.q-prompt{
   font-family:var(--font-display); font-weight:400; font-size:1.45rem;
   line-height:1.14; margin:0 0 .5rem; letter-spacing:.005em;
 }
+/* the test's prompt is a heading, not the card's small-caps kicker (v12.2, at
+   the owner's word: viewer.css's .card h2 outranked .q-prompt and shrank the
+   structure's name to a line of tiny caps) */
+.card h2.q-prompt{ font-size:1.7rem; text-transform:none; text-align:left; border:0; padding:0; margin:0 0 .6rem; }
 .detail .bar{ display:block; width:2.4rem; height:.32rem; background:var(--acc,var(--ink)); margin-bottom:.7rem; }
 .detail p{ font-family:var(--font-serif); font-size:.98rem; line-height:1.55; margin:0 0 .5rem; }
 .detail .aka{ font-family:var(--font-brand); color:var(--ink-60); font-size:.92rem; }
@@ -332,12 +336,12 @@ li > .cellt{ cursor:pointer; }
 .all-toggle input{ width:1rem; height:1rem; accent-color:var(--ink); margin:0; }
 
 /* the test */
-.q-count{ font-family:var(--font-brand); color:var(--ink-60); margin:0 0 .35rem; font-size:.92rem; }
+.q-count{ font-family:var(--font-brand); color:var(--ink-60); margin:0 0 .5rem; font-size:1rem; }
 .q-prompt .q-find{
-  display:block; font-family:var(--font-brand); font-size:.6rem; letter-spacing:.24em;
-  text-transform:uppercase; color:var(--ink-60); margin-bottom:.3rem;
+  display:block; font-family:var(--font-brand); font-size:.74rem; letter-spacing:.26em;
+  text-transform:uppercase; color:var(--ink-60); margin-bottom:.45rem;
 }
-.q-fb{ font-family:var(--font-serif); font-size:.98rem; line-height:1.55; min-height:8.5rem; margin:.2rem 0 .8rem; }
+.q-fb{ font-family:var(--font-serif); font-size:1.06rem; line-height:1.55; min-height:8.5rem; margin:.2rem 0 .8rem; }
 .q-fb.shake{ animation:shake .28s; }
 @keyframes shake{ 25%{ transform:translateX(-4px); } 75%{ transform:translateX(4px); } }
 .q-actions{ display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1rem; }
