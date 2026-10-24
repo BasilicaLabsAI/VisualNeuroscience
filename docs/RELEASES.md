@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.3 — 24 October 2026 — What it does as a sheet over the faces
+Commit · Raise the Brodmann reading as a sheet over the faces on a phone rather than swelling its box
+
+On a phone held upright, What it does on the Brodmann Area Atlas now slides a sheet up over the faces from behind the strip that names the area, as tall as its words and no taller, and the cross at its corner or the bar's button sends it back down; the strip stays where it was. Until now the reading's box grew to fill the whole of the faces' room with the text at its top.
+
 ## v12.2 — 24 October 2026 — The test's prompt readable
-Commit · Set the Microanatomy test's prompt as a heading rather than a line of tiny caps
+Commit `0885bb7` · Set the Microanatomy test's prompt as a heading rather than a line of tiny caps
 
 In Test yourself on the Microanatomy page the structure to find now stands as a proper heading, with Find above it and the count and the instruction larger too; the card's small-caps rule had been shrinking it to a line of tiny letters.
 

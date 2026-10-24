@@ -361,9 +361,13 @@ Read this first in every session. It is the handover; nothing else needs pasting
   upright `.one`, the script's mark for `max-width:760px` and not `.land`; sideways `.land`, since v11.57 the script's
   `landQ`, a coarse pointer in landscape under 500px tall, with `body.ba-land` and the masthead hidden) the three views
   show too and the reading is a strip along the foot (`.r-head`: kick, name and where) and the bar's What it does, or a
-  tap on the strip, raises the text (`#rText`) over the brain: `.reading.open` spans the brain's cell with the text above
-  the strip (`order:-1`, scrolling inside, the `r-rise` keyframes), the strip staying put and the faces in reach, put
-  away by the button or Escape (`setRead`, `readOpen`, `.read-open` on the screen), with a cross of its own at the top right of the text (`#readX`, v11.82); on an
+  tap on the strip, raises the text (`#rText`): upright, since v12.3 at the owner's word, the text is a sheet standing on
+  the strip's top edge (`.ba-screen.one .reading.open .r-text`, absolute at `bottom:100%` of the strip, as tall as its
+  words up to `min(62vh, 520px)`, its words scrolling in `.r-scroll`, which is `display:contents` everywhere else), rising
+  from behind the strip over the faces with the `r-rise` keyframes and sinking back with `r-sink`, the strip keeping its
+  row (until then `.reading.open` spanned the faces' cell, the box swelling over the diagram); sideways `.reading.open`
+  takes the brain's column with the text above the strip (`order:-1`, scrolling inside); put
+  away by the button or Escape (`setRead`, `readOpen`, `.read-open` on the screen), with a cross of its own at the top right of the text (`#readX`, v11.82, inside `#rText` since v12.3); on an
   iPad or a computer the button's group is hidden and the whole reading shows. The text, the notes and the brain's panel
   open one at a time (v11.82).
   Upright (since v11.81) the faces stand one over the other at the full width, or at the width whose two faces fill the
