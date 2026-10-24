@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.19 — 24 October 2026 — A promotional line for the whole app
+Commit · Make the App Store promotional text about the app as a whole
+
+The App Store promotional line in the listing notes now speaks for the app as a whole rather than for version 1.1: a free 3D atlas of the human brain, its regions, Brodmann areas, receptors, cells, white matter and networks, with revision questions and an AI connector, working offline.
+
 ## v12.18 — 24 October 2026 — Brain region explanations, and the 1.1 listing
-Commit · Make the region images' statement Brain region explanations alone and write the 1.1 listing text
+Commit `7fd5951` · Make the region images' statement Brain region explanations alone and write the 1.1 listing text
 
 The two App Store images of the atlas's region explanations now carry the owner's statement alone, Brain region explanations, on the iPad and on both iPhone sizes. The listing notes hold the text for version 1.1: the What's New list brought up to date with the AI Connector, the full-screen atlases and the update popup, a new promotional line, and a description that adds the AI Connector and the cell and molecule pages to what is inside.
 

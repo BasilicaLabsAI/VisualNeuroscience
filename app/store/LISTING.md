@@ -243,11 +243,11 @@ Only if 1.0 went out as build 14:
 • Saved models. Name a 3D Region Atlas view, with its regions, colours, camera and cuts, and open it again later. Signed in, models follow your account to every device.
 ```
 
-**Promotional Text** (162/170), which can be changed at any time
-without a new version:
+**Promotional Text** (165/170), about the app as a whole rather than one version, at
+the owner's word; it can be changed at any time without a new version:
 
 ```
-New in 1.1: ask the atlas from your AI assistant, explore a neuron and its receptors in 3D, and see the Brodmann areas on a brain you can turn. Free, with no ads.
+A free 3D atlas of the human brain: regions, Brodmann areas, receptors, cells, white matter and networks, with revision questions and an AI connector. Works offline.
 ```
 
 **Description** (3,952/4000). 1.0's description predated
