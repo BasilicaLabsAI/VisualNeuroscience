@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.4 — 24 October 2026 — The transmitter filter on three lines
+Commit · Lay the Microanatomy page's transmitter filters out on three lines
+
+In the Receptors and Neurotransmitters sheets on the Microanatomy page the row of transmitter buttons now reads on three lines: All on a line of its own, then the monoamines behind their label, then everything else behind its, rather than one run of buttons with the labels lost among them.
+
 ## v12.3 — 24 October 2026 — What it does as a sheet over the faces
-Commit · Raise the Brodmann reading as a sheet over the faces on a phone rather than swelling its box
+Commit `b45e42e` · Raise the Brodmann reading as a sheet over the faces on a phone rather than swelling its box
 
 On a phone held upright, What it does on the Brodmann Area Atlas now slides a sheet up over the faces from behind the strip that names the area, as tall as its words and no taller, and the cross at its corner or the bar's button sends it back down; the strip stays where it was. Until now the reading's box grew to fill the whole of the faces' room with the text at its top.
 

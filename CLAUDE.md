@@ -232,7 +232,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   the first visit at every width and remembered as `vn-cells-drawer` after; and the bar carries Cells (`#popCells`, the
   tiles, a pick closing the sheet), Test yourself (`#quizBtn`, a mode lit while on, switched through `MN_CELLS.setMode`,
   the drawer opened for it), Neurotransmitters (`#popNt`) and Receptors (`#popRx`), both full-width sheets holding what the
-  two folded sections held, and About (`#popAbout`: the lede, `#plateNote`, the credits). The screen script exposes
+  two folded sections held (their transmitter filters, `#ntFilter` and `#rxFilter`, built by `nt.js` and `rx.js` as three
+  `.rx-line`s since v12.4 at the owner's word: All alone, then the monoamines behind their `.rx-chip-label`, then everything
+  else behind its), and About (`#popAbout`: the lede, `#plateNote`, the credits). The screen script exposes
   `MN_SCREEN` (`open`, `hide`, `current`, `drawer`), and `VN_reveal` opens the sheet a hash names a tile in. The page
   opens a door to the shoot script, `MN_TRACTS` (`zoom`,
   `home`, `still`), through which `shoot-home-pictures.js` shoots both twins at zoom 1.2, the revolve stopped and the home

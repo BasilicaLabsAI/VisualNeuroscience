@@ -115,19 +115,25 @@
     var byId = {}; filters.forEach(function(f){ byId[f.id] = f; });
 
     if (chips && filters.length){
-      var seen = {};
-      filters.forEach(function(f){
-        if (f.kind !== "all" && !seen[f.kind]){
-          seen[f.kind] = true;
-          chips.appendChild(el("span", "rx-chip-label", f.kind === "mono" ? "Monoamines" : "Everything else"));
+      /* three lines (v12.4, at the owner's word): All on a line of its own,
+         then the monoamines behind their label, then everything else */
+      var rows = {};
+      function rowFor(kind){
+        if (!rows[kind]){
+          rows[kind] = el("div", "rx-line rx-line-" + kind);
+          if (kind !== "all") rows[kind].appendChild(el("span", "rx-chip-label", kind === "mono" ? "Monoamines" : "Everything else"));
+          chips.appendChild(rows[kind]);
         }
+        return rows[kind];
+      }
+      filters.forEach(function(f){
         var n = f.groups.length ? hay.filter(function(h){ return f.groups.indexOf(h.group) !== -1; }).length : hay.length;
         var b = el("button", "rx-chip" + (f.kind === "mono" ? " mono" : "") + (f.id === "all" ? " on" : ""));
         b.type = "button"; b.setAttribute("data-filter", f.id);
         b.setAttribute("aria-pressed", f.id === "all" ? "true" : "false");
         b.appendChild(document.createTextNode(f.label));
         b.appendChild(el("small", null, String(n)));
-        chips.appendChild(b);
+        rowFor(f.kind || "all").appendChild(b);
       });
       chips.addEventListener("click", function(e){
         var b = e.target.closest && e.target.closest(".rx-chip");

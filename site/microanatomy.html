@@ -224,13 +224,15 @@ li > .cellt{ cursor:pointer; }
    Schematics drawn by scripts/receptors, one per kind of machine, filled
    in per molecule by rx.js; the tiles share the neurotransmitter tiles'
    bones and add two rows of text. */
-/* the transmitter to isolate: the monoamines first, then the rest */
-.rx-filter{ display:flex; flex-wrap:wrap; align-items:center; gap:.35rem .4rem; margin:0 0 .7rem; }
+/* the transmitter to isolate, on three lines (v12.4, at the owner's word):
+   All on a line of its own, then the monoamines behind their label, then
+   everything else behind its, each line wrapping on its own when it must */
+.rx-filter{ display:flex; flex-direction:column; align-items:stretch; gap:.45rem; margin:0 0 .7rem; }
+.rx-line{ display:flex; flex-wrap:wrap; align-items:center; gap:.35rem .4rem; }
 .rx-chip-label{
   font-family:var(--font-brand); font-weight:500; font-size:.52rem; letter-spacing:.24em;
-  text-transform:uppercase; color:var(--ink-60); margin:0 .15rem 0 .5rem;
+  text-transform:uppercase; color:var(--ink-60); margin:0 .15rem 0 0; flex:none;
 }
-.rx-chip-label:first-child{ margin-left:0; }
 .rx-chip{
   display:inline-flex; align-items:baseline; gap:.4rem; cursor:pointer;
   font-family:var(--font-brand); font-weight:500; font-size:.6rem; letter-spacing:.14em;
