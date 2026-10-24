@@ -138,7 +138,9 @@ legend { font-family: var(--serif); font-weight: 600; font-size: 16px; padding: 
 #info .s { font-size: 13px; color: var(--ink-soft); margin-top: 1px; }
 #info .n { font-size: 13.5px; line-height: 1.45; margin: 6px 0 0; }
 
-#hint { position: fixed; z-index: 3; right: 18px; bottom: calc(var(--bar-h, 60px) + 10px); margin: 0; font-size: 13px; color: var(--ink-soft); text-shadow: 0 0 3px var(--halo), 0 0 8px var(--halo); pointer-events: none; transition: opacity 0.6s; }
+#hint { position: fixed; z-index: 3; right: 18px; bottom: calc(var(--bar-h, 60px) + 10px); margin: 0; font-size: 13px; color: var(--ink-soft); pointer-events: none; transition: opacity 0.6s;
+  /* a pill of the panel's material, so the line reads over whatever label the model puts beneath it (v12.1) */
+  padding: 0.3rem 0.7rem; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
 #fail { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 24px; background: var(--c-extra); }
 #fail p { max-width: 440px; font-size: 16px; margin: 0; }
 
