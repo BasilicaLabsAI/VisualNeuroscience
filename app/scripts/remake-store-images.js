@@ -2,8 +2,11 @@
 
      cd app && node scripts/remake-store-images.js [shot ...]
 
-   Each of the eighteen images in app/store/sell is a capture of the app
-   under a statement (store-sell.js). The captures came from the owner's
+   Each image in app/store/sell is a capture of the app under a statement
+   (store-sell.js): ten shots, each the iPad's at 2752×2064 and the
+   iPhone's at two sizes from the one render, 1206×2622 (the medium display
+   App Store Connect requires since October 2026) and 1320×2868 (the
+   6.9-inch, optional). The captures came from the owner's
    devices, an 11-inch iPad sideways and an iPhone 16 Pro, on 23 October
    2026; since v12.10 they are remade here whenever the pages change, so
    the images keep up without a device: each page is rendered as the app
@@ -16,12 +19,24 @@
    its capture whole and only the atlas box's picture, the home page's
    light twin, is set in afresh. The statements are the owner's.
 
+   No capture has the About tab lit on a pushed page, so the AI Connector
+   shots (the MCP server's page) stand under strips made from the others:
+   the iPad's bar is the Atlases one with the island of the owner's capture
+   of the About tab laid inside the capsule's outline; the iPhone's tab bar
+   is the Practice one with every item unlit and Practice's pill, read off
+   the lettering-free pixels, moved 207 px right under About, whose name is
+   thickened by the thirteen per cent a lit tab's name gains; and the
+   iPhone's bar is the Molecular one titled MCP Server in Inter SemiBold,
+   sized and tracked so that Molecular set the same way covers the
+   original. The one line a phone shows at the top since v12.14 (Best
+   experienced on iPad) is left out, as shoot-store.js leaves it out.
+
    Serves nothing itself: the site must be up on http://127.0.0.1:8412
    (python3 -m http.server 8412 --bind 127.0.0.1 --directory site), or
    VN_SITE names another address. Uses the global Playwright install and
    the bundled Chromium, drawing WebGL with SwiftShader, so the atlas pages
    take a minute or two each; the whole set takes half an hour or so. The
-   shots are named ipad-01 to ipad-09 and iphone-01 to iphone-09, as the
+   shots are named ipad-01 to ipad-10 and iphone-01 to iphone-10, as the
    captures were numbered; name some to remake only those.
 
    The page is marked as the shell marks it (data-shell, data-shell-pad on
@@ -43,8 +58,8 @@ const only = process.argv.slice(2);
 /* the two devices: the web view in CSS pixels, its scale, and where its
    rows sit in the capture */
 const DEV = {
-  ipad:   { w: 1210, h: 748, dpr: 2, pad: true,  top: 172, capture: [2420, 1668], family: 'ipad-13-land' },
-  iphone: { w: 402,  h: 675, dpr: 3, pad: false, top: 348, bottom: 2373, capture: [1206, 2622], family: 'iphone-6.9' },
+  ipad:   { w: 1210, h: 748, dpr: 2, pad: true,  top: 172, capture: [2420, 1668], families: ['ipad-13-land'] },
+  iphone: { w: 402,  h: 675, dpr: 3, pad: false, top: 348, bottom: 2373, capture: [1206, 2622], families: ['iphone-6.3', 'iphone-6.9'] },
 };
 
 /* the regions of the atlas captures, in the order the owner added them,
@@ -60,7 +75,7 @@ const atlasReady = p => p.waitForFunction(() => document.getElementById('status'
 const cellsReady = p => p.waitForFunction(() => { const s = document.getElementById('plate'); return s && s.children.length > 3; }, null, { timeout: 120000 }).then(() => p.waitForTimeout(1500));
 const hxReady = p => p.waitForFunction(() => !!document.querySelector('.view[data-box="render"] .slice-btn'), null, { timeout: 400000 }).then(() => p.waitForTimeout(2500));
 const molReady = p => p.waitForFunction(() => { const f = document.getElementById('viewer'); try { return !!(f && f.contentWindow && f.contentWindow.receptorViewer); } catch (e) { return false; } }, null, { timeout: 180000 }).then(() => p.waitForTimeout(6000));
-const practiceReady = p => p.waitForTimeout(2500);
+const pageReady = p => p.waitForTimeout(2500);
 
 /* what each capture had open */
 const click = (sel, ms) => async p => { await p.click(sel); await p.waitForTimeout(ms || 1500); };
@@ -106,55 +121,70 @@ const caudate = async (p, ctx) => {
   await probeTap(p, ctx, 2);
 };
 
-/* the eighteen: the page and its state, the chrome strips, the image and its statement */
+/* the twenty: the page and its state, the chrome strips, the image (after
+   the size's name) and its statement */
 const SHOTS = [
   { name: 'ipad-01', dev: 'ipad', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PAD), ready: atlasReady, setup: caudate,
-    top: 'ipad-top-dark-atlases', out: 'ipad-13-land-02-atlas.png', statement: 'Human Brain Anatomy: Interactive 3D Brain Atlas' },
+    top: 'ipad-top-dark-atlases', out: '02-atlas.png', statement: 'Human Brain Anatomy: Interactive 3D Brain Atlas' },
   { name: 'ipad-02', dev: 'ipad', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PAD), ready: atlasReady, setup: click('.panelbar [data-pop="popNotes"]', 1800),
-    top: 'ipad-top-dark-atlases', out: 'ipad-13-land-02-atlas-what-they-do.png', statement: 'Brain region explanations|Detailed breakdowns coming soon' },
+    top: 'ipad-top-dark-atlases', out: '02-atlas-what-they-do.png', statement: 'Brain region explanations|Detailed breakdowns coming soon' },
   { name: 'ipad-03', dev: 'ipad', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PAD), ready: atlasReady, setup: chartD2,
-    top: 'ipad-top-dark-atlases', out: 'ipad-13-land-02-atlas-receptor-graph.png', statement: 'Receptor Density Data by Brain Region' },
+    top: 'ipad-top-dark-atlases', out: '02-atlas-receptor-graph.png', statement: 'Receptor Density Data by Brain Region' },
   { name: 'ipad-04', dev: 'ipad', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PAD), ready: atlasReady, setup: figsD2,
-    top: 'ipad-top-dark-atlases', out: 'ipad-13-land-02-atlas-receptor.png', statement: 'Neurotransmitter & Receptor Profiles:|Structure, Binding and Signalling' },
+    top: 'ipad-top-dark-atlases', out: '02-atlas-receptor.png', statement: 'Neurotransmitter & Receptor Profiles:|Structure, Binding and Signalling' },
   { name: 'ipad-05', dev: 'ipad', theme: 'dark', url: 'microanatomy.html', ready: cellsReady,
-    top: 'ipad-top-dark-atlases', out: 'ipad-13-land-06-microanatomy.png', statement: 'Micro-anatomy: Simple Interactive Brain Cell Atlases' },
+    top: 'ipad-top-dark-atlases', out: '06-microanatomy.png', statement: 'Micro-anatomy: Simple Interactive Brain Cell Atlases' },
   { name: 'ipad-06', dev: 'ipad', theme: 'dark', url: 'molecular.html?rx=D2&tab=binding&panel=shown&picker=shown&level=simple&stop=0', ready: molReady,
-    top: 'ipad-top-dark-atlases', out: 'ipad-13-land-07-molecular.png', statement: 'Molecular anatomy: Dynamic receptor atlas|with Neurotransmitter & Drug interactions' },
+    top: 'ipad-top-dark-atlases', out: '07-molecular.png', statement: 'Molecular anatomy: Dynamic receptor atlas|with Neurotransmitter & Drug interactions' },
   { name: 'ipad-07', dev: 'ipad', theme: 'dark', url: 'hallucinations.html', ready: hxReady, setup: click('.panelbar [data-pop="popCircuit"]', 1800),
-    top: 'ipad-top-dark-library', out: 'ipad-13-land-10-hallucinations.png', statement: 'Built-in study visualisation on the live atlas' },
-  { name: 'ipad-08', dev: 'ipad', theme: 'dark', url: 'practice.html', ready: practiceReady, setup: question('The primary motor cortex is located in the:'),
-    top: 'ipad-top-dark-practice', out: 'ipad-13-land-08-practice.png', statement: 'Revision question testing' },
+    top: 'ipad-top-dark-library', out: '10-hallucinations.png', statement: 'Built-in study visualisation on the live atlas' },
+  { name: 'ipad-08', dev: 'ipad', theme: 'dark', url: 'practice.html', ready: pageReady, setup: question('The primary motor cortex is located in the:'),
+    top: 'ipad-top-dark-practice', out: '08-practice.png', statement: 'Revision question testing' },
   { name: 'ipad-09', dev: 'ipad', theme: 'light', url: 'regions.html', ready: atlasReady,
-    top: 'ipad-top-light-atlases', out: 'ipad-13-land-02-atlas-light.png', statement: 'Light mode' },
+    top: 'ipad-top-light-atlases', out: '02-atlas-light.png', statement: 'Light mode' },
   { name: 'iphone-01', dev: 'iphone', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady,
-    top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: 'iphone-6.9-02-atlas.png', statement: 'Human Brain Anatomy:|Interactive 3D Brain Atlas' },
+    top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: '02-atlas.png', statement: 'Human Brain Anatomy:|Interactive 3D Brain Atlas' },
   { name: 'iphone-02', dev: 'iphone', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, setup: click('.panelbar [data-view="render"]', 2500),
-    top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: 'iphone-6.9-02-atlas-3d.png', statement: 'Brain region explanations|Detailed breakdowns coming soon' },
+    top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: '02-atlas-3d.png', statement: 'Brain region explanations|Detailed breakdowns coming soon' },
   { name: 'iphone-03', dev: 'iphone', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, setup: chartD2,
-    top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: 'iphone-6.9-02-atlas-receptor-graph.png', statement: 'Receptor Density|Data by Brain Region' },
+    top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: '02-atlas-receptor-graph.png', statement: 'Receptor Density|Data by Brain Region' },
   { name: 'iphone-04', dev: 'iphone', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, setup: figsD2,
-    top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: 'iphone-6.9-02-atlas-receptor.png', statement: 'Neurotransmitter & Receptor Profiles:|Structure, Binding and Signalling' },
+    top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: '02-atlas-receptor.png', statement: 'Neurotransmitter & Receptor Profiles:|Structure, Binding and Signalling' },
   { name: 'iphone-05', dev: 'iphone', theme: 'dark', url: 'microanatomy.html', ready: cellsReady, store: { 'vn-cells-drawer': 'shut' },
-    top: 'iphone-top-dark-microanatomy', bottom: 'iphone-bottom-dark-atlases', out: 'iphone-6.9-06-microanatomy.png', statement: 'Micro-anatomy:|Simple Interactive Brain Cell Atlases' },
+    top: 'iphone-top-dark-microanatomy', bottom: 'iphone-bottom-dark-atlases', out: '06-microanatomy.png', statement: 'Micro-anatomy:|Simple Interactive Brain Cell Atlases' },
   { name: 'iphone-06', dev: 'iphone', theme: 'dark', url: 'molecular.html?rx=D2', ready: molReady,
-    top: 'iphone-top-dark-molecular', bottom: 'iphone-bottom-dark-atlases', out: 'iphone-6.9-07-molecular.png', statement: 'Molecular anatomy:|Dynamic receptor atlas with|Neurotransmitter & Drug interactions' },
+    top: 'iphone-top-dark-molecular', bottom: 'iphone-bottom-dark-atlases', out: '07-molecular.png', statement: 'Molecular anatomy:|Dynamic receptor atlas with|Neurotransmitter & Drug interactions' },
   { name: 'iphone-07', dev: 'iphone', theme: 'dark', url: 'hallucinations.html', ready: hxReady,
     setup: async p => { await p.click('.panelbar [data-view="render"]'); await p.waitForTimeout(2500); await p.click('.panelbar [data-pop="popCircuit"]'); await p.waitForTimeout(1800); },
-    top: 'iphone-top-dark-hallucinations', bottom: 'iphone-bottom-dark-library', out: 'iphone-6.9-10-hallucinations.png', statement: 'Built-in study visualisation|on the live atlas' },
-  { name: 'iphone-08', dev: 'iphone', theme: 'dark', url: 'practice.html', ready: practiceReady, setup: question('A central ethical advantage of iPSCs'),
-    top: 'iphone-top-dark-practice', bottom: 'iphone-bottom-dark-practice', out: 'iphone-6.9-08-practice.png', statement: 'Revision question testing' },
+    top: 'iphone-top-dark-hallucinations', bottom: 'iphone-bottom-dark-library', out: '10-hallucinations.png', statement: 'Built-in study visualisation|on the live atlas' },
+  { name: 'iphone-08', dev: 'iphone', theme: 'dark', url: 'practice.html', ready: pageReady, setup: question('A central ethical advantage of iPSCs'),
+    top: 'iphone-top-dark-practice', bottom: 'iphone-bottom-dark-practice', out: '08-practice.png', statement: 'Revision question testing' },
+  /* the MCP server's page as the About tab opens it */
+  { name: 'ipad-10', dev: 'ipad', theme: 'dark', url: 'mcp.html', ready: pageReady,
+    top: 'ipad-top-dark-about', out: '11-mcp.png', statement: 'AI Connector:|Connect to your AI Provider with the MCP Server' },
+  /* the page at its top, title and all; a text page runs on under the tab
+     bar, so its last lines fade into the ground (fade, in CSS px) as iOS
+     fades a scroll view's content at a floating bar, rather than being cut
+     through a heading */
+  { name: 'iphone-10', dev: 'iphone', theme: 'dark', url: 'mcp.html', ready: pageReady, fade: 30,
+    top: 'iphone-top-dark-mcp-server', bottom: 'iphone-bottom-dark-about', out: '11-mcp.png', statement: 'AI Connector:|Connect to your AI Provider|with the MCP Server' },
   /* the Atlases tab in light mode: the app's own screen, kept whole, with the
      atlas box's picture (the home page's light twin) set in afresh where the
      old one stood, rows 668 to 1944 and columns 96 to 1109, the box's words
      beneath moved down by whatever the new picture is taller */
   { name: 'iphone-09', dev: 'iphone', native: 'iphone-light-atlases-tab', twin: 'site/assets/home/atlas-light.jpg', box: { x: 96, y: 668, w: 1014, h: 1277 },
-    out: 'iphone-6.9-01-home-light.png', statement: 'Light mode' },
+    out: '01-home-light.png', statement: 'Light mode' },
 ];
 
 /* the page as the shell shows it */
 const shell = (o) => {
   window.Capacitor = { isNativePlatform: () => true, getPlatform: () => 'ios', Plugins: {} };
-  const mark = () => { const r = document.documentElement; if (!r) return false; r.setAttribute('data-shell', 'tabs'); r.setAttribute('data-native', ''); if (o.pad) r.setAttribute('data-shell-pad', ''); return true; };
+  const mark = () => {
+    const r = document.documentElement; if (!r) return false;
+    r.setAttribute('data-shell', 'tabs'); r.setAttribute('data-native', ''); if (o.pad) r.setAttribute('data-shell-pad', '');
+    const st = document.createElement('style'); st.textContent = '.vn-best{display:none !important}'; r.appendChild(st);
+    return true;
+  };
   if (!mark()) new MutationObserver((rs, w) => { if (mark()) w.disconnect(); }).observe(document, { childList: true });
   try { localStorage.setItem('mn-theme', o.theme); localStorage.setItem('vn-news', JSON.stringify({ done: true })); for (const k in (o.store || {})) localStorage.setItem(k, o.store[k]); } catch (e) {}
 };
@@ -176,6 +206,7 @@ async function join(browser, shot, renderPath, outPath){
   } else {
     layers.push(`<img src="${dataUrl(path.join(CHROME, shot.top + '.png'))}" style="left:0;top:0">`);
     layers.push(`<img src="${dataUrl(renderPath)}" style="left:0;top:${px(d.top)}">`);
+    if (shot.fade) layers.push(`<div style="position:absolute;left:0;top:${px(d.bottom - shot.fade * d.dpr)};width:${px(W)};height:${px(shot.fade * d.dpr)};background:linear-gradient(rgba(17,17,17,0),#111111 60%)"></div>`);
     if (shot.bottom) layers.push(`<img src="${dataUrl(path.join(CHROME, shot.bottom + '.png'))}" style="left:0;top:${px(d.bottom)}">`);
   }
   const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
@@ -216,9 +247,11 @@ async function join(browser, shot, renderPath, outPath){
       }
       const composite = path.join(work, 'capture-' + s.name + '.png');
       await join(browser, s, render, composite);
-      const family = s.native ? DEV.iphone.family : DEV[s.dev].family;
-      const said = execFileSync('node', [path.join(__dirname, 'store-sell.js'), composite, path.join(SELL, s.out), s.statement, family]).toString().trim();
-      console.log(s.name, '→', s.out, Math.round((Date.now() - t0) / 1000) + 's', '·', said.split('\n').pop());
+      for (const family of (s.native ? DEV.iphone : DEV[s.dev]).families){
+        const name = family + '-' + s.out;
+        const said = execFileSync('node', [path.join(__dirname, 'store-sell.js'), composite, path.join(SELL, name), s.statement, family]).toString().trim();
+        console.log(s.name, '→', name, Math.round((Date.now() - t0) / 1000) + 's', '·', said.split('\n').pop());
+      }
     } catch (e){ failed++; console.log(s.name, 'FAILED', String(e.message || e).split('\n')[0]); }
   }
   await browser.close();

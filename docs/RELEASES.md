@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.15 — 24 October 2026 — The developer's message, and the store's new iPhone size
+Commit · Open the About page with the owner's message and make the store images at the iPhone size App Store Connect now requires
+
+The About page now opens, under the portrait, with a short message from the developer: thank you for downloading Visual Neuroscience, built by one person with the help of AI and a PG Cert in Applied Neuroscience from King's College London Online, using models from Anthropic and Kimi. It goes straight on to how to write in, the signature and the links; the longer sections that stood between them are gone, and the Terms now send a reader looking for the posters' licences to the posters page. The App Store images are made again at the size App Store Connect now asks for on the iPhone, 1206 by 2622, as well as at the 6.9-inch size, without the Best experienced on iPad line the app shows at the top of an iPhone, and each set gains a tenth image, AI Connector: the MCP server's page as the About tab opens it, under the words Connect to your AI Provider with the MCP Server.
+
 ## v12.14 — 24 October 2026 — A line for the phone
-Commit · Put a one-line notice at the top of a phone, for the iPad in the app and the desktop on the web
+Commit `911ae9b` · Put a one-line notice at the top of a phone, for the iPad in the app and the desktop on the web
 
 On an iPhone the app now carries one small line at the top of every tab and every page, Best experienced on iPad, and the website on a phone carries Best experienced on desktop, in the smallest type the app uses. An iPad, a computer and the Android app see nothing.
 

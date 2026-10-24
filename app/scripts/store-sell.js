@@ -4,9 +4,11 @@
 
      node app/scripts/store-sell.js <capture.png> <out.png> "<statement>" [family] [bar]
 
-   family  ipad-13-land (2752×2064, the default), ipad-13 (2064×2752) or
-           iphone-6.9 (1320×2868): the App Store's sizes, as the sets in
-           app/store/screenshots/ have them. Sideways the capture takes nine
+   family  ipad-13-land (2752×2064, the default), ipad-13 (2064×2752),
+           iphone-6.3 (1206×2622) or iphone-6.9 (1320×2868): the App Store's
+           sizes. Since October 2026 App Store Connect requires the iPhone's
+           medium display, the iPhone 16 to 18 Pro's 1206×2622, and takes the
+           6.9-inch size as optional. Sideways the capture takes nine
            tenths of the width and the statement the band left above it;
            upright the band is set first, fifteen hundredths of the height,
            and the capture is fitted to the height beneath it
@@ -33,9 +35,9 @@ const path = require('path'), fs = require('fs'), { execSync } = require('child_
 const { chromium } = require(path.join(execSync('npm root -g').toString().trim(), 'playwright'));
 const [capture, out, statement, family = 'ipad-13-land', barArg] = process.argv.slice(2);
 if (!capture || !out || !statement){ console.error('usage: node app/scripts/store-sell.js <capture.png> <out.png> "<statement>" [family] [bar]'); process.exit(1); }
-const SIZES = { 'ipad-13-land': [2752, 2064], 'ipad-13': [2064, 2752], 'iphone-6.9': [1320, 2868] };
+const SIZES = { 'ipad-13-land': [2752, 2064], 'ipad-13': [2064, 2752], 'iphone-6.3': [1206, 2622], 'iphone-6.9': [1320, 2868] };
 const [W, H] = SIZES[family] || SIZES['ipad-13-land'];
-const bar = Number(barArg) || (family === 'iphone-6.9' ? 162 : 57);
+const bar = Number(barArg) || (family.startsWith('iphone') ? 162 : 57);
 const FONTS = path.join(__dirname, '..', '..', 'site', 'fonts');
 const font = (file) => 'data:font/woff2;base64,' + fs.readFileSync(path.join(FONTS, file)).toString('base64');
 const png = 'data:image/png;base64,' + fs.readFileSync(capture).toString('base64');

@@ -159,7 +159,15 @@ The iPhone and iPad screenshots in `app/store/screenshots/` were taken from
 the pages in a browser (`scripts/shoot-store.js`, every set retaken on the
 v12.9 pages) and show the website's own header, not the tab bar the app has
 had since v11; the Android sets among them are what Play takes. The App
-Store's images are the eighteen in `app/store/sell/` below. They began as
+Store's images are the thirty in `app/store/sell/` below: ten shots, each
+for the iPad at 2752×2064 and for the iPhone at two sizes. Since October
+2026 App Store Connect requires the iPhone's medium display, the iPhone 16
+to 18 Pro's 1206×2622 (or the 6.1-inch 1179×2556), and takes the 6.9-inch
+1320×2868 as optional; a 6.9-inch image dropped into the medium display's
+slot is refused as "File dimensions are invalid", which is how the change
+came to light on 24 October. The `iphone-6.3-` images are the required set,
+the `iphone-6.9-` ones replace 1.0's in the 6.9-inch slot, where Pro Max
+phones would otherwise go on showing the old ones. They began as
 captures of the app on the owner's iPad and iPhone (23 October 2026) under a
 statement each; since v12.10 `app/scripts/remake-store-images.js` remakes
 them from the live pages whenever the pages change, with no device in hand:
@@ -171,25 +179,36 @@ with the back button and the island on the iPad, the bar with the page's
 title and the tab bar on the iPhone), and set under its statement by
 `store-sell.js`. The Atlases tab in light mode is the app's own screen, so
 that image keeps its capture whole and only the atlas box's picture, the
-home page's light twin, is set in afresh. The renders are a browser's rather
+home page's light twin, is set in afresh. The tenth, AI Connector, is the
+MCP server's page as the About tab opens it; no capture had About lit on a
+pushed page, so its strips were made from the others (the iPad's island
+from the owner's capture of the About tab, the iPhone's tab bar with
+Practice's pill moved under About, the iPhone's bar titled MCP Server in
+Inter SemiBold set to the system title's size). The one line a phone shows
+at the top since v12.14 is left out of the images. The renders are a browser's rather
 than the device's, and the device's safe areas are not reproduced, which
 stands the page's bar a little closer to the tab bar than the app does; a
 capture from a device is still the truest image, and `store-sell.js` takes
 one as before. Run it with the site served on port 8412, from `app/`:
 `node scripts/remake-store-images.js`, half an hour for the set, or name
-the shots (`ipad-01` to `ipad-09`, `iphone-01` to `iphone-09`) to remake a
-few.
+the shots (`ipad-01` to `ipad-10`, `iphone-01` to `iphone-10`) to remake a
+few. Uploaded, each set goes in the owner's order: 01 Human Brain Anatomy,
+02 Brain region explanations, 03 Receptor Density, 04 Neurotransmitter and
+Receptor Profiles, 05 Micro-anatomy, 06 Molecular anatomy, 07 Built-in study
+visualisation, 08 Revision question testing, 09 Light mode, 10 AI Connector
+(ten is the most a size takes).
 
 A capture from a device becomes a store image with the sell above it through
 `app/scripts/store-sell.js`: the statement in Flux, the site's brand face, on
 the molecular viewer's light backdrop (the extracellular side's pale blue
 over the cytoplasm's pale lilac, meeting at the frame's middle as they do in
 the viewer), the capture framed beneath at the
-store's size (the 13-inch iPad sideways by default, upright and the 6.9-inch
-iPhone by name), its status bar painted over in the capture's own ground
+store's size (the 13-inch iPad sideways by default; upright, the iPhone's
+medium display `iphone-6.3` and the 6.9-inch `iphone-6.9` by name), its
+status bar painted over in the capture's own ground
 rather than cut off, so the capture keeps its shape. A "|" in the statement
 forces the line break. The images made this way live in `app/store/sell/`,
-nine for the iPad and nine for the iPhone.
+ten for the iPad and ten for each iPhone size.
 
 Check the build number on the 1.0 page first. If 1.0 went out as build 14
 rather than 15, the second block is new to App Store users as well and goes
@@ -242,9 +261,16 @@ The description on the version page is 1.0's. Its WHAT IS INSIDE list predates M
    an account signed in with Apple (it should leave the app's entry under
    Settings → Apple ID → Sign in with Apple), the 3D Region Atlas held
    sideways, and the Hallucinations study's bar.
-3. **The screenshots.** Retake the iPhone and iPad sets on the device or the
-   simulator (the current ones show the old web bar); the first three as
-   `APP-REVIEW-REPLY.md` §8 says, the tools rather than a brain on black.
+3. **The screenshots.** The images in `app/store/sell/`, in the order above:
+   the `ipad-13-land-` ten into the 13-inch iPad display, the `iphone-6.3-`
+   ten into the iPhone medium display (required), and the `iphone-6.9-` ten
+   into the 6.9-inch display in place of 1.0's. Optional, and shown on iOS 27
+   and iPadOS 27 or later: a product page header and a search results
+   picture, made in the app's Asset Library (the header 21:9 at 3840×1646,
+   JPEG or PNG; search results 3:2, 1920×1280 to 3840×2560; or one universal
+   16:9 PNG at 5244×2950 for both; videos 5 to 30 seconds at 30 or 60 fps; no
+   alpha channel), submitted on their own once the app has an approved
+   version.
 4. **App Store Connect → the app → the 1.1 version page**: pick the build,
    paste *What's New* from above, upload the screenshots, paste the
    description's bullets from `PLAY-STORE.md`, check the keywords (add

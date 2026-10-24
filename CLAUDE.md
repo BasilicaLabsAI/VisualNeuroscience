@@ -52,7 +52,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   v11.36, then (v11.68) a Coming soon box with nothing to press, three `SoonRow`s naming what is being built (the Circuit
   Atlas, Regions in depth, the MCP server extended), then the developer's message and the Channels; its twin on the
   website is the home page's About hub (`index.html#about`: `.m-mcp`, `.m-soon`, `.m-about`, `.m-channels`), and
-  `about.html` is the developer's message alone since v11.68 (its MCP box left with the hub). The Vision Pro console's
+  `about.html` is the developer's message alone since v11.68 (its MCP box left with the hub), and since v12.15, at the
+  owner's word, it opens under the portrait with the owner's own message (Thank you for downloading Visual Neuroscience…,
+  no heading) followed only by Tell me what is missing, the signature and the links; the six sections between went. The
+  listing's support URL is that page, so the contact address must stay on it. The Vision Pro console's
   About window has a card of its own (`vision-about.html`, since v11.37). Android keeps the web bar. On an iPad the pages fill the screen: the shell
   also marks them `data-shell-pad`, the system bar shows no title there, and the page's title strip steps aside
   (`viewer.css`), keeping any buttons it carries. The stack's swipes back (from the edge, and iOS 26's from
@@ -537,8 +540,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   changes the newsletter and the usage counts need, and the steps are in `app/store/LISTING.md`, the screenshots in
   `app/store/screenshots/` (the browser's, every set retaken on the v12.9 pages by `app/scripts/shoot-store.js`, whose
   Brodmann shot is the Brodmann Area Atlas page since v12.9) and the App Store's own images in `app/store/sell/`: since
-  v12.10 `app/scripts/remake-store-images.js` remakes all eighteen from the live pages (served on 8412, run from `app/`,
-  half an hour; name shots `ipad-01`…`iphone-09` for a few), each page rendered as the app shows it (the shell's marks and
+  v12.10 `app/scripts/remake-store-images.js` remakes them from the live pages (served on 8412, run from `app/`,
+  half an hour; name shots `ipad-01`…`iphone-10` for a few): ten shots since v12.15, each the iPad's at 2752×2064 and the
+  iPhone's at two sizes from one render, `iphone-6.3-` at 1206×2622, the medium display App Store Connect has required
+  since October 2026 (the 6.9-inch refused there as "File dimensions are invalid"), and `iphone-6.9-` at 1320×2868, now
+  optional, to replace 1.0's in that slot; the tenth, AI Connector, is `mcp.html` under About strips made from the
+  others (`ipad-top-dark-about`, `iphone-top-dark-mcp-server` titled in Inter SemiBold, `iphone-bottom-dark-about` with
+  Practice's pill moved under About), and the v12.14 notice line is hidden in every render. Each page rendered as the
+  app shows it (the shell's marks and
   a Capacitor stub set at document start) at the web view of the owner's captures of 23 October 2026, an 11-inch iPad
   sideways (1210×748 CSS px at 2×, the page 172 px down the 2420×1668 capture) and an iPhone 16 Pro (402×675 at 3×, rows
   348 to 2373 of 1206×2622), in the capture's state (the regions in the order the owner added them, `P:Amygdala|P:Thalamus|
