@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.12 — 24 October 2026 — Brain region explanations
+Commit · Reword the two region images' statement to Brain region explanations
+
+The two App Store images that show the atlas's What they do window now carry the owner's statement Brain region explanations, over Detailed breakdowns coming soon, in place of Quick region summaries, on the iPad and the iPhone alike.
+
 ## v12.11 — 24 October 2026 — The Brodmann Area Atlas upright: nothing scrolls, and the faces are yours to pick
-Commit · Stop the Brodmann Area Atlas scrolling on a phone and keep the face picks on its bar upright
+Commit `e0ed12e` · Stop the Brodmann Area Atlas scrolling on a phone and keep the face picks on its bar upright
 
 On a phone held upright the Brodmann Area Atlas could still be dragged up and down by a few lines: the page's body kept a margin beneath a screen that already filled the window. Nothing scrolls now, as on the other atlases. The bar upright also keeps Outside, Inside and Both: a face picked on an iPad or with the phone held sideways was remembered, and upright the bar had hidden the way back to both faces, leaving one face over an empty room. A face alone now stands in the middle of that room, and the picks are there to change it.
 
