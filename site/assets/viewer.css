@@ -676,6 +676,10 @@ html{ scroll-padding-top:5.2rem; }
   font-family:var(--font-brand); font-weight:500; font-size:.68rem; letter-spacing:.24em; text-transform:uppercase;
 }
 .vn-menu .vn-social-menu svg{ width:18px; height:18px; }
+.vn-menu .vn-social-menu small{
+  display:block; margin-top:.15rem; font-family:var(--font-serif); font-weight:400; font-size:.8rem;
+  letter-spacing:0; text-transform:none; color:var(--ink-60);
+}
 @media (min-width:700px){
   .vn-bar .vn-social-bar{ display:inline-flex; }
   .vn-menu .vn-social-menu{ display:none; }

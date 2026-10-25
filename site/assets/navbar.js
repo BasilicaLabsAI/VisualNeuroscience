@@ -250,19 +250,21 @@
 })();
 
 /* Where to follow and reach the maker, at the top of every page of the
-   Android app: YouTube, Instagram, LinkedIn and email, in the top bar where
-   it has room and at the foot of the sections menu on a phone, where it has
-   none. The website's header carried them until v11.63, when it became the
-   iOS app's bar of tabs, which carry none; the About page lists them, with
-   GitHub, on the website and in both apps. */
+   Android app: YouTube, Instagram (the project's account, then the
+   developer's), LinkedIn and email, in the top bar where it has room and at
+   the foot of the sections menu on a phone, where it has none. The website's
+   header carried them until v11.63, when it became the iOS app's bar of
+   tabs, which carry none; the About page lists them, with GitHub, on the
+   website and in both apps. */
 (function(){
+  var INSTAGRAM = '<rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5" fill="none" stroke="currentColor" stroke-width="1.9"/>' +
+                  '<circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.9"/>' +
+                  '<circle cx="17.2" cy="6.8" r="1.15"/>';
   var LINKS = [
     { name: "YouTube", handle: "@VisualNeuroscienceAI", href: "https://www.youtube.com/@VisualNeuroscienceAI",
       icon: '<path fill-rule="evenodd" d="M6.2 5h11.6A4.2 4.2 0 0 1 22 9.2v5.6a4.2 4.2 0 0 1-4.2 4.2H6.2A4.2 4.2 0 0 1 2 14.8V9.2A4.2 4.2 0 0 1 6.2 5zM10 8.9v6.2l5.4-3.1z"/>' },
-    { name: "Instagram", handle: "fid_900", href: "https://www.instagram.com/fid_900/",
-      icon: '<rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5" fill="none" stroke="currentColor" stroke-width="1.9"/>' +
-            '<circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.9"/>' +
-            '<circle cx="17.2" cy="6.8" r="1.15"/>' },
+    { name: "Instagram", handle: "@VisualNeuroscience", href: "https://www.instagram.com/visualneuroscience/", icon: INSTAGRAM },
+    { name: "Instagram", handle: "fid_900", href: "https://www.instagram.com/fid_900/", icon: INSTAGRAM },
     { name: "LinkedIn", handle: "Fadil Karim", href: "https://www.linkedin.com/in/fadil-karim/",
       icon: '<path fill-rule="evenodd" d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM7.6 6.05a1.35 1.35 0 1 0 0 2.7 1.35 1.35 0 0 0 0-2.7zM6.45 9.6h2.3v8.1h-2.3zM10.3 9.6h2.3v1.15c.5-.8 1.4-1.35 2.6-1.35 2.1 0 3.1 1.35 3.1 3.65v4.65h-2.3v-4.3c0-1.1-.45-1.85-1.45-1.85-1.05 0-1.95.7-1.95 1.95v4.2h-2.3z"/>' },
     { name: "Email", handle: "fkarim@visualneuroscience.ai", href: "mailto:fkarim@visualneuroscience.ai",
@@ -278,8 +280,10 @@
       if (/^https?:/.test(l.href)){ a.target = "_blank"; a.rel = "noopener"; }
       a.title = l.name + " " + l.handle;
       a.setAttribute("aria-label", l.name + ", " + l.handle);
+      /* two accounts on one network are told apart by the handle under the name */
+      var twin = LINKS.filter(function(m){ return m.name === l.name; }).length > 1;
       a.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">' + l.icon + '</svg>' +
-        (labelled ? '<span>' + l.name + '</span>' : '');
+        (labelled ? '<span>' + l.name + (twin ? '<small>' + l.handle + '</small>' : '') + '</span>' : '');
       g.appendChild(a);
     });
     return g;

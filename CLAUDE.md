@@ -51,8 +51,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `Shot(dark, light:)`. Retake a twin whenever its page's look changes. The About tab leads with the MCP server since
   v11.36, then (v11.68) a Coming soon box with nothing to press, three `SoonRow`s naming what is being built (the Circuit
   Atlas, Regions in depth, the MCP server extended), then the developer's message and the Channels; its twin on the
-  website is the home page's About hub (`index.html#about`: `.m-mcp`, `.m-soon`, `.m-about`, `.m-channels`), and
-  `about.html` is the developer's message alone since v11.68 (its MCP box left with the hub), titled A Message from the
+  website is the home page's About hub (`index.html#about`: `.m-mcp`, `.m-soon`, `.m-about`, `.m-channels`). The
+  Channels stand in four lists, the hub's `.m-channels`, the About tab's box in `Shell.swift`, `about.html`'s
+  `.elsewhere` (which adds GitHub) and the Android bar's `LINKS` in `navbar.js` (its phone menu puts the handle under
+  the name where a network has two accounts), and a change to one belongs in all four: YouTube, then since v12.26, at
+  the owner's word, Instagram twice, the project's @VisualNeuroscience first and the developer's fid_900 after it,
+  then LinkedIn and email. `about.html` is the developer's message alone since v11.68 (its MCP box left with the hub), titled A Message from the
   Developer since v12.25, at the owner's word (Message from the Developer from v12.17; its title strip, its `<title>` and
   `og:title`, the home page's About-hub box and its twin in `Shell.swift`, and the shell's bar, `Page.about` and the
   `titles` map), and since v12.16 that message is the owner's letter, word for word as they gave it on 24 October 2026:

@@ -360,6 +360,7 @@ struct AboutTab: View {
             Box(kicker: "Follow and write", title: "Channels") {
                 VStack(alignment: .leading, spacing: 0) {
                     OutLink(name: "YouTube", handle: "@VisualNeuroscienceAI", url: "https://www.youtube.com/@VisualNeuroscienceAI")
+                    OutLink(name: "Instagram", handle: "@VisualNeuroscience", url: "https://www.instagram.com/visualneuroscience/")
                     OutLink(name: "Instagram", handle: "fid_900", url: "https://www.instagram.com/fid_900/")
                     OutLink(name: "LinkedIn", handle: "Fadil Karim", url: "https://www.linkedin.com/in/fadil-karim/")
                     OutLink(name: "Email", handle: "fkarim@visualneuroscience.ai", url: "mailto:fkarim@visualneuroscience.ai")

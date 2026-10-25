@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.26 — 25 October 2026 — The project's own Instagram
+Commit · Add the project's Instagram, @VisualNeuroscience, ahead of the developer's
+
+Visual Neuroscience now has an Instagram account of its own, @VisualNeuroscience. It stands first among the Instagram links wherever they appear, ahead of the developer's own account, fid_900: in the Channels box on the home page's About section and in the app's About tab, in the list at the foot of A Message from the Developer, and in the Android app's top bar. In the Android app's menu on a phone, each Instagram account shows its handle under its name, so the two can be told apart. The app takes the change with its next build.
+
 ## v12.25 — 25 October 2026 — A Message from the Developer
-Commit · Title the developer's page A Message from the Developer and name Moonshot in its letter
+Commit `44afcbf` · Title the developer's page A Message from the Developer and name Moonshot in its letter
 
 The developer's page is now titled A Message from the Developer, on the page itself, on its box on the home page and in the app's About tab, and in the app's bar while it is open. In the message, the state-of-the-art models the app was built with are now credited to Anthropic and Moonshot. The app takes the change with its next build.
 
