@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.20 — 25 October 2026 — Brain region functions explained, and the iPhone Duo
+Commit · Retitle the region images, show the explanations on the iPhone and add the iPhone Duo set
+
+The second App Store image now reads Brain region functions explained, and on the iPhone it shows what the regions do, the What they do window open over the 3D view as on the iPad, where it showed only the brain. Every image also comes in the iPhone Duo's size, the unfolded inner display at 2853 by 2007, made from the same render as the iPad's.
+
 ## v12.19 — 24 October 2026 — A promotional line for the whole app
-Commit · Make the App Store promotional text about the app as a whole
+Commit `a68f966` · Make the App Store promotional text about the app as a whole
 
 The App Store promotional line in the listing notes now speaks for the app as a whole rather than for version 1.1: a free 3D atlas of the human brain, its regions, Brodmann areas, receptors, cells, white matter and networks, with revision questions and an AI connector, working offline.
 

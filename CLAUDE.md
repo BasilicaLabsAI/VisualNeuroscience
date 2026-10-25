@@ -554,7 +554,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   half an hour; name shots `ipad-01`…`iphone-10` for a few): ten shots since v12.15, each the iPad's at 2752×2064 and the
   iPhone's at two sizes from one render, `iphone-6.3-` at 1206×2622, the medium display App Store Connect has required
   since October 2026 (the 6.9-inch refused there as "File dimensions are invalid"), and `iphone-6.9-` at 1320×2868, now
-  optional, to replace 1.0's in that slot; the tenth, AI Connector, is `mcp.html` under About strips made from the
+  optional, to replace 1.0's in that slot, and since v12.20 `iphone-duo-land-` at 2853×2007, the iPhone Duo's inner
+  display, from each iPad render (`store-sell.js`'s `SHARE`, the capture at 84% of the width, the status bar's rows
+  read from the capture's shape); the second shot's statement is Brain region functions explained and the iPhone's
+  shows the What they do window over the 3D view as the iPad's does (`openPop` waits for a sheet to come to rest,
+  which at 3× with software 3D takes longer than the slide); the tenth, AI Connector, is `mcp.html` under About strips made from the
   others (`ipad-top-dark-about`, `iphone-top-dark-mcp-server` titled in Inter SemiBold, `iphone-bottom-dark-about` with
   Practice's pill moved under About), and the v12.14 notice line is hidden in every render. Each page rendered as the
   app shows it (the shell's marks and

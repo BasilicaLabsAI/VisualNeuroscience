@@ -3,10 +3,11 @@
      cd app && node scripts/remake-store-images.js [shot ...]
 
    Each image in app/store/sell is a capture of the app under a statement
-   (store-sell.js): ten shots, each the iPad's at 2752×2064 and the
-   iPhone's at two sizes from the one render, 1206×2622 (the medium display
-   App Store Connect requires since October 2026) and 1320×2868 (the
-   6.9-inch, optional). The captures came from the owner's
+   (store-sell.js): ten shots, each the iPad's at 2752×2064 and, from the
+   same render, the iPhone Duo's inner display at 2853×2007, which is
+   almost the iPad capture's shape, and the iPhone's at two sizes from the
+   one render, 1206×2622 (the medium display App Store Connect requires
+   since October 2026) and 1320×2868 (the 6.9-inch, optional). The captures came from the owner's
    devices, an 11-inch iPad sideways and an iPhone 16 Pro, on 23 October
    2026; since v12.10 they are remade here whenever the pages change, so
    the images keep up without a device: each page is rendered as the app
@@ -58,7 +59,7 @@ const only = process.argv.slice(2);
 /* the two devices: the web view in CSS pixels, its scale, and where its
    rows sit in the capture */
 const DEV = {
-  ipad:   { w: 1210, h: 748, dpr: 2, pad: true,  top: 172, capture: [2420, 1668], families: ['ipad-13-land'] },
+  ipad:   { w: 1210, h: 748, dpr: 2, pad: true,  top: 172, capture: [2420, 1668], families: ['ipad-13-land', 'iphone-duo-land'] },
   iphone: { w: 402,  h: 675, dpr: 3, pad: false, top: 348, bottom: 2373, capture: [1206, 2622], families: ['iphone-6.3', 'iphone-6.9'] },
 };
 
@@ -83,6 +84,14 @@ const chartD2 = async p => {
   await p.click('.panelbar [data-pop="popRx"][data-tab="chart"]'); await p.waitForTimeout(1200);
   await p.evaluate(() => { const d = document.getElementById('structure-dropdown'); if (d && d.value !== 'D2'){ d.value = 'D2'; d.dispatchEvent(new Event('change', { bubbles: true })); } });
   await p.waitForTimeout(2500);
+};
+/* a window raised from the bar, waited for until its sheet has come to rest:
+   at three times the scale, with the 3D drawn in software, the half-second
+   slide can take far longer than it does on a device */
+const openPop = id => async p => {
+  await p.click(`.panelbar [data-pop="${id}"]`);
+  await p.waitForFunction(i => { const el = document.getElementById(i); return !!el && !el.hidden && el.classList.contains('in') && getComputedStyle(el).transform === 'none'; }, id, { timeout: 60000 });
+  await p.waitForTimeout(800);
 };
 const figsD2 = async p => { await chartD2(p); await p.click('.panelbar [data-pop="popRx"][data-tab="figs"]'); await p.waitForTimeout(2000); };
 /* the practice page deals at random: it is dealt again until the capture's question comes up */
@@ -126,8 +135,8 @@ const caudate = async (p, ctx) => {
 const SHOTS = [
   { name: 'ipad-01', dev: 'ipad', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PAD), ready: atlasReady, setup: caudate,
     top: 'ipad-top-dark-atlases', out: '02-atlas.png', statement: 'Human Brain Anatomy: Interactive 3D Brain Atlas' },
-  { name: 'ipad-02', dev: 'ipad', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PAD), ready: atlasReady, setup: click('.panelbar [data-pop="popNotes"]', 1800),
-    top: 'ipad-top-dark-atlases', out: '02-atlas-what-they-do.png', statement: 'Brain region explanations' },
+  { name: 'ipad-02', dev: 'ipad', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PAD), ready: atlasReady, setup: openPop('popNotes'),
+    top: 'ipad-top-dark-atlases', out: '02-atlas-what-they-do.png', statement: 'Brain region functions explained' },
   { name: 'ipad-03', dev: 'ipad', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PAD), ready: atlasReady, setup: chartD2,
     top: 'ipad-top-dark-atlases', out: '02-atlas-receptor-graph.png', statement: 'Receptor Density Data by Brain Region' },
   { name: 'ipad-04', dev: 'ipad', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PAD), ready: atlasReady, setup: figsD2,
@@ -144,8 +153,11 @@ const SHOTS = [
     top: 'ipad-top-light-atlases', out: '02-atlas-light.png', statement: 'Light mode' },
   { name: 'iphone-01', dev: 'iphone', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady,
     top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: '02-atlas.png', statement: 'Human Brain Anatomy:|Interactive 3D Brain Atlas' },
-  { name: 'iphone-02', dev: 'iphone', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, setup: click('.panelbar [data-view="render"]', 2500),
-    top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: '02-atlas-3d.png', statement: 'Brain region explanations' },
+  /* the What they do window over the 3D view, as on the iPad, since the
+     statement speaks of the regions' functions */
+  { name: 'iphone-02', dev: 'iphone', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady,
+    setup: async p => { await p.click('.panelbar [data-view="render"]'); await p.waitForTimeout(2500); await openPop('popNotes')(p); },
+    top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: '02-atlas-what-they-do.png', statement: 'Brain region functions explained' },
   { name: 'iphone-03', dev: 'iphone', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, setup: chartD2,
     top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: '02-atlas-receptor-graph.png', statement: 'Receptor Density|Data by Brain Region' },
   { name: 'iphone-04', dev: 'iphone', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, setup: figsD2,

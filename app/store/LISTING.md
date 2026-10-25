@@ -159,8 +159,13 @@ The iPhone and iPad screenshots in `app/store/screenshots/` were taken from
 the pages in a browser (`scripts/shoot-store.js`, every set retaken on the
 v12.9 pages) and show the website's own header, not the tab bar the app has
 had since v11; the Android sets among them are what Play takes. The App
-Store's images are the thirty in `app/store/sell/` below: ten shots, each
-for the iPad at 2752×2064 and for the iPhone at two sizes. Since October
+Store's images are the forty in `app/store/sell/` below: ten shots, each
+for the iPad at 2752×2064, for the iPhone Duo's inner display at 2853×2007
+from the iPad's render (`iphone-duo-land-`, the capture at 84 hundredths of
+the width, since the unfolded Duo is almost the iPad capture's shape), and
+for the iPhone at two sizes. Submitting Duo screenshots puts a badge on the
+product page saying the app is optimized for iPhone Duo; the pages are
+responsive, but the app has not been tried on a Duo. Since October
 2026 App Store Connect requires the iPhone's medium display, the iPhone 16
 to 18 Pro's 1206×2622 (or the 6.1-inch 1179×2556), and takes the 6.9-inch
 1320×2868 as optional; a 6.9-inch image dropped into the medium display's
@@ -193,7 +198,7 @@ one as before. Run it with the site served on port 8412, from `app/`:
 `node scripts/remake-store-images.js`, half an hour for the set, or name
 the shots (`ipad-01` to `ipad-10`, `iphone-01` to `iphone-10`) to remake a
 few. Uploaded, each set goes in the owner's order: 01 Human Brain Anatomy,
-02 Brain region explanations, 03 Receptor Density, 04 Neurotransmitter and
+02 Brain region functions explained, 03 Receptor Density, 04 Neurotransmitter and
 Receptor Profiles, 05 Micro-anatomy, 06 Molecular anatomy, 07 Built-in study
 visualisation, 08 Revision question testing, 09 Light mode, 10 AI Connector
 (ten is the most a size takes).
@@ -320,8 +325,9 @@ Also on the web at visualneuroscience.ai
    sideways, and the Hallucinations study's bar.
 3. **The screenshots.** The images in `app/store/sell/`, in the order above:
    the `ipad-13-land-` ten into the 13-inch iPad display, the `iphone-6.3-`
-   ten into the iPhone medium display (required), and the `iphone-6.9-` ten
-   into the 6.9-inch display in place of 1.0's. Optional, and shown on iOS 27
+   ten into the iPhone medium display (required), the `iphone-6.9-` ten
+   into the 6.9-inch display in place of 1.0's, and the `iphone-duo-land-`
+   ten into the iPhone Duo tab. Optional, and shown on iOS 27
    and iPadOS 27 or later: a product page header and a search results
    picture, made in the app's Asset Library (the header 21:9 at 3840×1646,
    JPEG or PNG; search results 3:2, 1920×1280 to 3840×2560; or one universal

@@ -5,10 +5,13 @@
      node app/scripts/store-sell.js <capture.png> <out.png> "<statement>" [family] [bar]
 
    family  ipad-13-land (2752×2064, the default), ipad-13 (2064×2752),
-           iphone-6.3 (1206×2622) or iphone-6.9 (1320×2868): the App Store's
-           sizes. Since October 2026 App Store Connect requires the iPhone's
-           medium display, the iPhone 16 to 18 Pro's 1206×2622, and takes the
-           6.9-inch size as optional. Sideways the capture takes nine
+           iphone-6.3 (1206×2622), iphone-6.9 (1320×2868) or iphone-duo-land
+           (2853×2007, the iPhone Duo's inner display sideways): the App
+           Store's sizes. Since October 2026 App Store Connect requires the
+           iPhone's medium display, the iPhone 16 to 18 Pro's 1206×2622, and
+           takes the 6.9-inch size as optional. The Duo's inner display is
+           almost the shape of the iPad captures, so it takes them, at 84
+           hundredths of its width so the statement keeps the iPad's room Sideways the capture takes nine
            tenths of the width and the statement the band left above it;
            upright the band is set first, fifteen hundredths of the height,
            and the capture is fitted to the height beneath it
@@ -35,18 +38,21 @@ const path = require('path'), fs = require('fs'), { execSync } = require('child_
 const { chromium } = require(path.join(execSync('npm root -g').toString().trim(), 'playwright'));
 const [capture, out, statement, family = 'ipad-13-land', barArg] = process.argv.slice(2);
 if (!capture || !out || !statement){ console.error('usage: node app/scripts/store-sell.js <capture.png> <out.png> "<statement>" [family] [bar]'); process.exit(1); }
-const SIZES = { 'ipad-13-land': [2752, 2064], 'ipad-13': [2064, 2752], 'iphone-6.3': [1206, 2622], 'iphone-6.9': [1320, 2868] };
+const SIZES = { 'ipad-13-land': [2752, 2064], 'ipad-13': [2064, 2752], 'iphone-6.3': [1206, 2622], 'iphone-6.9': [1320, 2868], 'iphone-duo-land': [2853, 2007] };
+/* the share of a sideways frame's width the capture takes */
+const SHARE = { 'iphone-duo-land': 0.84 };
 const [W, H] = SIZES[family] || SIZES['ipad-13-land'];
-const bar = Number(barArg) || (family.startsWith('iphone') ? 162 : 57);
 const FONTS = path.join(__dirname, '..', '..', 'site', 'fonts');
 const font = (file) => 'data:font/woff2;base64,' + fs.readFileSync(path.join(FONTS, file)).toString('base64');
 const png = 'data:image/png;base64,' + fs.readFileSync(capture).toString('base64');
 const size = execSync(`identify -format "%w %h" "${capture}"`).toString().trim().split(' ').map(Number);
+/* the status bar's rows by the capture's shape: an iPhone's upright, an iPad's sideways */
+const bar = Number(barArg) || (size[1] > size[0] ? 162 : 57);
 const landscape = W > H;
 /* the capture's place in the frame, and the room the statement has above it */
 let side, capW, capH, band, bottom;
 if (landscape){
-  side = Math.round(W * 0.05);
+  side = Math.round(W * (1 - (SHARE[family] || 0.9)) / 2);
   capW = W - 2 * side; capH = Math.round(capW * size[1] / size[0]);
   bottom = Math.round(H * 0.02);
   band = H - capH - bottom;
