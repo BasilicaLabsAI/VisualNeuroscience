@@ -298,22 +298,75 @@
    app included. It stands first in the body, above the masthead on the
    website, in the smallest type the app uses (viewer.css, .vn-best), and the
    one-screen pages measure their room from under it. A phone is a narrow
-   window or, held sideways, a short one with a coarse pointer. */
+   window or, held sideways, a short one with a coarse pointer. Since v12.23
+   the line follows the screen as it changes, since an iPhone Duo is a phone
+   closed and, in the app, an iPad open (the shell marks it data-shell-pad
+   then); the pages are told by a resize when it comes or goes. */
 (function(){
   var root = document.documentElement, body = document.body;
   if (!body || !window.matchMedia) return;
-  var phone = window.matchMedia("(max-width: 760px)").matches ||
-              window.matchMedia("(pointer: coarse) and (max-height: 500px)").matches;
-  if (!phone) return;
-  var say = null;
-  if (root.hasAttribute("data-native")){
-    if (root.hasAttribute("data-shell") && !root.hasAttribute("data-shell-pad")) say = "Best experienced on iPad";
-  } else if (window.matchMedia("(pointer: coarse)").matches){
-    say = "Best experienced on desktop";
+  var narrow = window.matchMedia("(max-width: 760px)"), short = window.matchMedia("(pointer: coarse) and (max-height: 500px)"),
+      coarse = window.matchMedia("(pointer: coarse)"), line = null, queued = 0, ready = false;
+  function words(){
+    if (!narrow.matches && !short.matches) return null;
+    if (root.hasAttribute("data-native")){
+      return root.hasAttribute("data-shell") && !root.hasAttribute("data-shell-pad") ? "Best experienced on iPad" : null;
+    }
+    return coarse.matches ? "Best experienced on desktop" : null;
   }
-  if (!say) return;
-  var line = document.createElement("p");
-  line.className = "vn-best";
-  line.textContent = say;
-  body.insertBefore(line, body.firstChild);
+  function decide(){
+    queued = 0;
+    var say = words(), had = !!(line && line.parentNode);
+    if (say){
+      if (!line){ line = document.createElement("p"); line.className = "vn-best"; }
+      line.textContent = say;
+      if (body.firstChild !== line) body.insertBefore(line, body.firstChild);
+    } else if (had){
+      line.parentNode.removeChild(line);
+    }
+    if (ready && had !== !!say){ try{ window.dispatchEvent(new Event("resize")); }catch(e){} }
+  }
+  decide();
+  ready = true;
+  function soon(){ if (!queued) queued = requestAnimationFrame(decide); }
+  window.addEventListener("resize", soon);
+  if (window.MutationObserver) new MutationObserver(soon).observe(root, {attributes: true, attributeFilter: ["data-shell-pad"]});
+})();
+
+/* A squat phone (v12.23), the closed iPhone Duo's outer display, shorter for
+   its width than any other iPhone's (the atlas pages' own squat() test): the
+   root is marked vn-squat, and viewer.css gives a page of text in the app's
+   tabs the gap at its top an iPad's pages have, the Duo standing the shell's
+   bars down the side, so that nothing sits above the page */
+(function(){
+  var root = document.documentElement, coarse = window.matchMedia ? window.matchMedia("(pointer: coarse)") : null;
+  function mark(){
+    var s = window.screen || {}, a = Math.min(s.width || 0, s.height || 0), b = Math.max(s.width || 0, s.height || 0);
+    root.classList.toggle("vn-squat", !!(coarse && coarse.matches) && a > 0 && a < 600 && b < 1.75 * a);
+  }
+  mark();
+  window.addEventListener("resize", mark);
+})();
+
+/* The keyboard (v12.23): while a text field has the focus and the window has
+   lost a keyboard's height, as a web view the keyboard shortens does, the
+   root is marked vn-typing, and bar.css puts the atlases' bar away until the
+   keyboard goes, so it never rides up over the keys. The window's height at
+   rest is kept for each width it has had. */
+(function(){
+  var root = document.documentElement, rest = {};
+  function field(a){
+    if (!a) return false;
+    if (a.tagName === "TEXTAREA" || a.isContentEditable) return true;
+    return a.tagName === "INPUT" && /^(search|text|email|password|number|tel|url)$/i.test(a.getAttribute("type") || "text");
+  }
+  function check(){
+    var w = window.innerWidth, h = window.innerHeight, typing = field(document.activeElement);
+    if (!typing || !rest[w] || h > rest[w]) rest[w] = Math.max(rest[w] || 0, h);
+    root.classList.toggle("vn-typing", typing && rest[w] - h > 120);
+  }
+  check();
+  window.addEventListener("resize", check);
+  document.addEventListener("focusin", function(){ setTimeout(check, 0); });
+  document.addEventListener("focusout", function(){ setTimeout(check, 60); });
 })();

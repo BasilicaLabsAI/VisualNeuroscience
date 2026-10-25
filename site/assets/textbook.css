@@ -61,7 +61,7 @@ button{ font:inherit; color:inherit; }
   line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
 }
 @media (hover: hover){ .brand:hover{ text-decoration:none; } }
-.brand .mark{ width:.65em; height:.65em; flex:none; }
+.brand .mark{ width:1em; height:1em; flex:none; }
 .nav-row{
   display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
   gap:.3rem clamp(1rem,2.6vw,2rem);

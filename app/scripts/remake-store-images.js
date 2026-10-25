@@ -3,11 +3,18 @@
      cd app && node scripts/remake-store-images.js [shot ...]
 
    Each image in app/store/sell is a capture of the app under a statement
-   (store-sell.js): ten shots, each the iPad's at 2752×2064 and, from the
-   same render, the iPhone Duo's inner display at 2853×2007, which is
-   almost the iPad capture's shape, and the iPhone's at two sizes from the
-   one render, 1206×2622 (the medium display App Store Connect requires
-   since October 2026) and 1320×2868 (the 6.9-inch, optional). The captures came from the owner's
+   (store-sell.js): ten shots, each the iPad's at 2752×2064, the iPhone's at
+   two sizes from the one render, 1206×2622 (the medium display App Store
+   Connect requires since October 2026) and 1320×2868 (the 6.9-inch,
+   optional), and since v12.23 the iPhone Duo's two, its outer display
+   closed at 1398×2034 (duo-01 to duo-10) and its inner display open and
+   sideways at 2853×2007 (open-01 to open-10), each rendered at the Duo's
+   own web view, as the pages lay themselves out there (closed, one view at
+   a time and the bar down the right edge; open, as on an iPad), beside a
+   column down the right edge where the Duo stands the system's controls,
+   drawn from the iPhone captures' own pieces (column()); no Duo capture
+   exists yet, so the column is the iPhone's chrome stood on end as Apple
+   describes the Duo's, not a copy of it. The captures came from the owner's
    devices, an 11-inch iPad sideways and an iPhone 16 Pro, on 23 October
    2026; since v12.10 they are remade here whenever the pages change, so
    the images keep up without a device: each page is rendered as the app
@@ -36,9 +43,10 @@
    (python3 -m http.server 8412 --bind 127.0.0.1 --directory site), or
    VN_SITE names another address. Uses the global Playwright install and
    the bundled Chromium, drawing WebGL with SwiftShader, so the atlas pages
-   take a minute or two each; the whole set takes half an hour or so. The
+   take a minute or two each; the whole set takes an hour or so. The
    shots are named ipad-01 to ipad-10 and iphone-01 to iphone-10, as the
-   captures were numbered; name some to remake only those.
+   captures were numbered, and duo-01 to duo-10 and open-01 to open-10;
+   name some to remake only those.
 
    The page is marked as the shell marks it (data-shell, data-shell-pad on
    the iPad, data-native, a Capacitor stub so native.js takes it for the
@@ -56,11 +64,19 @@ const SELL = path.join(ROOT, 'app', 'store', 'sell');
 const SITE = (process.env.VN_SITE || 'http://127.0.0.1:8412/').replace(/\/?$/, '/');
 const only = process.argv.slice(2);
 
-/* the two devices: the web view in CSS pixels, its scale, and where its
-   rows sit in the capture */
+/* the devices: the web view in CSS pixels, its scale, and where its rows
+   sit in the capture. The iPhone Duo (v12.23) has no capture yet: closed,
+   its outer display is 466 by 678 points, and the page has the 402 left of
+   the column down the right edge where the system stands its controls (the
+   camera, the status, Back and the tab bar); open and sideways its inner
+   display is 951 by 669, the page the 887 left of the same column, laid out
+   as on an iPad. The column is drawn from the iPhone's own pieces (column()
+   below), and the screen's size is the page's own measure of a squat phone */
 const DEV = {
-  ipad:   { w: 1210, h: 748, dpr: 2, pad: true,  top: 172, capture: [2420, 1668], families: ['ipad-13-land', 'iphone-duo-land'] },
-  iphone: { w: 402,  h: 675, dpr: 3, pad: false, top: 348, bottom: 2373, capture: [1206, 2622], families: ['iphone-6.3', 'iphone-6.9'] },
+  ipad:    { w: 1210, h: 748, dpr: 2, pad: true,  top: 172, capture: [2420, 1668], families: ['ipad-13-land'] },
+  iphone:  { w: 402,  h: 675, dpr: 3, pad: false, top: 348, bottom: 2373, capture: [1206, 2622], families: ['iphone-6.3', 'iphone-6.9'] },
+  duo:     { w: 402,  h: 678, dpr: 3, pad: false, screen: [466, 678], column: 'outer', capture: [1398, 2034], families: ['iphone-duo'] },
+  duoOpen: { w: 887,  h: 669, dpr: 3, pad: true,  screen: [951, 669], column: 'inner', capture: [2853, 2007], families: ['iphone-duo-land'] },
 };
 
 /* the regions of the atlas captures, in the order the owner added them,
@@ -124,10 +140,10 @@ const probeTap = async (p, ctx, dpr) => {
   await p.mouse.click(rect.x + pos.x / dpr, rect.y + pos.y / dpr);
   await p.waitForTimeout(1500);
 };
-const caudate = async (p, ctx) => {
+const caudate = async (p, ctx, d) => {
   await p.evaluate(() => { const o = document.getElementById('opacity'); o.value = '0'; o.dispatchEvent(new Event('input', { bubbles: true })); MN_SEL.centreMm([-16, 14, 15]); });
   await p.waitForTimeout(3000);
-  await probeTap(p, ctx, 2);
+  await probeTap(p, ctx, d ? d.dpr : 2);
 };
 
 /* the twenty: the page and its state, the chrome strips, the image (after
@@ -190,6 +206,30 @@ const SHOTS = [
     out: '01-home-light.png', statement: 'Light mode' },
 ];
 
+/* the iPhone Duo (v12.23): open, the iPad's ten at the inner display's size,
+   the page laid out as on an iPad; closed, the iPhone's ten as the outer
+   display shows them, one view at a time and the bar down the right edge,
+   the atlas's opening shot the 3D view with the three regions lit, and the
+   last the Atlases page in light mode, the light shot of the iPad's. The
+   column's lit tab follows the page's place in the app */
+const TAB = { '06-microanatomy.png': 'atlases', '07-molecular.png': 'atlases', '10-hallucinations.png': 'library', '08-practice.png': 'practice', '11-mcp.png': 'about' };
+for (const s of SHOTS.filter(x => x.dev === 'ipad'))
+  SHOTS.push(Object.assign({}, s, { name: s.name.replace('ipad', 'open'), dev: 'duoOpen', top: undefined, tab: TAB[s.out] || 'atlases' }));
+const PHONE_SAID = Object.fromEntries(SHOTS.filter(x => x.dev === 'iphone').map(x => [x.out, x.statement]));
+SHOTS.push(
+  { name: 'duo-01', dev: 'duo', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, out: '02-atlas.png', statement: PHONE_SAID['02-atlas.png'] },
+  { name: 'duo-02', dev: 'duo', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, setup: openPop('popNotes'), out: '02-atlas-what-they-do.png', statement: PHONE_SAID['02-atlas-what-they-do.png'] },
+  { name: 'duo-03', dev: 'duo', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, setup: chartD2, out: '02-atlas-receptor-graph.png', statement: PHONE_SAID['02-atlas-receptor-graph.png'] },
+  { name: 'duo-04', dev: 'duo', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, setup: figsD2, out: '02-atlas-receptor.png', statement: PHONE_SAID['02-atlas-receptor.png'] },
+  { name: 'duo-05', dev: 'duo', theme: 'dark', url: 'microanatomy.html', ready: cellsReady, store: { 'vn-cells-drawer': 'shut' }, out: '06-microanatomy.png', statement: PHONE_SAID['06-microanatomy.png'] },
+  { name: 'duo-06', dev: 'duo', theme: 'dark', url: 'molecular.html?rx=D2', ready: molReady, out: '07-molecular.png', statement: PHONE_SAID['07-molecular.png'] },
+  { name: 'duo-07', dev: 'duo', theme: 'dark', url: 'hallucinations.html', ready: hxReady, setup: click('.panelbar [data-pop="popCircuit"]', 1800), out: '10-hallucinations.png', statement: PHONE_SAID['10-hallucinations.png'] },
+  { name: 'duo-08', dev: 'duo', theme: 'dark', url: 'practice.html', ready: pageReady, setup: question('A central ethical advantage of iPSCs'), out: '08-practice.png', statement: PHONE_SAID['08-practice.png'] },
+  { name: 'duo-09', dev: 'duo', theme: 'light', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, out: '02-atlas-light.png', statement: 'Light mode' },
+  { name: 'duo-10', dev: 'duo', theme: 'dark', url: 'mcp.html', ready: pageReady, fade: 30, out: '11-mcp.png', statement: PHONE_SAID['11-mcp.png'] },
+);
+for (const s of SHOTS) if (s.dev === 'duo') s.tab = TAB[s.out] || 'atlases';
+
 /* the page as the shell shows it */
 const shell = (o) => {
   window.Capacitor = { isNativePlatform: () => true, getPlatform: () => 'ios', Plugins: {} };
@@ -205,11 +245,65 @@ const shell = (o) => {
 const dataUrl = f => 'data:image/' + (/\.jpe?g$/i.test(f) ? 'jpeg' : 'png') + ';base64,' + fs.readFileSync(f).toString('base64');
 const px = n => n + 'px';
 
+/* the Duo's column down the right edge (v12.23), in the theme's paper: the
+   outer display's camera at its top, the status (the time, the Wi-Fi and
+   the battery), Back in the bar's glass circle, and at its foot the tab bar
+   stood on end, a capsule of the five tabs with the page's own lit. The
+   time, the status icons, the chevron and the tabs' icons and names are
+   cut from the owner's iPhone captures and levelled to masks, light on
+   black, so they sit on any ground (screened on the dark, inverted and
+   multiplied on the light); the glass is drawn as the captures show it,
+   the dark in the capsule's grey with its three-step rim */
+const TABS = ['atlases', 'library', 'practice', 'about', 'account'];
+function column(d, shot, work){
+  const x0 = d.w * d.dpr, [W, H] = d.capture, cw = W - x0, light = shot.theme === 'light';
+  const top = path.join(CHROME, 'iphone-top-dark-3d-region-atlas.png');
+  const mask = (src, box, name, black) => {
+    const out = path.join(work, 'mask-' + name + '.png');
+    if (!fs.existsSync(out)) execFileSync('convert', [src, '-crop', box, '+repage', '-level', black + '%,100%', out]);
+    return dataUrl(out);
+  };
+  /* the pieces: [box in the strip, the ground's share of white] */
+  const time = mask(top, '129x38+131+79', 'time', 7), wifi = mask(top, '51x37+945+79', 'wifi', 7), battery = mask(top, '82x39+1018+78', 'battery', 7);
+  const chevron = mask(top, '33x57+93+224', 'chevron', 9.5);
+  const item = n => {
+    const c = { atlases: 190, library: 396, practice: 602, about: 810, account: 1015 }[n];
+    /* each tab unlit: Atlases from the capture with Library lit, the rest from the one with Atlases lit */
+    const strip = path.join(CHROME, n === 'atlases' ? 'iphone-bottom-dark-library.png' : 'iphone-bottom-dark-atlases.png');
+    /* the window keeps clear of the capsule's round ends and of the lit tab's pill */
+    return mask(strip, '140x156+' + (c - 70) + '+14', 'tab-' + n, 9.5);
+  };
+  const blend = light ? 'filter:invert(1);mix-blend-mode:multiply' : 'mix-blend-mode:screen';
+  const paper = light ? '#FFFFFF' : '#111111';
+  const glass = light ? 'background:rgba(255,255,255,.94);box-shadow:inset 0 0 0 1px rgba(0,0,0,.07),0 8px 34px rgba(0,0,0,.13)'
+                      : 'background:#171717;box-shadow:inset 0 0 0 1px #383838,inset 0 0 0 2px #2F2F2F,inset 0 0 0 3px #262626,0 10px 40px rgba(0,0,0,.35)';
+  const at = (l, tp, w, h, extra) => `position:absolute;left:${px(x0 + l)};top:${px(tp)};width:${px(w)};height:${px(h)};${extra || ''}`;
+  const mid = w => Math.round((cw - w) / 2);
+  const outer = d.column === 'outer', y = outer ? { time: 120, icons: 178, back: 262 } : { time: 40, icons: 98, back: 180 };
+  const L = [`<div style="${at(0, 0, cw, H, 'background:' + paper)}"></div>`];
+  if (outer) L.push(`<div style="${at(mid(44), 42, 44, 44, 'border-radius:50%;background:#000;box-shadow:0 0 0 2px ' + (light ? '#D8D8D8' : '#1C1C1C'))}"></div>`);
+  L.push(`<img src="${time}" style="${at(mid(129), y.time, 129, 38, blend)}">`);
+  L.push(`<img src="${wifi}" style="${at(mid(147), y.icons, 51, 37, blend)}">`);
+  L.push(`<img src="${battery}" style="${at(mid(147) + 65, y.icons - 1, 82, 39, blend)}">`);
+  L.push(`<div style="${at(mid(131), y.back, 131, 131, 'border-radius:50%;' + glass)}"></div>`);
+  L.push(`<img src="${chevron}" style="${at(mid(33) - 2, y.back + 37, 33, 57, blend)}">`);
+  const capW = 172, cell = 148, pad = 16, capH = cell * TABS.length + 2 * pad, capTop = H - 40 - capH;
+  L.push(`<div style="${at(mid(capW), capTop, capW, capH, 'border-radius:' + px(capW / 2) + ';' + glass)}"></div>`);
+  const lit = TABS.indexOf(shot.tab || 'atlases');
+  L.push(`<div style="${at(mid(150), capTop + pad + lit * cell + (cell - 136) / 2, 150, 136, 'border-radius:68px;background:' + (light ? '#EBEBEB' : '#383838'))}"></div>`);
+  TABS.forEach((n, i) => L.push(`<img src="${item(n)}" style="${at(mid(123), capTop + pad + i * cell + (cell - 137) / 2, 123, 137, blend)}">`));
+  return L;
+}
+
 /* the render between the chrome strips, at the capture's size */
-async function join(browser, shot, renderPath, outPath){
+async function join(browser, shot, renderPath, outPath, work){
   const d = DEV[shot.dev], [W, H] = d.capture;
   const layers = [];
-  if (shot.capture){
+  if (d.column){
+    layers.push(`<img src="${dataUrl(renderPath)}" style="left:0;top:0">`);
+    if (shot.fade){ const b = d.h * d.dpr, f = shot.fade * d.dpr; layers.push(`<div style="position:absolute;left:0;top:${px(b - f)};width:${px(d.w * d.dpr)};height:${px(f)};background:linear-gradient(rgba(17,17,17,0),#111111 60%)"></div>`); }
+    layers.push(...column(d, shot, work));
+  } else if (shot.capture){
     layers.push(`<img src="${dataUrl(path.join(CHROME, shot.capture + '.png'))}" style="left:0;top:0">`);
     for (const [x, y, w, h] of shot.cover || []) layers.push(`<div style="position:absolute;left:${px(x)};top:${px(y)};width:${px(w)};height:${px(h)};background:#111111"></div>`);
   } else if (shot.native){
@@ -249,7 +343,9 @@ async function join(browser, shot, renderPath, outPath){
       const render = path.join(work, s.name + '.png');
       if (!s.native && !s.capture){
         const d = DEV[s.dev], problems = [];
-        const ctx = await browser.newContext({ viewport: { width: d.w, height: d.h }, deviceScaleFactor: d.dpr, isMobile: true, hasTouch: true });
+        const opts = { viewport: { width: d.w, height: d.h }, deviceScaleFactor: d.dpr, isMobile: true, hasTouch: true };
+        if (d.screen) opts.screen = { width: d.screen[0], height: d.screen[1] };
+        const ctx = await browser.newContext(opts);
         await ctx.addInitScript(shell, { pad: d.pad, theme: s.theme, store: s.store || {} });
         const page = await ctx.newPage();
         page.on('pageerror', e => problems.push('pageerror: ' + e.message));
@@ -257,13 +353,13 @@ async function join(browser, shot, renderPath, outPath){
         await page.goto(SITE + s.url, { waitUntil: 'load' });
         await s.ready(page);
         await page.evaluate(() => document.fonts.ready.then(() => true));
-        if (s.setup) await s.setup(page, ctx);
+        if (s.setup) await s.setup(page, ctx, d);
         await page.screenshot({ path: render, timeout: 240000 });
         await ctx.close();
         if (problems.length) console.log('  ' + s.name + ' problems ' + JSON.stringify(problems));
       }
       const composite = path.join(work, 'capture-' + s.name + '.png');
-      await join(browser, s, render, composite);
+      await join(browser, s, render, composite, work);
       for (const family of (s.native ? DEV.iphone : DEV[s.dev]).families){
         const name = family + '-' + s.out;
         const said = execFileSync('node', [path.join(__dirname, 'store-sell.js'), composite, path.join(SELL, name), s.statement, family]).toString().trim();

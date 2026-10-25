@@ -10,12 +10,14 @@ every node with a true circle:
 
     python3 scripts/appmark/trace.py
 
-writes two files into site/assets: app-mark.svg, the lines in currentColor,
-and app-mark-colour.svg, the same lines wearing the ring's colours (the
-palette of scripts/make_logo.py, swept clockwise from the top as the ring
-carries them, in ninety flat wedges that read as one sweep). Neither carries
-a background, so the icon script chooses the ground: white for the app icons,
-the paper black for the splash screens.
+writes three files into site/assets: app-mark.svg, the lines in
+currentColor, app-mark-colour.svg, the same lines wearing the ring's colours
+(the palette of scripts/make_logo.py, swept clockwise from the top as the
+ring carries them, in ninety flat wedges that read as one sweep), and
+logo.svg, the colour file again under the name every page gives its
+masthead and its browser tab (the site's mark since v12.23, where the ring
+stood). None carries a background, so the icon script chooses the ground:
+white for the app icons, the paper black for the splash screens.
 
 How: the drawing is cropped to its ink, enlarged three times and softened, the
 glow is cut off at the stroke's core, the strokes are thinned to their
@@ -41,6 +43,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "brain.jpg")
 OUT_MONO = os.path.join(HERE, "..", "..", "site", "assets", "app-mark.svg")
 OUT_COLOUR = os.path.join(HERE, "..", "..", "site", "assets", "app-mark-colour.svg")
+OUT_LOGO = os.path.join(HERE, "..", "..", "site", "assets", "logo.svg")
 SCALE = 3          # enlargement before tracing
 BLUR = 1.2         # softening after enlargement, in pixels
 LEVEL = 140        # where the stroke's core ends and the glow begins (0-255)
@@ -737,9 +740,11 @@ def main():
         poly = f"{cx0:.1f},{cy0:.1f} {cx0 + R * math.cos(a0):.1f},{cy0 + R * math.sin(a0):.1f} {cx0 + R * math.cos(a1):.1f},{cy0 + R * math.sin(a1):.1f}"
         defs.append(f'<clipPath id="w{i}"><polygon points="{poly}"/></clipPath>')
         uses.append(f'<use href="#brain" clip-path="url(#w{i})" color="{palette_at((i + 0.5) / WEDGES)}"/>')
-    with open(OUT_COLOUR, "w") as out:
-        out.write(head + "<defs>" + "".join(defs) + "</defs>\n" + "\n".join(uses) + "\n</svg>\n")
-    sys.stderr.write(f"one outline, {len(lines)} traces, {len(nodes)} nodes, {len(corners)} fillets, stroke {width:.1f} on a {W}x{H} field; wrote {os.path.relpath(OUT_MONO)} and {os.path.relpath(OUT_COLOUR)}\n")
+    colour = head + "<defs>" + "".join(defs) + "</defs>\n" + "\n".join(uses) + "\n</svg>\n"
+    for path in (OUT_COLOUR, OUT_LOGO):
+        with open(path, "w") as out:
+            out.write(colour)
+    sys.stderr.write(f"one outline, {len(lines)} traces, {len(nodes)} nodes, {len(corners)} fillets, stroke {width:.1f} on a {W}x{H} field; wrote {os.path.relpath(OUT_MONO)}, {os.path.relpath(OUT_COLOUR)} and {os.path.relpath(OUT_LOGO)}\n")
 
 
 if __name__ == "__main__":

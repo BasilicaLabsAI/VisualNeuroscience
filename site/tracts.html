@@ -17,7 +17,7 @@
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The flow-state network ring over orange-tinted MNI152 brain slices, with the VisualNeuroscience.AI wordmark at its centre.">
+<meta property="og:image:alt" content="The VisualNeuroscience.AI brain mark between two greyscale MNI152 brain slices, under the wordmark.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
@@ -96,7 +96,7 @@ svg{ display:block; }
    puts an image's bottom edge on the text baseline, so a box one cap
    height tall lands squarely between baseline and cap line. The brand
    face measures .647em to the cap line. */
-.brand .mark{ width:.65em; height:.65em; flex:none; }
+.brand .mark{ width:1em; height:1em; flex:none; }
 .nav-row{
   display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
   gap:.3rem clamp(1rem,2.6vw,2rem);
@@ -500,17 +500,33 @@ main.screen.one.land{ flex-direction:row; }
     if (a.tagName === "TEXTAREA" || a.isContentEditable) return true;
     return a.tagName === "INPUT" && /^(search|text|email|password|number|tel|url)$/i.test(a.getAttribute("type") || "text");
   }
+  /* a squat touch screen (v12.23), the closed iPhone Duo's outer display:
+     shorter for its width than any other iPhone's, so one view stands at a
+     time there and, upright, the bar stands down the right edge */
+  var coarse = window.matchMedia ? window.matchMedia("(pointer: coarse)") : null;
+  function squat(){
+    var s = window.screen || {}, a = Math.min(s.width || 0, s.height || 0), b = Math.max(s.width || 0, s.height || 0);
+    return !!(coarse && coarse.matches) && a > 0 && a < 600 && b < 1.75 * a;
+  }
+  var laid = "";
   function oneView(){
     if (oneSet && typingNow() && window.innerWidth === oneWidth) return;
     oneSet = true; oneWidth = window.innerWidth;
-    var on = !!(one && one.matches);
+    var on = !!(one && one.matches), sideways = on && !!(land && land.matches), sq = on && squat();
+    var now = [on, sideways, sq].join();
+    if (now === laid) return;
+    laid = now;
     main.classList.toggle("one", on);
-    main.classList.toggle("land", on && !!(land && land.matches));
+    main.classList.toggle("land", sideways);
+    main.classList.toggle("short", sq);
+    main.classList.toggle("side", sq && !sideways);
     if (window.MN_LIFE) MN_LIFE.remeasure();
     soon();
   }
   oneView();
   [one, land].forEach(function(q){ if (!q) return; if (q.addEventListener) q.addEventListener("change", oneView); else if (q.addListener) q.addListener(oneView); });
+  /* the closed Duo opened, or opened closed: the screen changes under the page */
+  window.addEventListener("resize", oneView);
 
   /* the sheets */
   var pops = {}, current = null;

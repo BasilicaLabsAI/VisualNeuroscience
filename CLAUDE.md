@@ -73,7 +73,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   page names the request. Since v12.22 the keyboard rises over a page rather than shortening it
   (`.ignoresSafeArea(.keyboard, edges: .bottom)` on `WebPage`'s `BridgeView`): SwiftUI's keyboard avoidance had shrunk
   the web view, and a page shortened so read as wider than tall, which on an iPhone threw the atlases into their
-  sideways layout, the bar down the right, while their search was typed in.
+  sideways layout, the bar down the right, while their search was typed in. Since v12.23, at the owner's word, an
+  iPhone Duo is an iPad open and a phone closed: the iPad's treatment (`data-shell-pad`, no title in the system bar, no
+  Best experienced line on the tab pages) follows `padLayout` in `ShellKit.swift`, an iPad or a window regular both
+  ways (a large iPhone held sideways is regular one way only), read from the size classes in `WebPage` and `TabPage`;
+  `BridgeView` hands it to the page's controller, which writes the mark at document start and changes it as the Duo
+  opens and closes (`show(pad:)`, `markPad`, written again when the page reports its theme), and `navbar.js`'s line
+  follows the mark. The Duo gives an app the whole of each display, its bars down the side, only when it is built with
+  the iOS 27.1 SDK (Xcode 27.1 or later); built with Xcode 26 the app is shown inset.
 - The website's header is the iOS app's since v11.63: a slim pinned bar with the brand at the left, the theme and
   account buttons at the right and, between them, a floating island of the app's five tabs, Atlases, Library, Practice,
   About and Account, each an icon over its name, the page's own tab lit. `navbar.js` (its website section) builds the
@@ -123,9 +130,16 @@ Read this first in every session. It is the handover; nothing else needs pasting
   paper black, named in the project's `ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES`; the Account tab's App icon choice
   (`IconTileChoice`, `IconTile`, `AppStore.iconTile` in `Shell.swift`, shown only where `supportsAlternateIcons`; since
   v11.91 the two tiles pictured, `IconTileWhite.imageset` and `IconTileBlack.imageset` drawn by the icon script at 360px,
-  with a box around the one in use) asks the system for it, and the system keeps the choice. Android and the web app keep the white tile, their launchers taking one icon at install. The website's masthead and browser tab keep the ring, `site/assets/logo.svg`, and
-  the Play feature graphic (`app/store/play/feature-graphic.html`) still carries the ring inline; its comment names a
-  `shoot-play.js` that is not in the repository, so shoot it with Playwright at 1024×500 if it should change.
+  with a box around the one in use) asks the system for it, and the system keeps the choice. Android and the web app keep the white tile, their launchers taking one icon at install. Since v12.23, at the owner's
+  word, the brain is the mark everywhere the ring stood: `site/assets/logo.svg`, every page's masthead mark (drawn at the
+  text's height since then, `.brand .mark{ width:1em }` in each page and `textbook.css`) and its browser tab, is the colour
+  file again, which `trace.py` writes beside it; `favicon-32.png` is the same drawn at 32px on nothing; the sharing card
+  (`share.html`, shot to `assets/social-card.jpg`, the `og:image`) and the Play feature graphic
+  (`app/store/play/feature-graphic.html`, shot to `feature-graphic.jpg` with Playwright at 1024×500; the `shoot-play.js`
+  it once named is not in the repository) carry it where the ring stood, their strapline alone at the foot's middle;
+  the posters inline it from `logo.svg` (`logo_svg()` in `scripts/posters/common.py`; their pictures in
+  `site/assets/posters/` were cut again from the posters re-rendered with it); and the browser's store screenshots were
+  retaken. `scripts/make_logo.py` still draws the ring and holds the palette the brain wears, and writes logo.svg no more.
 - Shared receptor drawings live in `site/assets/rxfig.js` + `rxfig.css`, built from `site/assets/rx/receptors.json`
   (`scripts/receptors/build.py`) and `site/assets/nt/molecules.json` (`scripts/neurotransmitters/build.py`).
   The textbook is built by `scripts/textbook/build.py` from the OpenStax source (not in the repo; CC BY-NC-SA 4.0).
@@ -327,7 +341,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   keyboard's blue Search key, and Enter takes the first match (or runs the search) and blurs the field, putting the
   keyboard away; and the five pages with a `oneView` keep their layout while a text field has the focus and the width is
   unchanged (`typingNow`, `oneSet`, `oneWidth`), so a keyboard shortening the window (the Android app's, or an iPad's)
-  never reads as a phone turned sideways. The bar's
+  never reads as a phone turned sideways; since v12.23 the bar steps aside while a keyboard has shortened the page all
+  the same (a field has the focus and the window has lost more than 120px of its height at that width: `navbar.js`'s
+  last section marks the root `vn-typing`, and `bar.css` hides `.screen > .panelbar` and gives the stage its room), so
+  it never rides up over the keys. The bar's
   buttons raise one pop-up at a time over the views (`.pop`: What they do, Receptor graph and Neurotransmitters, which
   open the receptor window (`#popRx`, `.pop-tabbed`) on one of its tabs: since v11.40 a row of tabs under its head,
   Graph, Receptor (named Region when charting by region), Neurotransmitters, Receptor types and Sources, one pane at a
@@ -511,6 +528,21 @@ Read this first in every session. It is the handover; nothing else needs pasting
   square from v11.2 to v11.19. Region
   colours reach the viewer through `MN_LOOK.labelTable` (and the same padding in `vision-scan.js`): the table is padded
   to a power of two, since at the atlas's 117 entries a highlighted label made the label just below it draw black.
+- A squat phone (v12.23, at the owner's word), the closed iPhone Duo's outer display at 466 by 678 points: every page
+  with a bar reads the screen's shape (`squat()`: a coarse pointer and a screen whose short side is under 600 and long
+  side under 1.75 times it, which no other iPhone has, the SE's 375 by 667 the nearest at 1.78), so one rule holds in the
+  app and in Safari. On the five pages with a `oneView` it marks the phone screen `.short`, one view at a time (the All
+  button hidden by `bar.css`, a pick of All shown as the 3D view; `shown` is the person's pick, kept for a larger
+  screen, and only a press changes it), and upright `.side` as well: the bar stands down the right edge as on a phone
+  held sideways (the Duo stands its own bars on that side), one button to a row in the middle of its height, scrolling
+  when it overflows, the drawer coming in beside it (`--box-w` short of the bar's 104px) and the sheets rising from the
+  foot at the deck's width; the rules are in `bar.css` after the island. `oneView` runs on every resize too, since the
+  Duo's screen changes under a page as it opens and closes while neither media query need change, and acts only when
+  the layout does (`laid`). The Brodmann Area Atlas marks `.one.side` in `arrange()` (the bar an 80px column at the
+  right, the faces, the strip and the 3D panel beside it), and the molecular viewer marks its body `.side` in
+  `layout()` (`isSide()` in `t4_engine2.js`, the rules at the end of `base.css`'s phone section, `--side-w` the bar's
+  width, the model centred in the room left of it). Open, the Duo is an iPad (the shell above): upright its inner
+  display is 669 wide, an iPad mini's layout (`.one`, the four views two by two), and sideways 887, the iPad's.
 - The interface follows Apple's fluid-interface guidance (v10.92): controls answer on the press (`viewer.css`, the
   last section), the account box and both section menus arrive from their button and leave the same way, the bars
   and menus are translucent materials with `prefers-reduced-transparency` and `prefers-contrast` fallbacks, a thrown
@@ -559,12 +591,17 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `app/store/screenshots/` (the browser's, every set retaken on the v12.9 pages by `app/scripts/shoot-store.js`, whose
   Brodmann shot is the Brodmann Area Atlas page since v12.9) and the App Store's own images in `app/store/sell/`: since
   v12.10 `app/scripts/remake-store-images.js` remakes them from the live pages (served on 8412, run from `app/`,
-  half an hour; name shots `ipad-01`…`iphone-10` for a few): ten shots since v12.15, each the iPad's at 2752×2064 and the
+  an hour; name shots `ipad-01`…`iphone-10`, `duo-01`…`open-10` for a few): ten shots since v12.15, each the iPad's at 2752×2064 and the
   iPhone's at two sizes from one render, `iphone-6.3-` at 1206×2622, the medium display App Store Connect has required
   since October 2026 (the 6.9-inch refused there as "File dimensions are invalid"), and `iphone-6.9-` at 1320×2868, now
-  optional, to replace 1.0's in that slot, and since v12.20 `iphone-duo-land-` at 2853×2007, the iPhone Duo's inner
-  display, from each iPad render (`store-sell.js`'s `SHARE`, the capture at 84% of the width, the status bar's rows
-  read from the capture's shape); the second shot's statement is Brain region functions explained (`openPop` waits
+  optional, to replace 1.0's in that slot, and since v12.23 the iPhone Duo's own two (v12.20 set the iPad renders in
+  the inner size): `iphone-duo-` at 1398×2034, the outer display closed (`duo-01`…`duo-10`), and `iphone-duo-land-` at
+  2853×2007, the inner display open and sideways (`open-01`…`open-10`; `store-sell.js`'s `SHARE`, the capture at 84% of
+  the width), each rendered at the Duo's web view (402×678 closed and 887×669 open, at 3×, the screen's size given so
+  the page knows the squat phone) beside a column down the right edge drawn from the iPhone captures' own pieces
+  (`column()`: the camera when closed, the time, Wi-Fi and battery, Back in its glass circle, and the tab bar stood on
+  end with the page's tab lit), since no Duo capture exists; `store-sell.js` covers no status bar on them (`BAR`);
+  the second shot's statement is Brain region functions explained (`openPop` waits
   for a raised sheet to come to rest, which at 3× with software 3D takes longer than the slide); since v12.21 the
   iPhone's first two are the owner's own captures from the TestFlight build of 25 October 2026, taken whole
   (`capture`, kept in `app/store/chrome/` as `iphone-capture-atlas` and `iphone-capture-what-they-do`, with the

@@ -5,19 +5,22 @@
      node app/scripts/store-sell.js <capture.png> <out.png> "<statement>" [family] [bar]
 
    family  ipad-13-land (2752×2064, the default), ipad-13 (2064×2752),
-           iphone-6.3 (1206×2622), iphone-6.9 (1320×2868) or iphone-duo-land
-           (2853×2007, the iPhone Duo's inner display sideways): the App
-           Store's sizes. Since October 2026 App Store Connect requires the
-           iPhone's medium display, the iPhone 16 to 18 Pro's 1206×2622, and
-           takes the 6.9-inch size as optional. The Duo's inner display is
-           almost the shape of the iPad captures, so it takes them, at 84
-           hundredths of its width so the statement keeps the iPad's room Sideways the capture takes nine
-           tenths of the width and the statement the band left above it;
-           upright the band is set first, fifteen hundredths of the height,
-           and the capture is fitted to the height beneath it
+           iphone-6.3 (1206×2622), iphone-6.9 (1320×2868), iphone-duo
+           (1398×2034, the iPhone Duo's outer display, closed) or
+           iphone-duo-land (2853×2007, its inner display open and
+           sideways): the App Store's sizes. Since October 2026 App Store
+           Connect requires the iPhone's medium display, the iPhone 16 to 18
+           Pro's 1206×2622, and takes the 6.9-inch size as optional. The
+           Duo's inner display sideways takes its capture at 84 hundredths
+           of its width, so the statement keeps the iPad's room; elsewhere
+           sideways the capture takes nine tenths of the width and the
+           statement the band left above it; upright the band is set first,
+           fifteen hundredths of the height, and the capture is fitted to
+           the height beneath it
    bar     the height of the device's status bar in the capture, in the
            capture's own pixels: 57 for an iPad's at 2420 wide, 162 for an
-           iPhone's at 1206 wide (the defaults by family). It is painted
+           iPhone's at 1206 wide, nought for the Duo's, whose status stands
+           in the column at the side (the defaults by family). It is painted
            over rather than cut off, so the capture keeps its shape, in the
            capture's own ground: a flat ground is painted flat, and a
            patterned one (the home page's dot grid) is carried on upward by
@@ -38,7 +41,9 @@ const path = require('path'), fs = require('fs'), { execSync } = require('child_
 const { chromium } = require(path.join(execSync('npm root -g').toString().trim(), 'playwright'));
 const [capture, out, statement, family = 'ipad-13-land', barArg] = process.argv.slice(2);
 if (!capture || !out || !statement){ console.error('usage: node app/scripts/store-sell.js <capture.png> <out.png> "<statement>" [family] [bar]'); process.exit(1); }
-const SIZES = { 'ipad-13-land': [2752, 2064], 'ipad-13': [2064, 2752], 'iphone-6.3': [1206, 2622], 'iphone-6.9': [1320, 2868], 'iphone-duo-land': [2853, 2007] };
+const SIZES = { 'ipad-13-land': [2752, 2064], 'ipad-13': [2064, 2752], 'iphone-6.3': [1206, 2622], 'iphone-6.9': [1320, 2868], 'iphone-duo': [1398, 2034], 'iphone-duo-land': [2853, 2007] };
+/* the iPhone Duo's captures carry their status bar in the column at the side, so nothing at the top is covered */
+const BAR = { 'iphone-duo': 0, 'iphone-duo-land': 0 };
 /* the share of a sideways frame's width the capture takes */
 const SHARE = { 'iphone-duo-land': 0.84 };
 const [W, H] = SIZES[family] || SIZES['ipad-13-land'];
@@ -47,7 +52,7 @@ const font = (file) => 'data:font/woff2;base64,' + fs.readFileSync(path.join(FON
 const png = 'data:image/png;base64,' + fs.readFileSync(capture).toString('base64');
 const size = execSync(`identify -format "%w %h" "${capture}"`).toString().trim().split(' ').map(Number);
 /* the status bar's rows by the capture's shape: an iPhone's upright, an iPad's sideways */
-const bar = Number(barArg) || (size[1] > size[0] ? 162 : 57);
+const bar = barArg !== undefined && barArg !== '' ? Number(barArg) : family in BAR ? BAR[family] : (size[1] > size[0] ? 162 : 57);
 const landscape = W > H;
 /* the capture's place in the frame, and the room the statement has above it */
 let side, capW, capH, band, bottom;

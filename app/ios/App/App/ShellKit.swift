@@ -154,6 +154,16 @@ extension View {
     }
 }
 
+// MARK: - An iPad's room
+
+/// Whether a page is laid out as on an iPad: on an iPad, and since v12.23 on
+/// an iPhone whose window is regular both ways, as an iPhone Duo's is open,
+/// so the Duo opened is an iPad and closed a phone. A large iPhone held
+/// sideways is regular one way only and stays a phone.
+func padLayout(_ horizontal: UserInterfaceSizeClass?, _ vertical: UserInterfaceSizeClass?) -> Bool {
+    UIDevice.current.userInterfaceIdiom == .pad || (horizontal == .regular && vertical == .regular)
+}
+
 // MARK: - A tab's page
 
 /// The shell of every tab's page: its own stack with the system bar
@@ -161,6 +171,8 @@ extension View {
 /// screen the column keeps to a reading width in the middle.
 struct TabPage<Content: View>: View {
     private let content: Content
+    @Environment(\.horizontalSizeClass) private var horizontalSize
+    @Environment(\.verticalSizeClass) private var verticalSize
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -171,8 +183,9 @@ struct TabPage<Content: View>: View {
             ScrollView {
                 VStack(spacing: 14) {
                     /* on an iPhone a line at the top of every tab, in the kicker's type
-                       (v12.14, at the owner's word); the pages say it too (navbar.js) */
-                    if UIDevice.current.userInterfaceIdiom == .phone {
+                       (v12.14, at the owner's word); the pages say it too (navbar.js).
+                       An iPhone Duo opened has an iPad's room and goes without it */
+                    if !padLayout(horizontalSize, verticalSize) {
                         Text("Best experienced on iPad".uppercased())
                             .font(Faces.brand(10, .caption2))
                             .tracking(2.6)

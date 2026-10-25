@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.23 — 25 October 2026 — The iPhone Duo, and the brain on the website
+Commit · Lay the pages out for the iPhone Duo, keep the bar off the keyboard and put the brain mark everywhere
+
+The app and the website now lay themselves out for the iPhone Duo. Closed, its outer display is shorter for its width than any other iPhone's, so each atlas shows one view at a time, with the All button gone, and the bar of tools stands down the right edge beside the Duo's own controls; the Brodmann Area Atlas, Tractography, Microanatomy and the molecular viewer stand their bars there too. Open, the app treats the Duo as an iPad, the pages filling the screen as they do there, and it follows the Duo as it opens and closes. The App Store images now come for both of the Duo's displays. And while a keyboard is up, the bar of tools stays out of the way instead of riding up over the keys, on an iPad as on a phone. The website now wears the app's brain wherever the old ring stood: beside the name at the top of every page, in the browser tab, on the card a shared link shows, atop the posters and in the store's pictures. The app takes the rest with its next build.
+
 ## v12.22 — 25 October 2026 — Searching on an iPhone
-Commit · Keep the page's layout while its search is typed in and give the searches a Search key
+Commit `0b0d58f` · Keep the page's layout while its search is typed in and give the searches a Search key
 
 On an iPhone, typing in the 3D Region Atlas's region search no longer throws the page into its sideways layout with the bar of tools down the right: the keyboard now rises over the page, which keeps its shape. The keyboard's return key is a blue Search key on the region and Brodmann searches and on Microanatomy's receptor search; it adds the first match, or runs the search, and puts the keyboard away, as an address bar does. The app takes the change with its next build.
 

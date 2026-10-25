@@ -293,6 +293,9 @@ body{
 :root[data-shell-pad] .title-strip .name, :root[data-shell-pad] .title-strip .anno{ display:none; }
 :root[data-shell-pad] .title-strip:not(:has(.ts-views)){ display:none; }
 :root[data-shell][data-shell-pad] body{ padding-top:max(var(--gap, 14px), env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px)); }
+/* on a squat phone, the closed iPhone Duo (navbar.js marks it vn-squat), the shell's bars stand down the
+   side and nothing stands above the page, so a page of text keeps the same gap at its top (v12.23) */
+:root.vn-squat[data-shell]:not([data-shell-pad]) body:not(.atlas-screen){ padding-top:max(var(--gap, 14px), env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px)); }
 .vn-bar{
   position:fixed; top:0; left:0; right:0; z-index:60;
   box-sizing:border-box; height:calc(var(--vn-top-inset, env(safe-area-inset-top)) + 44px);

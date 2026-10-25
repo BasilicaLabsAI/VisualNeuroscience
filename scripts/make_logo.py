@@ -7,17 +7,19 @@ five hundred. Geometry, palette and links are the same ones the live page
 uses (site/assets/network-ring.js and network-states.js) — change them there
 and re-run this to keep the mark in step.
 
-    python3 scripts/make_logo.py > site/assets/logo.svg
+    python3 scripts/make_logo.py > ring.svg
 
-The mark has no background of its own. It is the ring and nothing else, so it
-reads on a white page and a black one alike, and the browser tab picks up
-whichever chrome the reader is running.
+Since v12.23 the ring is no longer the site's mark: the brain the app icon
+carries stands in the masthead and the browser tab too, and
+scripts/appmark/trace.py writes it as site/assets/logo.svg, so this script's
+output must not go there any more. It is kept for its palette, which the
+brain wears swept round it as the ring carries it, and to draw the ring
+for anything that still wants it.
 
-The site uses this one mark everywhere — masthead and browser tab alike — so
-the tab shows what the page shows. A --favicon variant is kept for the case
-where that stops working: it drops the threads and thickens the arcs to the
-coloured ring alone, which holds up better if the icon is ever rendered very
-small. Nothing references it at present.
+The ring has no background of its own. It is the ring and nothing else, so it
+reads on a white page and a black one alike. A --favicon variant drops the
+threads and thickens the arcs to the coloured ring alone, which holds up
+better rendered very small.
 """
 
 import math

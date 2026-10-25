@@ -56,7 +56,7 @@
 .rx-pop li::marker{ color:var(--ink-60); }
 
 /* ── the panel under a density chart: the transmitter and its receptor ── */
-.rxfig{ display:grid; gap:var(--gap,14px); margin-top:.9rem; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); }
+.rxfig{ display:grid; gap:var(--gap,14px); margin-top:.9rem; grid-template-columns:repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
 .rxfig:empty{ display:none; }
 .rxfig figure{ border:1px solid var(--hair); background:var(--paper); margin:0; padding:.55rem .55rem 0; display:flex; flex-direction:column; min-width:0; }
 .rxfig .rx-draw{ padding:0; }
@@ -87,7 +87,7 @@
 .rxreg-sum b{ font-weight:600; }
 .rxreg-fam{ display:grid; grid-template-columns:minmax(220px, 260px) 1fr; gap:var(--gap,14px); align-items:start; margin-top:var(--gap,14px); }
 .rxreg-fam > figure{ position:sticky; top:.5rem; }
-.rxreg-list{ list-style:none; margin:0; padding:0; display:grid; gap:var(--gap,14px); grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); }
+.rxreg-list{ list-style:none; margin:0; padding:0; display:grid; gap:var(--gap,14px); grid-template-columns:repeat(auto-fill, minmax(min(230px, 100%), 1fr)); }
 .rxreg-item{ border:1px solid var(--hair); background:var(--paper); padding:.55rem .55rem 0; display:flex; flex-direction:column; min-width:0; }
 .rxreg-item.top{ border-color:var(--ink); }
 .rxreg-item .rx-draw{ padding:0; }

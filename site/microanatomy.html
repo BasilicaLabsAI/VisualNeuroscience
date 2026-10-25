@@ -17,7 +17,7 @@
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The flow-state network ring over orange-tinted MNI152 brain slices, with the VisualNeuroscience.AI wordmark at its centre.">
+<meta property="og:image:alt" content="The VisualNeuroscience.AI brain mark between two greyscale MNI152 brain slices, under the wordmark.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
@@ -109,7 +109,7 @@ button{ font:inherit; color:inherit; }
   line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
 }
 @media (hover: hover){ .brand:hover{ text-decoration:none; } }
-.brand .mark{ width:.65em; height:.65em; flex:none; }
+.brand .mark{ width:1em; height:1em; flex:none; }
 .nav-row{
   display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
   gap:.3rem clamp(1rem,2.6vw,2rem);
@@ -188,7 +188,7 @@ li > .cellt{ cursor:pointer; }
 }
 .nt-grid{
   display:grid; gap:var(--gap); list-style:none; margin:0; padding:0;
-  grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns:repeat(auto-fill, minmax(min(280px, 100%), 1fr));
 }
 .nt{ border:1px solid var(--hair); background:var(--paper); display:flex; flex-direction:column; min-width:0; }
 .nt-draw{ padding:.6rem .6rem 0; }
@@ -255,14 +255,14 @@ li > .cellt{ cursor:pointer; }
 .rx-kinds.searching{ display:none; }
 .rx-kinds{
   display:grid; gap:var(--gap); margin:0 0 calc(var(--gap) * 1.4);
-  grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns:repeat(auto-fill, minmax(min(250px, 100%), 1fr));
 }
 .rx-kind{ border:1px solid var(--hair); background:var(--paper); display:flex; flex-direction:column; min-width:0; }
 .rx-kind .cn{ display:block; font-family:var(--font-display); font-size:1.02rem; line-height:1.15; }
 .rx-means{ font-family:var(--font-serif); font-size:.86rem; line-height:1.5; margin:.35rem 0 0; }
 .rx-grid{
   display:grid; gap:var(--gap); list-style:none; margin:0; padding:0;
-  grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns:repeat(auto-fill, minmax(min(280px, 100%), 1fr));
 }
 .rx{ border:1px solid var(--hair); background:var(--paper); display:flex; flex-direction:column; min-width:0; }
 .rx[hidden], .nt[hidden], .nt-group[hidden]{ display:none; }
@@ -790,7 +790,7 @@ main.screen.one.land{ flex-direction:row; }
     <div class="panelbar-btns" role="group" aria-label="Panels">
       <button class="pbtn" type="button" data-pop="popCells" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="13" r="3.4"/><path d="M8.6 10.6 5.2 6.4M4 8.2l1.2-1.8 2 .6M13.4 10.6l3.4-4.2M18.6 8.2l-1.2-1.8-2 .6M11 16.4V21M8.3 19.2 11 21l2.7-1.8"/></svg><span>Cells</span></button>
       <button class="pbtn" type="button" id="quizBtn" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M9.4 9.6a2.6 2.6 0 1 1 3.8 2.3c-.8.4-1.2 1-1.2 1.9M12 16.8v.01"/></svg><span>Test yourself</span></button>
-      <button class="pbtn" type="button" data-pop="popNt" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="6" r="2.6"/><circle cx="6" cy="17" r="2.6"/><circle cx="18" cy="17" r="2.6"/><path d="M10.8 8.3 7.2 14.7M13.2 8.3l3.6 6.4M8.6 17h6.8"/></svg><span>Neurotransmitters</span></button>
+      <button class="pbtn" type="button" data-pop="popNt" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="6" r="2.6"/><circle cx="6" cy="17" r="2.6"/><circle cx="18" cy="17" r="2.6"/><path d="M10.8 8.3 7.2 14.7M13.2 8.3l3.6 6.4M8.6 17h6.8"/></svg><span>Neuro&shy;transmitters</span></button>
       <button class="pbtn" type="button" data-pop="popRx" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21v-7.5M12 13.5 6.5 6M12 13.5 17.5 6"/><circle cx="6.5" cy="5" r="1.7"/><circle cx="17.5" cy="5" r="1.7"/></svg><span>Receptors</span></button>
     </div>
     <div class="panelbar-end" role="group" aria-label="About">
@@ -860,16 +860,32 @@ main.screen.one.land{ flex-direction:row; }
     if (a.tagName === "TEXTAREA" || a.isContentEditable) return true;
     return a.tagName === "INPUT" && /^(search|text|email|password|number|tel|url)$/i.test(a.getAttribute("type") || "text");
   }
+  /* a squat touch screen (v12.23), the closed iPhone Duo's outer display:
+     shorter for its width than any other iPhone's, so one view stands at a
+     time there and, upright, the bar stands down the right edge */
+  var coarse = window.matchMedia ? window.matchMedia("(pointer: coarse)") : null;
+  function squat(){
+    var s = window.screen || {}, a = Math.min(s.width || 0, s.height || 0), b = Math.max(s.width || 0, s.height || 0);
+    return !!(coarse && coarse.matches) && a > 0 && a < 600 && b < 1.75 * a;
+  }
+  var laid = "";
   function oneView(){
     if (oneSet && typingNow() && window.innerWidth === oneWidth) return;
     oneSet = true; oneWidth = window.innerWidth;
-    var on = !!(one && one.matches);
+    var on = !!(one && one.matches), sideways = on && !!(land && land.matches), sq = on && squat();
+    var now = [on, sideways, sq].join();
+    if (now === laid) return;
+    laid = now;
     main.classList.toggle("one", on);
-    main.classList.toggle("land", on && !!(land && land.matches));
+    main.classList.toggle("land", sideways);
+    main.classList.toggle("short", sq);
+    main.classList.toggle("side", sq && !sideways);
     soon();
   }
   oneView();
   [one, land].forEach(function(q){ if (!q) return; if (q.addEventListener) q.addEventListener("change", oneView); else if (q.addListener) q.addListener(oneView); });
+  /* the closed Duo opened, or opened closed: the screen changes under the page */
+  window.addEventListener("resize", oneView);
 
   /* the sheets */
   var pops = {}, current = null;

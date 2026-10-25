@@ -83,6 +83,7 @@ struct WebPage: View {
 
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.horizontalSizeClass) private var horizontalSize
     @Environment(\.verticalSizeClass) private var verticalSize
     @State private var next: Page?
     @State private var showingNext = false
@@ -99,8 +100,15 @@ struct WebPage: View {
         UIDevice.current.userInterfaceIdiom == .phone && verticalSize == .compact
     }
 
+    /// An iPad, or an iPhone with an iPad's room, as an iPhone Duo opened
+    /// (padLayout): the page fills the screen as on an iPad, and follows as
+    /// the Duo opens and closes.
+    private var pad: Bool {
+        padLayout(horizontalSize, verticalSize)
+    }
+
     var body: some View {
-        BridgeView(page: page, store: store,
+        BridgeView(page: page, store: store, pad: pad,
                    open: { link in
                        next = link
                        showingNext = true
@@ -116,8 +124,8 @@ struct WebPage: View {
             }
             // on an iPad the title would take a row of its own under the tab
             // bar, so the page has that room instead; the tab bar names the
-            // section and the page its own contents
-            .navigationTitle(UIDevice.current.userInterfaceIdiom == .pad ? "" : page.title)
+            // section and the page its own contents (an iPhone Duo opened too)
+            .navigationTitle(pad ? "" : page.title)
             .navigationBarTitleDisplayMode(.inline)
             .systemBar(hidden: sideways)
             .overlay(alignment: .topLeading) {
@@ -163,11 +171,12 @@ struct BackOverPage: View {
 struct BridgeView: UIViewControllerRepresentable {
     let page: Page
     let store: AppStore
+    let pad: Bool
     let open: (Page) -> Void
     let home: () -> Void
 
     func makeUIViewController(context: Context) -> PageBridgeController {
-        let controller = PageBridgeController(page: page, startTheme: store.hasTheme ? store.theme : nil)
+        let controller = PageBridgeController(page: page, startTheme: store.hasTheme ? store.theme : nil, startPad: pad)
         controller.store = store
         controller.onOpen = open
         controller.onHome = home
@@ -178,6 +187,7 @@ struct BridgeView: UIViewControllerRepresentable {
         controller.onOpen = open
         controller.onHome = home
         controller.show(theme: store.theme)
+        controller.show(pad: pad)
     }
 }
 
@@ -195,10 +205,14 @@ final class PageBridgeController: CAPBridgeViewController {
     private let startTheme: Theme?
     /// The theme the page is in, once it has said so.
     private var pageTheme: Theme?
+    /// Whether the page is marked as an iPad's (data-shell-pad): written
+    /// before it runs, and changed as the window's room changes.
+    private var pad: Bool
 
-    init(page: Page, startTheme: Theme?) {
+    init(page: Page, startTheme: Theme?, startPad: Bool) {
         self.page = page
         self.startTheme = startTheme
+        self.pad = startPad
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -251,14 +265,14 @@ final class PageBridgeController: CAPBridgeViewController {
     }
 
     /// Runs before anything on the page: marks the page as one of the
-    /// shell's, and on an iPad as one that fills the screen (as soon as its
-    /// root element exists, which WebKit makes before this runs), pins the
-    /// viewport so the page cannot zoom (a double tap on a region once
-    /// magnified a whole atlas page; the views pinch on their own), writes
+    /// shell's, and on an iPad (or with an iPad's room) as one that fills the
+    /// screen (as soon as its root element exists, which WebKit makes before
+    /// this runs), pins the viewport so the page cannot zoom (a double tap on
+    /// a region once magnified a whole atlas page; the views pinch on their
+    /// own), writes
     /// the shell's theme where the page reads its own, opens it on its
     /// fragment, and once it is built has it say which theme it came up in.
     private var startScript: String {
-        let pad = UIDevice.current.userInterfaceIdiom == .pad
         var lines = [
             "var pad = \(pad);",
             "var mark = function () { var root = document.documentElement; if (root) { root.setAttribute('data-shell', 'tabs'); if (pad) root.setAttribute('data-shell-pad', ''); } return !!root; };",
@@ -300,9 +314,24 @@ final class PageBridgeController: CAPBridgeViewController {
         webView?.evaluateJavaScript(script, completionHandler: nil)
     }
 
+    /// Marks the page as an iPad's or takes the mark away, as an iPhone
+    /// Duo's window gains an iPad's room opening and loses it closing; the
+    /// page follows the mark as it changes (navbar.js).
+    func show(pad now: Bool) {
+        guard now != pad else { return }
+        pad = now
+        markPad()
+    }
+
+    private func markPad() {
+        let script = "(function (on) { var root = document.documentElement; if (!root) return; if (on) root.setAttribute('data-shell-pad', ''); else root.removeAttribute('data-shell-pad'); })(\(pad));"
+        webView?.evaluateJavaScript(script, completionHandler: nil)
+    }
+
     /// A message from the page: so far only the theme it came up in. The
     /// shell takes it if it has none yet; otherwise the page is brought to
-    /// the shell's.
+    /// the shell's. The iPad's mark is written again then, in case the room
+    /// changed while the page was loading.
     fileprivate func received(_ body: Any) {
         guard let message = body as? [String: Any],
               let raw = message["theme"] as? String,
@@ -310,6 +339,7 @@ final class PageBridgeController: CAPBridgeViewController {
         pageTheme = reported
         store?.pageReported(reported)
         if let wanted = store?.theme { show(theme: wanted) }
+        markPad()
     }
 
     /// A link on the page asked for another page.

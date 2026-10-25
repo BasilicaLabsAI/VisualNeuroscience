@@ -84,8 +84,57 @@
 .screen > .deck > .stage #popRing{ height:min(88%, calc(100% - var(--isle) - 2 * var(--gap, 14px))); }
 .screen.one > .deck > .stage #popRing{ height:auto; max-height:min(76%, calc(100% - var(--isle))); }
 .screen.one.land > .deck > .stage #popRing{ height:100%; max-height:100%; }
-/* the newsletter card stands above the island */
+/* the newsletter card stands above the island; where the bar is a column
+   the card keeps to the foot */
 body.atlas-screen:has(> main.screen) .vn-news{ bottom:calc(var(--isle) + 14px); }
+body.atlas-screen:has(> main.screen.one.land) .vn-news, body.atlas-screen:has(> main.screen.one.side) .vn-news{ bottom:max(14px, env(safe-area-inset-bottom, 0px)); }
+
+/* a squat phone (v12.23), the closed iPhone Duo's outer display, whose
+   screen is shorter for its width than any other iPhone's: the page's
+   script marks the screen .short there, where one view stands at a time
+   and the bar's All goes, the four together being thumbnails on a screen
+   so short; and upright it marks it .side as well, where the bar stands
+   down the right edge as it does on a phone held sideways (the Duo keeps
+   its own bars on that side), one button to a row, each its icon over its
+   name, and the views and the sheets have the whole height */
+.screen.one.short .panelbar-all{ display:none; }
+main.screen.one.side{ flex-direction:row; }
+.screen.one.side > .deck{ flex:1 1 auto; min-width:0; }
+/* the drawer from the right edge keeps to the room beside the bar, the bar and its margins 104px */
+.screen.one.side .drawer{ --box-w:min(320px, 100vw - 164px); }
+.screen.one.side > .panelbar{
+  flex:none; flex-direction:column; align-items:stretch; justify-content:flex-start; gap:0;
+  margin:var(--gap, 14px) var(--gap, 14px) calc(var(--gap, 14px) + env(safe-area-inset-bottom, 0px));
+  padding:.3rem .25rem; overflow-x:hidden; overflow-y:auto; white-space:normal; scrollbar-width:none;
+}
+.screen.one.side > .panelbar::-webkit-scrollbar{ display:none; }
+/* the groups stand in the middle of the bar while they fit, and the bar
+   scrolls when they do not: two empty ends take the room left over */
+.screen.one.side > .panelbar::before, .screen.one.side > .panelbar::after{ content:""; flex:1 1 0; min-height:0; }
+.screen.one.side .panelbar-views, .screen.one.side .panelbar-btns, .screen.one.side .panelbar-end{
+  display:grid; grid-template-columns:66px; gap:0; flex:none;
+  margin:0 0 .25rem; padding:0 0 .25rem; border-right:0; border-bottom:1px solid var(--bar-line);
+}
+.screen.one.side .panelbar > :last-child{ padding-bottom:0; border-bottom:0; }
+.screen.one.side .pbtn{ position:relative; min-width:0; width:66px; min-height:44px; padding:.25rem .15rem .2rem; gap:.2rem; }
+.screen.one.side .pbtn.pbtn-ref{ margin-left:0; padding-left:.15rem; border-left:0; }
+.screen.one.side .pbtn span{
+  font-size:.5rem; letter-spacing:.08em; line-height:1.15; white-space:normal; text-align:center; max-width:100%;
+  -webkit-hyphens:manual; hyphens:manual;
+}
+.screen.one.side .pbtn svg{ width:22px; height:22px; }
+.screen.one.side > .deck > .stage{ margin-bottom:0; padding-bottom:0; }
+.screen.one.side > .deck > .stage .pop{ left:0; right:0; width:auto; bottom:0; border-left:0; border-right:0; max-height:76%; }
+.screen.one.side > .deck > .stage #popRx{ height:100%; }
+.screen.one.side > .deck > .stage #popRing{ height:auto; max-height:76%; }
+
+/* while a keyboard has shortened the page (a field has the focus and the
+   window has lost a keyboard's height, which navbar.js marks vn-typing,
+   v12.23) the bar steps aside rather than ride up over the keys, and the
+   views take its room until the keyboard goes */
+:root.vn-typing .screen > .panelbar, :root.vn-typing .ba-screen > .panelbar{ display:none; }
+:root.vn-typing .screen > .deck > .stage{ margin-bottom:0; padding-bottom:var(--gap, 14px); }
+:root.vn-typing .screen.one > .deck > .stage{ padding-bottom:0; }
 
 /* the sliders: the viewer's, a rounded track and a big round thumb in the
    accent with the panel's solid about it */

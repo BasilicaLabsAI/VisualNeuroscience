@@ -173,6 +173,13 @@
   var panel = $('#panel'), side = $('#col'), foldBtn = $('#collapse'), bar = $('#bar');
   var pickBtn = $('#pickBtn'), pickHide = $('#drawerHide'), pickShow = $('#drawerTab');
   function isMobile() { return window.innerWidth <= 760; }
+  // a squat phone upright (v12.23), the closed iPhone Duo's outer display, shorter for its width than
+  // any other iPhone's: the bar stands down the right edge, as the atlases' bars do there
+  var coarseQ = window.matchMedia ? window.matchMedia('(pointer: coarse)') : null;
+  function isSide() {
+    var s = window.screen || {}, a = Math.min(s.width || 0, s.height || 0), b = Math.max(s.width || 0, s.height || 0);
+    return isMobile() && window.innerHeight > window.innerWidth && !!(coarseQ && coarseQ.matches) && a > 0 && a < 600 && b < 1.75 * a;
+  }
   function panelOpen() { return !panel.hidden && !panel.classList.contains('leaving'); }
   function syncTabBtns() {
     var open = panelOpen();
@@ -246,12 +253,17 @@
     W = window.innerWidth; H = window.innerHeight;
     if (sized !== W + 'x' + H) { renderer.setSize(W, H, false); sized = W + 'x' + H; }
     camera.aspect = W / H;
-    // the room the bar takes from the foot: the island and the gap under it (v12.1)
-    var barH = bar ? Math.max(0, Math.round(H - bar.getBoundingClientRect().top)) : 0;
-    document.documentElement.style.setProperty('--bar-h', (bar ? bar.offsetHeight : 0) + 'px');
+    // the room the bar takes from the foot: the island and the gap under it (v12.1); standing down
+    // the right edge of a squat phone (v12.23), the room it takes from the side
+    var edge = isSide();
+    document.body.classList.toggle('side', edge);
+    var barH = bar && !edge ? Math.max(0, Math.round(H - bar.getBoundingClientRect().top)) : 0;
+    var barL = bar && edge ? Math.round(bar.getBoundingClientRect().left) : W;
+    document.documentElement.style.setProperty('--bar-h', (bar && !edge ? bar.offsetHeight : 0) + 'px');
+    document.documentElement.style.setProperty('--side-w', (bar && edge ? bar.offsetWidth : 0) + 'px');
     var open = panelOpen(), pickOpen = !side.classList.contains('shut');
     VO.tx = 0; VO.ty = 0;
-    if (isMobile()) { freeW = W; freeH = Math.max(120, open ? panel.getBoundingClientRect().top : H - barH); VO.ty = (H - freeH) / 2; }
+    if (isMobile()) { freeW = barL; freeH = Math.max(120, open ? panel.getBoundingClientRect().top : H - barH); VO.tx = -(W - barL) / 2; VO.ty = (H - freeH) / 2; }
     else {
       var right = (open || pickOpen) ? side.getBoundingClientRect().right : 0;
       freeW = Math.max(200, W - right); freeH = Math.max(120, H - barH); VO.tx = right / 2; VO.ty = (H - freeH) / 2;
