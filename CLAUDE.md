@@ -549,15 +549,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   view buttons hidden too (`.screen.one.short .panelbar-views` in `regions.html`; v12.27, at the owner's word: the
   screen is too short for the flat slices). Everything else is the phone's: the bar at the foot, the drawer, the
   sheets, the Brodmann Area Atlas and the molecular viewer as on any iPhone upright, and the shell's bars where iOS
-  puts them, Back at the top left and the tabs at the foot, the Duo keeping only its status bar and camera in a column
-  down the right edge, which Apple's Duo page describes (v12.23 to v12.26 stood the page's bar down the right edge
-  beside it, one bar too many). `oneView` runs on every resize on those three pages, since the Duo's screen changes
-  under a page as it opens and closes while neither media query need change, and acts only when the layout does
-  (`laid`); Tractography and Microanatomy, with one view, read nothing from the screen. Open, the Duo is an iPad (the
-  shell above): upright its inner display is 669 wide, an iPad mini's layout (`.one`, the four views two by two), and
-  sideways 887, the iPad's, the page's bar at the foot and, in the store images, the iPad's bar of Back and the tabs
-  across the top; where iOS itself puts the tab bar on the open Duo is iOS's to decide, and a build with the iOS 27.1
-  SDK would stand it down the side under the status.
+  puts them (v12.23 to v12.26 stood the page's bar down the right edge, one bar too many). The Duo itself keeps its
+  status bar and camera in a column down the right edge of both displays, and an app built with the iOS 27.1 SDK gets
+  its tab bar and toolbars stood on end there, below the status, as Apple's Duo page and pictures show; a build with
+  Xcode 26 is shown inset open and gets the iPhone's bars closed. `oneView` runs on every resize on those three pages,
+  since the Duo's screen changes under a page as it opens and closes while neither media query need change, and acts
+  only when the layout does (`laid`); Tractography and Microanatomy, with one view, read nothing from the screen.
+  Open, the Duo is an iPad (the shell above): upright its inner display is 669 wide, an iPad mini's layout (`.one`,
+  the four views two by two), and sideways 887, the iPad's, the page's bar at the foot.
 - The interface follows Apple's fluid-interface guidance (v10.92): controls answer on the press (`viewer.css`, the
   last section), the account box and both section menus arrive from their button and leave the same way, the bars
   and menus are translucent materials with `prefers-reduced-transparency` and `prefers-contrast` fallbacks, a thrown
@@ -614,16 +613,16 @@ Read this first in every session. It is the handover; nothing else needs pasting
   optional, to replace 1.0's in that slot, and since v12.23 the iPhone Duo's own two (v12.20 set the iPad renders in
   the inner size): `iphone-duo-` at 1398×2034, the outer display closed (`duo-01`…`duo-10`), and `iphone-duo-land-` at
   2853×2007, the inner display open and sideways (`open-01`…`open-10`; `store-sell.js`'s `SHARE`, the capture at 84% of
-  the width), each rendered at the Duo's web view (402×512 closed and 887×583 open, at 3×, the screen's size given so
-  the page knows the squat phone) under the app's bar and, closed, over its tab bar, with the status in a column down
-  the right edge, where Apple's Duo page stands it (since v12.27, at the owner's word; v12.23 had stood Back and the
-  tabs in that column too): closed, the iPhone's bar with Back and the page's title, the strip the iPhone shot of the
-  same picture names cut below its status rows under a 20-point inset, and the iPhone's tab bar at the foot, the app's
-  area being the iPhone's own width (the light shot's bar is drawn from the dark strip's pieces as masks, its tab bar
-  the foot of the light capture); open, the iPad's bar, Back at the left and the island of tabs in the middle, cut
-  from the iPad strip the shot names and set at three halves (`duoTop()`); the column holds the camera when closed,
-  the time, Wi-Fi and battery, drawn from the iPhone captures' pieces (`column()`), since no Duo capture exists;
-  `store-sell.js` covers no status bar on them (`BAR`);
+  the width), each rendered at the Duo's web view (402×595 closed and 887×583 open, at 3×, the screen's size given so
+  the page knows the squat phone) under the app's bar, with a column down the right edge as Apple pictures the Duo's
+  (since v12.29, at the owner's word, after Apple's own pictures; v12.27 had put the tabs at the foot and the island
+  across the top): the camera, the time and the Wi-Fi, then the tab bar stood on end, a capsule of the five tabs with
+  the page's own lit, drawn from the iPhone captures' pieces as masks on the theme's paper (`column()`); the page has
+  the whole height under the app's bar, its own bar at the foot; closed, the app's bar is the iPhone's with Back and
+  the page's title, the strip the iPhone shot of the same picture names cut below its status rows under a 20-point
+  inset, the app's area being the iPhone's own width (the light shot's bar is drawn from the dark strip's pieces as
+  masks); open, the iPad's with Back alone at the left, cut from the iPad strip the shot names and set at three halves
+  (`duoTop()`); no Duo capture exists; `store-sell.js` covers no status bar on them (`BAR`);
   the second shot's statement is Brain region functions explained (`openPop` waits
   for a raised sheet to come to rest, which at 3× with software 3D takes longer than the slide); since v12.21 the
   iPhone's first two are the owner's own captures from the TestFlight build of 25 October 2026, taken whole

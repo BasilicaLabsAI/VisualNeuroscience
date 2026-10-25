@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.29 — 25 October 2026 — The Duo's tabs down the side
+Commit · Stand the tabs in the Duo's side column in the store images, as Apple pictures the Duo
+
+The App Store images of the iPhone Duo now show the app as Apple's own pictures show the Duo: on both displays a column down the right edge holds the camera, the time and the Wi-Fi, and under them the app's five tabs stood on end, with the page's own bar of tools at the foot and the whole height to itself. Closed, the app's bar with Back and the page's title stays at the top; open, the iPad's bar with Back. Nothing on the website or in the app changes.
+
 ## v12.28 — 25 October 2026 — The next app version is 2.0
-Commit · Number the next app version 2.0 in place of 1.1
+Commit `130ea09` · Number the next app version 2.0 in place of 1.1
 
 The next version of the app is numbered 2.0 rather than 1.1, at the owner's word: the iOS project, the Android project and the store notes all say so, so the build Xcode Cloud makes next carries 2.0 and matches the version page in App Store Connect. Nothing on the website changes.
 

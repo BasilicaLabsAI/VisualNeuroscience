@@ -163,14 +163,15 @@ Store's images are the fifty in `app/store/sell/` below: ten shots, each
 for the iPad at 2752×2064, for the iPhone at two sizes, and since v12.23
 for the iPhone Duo's two displays: closed, the outer display at 1398×2034
 (`iphone-duo-`), the pages as they lay themselves out there, one view at a
-time, the 3D Region Atlas its 3D view alone, under the iPhone's bar and over
-its tab bar; open and sideways, the inner display at 2853×2007
+time, the 3D Region Atlas its 3D view alone, under the iPhone's bar of Back
+and the title; open and sideways, the inner display at 2853×2007
 (`iphone-duo-land-`), the pages laid out as on an iPad under the iPad's bar
-of Back and the tabs. No Duo capture exists yet, so each is rendered at the
-Duo's own web view with the status (and, closed, the camera) in a column
-down the right edge, where Apple's Duo page stands it, the bars and the
-column drawn from the iPhone and iPad captures' own pieces (v12.27; v12.23
-had stood Back and the tab bar in that column too). Submitting Duo screenshots puts a badge on the product
+with Back. On both, as Apple pictures the Duo, a column down the right edge
+holds the camera, the time and the Wi-Fi and then the tab bar stood on end,
+where the iOS 27.1 SDK stands an app's tab bar, and the page's own bar is at
+the foot (v12.29; v12.27 had the tabs at the foot). No Duo capture exists
+yet, so the bars and the column are drawn from the iPhone and iPad
+captures' own pieces. Submitting Duo screenshots puts a badge on the product
 page saying the app is optimized for iPhone Duo; the pages now lay
 themselves out for both of its displays, but the app has not been tried on
 a Duo, and only a build made with the iOS 27.1 SDK (Xcode 27.1 or later)

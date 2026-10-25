@@ -11,18 +11,19 @@
    sideways at 2853×2007 (open-01 to open-10), each rendered at the Duo's
    own web view, as the pages lay themselves out there (closed, one view at
    a time, the 3D Region Atlas its 3D view alone; open, as on an iPad),
-   under the app's bar and, closed, over its tab bar, with the status in a
-   column down the right edge, where Apple puts the Duo's (the app's content
-   stands to the left of the status bar and camera). Since v12.27, at the
-   owner's word, the bars are the iPhone's and the iPad's own, where they
-   always stand: closed, the iPhone's bar with Back at the top left and the
-   page's title, cut from the iPhone strips below their status rows, and the
-   iPhone's tab bar at the foot (duoTop(), the closed app area being the
-   iPhone's own width); open, the iPad's bar with Back at the left and the
-   island of tabs in the middle, cut from the iPad strips and set at the
-   Duo's scale. The column holds the camera and the status alone, drawn from
-   the iPhone captures' pieces (column()); no Duo capture exists yet, so
-   nothing here is a copy of one. The captures came from the owner's
+   under the app's bar, with a column down the right edge where Apple puts
+   the Duo's status bar and camera and, for an app built with the iOS 27.1
+   SDK, its tab bar and toolbars, stood on end below the status. Since
+   v12.29, at the owner's word and after Apple's own pictures of the Duo,
+   the column holds the camera, the time and the Wi-Fi, then the tab bar
+   stood on end, a capsule of the five tabs with the page's own lit
+   (column()), and the page has the whole height beneath the app's bar, its
+   own bar at the foot; the app's bar is the iPhone's closed, Back at the
+   top left and the page's title, cut from the iPhone strip below its status
+   rows, and the iPad's open, Back alone at the left, cut from the iPad strip
+   (duoTop()). Everything is drawn from the iPhone and iPad captures'
+   pieces; no Duo capture exists yet, so nothing here is a copy of one.
+   The captures came from the owner's
    devices, an 11-inch iPad sideways and an iPhone 16 Pro, on 23 October
    2026; since v12.10 they are remade here whenever the pages change, so
    the images keep up without a device: each page is rendered as the app
@@ -75,18 +76,18 @@ const only = process.argv.slice(2);
 /* the devices: the web view in CSS pixels, its scale, and where its rows
    sit in the capture. The iPhone Duo (v12.23) has no capture yet: closed,
    its outer display is 466 by 678 points, and the app has the 402 left of
-   the column down the right edge where the Duo stands the status bar and
-   the camera, under the iPhone's bar (83 points: a 20-point inset and the
-   bar's own row) and over its tab bar (83); open and sideways its inner
-   display is 951 by 669, the app the 887 left of the same column, laid out
-   as on an iPad under the iPad's bar (86). The column is drawn from the
-   iPhone's own pieces (column() below), the bars from the captures' strips
-   (duoTop()), and the screen's size is the page's own measure of a squat
-   phone */
+   the column down the right edge where the Duo stands the status bar, the
+   camera and the tab bar, under the iPhone's bar (83 points: a 20-point
+   inset and the bar's own row) and down to the foot; open and sideways its
+   inner display is 951 by 669, the app the 887 left of the same column,
+   laid out as on an iPad under the iPad's bar (86). The column is drawn
+   from the iPhone's own pieces (column() below), the bars from the
+   captures' strips (duoTop()), and the screen's size is the page's own
+   measure of a squat phone */
 const DEV = {
   ipad:    { w: 1210, h: 748, dpr: 2, pad: true,  top: 172, capture: [2420, 1668], families: ['ipad-13-land'] },
   iphone:  { w: 402,  h: 675, dpr: 3, pad: false, top: 348, bottom: 2373, capture: [1206, 2622], families: ['iphone-6.3', 'iphone-6.9'] },
-  duo:     { w: 402,  h: 512, dpr: 3, pad: false, screen: [466, 678], column: 'outer', top: 249, bottom: 1785, capture: [1398, 2034], families: ['iphone-duo'] },
+  duo:     { w: 402,  h: 595, dpr: 3, pad: false, screen: [466, 678], column: 'outer', top: 249, capture: [1398, 2034], families: ['iphone-duo'] },
   duoOpen: { w: 887,  h: 583, dpr: 3, pad: true,  screen: [951, 669], column: 'inner', top: 258, capture: [2853, 2007], families: ['iphone-duo-land'] },
 };
 
@@ -220,11 +221,11 @@ const SHOTS = [
 /* the iPhone Duo (v12.23): open, the iPad's ten at the inner display's size,
    the page laid out as on an iPad under the iPad's own bar (the strip the
    iPad shot names); closed, the iPhone's ten as the outer display shows
-   them, one view at a time, under the iPhone's bar and over its tab bar
-   (the strips the iPhone shot of the same picture names; the two capture
-   shots and the light one take the atlas's), the atlas's opening shot the
-   3D view with the three regions lit, and the last the Atlases page in
-   light mode, the light shot of the iPad's */
+   them, one view at a time, under the iPhone's bar (the strip the iPhone
+   shot of the same picture names; the two capture shots and the light one
+   take the atlas's), the tabs stood on end in the column, the atlas's
+   opening shot the 3D view with the three regions lit, and the last the
+   Atlases page in light mode, the light shot of the iPad's */
 const TAB = { '06-microanatomy.png': 'atlases', '07-molecular.png': 'atlases', '10-hallucinations.png': 'library', '08-practice.png': 'practice', '11-mcp.png': 'about' };
 for (const s of SHOTS.filter(x => x.dev === 'ipad'))
   SHOTS.push(Object.assign({}, s, { name: s.name.replace('ipad', 'open'), dev: 'duoOpen', tab: TAB[s.out] || 'atlases' }));
@@ -239,13 +240,10 @@ SHOTS.push(
   { name: 'duo-07', dev: 'duo', theme: 'dark', url: 'hallucinations.html', ready: hxReady, setup: click('.panelbar [data-pop="popCircuit"]', 1800), out: '10-hallucinations.png', statement: PHONE_SAID['10-hallucinations.png'] },
   { name: 'duo-08', dev: 'duo', theme: 'dark', url: 'practice.html', ready: pageReady, setup: question('A central ethical advantage of iPSCs'), out: '08-practice.png', statement: PHONE_SAID['08-practice.png'] },
   { name: 'duo-09', dev: 'duo', theme: 'light', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, out: '02-atlas-light.png', statement: 'Light mode' },
-  { name: 'duo-10', dev: 'duo', theme: 'dark', url: 'mcp.html', ready: pageReady, fade: 30, out: '11-mcp.png', statement: PHONE_SAID['11-mcp.png'] },
+  { name: 'duo-10', dev: 'duo', theme: 'dark', url: 'mcp.html', ready: pageReady, out: '11-mcp.png', statement: PHONE_SAID['11-mcp.png'] },
 );
 const PHONE = Object.fromEntries(SHOTS.filter(x => x.dev === 'iphone' && x.top).map(x => [x.out, x]));
-for (const s of SHOTS) if (s.dev === 'duo'){
-  const p = PHONE[s.out];
-  s.top = p ? p.top : 'iphone-top-dark-3d-region-atlas'; s.bottom = p ? p.bottom : 'iphone-bottom-dark-atlases';
-}
+for (const s of SHOTS) if (s.dev === 'duo') s.top = PHONE[s.out] ? PHONE[s.out].top : 'iphone-top-dark-3d-region-atlas';
 
 /* the page as the shell shows it */
 const shell = (o) => {
@@ -274,25 +272,38 @@ const blendFor = light => light ? 'filter:invert(1);mix-blend-mode:multiply' : '
 const glassFor = light => light ? 'background:rgba(255,255,255,.94);box-shadow:inset 0 0 0 1px rgba(0,0,0,.07),0 8px 34px rgba(0,0,0,.13)'
                                : 'background:#171717;box-shadow:inset 0 0 0 1px #383838,inset 0 0 0 2px #2F2F2F,inset 0 0 0 3px #262626,0 10px 40px rgba(0,0,0,.35)';
 
-/* the Duo's column down the right edge (v12.23), in the theme's paper: the
-   outer display's camera at its top and the status (the time, the Wi-Fi and
-   the battery), which Apple stands there on both displays; nothing else
-   since v12.27. The time and the status icons are cut from the owner's
-   iPhone captures and levelled to masks */
+/* the Duo's column down the right edge (v12.23), in the theme's paper, as
+   Apple pictures the Duo's on both displays: the camera at its top, the
+   status below it (the time and the Wi-Fi, as Apple's pictures show them)
+   and under them the tab bar stood on end, a capsule of the five tabs with
+   the page's own lit, where the iOS 27.1 SDK stands an app's tab bar
+   (v12.29, at the owner's word; v12.27 had kept the tabs at the foot). The
+   time, the Wi-Fi and the tabs' icons and names are cut from the owner's
+   iPhone captures and levelled to masks, light on black, so they sit on
+   any ground (screened on the dark, inverted and multiplied on the light);
+   the glass is drawn as the captures show it, the dark in the capsule's
+   grey with its three-step rim */
+const TABS = ['atlases', 'library', 'practice', 'about', 'account'], TAB_X = { atlases: 190, library: 396, practice: 602, about: 810, account: 1015 };
 function column(d, shot, work){
   const x0 = d.w * d.dpr, [W, H] = d.capture, cw = W - x0, light = shot.theme === 'light';
   const top = path.join(CHROME, 'iphone-top-dark-3d-region-atlas.png');
   /* the pieces: [box in the strip, the ground's share of white] */
-  const time = cut(work, top, '129x38+131+79', 'time', 7), wifi = cut(work, top, '51x37+945+79', 'wifi', 7), battery = cut(work, top, '82x39+1018+78', 'battery', 7);
-  const blend = blendFor(light), paper = light ? '#FFFFFF' : '#111111';
+  const time = cut(work, top, '129x38+131+79', 'time', 7), wifi = cut(work, top, '51x37+945+79', 'wifi', 7);
+  /* each tab unlit: Atlases from the capture with Library lit, the rest from the one with Atlases lit; the
+     window keeps clear of the capsule's round ends and of the lit tab's pill */
+  const item = n => cut(work, path.join(CHROME, n === 'atlases' ? 'iphone-bottom-dark-library.png' : 'iphone-bottom-dark-atlases.png'), '140x156+' + (TAB_X[n] - 70) + '+14', 'tab-' + n, 9.5);
+  const blend = blendFor(light), paper = light ? '#FFFFFF' : '#111111', glass = glassFor(light);
   const at = (l, tp, w, h, extra) => `position:absolute;left:${px(x0 + l)};top:${px(tp)};width:${px(w)};height:${px(h)};${extra || ''}`;
   const mid = w => Math.round((cw - w) / 2);
-  const outer = d.column === 'outer', y = outer ? { time: 120, icons: 178 } : { time: 40, icons: 98 };
   const L = [`<div style="${at(0, 0, cw, H, 'background:' + paper)}"></div>`];
-  if (outer) L.push(`<div style="${at(mid(44), 42, 44, 44, 'border-radius:50%;background:#000;box-shadow:0 0 0 2px ' + (light ? '#D8D8D8' : '#1C1C1C'))}"></div>`);
-  L.push(`<img src="${time}" style="${at(mid(129), y.time, 129, 38, blend)}">`);
-  L.push(`<img src="${wifi}" style="${at(mid(147), y.icons, 51, 37, blend)}">`);
-  L.push(`<img src="${battery}" style="${at(mid(147) + 65, y.icons - 1, 82, 39, blend)}">`);
+  L.push(`<div style="${at(mid(44), 42, 44, 44, 'border-radius:50%;background:#000;box-shadow:0 0 0 2px ' + (light ? '#D8D8D8' : '#1C1C1C'))}"></div>`);
+  L.push(`<img src="${time}" style="${at(mid(129), 120, 129, 38, blend)}">`);
+  L.push(`<img src="${wifi}" style="${at(mid(51), 178, 51, 37, blend)}">`);
+  const capW = 172, cell = 148, pad = 16, capH = cell * TABS.length + 2 * pad, capTop = 262;
+  L.push(`<div style="${at(mid(capW), capTop, capW, capH, 'border-radius:' + px(capW / 2) + ';' + glass)}"></div>`);
+  const lit = TABS.indexOf(shot.tab || 'atlases');
+  L.push(`<div style="${at(mid(150), capTop + pad + lit * cell + (cell - 136) / 2, 150, 136, 'border-radius:68px;background:' + (light ? '#EBEBEB' : '#383838'))}"></div>`);
+  TABS.forEach((n, i) => L.push(`<img src="${item(n)}" style="${at(mid(123), capTop + pad + i * cell + (cell - 137) / 2, 123, 137, blend)}">`));
   return L;
 }
 
@@ -304,9 +315,10 @@ function column(d, shot, work){
    page shows, is drawn from the dark one's pieces as masks on white, with
    the glass circle as the captures show it. Open, the iPad's: the strip's
    own ground (its one blank column stretched across, so the bar keeps the
-   capture's shading), Back at the left and the island of tabs in the middle
-   of the app's width, each cut from the iPad strip the shot names and set
-   at the Duo's scale, three halves of the iPad's two */
+   capture's shading) and Back at the left, cut from the iPad strip the shot
+   names and set at the Duo's scale, three halves of the iPad's two; the
+   island of tabs is not here since v12.29, the tabs standing in the column
+   on both displays */
 const TITLE = { 'iphone-top-dark-3d-region-atlas': '373x49+417+230' };
 function duoTop(d, shot, work){
   const aw = d.w * d.dpr, light = shot.theme === 'light', strip = path.join(CHROME, shot.top + '.png');
@@ -327,35 +339,11 @@ function duoTop(d, shot, work){
     const k = 1.5;
     /* the column at 520 stands between the status text and the island in every strip, where nothing is drawn */
     L.push(`<img src="${cut(work, strip, '1x172+520+0', 'ground-' + shot.top)}" style="${at(0, 0, aw, d.top)}">`);
-    /* each piece's window reaches out to where the glass's shadow has faded into the ground, so no edge shows:
-       Back's below the status text, the island's the whole height, between the status text and its icons */
+    /* Back's window reaches out, below the status text, to where the glass's shadow has faded into the ground, and
+       its top edge is softened, so no edge shows; the island is not here, the tabs standing in the column */
     const soft = 'mask-image:linear-gradient(rgba(0,0,0,0),#000 36px);-webkit-mask-image:linear-gradient(rgba(0,0,0,0),#000 36px)';
     L.push(`<img src="${cut(work, strip, '260x128+0+44', 'back-' + shot.top)}" style="${at(0, Math.round(44 * k), 260 * k, 128 * k, soft)}">`);
-    L.push(`<img src="${cut(work, strip, '1140x172+600+0', 'island-' + shot.top)}" style="${at(Math.round((aw - 1140 * k) / 2), 0, 1140 * k, 172 * k)}">`);
   }
-  return L;
-}
-
-/* the iPhone's tab bar in the light theme, for the closed Duo's light shot:
-   no light capture of a pushed page exists, and the light capture of the
-   Atlases tab shows that page through the bar's glass, so the bar is drawn
-   as the dark strips measure it, on white: the capsule (1080 by 186 from
-   63, its rim as the captures show it), the lit tab's pill (234 by 162
-   about the tab's centre) and the five tabs' icons and names as masks cut
-   from the dark strips, inverted (each tab unlit: Atlases from the strip
-   with Library lit, the rest from the one with Atlases lit) */
-const TABS = ['atlases', 'library', 'practice', 'about', 'account'], TAB_X = { atlases: 190, library: 396, practice: 602, about: 810, account: 1015 };
-function tabsLight(d, shot, work){
-  const blend = blendFor(true);
-  const at = (l, tp, w, h, extra) => `position:absolute;left:${px(l)};top:${px(d.bottom + tp)};width:${px(w)};height:${px(h)};${extra || ''}`;
-  const L = [`<div style="${at(0, 0, 1206, 249, 'background:#FFFFFF')}"></div>`];
-  L.push(`<div style="${at(63, 0, 1080, 186, 'border-radius:93px;' + glassFor(true))}"></div>`);
-  const lit = TAB_X[shot.tab || 'atlases'];
-  L.push(`<div style="${at(lit - 117, 11, 234, 162, 'border-radius:81px;background:#EBEBEB')}"></div>`);
-  TABS.forEach(n => {
-    const strip = path.join(CHROME, n === 'atlases' ? 'iphone-bottom-dark-library.png' : 'iphone-bottom-dark-atlases.png');
-    L.push(`<img src="${cut(work, strip, '140x156+' + (TAB_X[n] - 70) + '+14', 'tab-' + n, 9.5)}" style="${at(TAB_X[n] - 70, 14, 140, 156, blend)}">`);
-  });
   return L;
 }
 
@@ -366,12 +354,6 @@ async function join(browser, shot, renderPath, outPath, work){
   if (d.column){
     layers.push(...duoTop(d, shot, work));
     layers.push(`<img src="${dataUrl(renderPath)}" style="left:0;top:${px(d.top)}">`);
-    if (shot.fade) layers.push(`<div style="position:absolute;left:0;top:${px(d.bottom - shot.fade * d.dpr)};width:${px(d.w * d.dpr)};height:${px(shot.fade * d.dpr)};background:linear-gradient(rgba(17,17,17,0),#111111 60%)"></div>`);
-    /* closed, the iPhone's tab bar at the foot: the strip the shot names, or drawn in the light theme */
-    if (d.bottom){
-      if (shot.theme === 'light') layers.push(...tabsLight(d, shot, work));
-      else layers.push(`<img src="${dataUrl(path.join(CHROME, shot.bottom + '.png'))}" style="left:0;top:${px(d.bottom)}">`);
-    }
     layers.push(...column(d, shot, work));
   } else if (shot.capture){
     layers.push(`<img src="${dataUrl(path.join(CHROME, shot.capture + '.png'))}" style="left:0;top:0">`);
