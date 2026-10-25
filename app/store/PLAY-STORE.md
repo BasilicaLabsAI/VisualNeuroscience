@@ -55,7 +55,7 @@ npm run android:bundle          # cap sync android, then gradlew bundleRelease
 ```
 
 The bundle lands at `android/app/build/outputs/bundle/release/app-release.aab`.
-Version 1.1, versionCode 2 (`android/app/build.gradle`); bump versionCode
+Version 2.0, versionCode 2 (`android/app/build.gradle`); bump versionCode
 with every upload, it can never repeat. Upload the .aab on the testing or
 production track, and the console runs its pre-launch report on real
 devices (phones, tablets, a Chromebook); read it, it is free QA.

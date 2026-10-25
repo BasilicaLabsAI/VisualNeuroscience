@@ -75,7 +75,7 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `CFBundleShortVersionString` shows a native alert, Update (the store page) or Not Now, at most once a day for the same
   version (`vn-update-asked-on`, `vn-update-asked-for`) and never when that version needs a newer iOS than the device has
   (skipped on a Mac, whose numbers are macOS's). A build newer than the store's, on TestFlight or in review, is never
-  asked. Only builds that carry it can ask: 1.0 never will, and 1.1 is the first to ask, once 1.2 is out. The privacy
+  asked. Only builds that carry it can ask: 1.0 never will, and 2.0 is the first to ask, once 2.1 is out. The privacy
   page names the request. Since v12.22 the keyboard rises over a page rather than shortening it
   (`.ignoresSafeArea(.keyboard, edges: .bottom)` on `WebPage`'s `BridgeView`): SwiftUI's keyboard avoidance had shrunk
   the web view, and a page shortened so read as wider than tall, which on an iPhone threw the atlases into their
@@ -601,7 +601,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
 
 ## Open on the owner's side (update as they close)
 - App Store: version 1.0 was approved and released on 25 September 2026 (https://apps.apple.com/app/id6805618686)
-  after an expedited review. The project is at 1.1 for the next submission; its What's New text, the App Privacy
+  after an expedited review. The project is at 2.0 for the next submission (the owner's choice of 25 October 2026, in
+  place of 1.1: `MARKETING_VERSION` in the Xcode project and Android's `versionName`, and the version page in App Store
+  Connect must say 2.0 as well, since a build's number and its page's must agree); its What's New text, the App Privacy
   changes the newsletter and the usage counts need, and the steps are in `app/store/LISTING.md`, the screenshots in
   `app/store/screenshots/` (the browser's, every set retaken on the v12.9 pages by `app/scripts/shoot-store.js`, whose
   Brodmann shot is the Brodmann Area Atlas page since v12.9) and the App Store's own images in `app/store/sell/`: since
@@ -641,7 +643,7 @@ Read this first in every session. It is the handover; nothing else needs pasting
   under the owner's statements by `store-sell.js`. Run it again whenever the pages change; a device capture is still the
   truest image and `store-sell.js` takes one as before. The listing's new name is *Visual Neuroscience: 3D Human Brain Atlas* (the owner, 23 October
   2026), which the store's 30-character cap splits into the name `Visual Neuroscience` and the subtitle `3D Human Brain
-  Atlas`; it goes in with 1.1. `GoogleService-Info.plist` was downloaded again on 21 October 2026 and was identical to the
+  Atlas`; it goes in with 2.0. `GoogleService-Info.plist` was downloaded again on 21 October 2026 and was identical to the
   repo's copy (`IS_ANALYTICS_ENABLED` false); the key does not gate collection in current SDKs, so the apps count
   unless `Info.plist` says otherwise. Confirm the iOS stream in the Firebase console's Realtime view with a TestFlight
   build before submitting; if no iOS data stream is listed, link Analytics under Integrations and download again.

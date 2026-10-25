@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.28 — 25 October 2026 — The next app version is 2.0
+Commit · Number the next app version 2.0 in place of 1.1
+
+The next version of the app is numbered 2.0 rather than 1.1, at the owner's word: the iOS project, the Android project and the store notes all say so, so the build Xcode Cloud makes next carries 2.0 and matches the version page in App Store Connect. Nothing on the website changes.
+
 ## v12.27 — 25 October 2026 — The Duo as an iPhone closed and an iPad open, and a selection as a file
-Commit · Keep the closed Duo's bar at the foot with the 3D view alone, and move a selection between devices as a file
+Commit `a16ca04` · Keep the closed Duo's bar at the foot with the 3D view alone, and move a selection between devices as a file
 
 On an iPhone Duo closed, the bar of tools now stays at the foot of the page as it does on every iPhone, under the app's own bar with Back at the top left and over its tabs, with nothing of the app's down the right edge but the status the Duo itself keeps there; the 3D Region Atlas shows its 3D view alone there, with its slicing, since the screen is too short for the four views or the flat slices. Open, the Duo is an iPad, its bar with Back and the tabs across the top and the page's bar at the foot. The App Store images of both displays were remade to show this. On the 3D Region Atlas, the Saved maps window gains Export file and Import file: the first writes the highlighted regions, their colours, the camera and the cuts as a small JSON file, to the Files app and the share sheet in the apps and as a download on the website, and the second reads such a file back and builds the same view, on any device, with or without an account. The app takes the change with its next build.
 

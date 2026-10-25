@@ -27,7 +27,7 @@ which the store sets one under the other on the product page and in
 search; the colon is the store's own break, not typed anywhere. Was
 VisualNeuroscience.AI for 1.0, with the subtitle *Interactive brain atlas*.
 The name can only be changed while a new version is being prepared, so
-this goes in with 1.1 and shows once 1.1 is released. With the space,
+this goes in with 2.0 and shows once 2.0 is released. With the space,
 "neuroscience" is a word of its own for search. NOURAKU – Visual
 Neuroscience is on the store too, and the 4.3(a) notes name that likeness
 as a possible trigger, so the subtitle says what no other listing could.
@@ -146,13 +146,13 @@ https://visualneuroscience.ai
 
 Routing App Coverage File, App Clip and iMessage App: leave alone.
 
-## Next update: what's new (1.1)
+## Next update: what's new (2.0)
 
 Version 1.0 was approved and released on 25 September 2026. The project is
-at 1.1 for the next submission: create version 1.1 in App Store Connect,
+at 2.0 for the next submission: create version 2.0 in App Store Connect,
 pick the new build, upload the screenshots in `app/store/screenshots/`,
 paste the text below into *What's New in This Version*, and update App
-Privacy as the section below says, since 1.1 is the first version that can
+Privacy as the section below says, since 2.0 is the first version that can
 put an address on the newsletter's list.
 
 The iPhone and iPad screenshots in `app/store/screenshots/` were taken from
@@ -318,7 +318,7 @@ Not a medical device and not a diagnostic tool. An educational reference that su
 Also on the web at visualneuroscience.ai
 ```
 
-## Submitting 1.1, in order
+## Submitting 2.0, in order
 
 1. **The Firebase file.** `app/ios/App/App/GoogleService-Info.plist` carries
    `IS_ANALYTICS_ENABLED` false, and a fresh download from the Firebase
@@ -348,7 +348,7 @@ Also on the web at visualneuroscience.ai
    16:9 PNG at 5244×2950 for both; videos 5 to 30 seconds at 30 or 60 fps; no
    alpha channel), submitted on their own once the app has an approved
    version.
-4. **App Store Connect → the app → the 1.1 version page**: pick the build,
+4. **App Store Connect → the app → the 2.0 version page**: pick the build,
    paste *What's New* from above, upload the screenshots, paste the
    description's bullets from `PLAY-STORE.md`, check the keywords (add
    `MNI152` and `AAL` as §8 suggests), the Support and Marketing URLs and the
@@ -369,7 +369,7 @@ Also on the web at visualneuroscience.ai
 8. **Age rating** stays 12+; export compliance is answered by `Info.plist`
    (`ITSAppUsesNonExemptEncryption` false), so no question comes at upload.
 9. **Submit**, one build, no expedited request. After approval the new name
-   shows, and the project moves to 1.2 (`MARKETING_VERSION` in the Xcode
+   shows, and the project moves to 2.1 (`MARKETING_VERSION` in the Xcode
    project) for the next one.
 
 ## App Review Information
@@ -409,11 +409,11 @@ Analytics for Firebase, from v11.21 of the site) the app also collects
 used to track: the app is built without the advertising identifier, so no
 tracking permission is asked. Everything else: not collected.
 
-The newsletter box stays on the website, but from 1.1 a new account's
+The newsletter box stays on the website, but from 2.0 a new account's
 address goes to the newsletter's list at Mailchimp when the
 feature-announcements box is left ticked. Add **Developer's Advertising
 or Marketing** to the purposes of Contact Info → Email Address before
-submitting 1.1; it stays linked to the user and not used to track.
+submitting 2.0; it stays linked to the user and not used to track.
 
 ## Age Rating
 
