@@ -14,7 +14,11 @@
    in, they are files in the account: users/{uid}/tools/{tool}/files/{name},
    through userdata.js, which is what Practice already uses for progress.
    A save that the account refuses is kept on the device instead and the
-   note under the list says so. */
+   note under the list says so. Export file and Import file (v12.28) move a
+   model between devices as a JSON file, the same object Save keeps, with no
+   account needed: the apps hand it to the Files app and the share sheet
+   through MN.saveFile, the web downloads it, and a file picker reads one
+   back and the page's restore builds the view from it. */
 window.MN_MODELS = (function(){
 "use strict";
 
@@ -57,7 +61,19 @@ function attach(o){
   form.appendChild(input); form.appendChild(saveBtn);
   var list = document.createElement("div"); list.className = "mlist"; list.setAttribute("role", "list");
   var note = document.createElement("p"); note.className = "models-note"; note.setAttribute("aria-live", "polite");
-  wrap.appendChild(form); wrap.appendChild(list); wrap.appendChild(note);
+  /* the model as a file (v12.28, at the owner's word): Export writes what
+     Save would keep, as JSON, to the Files app and the share sheet inside the
+     apps and as a download on the web; Import reads such a file back and
+     builds the view from it, on any device, signed in or not */
+  var fileRow = document.createElement("div"); fileRow.className = "mfile";
+  var exportBtn = document.createElement("button"); exportBtn.type = "button"; exportBtn.className = "btn"; exportBtn.textContent = "Export file";
+  exportBtn.title = "Write this " + noun + " to a file";
+  var importBtn = document.createElement("button"); importBtn.type = "button"; importBtn.className = "btn"; importBtn.textContent = "Import file";
+  importBtn.title = "Open a " + noun + " from a file";
+  var picker = document.createElement("input"); picker.type = "file"; picker.accept = ".json,application/json"; picker.hidden = true;
+  picker.setAttribute("aria-label", "A saved " + noun + " file");
+  fileRow.appendChild(exportBtn); fileRow.appendChild(importBtn); fileRow.appendChild(picker);
+  wrap.appendChild(form); wrap.appendChild(fileRow); wrap.appendChild(list); wrap.appendChild(note);
   host.appendChild(wrap);
 
   var mode = "device", items = [], user = null, busy = false, flash = null, flashErr = false;
@@ -133,7 +149,7 @@ function attach(o){
     return Promise.resolve();
   }
 
-  function setBusy(b){ busy = b; saveBtn.disabled = b; list.classList.toggle("busy", b); }
+  function setBusy(b){ busy = b; saveBtn.disabled = b; exportBtn.disabled = b; importBtn.disabled = b; list.classList.toggle("busy", b); }
 
   function save(name){
     name = String(name || "").trim();
@@ -220,6 +236,56 @@ function attach(o){
       mode = "device"; flash = null; refresh();
     }
   }
+
+  /* the file's name: the tool, then the model's name as typed, made safe for
+     a file system (brain-regions-my-selection.json) */
+  function fileName(name){
+    var slug = String(name || "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
+    return "brain-" + tool + (slug ? "-" + slug : "") + ".json";
+  }
+  function exportFile(){
+    var data;
+    try{ data = o.capture(); }catch(e){ say("Could not read the view: " + (e && e.message), true); return; }
+    if (!data){ say("There is nothing to export yet."); return; }
+    var name = String(input.value || "").trim();
+    data.updated = Date.now(); if (name) data.name = name; else delete data.name;
+    var text = JSON.stringify(data, null, 2), file = fileName(name);
+    var blob = new Blob([text], { type: "application/json" });
+    var p;
+    if (window.MN && MN.saveFile) p = Promise.resolve(MN.saveFile(blob, file));
+    else {
+      p = new Promise(function(res){
+        var u = URL.createObjectURL(blob), a = document.createElement("a");
+        a.href = u; a.download = file; document.body.appendChild(a); a.click();
+        setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(u); res(); }, 0);
+      });
+    }
+    p.then(function(){ say("Exported this " + noun + " as " + file + ". Import it on any other device to build it there."); })
+     .catch(function(err){ say("Could not write the file: " + ((err && err.message) || "unknown error"), true); });
+  }
+  function importFile(file){
+    if (!file) return;
+    setBusy(true);
+    var read = typeof file.text === "function" ? file.text() : new Promise(function(res, rej){
+      var r = new FileReader(); r.onload = function(){ res(String(r.result)); }; r.onerror = function(){ rej(r.error); }; r.readAsText(file);
+    });
+    read.then(function(text){
+      var data;
+      try{ data = JSON.parse(text); }catch(e){ throw new Error("That file is not a saved " + noun + ": it does not read as JSON."); }
+      if (!data || typeof data !== "object") throw new Error("That file holds no " + noun + ".");
+      o.restore(data);
+      var name = typeof data.name === "string" ? data.name.trim().slice(0, 60) : "";
+      input.value = name;
+      if (window.MN) MN.tap("light");
+      say("Imported " + (name ? "“" + name + "”" : "the " + noun) + " from " + file.name + ". Press Save to keep it here.");
+    }).catch(function(err){
+      console.warn("model import:", err && err.message);
+      say((err && err.message) || "Could not read the file.", true);
+    }).then(function(){ setBusy(false); picker.value = ""; });
+  }
+  exportBtn.addEventListener("click", function(){ if (!busy) exportFile(); });
+  importBtn.addEventListener("click", function(){ if (!busy) picker.click(); });
+  picker.addEventListener("change", function(){ importFile(picker.files && picker.files[0]); });
 
   form.addEventListener("submit", function(e){ e.preventDefault(); if (!busy) save(input.value); });
 

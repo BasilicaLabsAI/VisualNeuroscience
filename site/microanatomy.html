@@ -861,32 +861,16 @@ main.screen.one.land{ flex-direction:row; }
     if (a.tagName === "TEXTAREA" || a.isContentEditable) return true;
     return a.tagName === "INPUT" && /^(search|text|email|password|number|tel|url)$/i.test(a.getAttribute("type") || "text");
   }
-  /* a squat touch screen (v12.23), the closed iPhone Duo's outer display:
-     shorter for its width than any other iPhone's, so one view stands at a
-     time there and, upright, the bar stands down the right edge */
-  var coarse = window.matchMedia ? window.matchMedia("(pointer: coarse)") : null;
-  function squat(){
-    var s = window.screen || {}, a = Math.min(s.width || 0, s.height || 0), b = Math.max(s.width || 0, s.height || 0);
-    return !!(coarse && coarse.matches) && a > 0 && a < 600 && b < 1.75 * a;
-  }
-  var laid = "";
   function oneView(){
     if (oneSet && typingNow() && window.innerWidth === oneWidth) return;
     oneSet = true; oneWidth = window.innerWidth;
-    var on = !!(one && one.matches), sideways = on && !!(land && land.matches), sq = on && squat();
-    var now = [on, sideways, sq].join();
-    if (now === laid) return;
-    laid = now;
+    var on = !!(one && one.matches);
     main.classList.toggle("one", on);
-    main.classList.toggle("land", sideways);
-    main.classList.toggle("short", sq);
-    main.classList.toggle("side", sq && !sideways);
+    main.classList.toggle("land", on && !!(land && land.matches));
     soon();
   }
   oneView();
   [one, land].forEach(function(q){ if (!q) return; if (q.addEventListener) q.addEventListener("change", oneView); else if (q.addListener) q.addListener(oneView); });
-  /* the closed Duo opened, or opened closed: the screen changes under the page */
-  window.addEventListener("resize", oneView);
 
   /* the sheets */
   var pops = {}, current = null;

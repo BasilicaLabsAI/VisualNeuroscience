@@ -1175,6 +1175,9 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
 .screen.one.all .view-expand{ display:inline-flex; }
 .screen.one .panelbar-stats{ display:none; }
 .screen.one .panelbar-views, .screen.one .panelbar-all{ display:flex; gap:.15rem; flex:none; padding-right:.45rem; margin-right:.3rem; border-right:1px solid var(--hair); }
+/* a squat phone, the closed iPhone Duo (the script's .short): the 3D view
+   alone, with its slicing, so the view buttons go too (v12.27) */
+.screen.one.short .panelbar-views{ display:none; }
 .screen.one .panelbar-btns{ margin-left:0; }
 .screen.one .panelbar-end{ margin-left:0; padding-left:0; }
 .screen.one .pop{ left:0; right:0; bottom:0; max-height:76%; border-left:0; border-right:0; border-bottom:0; border-radius:18px 18px 0 0; }
@@ -1511,7 +1514,7 @@ main.screen.one.land{ flex-direction:row; }
       <div class="pop pop-sm" id="popSaved" hidden aria-labelledby="popSavedH">
         <header class="pop-head"><b id="popSavedH">Saved maps</b><small>this map, named and kept</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
         <div class="pop-body">
-                    <p class="empty-note">Name the view &mdash; the highlighted regions, their colours, the camera and any cuts &mdash; and open it again later.</p>
+                    <p class="empty-note">Name the view &mdash; the highlighted regions, their colours, the camera and any cuts &mdash; and open it again later. Export writes it as a file to open on any other device; Import reads one in.</p>
           <div id="models"></div>
         </div>
       </div>
@@ -4018,8 +4021,10 @@ if (location.hash === "#receptors") {
     return a.tagName === "INPUT" && /^(search|text|email|password|number|tel|url)$/i.test(a.getAttribute("type") || "text");
   }
   /* a squat touch screen (v12.23), the closed iPhone Duo's outer display:
-     shorter for its width than any other iPhone's, so one view stands at a
-     time there and, upright, the bar stands down the right edge */
+     shorter for its width than any other iPhone's, so the 3D view stands
+     alone there, with its slicing, and the view buttons go (v12.27, at the
+     owner's word: the pick is kept for a larger screen, and only a press
+     changes it) */
   var coarse = window.matchMedia ? window.matchMedia("(pointer: coarse)") : null;
   function squat(){
     var s = window.screen || {}, a = Math.min(s.width || 0, s.height || 0), b = Math.max(s.width || 0, s.height || 0);
@@ -4036,8 +4041,7 @@ if (location.hash === "#receptors") {
     main.classList.toggle("one", on);
     main.classList.toggle("land", sideways);
     main.classList.toggle("short", sq);
-    main.classList.toggle("side", sq && !sideways);
-    if (on) showView(sq && shown === "all" ? "render" : shown, false); else if (window.MN_LIFE) MN_LIFE.remeasure();
+    if (on) showView(sq ? "render" : shown, false); else if (window.MN_LIFE) MN_LIFE.remeasure();
     soon();
   }
   oneView();

@@ -250,23 +250,6 @@ legend { font-family: var(--serif); font-weight: 600; font-size: 16px; padding: 
   #info { left: 10px !important; right: 10px; top: calc(10px + env(safe-area-inset-top, 0px)) !important; max-width: none; transform: none !important; }
   #hint { right: auto; left: 14px; bottom: auto; top: calc(12px + env(safe-area-inset-top, 0px)); }
 }
-/* a squat phone upright (v12.23), the closed iPhone Duo, whose screen is shorter for its width than
-   any other iPhone's: the engine marks the body .side, and the bar stands down the right edge as the
-   atlases' bars do there, one button to a row in the middle of its height, About under a line; the
-   drawer comes in from beside it, and the window rises from the foot in the room it leaves */
-body.side #bar { left: auto; top: calc(var(--edge) + env(safe-area-inset-top, 0px)); flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0;
-  padding: 0.3rem 0.25rem; overflow-x: hidden; overflow-y: auto; white-space: normal; }
-body.side #bar::before, body.side #bar::after { content: ''; flex: 1 1 0; min-height: 0; }
-body.side .bar-pick, body.side #bar .tabs { display: grid; grid-template-columns: 66px; gap: 0; flex: none; margin: 0 0 0.25rem; padding: 0 0 0.25rem; border-right: 0; border-bottom: 1px solid var(--line); }
-body.side #bar .tabs { margin: 0; padding: 0; border-bottom: 0; }
-body.side .pbtn { position: relative; width: 66px; min-width: 0; min-height: 44px; padding: 0.25rem 0.15rem 0.2rem; gap: 0.2rem; }
-body.side .pbtn span { font-size: 0.5rem; letter-spacing: 0.08em; line-height: 1.15; white-space: normal; text-align: center; max-width: 100%; }
-body.side .pbtn.pbtn-ref { margin: 0.5rem 0 0; padding-left: 0.15rem; border-left: 0; }
-body.side .pbtn.pbtn-ref::after { content: ''; position: absolute; left: 0; right: 0; top: calc(-0.25rem - 1px); height: 1px; background: var(--line); }
-body.side #col { right: calc(var(--side-w, 76px) + 2 * var(--edge)); bottom: env(safe-area-inset-bottom, 0px); }
-body.side .drawer-show { right: calc(var(--side-w, 76px) + 2 * var(--edge)); }
-body.side #panel.pop { bottom: 0; }
-body.side #hint { max-width: calc(100vw - var(--side-w, 76px) - 2 * var(--edge) - 28px); }
 
 :root { --hb: #0E9AAE; --da: #D38F1F; --inact-bg: rgba(88, 120, 159, 0.14); --act-bg: rgba(200, 103, 122, 0.14); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hb: #62DCEA; --da: #F0B04C; --inact-bg: rgba(126, 157, 196, 0.18); --act-bg: rgba(224, 138, 155, 0.18); } }
@@ -1897,13 +1880,6 @@ table.pocket.wide { font-size: 12.5px; }
   var panel = $('#panel'), side = $('#col'), foldBtn = $('#collapse'), bar = $('#bar');
   var pickBtn = $('#pickBtn'), pickHide = $('#drawerHide'), pickShow = $('#drawerTab');
   function isMobile() { return window.innerWidth <= 760; }
-  // a squat phone upright (v12.23), the closed iPhone Duo's outer display, shorter for its width than
-  // any other iPhone's: the bar stands down the right edge, as the atlases' bars do there
-  var coarseQ = window.matchMedia ? window.matchMedia('(pointer: coarse)') : null;
-  function isSide() {
-    var s = window.screen || {}, a = Math.min(s.width || 0, s.height || 0), b = Math.max(s.width || 0, s.height || 0);
-    return isMobile() && window.innerHeight > window.innerWidth && !!(coarseQ && coarseQ.matches) && a > 0 && a < 600 && b < 1.75 * a;
-  }
   function panelOpen() { return !panel.hidden && !panel.classList.contains('leaving'); }
   function syncTabBtns() {
     var open = panelOpen();
@@ -1977,17 +1953,12 @@ table.pocket.wide { font-size: 12.5px; }
     W = window.innerWidth; H = window.innerHeight;
     if (sized !== W + 'x' + H) { renderer.setSize(W, H, false); sized = W + 'x' + H; }
     camera.aspect = W / H;
-    // the room the bar takes from the foot: the island and the gap under it (v12.1); standing down
-    // the right edge of a squat phone (v12.23), the room it takes from the side
-    var edge = isSide();
-    document.body.classList.toggle('side', edge);
-    var barH = bar && !edge ? Math.max(0, Math.round(H - bar.getBoundingClientRect().top)) : 0;
-    var barL = bar && edge ? Math.round(bar.getBoundingClientRect().left) : W;
-    document.documentElement.style.setProperty('--bar-h', (bar && !edge ? bar.offsetHeight : 0) + 'px');
-    document.documentElement.style.setProperty('--side-w', (bar && edge ? bar.offsetWidth : 0) + 'px');
+    // the room the bar takes from the foot: the island and the gap under it (v12.1)
+    var barH = bar ? Math.max(0, Math.round(H - bar.getBoundingClientRect().top)) : 0;
+    document.documentElement.style.setProperty('--bar-h', (bar ? bar.offsetHeight : 0) + 'px');
     var open = panelOpen(), pickOpen = !side.classList.contains('shut');
     VO.tx = 0; VO.ty = 0;
-    if (isMobile()) { freeW = barL; freeH = Math.max(120, open ? panel.getBoundingClientRect().top : H - barH); VO.tx = -(W - barL) / 2; VO.ty = (H - freeH) / 2; }
+    if (isMobile()) { freeW = W; freeH = Math.max(120, open ? panel.getBoundingClientRect().top : H - barH); VO.ty = (H - freeH) / 2; }
     else {
       var right = (open || pickOpen) ? side.getBoundingClientRect().right : 0;
       freeW = Math.max(200, W - right); freeH = Math.max(120, H - barH); VO.tx = right / 2; VO.ty = (H - freeH) / 2;

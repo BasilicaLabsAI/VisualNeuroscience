@@ -1036,7 +1036,7 @@ main.screen.one.land{ flex-direction:row; }
   }
   /* a squat touch screen (v12.23), the closed iPhone Duo's outer display:
      shorter for its width than any other iPhone's, so one view stands at a
-     time there and, upright, the bar stands down the right edge */
+     time there */
   var coarse = window.matchMedia ? window.matchMedia("(pointer: coarse)") : null;
   function squat(){
     var s = window.screen || {}, a = Math.min(s.width || 0, s.height || 0), b = Math.max(s.width || 0, s.height || 0);
@@ -1053,7 +1053,6 @@ main.screen.one.land{ flex-direction:row; }
     main.classList.toggle("one", on);
     main.classList.toggle("land", sideways);
     main.classList.toggle("short", sq);
-    main.classList.toggle("side", sq && !sideways);
     if (on) showView(sq && shown === "all" ? "render" : shown, false); else if (window.MN_LIFE) MN_LIFE.remeasure();
     soon();
   }

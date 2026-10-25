@@ -504,7 +504,13 @@ Read this first in every session. It is the handover; nothing else needs pasting
   Network Atlas writes `vn-net-last` with the address in `markAddress` and opens on it when the address names no state,
   and `vn-net-opacity` as the opacity is applied; Tractography `vn-tracts-last`; Microanatomy `vn-cells-last` (the cell,
   the structure picked and Colour every structure, written in `select` and the switch, put back as the cell's drawing
-  comes in; a cell in the address wins); the molecular viewer keeps its picker and level as before.
+  comes in; a cell in the address wins); the molecular viewer keeps its picker and level as before. Since v12.27, at
+  the owner's word, a 3D Region Atlas model also travels as a file: `models.js`'s Saved maps widget carries Export file
+  and Import file under the name box (`.mfile` in `viewer.css`), the first writing `capture()`'s object, the same JSON
+  a save keeps, as `brain-regions[-name].json` through `MN.saveFile` (the Files app and the share sheet in the apps, a
+  download on the web) and the second reading one through a file picker into `restore()`, which refuses another
+  tool's file; no account is needed, and the import fills the name box so Save can keep it. The Vision Pro app has no
+  saved models, so it has no part in this.
 - The Hallucinations study (`site/hallucinations.html`, the visualisation of Boksa 2009 that the owner calls the
   schizophrenia visualisation) is one screen in the 3D Region Atlas's manner since v11.43: `body.atlas-screen`,
   `main#main.screen`, the drawer (`#drawerBox`: Brain state, then Regions with the system filters, the list and the
@@ -537,18 +543,21 @@ Read this first in every session. It is the handover; nothing else needs pasting
 - A squat phone (v12.23, at the owner's word), the closed iPhone Duo's outer display at 466 by 678 points: every page
   with a bar reads the screen's shape (`squat()`: a coarse pointer and a screen whose short side is under 600 and long
   side under 1.75 times it, which no other iPhone has, the SE's 375 by 667 the nearest at 1.78), so one rule holds in the
-  app and in Safari. On the five pages with a `oneView` it marks the phone screen `.short`, one view at a time (the All
+  app and in Safari. On the three pages with four views it marks the phone screen `.short`, one view at a time (the All
   button hidden by `bar.css`, a pick of All shown as the 3D view; `shown` is the person's pick, kept for a larger
-  screen, and only a press changes it), and upright `.side` as well: the bar stands down the right edge as on a phone
-  held sideways (the Duo stands its own bars on that side), one button to a row in the middle of its height, scrolling
-  when it overflows, the drawer coming in beside it (`--box-w` short of the bar's 104px) and the sheets rising from the
-  foot at the deck's width; the rules are in `bar.css` after the island. `oneView` runs on every resize too, since the
-  Duo's screen changes under a page as it opens and closes while neither media query need change, and acts only when
-  the layout does (`laid`). The Brodmann Area Atlas marks `.one.side` in `arrange()` (the bar an 80px column at the
-  right, the faces, the strip and the 3D panel beside it), and the molecular viewer marks its body `.side` in
-  `layout()` (`isSide()` in `t4_engine2.js`, the rules at the end of `base.css`'s phone section, `--side-w` the bar's
-  width, the model centred in the room left of it). Open, the Duo is an iPad (the shell above): upright its inner
-  display is 669 wide, an iPad mini's layout (`.one`, the four views two by two), and sideways 887, the iPad's.
+  screen, and only a press changes it), and the 3D Region Atlas shows its 3D view alone there, with its slicing, the
+  view buttons hidden too (`.screen.one.short .panelbar-views` in `regions.html`; v12.27, at the owner's word: the
+  screen is too short for the flat slices). Everything else is the phone's: the bar at the foot, the drawer, the
+  sheets, the Brodmann Area Atlas and the molecular viewer as on any iPhone upright, and the shell's bars where iOS
+  puts them, Back at the top left and the tabs at the foot, the Duo keeping only its status bar and camera in a column
+  down the right edge, which Apple's Duo page describes (v12.23 to v12.26 stood the page's bar down the right edge
+  beside it, one bar too many). `oneView` runs on every resize on those three pages, since the Duo's screen changes
+  under a page as it opens and closes while neither media query need change, and acts only when the layout does
+  (`laid`); Tractography and Microanatomy, with one view, read nothing from the screen. Open, the Duo is an iPad (the
+  shell above): upright its inner display is 669 wide, an iPad mini's layout (`.one`, the four views two by two), and
+  sideways 887, the iPad's, the page's bar at the foot and, in the store images, the iPad's bar of Back and the tabs
+  across the top; where iOS itself puts the tab bar on the open Duo is iOS's to decide, and a build with the iOS 27.1
+  SDK would stand it down the side under the status.
 - The interface follows Apple's fluid-interface guidance (v10.92): controls answer on the press (`viewer.css`, the
   last section), the account box and both section menus arrive from their button and leave the same way, the bars
   and menus are translucent materials with `prefers-reduced-transparency` and `prefers-contrast` fallbacks, a thrown
@@ -603,10 +612,16 @@ Read this first in every session. It is the handover; nothing else needs pasting
   optional, to replace 1.0's in that slot, and since v12.23 the iPhone Duo's own two (v12.20 set the iPad renders in
   the inner size): `iphone-duo-` at 1398×2034, the outer display closed (`duo-01`…`duo-10`), and `iphone-duo-land-` at
   2853×2007, the inner display open and sideways (`open-01`…`open-10`; `store-sell.js`'s `SHARE`, the capture at 84% of
-  the width), each rendered at the Duo's web view (402×678 closed and 887×669 open, at 3×, the screen's size given so
-  the page knows the squat phone) beside a column down the right edge drawn from the iPhone captures' own pieces
-  (`column()`: the camera when closed, the time, Wi-Fi and battery, Back in its glass circle, and the tab bar stood on
-  end with the page's tab lit), since no Duo capture exists; `store-sell.js` covers no status bar on them (`BAR`);
+  the width), each rendered at the Duo's web view (402×512 closed and 887×583 open, at 3×, the screen's size given so
+  the page knows the squat phone) under the app's bar and, closed, over its tab bar, with the status in a column down
+  the right edge, where Apple's Duo page stands it (since v12.27, at the owner's word; v12.23 had stood Back and the
+  tabs in that column too): closed, the iPhone's bar with Back and the page's title, the strip the iPhone shot of the
+  same picture names cut below its status rows under a 20-point inset, and the iPhone's tab bar at the foot, the app's
+  area being the iPhone's own width (the light shot's bar is drawn from the dark strip's pieces as masks, its tab bar
+  the foot of the light capture); open, the iPad's bar, Back at the left and the island of tabs in the middle, cut
+  from the iPad strip the shot names and set at three halves (`duoTop()`); the column holds the camera when closed,
+  the time, Wi-Fi and battery, drawn from the iPhone captures' pieces (`column()`), since no Duo capture exists;
+  `store-sell.js` covers no status bar on them (`BAR`);
   the second shot's statement is Brain region functions explained (`openPop` waits
   for a raised sheet to come to rest, which at 3× with software 3D takes longer than the slide); since v12.21 the
   iPhone's first two are the owner's own captures from the TestFlight build of 25 October 2026, taken whole

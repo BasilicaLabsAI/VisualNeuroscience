@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.27 — 25 October 2026 — The Duo as an iPhone closed and an iPad open, and a selection as a file
+Commit · Keep the closed Duo's bar at the foot with the 3D view alone, and move a selection between devices as a file
+
+On an iPhone Duo closed, the bar of tools now stays at the foot of the page as it does on every iPhone, under the app's own bar with Back at the top left and over its tabs, with nothing of the app's down the right edge but the status the Duo itself keeps there; the 3D Region Atlas shows its 3D view alone there, with its slicing, since the screen is too short for the four views or the flat slices. Open, the Duo is an iPad, its bar with Back and the tabs across the top and the page's bar at the foot. The App Store images of both displays were remade to show this. On the 3D Region Atlas, the Saved maps window gains Export file and Import file: the first writes the highlighted regions, their colours, the camera and the cuts as a small JSON file, to the Files app and the share sheet in the apps and as a download on the website, and the second reads such a file back and builds the same view, on any device, with or without an account. The app takes the change with its next build.
+
 ## v12.26 — 25 October 2026 — The project's own Instagram
-Commit · Add the project's Instagram, @VisualNeuroscience, ahead of the developer's
+Commit `4b4c2bf` · Add the project's Instagram, @VisualNeuroscience, ahead of the developer's
 
 Visual Neuroscience now has an Instagram account of its own, @VisualNeuroscience. It stands first among the Instagram links wherever they appear, ahead of the developer's own account, fid_900: in the Channels box on the home page's About section and in the app's About tab, in the list at the foot of A Message from the Developer, and in the Android app's top bar. In the Android app's menu on a phone, each Instagram account shows its handle under its name, so the two can be told apart. The app takes the change with its next build.
 

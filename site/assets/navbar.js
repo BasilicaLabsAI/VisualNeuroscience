@@ -337,21 +337,6 @@
   if (window.MutationObserver) new MutationObserver(soon).observe(root, {attributes: true, attributeFilter: ["data-shell-pad"]});
 })();
 
-/* A squat phone (v12.23), the closed iPhone Duo's outer display, shorter for
-   its width than any other iPhone's (the atlas pages' own squat() test): the
-   root is marked vn-squat, and viewer.css gives a page of text in the app's
-   tabs the gap at its top an iPad's pages have, the Duo standing the shell's
-   bars down the side, so that nothing sits above the page */
-(function(){
-  var root = document.documentElement, coarse = window.matchMedia ? window.matchMedia("(pointer: coarse)") : null;
-  function mark(){
-    var s = window.screen || {}, a = Math.min(s.width || 0, s.height || 0), b = Math.max(s.width || 0, s.height || 0);
-    root.classList.toggle("vn-squat", !!(coarse && coarse.matches) && a > 0 && a < 600 && b < 1.75 * a);
-  }
-  mark();
-  window.addEventListener("resize", mark);
-})();
-
 /* The keyboard (v12.23): while a text field has the focus and the window has
    lost a keyboard's height, as a web view the keyboard shortens does, the
    root is marked vn-typing, and bar.css puts the atlases' bar away until the
