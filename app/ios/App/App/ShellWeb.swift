@@ -208,6 +208,10 @@ final class PageBridgeController: CAPBridgeViewController {
     /// Whether the page is marked as an iPad's (data-shell-pad): written
     /// before it runs, and changed as the window's room changes.
     private var pad: Bool
+    /// Whether this build came from the App Store: a TestFlight or Xcode
+    /// build keeps a sandbox receipt. The pages count usage only in an App
+    /// Store build (VN_STORE, v12.30), so the numbers are the approved app's.
+    private static let fromStore = Bundle.main.appStoreReceiptURL?.lastPathComponent == "receipt"
 
     init(page: Page, startTheme: Theme?, startPad: Bool) {
         self.page = page
@@ -274,6 +278,7 @@ final class PageBridgeController: CAPBridgeViewController {
     /// fragment, and once it is built has it say which theme it came up in.
     private var startScript: String {
         var lines = [
+            "window.VN_STORE = \(Self.fromStore);",
             "var pad = \(pad);",
             "var mark = function () { var root = document.documentElement; if (root) { root.setAttribute('data-shell', 'tabs'); if (pad) root.setAttribute('data-shell-pad', ''); } return !!root; };",
             "if (!mark()) new MutationObserver(function (records, watch) { if (mark()) watch.disconnect(); }).observe(document, { childList: true });",

@@ -148,22 +148,31 @@ async function build(){
      (the default) counts everywhere, "app" keeps the website silent, with
      no analytics cookie, and counts in the apps alone, and false turns it
      off everywhere. Every call here is best effort: counting never gets
-     in the way of signing in. */
+     in the way of signing in. Since v12.30, at the owner's word, only the
+     website and the approved app count: the website on its own address
+     alone (a preview build, a local copy and the checks run on this code
+     stay silent), and the app only as the App Store installed it. The iOS
+     shell says which it is before a page runs (VN_STORE, false for a
+     TestFlight or Xcode build), and the iOS app starts with collection off
+     (FIREBASE_ANALYTICS_COLLECTION_ENABLED in its Info.plist) until a page
+     of an App Store build switches it on; the switch is kept on the device.
+     The Android app, which says nothing, counts as before. */
   const gaWant = CFG.analytics === undefined ? true : CFG.analytics;
   const gaPlug = isNative && cap.Plugins ? cap.Plugins.FirebaseAnalytics : null;
+  const gaLive = isNative ? window.VN_STORE !== false : /(^|\.)visualneuroscience\.ai$/i.test(location.hostname);
   let ga = null;
   if (gaPlug){
-    try{ await gaPlug.setEnabled({ enabled: gaWant !== false }); }catch(_){}
-    if (gaWant !== false){
+    try{ await gaPlug.setEnabled({ enabled: gaWant !== false && gaLive }); }catch(_){}
+    if (gaWant !== false && gaLive){
       const page = (location.pathname.split("/").pop() || "index.html").replace(/\.html$/, "");
       try{ gaPlug.setCurrentScreen({ screenName: page }).catch(() => {}); }catch(_){}
     }
-  } else if (!isNative && gaWant === true && CFG.measurementId){
+  } else if (!isNative && gaWant === true && CFG.measurementId && gaLive){
     try{ if (await sdk.isSupported()) ga = sdk.getAnalytics(app); }catch(_){}
   }
   function track(name, params){
     try{
-      if (gaPlug){ if (gaWant !== false) gaPlug.logEvent({ name, params: params || {} }).catch(() => {}); }
+      if (gaPlug){ if (gaWant !== false && gaLive) gaPlug.logEvent({ name, params: params || {} }).catch(() => {}); }
       else if (ga) sdk.logEvent(ga, name, params || {});
     }catch(_){}
   }

@@ -185,7 +185,16 @@ Read this first in every session. It is the handover; nothing else needs pasting
   it, names each page as a screen inside the apps, and counts every sign-in as `login` or `sign_up` with its `method`;
   `VN_AUTH.track(name, params)` is the door for any other count. The `analytics` flag in the config is `true`, `"app"`
   (website silent, no cookie) or `false`. The privacy page names it under *Usage counts*; both store listings declare
-  it. The counts are read in the Firebase console under Analytics. The vendored bundle is rebuilt with
+  it. The counts are read in the Firebase console under Analytics. Since v12.30, at the owner's word, only the website
+  on its own address and the app as the App Store installed it count (`gaLive` in `auth.js`): on the web the hostname
+  (`visualneuroscience.ai` and its subdomains; Cloudflare's preview builds and local copies stay silent), in the apps
+  `window.VN_STORE`, which the iOS shell writes at document start from the receipt's name (`fromStore` in
+  `PageBridgeController`, false for a TestFlight or Xcode build, whose receipt is a sandbox one; App Review's device is
+  one too), and the iOS app starts with collection off (`FIREBASE_ANALYTICS_COLLECTION_ENABLED` false in `Info.plist`)
+  until a page of an App Store build switches it on, the SDK keeping the switch on the device. Android says nothing and
+  counts as before: a Play test track cannot be told from production at run time. Version 1.0 carries no counting at
+  all, so 2.0 is the first App Store build that counts, and every approved version after it does; the reports split
+  by `app_version`. The vendored bundle is rebuilt with
   `sh scripts/firebase/build.sh` from `scripts/firebase/entry.js` (`docs/AUTH-SETUP.md` §8 and its appendix).
 - Licences and permissions are recorded in `docs/PERMISSIONS.md`; keep it in step with any new data source.
 - `site/get.html` (v11.55) is an unlisted landing page naming every screen, the website and the App Store app with

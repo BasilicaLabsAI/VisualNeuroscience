@@ -108,5 +108,7 @@
 	     (assets/auth.js), not by the bridge's class name -->
 	<key>FirebaseAutomaticScreenReportingEnabled</key>
 	<false/>
+	<key>FIREBASE_ANALYTICS_COLLECTION_ENABLED</key>
+	<false/>
 </dict>
 </plist>
