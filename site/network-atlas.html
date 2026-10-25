@@ -1020,7 +1020,19 @@ main.screen.one.land{ flex-direction:row; }
     if (keep){ try{ localStorage.setItem("vn-net-view", key); }catch(e){} }
     if (window.MN_LIFE) MN_LIFE.remeasure();
   }
+  /* a keyboard rising over a field shortens the window, which on a phone
+     read as held sideways and on an iPad held sideways as a phone: while a
+     text field has the focus and the width is what it was, the layout stays */
+  var oneSet = false, oneWidth = 0;
+  function typingNow(){
+    var a = document.activeElement;
+    if (!a) return false;
+    if (a.tagName === "TEXTAREA" || a.isContentEditable) return true;
+    return a.tagName === "INPUT" && /^(search|text|email|password|number|tel|url)$/i.test(a.getAttribute("type") || "text");
+  }
   function oneView(){
+    if (oneSet && typingNow() && window.innerWidth === oneWidth) return;
+    oneSet = true; oneWidth = window.innerWidth;
     var on = !!(one && one.matches);
     main.classList.toggle("one", on);
     main.classList.toggle("land", on && !!(land && land.matches));

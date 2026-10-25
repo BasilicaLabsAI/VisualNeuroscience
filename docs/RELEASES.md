@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.22 — 25 October 2026 — Searching on an iPhone
+Commit · Keep the page's layout while its search is typed in and give the searches a Search key
+
+On an iPhone, typing in the 3D Region Atlas's region search no longer throws the page into its sideways layout with the bar of tools down the right: the keyboard now rises over the page, which keeps its shape. The keyboard's return key is a blue Search key on the region and Brodmann searches and on Microanatomy's receptor search; it adds the first match, or runs the search, and puts the keyboard away, as an address bar does. The app takes the change with its next build.
+
 ## v12.21 — 25 October 2026 — The iPhone's first two images from the device
-Commit · Make the iPhone's first two store images from the owner's captures
+Commit `cee5613` · Make the iPhone's first two store images from the owner's captures
 
 The iPhone's first two App Store images are now the owner's own captures from the app: the 3D Region Atlas's four views with the three regions lit, and the What they do window open over them. The Best experienced on iPad line at the top is painted out, as it is in the rest of the set.
 

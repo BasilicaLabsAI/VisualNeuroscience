@@ -70,7 +70,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   version (`vn-update-asked-on`, `vn-update-asked-for`) and never when that version needs a newer iOS than the device has
   (skipped on a Mac, whose numbers are macOS's). A build newer than the store's, on TestFlight or in review, is never
   asked. Only builds that carry it can ask: 1.0 never will, and 1.1 is the first to ask, once 1.2 is out. The privacy
-  page names the request.
+  page names the request. Since v12.22 the keyboard rises over a page rather than shortening it
+  (`.ignoresSafeArea(.keyboard, edges: .bottom)` on `WebPage`'s `BridgeView`): SwiftUI's keyboard avoidance had shrunk
+  the web view, and a page shortened so read as wider than tall, which on an iPhone threw the atlases into their
+  sideways layout, the bar down the right, while their search was typed in.
 - The website's header is the iOS app's since v11.63: a slim pinned bar with the brand at the left, the theme and
   account buttons at the right and, between them, a floating island of the app's five tabs, Atlases, Library, Practice,
   About and Account, each an icon over its name, the page's own tab lit. `navbar.js` (its website section) builds the
@@ -319,7 +322,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `--pop-top`, `--pop-w`), outside the box's scroller, so its list is one scroller and not one inside another, which
   the iPad would not always let scroll; the box's own scroll closes it. Its search field takes the focus on opening
   only with a fine pointer or when typing on the button opened it (`openRegionPicker(seed, typed)`): on a touch
-  screen the keyboard rose over the list, so there it waits for a tap (v11.26). The bar's
+  screen the keyboard rose over the list, so there it waits for a tap (v11.26). Since v12.22 both searches (`#rpickQ`,
+  `#baq`) and Microanatomy's receptor search (`#rxSearch`, its Enter in `rx.js`) carry `enterkeyhint="search"`, the
+  keyboard's blue Search key, and Enter takes the first match (or runs the search) and blurs the field, putting the
+  keyboard away; and the five pages with a `oneView` keep their layout while a text field has the focus and the width is
+  unchanged (`typingNow`, `oneSet`, `oneWidth`), so a keyboard shortening the window (the Android app's, or an iPad's)
+  never reads as a phone turned sideways. The bar's
   buttons raise one pop-up at a time over the views (`.pop`: What they do, Receptor graph and Neurotransmitters, which
   open the receptor window (`#popRx`, `.pop-tabbed`) on one of its tabs: since v11.40 a row of tabs under its head,
   Graph, Receptor (named Region when charting by region), Neurotransmitters, Receptor types and Sources, one pane at a

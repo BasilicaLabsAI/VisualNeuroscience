@@ -762,7 +762,7 @@ main.screen.one.land{ flex-direction:row; }
           <p class="lede">A neurotransmitter does nothing on its own: it has to bind to something. Here is what it binds to &mdash; the receptors for the molecules in the Neurotransmitters sheet &mdash; and alongside them the ion channels and transporters that shape its signal and end it, a hundred and fifty in all. Among them are only ten kinds of machine, drawn first, and the first thing to know about the receptors is that they come in two speeds. An <button type="button" class="rx-term" data-term="Ionotropic">ionotropic</button> receptor is a channel: the transmitter opens it within a millisecond, and it shuts when the transmitter leaves, or sooner, since many desensitise while it is still bound. A <button type="button" class="rx-term" data-term="Metabotropic">metabotropic</button> receptor has no pore; it works through a G protein and chemical messengers inside the cell, so it is slower to act and keeps acting for seconds or minutes after the transmitter has gone. Glutamate, GABA, acetylcholine, serotonin and ATP each have receptors of both kinds; dopamine, noradrenaline, histamine, the opioids and the neuropeptides work through metabotropic receptors alone. Most drugs that act on the brain act on one of the machines below. Pick a transmitter below to see only its receptors &mdash; the monoamines first, since they are what so many familiar drugs act on &mdash; and search inside it by name, drug or effect. Every word in a tile&rsquo;s small capitals, and <button type="button" class="rx-term" data-term="affinity">affinity</button>, <button type="button" class="rx-term" data-term="agonist">agonist</button>, <button type="button" class="rx-term" data-term="antagonist">antagonist</button> and <button type="button" class="rx-term" data-term="autoreceptor">autoreceptor</button> here, opens a plain explanation on a hover or a tap. Each tile gives the name pharmacologists use with the plain name under it, what binds it and how tightly, the drugs people have heard of that act on it, what happens when it is bound, and under <em>What the kind means</em> the kind&rsquo;s explanation again with a line of context.</p>
           <div class="rx-filter" id="rxFilter" role="group" aria-label="Isolate one transmitter"></div>
           <div class="rx-search">
-            <input type="search" id="rxSearch" placeholder="Search by name, transmitter, drug, kind or effect&hellip;" aria-label="Search the receptors, channels and transporters" autocomplete="off" spellcheck="false">
+            <input type="search" id="rxSearch" enterkeyhint="search" placeholder="Search by name, transmitter, drug, kind or effect&hellip;" aria-label="Search the receptors, channels and transporters" autocomplete="off" spellcheck="false">
             <span id="rxCount" class="rx-count" aria-live="polite"></span>
           </div>
           <div id="rxKinds" class="rx-kinds"></div>
@@ -850,7 +850,19 @@ main.screen.one.land{ flex-direction:row; }
   if (hideBtn) hideBtn.addEventListener("click", function(){ setDrawer(false, true); focusSoon(tab); });
 
   /* a phone, and a phone held sideways */
+  /* a keyboard rising over a field shortens the window, which on a phone
+     read as held sideways and on an iPad held sideways as a phone: while a
+     text field has the focus and the width is what it was, the layout stays */
+  var oneSet = false, oneWidth = 0;
+  function typingNow(){
+    var a = document.activeElement;
+    if (!a) return false;
+    if (a.tagName === "TEXTAREA" || a.isContentEditable) return true;
+    return a.tagName === "INPUT" && /^(search|text|email|password|number|tel|url)$/i.test(a.getAttribute("type") || "text");
+  }
   function oneView(){
+    if (oneSet && typingNow() && window.innerWidth === oneWidth) return;
+    oneSet = true; oneWidth = window.innerWidth;
     var on = !!(one && one.matches);
     main.classList.toggle("one", on);
     main.classList.toggle("land", on && !!(land && land.matches));

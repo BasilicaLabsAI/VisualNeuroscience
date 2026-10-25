@@ -169,6 +169,12 @@
     if (input){
       input.addEventListener("input", function(){ clearTimeout(timer); timer = setTimeout(apply, 80); });
       input.addEventListener("search", apply);
+      /* Enter, the keyboard's blue Search key on a phone, runs the search at
+         once and puts the keyboard away */
+      input.addEventListener("keydown", function(e){
+        if (e.key !== "Enter") return;
+        e.preventDefault(); clearTimeout(timer); apply(); input.blur();
+      });
     }
     if (input && input.value) apply();
   }

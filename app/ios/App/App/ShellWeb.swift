@@ -106,6 +106,11 @@ struct WebPage: View {
                        showingNext = true
                    },
                    home: { dismiss() })
+            // the keyboard rises over the page rather than shortening it: a
+            // page shortened by the keyboard read as wider than tall, and on
+            // an iPhone the atlases laid themselves out as for a phone held
+            // sideways while their search was typed in
+            .ignoresSafeArea(.keyboard, edges: .bottom)
             .background {
                 Palette.paper.ignoresSafeArea()
             }
