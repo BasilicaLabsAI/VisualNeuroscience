@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.24 — 25 October 2026 — A slimmer bar held sideways
+Commit · Stand the sideways bar's buttons one to a row
+
+On a phone held sideways, the bar of tools down the right edge of the atlases, the Hallucinations study, Tractography and Microanatomy now holds its buttons one to a row instead of two, so it takes about half the width it did and the views have the rest; where the buttons run past the bar's foot, it scrolls. The app takes the change with its next build.
+
 ## v12.23 — 25 October 2026 — The iPhone Duo, and the brain on the website
-Commit · Lay the pages out for the iPhone Duo, keep the bar off the keyboard and put the brain mark everywhere
+Commit `e7865e1` · Lay the pages out for the iPhone Duo, keep the bar off the keyboard and put the brain mark everywhere
 
 The app and the website now lay themselves out for the iPhone Duo. Closed, its outer display is shorter for its width than any other iPhone's, so each atlas shows one view at a time, with the All button gone, and the bar of tools stands down the right edge beside the Duo's own controls; the Brodmann Area Atlas, Tractography, Microanatomy and the molecular viewer stand their bars there too. Open, the app treats the Duo as an iPad, the pages filling the screen as they do there, and it follows the Duo as it opens and closes. The App Store images now come for both of the Duo's displays. And while a keyboard is up, the bar of tools stays out of the way instead of riding up over the keys, on an iPad as on a phone. The website now wears the app's brain wherever the old ring stood: beside the name at the top of every page, in the browser tab, on the card a shared link shows, atop the posters and in the store's pictures. The app takes the rest with its next build.
 

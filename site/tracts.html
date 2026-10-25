@@ -304,8 +304,9 @@ main.screen.one.land{ flex-direction:row; }
 .screen.one.land .panelbar::-webkit-scrollbar{ display:none; }
 .screen.one.land .panelbar > :first-child{ margin-top:auto; }
 .screen.one.land .panelbar > :last-child{ margin-bottom:auto; }
+/* one to a row since v12.24, at the owner's word, the bar scrolling when they overrun it */
 .screen.one.land .panelbar-btns, .screen.one.land .panelbar-end{
-  display:grid; grid-template-columns:66px 66px; gap:0; flex:none;
+  display:grid; grid-template-columns:66px; gap:0; flex:none;
   margin:0 0 .25rem; padding:0 0 .25rem; border-right:0; border-bottom:1px solid var(--hair);
 }
 .screen.one.land .panelbar-end{ padding-bottom:0; border-bottom:0; }

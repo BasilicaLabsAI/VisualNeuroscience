@@ -407,9 +407,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `MN_SLICE.attach` as `reset`, which the tool then shows, hides and binds to putting every cut back and draws no Reset
   cuts of its own (the cap's Reset cuts went with it; the Brodmann page's head keeps its Reset, which puts back the view
   and the cuts together). Held sideways (v11.42: `main.screen.one.land`, the script's `land` query, a coarse pointer in
-  landscape) the bar stands along the right edge, its buttons two to a row, each its icon over its name as upright (since
-  v11.58; 66px cells in a 141px bar, the groups centred while they fit and the bar scrolling when they do not; the
-  longest name carries a soft hyphen), the
+  landscape) the bar stands along the right edge, its buttons one to a row since v12.24, at the owner's word (two to a row, 66px
+  cells in a 141px bar, from v11.58 took too much of the short screen's width), each its icon over its name as upright,
+  in a 76px bar that scrolls when they run past its foot (the longest name carries a soft hyphen), the
   drawer's handle off the bar's edge, the four views one row, the one view's tools and Centre at the left of its bar
   and the name at the right, the masthead hidden; in the app's tabs the shell hides its bar on a phone sideways
   (`WebPage.sideways` in `ShellWeb.swift`, `BackOverPage` the back button it keeps at the top left) and the page's body
