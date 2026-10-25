@@ -151,13 +151,15 @@ const SHOTS = [
     top: 'ipad-top-dark-practice', out: '08-practice.png', statement: 'Revision question testing' },
   { name: 'ipad-09', dev: 'ipad', theme: 'light', url: 'regions.html', ready: atlasReady,
     top: 'ipad-top-light-atlases', out: '02-atlas-light.png', statement: 'Light mode' },
-  { name: 'iphone-01', dev: 'iphone', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady,
-    top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: '02-atlas.png', statement: 'Human Brain Anatomy:|Interactive 3D Brain Atlas' },
-  /* the What they do window over the 3D view, as on the iPad, since the
-     statement speaks of the regions' functions */
-  { name: 'iphone-02', dev: 'iphone', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady,
-    setup: async p => { await p.click('.panelbar [data-view="render"]'); await p.waitForTimeout(2500); await openPop('popNotes')(p); },
-    top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: '02-atlas-what-they-do.png', statement: 'Brain region functions explained' },
+  /* the first two on the iPhone are the owner's own captures from the
+     TestFlight build, 25 October 2026, taken whole: the atlas's four views
+     with the three regions lit, and the What they do window over them; the
+     one line a phone shows at the top, Best experienced on iPad, is painted
+     out in the page's black (cover: x, y, width, height in the capture) */
+  { name: 'iphone-01', dev: 'iphone', capture: 'iphone-capture-atlas', cover: [[440, 360, 326, 28]],
+    out: '02-atlas.png', statement: 'Human Brain Anatomy:|Interactive 3D Brain Atlas' },
+  { name: 'iphone-02', dev: 'iphone', capture: 'iphone-capture-what-they-do', cover: [[440, 360, 326, 28]],
+    out: '02-atlas-what-they-do.png', statement: 'Brain region functions explained' },
   { name: 'iphone-03', dev: 'iphone', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, setup: chartD2,
     top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: '02-atlas-receptor-graph.png', statement: 'Receptor Density|Data by Brain Region' },
   { name: 'iphone-04', dev: 'iphone', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, setup: figsD2,
@@ -207,7 +209,10 @@ const px = n => n + 'px';
 async function join(browser, shot, renderPath, outPath){
   const d = DEV[shot.dev], [W, H] = d.capture;
   const layers = [];
-  if (shot.native){
+  if (shot.capture){
+    layers.push(`<img src="${dataUrl(path.join(CHROME, shot.capture + '.png'))}" style="left:0;top:0">`);
+    for (const [x, y, w, h] of shot.cover || []) layers.push(`<div style="position:absolute;left:${px(x)};top:${px(y)};width:${px(w)};height:${px(h)};background:#111111"></div>`);
+  } else if (shot.native){
     /* the screen whole; the twin at the old picture's width, its height
        following; the words beneath, up to the tab bar, moved down by the
        difference, in a window that shows just them */
@@ -242,7 +247,7 @@ async function join(browser, shot, renderPath, outPath){
     const t0 = Date.now();
     try {
       const render = path.join(work, s.name + '.png');
-      if (!s.native){
+      if (!s.native && !s.capture){
         const d = DEV[s.dev], problems = [];
         const ctx = await browser.newContext({ viewport: { width: d.w, height: d.h }, deviceScaleFactor: d.dpr, isMobile: true, hasTouch: true });
         await ctx.addInitScript(shell, { pad: d.pad, theme: s.theme, store: s.store || {} });

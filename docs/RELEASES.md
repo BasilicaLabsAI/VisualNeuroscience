@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.21 — 25 October 2026 — The iPhone's first two images from the device
+Commit · Make the iPhone's first two store images from the owner's captures
+
+The iPhone's first two App Store images are now the owner's own captures from the app: the 3D Region Atlas's four views with the three regions lit, and the What they do window open over them. The Best experienced on iPad line at the top is painted out, as it is in the rest of the set.
+
 ## v12.20 — 25 October 2026 — Brain region functions explained, and the iPhone Duo
-Commit · Retitle the region images, show the explanations on the iPhone and add the iPhone Duo set
+Commit `08f0c95` · Retitle the region images, show the explanations on the iPhone and add the iPhone Duo set
 
 The second App Store image now reads Brain region functions explained, and on the iPhone it shows what the regions do, the What they do window open over the 3D view as on the iPad, where it showed only the brain. Every image also comes in the iPhone Duo's size, the unfolded inner display at 2853 by 2007, made from the same render as the iPad's.
 

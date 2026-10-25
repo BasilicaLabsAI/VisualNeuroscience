@@ -184,7 +184,10 @@ with the back button and the island on the iPad, the bar with the page's
 title and the tab bar on the iPhone), and set under its statement by
 `store-sell.js`. The Atlases tab in light mode is the app's own screen, so
 that image keeps its capture whole and only the atlas box's picture, the
-home page's light twin, is set in afresh. The tenth, AI Connector, is the
+home page's light twin, is set in afresh. The iPhone's first two, the
+atlas's four views and the What they do window over them, are the owner's
+own captures from the TestFlight build of 25 October, taken whole with the
+Best experienced on iPad line painted out. The tenth, AI Connector, is the
 MCP server's page as the About tab opens it; no capture had About lit on a
 pushed page, so its strips were made from the others (the iPad's island
 from the owner's capture of the About tab, the iPhone's tab bar with
