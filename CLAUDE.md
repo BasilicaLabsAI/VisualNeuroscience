@@ -52,12 +52,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   v11.36, then (v11.68) a Coming soon box with nothing to press, three `SoonRow`s naming what is being built (the Circuit
   Atlas, Regions in depth, the MCP server extended), then the developer's message and the Channels; its twin on the
   website is the home page's About hub (`index.html#about`: `.m-mcp`, `.m-soon`, `.m-about`, `.m-channels`), and
-  `about.html` is the developer's message alone since v11.68 (its MCP box left with the hub), titled Message from the
-  Developer since v12.17 (its title strip, its `<title>` and the shell's bar, `Page.about`), and since v12.16 that message
-  is the owner's letter, word for word as they gave it on 24 October 2026: under the portrait, from Thank you for
-  downloading Visual Neuroscience (the lede) to Write to fkarim@visualneuroscience.ai and I read it myself, then the
-  signature, the links and the stamp, with no headings (v12.15 had cut the six sections that stood there). Keep the
-  owner's words as given. The listing's support URL is that page, so the contact address must stay on it. The Vision Pro console's
+  `about.html` is the developer's message alone since v11.68 (its MCP box left with the hub), titled A Message from the
+  Developer since v12.25, at the owner's word (Message from the Developer from v12.17; its title strip, its `<title>` and
+  `og:title`, the home page's About-hub box and its twin in `Shell.swift`, and the shell's bar, `Page.about` and the
+  `titles` map), and since v12.16 that message is the owner's letter, word for word as they gave it on 24 October 2026:
+  under the portrait, from Thank you for downloading Visual Neuroscience (the lede) to Write to
+  fkarim@visualneuroscience.ai and I read it myself, then the signature, the links and the stamp, with no headings (v12.15
+  had cut the six sections that stood there); since v12.25, at the owner's word, its models are from Anthropic and
+  Moonshot, where it said Kimi (the MCP pages still name Kimi, the assistant). Keep the owner's words as given. The listing's support URL is that page, so the contact address must stay on it. The Vision Pro console's
   About window has a card of its own (`vision-about.html`, since v11.37). Android keeps the web bar. On an iPad the pages fill the screen: the shell
   also marks them `data-shell-pad`, the system bar shows no title there, and the page's title strip steps aside
   (`viewer.css`), keeping any buttons it carries. The stack's swipes back (from the edge, and iOS 26's from

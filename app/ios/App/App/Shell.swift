@@ -353,7 +353,7 @@ struct AboutTab: View {
                 }
                 .padding(.top, 10)
             }
-            PageBox(page: .about, kicker: "From the developer", title: "Message from the Developer",
+            PageBox(page: .about, kicker: "From the developer", title: "A Message from the Developer",
                     shot: Shot("assets/portrait/portrait.webp", framed: true),
                     meta: "Fadil Karim · built by one engineer · free to use",
                     go: "Read the message")

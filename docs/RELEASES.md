@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.25 — 25 October 2026 — A Message from the Developer
+Commit · Title the developer's page A Message from the Developer and name Moonshot in its letter
+
+The developer's page is now titled A Message from the Developer, on the page itself, on its box on the home page and in the app's About tab, and in the app's bar while it is open. In the message, the state-of-the-art models the app was built with are now credited to Anthropic and Moonshot. The app takes the change with its next build.
+
 ## v12.24 — 25 October 2026 — A slimmer bar held sideways
-Commit · Stand the sideways bar's buttons one to a row
+Commit `ecbc1a3` · Stand the sideways bar's buttons one to a row
 
 On a phone held sideways, the bar of tools down the right edge of the atlases, the Hallucinations study, Tractography and Microanatomy now holds its buttons one to a row instead of two, so it takes about half the width it did and the views have the rest; where the buttons run past the bar's foot, it scrolls. The app takes the change with its next build.
 

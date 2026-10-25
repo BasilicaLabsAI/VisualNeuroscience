@@ -34,7 +34,7 @@ nonisolated struct Page: Sendable {
     static let textbook = Page(file: "textbook.html", title: "Digital Textbook")
     static let posters = Page(file: "posters.html", title: "Posters")
     static let practice = Page(file: "practice.html", title: "Practice")
-    static let about = Page(file: "about.html", title: "Message from the Developer")
+    static let about = Page(file: "about.html", title: "A Message from the Developer")
     static let mcp = Page(file: "mcp.html", title: "MCP Server")
     static let account = Page(file: "account.html", title: "Account")
     static let privacy = Page(file: "privacy.html", title: "Privacy & Support")
@@ -49,7 +49,7 @@ nonisolated struct Page: Sendable {
         "microanatomy.html": "Microanatomy", "molecular.html": "Molecular",
         "studies.html": "Visualizing Studies", "hallucinations.html": "Hallucinations",
         "practice.html": "Practice", "textbook.html": "Digital Textbook",
-        "about.html": "Message from the Developer", "privacy.html": "Privacy & Support",
+        "about.html": "A Message from the Developer", "privacy.html": "Privacy & Support",
         "terms.html": "Terms of Use", "delete-account.html": "Delete your account",
         "account.html": "Account", "mcp.html": "MCP Server", "connect.html": "Connect"
     ]
