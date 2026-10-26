@@ -15,7 +15,10 @@
 
      var bar = MN_VIEWBAR.attach({ main: <main.screen>, key: "vn-atlas-view" })
        main holds the bar and the views and takes .all; start, the view
-       shown until the person picks one, is all unless given
+       shown until the person picks one, is all unless given; key, where
+       the pick is kept on the device, may be left out for a page that keeps
+       it its own way, told of each pick through onPick(view) (the study,
+       which keeps its views for the launch alone since v12.35)
        bar.show(key, keep)   all, render, axial, coronal or sagittal; keep
                              makes it the person's pick and remembers it
        bar.picked()          the person's pick, kept for a larger screen
@@ -37,10 +40,12 @@ function attach(o){
   var viewBtns = bar.querySelectorAll("[data-view]");
   var sliceBtn = bar.querySelector(".vb-slice"), regionsBtn = bar.querySelector(".vb-regions");
   var now = o.start || "all", picked = now;
-  try{
-    var k = localStorage.getItem(o.key);
-    if (k && (k === "all" || main.querySelector('.views .view[data-box="' + k + '"]'))) picked = k;
-  }catch(e){}
+  if (o.key){
+    try{
+      var k = localStorage.getItem(o.key);
+      if (k && (k === "all" || main.querySelector('.views .view[data-box="' + k + '"]'))) picked = k;
+    }catch(e){}
+  }
 
   function paint(){
     var st = tool ? tool.state() : null, on = !!(st && st.on);
@@ -67,7 +72,8 @@ function attach(o){
       b.classList.toggle("active", lit);
       b.setAttribute("aria-pressed", String(lit));
     });
-    if (keep){ try{ localStorage.setItem(o.key, key); }catch(e){} }
+    if (keep && o.key){ try{ localStorage.setItem(o.key, key); }catch(e){} }
+    if (keep && o.onPick) o.onPick(key);
     paint();
     if (window.MN_LIFE) MN_LIFE.remeasure();
   }

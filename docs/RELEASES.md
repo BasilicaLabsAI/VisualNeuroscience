@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.35 — 26 October 2026 — The study opens on the paper
+Commit · Open the study on the paper after each launch, and where it was left while the app runs
+
+The study of hallucinations now opens on the paper the first time it is visited after the app is opened, the window introducing Boksa's editorial raised over the scans and everything else as it comes. Go back to it while the app is still running and it opens where you left it: the state shown, the region picked, the systems filtered, the transparency, the drawer, the view, the window you were reading and how far down, the cuts, and the way the brain was turned and zoomed. Close the app fully, by swiping it away, and it opens afresh on the paper next time. On the website the same holds within a browser tab: a reload keeps your place and a new tab starts afresh. The app takes it with its next build.
+
 ## v12.34 — 26 October 2026 — The Brodmann brain in four views
-Commit · Give the Brodmann Area Atlas's brain the atlases' four views under the views' bar, without its banner and frame
+Commit `8c64386` · Give the Brodmann Area Atlas's brain the atlases' four views under the views' bar, without its banner and frame
 
 The Brodmann Area Atlas's brain now has the views the 3D Region Atlas has. Its banner and the lines round it are gone, and a bar along its top picks what it shows: the brain in 3D, as before, the axial, coronal or sagittal slice, or all four together. The slices pass through the picked area, so it shows in every one of them, and move to the next area as it is picked. Slice stands at the bar's far left and cuts the 3D view, greyed out while a slice is shown alone, with Area beside it while slicing, to cut the lit area with the brain or leave it whole. On a phone the bar heads the brain as the 3D tab raises it, just under the line at the top. The Reset that stood in the banner went with it; a double tap still puts a view's zoom back. The apps take it with their next build.
 

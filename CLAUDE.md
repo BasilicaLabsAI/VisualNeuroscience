@@ -44,7 +44,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   Account, each a page of boxes in the home page's words with no header of its own (the tab bar names it), each box
   pushing a web page in a Capacitor bridge of its own. A page inside the tabs carries `data-shell="tabs"` and draws
   no web bar (`navbar.js`); the theme is the shell's (Account). The shell's start script (`startScript` in
-  `ShellWeb.swift`, at document start) also pins every page's viewport to `maximum-scale=1, user-scalable=no` (v11.92: a
+  `ShellWeb.swift`, at document start) writes `window.VN_LAUNCH` since v12.35, a name new with each launch of the app
+  that pages keep how they were left under (the Hallucinations study, below), and pins every page's viewport to `maximum-scale=1, user-scalable=no` (v11.92: a
   double tap on a region row once magnified the whole atlas page), and `viewer.css` sets `touch-action:manipulation` on
   `html` (the molecular viewer's `base.css` too), which takes WebKit's double-tap zoom off every page on the website as
   well, where a pinch still enlarges the page for whoever needs it. When a home-page box's text or picture changes,
@@ -574,8 +575,25 @@ Read this first in every session. It is the handover; nothing else needs pasting
   buttons is a pair, `#note-healthy` and `#note-halluc` in `.state-notes`, both laid in one grid cell with the other
   marked `.off` (v11.64), so the box keeps one height and the Regions beneath never move; keep the two texts close in
   length. The chrome
-  (the screen, drawer, bar, pops, `.one` and `.land` rules, and the screen script with its `vn-hx-drawer` and
-  `vn-hx-view` keys) is a copy of the atlas's with the same names: a change to the chrome belongs in both pages.
+  (the screen, drawer, bar, pops, `.one` and `.land` rules, and the screen script) is a copy of the atlas's with the
+  same names: a change to the chrome belongs in both pages. Since v12.35, at the owner's word, the study opens the
+  first time after the app is launched as on a first visit, The paper's window (`#popPaper`) raised over the views and
+  everything else as it comes, and when it is come back to while the app still runs, where it was left; a full close
+  of the app (a swipe up from the switcher) forgets it, so the next launch opens it as the first. What is kept is one
+  object, `hx` through `MN_KEEP` (`site/assets/launch-keep.js`): the state, the region picked, the systems filtered,
+  the transparency, the drawer, the view, the window open (`HX_SCREEN.current()`) and its `.pop-body`'s scroll, the
+  cuts, the 3D view's turn, zoom and `position`, each slice's `pan2Dxyzmm` and the crosshair, written by `rememberSoon`
+  250ms after each change (`renderAll`, the opacity, the drawer, `onPick` from the views' bar, a window opened, closed
+  or scrolled, the slice tool's `onChange`, a hand let go of a view) once `startKeeping()` has run at the end of the
+  screen script, and read back as `HX_KEPT`: the state, pick, filters and transparency before the first `renderAll`,
+  the drawer, view and window by the screen script, the scans in `keptScans()` once they are in (the crosshair after
+  the picked region has centred it). `MN_KEEP` files it in localStorage under `window.VN_LAUNCH` in the iOS app, a
+  name the shell writes into every page at document start (`launch` in `PageBridgeController`, a UUID made once per
+  process), anything under an earlier launch counting as nothing, since every page there is a web view of its own and
+  keeps no session from one page to the next; on the website and in Android's one web view it is the tab's own
+  sessionStorage (a reload keeps it, a new tab starts afresh). The view and the drawer, kept on the device for good as
+  `vn-hx-view` and `vn-hx-drawer` until then, are kept so too, and those keys are cleared as the page opens; the
+  atlases keep their last states on the device across launches as before (v11.93, v12.1).
 - The 3D Region Atlas, the Network Atlas and, since v11.17, the Hallucinations study (`site/hallucinations.html`)
   draw their four views alike, and since v12.34 the Brodmann Area Atlas's brain draws them so too in a box of its own
   (`.scan.quad`, holding the bar and the views; see that page above), from shared files: the scans' look in either theme is `site/assets/scan-look.js`, and
@@ -587,8 +605,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   the bar along the foot, holds Slice at the far left (`.vb-slice`, the slice tool's switch, greyed while Axial,
   Coronal or Sagittal is shown alone, the cuts being the 3D view's), Regions beside it while slicing (`.vb-regions`, the
   cut through the highlighted regions too; Area on the Brodmann page, the lit area), and the views, All and each one alone (`[data-view]`), on every screen; on
-  a phone it stands just under the Best experienced line. `MN_VIEWBAR.attach({main, key, start})` wires it (the pick kept as
-  `vn-atlas-view`, `vn-hx-view`, `vn-net-view` or `vn-ba-scan-view`; `start` the view until one is picked, All unless
+  a phone it stands just under the Best experienced line. `MN_VIEWBAR.attach({main, key, start, onPick})` wires it (the pick kept on
+  the device as `vn-atlas-view`, `vn-net-view` or `vn-ba-scan-view`; a page that keeps it its own way gives no `key`
+  and hears each pick through `onPick`, the study since v12.35; `start` the view until one is picked, All unless
   given; `show(key, keep)`, `picked()`), the page hands it the slice tool
   (`MN_VIEWBAR.slice(tool)`, `MN_VIEWBAR.paint()` from the tool's `onChange`), and it writes `--vbar`, the bar's foot
   from the stage's top, so the sheets rising from the foot stop short of it (`bar.css`; a bar with no `.stage` round it,

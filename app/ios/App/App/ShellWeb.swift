@@ -212,6 +212,12 @@ final class PageBridgeController: CAPBridgeViewController {
     /// build keeps a sandbox receipt. The pages count usage only in an App
     /// Store build (VN_STORE, v12.30), so the numbers are the approved app's.
     private static let fromStore = Bundle.main.appStoreReceiptURL?.lastPathComponent == "receipt"
+    /// The launch's own name, the same for every page while the app runs and
+    /// new each time it is launched (VN_LAUNCH, v12.35): a page keeps how it
+    /// was left under it (site/assets/launch-keep.js), so the study opens
+    /// where it was left when it is come back to, and as on a first visit
+    /// after the app has been closed for good.
+    private static let launch = UUID().uuidString
 
     init(page: Page, startTheme: Theme?, startPad: Bool) {
         self.page = page
@@ -279,6 +285,7 @@ final class PageBridgeController: CAPBridgeViewController {
     private var startScript: String {
         var lines = [
             "window.VN_STORE = \(Self.fromStore);",
+            "window.VN_LAUNCH = \(Self.literal(Self.launch));",
             "var pad = \(pad);",
             "var mark = function () { var root = document.documentElement; if (root) { root.setAttribute('data-shell', 'tabs'); if (pad) root.setAttribute('data-shell-pad', ''); } return !!root; };",
             "if (!mark()) new MutationObserver(function (records, watch) { if (mark()) watch.disconnect(); }).observe(document, { childList: true });",

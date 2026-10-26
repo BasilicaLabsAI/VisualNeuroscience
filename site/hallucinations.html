@@ -906,6 +906,7 @@ main.screen.one.land{ flex-direction:row; }
 <script src="assets/slice-tool.js"></script>
 <script src="assets/scan-look.js"></script>
 <script src="assets/view-bar.js"></script>
+<script src="assets/launch-keep.js"></script>
 <script src="assets/zoom.js"></script>
 <script src="assets/diagram-gestures.js"></script>
 <script src="assets/export3d.js"></script>
@@ -1008,7 +1009,7 @@ const EMPH = { full: 1, mid: 0.62, faint: 0.22 };
 
 const $ = id => document.getElementById(id);
 let state = "healthy", selected = null, roleFilter = [];
-let scanState = "idle", scanInstances = [], byKey = {};
+let scanState = "idle", scanInstances = [], byKey = {}, sliceTool = null;
 
 function loadScript(src){
   return new Promise((res, rej) => {
@@ -1290,6 +1291,7 @@ function renderAll(){
   renderPanel();
   paintMechanism();
   repaint();
+  rememberSoon();
 }
 
 /* ── the scans, as the atlases draw them ─────────────────────────────────
@@ -1350,10 +1352,10 @@ async function ensureScan(){
     /* the cuts on the 3D view, through the regions as well as the brain,
        switched by Slice on the views' bar (v12.33), with Regions beside it */
     const renBox = document.querySelector('.view[data-box="render"]');
-    const sliceTool = window.MN_SLICE && renBox ? MN_SLICE.attach({
+    sliceTool = window.MN_SLICE && renBox ? MN_SLICE.attach({
       stage: renBox.querySelector(".mri-stage"),
       nv: byKey.render, regions: "Slice regions",
-      onChange: () => { if (window.MN_VIEWBAR) MN_VIEWBAR.paint(); }
+      onChange: () => { if (window.MN_VIEWBAR) MN_VIEWBAR.paint(); rememberSoon(); }
     }) : null;
     if (sliceTool && window.MN_VIEWBAR) MN_VIEWBAR.slice(sliceTool);
     /* the wheel zooms the 3D model; the slices answer to drag and touch
@@ -1369,11 +1371,45 @@ async function ensureScan(){
     }
     applyOpacity();
     renderAll();
+    keptScans();
   } catch (err){
     scanState = "failed";
     $("scan-note").textContent = "The scan could not be loaded: " +
       (err && err.message ? err.message : err);
   }
+}
+
+/* the scans as they were left this launch (v12.35): the cuts, the brain's
+   turn, zoom and place, each slice's zoom and pan, and the crosshair, put
+   back after the picked region has centred it, so a crosshair moved by hand
+   stays where it was put; and from here on the views are kept wherever the
+   hand lets go of one */
+function keptScans(){
+  const k = HX_KEPT, ren = byKey.render;
+  if (k){
+    if (k.cuts && sliceTool) sliceTool.setState(k.cuts);
+    if (k.cam && ren){
+      if (isFinite(k.cam.az) && isFinite(k.cam.el)){
+        ren.scene.renderAzimuth = Number(k.cam.az);
+        ren.scene.renderElevation = Number(k.cam.el);
+      }
+      if (k.cam.zoom > 0) ren.scene.volScaleMultiplier = Number(k.cam.zoom);
+      if (Array.isArray(k.cam.pos) && k.cam.pos.length === 3) ren.position = k.cam.pos.map(Number);
+    }
+    if (k.pan){
+      for (const key of ["axial", "coronal", "sagittal"]){
+        const p = k.pan[key];
+        if (byKey[key] && Array.isArray(p) && p.length === 4) byKey[key].scene.pan2Dxyzmm = p.map(Number);
+      }
+    }
+    if (Array.isArray(k.cross) && k.cross.length === 3){
+      for (const inst of scanInstances) inst.scene.crosshairPos = k.cross.map(Number);
+    }
+    for (const inst of scanInstances){ try{ inst.drawScene(); }catch(e){} }
+  }
+  document.querySelectorAll("#scan-views .mri-stage").forEach(stage => {
+    ["pointerup", "wheel", "touchend"].forEach(evt => stage.addEventListener(evt, rememberSoon, {passive: true}));
+  });
 }
 
 /* how strongly the regions cover the scan: the newest value at most every
@@ -1393,6 +1429,7 @@ function applyOpacity(){
 }
 opacityEl.addEventListener("input", () => {
   opacityVal.textContent = opacityEl.value + "%";
+  rememberSoon();
   if (opacityTimer) return;
   opacityTimer = setTimeout(() => requestAnimationFrame(applyOpacity),
                             Math.max(0, 100 - (performance.now() - opacityLast)));
@@ -1457,6 +1494,62 @@ themeBtn.addEventListener("click", () => {
   if (scanState === "ready") repaint();
 });
 
+/* ── where the study was left (v12.35, at the owner's word) ─────────────
+   The first time after the app is launched the study opens as on a first
+   visit: the paper's window raised over the views and the rest as it comes.
+   Coming back to it while the app still runs, it opens where it was left:
+   the state, the region picked, the systems filtered, the transparency, the
+   drawer, the view, the window open and how far down it was read, the cuts,
+   the brain's turn, zoom and place, each slice's zoom and pan, and the
+   crosshair. A launch after the app has been closed for good (a swipe up
+   from the switcher) opens it as the first did. It is kept as "hx" through
+   assets/launch-keep.js, a moment after each change, the launch's alone in
+   the apps and the tab's on the website; the screen's script below reads
+   the drawer, the view and the window from HX_KEPT and starts the keeping
+   once the page stands as it was. */
+const HX_KEPT = window.MN_KEEP ? MN_KEEP.get("hx") : null;
+let keepReady = false, keepTimer = 0;
+function rememberSoon(){
+  if (!keepReady || !window.MN_KEEP) return;
+  clearTimeout(keepTimer);
+  keepTimer = setTimeout(() => {
+    const S = window.HX_SCREEN, ren = byKey.render, k = HX_KEPT || {};
+    const ready = scanState === "ready" && !!ren;
+    MN_KEEP.set("hx", {
+      v: 1, state, selected, roles: roleFilter.slice(), trans: Number(opacityEl.value),
+      drawer: S ? S.drawer() : k.drawer, view: S ? S.view() : k.view,
+      pop: S ? S.current() : k.pop, scroll: S ? S.scroll() : k.scroll,
+      /* until the scans are in, what was kept of them stands */
+      cuts: sliceTool ? sliceTool.state() : k.cuts || null,
+      /* the viewer may hold these as typed arrays, which JSON would write as objects */
+      cam: ready ? { az: ren.scene.renderAzimuth, el: ren.scene.renderElevation,
+                     zoom: ren.scene.volScaleMultiplier, pos: Array.from(ren.position || [0, 0, 0]) } : k.cam || null,
+      pan: ready ? Object.fromEntries(["axial", "coronal", "sagittal"].map(key =>
+             [key, Array.from(byKey[key].scene.pan2Dxyzmm || [0, 0, 0, 1])])) : k.pan || null,
+      cross: ready ? Array.from(ren.scene.crosshairPos) : k.cross || null
+    });
+  }, 250);
+}
+function startKeeping(){ keepReady = true; rememberSoon(); }
+if (HX_KEPT){
+  if (HX_KEPT.state === "healthy" || HX_KEPT.state === "halluc") state = HX_KEPT.state;
+  if (HX_KEPT.selected && DATA[HX_KEPT.selected]){ selected = HX_KEPT.selected; focus = [selected]; }
+  if (Array.isArray(HX_KEPT.roles)){
+    roleFilter = HX_KEPT.roles.filter(r => document.querySelector('[data-role="' + r + '"]'));
+    document.querySelectorAll("[data-role]").forEach(btn => {
+      const on = roleFilter.indexOf(btn.dataset.role) >= 0;
+      btn.setAttribute("aria-pressed", String(on));
+      btn.classList.toggle("active", on);
+    });
+  }
+  if (isFinite(HX_KEPT.trans) && HX_KEPT.trans !== null){
+    opacityEl.value = String(HX_KEPT.trans);
+    opacityVal.textContent = opacityEl.value + "%";
+  }
+}
+/* the view and the drawer were kept on the device for good until v12.35 */
+try{ localStorage.removeItem("vn-hx-view"); localStorage.removeItem("vn-hx-drawer"); }catch(e){}
+
 $("coverage").textContent = REGIONS.length + " regions, drawn on the atlas parcels each one occupies.";
 buildList();
 bindMechanism();
@@ -1473,10 +1566,12 @@ ensureScan();
 /* ── the screen ──────────────────────────────────────────────────────────
    The 3D Region Atlas's screen, carried here: the header's height is
    measured into --screen-top so the views fill the rest, the drawer folds
-   away on its tab (and is remembered), the views' bar at the top picks the
-   views (assets/view-bar.js), sideways the bar stands at the
+   away on its tab, the views' bar at the top picks the views
+   (assets/view-bar.js), sideways the bar stands at the
    right edge, and the bar's buttons raise one pop-up at a time over the
-   views. The page's own script opens the reading through HX_SCREEN. */
+   views. The page's own script opens the reading through HX_SCREEN. The
+   drawer, the view and the window open are kept with the rest of how the
+   study was left, for the launch alone (v12.35; HX_KEPT above). */
 (function(){
   var root = document.documentElement, main = document.getElementById("main");
   var head = document.querySelector(".masthead"), bar = document.querySelector(".panelbar");
@@ -1503,18 +1598,17 @@ ensureScan();
   var narrow = window.matchMedia ? window.matchMedia("(max-width:900px)") : null;
   var one = window.matchMedia ? window.matchMedia("(max-width:760px), (pointer:coarse) and (max-height:500px)") : null;
   var land = window.matchMedia ? window.matchMedia("(orientation: landscape) and (pointer: coarse)") : null;
-  var open;
-  try{
-    var kept = localStorage.getItem("vn-hx-drawer");
-    open = kept === "open" ? true : kept === "shut" ? false : !(narrow && narrow.matches);
-  } catch(e){ open = !(narrow && narrow.matches); }
-  if (one && one.matches) open = false;
+  /* as it was left this launch, or as it comes the first time: open beside
+     the views where there is room, shut up to 900 wide and on a phone */
+  var left = typeof HX_KEPT !== "undefined" ? HX_KEPT : null;
+  var open = left && typeof left.drawer === "boolean" ? left.drawer
+           : !(narrow && narrow.matches) && !(one && one.matches);
   function setDrawer(on, keep){
     open = on;
     deck.classList.toggle("shut", !on);
     tab.setAttribute("aria-expanded", String(on));
     if (hideBtn) hideBtn.setAttribute("aria-expanded", String(on));
-    if (keep){ try{ localStorage.setItem("vn-hx-drawer", on ? "open" : "shut"); }catch(e){} }
+    if (keep) rememberSoon();
     if (window.MN_LIFE) MN_LIFE.remeasure();
   }
   function focusSoon(el){ setTimeout(function(){ try{ el.focus({preventScroll: true}); }catch(e){} }, 360); }
@@ -1524,8 +1618,11 @@ ensureScan();
 
   /* the views' bar at the top of the stage picks what the stage shows, on
      every screen (v12.33, at the owner's word): All, the four two by two, or
-     one view alone; the pick is kept as vn-hx-view (assets/view-bar.js) */
-  var vbar = window.MN_VIEWBAR ? MN_VIEWBAR.attach({ main: main, key: "vn-hx-view" }) : null;
+     one view alone; the pick is kept with the rest for the launch (v12.35),
+     not on the device as the atlases keep theirs (assets/view-bar.js) */
+  var vbar = window.MN_VIEWBAR ? MN_VIEWBAR.attach({ main: main,
+    start: left && ["all", "render", "axial", "coronal", "sagittal"].indexOf(left.view) >= 0 ? left.view : "all",
+    onPick: function(){ rememberSoon(); } }) : null;
   /* a keyboard rising over a field shortens the window, which on a phone
      read as held sideways and on an iPad held sideways as a phone: while a
      text field has the focus and the width is what it was, the layout stays */
@@ -1586,6 +1683,7 @@ ensureScan();
     p._leaving = setTimeout(function(){ if (!p.classList.contains("in")) p.hidden = true; }, 400);
     popped(false);
     press();
+    rememberSoon();
   }
   function openPop(id){
     if (current === id) return;
@@ -1600,12 +1698,33 @@ ensureScan();
     popped(true);
     requestAnimationFrame(function(){ window.dispatchEvent(new Event("resize")); });
     press();
+    rememberSoon();
   }
   function show(id){ if (current === id) hide(); else openPop(id); }
+  function bodyOf(id){ var p = id && pops[id]; return p ? p.querySelector(".pop-body") : null; }
+  /* how far down the open window has been read is kept too */
+  Object.keys(pops).forEach(function(id){
+    var b = bodyOf(id);
+    if (b) b.addEventListener("scroll", function(){ if (current === id) rememberSoon(); }, {passive: true});
+  });
   buttons.forEach(function(b){ b.addEventListener("click", function(){ show(b.getAttribute("data-pop")); }); });
   document.querySelectorAll(".pop .pop-x").forEach(function(x){ x.addEventListener("click", hide); });
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && current) hide(); });
-  window.HX_SCREEN = { open: openPop, show: show, hide: hide, current: function(){ return current; } };
+  window.HX_SCREEN = { open: openPop, show: show, hide: hide, current: function(){ return current; },
+    drawer: function(){ return open; }, view: function(){ return vbar ? vbar.picked() : "all"; },
+    scroll: function(){ var b = bodyOf(current); return b ? Math.round(b.scrollTop) : 0; } };
+
+  /* the window the study opens on (v12.35, at the owner's word): the
+     paper's, the first time after the app is launched; after that the one
+     left open, read down to where it was left, or none; and from here on
+     how the study stands is kept */
+  if (!left) openPop("popPaper");
+  else if (left.pop && pops[left.pop]){
+    openPop(left.pop);
+    var leftAt = Number(left.scroll) || 0, body = bodyOf(left.pop);
+    if (body && leftAt > 0) requestAnimationFrame(function(){ body.scrollTop = leftAt; });
+  }
+  startKeeping();
 })();
 </script>
 <script src="assets/firebase-config.js"></script>
