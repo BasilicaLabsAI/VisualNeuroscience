@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.40 — 26 October 2026 — The views' bar under the island
+Commit · Centre the views' bar on the header's island rather than on the stage beside the drawer
+
+The bar of views at the top of the 3D Region Atlas, the Network Atlas and the Hallucinations study now stands centred under the header's island of tabs, on the page's own centre, instead of on the stage to the right of the regions box, which had left it off to one side on a computer. Where the box and the bar meet, the box stands over the bar. In the app the bar centres on the screen the same way. The apps take it with their next build.
+
 ## v12.39 — 26 October 2026 — The fibres stand out of the cut
-Commit · Cut the streamlines a little behind the brain's cut, so they stand out of the cut face
+Commit `e4454f8` · Cut the streamlines a little behind the brain's cut, so they stand out of the cut face
 
 On Tractography the streamlines are now cut a little behind the brain, two and a half millimetres, so wherever Slice opens the head their ends stand out of the cut face, and the fibres can be seen leaving the anatomy at any transparency, a solid brain included. The apps take it with their next build.
 

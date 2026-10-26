@@ -41,7 +41,11 @@
    takes the width and slides sideways, as the bar along the foot does. The
    rules read .quad alone, so a box of four views anywhere takes them: the
    Brodmann Area Atlas's brain since v12.34, which adds its own for a
-   phone; the phone's rules below are the three pages' screens. */
+   phone; the phone's rules below are the three pages' screens. Since v12.40,
+   at the owner's word, view-bar.js slides the bar to the header's island's
+   centre, the page's, and the drawer beside the views stands over it where
+   the two meet. */
+.quad .drawer{ z-index:7; }   /* over the bar's 6; the pages set it position:relative */
 .quad .viewbar{
   flex:none; align-self:center; max-width:100%; box-sizing:border-box;
   display:flex; align-items:center; gap:.15rem;

@@ -631,7 +631,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   buttons and centred over the views as the header's island is (`align-self:center; max-width:100%` in
   `atlas-views.css`, the side gaps kept on a phone, 60px each side in the app held sideways for the shell's back
   button), and where its buttons are wider than the screen it takes the width and slides sideways as the bar along the
-  foot does (its `overflow-x:auto`), which Slice regions' name makes it do on a phone upright. On the Brodmann Area
+  foot does (its `overflow-x:auto`), which Slice regions' name makes it do on a phone upright. Since v12.40, at the
+  owner's word, it is centred on the header's island, the page's centre, rather than on the stage, whose centre the
+  drawer's column beside the views had pushed off the page's: `centre()` in `view-bar.js`, run with each measure,
+  slides the bar by the difference (`transform`), to the screen's centre where there is no island (the app's pages),
+  never off the left edge and not at all on a phone held sideways, and `.quad .drawer{ z-index:7 }` in
+  `atlas-views.css` stands the drawer over the bar where the two meet. On the Brodmann Area
   Atlas the same bar stands in the bar along the foot on an iPad or a computer since v12.37, at the owner's word, after
   the faces' group where there is room (`#barScan`, a `.panelbar-scan` slot; `.panelbar .viewbar` undoes its island;
   `arrange()` moves `nav#baViewbar` there while the screen is `.tall` or `.wide` and back to the head of the brain's box

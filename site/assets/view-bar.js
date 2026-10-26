@@ -13,9 +13,14 @@
    since v12.37, at the owner's word, greyed while Slice is off or a flat
    view is shown (until then it stood only while slicing). The bar is as
    wide as its buttons and centred, as the header's island is, and slides
-   sideways where they are wider than the screen (v12.37). On a phone the
-   bar stands just under the line that says where the atlas is best
-   experienced. The styles are in atlas-views.css and bar.css.
+   sideways where they are wider than the screen (v12.37); since v12.40,
+   at the owner's word, it is centred on the island itself (the page's
+   centre, or the screen's where there is no header) rather than on the
+   stage, whose centre the drawer's column beside the views had pushed off
+   the page's (centre, below): the bar is slid by the difference, and where
+   it meets the drawer the drawer stands over it. On a phone the bar stands
+   just under the line that says where the atlas is best experienced. The
+   styles are in atlas-views.css and bar.css.
 
      var bar = MN_VIEWBAR.attach({ main: <main.screen>, key: "vn-atlas-view" })
        main holds the bar and the views and takes .all (bar names the bar
@@ -100,11 +105,25 @@ function attach(o){
     paint();
   });
 
+  /* the bar centred on the header's island, or on the screen where there is none (the
+     app's pages, the masthead scrolled away): slid sideways by the difference from the
+     stage's own centre, never off the screen's left edge, and not at all on a phone held
+     sideways, where the bar along the right edge and the shell's back button leave no room */
+  function centre(){
+    bar.style.transform = "";
+    if (!stage || main.classList.contains("land")) return;
+    var isle = document.querySelector(".vn-isle"), ir = isle ? isle.getBoundingClientRect() : null;
+    var target = ir && ir.width > 0 && ir.bottom > 0 ? ir.left + ir.width / 2 : window.innerWidth / 2;
+    var b = bar.getBoundingClientRect(), shift = Math.round(target - (b.left + b.width / 2));
+    if (b.left + shift < 6) shift = Math.round(6 - b.left);
+    if (Math.abs(shift) > 1) bar.style.transform = "translateX(" + shift + "px)";
+  }
   /* the bar's foot from the stage's top, for the sheets; measured once
      layout has settled, never inside an observer's own turn */
   var queued = 0;
   function measure(){
     queued = 0;
+    centre();
     if (!stage) return;
     var foot = bar.offsetParent ? bar.getBoundingClientRect().bottom - stage.getBoundingClientRect().top : 0;
     main.style.setProperty("--vbar", Math.max(0, Math.round(foot)) + "px");
@@ -117,6 +136,7 @@ function attach(o){
     if (stage) ro.observe(stage);
   }
   window.addEventListener("resize", soon);
+  window.addEventListener("load", soon);   /* the island is built as the page loads */
 
   page = { show: show, picked: function(){ return picked; }, paint: paint };
   paint();
