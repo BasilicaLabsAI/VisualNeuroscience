@@ -341,38 +341,34 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (azimuth, elevation, zoom), written by `rememberSoon` a moment after each change (the colour and thickness controls,
   the cube, Reset view, the slice tool's `onChange`, and the hand letting go of the view) once the page is up, and read
   back by `restoreKept` as the tractogram comes in. Since v12.31, at the owner's word, the brain can stand around the
-  streamlines: Brain on the bar raises `#popBrain`, Off and On (`[data-brain]`; On as the page opens since v12.36, at
-  the owner's word) and Brain transparency (`#brainTrans`, a
-  `.trans-row` as on the atlases, 0 solid to 95, 75 to begin; moving it shows the brain), and the first On builds the
-  template's outer surface in the browser (`loadBrain`: `assets/mni152.nii.gz` through `NVImage.loadFromUrl`, kept out
-  of the export's cache so the voxels go once built and a failed fetch can be tried again, then `MN_EXPORT3D.isoSurface`
-  at its own threshold, the largest piece, a 2-voxel stride, about 150,000 triangles, each vertex lifted
-  `BRAIN_LIFT`, 1.5 mm, along its normal so the streamlines' ends stay inside it) and adds it as the viewer's second mesh,
-  after the streamlines, drawn as glass by a shader of its own (`GLASS`: the renderer's Phong light, and towards the
-  outline up to three times the opacity of the faces; the renderer draws a see-through mesh front faces only, over what
-  is drawn) in a warm pale grey on the dark theme and a mid grey on the light (`brainColour`). The camera frames what
-  shows (`frameBrain`: the brain's own extents while it shows, the streamlines' while it hides, so the page with the
-  brain off opens as it always did). The slice tool cuts both: while the brain shows, a cut's share is read over the box
-  the brain fills (`BRAIN_BOX`, with the streamlines' extents in `cutBox`), and `cutBrain` keeps the triangles whose
-  corners lie in the box, handing the renderer that index list alone (`indexBuffer`, `indexCount`), the vertices,
-  normals and colours untouched. The state's `brain` (`on`, `trans`, and `slices` since v12.36) rides in
-  `vn-tracts-last`, and the export carries
-  the brain, cut as shown, at its opacity, while it shows (the slices are not exported). Since v12.36, at the owner's
-  word, the brain carries the MRI's own slices inside it: `buildSlices` samples the same template, trilinear, at a
-  vertex a millimetre over three planes through the middle of the brain's surface (axial, coronal and sagittal), keeps
-  every cell whose four corners are inside the brain (the template is a brain alone, nought outside it, so the
-  ventricles stay and nothing beyond the brain is drawn), keeps each vertex's place in the template's `cal_min`/`cal_max`
-  window (`slices.place`; the template stores its values scaled by `scl_slope`, about a third, and the window is in the
-  scaled values, so a raw voxel read against it drew the slices white), shades it in the atlases' greys for the theme
-  (`plateGrey`, `PLATE_LIGHT`: `scan-look.js`'s two scales, the page's black up to the floor on the dark theme, the
-  stained section on the light; the theme observer recolours them) as per-vertex colours (an `rgba255` four to a
-  vertex), and winds each cell both ways, since the renderer culls back faces; the `slices` mesh is added before the
-  brain, so the brain's glass is drawn over it, and drawn flat by a shader of its own (`PLATE`). It shows while the brain shows, unless the MRI slices switch beneath the brain's turns it off
-  (`[data-slices]` in `#slicesRow`, a `.brain-sub` hidden while the brain is off, `showSlices`), and a cut takes it with
-  the brain (`cutPart`, which `cutBrain` runs for both; `frameBrain` frames both). The kept state is `v: 2` since then: a
-  state kept before, when the brain began off and stayed so unless pressed, keeps its transparency and opens with the
-  brain on; `showBrain(brain.on)` after `restoreKept` fetches it as the page opens, and `MN_TRACTS.brain()` settles once
-  it is in, which `shoot-home-pictures.js` waits for (the home twins were retaken with the brain and its slices). The
+  streamlines, and since v12.38, at the owner's word, it is the 3D Region Atlas's own 3D view: Brain on the bar raises
+  `#popBrain`, Off and On (`[data-brain]`; On as the page opens since v12.36, at the owner's word) and Brain
+  transparency (`#brainTrans`, a `.trans-row` as on the atlases, 0 solid to 95, 75 to begin; moving it shows the
+  brain). The brain is a second NiiVue viewer (`brain.nv`) on `#tkBrain`, a `.brain-layer` canvas laid over the
+  streamlines' `#tkRen` in the same `.mri-stage` that takes no pointer, holding the MNI152 template
+  (`assets/mni152.nii.gz` through `NVImage.loadFromUrl` on the first On, `addVolume`, `SLICE_TYPE.RENDER`, no
+  crosshair) and rendering it as the atlas's render view does, its ground clear (`backColor` alpha 0) so the
+  streamlines show through, the layer's CSS opacity the transparency (`applyBrainTrans`, `placeBrain`),
+  `visibility:hidden` while off; `MN_LIFE` registers it. The two cameras are one: `followDraws` wraps the
+  streamlines' viewer's `drawScene` so every draw, its own on a drag included, runs `drawBrain`, which `mirror`s the
+  turn, zoom and `position` into the brain's viewer and draws it; and `frameBrain` gives the streamlines' mesh the
+  volume's extents (`brain.box`, from `volumeObject3D.extentsMin/Max`) while the brain shows and the streamlines' own
+  (`whole`) while it hides, set again after every cut's rebuild, so both viewers frame the same box and the view
+  never jumps. The slice tool cuts both exactly alike: `applyCut` first hands the planes to the brain's viewer
+  (`cutBrainPlanes`, NiiVue's own `setClipPlanes`, as the atlas's tool does), then `cutBox` reads the planes back
+  off that viewer's `scene.clipPlanes` (each a vec4 in the volume's unit cube, the side where `dot(n, p − 0.5) + a <
+  0` cut away) and turns them into millimetres through its `frac2mm`, so the streamlines end exactly where the head is
+  cut and the MRI shows at the cut face as on the atlas (the first quarter of a slider's travel cuts the air around
+  the brain there, and nothing of the streamlines); the brain off, the planes are read as before (`planeNormal`, the
+  slider's share straight over the streamlines' box). The state's `brain` (`on`, `trans`) rides in `vn-tracts-last`
+  (`v: 2`; the `slices` v12.36 kept is ignored), and the export carries the brain while it shows as a surface drawn
+  from the template on the first export (`brainForExport`: `MN_EXPORT3D.isoSurface` at a 2-voxel stride, lifted
+  `BRAIN_LIFT` along its normals, cut by the box; the screen's brain is the renderer's and has no surface to give),
+  at its opacity. v12.31's surface of glass (`GLASS`, the lifted isosurface drawn after the streamlines, cut by
+  `cutPart`) and v12.36's three fixed slices through its middle (`buildSlices`, `PLATE`, the MRI slices switch) went
+  with v12.38, at the owner's word: the brain and its cuts were to be exactly the atlas's 3D view, translucent, with
+  the MRI only at the cut. `showBrain(brain.on)` after `restoreKept` fetches it as the page opens, and
+  `MN_TRACTS.brain()` settles once it is in, which `shoot-home-pictures.js` waits for (the home twins retaken). The
   chrome now
   lives in six pages (the 3D Region Atlas, the Brodmann Area Atlas, the Hallucinations study, the molecular viewer, the
   Network Atlas and Tractography); a change to it belongs in all of them.

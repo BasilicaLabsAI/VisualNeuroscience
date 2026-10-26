@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.38 — 26 October 2026 — The brain as the atlas draws it
+Commit · Draw Tractography's brain with the atlas's own renderer, cut exactly as the atlas cuts it
+
+Tractography's brain is now the 3D Region Atlas's own: the same rendering of the MNI152 template, drawn around the streamlines and as see-through as its slider leaves it, so the fibres show through it everywhere. Slice cuts it exactly as it cuts the atlas's brain, opening the head to show the MRI at the cut face and nothing of the inside otherwise, and the streamlines end exactly where the head is cut. The three fixed slices through the middle of the brain, and their switch, are gone; Brain off shows the streamlines alone, cut open as before. The apps take it with their next build.
+
 ## v12.37 — 26 October 2026 — The views' bar centred
-Commit · Centre the views' bar, keep Slice regions on show greyed, and fold the Brodmann page's view buttons into its bar
+Commit `182e4f2` · Centre the views' bar, keep Slice regions on show greyed, and fold the Brodmann page's view buttons into its bar
 
 The bar of views at the top of the 3D Region Atlas, the Network Atlas and the Hallucinations study is now only as wide as its buttons and stands centred over the views, as the header's island of tabs does; where a screen is too narrow for it, it takes the width and slides sideways like the bar along the foot. Slice regions, the button beside Slice that cuts the highlighted regions with the brain, is now always on show under that name and greyed out until a cut can take them, while Slice is off or a flat view is shown, instead of appearing only while slicing. On the Brodmann Area Atlas the same buttons, Slice area among them, stand in the bar along the foot on an iPad or a computer, where there is room beside Outside, Inside and Both, and head the brain's box on a phone as before. On the website, hovering over the lit view button no longer hides its name and icon. The apps take it with their next build.
 
