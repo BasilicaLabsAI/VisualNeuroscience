@@ -357,10 +357,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   never jumps. The slice tool cuts both exactly alike: `applyCut` first hands the planes to the brain's viewer
   (`cutBrainPlanes`, NiiVue's own `setClipPlanes`, as the atlas's tool does), then `cutBox` reads the planes back
   off that viewer's `scene.clipPlanes` (each a vec4 in the volume's unit cube, the side where `dot(n, p − 0.5) + a <
-  0` cut away) and turns them into millimetres through its `frac2mm`, so the streamlines end exactly where the head is
-  cut and the MRI shows at the cut face as on the atlas (the first quarter of a slider's travel cuts the air around
-  the brain there, and nothing of the streamlines); the brain off, the planes are read as before (`planeNormal`, the
-  slider's share straight over the streamlines' box). The state's `brain` (`on`, `trans`) rides in `vn-tracts-last`
+  0` cut away) and turns them into millimetres through its `frac2mm`, so the streamlines end where the head is cut
+  and the MRI shows at the cut face as on the atlas, or rather a little past it: since v12.39, at the owner's word,
+  the streamlines' own cut stands `TRACT_PAST` (2.5 mm) behind the brain's (`cutBox(planes, past)`), so their ends
+  stick out of the cut face at any transparency; the export's surface is cut with no such room (the first quarter of a
+  slider's travel cuts the air around the brain there, and nothing of the streamlines); the brain off, the planes are
+  read as before (`planeNormal`, the slider's share straight over the streamlines' box). The state's `brain` (`on`, `trans`) rides in `vn-tracts-last`
   (`v: 2`; the `slices` v12.36 kept is ignored), and the export carries the brain while it shows as a surface drawn
   from the template on the first export (`brainForExport`: `MN_EXPORT3D.isoSurface` at a 2-voxel stride, lifted
   `BRAIN_LIFT` along its normals, cut by the box; the screen's brain is the renderer's and has no surface to give),

@@ -845,10 +845,15 @@ main.screen.one.land{ flex-direction:row; }
      renderer reads it: its normal from the azimuth and elevation (planeNormal, the renderer's own
      maths) and its depth as the plane's offset in the volume's unit cube, the side where
      dot(n, p - 0.5) + depth < 0 cut away, turned back into millimetres through that viewer's own
-     frac2mm, so the streamlines end exactly where the brain is cut; the first quarter of a slider's
-     travel, which cuts the air around the brain there, cuts them not at all, as on the atlas. The
-     brain off, the slider's share is taken straight over the streamlines' own box. */
-  function cutBox(planes){
+     frac2mm, so the streamlines end where the brain is cut, or a little past it: since v12.39, at
+     the owner's word, their own cut stands TRACT_PAST behind the brain's, so their ends stick out of
+     the cut face at any transparency (past: the millimetres to leave, nought for the export's
+     surface); the first quarter of a slider's travel, which cuts the air around the brain there,
+     cuts them not at all, as on the atlas. The brain off, the slider's share is taken straight over
+     the streamlines' own box. */
+  var TRACT_PAST = 2.5;
+  function cutBox(planes, past){
+    past = past || 0;
     var lo = [-Infinity, -Infinity, -Infinity], hi = [Infinity, Infinity, Infinity], k, i;
     var b = brain.on && brain.nv && brain.box ? brain.nv : null;
     if (b){
@@ -864,7 +869,7 @@ main.screen.one.land{ flex-direction:row; }
         g[k] = 0; h[k] = 1;
         var mm = b.frac2mm(f)[k], up = b.frac2mm(h)[k] > b.frac2mm(g)[k];
         var lowSide = (n[k] > 0) === up;   /* the cut-away side is the low millimetres */
-        if (lowSide) lo[k] = Math.max(lo[k], mm); else hi[k] = Math.min(hi[k], mm);
+        if (lowSide) lo[k] = Math.max(lo[k], mm - past); else hi[k] = Math.min(hi[k], mm + past);
       });
       return {lo: lo, hi: hi};
     }
@@ -894,7 +899,7 @@ main.screen.one.land{ flex-direction:row; }
       if (again) nv.drawScene();
       return;
     }
-    var box = cutBox(planes), lo = box.lo, hi = box.hi;
+    var box = cutBox(planes, brain.on && brain.nv ? TRACT_PAST : 0), lo = box.lo, hi = box.hi;
     var P = whole.pts, O = whole.off, n = O.length - 1;
     var pts = new Float32Array(P.length), m = 0, offs = [0];
     for (var s = 0; s < n; s++){
@@ -1061,7 +1066,7 @@ main.screen.one.land{ flex-direction:row; }
     }
     var b = brain.part, idx = b.idx, pos2 = b.pos;
     if (lastPlanes.length){
-      var box = cutBox(lastPlanes), lo = box.lo, hi = box.hi, out = [];
+      var box = cutBox(lastPlanes, 0), lo = box.lo, hi = box.hi, out = [];
       var inside = function(v){ var j = v * 3; return pos2[j] >= lo[0] && pos2[j] <= hi[0] && pos2[j + 1] >= lo[1] && pos2[j + 1] <= hi[1] && pos2[j + 2] >= lo[2] && pos2[j + 2] <= hi[2]; };
       for (var t = 0; t < idx.length; t += 3) if (inside(idx[t]) && inside(idx[t + 1]) && inside(idx[t + 2])) out.push(idx[t], idx[t + 1], idx[t + 2]);
       idx = Uint32Array.from(out);

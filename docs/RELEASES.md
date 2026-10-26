@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.39 — 26 October 2026 — The fibres stand out of the cut
+Commit · Cut the streamlines a little behind the brain's cut, so they stand out of the cut face
+
+On Tractography the streamlines are now cut a little behind the brain, two and a half millimetres, so wherever Slice opens the head their ends stand out of the cut face, and the fibres can be seen leaving the anatomy at any transparency, a solid brain included. The apps take it with their next build.
+
 ## v12.38 — 26 October 2026 — The brain as the atlas draws it
-Commit · Draw Tractography's brain with the atlas's own renderer, cut exactly as the atlas cuts it
+Commit `19fbbb0` · Draw Tractography's brain with the atlas's own renderer, cut exactly as the atlas cuts it
 
 Tractography's brain is now the 3D Region Atlas's own: the same rendering of the MNI152 template, drawn around the streamlines and as see-through as its slider leaves it, so the fibres show through it everywhere. Slice cuts it exactly as it cuts the atlas's brain, opening the head to show the MRI at the cut face and nothing of the inside otherwise, and the streamlines end exactly where the head is cut. The three fixed slices through the middle of the brain, and their switch, are gone; Brain off shows the streamlines alone, cut open as before. The apps take it with their next build.
 
