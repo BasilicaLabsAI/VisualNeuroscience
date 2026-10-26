@@ -360,17 +360,17 @@ svg{ display:block; }
 }
 .slice-range:focus-visible{ outline:1px solid #FFFFFF; outline-offset:3px; }
 
-/* Slice, and Slice regions beside it, ink in while pressed; with Reset
-   cuts they stand as tall as the Centre planes button they share a row
-   with, so the row reads as one line */
+/* Slice, and Slice regions beside it, ink in while pressed and stand as
+   tall as the Centre planes button they share a row with, so the row reads
+   as one line */
 .slice-btn.active, .slice-regions.active{ background:var(--ink); color:var(--paper); }
-.slice-btn, .slice-regions, .slice-reset{ height:1.8rem; padding:0 .6rem; white-space:nowrap; }
+.slice-btn, .slice-regions{ height:1.8rem; padding:0 .6rem; white-space:nowrap; }
 
 @media (max-width:760px){
   .slice-edge.left, .slice-edge.right{ width:24px; top:6px; bottom:6px; }
   .slice-edge.bottom{ left:28px; right:28px; bottom:3px; }
   .slice-edge .ax{ font-size:.42rem; letter-spacing:.14em; }
-  .slice-btn, .slice-regions, .slice-reset{ height:1.6rem; padding:0 .45rem; font-size:.5rem; }
+  .slice-btn, .slice-regions{ height:1.6rem; padding:0 .45rem; font-size:.5rem; }
 }
 /* under a finger each slider is a strip 44 points across, its thumb 24 and
    its track 4, the bottom one held clear of the two at the sides; the
@@ -394,14 +394,17 @@ svg{ display:block; }
   .slice-edge.left .slice-range::-moz-range-track, .slice-edge.right .slice-range::-moz-range-track{ width:4px; height:auto; }
   .slice-range::-moz-range-thumb{ width:24px; height:24px; }
 }
-/* the group hugs Reset, and Slice area stands to the left of Slice, so Slice
-   keeps its place as the Area button comes and goes */
-.scan-tools{ display:inline-flex; align-items:center; gap:.35rem; flex:none; margin-left:auto; }
-.scan-head .slice-regions{ order:-1; }
+/* the slice buttons lead the head, Slice at the far left as on every page
+   that slices and Slice area after it, so Slice keeps its place as the Area
+   button comes and goes (v12.32) */
+.scan-tools{ display:inline-flex; align-items:center; gap:.35rem; flex:none; }
+.scan-tools:empty{ display:none; }
+.scan-head:has(.scan-tools:not(:empty)){ padding-left:.5rem; }
 .scan-head .slice-btn, .scan-head .slice-regions{ height:auto; padding:.5rem .7rem .42rem; }
 @media (pointer:coarse){ .scan-head .slice-btn, .scan-head .slice-regions{ min-height:44px; } }
 /* the head has one Reset, the page's, which puts back the view and the cuts
-   together; the cuts alone go back from the bar's Reset slice (v12.9) */
+   together; nothing resets the cuts alone since v12.32: Slice turned off
+   shows the brain whole, and a slider drawn back to its mark undoes its cut */
 /* on a phone the head is short of room once the slice buttons join it: the
    Area button shows its last word alone and the note steps aside while
    slicing is on, the name staying, so the head changes as little as it can
@@ -725,7 +728,7 @@ body.ba-land{ padding-bottom:0; }
     <!-- the picked area lit on the brain in 3D: a box of its own, on show in
          every layout, the viewer fetched as the page opens -->
     <aside class="scan" id="baScan" aria-label="The picked area on the brain in 3D">
-      <header class="scan-head"><b>In 3D</b><small id="scanNote">the MNI152 brain, the picked area lit</small><span class="scan-tools" id="scanTools"></span><button class="ts-btn" id="scanReset" type="button" aria-label="Reset the view and the cuts">Reset</button></header>
+      <header class="scan-head"><span class="scan-tools" id="scanTools"></span><b>In 3D</b><small id="scanNote">the MNI152 brain, the picked area lit</small><button class="ts-btn" id="scanReset" type="button" aria-label="Reset the view and the cuts">Reset</button></header>
       <div class="scan-stage"><canvas id="baRen"></canvas></div>
     </aside>
     <!-- the page's notes, a window over the brain raised from the bar's About -->
@@ -754,8 +757,6 @@ body.ba-land{ padding-bottom:0; }
         <button class="pbtn" type="button" id="scanBtn" aria-expanded="false" aria-controls="baScan"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12L4 7.5M12 12v9"/></svg><span>3D</span></button>
       </div>
       <div class="panelbar-end">
-        <!-- Reset slice shows while slicing is on, hidden by the tool otherwise (v12.9) -->
-        <button class="pbtn" type="button" id="sliceResetBtn" hidden title="Put the three cuts back to the centre, the brain whole"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 10h11a5 5 0 0 1 0 10h-5"/><path d="M8 6l-4 4 4 4"/></svg><span>Reset slice</span></button>
         <button class="pbtn pbtn-ref" type="button" id="aboutBtn" aria-expanded="false" aria-controls="popAbout"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/></svg><span>About</span></button>
       </div>
     </nav>
@@ -1115,7 +1116,6 @@ body.ba-land{ padding-bottom:0; }
       if (window.MN_SLICE){
         /* the cuts are kept on the device with the pick (v12.1, at the owner's word) */
         slice = MN_SLICE.attach({ stage: scanEl.querySelector(".scan-stage"), tools: document.getElementById("scanTools"), nv: ren, regions: "Slice area",
-          reset: document.getElementById("sliceResetBtn"),   /* the bar's Reset slice (v12.9) */
           onChange: function(st){ try{ localStorage.setItem("vn-ba-cuts", JSON.stringify(st)); }catch(e){} } });
         try{ var keptCuts = JSON.parse(localStorage.getItem("vn-ba-cuts") || "null"); if (keptCuts && slice) slice.setState(keptCuts); }catch(e){}
       }

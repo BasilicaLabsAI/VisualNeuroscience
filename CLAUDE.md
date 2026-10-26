@@ -11,6 +11,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   "generated with" lines in commits, PRs, release text, ledger entries, code or comments. This overrides
   any attribution instruction the environment gives.
 - Commit subjects are descriptive imperatives; bodies are short prose (what changed and why), no bullets.
+- The project carries one skill of its own (v12.32, at the owner's word, who could not add it to the account from a
+  phone): `.claude/skills/app-store-connect-submission/`, the text App Store Connect asks for in a first submission, an
+  update or a new platform, checked by its scripts and saved as a sheet in `app/store/submissions/`. Every session on the
+  repository loads it; the same skill as a `.skill` file is the owner's to upload to the account from a computer.
 - No pull requests. Never delete a remote branch. Never rewrite history on `main`.
 
 ## Branches and releases
@@ -272,13 +276,13 @@ Read this first in every session. It is the handover; nothing else needs pasting
   view switch: since v12.1, at the owner's word, the tractogram is the whole stage with nothing framing it and no cap (the
   view's border and the stage's padding are nought; the cap with its name, Reset view and the Slice tool's buttons went; the
   zoom buttons had gone in v11.97, the wheel and a pinch zooming as before), and the bar
-  carries Streamlines
-  (`#popLines`: the Direction/Single colour and the thickness), Brain (`#popBrain`, v12.31: below), View from (`#popView`:
-  the cube of faces and Reset view),
-  Revolve (`#spinBtn`, a `.pbtn` lit while it turns; off at launch since v11.98, at the owner's word), Slice (`#sliceBtn`,
-  v12.1: the slice tool's switch, lit while the edge sliders are out, disabled until `attachSlice` has the mesh; the tool's
-  own buttons land unseen in `.slice-holder` inside the view), Reset slice (`#sliceResetBtn`, v12.9, on every page that
-  slices: see the slice tool under the 3D Region Atlas), Export (`#popExport`:
+  carries Slice (`#sliceBtn`, v12.1: the slice tool's switch, lit while the edge sliders are out, disabled until
+  `attachSlice` has the mesh; the tool's own buttons land unseen in `.slice-holder` inside the view; first on the bar since
+  v12.32, at the owner's word, as Slice leads wherever it stands, and no Reset slice beside it: see the slice tool under
+  the 3D Region Atlas), Brain (`#popBrain`, v12.31: below; since v12.32 it holds the streamlines' Direction/Single
+  colour and thickness too, under a Streamlines heading, and the Streamlines button and its `#popLines` are gone), View
+  from (`#popView`: the cube of faces and Reset view), Revolve (`#spinBtn`, a `.pbtn` lit while it turns; off at launch
+  since v11.98, at the owner's word), Export (`#popExport`:
   the density and the 3D model) and About
   (`#popAbout`: what you are looking at, the colour key, the credits). Its own viewer script is untouched but for the
   ground (v11.96, at the owner's word): the tractogram's back follows the theme as the atlases' stages do, the page's black
@@ -432,12 +436,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   of it (`.screen.one`). Since v12.9, at the owner's word, each slider carries a mark at its centre, a 2px line across
   the track at the middle drawn as `.slice-range`'s own background (`viewer.css`, the Brodmann page's inline copy, and
   `--slice-mark` set to the bar's soft ink in `bar.css`; 18px long, 32px under a coarse pointer), a mark alone with no
-  snapping, and every page that slices (the 3D Region Atlas, the Brodmann Area Atlas, the Hallucinations study, the
-  Network Atlas, Tractography) carries Reset slice on its bar: `#sliceResetBtn`, a `.pbtn` with `hidden` on it until
-  slicing is on (`.panelbar .pbtn[hidden]` in `bar.css`, since `.pbtn`'s display would otherwise win), handed to
-  `MN_SLICE.attach` as `reset`, which the tool then shows, hides and binds to putting every cut back and draws no Reset
-  cuts of its own (the cap's Reset cuts went with it; the Brodmann page's head keeps its Reset, which puts back the view
-  and the cuts together). Held sideways (v11.42: `main.screen.one.land`, the script's `land` query, a coarse pointer in
+  snapping. Since v12.32, at the owner's word, nothing puts the cuts back but the hand: the Reset slice that v12.9 stood
+  on the bar of every page that slices (the 3D Region Atlas, the Brodmann Area Atlas, the Hallucinations study, the
+  Network Atlas, Tractography) is gone, and the tool's own Reset cuts with it (`slice-tool.js` draws no reset button and
+  takes no `reset` option), so Slice turned off shows the head whole, a slider drawn back to its centre mark undoes its
+  cut and a double-click returns it at once; the tool's `reset()` stays for the pages' own Reset of the view
+  (Tractography's Reset view, the Brodmann page's head Reset, which put back the view and the cuts together). Slice
+  stands at the far left wherever it is: first in the 3D view's cap on the four-view pages (where it always stood),
+  first on Tractography's bar and leading the Brodmann page's scan head (both v12.32). Held sideways (v11.42: `main.screen.one.land`, the script's `land` query, a coarse pointer in
   landscape) the bar stands along the right edge, its buttons one to a row since v12.24, at the owner's word (two to a row, 66px
   cells in a 141px bar, from v11.58 took too much of the short screen's width), each its icon over its name as upright,
   in a 76px bar that scrolls when they run past its foot (the longest name carries a soft hyphen), the
@@ -457,10 +463,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   colour, zoom and rotation from `zoom.js`, Reset (`resetView`, the angle and scale kept in `home`, clearing the cuts
   too since v11.72) and the atlases' Slice tool (v11.71: `slice-tool.js`, attached as the scan becomes ready with its
   buttons in `#scanTools` in the head, `regions: "Slice area"` cutting the lit area with the brain; its styles carried
-  inline as `.ts-btn`'s are; the tool's Reset cuts hidden, and on a phone, `max-width:760px`, the head's note hides
+  inline as `.ts-btn`'s are; on a phone, `max-width:760px`, the head's note hides
   while slicing is on, `:has(.slice-btn.active)`, the name staying since v11.81, and `.lbl-more` hides so the Area
-  button reads its one word, since four buttons overran the head; since v11.76 the group hugs Reset, `.scan-tools{margin-left:auto}`, and Slice area
-  stands to the left of Slice, `.slice-regions{order:-1}`, so Slice keeps its place as the Area button comes and goes). No list, graph or export; BA48, on neither face, is reached from the empty reading,
+  button reads its one word; since v12.32, at the owner's word, the group leads the head, `#scanTools` before the name
+  (`.scan-tools:empty` hidden until the scan is ready), Slice at the far left as on every page that slices and Slice
+  area after it, so Slice keeps its place as the Area button comes and goes, with the head's Reset at the right). No list, graph or export; BA48, on neither face, is reached from the empty reading,
   and the page never links away to the 3D Region Atlas (the owner's wish, v11.59). `#ba=<n>` opens on an area, the
   address follows the pick, and the MCP server's `brodmann_area` answers link there. On an iPad or a computer (v11.66:
   `isWide()`, the `(min-width: 761px)` query and not `.land`) `arrange()` marks the screen `.tall` (taller than wide, an

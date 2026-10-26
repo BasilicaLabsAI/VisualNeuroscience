@@ -203,17 +203,17 @@ select{
 }
 .slice-range:focus-visible{ outline:1px solid #FFFFFF; outline-offset:3px; }
 
-/* Slice, and Slice regions beside it, ink in while pressed; with Reset
-   cuts they stand as tall as the Centre planes button they share a row
-   with, so the row reads as one line */
+/* Slice, and Slice regions beside it, ink in while pressed and stand as
+   tall as the Centre planes button they share a row with, so the row reads
+   as one line */
 .slice-btn.active, .slice-regions.active{ background:var(--ink); color:var(--paper); }
-.slice-btn, .slice-regions, .slice-reset{ height:1.8rem; padding:0 .6rem; white-space:nowrap; }
+.slice-btn, .slice-regions{ height:1.8rem; padding:0 .6rem; white-space:nowrap; }
 
 @media (max-width:760px){
   .slice-edge.left, .slice-edge.right{ width:24px; top:6px; bottom:6px; }
   .slice-edge.bottom{ left:28px; right:28px; bottom:3px; }
   .slice-edge .ax{ font-size:.42rem; letter-spacing:.14em; }
-  .slice-btn, .slice-regions, .slice-reset{ height:1.6rem; padding:0 .45rem; font-size:.5rem; }
+  .slice-btn, .slice-regions{ height:1.6rem; padding:0 .45rem; font-size:.5rem; }
 }
 /* under a finger each slider is a strip 44 points across, its thumb 24 and
    its track 4, the bottom one held clear of the two at the sides; the

@@ -22,22 +22,22 @@
    same wherever it appears. Wire one up with:
 
      MN_SLICE.attach({ stage: <.mri-stage>, tools: <.view-tools>, nv: <Niivue>,
-                       regions: "Slice regions", reset: <button> });
+                       regions: "Slice regions" });
        → { open, close, reset, state, setState }
    onChange is optional: given, it is called with state() whenever the
    cuts, the switch or the regions choice change, so a page can keep them
    (v12.1: every atlas remembers its last cuts on the device)
 
-   reset is optional: a button of the page's own, on its bar, that the tool
-   shows while slicing is on, hides while it is off and binds to putting
-   every cut back (v12.9, at the owner's word: Reset slice stands on the bar
-   of every page that slices). Without it the tool puts a Reset cuts button
-   of its own beside Slice.
+   There is no button to put the cuts back (v12.32, at the owner's word,
+   which took Reset slice off every bar and the tool's own Reset cuts with
+   it): Slice turned off shows the head whole, a slider drawn back to its
+   centre mark undoes its cut, and a double-click returns it at once. The
+   returned reset() is still there for a page's own Reset of its view.
 
-   regions is optional: given, a button of that name joins Slice and Reset
-   cuts while slicing is on, and pressed it takes the cuts through the
-   volumes the page paints over the scan (its highlighted regions) as well
-   as the scan itself. It is pressed each time slicing starts.
+   regions is optional: given, a button of that name joins Slice while
+   slicing is on, and pressed it takes the cuts through the volumes the
+   page paints over the scan (its highlighted regions) as well as the scan
+   itself. It is pressed each time slicing starts.
 
    Meshes are not clipped by this — clip planes act on the volume only —
    so a page whose 3D view is a tractogram gets nothing useful from it. */
@@ -119,20 +119,6 @@ function attach(o){
   btn.textContent = "Slice";
   btn.setAttribute("aria-pressed", "false");
 
-  /* the page's own Reset slice on its bar, or a Reset cuts of the tool's
-     beside Slice; where a bar is short of room the pages show the first
-     word alone (.lbl-more is hidden there); the full name stays the
-     button's name */
-  var resetBtn = o.reset || null, ownReset = !resetBtn;
-  if (ownReset){
-    resetBtn = document.createElement("button");
-    resetBtn.type = "button";
-    resetBtn.className = "ts-btn slice-reset";
-    resetBtn.innerHTML = 'Reset<span class="lbl-more"> cuts</span>';
-    resetBtn.setAttribute("aria-label", "Reset cuts");
-  }
-  resetBtn.hidden = true;
-
   /* the cuts through the painted regions too, or through the scan alone:
      the viewer's isClipAllVolumes takes its clip planes from the scan to
      every volume it draws */
@@ -171,7 +157,7 @@ function attach(o){
   /* before the Centre planes button where it shares the row, which holds
      the right-hand end */
   var centre = tools.querySelector(".centre-btn");
-  [btn, regionsBtn, ownReset ? resetBtn : null].forEach(function(b){
+  [btn, regionsBtn].forEach(function(b){
     if (!b) return;
     if (centre) tools.insertBefore(b, centre); else tools.appendChild(b);
   });
@@ -213,14 +199,12 @@ function attach(o){
     panel.classList.toggle("on", on);
     btn.classList.toggle("active", on);
     btn.setAttribute("aria-pressed", String(on));
-    resetBtn.hidden = !on;
     if (regionsBtn) regionsBtn.hidden = !on;
     paintRegions();
     apply();
   }
 
   btn.addEventListener("click", function(){ setOn(!on); });
-  resetBtn.addEventListener("click", resetAll);
 
   /* the cuts as a plain object, so a saved view can carry them */
   function state(){

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.32 — 26 October 2026 — Slice at the left, and no Reset slice
+Commit · Lead with Slice on every page that slices, drop Reset slice, and fold the streamline settings into Brain
+
+Slice now stands at the far left wherever it appears: first on the Tractography bar, and leading the 3D brain's header on the Brodmann Area Atlas, as it already did on the other atlases. Reset slice is gone from every page: turn Slice off to see the brain whole again, or draw a slider back to its centre mark, and a double-click on a slider returns it at once. On Tractography the streamlines' colour and thickness now sit in the Brain sheet with the brain itself, so the bar is one button shorter. The repository also carries the working notes for preparing App Store submissions.
+
 ## v12.31 — 26 October 2026 — The brain around the tracts
-Commit · Draw the brain around the tractogram, as see-through as its slider leaves it
+Commit `bd9ec2a` · Draw the brain around the tractogram, as see-through as its slider leaves it
 
 Tractography can now show the brain itself around the white matter. Brain on the bar switches it on and sets how see-through it is, from solid to a faint outline of glass, so the fibres can be seen in their place inside the head. Slice cuts the brain and the fibres together, so a solid brain can be opened to show the pathways inside it. The page remembers the brain as you left it, and Export takes it with the streamlines while it shows.
 

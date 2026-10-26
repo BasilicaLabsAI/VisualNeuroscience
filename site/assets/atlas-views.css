@@ -42,7 +42,7 @@
 .views .view-cap .view-end{ order:2; flex:1 1 0; display:flex; justify-content:flex-end; align-items:center; gap:.6rem; }
 .views .view-cap .view-tools{ order:3; flex:0 0 100%; padding:0; border:0; }
 /* the caption's italic is for its own words, not the tools' label nor
-   the second word of a button (Centre planes, Reset cuts, Slice regions);
+   the second word of a button (Centre planes, Slice regions);
    that word's space is inside its span, which a flex button would trim */
 .views .view-cap .tool-label{ font-family:var(--font-brand); font-style:normal; font-size:.55rem; color:var(--ink-60); }
 .views .view-cap .ts-btn span{ font:inherit; letter-spacing:inherit; color:inherit; white-space:pre; }

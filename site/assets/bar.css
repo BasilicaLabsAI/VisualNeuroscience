@@ -34,7 +34,7 @@
 .panelbar .pbtn{ color:var(--bar-soft); }
 .panelbar .pbtn span{ font-family:'Flux','Afacad Flux',system-ui,-apple-system,sans-serif; font-weight:400; font-size:.6rem; letter-spacing:.14em; line-height:1; }
 @media (hover: hover){ .panelbar .pbtn:hover{ color:var(--bar-ink); } }
-/* a bar button that waits for its moment, Reset slice while slicing is off (v12.9) */
+/* a bar button given the hidden attribute stays out of the bar, which .pbtn's display would otherwise undo */
 .panelbar .pbtn[hidden]{ display:none; }
 .panelbar .pbtn:active{ color:var(--bar-ink); }
 .panelbar .pbtn.active, .panelbar .pbtn[aria-pressed="true"], .panelbar .pbtn[aria-expanded="true"]{ background:var(--bar-ink); color:var(--bar-fill-solid); }
