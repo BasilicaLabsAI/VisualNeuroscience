@@ -31,14 +31,20 @@
    On the pages with four views (main.screen.quad) the views have no bars,
    names or borders: they fill the stage under one bar, an island like the
    bar along the foot (its inks in bar.css), which holds Slice at the far
-   left, greyed while a flat view is shown, Regions beside it while slicing,
-   and the views to pick from, All and each one alone, on every screen
-   (assets/view-bar.js). All lays the four two by two; one view alone fills
-   the stage. The rules read .quad alone, so a box of four views anywhere
-   takes them: the Brodmann Area Atlas's brain since v12.34, which adds its
-   own for a phone; the phone's rules below are the three pages' screens. */
+   left, greyed while a flat view is shown, Regions beside it, greyed until
+   a cut can take them (since v12.37, at the owner's word; shown while
+   slicing alone until then), and the views to pick from, All and each one
+   alone, on every screen (assets/view-bar.js). All lays the four two by
+   two; one view alone fills the stage. Since v12.37, at the owner's word,
+   the bar is as wide as its buttons and stands centred, as the header's
+   island of tabs does, and where its buttons are wider than the screen it
+   takes the width and slides sideways, as the bar along the foot does. The
+   rules read .quad alone, so a box of four views anywhere takes them: the
+   Brodmann Area Atlas's brain since v12.34, which adds its own for a
+   phone; the phone's rules below are the three pages' screens. */
 .quad .viewbar{
-  flex:none; display:flex; align-items:center; gap:.15rem;
+  flex:none; align-self:center; max-width:100%; box-sizing:border-box;
+  display:flex; align-items:center; gap:.15rem;
   margin:0 0 var(--gap, 14px); padding:.35rem .45rem;
   overflow-x:auto; overflow-y:hidden; scrollbar-width:none; white-space:nowrap;
   position:relative; z-index:6;
@@ -53,15 +59,16 @@
 .quad:not(.all) .views .view.shown{ display:flex; }
 /* a phone: the bar just under the line that says where the atlas is best
    experienced, in from the edges as the foot's is, its buttons drawn close
-   so the six fit a phone's width; the four close-set */
-.screen.quad.one .viewbar{ margin:8px var(--gap, 14px) 8px; padding:.3rem .3rem; }
+   so the seven fit a phone's width, or nearly; the four close-set */
+.screen.quad.one .viewbar{ margin:8px var(--gap, 14px) 8px; max-width:calc(100% - 2 * var(--gap, 14px)); padding:.3rem .3rem; }
 .screen.quad.one .viewbar .pbtn{ min-width:0; padding:.3rem .42rem .25rem; }
 .screen.quad.one .viewbar-slice{ padding-right:.3rem; margin-right:.2rem; }
 .screen.quad.one.all .views{ gap:6px; }
 /* held sideways the bar stays at the top, its buttons a little lower, and
-   in the app it keeps clear of the shell's back button at the top left */
+   in the app it keeps clear of the shell's back button at the top left,
+   the same room at the right so it stays centred */
 .screen.quad.one.land .viewbar{ margin:6px var(--gap, 14px) 6px; }
 .screen.quad.one.land .viewbar .pbtn{ min-height:40px; padding-top:.2rem; padding-bottom:.15rem; gap:.18rem; }
-:root[data-shell]:not([data-shell-pad]) .screen.quad.one.land .viewbar{ margin-left:60px; }
+:root[data-shell]:not([data-shell-pad]) .screen.quad.one.land .viewbar{ margin-left:60px; margin-right:60px; max-width:calc(100% - 120px); }
 /* a squat phone (the script's .short) shows one view at a time: no All */
 .screen.quad.one.short .viewbar [data-view="all"]{ display:none; }

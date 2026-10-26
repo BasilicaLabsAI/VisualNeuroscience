@@ -600,6 +600,19 @@ body.ba-land{ padding-bottom:0; }
 .ba-screen.one .panelbar-views{ padding-right:.3rem; margin-right:.1rem; }
 .ba-screen.one .panelbar-end{ padding-left:.3rem; }
 .ba-screen.one .pbtn.pbtn-ref{ margin-left:.1rem; padding-left:.5rem; }
+/* on an iPad or a computer the brain's views' bar stands in the bar along the foot, after the
+   faces' group, where there is room (v12.37, at the owner's word): its island undone, its two
+   groups as the bar's own; on a phone it heads the brain's box as before (atlas-views.css) */
+.panelbar-scan{ display:flex; flex:none; min-width:0; }
+.panelbar-scan:empty{ display:none; }
+.panelbar .viewbar{
+  display:flex; align-items:center; gap:.15rem; margin:0; padding:0; border:0; max-width:none;
+  background:none; box-shadow:none; -webkit-backdrop-filter:none; backdrop-filter:none;
+}
+.panelbar .viewbar-slice, .panelbar .viewbar-views{ display:flex; gap:.15rem; flex:none; }
+.panelbar .viewbar-slice{ padding-right:.45rem; margin-right:.3rem; border-right:1px solid var(--hair); }
+/* upright on an iPad the bar holds eleven buttons: drawn a little closer, so they fit its width */
+.ba-screen.tall .panelbar .pbtn{ min-width:0; padding:.3rem .4rem .25rem; }
 /* held sideways: a column at the right edge, the groups one under another */
 .ba-screen.land .panelbar{
   flex-direction:column; align-items:stretch; justify-content:flex-start; gap:0; min-height:0;
@@ -716,13 +729,15 @@ body.ba-land{ padding-bottom:0; }
     </div>
     <!-- the picked area lit on the brain: a box of its own, on show in every layout, the viewer
          fetched as the page opens; since v12.34, at the owner's word, the atlases' four views under
-         the views' bar (Slice at the far left, greyed while a slice is shown alone, Area beside it
-         while slicing, then the views), with no banner and no lines -->
+         the views' bar (Slice at the far left, greyed while a slice is shown alone, Slice area beside
+         it, greyed until a cut can take the area, then the views), with no banner and no lines; on an
+         iPad or a computer the bar stands in the bar along the foot since v12.37, at the owner's word
+         (arrange() moves it there and back) -->
     <aside class="scan quad" id="baScan" aria-label="The picked area on the brain">
-      <nav class="viewbar" aria-label="Views">
+      <nav class="viewbar" id="baViewbar" aria-label="Views">
         <div class="viewbar-slice" role="group" aria-label="Slice">
           <button class="pbtn vb-slice" type="button" aria-pressed="false" disabled title="A slider on each edge of the 3D view, each a cut taking the brain away from that side; off, it is whole again"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 21 8l-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5M3 16l9 5 9-5"/></svg><span>Slice</span></button>
-          <button class="pbtn vb-regions" type="button" aria-pressed="false" hidden title="Cut the lit area with the brain, or leave it whole inside it"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 13a7.5 7.5 0 0 1 15 0"/><path d="M4.5 13a7.5 7.5 0 0 0 15 0" stroke-dasharray="1.6 2.6"/><path d="M2.5 13h19"/></svg><span>Area</span></button>
+          <button class="pbtn vb-regions" type="button" aria-pressed="false" disabled title="Cut the lit area with the brain, or leave it whole inside it"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 13a7.5 7.5 0 0 1 15 0"/><path d="M4.5 13a7.5 7.5 0 0 0 15 0" stroke-dasharray="1.6 2.6"/><path d="M2.5 13h19"/></svg><span>Slice area</span></button>
         </div>
         <div class="viewbar-views" role="group" aria-label="View">
           <button class="pbtn" type="button" data-view="all" aria-pressed="false" aria-label="All four views"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg><span>All</span></button>
@@ -756,8 +771,9 @@ body.ba-land{ padding-bottom:0; }
     </aside>
     <!-- the bar of tab buttons, as the 3D Region Atlas and the molecular viewer carry it: along the
          foot, or along the right edge on a phone held sideways. Outside, Inside and Both pick what
-         the faces show; What it does raises the reading on a phone; About raises the notes -->
-    <nav class="panelbar" id="baBar" aria-label="The faces, the reading and the notes">
+         the faces show; What it does raises the reading on a phone; on an iPad or a computer the
+         brain's views' bar stands next (v12.37); About raises the notes -->
+    <nav class="panelbar" id="baBar" aria-label="The faces, the brain's views, the reading and the notes">
       <div class="panelbar-views" role="group" aria-label="The faces shown">
         <button class="pbtn" type="button" data-view="outside" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 13c0-4.4 3.8-8 8.5-8S21 8.6 21 13c0 2.6-1.6 4.6-4.1 5.3l-.7 2.2h-6.4l-.7-2.2C6.1 17.6 4 15.6 4 13z"/><path d="M9 10.5c1.5-1.4 3.4-1.9 5.4-1.3"/></svg><span>Outside</span></button>
         <button class="pbtn" type="button" data-view="inside" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 13c0-4.4 3.8-8 8.5-8S21 8.6 21 13c0 2.6-1.6 4.6-4.1 5.3l-.7 2.2h-6.4l-.7-2.2C6.1 17.6 4 15.6 4 13z"/><path d="M9.5 15.5c0-3 1.9-5 4.5-5.5M8 12.5c2.3-.2 4.5.4 6.3 2" stroke-dasharray="2 1.6"/></svg><span>Inside</span></button>
@@ -767,6 +783,8 @@ body.ba-land{ padding-bottom:0; }
         <button class="pbtn" type="button" id="readBtn" aria-expanded="false" aria-controls="rText"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></svg><span>What it does</span></button>
         <button class="pbtn" type="button" id="scanBtn" aria-expanded="false" aria-controls="baScan"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12L4 7.5M12 12v9"/></svg><span>3D</span></button>
       </div>
+      <!-- the brain's views' bar, on an iPad or a computer (v12.37) -->
+      <div class="panelbar-scan" id="barScan"></div>
       <div class="panelbar-end">
         <button class="pbtn pbtn-ref" type="button" id="aboutBtn" aria-expanded="false" aria-controls="popAbout"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/></svg><span>About</span></button>
       </div>
@@ -841,6 +859,13 @@ body.ba-land{ padding-bottom:0; }
     screenEl.classList.toggle("wide", wide && !tall);
     screenEl.classList.toggle("one", one);
     if (wide && readOpen) setRead(false);      /* the whole reading shows here */
+    /* on an iPad or a computer the brain's views' bar stands in the bar along the foot, where
+       there is room; on a phone it heads the brain's box (v12.37, at the owner's word) */
+    var vbarEl = document.getElementById("baViewbar"), vbarSlot = document.getElementById("barScan"), scanBox = document.getElementById("baScan");
+    if (vbarEl && vbarSlot && scanBox){
+      if (wide){ if (vbarEl.parentElement !== vbarSlot) vbarSlot.appendChild(vbarEl); }
+      else if (vbarEl.parentElement !== scanBox) scanBox.insertBefore(vbarEl, scanBox.firstChild);
+    }
     mapsEl.classList.remove("side");
     if (one){
       /* the faces one over the other: the full width, or the width whose two
@@ -1079,7 +1104,7 @@ body.ba-land{ padding-bottom:0; }
   var scanState = "idle", byKey = {}, scanInstances = [], spots = null, slice = null, scanOpen = false;
   var scanEl = document.getElementById("baScan"), scanNote = document.getElementById("scanNote"), scanBtn = document.getElementById("scanBtn");
   function stageOf(key){ var v = scanEl.querySelector('.view[data-box="' + key + '"]'); return v ? v.querySelector(".scan-stage") : null; }
-  var vbar = window.MN_VIEWBAR ? MN_VIEWBAR.attach({ main: scanEl, key: "vn-ba-scan-view", start: "render" }) : null;
+  var vbar = window.MN_VIEWBAR ? MN_VIEWBAR.attach({ main: scanEl, bar: document.getElementById("baViewbar"), key: "vn-ba-scan-view", start: "render" }) : null;
   if (vbar) vbar.show(vbar.picked(), false);
   function loadScript(src){
     return new Promise(function(res, rej){

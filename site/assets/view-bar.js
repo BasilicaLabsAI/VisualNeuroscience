@@ -8,13 +8,19 @@
    island like the bar along the foot, picks what the stage shows on every
    screen, All (the four two by two) or one view alone. Slice stands at its
    far left, the slice tool's switch, greyed while a flat view is shown
-   alone, since the cuts are the 3D view's, and Regions beside it while
-   slicing, which takes the cuts through the highlighted regions too. On a phone the
+   alone, since the cuts are the 3D view's, and Regions beside it, which
+   takes the cuts through the highlighted regions too: always on show
+   since v12.37, at the owner's word, greyed while Slice is off or a flat
+   view is shown (until then it stood only while slicing). The bar is as
+   wide as its buttons and centred, as the header's island is, and slides
+   sideways where they are wider than the screen (v12.37). On a phone the
    bar stands just under the line that says where the atlas is best
    experienced. The styles are in atlas-views.css and bar.css.
 
      var bar = MN_VIEWBAR.attach({ main: <main.screen>, key: "vn-atlas-view" })
-       main holds the bar and the views and takes .all; start, the view
+       main holds the bar and the views and takes .all (bar names the bar
+       itself where a page stands it elsewhere, the Brodmann page's in the
+       bar along the foot on an iPad or a computer since v12.37); start, the view
        shown until the person picks one, is all unless given; key, where
        the pick is kept on the device, may be left out for a page that keeps
        it its own way, told of each pick through onPick(view) (the study,
@@ -33,7 +39,7 @@ window.MN_VIEWBAR = (function(){
 var page = null, tool = null;
 
 function attach(o){
-  var main = o.main, bar = main ? main.querySelector(".viewbar") : null;
+  var main = o.main, bar = o.bar || (main ? main.querySelector(".viewbar") : null);
   if (!bar) return null;
   var stage = bar.closest(".stage");
   var views = main.querySelectorAll(".views .view[data-box]");
@@ -56,8 +62,11 @@ function attach(o){
       sliceBtn.setAttribute("aria-pressed", String(on && !flat));
     }
     if (regionsBtn){
-      var can = !!(st && typeof st.regions === "boolean"), cut = can && st.regions;
-      regionsBtn.hidden = !can || !on || flat;
+      /* a tool with no regions to cut (none yet) takes the button away; otherwise it
+         stands, usable while a cut can take the regions, lit while it does */
+      var can = !!(st && typeof st.regions === "boolean"), usable = can && on && !flat, cut = usable && st.regions;
+      regionsBtn.hidden = !!(st && !can);
+      regionsBtn.disabled = !usable;
       regionsBtn.classList.toggle("active", cut);
       regionsBtn.setAttribute("aria-pressed", String(cut));
     }

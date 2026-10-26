@@ -487,8 +487,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   once the script marks the screen's layout (`.one`, `.land`, `.tall` or `.wide`). Since v12.34, at the owner's word, it
   is the atlases' four views, with no banner and no lines: the views' bar at its top (`nav.viewbar`, `view-bar.js` and
   `atlas-views.css` as on the 3D Region Atlas, attached with the box itself as `main`, `start:"render"` and the pick
-  kept as `vn-ba-scan-view`: Slice at the far left, greyed while a slice is shown alone, Area beside it while slicing,
-  then All, 3D, Axial, Coronal and Sagittal; close-set on a phone by the page's own `.ba-screen.one .scan .viewbar`
+  kept as `vn-ba-scan-view`: Slice at the far left, greyed while a slice is shown alone, Slice area beside it, greyed
+  until a cut can take the area (v12.37; Area, shown while slicing, until then), then All, 3D, Axial, Coronal and
+  Sagittal; in the bar along the foot on an iPad or a computer since v12.37, see the views' bar below; close-set on a
+  phone by the page's own `.ba-screen.one .scan .viewbar`
   rules, and the bottom bar's sideways button rules scoped to `.panelbar` so they leave it alone), and beneath it four
   NiiVue instances (`PLANES`, `byKey`, `scanInstances`; fetched as the page opens by `applyScanMode` and `ensureScan`,
   each with the MNI152 template and `assets/brodmann.nii.gz` over it at 0.9, `show3Dcrosshair:false`, kept in step by
@@ -623,10 +625,22 @@ Read this first in every session. It is the handover; nothing else needs pasting
   the grid, `view-expand.js`, went, and `view-fit.js`, which fitted the four to the screen and had nothing left to fit,
   with them): the three pages are `main.screen.quad`, and one bar at the top of the stage, `nav.viewbar`, an island like
   the bar along the foot, holds Slice at the far left (`.vb-slice`, the slice tool's switch, greyed while Axial,
-  Coronal or Sagittal is shown alone, the cuts being the 3D view's), Regions beside it while slicing (`.vb-regions`, the
-  cut through the highlighted regions too; Area on the Brodmann page, the lit area), and the views, All and each one alone (`[data-view]`), on every screen; on
-  a phone it stands just under the Best experienced line. `MN_VIEWBAR.attach({main, key, start, onPick})` wires it (the pick kept on
-  the device as `vn-atlas-view`, `vn-net-view` or `vn-ba-scan-view`; a page that keeps it its own way gives no `key`
+  Coronal or Sagittal is shown alone, the cuts being the 3D view's), Slice regions beside it (`.vb-regions`, the cut
+  through the highlighted regions too; Slice area on the Brodmann page, the lit area; named so and always on show since
+  v12.37, at the owner's word, greyed (`disabled`) while Slice is off or a flat view is shown, where until then it stood
+  only while slicing, named Regions or Area), and the views, All and each one alone (`[data-view]`), on every screen; on
+  a phone it stands just under the Best experienced line. Since v12.37, at the owner's word, the bar is as wide as its
+  buttons and centred over the views as the header's island is (`align-self:center; max-width:100%` in
+  `atlas-views.css`, the side gaps kept on a phone, 60px each side in the app held sideways for the shell's back
+  button), and where its buttons are wider than the screen it takes the width and slides sideways as the bar along the
+  foot does (its `overflow-x:auto`), which Slice regions' name makes it do on a phone upright. On the Brodmann Area
+  Atlas the same bar stands in the bar along the foot on an iPad or a computer since v12.37, at the owner's word, after
+  the faces' group where there is room (`#barScan`, a `.panelbar-scan` slot; `.panelbar .viewbar` undoes its island;
+  `arrange()` moves `nav#baViewbar` there while the screen is `.tall` or `.wide` and back to the head of the brain's box
+  on a phone, where it stays as before; the attach is given the nav as `bar`), the eleven buttons drawn closer upright
+  on an iPad (`.ba-screen.tall .panelbar .pbtn`). `MN_VIEWBAR.attach({main, bar, key, start, onPick})` wires it (the pick kept on
+  the device as `vn-atlas-view`, `vn-net-view` or `vn-ba-scan-view`; `bar` names the nav where it stands outside
+  `main`; a page that keeps it its own way gives no `key`
   and hears each pick through `onPick`, the study since v12.35; `start` the view until one is picked, All unless
   given; `show(key, keep)`, `picked()`), the page hands it the slice tool
   (`MN_VIEWBAR.slice(tool)`, `MN_VIEWBAR.paint()` from the tool's `onChange`), and it writes `--vbar`, the bar's foot
@@ -688,7 +702,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   grid cell and takes the grey alone. Since v11.98, at the owner's word, a lit bar button
   (`.pbtn.active`, `[aria-pressed="true"]`, the Brodmann page's `[aria-expanded="true"]`: a sheet open or a mode on) is a
   block of ink, `background:var(--ink); color:var(--paper)` with 10px corners, in all six chromes (the viewer's `base.css`
-  takes `--panel-solid` for the paper), the rule standing after the hover rule so a hovered lit button keeps its paper.
+  takes `--panel-solid` for the paper), the rule standing after the hover rule at the same weight so a hovered lit
+  button keeps its paper (v12.37: the views' bar's hover rule carried `:not(:disabled)`, which outranked the lit rule, and a
+  hovered lit view button's name and icon took the ink of its block and vanished; the greyed rule, standing later,
+  keeps a greyed button from lighting instead).
 - Swift: both Xcode projects build with Approachable Concurrency, main-actor isolation by default and complete
   concurrency checking in the Swift 5 language mode; the visionOS data layer is `nonisolated` and its slow work is
   `@concurrent`, never a detached task. Nothing here can compile Swift, so a Swift change is verified by the owner's

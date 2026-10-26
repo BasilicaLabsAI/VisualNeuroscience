@@ -35,7 +35,10 @@
 .panelbar .panelbar-btns, .panelbar .panelbar-end, .panelbar .pbtn.pbtn-ref, .viewbar .viewbar-slice{ border-color:var(--bar-line); }
 .panelbar .pbtn, .viewbar .pbtn{ color:var(--bar-soft); }
 .panelbar .pbtn span, .viewbar .pbtn span{ font-family:'Flux','Afacad Flux',system-ui,-apple-system,sans-serif; font-weight:400; font-size:.6rem; letter-spacing:.14em; line-height:1; }
-@media (hover: hover){ .panelbar .pbtn:hover, .viewbar .pbtn:hover:not(:disabled){ color:var(--bar-ink); } }
+/* a hovered button takes the ink; the lit rule and the greyed rule stand after it at the same weight, so a lit
+   button keeps its paper (v12.37: a :not(:disabled) here outranked the lit rule and the lit button's name and
+   icon vanished into its block on hover) and a greyed one stays grey */
+@media (hover: hover){ .panelbar .pbtn:hover, .viewbar .pbtn:hover{ color:var(--bar-ink); } }
 /* a bar button given the hidden attribute stays out of the bar, which .pbtn's display would otherwise undo */
 .panelbar .pbtn[hidden], .viewbar .pbtn[hidden]{ display:none; }
 .panelbar .pbtn:active, .viewbar .pbtn:active{ color:var(--bar-ink); }
@@ -43,7 +46,7 @@
 .viewbar .pbtn.active, .viewbar .pbtn[aria-pressed="true"]{ background:var(--bar-ink); color:var(--bar-fill-solid); }
 .panelbar .pbtn.active span, .panelbar .pbtn[aria-pressed="true"] span, .panelbar .pbtn[aria-expanded="true"] span,
 .viewbar .pbtn.active span, .viewbar .pbtn[aria-pressed="true"] span{ font-weight:600; }
-/* greyed: Slice while a flat view is shown (v12.33) */
+/* greyed: Slice while a flat view is shown (v12.33), and Regions while Slice is off or a flat view is shown (v12.37) */
 .viewbar .pbtn:disabled{ background:none; color:var(--bar-soft); opacity:.32; }
 /* the readouts at the bar's start, in the bar's inks */
 .panelbar .stat .k, .panelbar .stat .v small, .panelbar .probe-hint{ color:var(--bar-soft); }

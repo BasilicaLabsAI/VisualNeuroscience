@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.37 — 26 October 2026 — The views' bar centred
+Commit · Centre the views' bar, keep Slice regions on show greyed, and fold the Brodmann page's view buttons into its bar
+
+The bar of views at the top of the 3D Region Atlas, the Network Atlas and the Hallucinations study is now only as wide as its buttons and stands centred over the views, as the header's island of tabs does; where a screen is too narrow for it, it takes the width and slides sideways like the bar along the foot. Slice regions, the button beside Slice that cuts the highlighted regions with the brain, is now always on show under that name and greyed out until a cut can take them, while Slice is off or a flat view is shown, instead of appearing only while slicing. On the Brodmann Area Atlas the same buttons, Slice area among them, stand in the bar along the foot on an iPad or a computer, where there is room beside Outside, Inside and Both, and head the brain's box on a phone as before. On the website, hovering over the lit view button no longer hides its name and icon. The apps take it with their next build.
+
 ## v12.36 — 26 October 2026 — Tractography inside the brain
-Commit · Open Tractography inside the brain with its MRI slices, and part About into What it is and Reference
+Commit `d345085` · Open Tractography inside the brain with its MRI slices, and part About into What it is and Reference
 
 Tractography now opens with the brain around the streamlines, three quarters see-through, and inside it the MRI's own slices: the axial, coronal and sagittal slices of the brain the atlases draw, through its middle and in the same greys as the atlases' scans, so the fibres can be followed against the anatomy they run through. Brain on the bar still turns the brain off and sets how see-through it is, and beneath it the MRI slices can be switched off on their own; Slice cuts the slices with the brain and the streamlines, and the page remembers how you left them. The About button has given way to two: What it is, which explains what a tractogram is, what its colours mean and how the page works, and Reference, at the bar's far right, which gives the tractogram's paper, the template, the Human Connectome Project's acknowledgement and the renderer. The apps take it with their next build.
 
