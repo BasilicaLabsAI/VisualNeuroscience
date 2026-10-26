@@ -283,9 +283,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   the 3D Region Atlas), Brain (`#popBrain`, v12.31: below; since v12.32 it holds the streamlines' Direction/Single
   colour and thickness too, under a Streamlines heading, and the Streamlines button and its `#popLines` are gone), View
   from (`#popView`: the cube of faces and Reset view), Revolve (`#spinBtn`, a `.pbtn` lit while it turns; off at launch
-  since v11.98, at the owner's word), Export (`#popExport`:
-  the density and the 3D model) and About
-  (`#popAbout`: what you are looking at, the colour key, the credits). Its own viewer script is untouched but for the
+  since v11.98, at the owner's word), What it is (`#popWhat`, v12.36, at the owner's word: what tractography is, the
+  colour key and how the page works, the notes the About window held), Export (`#popExport`:
+  the density and the 3D model) and, at the far right behind a line as on the 3D Region Atlas, Reference (`#popRef`,
+  v12.36: the sources as `.ref-line`s, the HCP1065 paper, Yeh 2022, linked by its DOI, the template, the HCP's
+  acknowledgement and NiiVue); the About button went with v12.36. Its own viewer script is untouched but for the
   ground (v11.96, at the owner's word): the tractogram's back follows the theme as the atlases' stages do, the page's black
   dark and white light (`ground()` beside the viewer list, the stage's two rules by theme, an observer on `data-theme`
   repainting the viewers at once), the loading message in the page's paper and ink, and `shoot-home-pictures.js` no longer
@@ -339,7 +341,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (azimuth, elevation, zoom), written by `rememberSoon` a moment after each change (the colour and thickness controls,
   the cube, Reset view, the slice tool's `onChange`, and the hand letting go of the view) once the page is up, and read
   back by `restoreKept` as the tractogram comes in. Since v12.31, at the owner's word, the brain can stand around the
-  streamlines: Brain on the bar raises `#popBrain`, Off and On (`[data-brain]`) and Brain transparency (`#brainTrans`, a
+  streamlines: Brain on the bar raises `#popBrain`, Off and On (`[data-brain]`; On as the page opens since v12.36, at
+  the owner's word) and Brain transparency (`#brainTrans`, a
   `.trans-row` as on the atlases, 0 solid to 95, 75 to begin; moving it shows the brain), and the first On builds the
   template's outer surface in the browser (`loadBrain`: `assets/mni152.nii.gz` through `NVImage.loadFromUrl`, kept out
   of the export's cache so the voxels go once built and a failed fetch can be tried again, then `MN_EXPORT3D.isoSurface`
@@ -352,8 +355,25 @@ Read this first in every session. It is the handover; nothing else needs pasting
   brain off opens as it always did). The slice tool cuts both: while the brain shows, a cut's share is read over the box
   the brain fills (`BRAIN_BOX`, with the streamlines' extents in `cutBox`), and `cutBrain` keeps the triangles whose
   corners lie in the box, handing the renderer that index list alone (`indexBuffer`, `indexCount`), the vertices,
-  normals and colours untouched. The state's `brain` (`on`, `trans`) rides in `vn-tracts-last`, and the export carries
-  the brain, cut as shown, at its opacity, while it shows. The chrome now
+  normals and colours untouched. The state's `brain` (`on`, `trans`, and `slices` since v12.36) rides in
+  `vn-tracts-last`, and the export carries
+  the brain, cut as shown, at its opacity, while it shows (the slices are not exported). Since v12.36, at the owner's
+  word, the brain carries the MRI's own slices inside it: `buildSlices` samples the same template, trilinear, at a
+  vertex a millimetre over three planes through the middle of the brain's surface (axial, coronal and sagittal), keeps
+  every cell whose four corners are inside the brain (the template is a brain alone, nought outside it, so the
+  ventricles stay and nothing beyond the brain is drawn), keeps each vertex's place in the template's `cal_min`/`cal_max`
+  window (`slices.place`; the template stores its values scaled by `scl_slope`, about a third, and the window is in the
+  scaled values, so a raw voxel read against it drew the slices white), shades it in the atlases' greys for the theme
+  (`plateGrey`, `PLATE_LIGHT`: `scan-look.js`'s two scales, the page's black up to the floor on the dark theme, the
+  stained section on the light; the theme observer recolours them) as per-vertex colours (an `rgba255` four to a
+  vertex), and winds each cell both ways, since the renderer culls back faces; the `slices` mesh is added before the
+  brain, so the brain's glass is drawn over it, and drawn flat by a shader of its own (`PLATE`). It shows while the brain shows, unless the MRI slices switch beneath the brain's turns it off
+  (`[data-slices]` in `#slicesRow`, a `.brain-sub` hidden while the brain is off, `showSlices`), and a cut takes it with
+  the brain (`cutPart`, which `cutBrain` runs for both; `frameBrain` frames both). The kept state is `v: 2` since then: a
+  state kept before, when the brain began off and stayed so unless pressed, keeps its transparency and opens with the
+  brain on; `showBrain(brain.on)` after `restoreKept` fetches it as the page opens, and `MN_TRACTS.brain()` settles once
+  it is in, which `shoot-home-pictures.js` waits for (the home twins were retaken with the brain and its slices). The
+  chrome now
   lives in six pages (the 3D Region Atlas, the Brodmann Area Atlas, the Hallucinations study, the molecular viewer, the
   Network Atlas and Tractography); a change to it belongs in all of them.
 - The Region Atlas is called the 3D Region Atlas wherever its name shows (nav, titles, home page, the app) since

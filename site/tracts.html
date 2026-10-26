@@ -286,6 +286,14 @@ main.screen{
   font-family:var(--font-serif); font-size:.82rem; color:var(--ink-60);
 }
 .pop .credits p{ margin:0 0 .5rem; font-size:.82rem; }
+/* the sources, one to a line under its name, as the study's Reference has them */
+.pop .ref-line{ font-family:var(--font-serif); font-size:.95rem; line-height:1.55; margin:0 0 .6rem; }
+.pop .ref-line b{ font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); margin-right:.5rem; }
+.pop .ref-line a{ color:var(--ink); text-decoration:underline; text-underline-offset:3px; }
+/* the MRI slices' switch, beneath the brain's and set in from it, shown while the brain shows */
+.brain-sub{ margin:.8rem 0 1rem; padding-left:.8rem; border-left:2px solid var(--ink-35); }
+.brain-sub[hidden]{ display:none; }
+.brain-sub .tool-label{ display:block; margin:0 0 .4rem; }
 
 /* ── a phone: the view edge to edge, the sheets the width of the screen ── */
 .screen.one .stage{ padding:0; }
@@ -371,9 +379,10 @@ main.screen.one.land{ flex-direction:row; }
         <header class="pop-head"><b id="popBrainH">Brain</b><small>the brain around the streamlines, and how they are drawn</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
         <div class="pop-body">
           <h2>Brain</h2>
+          <!-- on as the page opens since v12.36, at the owner's word -->
           <div class="mode-group" role="group" aria-label="Show the brain">
-            <button class="ts-btn active" data-brain="off" type="button" aria-pressed="true">Off</button>
-            <button class="ts-btn" data-brain="on" type="button" aria-pressed="false" title="The MNI152 brain's surface, drawn around the streamlines">On</button>
+            <button class="ts-btn" data-brain="off" type="button" aria-pressed="false">Off</button>
+            <button class="ts-btn active" data-brain="on" type="button" aria-pressed="true" title="The MNI152 brain's surface, drawn around the streamlines">On</button>
           </div>
           <!-- the slider reads as transparency, as the atlases' do: nought is a solid brain -->
           <div class="rail-row trans-row">
@@ -381,7 +390,15 @@ main.screen.one.land{ flex-direction:row; }
             <span class="slider-val" id="brainVal">75%</span>
             <input type="range" id="brainTrans" min="0" max="95" step="1" value="75" aria-label="How far the brain lets the streamlines through">
           </div>
-          <p class="rail-note" id="brainNote">The MNI152 template&rsquo;s outer surface, the brain the atlases draw. Slice cuts it with the streamlines, so a solid brain can be opened to show the fibres inside.</p>
+          <!-- beneath the brain while it shows (v12.36, at the owner's word): the template's own slices through its middle -->
+          <div class="brain-sub" id="slicesRow">
+            <span class="tool-label">MRI slices</span>
+            <div class="mode-group" role="group" aria-label="Show the MRI slices">
+              <button class="ts-btn" data-slices="off" type="button" aria-pressed="false">Off</button>
+              <button class="ts-btn active" data-slices="on" type="button" aria-pressed="true" title="The template's axial, coronal and sagittal slices through the middle of the brain">On</button>
+            </div>
+          </div>
+          <p class="rail-note" id="brainNote">The MNI152 template&rsquo;s outer surface, the brain the atlases draw, with its axial, coronal and sagittal slices through the middle inside it. Slice cuts them with the streamlines, so a solid brain can be opened to show the fibres inside.</p>
           <h2>Streamlines</h2>
           <div class="mode-group" role="group" aria-label="Streamline colour">
             <button class="ts-btn active" data-colour="Local" type="button" title="Colour each segment by the direction it runs">Direction</button>
@@ -428,8 +445,10 @@ main.screen.one.land{ flex-direction:row; }
         </div>
       </div>
 
-      <div class="pop pop-md" id="popAbout" hidden aria-labelledby="popAboutH">
-        <header class="pop-head"><b id="popAboutH">About</b><small>what you are looking at, and where it comes from</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+      <!-- what tractography is (v12.36, at the owner's word: the notes the About window held,
+           its sources now under Reference at the bar's far right) -->
+      <div class="pop pop-md" id="popWhat" hidden aria-labelledby="popWhatH">
+        <header class="pop-head"><b id="popWhatH">What it is</b><small>what tractography is, and what you are looking at</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
         <div class="pop-body">
           <p>A <em>tractogram</em> is a reconstruction of the brain&rsquo;s wiring, built from diffusion MRI: the scanner measures which way water molecules are free to move in each voxel, and since water travels more easily along a nerve fibre than across it, those measurements trace out the paths that bundles of axons follow. Each thread here is a <em>streamline</em>, an estimate of one such path through the white matter.</p>
           <p>The colours are not tissue types or measurements &mdash; they say which way a fibre is running at that point, the standard convention in the field:</p>
@@ -438,12 +457,20 @@ main.screen.one.land{ flex-direction:row; }
             <span class="key-item"><span class="key-swatch" style="background:#4FB06A"></span>front &ndash; back</span>
             <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
           </div>
-          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the streamlines (and the brain, while it shows) away from that side: draw a slider back to its centre mark to undo its cut, or turn Slice off to see everything whole. Brain draws the brain&rsquo;s surface around the fibres, as see-through as its slider leaves it, and holds the streamlines&rsquo; colour and thickness. Revolve sets the brain turning until you take hold of it, and Reset view under View from puts everything back where it started. The page remembers how you left it: the colour, the thickness, the brain, the cuts and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
+          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the streamlines (and the brain, while it shows) away from that side: draw a slider back to its centre mark to undo its cut, or turn Slice off to see everything whole. Brain draws the brain&rsquo;s surface around the fibres, as see-through as its slider leaves it, with the MRI&rsquo;s own axial, coronal and sagittal slices through its middle, which can be switched off beneath it, and holds the streamlines&rsquo; colour and thickness. Revolve sets the brain turning until you take hold of it, and Reset view under View from puts everything back where it started. The page remembers how you left it: the colour, the thickness, the brain and its slices, the cuts and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share; where the tractogram and the brain come from is under Reference, at the bar&rsquo;s far right.</p>
+        </div>
+      </div>
+
+      <!-- the sources, at the bar's far right as on the 3D Region Atlas (v12.36, at the owner's word) -->
+      <div class="pop pop-md" id="popRef" hidden aria-labelledby="popRefH">
+        <header class="pop-head"><b id="popRefH">Reference</b><small>where the tractogram and the brain come from</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body">
+          <p class="ref-line"><b>Tractogram</b> the HCP1065 population-averaged tractography atlas: Yeh FC, <a href="https://doi.org/10.1038/s41467-022-32595-4" target="_blank" rel="noopener">Population-based tract-to-region connectome of the human brain and its hierarchical topology</a>, <em>Nat Commun</em> 13:4933 (2022), CC BY-SA 4.0.</p>
+          <p class="ref-line"><b>Brain and slices</b> the MNI152 template (ICBM 2009c), McConnell Brain Imaging Centre, Montreal Neurological Institute: its outer surface drawn around the streamlines, and its own slices inside it.</p>
+          <p class="ref-line"><b>Data</b> provided in part by the Human Connectome Project, WU-Minn Consortium (Principal Investigators: David Van Essen and Kamil Ugurbil; 1U54MH091657) funded by the 16 NIH Institutes and Centers that support the NIH Blueprint for Neuroscience Research; and by the McDonnell Center for Systems Neuroscience at Washington University.</p>
+          <p class="ref-line"><b>Rendering</b> <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a> (Rorden lab).</p>
           <div class="credits">
-            <p>Tractography: HCP1065 atlas, Yeh FC, <em>Nat Commun</em> 13:4933 (2022), CC BY-SA 4.0.</p>
-            <p>Brain surface: drawn from the MNI152 template (ICBM 2009c), McConnell Brain Imaging Centre, Montreal Neurological Institute.</p>
-            <p>Data were provided in part by the Human Connectome Project, WU-Minn Consortium (Principal Investigators: David Van Essen and Kamil Ugurbil; 1U54MH091657) funded by the 16 NIH Institutes and Centers that support the NIH Blueprint for Neuroscience Research; and by the McDonnell Center for Systems Neuroscience at Washington University.</p>
-            <p>&copy; 2026 VisualNeuroscience.AI &middot; rendered with <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a> (Rorden lab) &middot; <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a> &middot; <a href="terms.html">Terms of use</a></p>
+            <p>&copy; 2026 VisualNeuroscience.AI &middot; <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy &amp; support</a> &middot; <a href="terms.html">Terms of use</a></p>
           </div>
         </div>
       </div>
@@ -458,10 +485,12 @@ main.screen.one.land{ flex-direction:row; }
       <button class="pbtn" type="button" data-pop="popBrain" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4.5v15.1"/><path d="M12 4.5C10.9 3.4 8.6 3.6 7.9 5.2 6.1 5 4.6 6.6 5 8.4 3.5 9.3 3.4 11.6 4.6 12.6 3.9 14.3 4.9 16.3 6.7 16.6 6.9 18.5 8.9 19.7 10.6 19c.6.6 1.1.7 1.4.6"/><path d="M12 4.5c1.1-1.1 3.4-.9 4.1.7 1.8-.2 3.3 1.4 2.9 3.2 1.5.9 1.6 3.2.4 4.2.7 1.7-.3 3.7-2.1 4-.2 1.9-2.2 3.1-3.9 2.4-.6.6-1.1.7-1.4.6"/><path d="M8.3 9.2c1.3.1 2.2 1 2.4 2.3M15.7 9.2c-1.3.1-2.2 1-2.4 2.3M7.2 13.6c1.2-.2 2.3.4 2.8 1.5M16.8 13.6c-1.2-.2-2.3.4-2.8 1.5"/></svg><span>Brain</span></button>
       <button class="pbtn" type="button" data-pop="popView" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>View from</span></button>
       <button class="pbtn" type="button" id="spinBtn" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 3v5.5h-5.5"/></svg><span>Revolve</span></button>
+      <!-- what tractography is, where About stood until v12.36 -->
+      <button class="pbtn" type="button" data-pop="popWhat" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></svg><span>What it is</span></button>
     </div>
-    <div class="panelbar-end" role="group" aria-label="Export and about">
+    <div class="panelbar-end" role="group" aria-label="Export and reference">
       <button class="pbtn" type="button" data-pop="popExport" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15V4M8 8l4-4 4 4M5 13v7h14v-7"/></svg><span>Export</span></button>
-      <button class="pbtn pbtn-ref" type="button" data-pop="popAbout" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/></svg><span>About</span></button>
+      <button class="pbtn pbtn-ref" type="button" data-pop="popRef" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/></svg><span>Reference</span></button>
     </div>
   </nav>
 </main>
@@ -689,11 +718,17 @@ main.screen.one.land{ flex-direction:row; }
       var id = meshIds[nv.canvas.id];
       if (id !== undefined){ try{ nv.setMeshProperty(id, "rgba255", inkColour()); }catch(e){} shade(nv, id); }
     });
-    /* the brain's grey follows too; the rebuild hands the renderer every triangle, so the cut goes back on */
+    /* the brain's grey follows too, and its slices' greys; the rebuild hands the renderer
+       every triangle, so the cut goes back on */
     if (brain && brain.mesh && byKey.Ren){
       brain.mesh.rgba255 = new Uint8Array(brainColour());
       try{ brain.mesh.updateMesh(byKey.Ren.gl); }catch(e){}
       brain.shown = brain.tris;
+      if (slices.mesh){
+        slices.mesh.rgba255 = plateColours(slices.place);
+        try{ slices.mesh.updateMesh(byKey.Ren.gl); }catch(e){}
+        slices.shown = slices.tris;
+      }
       applyCut(lastPlanes);
       byKey.Ren.drawScene();
     }
@@ -776,7 +811,9 @@ main.screen.one.land{ flex-direction:row; }
       nv.drawScene();
     },
     still: function(){ if (spinning && spinBtn) spinBtn.click(); },
-    nv: function(){ return byKey.Ren; }
+    nv: function(){ return byKey.Ren; },
+    /* settles once the brain the page opens with is in (at once while it is off) */
+    brain: function(){ return brain.loading ? brain.loading.then(function(){ return true; }) : Promise.resolve(false); }
   };
 
   var radiusEl = document.getElementById("radius");
@@ -902,28 +939,31 @@ main.screen.one.land{ flex-direction:row; }
     "  float d = max(dot(n, l), 0.0);\n  float s = 0.2 * pow(max(dot(reflect(l, n), r), 0.0), 10.0);\n" +
     "  float rim = pow(1.0 - abs(n.z), 2.0);\n" +
     "  color = vec4(vClr.rgb * (0.35 + 0.5 * d) + s, mix(opacity, min(1.0, opacity * 3.0), rim));\n}\n";
-  var brain = { on: false, trans: 75, mesh: null, part: null, tris: null, cut: null, keep: null, shown: null, loading: null };
+  /* on as the page opens since v12.36, at the owner's word, at 75 per cent transparency */
+  var brain = { on: true, trans: 75, mesh: null, part: null, tris: null, cut: null, keep: null, shown: null, loading: null };
   var brainTrans = document.getElementById("brainTrans"), brainVal = document.getElementById("brainVal");
   var brainNote = document.getElementById("brainNote"), brainNoteText = brainNote.innerHTML;
   /* a warm pale grey on the dark theme's black, a mid grey on the light theme's white */
   function brainColour(){ return document.documentElement.getAttribute("data-theme") === "dark" ? [214, 208, 202, 255] : [118, 114, 110, 255]; }
-  function cutBrain(box){
-    var m = brain.mesh, nv = byKey.Ren;
-    if (!m || !nv || !brain.tris) return false;
-    var all = brain.tris, tris = all;
+  /* a cut keeps a mesh's triangles whose corners lie inside the box, the brain's and its
+     slices' alike (rec: the mesh, every triangle it was built with, and what it shows now) */
+  function cutPart(rec, box){
+    var m = rec.mesh, nv = byKey.Ren;
+    if (!m || !nv || !rec.tris) return false;
+    var all = rec.tris, tris = all;
     if (box){
       var P = m.pts, lo = box.lo, hi = box.hi, nV = P.length / 3;
-      var keep = brain.keep || (brain.keep = new Uint8Array(nV));
+      var keep = rec.keep || (rec.keep = new Uint8Array(nV));
       for (var v = 0, i = 0; v < nV; v++, i += 3){
         keep[v] = P[i] >= lo[0] && P[i] <= hi[0] && P[i + 1] >= lo[1] && P[i + 1] <= hi[1] && P[i + 2] >= lo[2] && P[i + 2] <= hi[2] ? 1 : 0;
       }
-      var out = brain.cut || (brain.cut = new Uint32Array(all.length)), n = 0;
+      var out = rec.cut || (rec.cut = new Uint32Array(all.length)), n = 0;
       for (var t = 0; t < all.length; t += 3){
         var a = all[t], b = all[t + 1], c = all[t + 2];
         if (keep[a] && keep[b] && keep[c]){ out[n++] = a; out[n++] = b; out[n++] = c; }
       }
       tris = out.subarray(0, n);
-    } else if (brain.shown === all) return false;
+    } else if (rec.shown === all) return false;
     var gl = nv.gl;
     try{
       gl.bindVertexArray(null);
@@ -931,9 +971,109 @@ main.screen.one.land{ flex-direction:row; }
       gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, tris, gl.DYNAMIC_DRAW);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
       m.indexCount = tris.length;
-      brain.shown = tris;
+      rec.shown = tris;
     }catch(e){ return false; }
     return true;
+  }
+  function cutBrain(box){
+    var a = cutPart(brain, box), b = cutPart(slices, box);
+    return a || b;
+  }
+
+  /* ── the MRI slices inside the brain (v12.36, at the owner's word) ──
+     The template's own axial, coronal and sagittal slices through the middle of the brain,
+     drawn inside the 3D view as tractography viewers draw them: three planes, each the
+     template's greys, in the atlases' scale for the theme, wherever the brain is and nothing
+     beyond it (the template is a brain alone, every voxel outside it nought). Built with the
+     brain's surface from the same voxels, a vertex to the millimetre and every cell inside
+     the brain two triangles each way round, since the renderer draws a face from its front
+     alone; drawn flat in those greys by a shader of their own and before the brain in the
+     renderer's list, so the brain's glass lies over them; shown while the brain shows unless
+     switched off beneath it, and cut with the rest. */
+  var slices = { on: true, mesh: null, tris: null, cut: null, keep: null, shown: null, place: null };
+  var PLATE = "#version 300 es\nprecision highp int;\nprecision highp float;\nuniform float opacity;\nin vec4 vClr;\nin vec3 vN;\nout vec4 color;\n" +
+    "void main(){\n  color = vec4(vClr.rgb, opacity);\n}\n";
+  function buildSlices(vol, mn, mx){
+    var A = vol.hdr.affine, d = vol.hdr.dims, nx = d[1], ny = d[2], nz = d[3], img = vol.img;
+    /* millimetres to voxels: the inverse of the affine's three by three, after its shift */
+    var a = A[0][0], b = A[0][1], c = A[0][2], e = A[1][0], f = A[1][1], g = A[1][2], h = A[2][0], k = A[2][1], l = A[2][2];
+    var det = a * (f * l - g * k) - b * (e * l - g * h) + c * (e * k - f * h);
+    if (!det) return null;
+    var M = [[(f * l - g * k) / det, (c * k - b * l) / det, (b * g - c * f) / det],
+             [(g * h - e * l) / det, (a * l - c * h) / det, (c * e - a * g) / det],
+             [(e * k - f * h) / det, (b * h - a * k) / det, (a * f - b * e) / det]];
+    function at(i, j, q){ return img[i + nx * (j + ny * q)]; }
+    /* trilinear between the voxels, nought outside the volume */
+    function sample(x, y, z){
+      var px = x - A[0][3], py = y - A[1][3], pz = z - A[2][3];
+      var fi = M[0][0] * px + M[0][1] * py + M[0][2] * pz,
+          fj = M[1][0] * px + M[1][1] * py + M[1][2] * pz,
+          fk = M[2][0] * px + M[2][1] * py + M[2][2] * pz;
+      var i0 = Math.floor(fi), j0 = Math.floor(fj), k0 = Math.floor(fk);
+      if (i0 < 0 || j0 < 0 || k0 < 0 || i0 + 1 >= nx || j0 + 1 >= ny || k0 + 1 >= nz) return 0;
+      var di = fi - i0, dj = fj - j0, dk = fk - k0;
+      var c00 = at(i0, j0, k0) * (1 - di) + at(i0 + 1, j0, k0) * di,
+          c10 = at(i0, j0 + 1, k0) * (1 - di) + at(i0 + 1, j0 + 1, k0) * di,
+          c01 = at(i0, j0, k0 + 1) * (1 - di) + at(i0 + 1, j0, k0 + 1) * di,
+          c11 = at(i0, j0 + 1, k0 + 1) * (1 - di) + at(i0 + 1, j0 + 1, k0 + 1) * di;
+      return (c00 * (1 - dj) + c10 * dj) * (1 - dk) + (c01 * (1 - dj) + c11 * dj) * dk;
+    }
+    /* each vertex keeps its place in the window the viewer reads the template at (0 its
+       bottom, 1 its top), for the theme's greys to shade; the template stores its values
+       scaled, by about a third, and the window is in the scaled values */
+    var slope = Number(vol.hdr.scl_slope) || 1, inter = Number(vol.hdr.scl_inter) || 0;
+    var lo = Number(vol.cal_min) || 0, hi = Number(vol.cal_max) || 0;
+    if (!(hi > lo)){ lo = inter; hi = 255 * slope + inter; }
+    var mid = [0, 1, 2].map(function(q){ return (mn[q] + mx[q]) / 2; });
+    var pos = [], place = [], tris = [];
+    /* one plane: the axis it faces at the brain's middle, and the two it spans */
+    function plane(axis){
+      var u = axis === 0 ? 1 : 0, w = axis === 2 ? 1 : 2;
+      var u0 = Math.floor(mn[u]) - 1, w0 = Math.floor(mn[w]) - 1;
+      var cu = Math.ceil(mx[u]) + 1 - u0 + 1, cw = Math.ceil(mx[w]) + 1 - w0 + 1;
+      var idx = new Int32Array(cu * cw).fill(-1), p = [0, 0, 0], ju, jw;
+      p[axis] = mid[axis];
+      for (jw = 0; jw < cw; jw++) for (ju = 0; ju < cu; ju++){
+        p[u] = u0 + ju; p[w] = w0 + jw;
+        var val = sample(p[0], p[1], p[2]);
+        if (!(val > 0.5)) continue;
+        idx[jw * cu + ju] = pos.length / 3;
+        pos.push(p[0], p[1], p[2]);
+        place.push((val * slope + inter - lo) / (hi - lo));
+      }
+      for (jw = 0; jw < cw - 1; jw++) for (ju = 0; ju < cu - 1; ju++){
+        var q00 = idx[jw * cu + ju], q10 = idx[jw * cu + ju + 1], q01 = idx[(jw + 1) * cu + ju], q11 = idx[(jw + 1) * cu + ju + 1];
+        if (q00 < 0 || q10 < 0 || q01 < 0 || q11 < 0) continue;
+        tris.push(q00, q10, q11, q00, q11, q01,    /* the face one way */
+                  q00, q11, q10, q00, q01, q11);   /* and the other */
+      }
+    }
+    plane(2); plane(1); plane(0);
+    if (!tris.length) return null;
+    return { pos: new Float32Array(pos), place: new Float32Array(place), tris: new Uint32Array(tris) };
+  }
+  /* the greys are the atlases' slices' (scan-look.js): on the dark theme the page's black up
+     to the window's floor and the ramp to white above it, on the light theme the scale that
+     reads like a stained section, fluid white, grey matter the darkest grey, white matter pale */
+  var PLATE_LIGHT = [[-0.05, 1], [0.30, 0.45], [0.50, 0.40], [0.70, 0.55], [0.90, 0.80], [1, 0.86]];
+  function plateGrey(t, dark){
+    if (dark) return t <= 0 ? 17 : t >= 1 ? 255 : Math.round(17 + 238 * t);
+    var s = PLATE_LIGHT;
+    if (t <= s[0][0]) return 255;
+    for (var i = 1; i < s.length; i++) if (t <= s[i][0]){
+      var f = (t - s[i - 1][0]) / (s[i][0] - s[i - 1][0]);
+      return Math.round(255 * (s[i - 1][1] + f * (s[i][1] - s[i - 1][1])));
+    }
+    return Math.round(255 * s[s.length - 1][1]);
+  }
+  function plateColours(place){
+    var dark = document.documentElement.getAttribute("data-theme") === "dark";
+    var out = new Uint8Array(place.length * 4);
+    for (var v = 0, i = 0; v < place.length; v++, i += 4){
+      out[i] = out[i + 1] = out[i + 2] = plateGrey(place[v], dark);
+      out[i + 3] = 255;
+    }
+    return out;
   }
   function loadBrain(){
     if (brain.loading) return brain.loading;
@@ -956,7 +1096,23 @@ main.screen.one.land{ flex-direction:row; }
       brain.ownMin = m.extentsMin; brain.ownMax = m.extentsMax;
       brain.part = { pos: pos, nrm: N, volumeMm3: part.volumeMm3 };
       brain.mesh = m; brain.tris = m.tris; brain.shown = m.tris;
+      /* the slices from the same voxels, through the middle of the surface just built (v12.36) */
+      var S = buildSlices(vol, brain.ownMin, brain.ownMax);
+      if (S){
+        slices.place = S.place;
+        var sm = new niivue.NVMesh(S.pos, S.tris, "MRI slices", plateColours(S.place), 1, brain.on && slices.on, nv.gl);
+        slices.ownMin = sm.extentsMin; slices.ownMax = sm.extentsMax;
+        slices.mesh = sm; slices.tris = sm.tris; slices.shown = sm.tris;
+      }
       frameBrain();
+      /* the slices before the brain, so its glass is drawn over them */
+      if (slices.mesh){
+        nv.addMesh(slices.mesh);
+        try{
+          if (nv.vnPlate === undefined) nv.vnPlate = nv.setCustomMeshShader(PLATE, "Plate");
+          nv.setMeshShader(slices.mesh.id, nv.vnPlate);
+        }catch(e){}
+      }
       nv.addMesh(m);
       try{
         if (nv.vnGlass === undefined) nv.vnGlass = nv.setCustomMeshShader(GLASS, "Glass");
@@ -972,14 +1128,25 @@ main.screen.one.land{ flex-direction:row; }
   /* the camera frames what shows: the whole brain while it shows (it reaches below the
      streamlines), and the streamlines alone, as the page always framed them, while it hides */
   function frameBrain(){
-    var m = brain.mesh, tract = byKey.Ren && byKey.Ren.meshes[0];
-    if (!m || !tract) return;
-    m.extentsMin = brain.on ? brain.ownMin : tract.extentsMin;
-    m.extentsMax = brain.on ? brain.ownMax : tract.extentsMax;
+    var tract = byKey.Ren && byKey.Ren.meshes[0];
+    if (!tract) return;
+    [brain, slices].forEach(function(rec){
+      if (!rec.mesh) return;
+      rec.mesh.extentsMin = brain.on ? rec.ownMin : tract.extentsMin;
+      rec.mesh.extentsMax = brain.on ? rec.ownMax : tract.extentsMax;
+    });
   }
+  var slicesRow = document.getElementById("slicesRow");
   function paintBrainBtns(){
     document.querySelectorAll("[data-brain]").forEach(function(b){
       var lit = (b.getAttribute("data-brain") === "on") === brain.on;
+      b.classList.toggle("active", lit);
+      b.setAttribute("aria-pressed", String(lit));
+    });
+    /* the slices' switch stands beneath the brain's while the brain shows */
+    if (slicesRow) slicesRow.hidden = !brain.on;
+    document.querySelectorAll("[data-slices]").forEach(function(b){
+      var lit = (b.getAttribute("data-slices") === "on") === slices.on;
       b.classList.toggle("active", lit);
       b.setAttribute("aria-pressed", String(lit));
     });
@@ -990,6 +1157,7 @@ main.screen.one.land{ flex-direction:row; }
     var nv = byKey.Ren;
     if (brain.mesh){
       brain.mesh.visible = brain.on;
+      if (slices.mesh) slices.mesh.visible = brain.on && slices.on;
       frameBrain();
       applyCut(lastPlanes);   /* the cut's share is read over the brain while it shows */
       if (nv) nv.drawScene();
@@ -1017,6 +1185,18 @@ main.screen.one.land{ flex-direction:row; }
   }
   document.querySelectorAll("[data-brain]").forEach(function(b){
     b.addEventListener("click", function(){ showBrain(b.getAttribute("data-brain") === "on"); });
+  });
+  function showSlices(on){
+    slices.on = !!on;
+    paintBrainBtns();
+    if (slices.mesh){
+      slices.mesh.visible = brain.on && slices.on;
+      if (byKey.Ren) byKey.Ren.drawScene();
+    }
+    rememberSoon();
+  }
+  document.querySelectorAll("[data-slices]").forEach(function(b){
+    b.addEventListener("click", function(){ showSlices(b.getAttribute("data-slices") === "on"); });
   });
   /* moving the slider shows the brain, so the change it makes is seen */
   brainTrans.addEventListener("input", function(){
@@ -1073,8 +1253,8 @@ main.screen.one.land{ flex-direction:row; }
       var nv = byKey.Ren;
       try{
         localStorage.setItem("vn-tracts-last", JSON.stringify({
-          v: 1, colour: colourMode, radius: Number(radiusEl.value),
-          brain: { on: brain.on, trans: brain.trans },
+          v: 2, colour: colourMode, radius: Number(radiusEl.value),
+          brain: { on: brain.on, trans: brain.trans, slices: slices.on },
           cuts: slice ? slice.state() : null,
           view: nv ? { az: nv.scene.renderAzimuth, el: nv.scene.renderElevation, zoom: zoom } : null
         }));
@@ -1089,8 +1269,11 @@ main.screen.one.land{ flex-direction:row; }
     if (m.colour === "accent" || m.colour === "Local") setColour(m.colour);
     if (m.brain && typeof m.brain === "object"){
       if (m.brain.trans != null) applyBrainTrans(m.brain.trans);
-      /* on before the cuts come back, so they are read over the brain from the start */
-      if (m.brain.on === true) showBrain(true);
+      /* on or off as it was left, before the cuts come back, so they are read over the
+         brain from the start; a state kept before v12.36, when the brain began off and
+         stayed so unless pressed, opens on the new default, the brain on */
+      if (m.v >= 2 && typeof m.brain.on === "boolean") brain.on = m.brain.on;
+      if (typeof m.brain.slices === "boolean") slices.on = m.brain.slices;
     }
     if (m.cuts && slice) slice.setState(m.cuts);
     var nv = byKey.Ren;
@@ -1235,6 +1418,7 @@ main.screen.one.land{ flex-direction:row; }
       byKey.Ren.scene.renderElevation = HOME[1];
       applyZoom(zoom);
       restoreKept();          /* how the page was left, if it was left at all */
+      showBrain(brain.on);    /* on as it opens, unless it was left off (v12.36) */
       keepReady = true;
       rememberSoon();
       instances.forEach(function(nv){ nv.drawScene(); });

@@ -130,11 +130,14 @@ function done(file, problems){ const [w, h] = size(file); console.log(path.basen
   /* the tractogram in both themes, the page's ground following the theme
      since v11.96; the page's door holds it still at the home angle and
      pulls the zoom back from the page's own 1.4 to 1.2, the whole brain in
-     the frame, which is sized to the picture's proportion so nothing is cut */
+     the frame, which is sized to the picture's proportion so nothing is cut;
+     since v12.36 the page opens with the brain and its slices about the
+     streamlines, and the door says when they are in */
   if (want('tracts')){
     for (const [theme, file] of [['dark', 'tracts.jpg'], ['light', 'tracts-light.jpg']]){
       const { ctx, page, problems } = await open(browser, theme, 'tracts.html', { width: 1240, height: 930 });
       await page.waitForFunction(() => document.getElementById('stageMsg').classList.contains('hidden'), null, { timeout: 500000 });
+      await page.evaluate(() => MN_TRACTS.brain());
       await page.evaluate(() => { MN_TRACTS.still(); MN_TRACTS.zoom(1.2); MN_TRACTS.home(); });
       await page.waitForTimeout(2500);
       await shotOf(page, '.view[data-box="Ren"] .mri-stage', tmp('tracts.png'));

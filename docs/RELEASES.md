@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.36 — 26 October 2026 — Tractography inside the brain
+Commit · Open Tractography inside the brain with its MRI slices, and part About into What it is and Reference
+
+Tractography now opens with the brain around the streamlines, three quarters see-through, and inside it the MRI's own slices: the axial, coronal and sagittal slices of the brain the atlases draw, through its middle and in the same greys as the atlases' scans, so the fibres can be followed against the anatomy they run through. Brain on the bar still turns the brain off and sets how see-through it is, and beneath it the MRI slices can be switched off on their own; Slice cuts the slices with the brain and the streamlines, and the page remembers how you left them. The About button has given way to two: What it is, which explains what a tractogram is, what its colours mean and how the page works, and Reference, at the bar's far right, which gives the tractogram's paper, the template, the Human Connectome Project's acknowledgement and the renderer. The apps take it with their next build.
+
 ## v12.35 — 26 October 2026 — The study opens on the paper
-Commit · Open the study on the paper after each launch, and where it was left while the app runs
+Commit `3a8f22d` · Open the study on the paper after each launch, and where it was left while the app runs
 
 The study of hallucinations now opens on the paper the first time it is visited after the app is opened, the window introducing Boksa's editorial raised over the scans and everything else as it comes. Go back to it while the app is still running and it opens where you left it: the state shown, the region picked, the systems filtered, the transparency, the drawer, the view, the window you were reading and how far down, the cuts, and the way the brain was turned and zoomed. Close the app fully, by swiping it away, and it opens afresh on the paper next time. On the website the same holds within a browser tab: a reload keeps your place and a new tab starts afresh. The app takes it with its next build.
 
