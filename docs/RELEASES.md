@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.43 — 26 October 2026 — The bar in groups, with Offset and Thicken
+Commit · Group the Tractography bar behind lines with Transparency, Offset and Thicken as slim tall bars, and reword the developer's message
+
+Tractography's bar now stands in four groups behind thin lines: Slice; Brain and Transparency; Tract, Offset and Thicken; View and Revolve, with Tractography on show at the end as before. Transparency is the last release's tall bar renamed, read the atlases' way with nought solid, and slimmed to the width of its thumb. Offset is new: while Slice is on it sets how far the streamlines stand out of the cut face, from nought to ten millimetres, two and a half to begin, and it is greyed while Slice is off. Thicken sets the streamlines' thickness again, over the range it had before, as a tall bar of its own, and the page keeps the offset and the thickness with the rest. On the About page the developer's message no longer opens with I am a solo developer, says the app was built with knowledge from the post-grad in Applied Neuroscience and experience in software development, and asks for features added or improved, with corrections to be sent in the same breath. The apps take it with their next build.
+
 ## v12.42 — 26 October 2026 — The Tractography bar remade
-Commit · Remake the Tractography bar as six buttons that slide and Tractography pinned, with the brain's solidity a tall bar, the faces a list and the cut back to two and a half millimetres
+Commit `d6e2b7c` · Remake the Tractography bar as six buttons that slide and Tractography pinned, with the brain's solidity a tall bar, the faces a list and the cut back to two and a half millimetres
 
 Tractography's bar is now Slice, Brain, Tract, Thicken, View and Revolve, then a line and Tractography, which stays on show while the six slide wherever the bar is too narrow for them. Brain and Tract are switches, each showing or hiding the brain or the streamlines at a press. Thicken raises a tall bar over its button that makes the brain more solid or more see-through, and View a short list of the faces, Left, Right, Front, Back, Top, Bottom and Home, with Reset slice beneath, which puts every cut back. Reset view, the single colour and the streamline thickness are gone, the streamlines drawn at one thickness in their direction colours, and Tractography holds what it is, the export and the reference in one sheet. The streamlines stand two and a half millimetres out of the cut again, half of what the last release gave them. The apps take it with their next build.
 

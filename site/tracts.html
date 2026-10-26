@@ -191,8 +191,13 @@ main.screen{
 }
 /* the buttons slide while Tractography, behind its line, stays on show (v12.42, at the owner's word): the
    group is the scroller, shrinking to the room the pinned button leaves */
-.panelbar-btns{ display:flex; gap:.15rem; flex:1 1 auto; min-width:0; overflow-x:auto; overflow-y:hidden; scrollbar-width:none; }
+.panelbar-btns{ display:flex; gap:0; flex:1 1 auto; min-width:0; overflow-x:auto; overflow-y:hidden; scrollbar-width:none; }
 .panelbar-btns::-webkit-scrollbar{ display:none; }
+/* the four groups, each behind a line (v12.43, at the owner's word): Slice | Brain, Transparency | Tract, Offset,
+   Thicken | View, Revolve */
+.pgroup{ display:flex; gap:.15rem; flex:none; padding:0 .3rem; border-left:1px solid var(--bar-line, var(--hair)); }
+.pgroup:first-child{ padding-left:0; border-left:0; }
+.pgroup:last-child{ padding-right:0; }
 .panelbar-end{ display:flex; gap:.15rem; flex:none; margin-left:auto; padding-left:.6rem; }
 .pbtn.pbtn-ref{ margin-left:.3rem; padding-left:.65rem; border-left:1px solid var(--hair); }
 .pbtn{
@@ -276,10 +281,11 @@ main.screen{
 .pop .ref-line b{ font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); margin-right:.5rem; }
 .pop .ref-line a{ color:var(--ink); text-decoration:underline; text-underline-offset:3px; }
 /* the brain's own viewer (v12.38): a canvas over the streamlines' that takes no pointer, shown while the
-   brain shows; its opacity is the solidity Thicken's bar sets */
+   brain shows; its opacity is the transparency Transparency's bar sets */
 .view[data-box="Ren"] .mri-stage .brain-layer{ pointer-events:none; visibility:hidden; }
 /* a mini (v12.42, at the owner's word): a small window that comes up out of its bar button, the brain's
-   solidity as a tall bar under Thicken and the faces of the brain, with Reset slice, under View. The page's
+   transparency, the streamlines' offset and thickness as tall bars (v12.43) and the faces of the brain, with Reset
+   slice, under View. The page's
    script stands it over its button, or beside it where the bar is a column, in the bar's material and inks,
    and it arrives from the button as the sheets do from the bar; one thing is raised at a time */
 .mini{
@@ -307,10 +313,11 @@ main.screen.one.land .mini.in{ transform:none; }
 /* held sideways the list stands beside the bar's column and keeps to the short screen's height */
 main.screen.one.land .mini-item{ min-height:38px; padding:.5rem .9rem .44rem; }
 .mini-rule{ border:0; border-top:1px solid var(--bar-line, var(--hair)); margin:.3rem .4rem; }
-/* the tall bar: the slider stood on end, how solid the brain is above it */
-.mini-tall{ align-items:center; padding:.55rem .45rem .5rem; }
-.mini-tall .slider-val{ min-width:0; text-align:center; color:var(--bar-soft, var(--ink-60)); margin-bottom:.35rem; }
-.tall{ position:relative; width:44px; height:150px; }
+/* a tall bar (Transparency, Offset, Thicken): the slider stood on end with its value above, as slim as its thumb
+   allows (v12.43, at the owner's word) */
+.mini-tall{ align-items:center; min-width:0; padding:.4rem .2rem .35rem; overflow:visible; }
+.mini-tall .slider-val{ min-width:0; font-size:.52rem; letter-spacing:.06em; white-space:nowrap; text-align:center; color:var(--bar-soft, var(--ink-60)); margin-bottom:.25rem; }
+.tall{ position:relative; width:32px; height:150px; }
 .tall input[type="range"]{ position:absolute; left:50%; top:50%; width:150px; height:30px; margin:0; transform:translate(-50%,-50%) rotate(-90deg); }
 
 /* ── a phone: the view edge to edge, the sheets the width of the screen ── */
@@ -332,14 +339,16 @@ main.screen.one.land{ flex-direction:row; }
 }
 .screen.one.land .panelbar > :first-child{ margin-top:auto; }
 .screen.one.land .panelbar > :last-child{ margin-bottom:auto; }
-/* one to a row since v12.24, at the owner's word; the group scrolls when they overrun the column and
-   Tractography keeps its foot (v12.42) */
-.screen.one.land .panelbar-btns, .screen.one.land .panelbar-end{
-  display:grid; grid-template-columns:66px; gap:0; flex:none;
+/* one to a row since v12.24, at the owner's word, the groups one under another behind their lines (v12.43);
+   the column scrolls when they overrun it and Tractography keeps its foot (v12.42) */
+.screen.one.land .panelbar-btns{
+  display:flex; flex-direction:column; gap:0; flex:0 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden;
   margin:0 0 .25rem; padding:0 0 .25rem; border-right:0; border-bottom:1px solid var(--hair);
 }
-.screen.one.land .panelbar-btns{ flex:0 1 auto; min-height:0; align-content:start; overflow-y:auto; overflow-x:hidden; }
-.screen.one.land .panelbar-end{ padding-bottom:0; border-bottom:0; }
+.screen.one.land .pgroup{ flex-direction:column; flex:none; padding:.25rem 0; border-left:0; border-top:1px solid var(--bar-line, var(--hair)); }
+.screen.one.land .pgroup:first-child{ padding-top:0; border-top:0; }
+.screen.one.land .pgroup:last-child{ padding-bottom:0; }
+.screen.one.land .panelbar-end{ display:grid; grid-template-columns:66px; gap:0; flex:none; margin:0 0 .25rem; padding:0; border:0; }
 .screen.one.land .pbtn{ position:relative; min-width:0; width:66px; min-height:48px; padding:.25rem .15rem .2rem; gap:.2rem; }
 .screen.one.land .pbtn.pbtn-ref{ margin-left:0; padding-left:.15rem; border-left:0; }
 .screen.one.land .pbtn span{
@@ -407,7 +416,7 @@ main.screen.one.land{ flex-direction:row; }
             <span class="key-item"><span class="key-swatch" style="background:#4FB06A"></span>front &ndash; back</span>
             <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
           </div>
-          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the streamlines and the brain away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there; Tract shows or hides the streamlines; Thicken raises a tall bar that makes the brain more solid or more see-through; View turns the brain to one of its faces, or home to the view the page opens with; and Revolve sets it turning until you take hold of it. The page remembers how you left it: the brain and how solid it is, the streamlines, the cuts and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
+          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the streamlines and the brain away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there, and Transparency raises a tall bar that makes it more see-through or more solid. Tract shows or hides the streamlines; Offset, while Slice is on, sets how far they stand out of the cut face, in millimetres; and Thicken sets how thick they are drawn. View turns the brain to one of its faces, or home to the view the page opens with, and Revolve sets it turning until you take hold of it. The page remembers how you left it: the brain and its transparency, the streamlines, their offset and thickness, the cuts and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
           <h2>Export</h2>
           <p class="rail-note" style="margin:0 0 .2rem">The streamlines as a 3D model, an even sample of them at the number picked, and the brain with them while it shows, cut as the screen has it.</p>
           <div class="rail-row">
@@ -434,29 +443,49 @@ main.screen.one.land{ flex-direction:row; }
   </div>
 
   <nav class="panelbar" aria-label="Tractography panels">
-    <!-- the buttons, which slide when they overrun the bar, and Tractography behind its line, always on show
-         (v12.42, at the owner's word): Slice, Brain, Tract, Thicken, View, Revolve -->
+    <!-- the buttons in four groups behind their lines (v12.43, at the owner's word), which slide when they overrun
+         the bar, and Tractography behind its own line, always on show (v12.42):
+         Slice | Brain, Transparency | Tract, Offset, Thicken | View, Revolve -->
     <div class="panelbar-btns" role="group" aria-label="Controls">
-      <!-- Slice leads the bar on every page that slices (v12.32); off, the streamlines are whole again -->
-      <button class="pbtn" type="button" id="sliceBtn" aria-pressed="false" disabled title="A slider on each edge of the view, each a cut taking the streamlines, and the brain while it shows, away from that side; off, they are whole again"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 21 8l-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5M3 16l9 5 9-5"/></svg><span>Slice</span></button>
-      <!-- the brain and the streamlines, each shown or hidden by its own button (v12.42) -->
-      <button class="pbtn" type="button" id="brainBtn" aria-pressed="true" title="The MNI152 brain around the streamlines, as the 3D Region Atlas draws it: shown or hidden"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4.5v15.1"/><path d="M12 4.5C10.9 3.4 8.6 3.6 7.9 5.2 6.1 5 4.6 6.6 5 8.4 3.5 9.3 3.4 11.6 4.6 12.6 3.9 14.3 4.9 16.3 6.7 16.6 6.9 18.5 8.9 19.7 10.6 19c.6.6 1.1.7 1.4.6"/><path d="M12 4.5c1.1-1.1 3.4-.9 4.1.7 1.8-.2 3.3 1.4 2.9 3.2 1.5.9 1.6 3.2.4 4.2.7 1.7-.3 3.7-2.1 4-.2 1.9-2.2 3.1-3.9 2.4-.6.6-1.1.7-1.4.6"/><path d="M8.3 9.2c1.3.1 2.2 1 2.4 2.3M15.7 9.2c-1.3.1-2.2 1-2.4 2.3M7.2 13.6c1.2-.2 2.3.4 2.8 1.5M16.8 13.6c-1.2-.2-2.3.4-2.8 1.5"/></svg><span>Brain</span></button>
-      <button class="pbtn" type="button" id="tractBtn" aria-pressed="true" title="The streamlines: shown or hidden"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 7.5c3.5-3 6 2.5 9 .5s5.5-4 9-1"/><path d="M3 12.5c3.5-3 6 2.5 9 .5s5.5-4 9-1"/><path d="M3 17.5c3.5-3 6 2.5 9 .5s5.5-4 9-1"/></svg><span>Tract</span></button>
-      <!-- Thicken and View each raise a mini over the button: the brain's solidity as a tall bar, and the faces
-           of the brain with Reset slice -->
-      <button class="pbtn" type="button" id="thickBtn" aria-haspopup="true" aria-expanded="false" aria-controls="thickPop" title="How solid the brain is drawn"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 4v16M16 4v16"/><path d="M5 14.5h6M13 9.5h6"/></svg><span>Thicken</span></button>
-      <button class="pbtn" type="button" id="viewBtn" aria-haspopup="true" aria-expanded="false" aria-controls="viewPop" title="Turn the brain to one of its faces, or put the cuts back"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>View</span></button>
-      <button class="pbtn" type="button" id="spinBtn" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 3v5.5h-5.5"/></svg><span>Revolve</span></button>
+      <div class="pgroup">
+        <!-- Slice leads the bar on every page that slices (v12.32); off, the streamlines are whole again -->
+        <button class="pbtn" type="button" id="sliceBtn" aria-pressed="false" disabled title="A slider on each edge of the view, each a cut taking the streamlines, and the brain while it shows, away from that side; off, they are whole again"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 21 8l-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5M3 16l9 5 9-5"/></svg><span>Slice</span></button>
+      </div>
+      <div class="pgroup">
+        <!-- the brain, shown or hidden by its button (v12.42), and its transparency as a tall bar (v12.43) -->
+        <button class="pbtn" type="button" id="brainBtn" aria-pressed="true" title="The MNI152 brain around the streamlines, as the 3D Region Atlas draws it: shown or hidden"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4.5v15.1"/><path d="M12 4.5C10.9 3.4 8.6 3.6 7.9 5.2 6.1 5 4.6 6.6 5 8.4 3.5 9.3 3.4 11.6 4.6 12.6 3.9 14.3 4.9 16.3 6.7 16.6 6.9 18.5 8.9 19.7 10.6 19c.6.6 1.1.7 1.4.6"/><path d="M12 4.5c1.1-1.1 3.4-.9 4.1.7 1.8-.2 3.3 1.4 2.9 3.2 1.5.9 1.6 3.2.4 4.2.7 1.7-.3 3.7-2.1 4-.2 1.9-2.2 3.1-3.9 2.4-.6.6-1.1.7-1.4.6"/><path d="M8.3 9.2c1.3.1 2.2 1 2.4 2.3M15.7 9.2c-1.3.1-2.2 1-2.4 2.3M7.2 13.6c1.2-.2 2.3.4 2.8 1.5M16.8 13.6c-1.2-.2-2.3.4-2.8 1.5"/></svg><span>Brain</span></button>
+        <button class="pbtn" type="button" id="transBtn" aria-haspopup="true" aria-expanded="false" aria-controls="transPop" title="How see-through the brain is drawn"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor" stroke="none"/></svg><span>Trans&shy;parency</span></button>
+      </div>
+      <div class="pgroup">
+        <!-- the streamlines, shown or hidden by their button (v12.42), how far they stand out of a cut and how thick
+             they are drawn, each a tall bar (v12.43) -->
+        <button class="pbtn" type="button" id="tractBtn" aria-pressed="true" title="The streamlines: shown or hidden"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 7.5c3.5-3 6 2.5 9 .5s5.5-4 9-1"/><path d="M3 12.5c3.5-3 6 2.5 9 .5s5.5-4 9-1"/><path d="M3 17.5c3.5-3 6 2.5 9 .5s5.5-4 9-1"/></svg><span>Tract</span></button>
+        <button class="pbtn" type="button" id="offsetBtn" aria-haspopup="true" aria-expanded="false" aria-controls="offsetPop" disabled title="How far the streamlines stand out of the cut face, while Slice is on"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 5v14M19 5v14"/><path d="M8.5 12h7M13 9.5l2.5 2.5-2.5 2.5"/></svg><span>Offset</span></button>
+        <button class="pbtn" type="button" id="thickBtn" aria-haspopup="true" aria-expanded="false" aria-controls="thickPop" title="How thick the streamlines are drawn"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6.5h16" stroke-width="1"/><path d="M4 12h16" stroke-width="2"/><path d="M4 17.5h16" stroke-width="3.2"/></svg><span>Thicken</span></button>
+      </div>
+      <div class="pgroup">
+        <button class="pbtn" type="button" id="viewBtn" aria-haspopup="true" aria-expanded="false" aria-controls="viewPop" title="Turn the brain to one of its faces, or put the cuts back"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>View</span></button>
+        <button class="pbtn" type="button" id="spinBtn" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 3v5.5h-5.5"/></svg><span>Revolve</span></button>
+      </div>
     </div>
     <div class="panelbar-end" role="group" aria-label="About tractography">
       <button class="pbtn pbtn-ref" type="button" data-pop="popTract" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></svg><span>Tractography</span></button>
     </div>
   </nav>
-  <!-- the minis (v12.42): how solid the brain is, a slider stood on end, and the faces of the brain with Reset
-       slice beneath them, each placed over its button by the screen script -->
-  <div class="mini mini-tall" id="thickPop" hidden role="group" aria-label="How solid the brain is">
-    <span class="slider-val" id="brainVal">25%</span>
-    <div class="tall"><input type="range" id="brainTrans" min="5" max="100" step="1" value="25" aria-label="How solid the brain is drawn" aria-orientation="vertical"></div>
+  <!-- the minis (v12.42), each placed over its button by the screen script: three sliders stood on end (v12.43), the
+       brain's transparency, the streamlines' offset from the cut face and their thickness, and the faces of the
+       brain with Reset slice beneath them -->
+  <div class="mini mini-tall" id="transPop" hidden role="group" aria-label="Brain transparency">
+    <span class="slider-val" id="brainVal">75%</span>
+    <div class="tall"><input type="range" id="brainTrans" min="0" max="95" step="1" value="75" aria-label="How far the brain lets the streamlines through" aria-orientation="vertical"></div>
+  </div>
+  <div class="mini mini-tall" id="offsetPop" hidden role="group" aria-label="Streamline offset">
+    <span class="slider-val" id="offsetVal">2.5 mm</span>
+    <div class="tall"><input type="range" id="offset" min="0" max="10" step="0.5" value="2.5" aria-label="How far the streamlines stand out of the cut face, in millimetres" aria-orientation="vertical"></div>
+  </div>
+  <div class="mini mini-tall" id="thickPop" hidden role="group" aria-label="Streamline thickness">
+    <span class="slider-val" id="radiusVal">0.30</span>
+    <div class="tall"><input type="range" id="radius" min="0.05" max="0.9" step="0.05" value="0.3" aria-label="Streamline thickness" aria-orientation="vertical"></div>
   </div>
   <div class="mini" id="viewPop" hidden role="group" aria-label="View from">
     <button class="mini-item" type="button" data-face="left">Left</button>
@@ -485,7 +514,7 @@ main.screen.one.land{ flex-direction:row; }
    --screen-top so the tractogram fills the rest, on a phone the screen is
    marked one and, held sideways, land, with the bar at the right edge,
    and the bar's buttons raise one sheet at a time over the view, or one of
-   the minis, Thicken's tall bar and View's faces (v12.42). */
+   the minis, the tall bars and View's faces (v12.42). */
 (function(){
   var root = document.documentElement, main = document.getElementById("main");
   var head = document.querySelector(".masthead"), bar = document.querySelector(".panelbar");
@@ -573,7 +602,7 @@ main.screen.one.land{ flex-direction:row; }
   document.querySelectorAll(".pop .pop-x").forEach(function(x){ x.addEventListener("click", hide); });
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && current) hide(); });
 
-  /* the minis (v12.42, at the owner's word): Thicken's tall bar and View's faces, each a small window that
+  /* the minis (v12.42, at the owner's word): the tall bars and View's faces, each a small window that
      comes up out of its button (aria-controls names it), one at a time, stood over the button, or beside it
      where the bar is a column, and put away by its button, a press anywhere else, Escape or a sheet rising */
   var minis = {}, miniOpen = null;
@@ -823,19 +852,29 @@ main.screen.one.land{ flex-direction:row; }
     nv: function(){ return byKey.Ren; },
     /* settles once the brain the page opens with is in (at once while it is off) */
     brain: function(){ return brain.loading ? brain.loading.then(function(){ return true; }) : Promise.resolve(false); },
+    /* the streamlines' offset from the cut face and their thickness, for a check */
+    offset: function(){ return tractPast; },
+    radius: function(){ return tractRadius; },
     /* the ends standing out of the cut, for a check: how many points they hold, or null */
     ends: function(){ return brain.ends ? { shown: !!brain.ends.visible, points: brain.ends.pts ? brain.ends.pts.length / 3 : 0, indices: brain.ends.indexCount || 0, radius: brain.ends.fiberRadius, meshes: brain.nv ? brain.nv.meshes.length : 0 } : null; }
   };
 
-  /* the streamlines' thickness, one for all since v12.42, at the owner's word (the Thick slider went with the
-     Brain sheet, and the single colour with it: Direction alone); the ends in the brain's viewer take the same */
-  var TRACT_RADIUS = 0.3;
+  /* the streamlines' thickness, Thicken's tall bar (v12.43, at the owner's word, with the range the Brain sheet's
+     Thick slider had until v12.42: 0.05 to 0.9, 0.3 to begin; the single colour stays gone, Direction alone); the
+     ends in the brain's viewer take the same */
+  var tractRadius = 0.3;
+  var radiusEl = document.getElementById("radius"), radiusVal = document.getElementById("radiusVal");
   function applyRadius(v){
+    var r = Number(v);
+    tractRadius = isFinite(r) && r > 0 ? Math.max(0.05, Math.min(0.9, r)) : 0.3;
+    if (radiusEl) radiusEl.value = String(tractRadius);
+    if (radiusVal) radiusVal.textContent = tractRadius.toFixed(2);
     instances.forEach(function(nv){
-      if (meshIds[nv.canvas.id] !== undefined) nv.setMeshProperty(meshIds[nv.canvas.id], "fiberRadius", Number(v));
+      if (meshIds[nv.canvas.id] !== undefined) nv.setMeshProperty(meshIds[nv.canvas.id], "fiberRadius", tractRadius);
     });
     dressEnds();
   }
+  if (radiusEl) radiusEl.addEventListener("input", function(){ applyRadius(radiusEl.value); rememberSoon(); });
 
   /* ── the streamlines shown or hidden by Tract on the bar (v12.42, at the owner's word) ──
      the mesh keeps its points and its cuts and is simply not drawn, the ends in the brain's viewer with it */
@@ -877,12 +916,13 @@ main.screen.one.land{ flex-direction:row; }
      maths) and its depth as the plane's offset in the volume's unit cube, the side where
      dot(n, p - 0.5) + depth < 0 cut away, turned back into millimetres through that viewer's own
      frac2mm, so the streamlines end where the brain is cut, or a little past it: since v12.39, at
-     the owner's word, their own cut stands TRACT_PAST behind the brain's, so their ends stick out of
+     the owner's word, their own cut stands tractPast behind the brain's, so their ends stick out of
      the cut face at any transparency (past: the millimetres to leave, nought for the export's
      surface); the first quarter of a slider's travel, which cuts the air around the brain there,
      cuts them not at all, as on the atlas. The brain off, the slider's share is taken straight over
-     the streamlines' own box. */
-  var TRACT_PAST = 2.5;   /* v12.39; doubled in v12.41 and halved again in v12.42, at the owner's word */
+     the streamlines' own box, the same millimetres past it. */
+  var TRACT_PAST_DEFAULT = 2.5;   /* v12.39; doubled in v12.41 and halved again in v12.42, at the owner's word */
+  var tractPast = TRACT_PAST_DEFAULT;   /* Offset's tall bar sets it since v12.43, 0 to 10 mm, at the owner's word */
   function cutBox(planes, past){
     past = past || 0;
     var lo = [-Infinity, -Infinity, -Infinity], hi = [Infinity, Infinity, Infinity], k, i;
@@ -909,8 +949,8 @@ main.screen.one.land{ flex-direction:row; }
       var n = planeNormal(p[1], p[2]), f = Math.max(0, Math.min(1, (1 - p[0]) / 2));   /* depth 1 whole, -1 all gone */
       for (k = 0, i = 1; i < 3; i++) if (Math.abs(n[i]) > Math.abs(n[k])) k = i;
       var span = mx[k] - mn[k];
-      if (n[k] > 0) lo[k] = Math.max(lo[k], mn[k] + f * span);
-      else hi[k] = Math.min(hi[k], mx[k] - f * span);
+      if (n[k] > 0) lo[k] = Math.max(lo[k], mn[k] + f * span - past);
+      else hi[k] = Math.min(hi[k], mx[k] - f * span + past);
     });
     return {lo: lo, hi: hi};
   }
@@ -932,7 +972,7 @@ main.screen.one.land{ flex-direction:row; }
       return;
     }
     var withBrain = !!(brain.on && brain.nv);
-    var box = cutBox(planes, withBrain ? TRACT_PAST : 0), lo = box.lo, hi = box.hi;
+    var box = cutBox(planes, tractPast), lo = box.lo, hi = box.hi;
     /* the ends: the pieces that stand out past the brain's own cut, and a millimetre inside it
        so each tube runs on through the face, gathered for the brain's viewer (setEnds) */
     var inner = withBrain ? cutBox(planes, -1) : null;
@@ -980,8 +1020,8 @@ main.screen.one.land{ flex-direction:row; }
      (followDraws, mirror). v12.31 drew the brain as a surface of glass in the streamlines' viewer and v12.36 laid
      three slices through its middle; both went at the owner's word, for the atlas's own render and its cuts. */
   var BRAIN_URL = "assets/mni152.nii.gz", BRAIN_LIFT = 1.5;
-  /* on as the page opens since v12.36, at the owner's word, at 75 per cent transparency (a quarter solid, as
-     Thicken's bar reads it since v12.42); endsOn says whether a cut has filled the ends */
+  /* on as the page opens since v12.36, at the owner's word, at 75 per cent transparency (Transparency's bar since
+     v12.43; v12.42's Thicken read it as solidity); endsOn says whether a cut has filled the ends */
   var brain = { on: true, trans: 75, nv: null, vol: null, box: null, loading: null, part: null, ends: null, endsOn: false };
   var brainCanvas = document.getElementById("tkBrain");
   var brainTrans = document.getElementById("brainTrans"), brainVal = document.getElementById("brainVal");
@@ -1066,7 +1106,7 @@ main.screen.one.land{ flex-direction:row; }
     try{
       b.setMeshProperty(em.id, "fiberLength", 1);   /* the shortest piece kept, in mm; nought would build nothing */
       b.setMeshProperty(em.id, "fiberDither", 0.1);
-      b.setMeshProperty(em.id, "fiberRadius", TRACT_RADIUS);
+      b.setMeshProperty(em.id, "fiberRadius", tractRadius);
       b.setMeshProperty(em.id, "fiberColor", "Local");
     }catch(e){}
   }
@@ -1119,13 +1159,13 @@ main.screen.one.land{ flex-direction:row; }
     }
     rememberSoon();
   }
-  /* how solid the brain is, Thicken's tall bar (v12.42): the slider reads 5 to 100 per cent solid, and the
-     brain keeps its transparency underneath, 0 to 95, as the kept state and the export's alpha have it */
+  /* the brain's transparency, Transparency's tall bar (v12.43, at the owner's word; v12.42's Thicken read it
+     as solidity): 0 solid to 95, 75 to begin, as the atlases' sliders read, the kept state and the export's alpha */
   function applyBrainTrans(v){
     var t = Math.round(Number(v));
     brain.trans = isFinite(t) ? Math.max(0, Math.min(95, t)) : 75;
-    brainTrans.value = String(100 - brain.trans);
-    brainVal.textContent = (100 - brain.trans) + "%";
+    brainTrans.value = String(brain.trans);
+    brainVal.textContent = brain.trans + "%";
     brainCanvas.style.opacity = String(1 - brain.trans / 100);
   }
   if (brainBtn) brainBtn.addEventListener("click", function(){ showBrain(!brain.on); });
@@ -1157,7 +1197,7 @@ main.screen.one.land{ flex-direction:row; }
   }
   /* moving the bar shows the brain, so the change it makes is seen */
   brainTrans.addEventListener("input", function(){
-    applyBrainTrans(100 - Number(brainTrans.value));
+    applyBrainTrans(brainTrans.value);
     if (!brain.on) showBrain(true); else rememberSoon();
   });
   var cutter = {
@@ -1168,6 +1208,21 @@ main.screen.one.land{ flex-direction:row; }
       if (!cutFrame) cutFrame = requestAnimationFrame(function(){ cutFrame = 0; applyCut(pendingPlanes); });
     }
   };
+  /* Offset's tall bar (v12.43, at the owner's word): how far the streamlines stand out of the cut face, 0 to 10 mm,
+     2.5 to begin; a change cuts again on the next frame, as a slider of the tool does */
+  var offsetEl = document.getElementById("offset"), offsetVal = document.getElementById("offsetVal");
+  function applyOffset(v){
+    var p = Number(v);
+    tractPast = isFinite(p) ? Math.max(0, Math.min(10, p)) : TRACT_PAST_DEFAULT;
+    if (offsetEl) offsetEl.value = String(tractPast);
+    if (offsetVal) offsetVal.textContent = (Math.round(tractPast * 10) / 10) + " mm";
+  }
+  function recut(){
+    if (!lastPlanes.length) return;
+    pendingPlanes = lastPlanes;
+    if (!cutFrame) cutFrame = requestAnimationFrame(function(){ cutFrame = 0; applyCut(pendingPlanes); });
+  }
+  if (offsetEl) offsetEl.addEventListener("input", function(){ applyOffset(offsetEl.value); recut(); rememberSoon(); });
   function attachSlice(){
     var nv = byKey.Ren, mesh = nv && nv.meshes && nv.meshes[0];
     if (!mesh || !window.MN_SLICE || slice) return;
@@ -1184,12 +1239,15 @@ main.screen.one.land{ flex-direction:row; }
     paintSliceBtn();
   }
   /* Slice on the bar is the tool's switch (v12.1): lit while the edge sliders are out */
-  var sliceBtn = document.getElementById("sliceBtn");
+  var sliceBtn = document.getElementById("sliceBtn"), offsetBtn = document.getElementById("offsetBtn");
   function paintSliceBtn(){
     if (!sliceBtn) return;
     var on = !!(slice && slice.state().on);
     sliceBtn.setAttribute("aria-pressed", String(on));
     sliceBtn.classList.toggle("active", on);
+    /* Offset has its say only while Slice is on (v12.43, at the owner's word): greyed otherwise, its bar put away */
+    if (offsetBtn) offsetBtn.disabled = !on;
+    if (!on && window.TK_MINI && TK_MINI.current() === "offsetPop") TK_MINI.closeAll();
   }
   if (sliceBtn) sliceBtn.addEventListener("click", function(){
     if (!slice) return;
@@ -1198,11 +1256,12 @@ main.screen.one.land{ flex-direction:row; }
   });
 
   /* ── the last state, kept on the device (v12.1, at the owner's word) ──
-     the brain (v12.31) and how solid it is, the streamlines (v12.42), the
-     cuts and the view, written a moment after each change once the page is
-     up, and read back as the tractogram comes in; nothing in the address
-     asks for anything else on this page. A state kept before v12.42 (v 2)
-     carried a colour and a thickness, read no more. */
+     the brain (v12.31) and its transparency, the streamlines (v12.42), their
+     offset and thickness (v12.43), the cuts and the view, written a moment
+     after each change once the page is up, and read back as the tractogram
+     comes in; nothing in the address asks for anything else on this page. A
+     state kept before v12.42 (v 2) carried a colour, read no more, and a
+     thickness, read again since v12.43. */
   var keepReady = false, keepTimer = 0;
   function rememberSoon(){
     if (!keepReady) return;
@@ -1211,9 +1270,10 @@ main.screen.one.land{ flex-direction:row; }
       var nv = byKey.Ren;
       try{
         localStorage.setItem("vn-tracts-last", JSON.stringify({
-          v: 3,
+          v: 4,
           brain: { on: brain.on, trans: brain.trans },
           tract: tract.on,
+          radius: tractRadius, past: tractPast,
           cuts: slice ? slice.state() : null,
           view: nv ? { az: nv.scene.renderAzimuth, el: nv.scene.renderElevation, zoom: zoom } : null
         }));
@@ -1233,6 +1293,9 @@ main.screen.one.land{ flex-direction:row; }
     }
     /* the streamlines as they were left (v12.42); a state kept before it had them always on */
     if (m.v >= 3 && typeof m.tract === "boolean") tract.on = m.tract;
+    /* their thickness (v2 kept one too) and, since v12.43, their offset, before the cuts come back */
+    if (m.radius > 0) applyRadius(m.radius);
+    if (m.v >= 4 && isFinite(m.past)) applyOffset(m.past);
     if (m.cuts && slice) slice.setState(m.cuts);
     var nv = byKey.Ren;
     if (nv && m.view){
@@ -1277,7 +1340,7 @@ main.screen.one.land{ flex-direction:row; }
         if (bp) parts.push({ kind: "mesh", name: "Brain surface (MNI152)", pos: bp.pos, idx: bp.idx, nrm: bp.nrm,
                              colour: [0.82, 0.80, 0.78], alpha: 1 - brain.trans / 100, volumeMm3: bp.volumeMm3 });
         if (!parts.length) throw new Error("Turn the streamlines or the brain on to export them.");
-        return { name: "VisualNeuroscience tractogram", parts: parts, tubeRadius: TRACT_RADIUS };
+        return { name: "VisualNeuroscience tractogram", parts: parts, tubeRadius: tractRadius };
       }
     });
   }
@@ -1365,7 +1428,7 @@ main.screen.one.land{ flex-direction:row; }
         });
       }
 
-      applyRadius(TRACT_RADIUS);
+      applyRadius(tractRadius);
       byKey.Ren.scene.renderAzimuth = HOME[0];
       byKey.Ren.scene.renderElevation = HOME[1];
       applyZoom(zoom);

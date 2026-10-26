@@ -68,7 +68,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   under the portrait, from Thank you for downloading Visual Neuroscience (the lede) to Write to
   fkarim@visualneuroscience.ai and I read it myself, then the signature, the links and the stamp, with no headings (v12.15
   had cut the six sections that stood there); since v12.25, at the owner's word, its models are from Anthropic and
-  Moonshot, where it said Kimi (the MCP pages still name Kimi, the assistant). Keep the owner's words as given. The listing's support URL is that page, so the contact address must stay on it. The Vision Pro console's
+  Moonshot, where it said Kimi (the MCP pages still name Kimi, the assistant); and since v12.43, at the owner's word,
+  the second paragraph no longer opens with I am a solo developer, and the built-with sentence reads with knowledge
+  from my post-grad in Applied Neuroscience from King's College London Online and my experience in software
+  development, where it read with the help of AI and my knowledge from my PG Cert, and the invitation to write in
+  asks for features added or improved and ends but if any of them are wrong, let me know and I will correct it, the
+  line Corrections are the most welcome mail of all gone. Keep the owner's words as given. The listing's support URL is that page, so the contact address must stay on it. The Vision Pro console's
   About window has a card of its own (`vision-about.html`, since v11.37). Android keeps the web bar. On an iPad the pages fill the screen: the shell
   also marks them `data-shell-pad`, the system bar shows no title there, and the page's title strip steps aside
   (`viewer.css`), keeping any buttons it carries. The stack's swipes back (from the edge, and iOS 26's from
@@ -277,15 +282,23 @@ Read this first in every session. It is the handover; nothing else needs pasting
   view switch: since v12.1, at the owner's word, the tractogram is the whole stage with nothing framing it and no cap (the
   view's border and the stage's padding are nought; the cap with its name, Reset view and the Slice tool's buttons went; the
   zoom buttons had gone in v11.97, the wheel and a pinch zooming as before), and the bar, since v12.42 at the owner's
-  word, carries six buttons that slide and one that stays: Slice (`#sliceBtn`, v12.1: the slice tool's switch, lit while
+  word, carries the buttons that slide and one that stays, the sliding ones in four groups behind lines since v12.43,
+  at the owner's word (`.pgroup`: Slice | Brain, Transparency | Tract, Offset, Thicken | View, Revolve, each group
+  after the first behind a `border-left` in the row and a `border-top` in the column): Slice (`#sliceBtn`, v12.1: the slice tool's switch, lit while
   the edge sliders are out, disabled until `attachSlice` has the mesh; the tool draws no buttons of its own, attached
   without `tools` since v12.33; first on the bar since v12.32, at the owner's word, as Slice leads wherever it stands:
   see the slice tool under the 3D Region Atlas), Brain (`#brainBtn`, `aria-pressed`, lit while the brain shows,
-  `showBrain(!brain.on)`, where the `#popBrain` sheet's Off and On had stood since v12.31), Tract (`#tractBtn`, v12.42:
-  the streamlines shown or hidden, `showTract`, the mesh's `visible` and the ends' with it), Thicken (`#thickBtn`,
-  `aria-expanded`: a mini, `#thickPop`, holding how solid the brain is as a tall bar, `#brainTrans` stood on end in
-  `.tall`, 5 to 100 per cent solid with its value `#brainVal` above it, where the sheet's Brain transparency slider
-  read 0 to 95; `applyBrainTrans` still takes and keeps a transparency), View (`#viewBtn`: a mini, `#viewPop`, of the
+  `showBrain(!brain.on)`, where the `#popBrain` sheet's Off and On had stood since v12.31), Transparency (`#transBtn`,
+  `aria-expanded`: a mini, `#transPop`, the brain's transparency as a tall bar, `#brainTrans` stood on end in `.tall`,
+  0 solid to 95 with its value `#brainVal` above it, as the sheet's slider read until v12.42, whose Thicken had read
+  it as solidity, 5 to 100, for that one release; `applyBrainTrans`), Tract (`#tractBtn`, v12.42: the streamlines
+  shown or hidden, `showTract`, the mesh's `visible` and the ends' with it), Offset (`#offsetBtn`, v12.43: a mini,
+  `#offsetPop`, how far the streamlines stand out of the cut face, `#offset` 0 to 10 mm in halves, 2.5 to begin,
+  `applyOffset` setting `tractPast` and `recut` cutting again on the next frame; greyed, `disabled`, while Slice is
+  off and its bar put away then, by `paintSliceBtn`), Thicken (`#thickBtn`, v12.43: a mini, `#thickPop`, the
+  streamlines' thickness, `#radius` 0.05 to 0.9 in twentieths, 0.3 to begin, `applyRadius` setting `tractRadius` on
+  the mesh and on the ends, the range the Brain sheet's Thick slider had until v12.42, when it went for that one
+  release), View (`#viewBtn`: a mini, `#viewPop`, of the
   faces as words alone, Left, Right, Front, Back, Top, Bottom and Home, `.mini-item[data-face]` through `faceTo`,
   Home the opening view with its zoom and its place put back, then behind a rule Reset slice, `#sliceReset`, every
   cut back to its centre mark with the view left as it is, which the owner asked back here after v12.32 had taken it
@@ -298,16 +311,17 @@ Read this first in every session. It is the handover; nothing else needs pasting
   button with v12.36). The six slide: `.panelbar-btns` is the scroller (`flex:1 1 auto; min-width:0;
   overflow-x:auto`, no scrollbar) and `.panelbar-end` keeps its place, the bar itself `overflow:hidden`; held sideways
   the group scrolls down its column (`flex:0 1 auto; min-height:0; overflow-y:auto`) and Tractography keeps its foot.
-  A mini (`.mini`, the two standing after the nav in `main`, `position:fixed`, z 40, in the bar's material and inks)
-  is raised by its button one at a time and closes the open sheet (`openPop` closes a mini likewise): the screen
+  A mini (`.mini`, the four standing after the nav in `main`, `position:fixed`, z 40, in the bar's material and inks;
+  a tall bar, `.mini-tall`, as slim as its thumb allows since v12.43, at the owner's word, its `.tall` 32px wide
+  with the value in small type above) is raised by its button one at a time and closes the open sheet (`openPop` closes a mini likewise): the screen
   script's `minis`, read off `aria-controls`, `openMini`, `closeMini` and `placeMini` (over the button, centred, 8px
   up, or to its left where the screen is `.land`, kept inside the window, placed again on a resize or a scroll of the
   group), put away by the button, a pointer down outside it, Escape, a face picked or Reset slice pressed
   (`window.TK_MINI`: `open`, `closeAll`, `current`), arriving from the button on the sheets' curve and as a plain
-  fade under `prefers-reduced-motion`. The streamlines' thickness and single colour went with v12.42, at the owner's
-  word: `TRACT_RADIUS` (0.3) is their one thickness and Direction their one colour (`fiberColor` Local; `inkColour`,
-  `SATIN`, `shade`, `setColour` and the Thick slider are gone), and the export carries the streamlines while Tract
-  shows them and the brain while it shows, refusing with neither. Its own viewer script is untouched but for the
+  fade under `prefers-reduced-motion`. The streamlines' single colour went with v12.42, at the owner's word, Direction
+  their one colour (`fiberColor` Local; `inkColour`, `SATIN`, `shade` and `setColour` are gone); their thickness went
+  with it and came back as Thicken in v12.43 (`tractRadius`, the export's `tubeRadius` too); and the export carries
+  the streamlines while Tract shows them and the brain while it shows, refusing with neither. Its own viewer script is untouched but for the
   ground (v11.96, at the owner's word): the tractogram's back follows the theme as the atlases' stages do, the page's black
   dark and white light (`ground()` beside the viewer list, the stage's two rules by theme, an observer on `data-theme`
   repainting the viewers at once), the loading message in the page's paper and ink, and `shoot-home-pictures.js` no longer
@@ -356,13 +370,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   streamlines had a Single colour beside Direction, white on the dark theme and a dark grey lit by a satin shader of
   its own on the light, and a thickness slider; both went with v12.42, at the owner's word (above). `MN_TRACTS.nv()`
   hands the viewer to a check. The page keeps its last state on the device (v12.1): `vn-tracts-last`, the brain and
-  how solid it is, the streamlines (v12.42), the cuts and the view (azimuth, elevation, zoom), written by
-  `rememberSoon` a moment after each change (Brain, Tract, Thicken's bar, a face, the slice tool's `onChange`, and the
-  hand letting go of the view) once the page is up, and read back by `restoreKept` as the tractogram comes in. Since
-  v12.31, at the owner's word, the brain can stand around the streamlines, and since v12.38, at the owner's word, it
-  is the 3D Region Atlas's own 3D view: Brain on the bar shows and hides it (on as the page opens since v12.36, at the
-  owner's word) and Thicken's bar sets how solid it is (`#brainTrans`, 5 to 100 per cent, a quarter to begin, which
-  is the 75 per cent transparency `brain.trans` keeps; moving it shows the brain). The brain is a second NiiVue viewer (`brain.nv`) on `#tkBrain`, a `.brain-layer` canvas laid over the
+  its transparency, the streamlines (v12.42), their offset and thickness (v12.43), the cuts and the view (azimuth,
+  elevation, zoom), written by `rememberSoon` a moment after each change (Brain, Tract, the three tall bars, a face,
+  the slice tool's `onChange`, and the hand letting go of the view) once the page is up, and read back by
+  `restoreKept` as the tractogram comes in. Since v12.31, at the owner's word, the brain can stand around the
+  streamlines, and since v12.38, at the owner's word, it is the 3D Region Atlas's own 3D view: Brain on the bar shows
+  and hides it (on as the page opens since v12.36, at the owner's word) and Transparency's bar sets how see-through
+  it is (`#brainTrans`, 0 to 95, 75 to begin, `brain.trans`; moving it shows the brain; v12.42's Thicken read it as
+  solidity for that one release). The brain is a second NiiVue viewer (`brain.nv`) on `#tkBrain`, a `.brain-layer` canvas laid over the
   streamlines' `#tkRen` in the same `.mri-stage` that takes no pointer, holding the MNI152 template
   (`assets/mni152.nii.gz` through `NVImage.loadFromUrl` on the first On, `addVolume`, `SLICE_TYPE.RENDER`, no
   crosshair) and rendering it as the atlas's render view does, its ground clear (`backColor` alpha 0) so the
@@ -377,10 +392,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   off that viewer's `scene.clipPlanes` (each a vec4 in the volume's unit cube, the side where `dot(n, p − 0.5) + a <
   0` cut away) and turns them into millimetres through its `frac2mm`, so the streamlines end where the head is cut
   and the MRI shows at the cut face as on the atlas, or rather a little past it: since v12.39, at the owner's word,
-  the streamlines' own cut stands `TRACT_PAST` behind the brain's (`cutBox(planes, past)`; 2.5 mm, doubled to 5 in
-  v12.41 and halved again in v12.42, at the owner's word each time), so their ends stick out of the cut face at any transparency; the export's surface is cut with no such room
-  (the first quarter of a slider's travel cuts the air around the brain there, and nothing of the streamlines); the
-  brain off, the planes are read as before (`planeNormal`, the slider's share straight over the streamlines' box).
+  the streamlines' own cut stands `tractPast` behind the brain's (`cutBox(planes, past)`; `TRACT_PAST_DEFAULT` 2.5 mm,
+  doubled to 5 in v12.41 and halved again in v12.42, at the owner's word each time, and since v12.43 Offset's bar
+  sets it, 0 to 10 mm), so their ends stick out of the cut face at any transparency; the export's surface is cut with
+  no such room (the first quarter of a slider's travel cuts the air around the brain there, and nothing of the
+  streamlines); the brain off, the planes are read as before (`planeNormal`, the slider's share straight over the
+  streamlines' box, the same millimetres past it since v12.43).
   Since v12.41, at the owner's word, those ends are drawn in the brain's viewer as well, so they show from any angle:
   the streamlines' viewer lies beneath the brain's canvas with no depth between the two, so the ends it drew showed
   only past the head's outline; `applyCut` now gathers the pieces that stand past the brain's own cut, and a
@@ -388,11 +405,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   the brain's viewer holds (an `NVMesh` built from points and offsets, marked a fibre mesh by a colour with no alpha;
   two points and hidden until a cut fills it, `setEnds`, which sets `brain.endsOn`; shown only while Tract shows the
   streamlines, v12.42), which the renderer sets against the head's depth, in front of the cut face and behind the
-  head elsewhere; `dressEnds` gives it the streamlines' direction colours, `TRACT_RADIUS` and dither, from
+  head elsewhere; `dressEnds` gives it the streamlines' direction colours, `tractRadius` and dither, from
   `applyRadius`, with `fiberLength` 1 (the shortest piece kept, in millimetres: the renderer builds nothing for a
-  fibre mesh whose `fiberLength` is nought), and `MN_TRACTS.ends()` reports it for a check. The state's `brain` (`on`,
-  `trans`) and, since v12.42, `tract` ride in `vn-tracts-last` (`v: 3`; v2's colour and thickness and the `slices`
-  v12.36 kept are ignored), and the export carries the brain while it shows as a surface drawn
+  fibre mesh whose `fiberLength` is nought), and `MN_TRACTS.ends()` reports it for a check (`offset()` and `radius()`
+  the two settings). The state's `brain` (`on`, `trans`), since v12.42 `tract` and since v12.43 `radius` and `past`
+  ride in `vn-tracts-last` (`v: 4`; v2's colour and the `slices` v12.36 kept are ignored, v2's thickness read
+  again), and the export carries the brain while it shows as a surface drawn
   from the template on the first export (`brainForExport`: `MN_EXPORT3D.isoSurface` at a 2-voxel stride, lifted
   `BRAIN_LIFT` along its normals, cut by the box; the screen's brain is the renderer's and has no surface to give),
   at its opacity. v12.31's surface of glass (`GLASS`, the lifted isosurface drawn after the streamlines, cut by
