@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.31 — 26 October 2026 — The brain around the tracts
+Commit · Draw the brain around the tractogram, as see-through as its slider leaves it
+
+Tractography can now show the brain itself around the white matter. Brain on the bar switches it on and sets how see-through it is, from solid to a faint outline of glass, so the fibres can be seen in their place inside the head. Slice cuts the brain and the fibres together, so a solid brain can be opened to show the pathways inside it. The page remembers the brain as you left it, and Export takes it with the streamlines while it shows.
+
 ## v12.30 — 25 October 2026 — Counting the real thing only
-Commit · Count usage only on the website's own address and in App Store builds of the app
+Commit `e2d60ae` · Count usage only on the website's own address and in App Store builds of the app
 
 The usage counts now come from the website at visualneuroscience.ai and from the app as the App Store installed it, and from nothing else: the preview copies of the site that every change produces, copies opened on a computer for testing, and TestFlight and Xcode builds of the app are no longer counted, so the numbers are the public's. The website takes this at once; the app takes it with its next build, and until then a TestFlight build still counts.
 

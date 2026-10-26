@@ -273,7 +273,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   view's border and the stage's padding are nought; the cap with its name, Reset view and the Slice tool's buttons went; the
   zoom buttons had gone in v11.97, the wheel and a pinch zooming as before), and the bar
   carries Streamlines
-  (`#popLines`: the Direction/Single colour and the thickness), View from (`#popView`: the cube of faces and Reset view),
+  (`#popLines`: the Direction/Single colour and the thickness), Brain (`#popBrain`, v12.31: below), View from (`#popView`:
+  the cube of faces and Reset view),
   Revolve (`#spinBtn`, a `.pbtn` lit while it turns; off at launch since v11.98, at the owner's word), Slice (`#sliceBtn`,
   v12.1: the slice tool's switch, lit while the edge sliders are out, disabled until `attachSlice` has the mesh; the tool's
   own buttons land unseen in `.slice-holder` inside the view), Reset slice (`#sliceResetBtn`, v12.9, on every page that
@@ -332,7 +333,22 @@ Read this first in every session. It is the handover; nothing else needs pasting
   page keeps its last state on the device (v12.1): `vn-tracts-last`, the colour, the thickness, the cuts and the view
   (azimuth, elevation, zoom), written by `rememberSoon` a moment after each change (the colour and thickness controls,
   the cube, Reset view, the slice tool's `onChange`, and the hand letting go of the view) once the page is up, and read
-  back by `restoreKept` as the tractogram comes in. The chrome now
+  back by `restoreKept` as the tractogram comes in. Since v12.31, at the owner's word, the brain can stand around the
+  streamlines: Brain on the bar raises `#popBrain`, Off and On (`[data-brain]`) and Brain transparency (`#brainTrans`, a
+  `.trans-row` as on the atlases, 0 solid to 95, 75 to begin; moving it shows the brain), and the first On builds the
+  template's outer surface in the browser (`loadBrain`: `assets/mni152.nii.gz` through `NVImage.loadFromUrl`, kept out
+  of the export's cache so the voxels go once built and a failed fetch can be tried again, then `MN_EXPORT3D.isoSurface`
+  at its own threshold, the largest piece, a 2-voxel stride, about 150,000 triangles, each vertex lifted
+  `BRAIN_LIFT`, 1.5 mm, along its normal so the streamlines' ends stay inside it) and adds it as the viewer's second mesh,
+  after the streamlines, drawn as glass by a shader of its own (`GLASS`: the renderer's Phong light, and towards the
+  outline up to three times the opacity of the faces; the renderer draws a see-through mesh front faces only, over what
+  is drawn) in a warm pale grey on the dark theme and a mid grey on the light (`brainColour`). The camera frames what
+  shows (`frameBrain`: the brain's own extents while it shows, the streamlines' while it hides, so the page with the
+  brain off opens as it always did). The slice tool cuts both: while the brain shows, a cut's share is read over the box
+  the brain fills (`BRAIN_BOX`, with the streamlines' extents in `cutBox`), and `cutBrain` keeps the triangles whose
+  corners lie in the box, handing the renderer that index list alone (`indexBuffer`, `indexCount`), the vertices,
+  normals and colours untouched. The state's `brain` (`on`, `trans`) rides in `vn-tracts-last`, and the export carries
+  the brain, cut as shown, at its opacity, while it shows. The chrome now
   lives in six pages (the 3D Region Atlas, the Brodmann Area Atlas, the Hallucinations study, the molecular viewer, the
   Network Atlas and Tractography); a change to it belongs in all of them.
 - The Region Atlas is called the 3D Region Atlas wherever its name shows (nav, titles, home page, the app) since
