@@ -28,6 +28,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="assets/atlas-views.css">
 <link rel="stylesheet" href="fonts/fonts.css">
 <meta name="color-scheme" content="dark light">
 <script>/* Dark is the default; only an explicit choice of light overrides it.
@@ -360,17 +361,10 @@ svg{ display:block; }
 }
 .slice-range:focus-visible{ outline:1px solid #FFFFFF; outline-offset:3px; }
 
-/* Slice, and Slice regions beside it, ink in while pressed and stand as
-   tall as the Centre planes button they share a row with, so the row reads
-   as one line */
-.slice-btn.active, .slice-regions.active{ background:var(--ink); color:var(--paper); }
-.slice-btn, .slice-regions{ height:1.8rem; padding:0 .6rem; white-space:nowrap; }
-
 @media (max-width:760px){
   .slice-edge.left, .slice-edge.right{ width:24px; top:6px; bottom:6px; }
   .slice-edge.bottom{ left:28px; right:28px; bottom:3px; }
   .slice-edge .ax{ font-size:.42rem; letter-spacing:.14em; }
-  .slice-btn, .slice-regions{ height:1.6rem; padding:0 .45rem; font-size:.5rem; }
 }
 /* under a finger each slider is a strip 44 points across, its thumb 24 and
    its track 4, the bottom one held clear of the two at the sides; the
@@ -394,45 +388,40 @@ svg{ display:block; }
   .slice-edge.left .slice-range::-moz-range-track, .slice-edge.right .slice-range::-moz-range-track{ width:4px; height:auto; }
   .slice-range::-moz-range-thumb{ width:24px; height:24px; }
 }
-/* the slice buttons lead the head, Slice at the far left as on every page
-   that slices and Slice area after it, so Slice keeps its place as the Area
-   button comes and goes (v12.32) */
-.scan-tools{ display:inline-flex; align-items:center; gap:.35rem; flex:none; }
-.scan-tools:empty{ display:none; }
-.scan-head:has(.scan-tools:not(:empty)){ padding-left:.5rem; }
-.scan-head .slice-btn, .scan-head .slice-regions{ height:auto; padding:.5rem .7rem .42rem; }
-@media (pointer:coarse){ .scan-head .slice-btn, .scan-head .slice-regions{ min-height:44px; } }
-/* the head has one Reset, the page's, which puts back the view and the cuts
-   together; nothing resets the cuts alone since v12.32: Slice turned off
-   shows the brain whole, and a slider drawn back to its mark undoes its cut */
-/* on a phone the head is short of room once the slice buttons join it: the
-   Area button shows its last word alone and the note steps aside while
-   slicing is on, the name staying, so the head changes as little as it can
-   and Slice and Reset never move */
-@media (max-width:760px){
-  .scan-head .lbl-more{ display:none; }
-  .scan-head:has(.slice-btn.active) small{ display:none; }
-}
-
-/* ── the brain in 3D ─────────────────────────────────────────────────────
-   The picked area lit on the MNI152 brain, rendered in 3D and nothing else,
-   in a box of its own on show in every layout: under the reading or across
-   the foot on an iPad or a computer, under the faces on a phone upright,
-   beside them held sideways. It takes the screen's scan area once the
-   script has laid the screen out, and the viewer and the brain are fetched
-   as the page opens. */
+/* ── the brain ───────────────────────────────────────────────────────────
+   The picked area lit on the MNI152 brain, in a box of its own on show in
+   every layout: under the reading or across the foot on an iPad or a
+   computer, under the faces on a phone upright, beside them held sideways.
+   It takes the screen's scan area once the script has laid the screen out,
+   and the viewer and the brain are fetched as the page opens. Since v12.34,
+   at the owner's word, the box is the atlases' four views and has no banner
+   and no lines: the views' bar at its top, as the 3D Region Atlas has it
+   (assets/atlas-views.css with view-bar.js: Slice at the far left, greyed
+   while a slice is shown alone, Area beside it while slicing, then All and
+   each view alone), and beneath it the 3D view, a slice through the picked
+   area, or all four two by two. Until then a banner named it In 3D over a
+   framed render, with Slice and Reset in the banner. */
 .scan{
   display:none; grid-area:scan; flex-direction:column; min-height:0; min-width:0;
-  border:1px solid var(--hair); overflow:hidden; background:var(--paper);
+  position:relative; overflow:hidden; background:var(--paper);
 }
 .ba-screen.one .scan, .ba-screen.land .scan, .ba-screen.tall .scan, .ba-screen.wide .scan{ display:flex; }
-.scan-head{ flex:none; display:flex; align-items:center; gap:.6rem; padding:.4rem .5rem .4rem .9rem; border-bottom:1px solid var(--hair); }
-.scan-head b{ font-family:var(--font-brand); font-weight:500; font-size:.66rem; letter-spacing:.28em; text-transform:uppercase; white-space:nowrap; }
-.scan-head small{ font-family:var(--font-serif); font-style:italic; font-size:.82rem; color:var(--ink-60); flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.scan-head .ts-btn{ flex:none; }
-.ts-btn{ border:1px solid var(--hair); background:var(--paper); color:var(--ink); font-family:var(--font-brand); font-weight:500; font-size:.62rem; letter-spacing:.2em; text-transform:uppercase; cursor:pointer; padding:.5rem .7rem .42rem; text-decoration:none; line-height:1; }
-@media (hover: hover){ .ts-btn:hover{ background:var(--ink); color:var(--paper); } }
-@media (pointer:coarse){ .ts-btn{ min-height:44px; } }
+.scan .views-wrap{ position:relative; flex:1 1 auto; min-height:0; }
+.scan .views{ height:100%; grid-template-columns:minmax(0,1fr) minmax(0,1fr); grid-template-rows:minmax(0,1fr) minmax(0,1fr); gap:var(--gap); }
+.scan .views .view{ min-height:0; min-width:0; }
+/* while the brain comes in, or if it cannot, a line in the middle of the views */
+.scan-note{
+  position:absolute; left:1rem; right:1rem; top:50%; z-index:3; margin:0; transform:translateY(-50%);
+  pointer-events:none; text-align:center;
+  font-family:var(--font-serif); font-style:italic; font-size:.88rem; line-height:1.4; color:var(--ink-60);
+}
+.scan-note:empty{ display:none; }
+/* a phone: the views' bar close-set, as the atlases have it there, and the views closer together */
+.ba-screen.one .scan .viewbar, .ba-screen.land .scan .viewbar{ margin-bottom:8px; padding:.3rem; }
+.ba-screen.one .scan .viewbar .pbtn, .ba-screen.land .scan .viewbar .pbtn{ min-width:0; padding:.3rem .42rem .25rem; }
+.ba-screen.one .scan .viewbar-slice, .ba-screen.land .scan .viewbar-slice{ padding-right:.3rem; margin-right:.2rem; }
+.ba-screen.land .scan .viewbar .pbtn{ min-height:40px; padding-top:.2rem; padding-bottom:.15rem; gap:.18rem; }
+.ba-screen.one .scan .views, .ba-screen.land .scan .views{ gap:6px; }
 .scan-stage{ position:relative; flex:1 1 auto; min-height:0; background:#111111; touch-action:none; }   /* the page's black, as the scan's ground (v12.1) */
 .scan-stage canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; outline:none; }
 /* light, the brain stands on white, and dark on the page's black (v12.1); the viewer paints its parent pure black as it attaches */
@@ -607,7 +596,7 @@ body.ba-land{ padding-bottom:0; }
 /* upright on a phone the five tabs share the width, so they stand closer and
    drop the atlas's minimum width, and the bar never has to scroll */
 .ba-screen.one .panelbar{ gap:.3rem; padding-left:.35rem; padding-right:.35rem; }
-.ba-screen.one .pbtn{ min-width:0; padding:.3rem .3rem .25rem; }   /* six to the bar since v12.11, the faces' three among them */
+.ba-screen.one .panelbar .pbtn{ min-width:0; padding:.3rem .3rem .25rem; }   /* six to the bar since v12.11, the faces' three among them */
 .ba-screen.one .panelbar-views{ padding-right:.3rem; margin-right:.1rem; }
 .ba-screen.one .panelbar-end{ padding-left:.3rem; }
 .ba-screen.one .pbtn.pbtn-ref{ margin-left:.1rem; padding-left:.5rem; }
@@ -624,9 +613,9 @@ body.ba-land{ padding-bottom:0; }
   margin:0 0 .25rem; padding:0 0 .25rem; border-right:0; border-bottom:1px solid var(--hair);
 }
 .ba-screen.land .panelbar-end{ margin-left:0; padding-left:0; padding-bottom:0; border-bottom:0; }
-.ba-screen.land .pbtn{ min-width:0; width:100%; min-height:48px; padding:.25rem .1rem .2rem; gap:.2rem; }
-.ba-screen.land .pbtn.pbtn-ref{ margin-left:0; padding-left:.1rem; border-left:0; }
-.ba-screen.land .pbtn span{ font-size:.46rem; letter-spacing:.08em; line-height:1.15; white-space:normal; text-align:center; max-width:100%; }
+.ba-screen.land .panelbar .pbtn{ min-width:0; width:100%; min-height:48px; padding:.25rem .1rem .2rem; gap:.2rem; }
+.ba-screen.land .panelbar .pbtn.pbtn-ref{ margin-left:0; padding-left:.1rem; border-left:0; }
+.ba-screen.land .panelbar .pbtn span{ font-size:.46rem; letter-spacing:.08em; line-height:1.15; white-space:normal; text-align:center; max-width:100%; }
 
 /* ── the window of notes ────────────────────────────────────────────────
    What this is and the credits, over the brain's box, raised and put away
@@ -725,18 +714,40 @@ body.ba-land{ padding-bottom:0; }
         <div class="cart-stage" id="cartMedial"></div>
       </figure>
     </div>
-    <!-- the picked area lit on the brain in 3D: a box of its own, on show in
-         every layout, the viewer fetched as the page opens -->
-    <aside class="scan" id="baScan" aria-label="The picked area on the brain in 3D">
-      <header class="scan-head"><span class="scan-tools" id="scanTools"></span><b>In 3D</b><small id="scanNote">the MNI152 brain, the picked area lit</small><button class="ts-btn" id="scanReset" type="button" aria-label="Reset the view and the cuts">Reset</button></header>
-      <div class="scan-stage"><canvas id="baRen"></canvas></div>
+    <!-- the picked area lit on the brain: a box of its own, on show in every layout, the viewer
+         fetched as the page opens; since v12.34, at the owner's word, the atlases' four views under
+         the views' bar (Slice at the far left, greyed while a slice is shown alone, Area beside it
+         while slicing, then the views), with no banner and no lines -->
+    <aside class="scan quad" id="baScan" aria-label="The picked area on the brain">
+      <nav class="viewbar" aria-label="Views">
+        <div class="viewbar-slice" role="group" aria-label="Slice">
+          <button class="pbtn vb-slice" type="button" aria-pressed="false" disabled title="A slider on each edge of the 3D view, each a cut taking the brain away from that side; off, it is whole again"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 21 8l-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5M3 16l9 5 9-5"/></svg><span>Slice</span></button>
+          <button class="pbtn vb-regions" type="button" aria-pressed="false" hidden title="Cut the lit area with the brain, or leave it whole inside it"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 13a7.5 7.5 0 0 1 15 0"/><path d="M4.5 13a7.5 7.5 0 0 0 15 0" stroke-dasharray="1.6 2.6"/><path d="M2.5 13h19"/></svg><span>Area</span></button>
+        </div>
+        <div class="viewbar-views" role="group" aria-label="View">
+          <button class="pbtn" type="button" data-view="all" aria-pressed="false" aria-label="All four views"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg><span>All</span></button>
+          <button class="pbtn" type="button" data-view="render" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>3D</span></button>
+          <button class="pbtn" type="button" data-view="axial" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16"/></svg><span>Axial</span></button>
+          <button class="pbtn" type="button" data-view="coronal" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8"/></svg><span>Coronal</span></button>
+          <button class="pbtn" type="button" data-view="sagittal" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 4v16"/></svg><span>Sagittal</span></button>
+        </div>
+      </nav>
+      <div class="views-wrap">
+        <div class="views" id="baViews">
+          <div class="view" data-box="axial"><div class="scan-stage"><canvas id="baAx"></canvas></div></div>
+          <div class="view" data-box="coronal"><div class="scan-stage"><canvas id="baCor"></canvas></div></div>
+          <div class="view" data-box="sagittal"><div class="scan-stage"><canvas id="baSag"></canvas></div></div>
+          <div class="view shown" data-box="render"><div class="scan-stage"><canvas id="baRen"></canvas></div></div>
+        </div>
+        <p class="scan-note" id="scanNote" role="status"></p>
+      </div>
     </aside>
     <!-- the page's notes, a window over the brain raised from the bar's About -->
     <aside class="pop" id="popAbout" hidden aria-labelledby="about-h">
       <header class="pop-head"><b>About</b><small>the map, and where it came from</small><button class="pop-x" type="button" id="aboutX" aria-label="Close the notes">&times;</button></header>
       <div class="pop-body prose">
     <h2 id="about-h">What this is</h2>
-    <p>The two faces are a line map of the classic Brodmann scheme, descending from Brodmann&rsquo;s own 1909 figures: every area outlined and numbered, nothing drawn beneath. Tap an area and it fills in its lobe&rsquo;s colour on the face that shows it, and what it does appears beside the map; tap it again to let it go, and pinch a face to look closer. Anterior is on the left in the external view and, as the scheme is conventionally drawn, on the right in the internal one. The drawing is a schematic; where each area actually sits in a real head, with the atlas&rsquo;s own boundaries, is what the brain in 3D shows: the area lit on the MNI152 brain, which turns under a finger, always on show beside the map on an iPad or a computer, beside the faces on a phone held sideways, and raised over them by the bar&rsquo;s <b>3D</b> tab on a phone upright. Brodmann Areas diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN &ndash; Institute for EEG-Neurofeedback / Neurofeedback Academy</a>.</p>
+    <p>The two faces are a line map of the classic Brodmann scheme, descending from Brodmann&rsquo;s own 1909 figures: every area outlined and numbered, nothing drawn beneath. Tap an area and it fills in its lobe&rsquo;s colour on the face that shows it, and what it does appears beside the map; tap it again to let it go, and pinch a face to look closer. Anterior is on the left in the external view and, as the scheme is conventionally drawn, on the right in the internal one. The drawing is a schematic; where each area actually sits in a real head, with the atlas&rsquo;s own boundaries, is what the brain shows: the area lit on the MNI152 brain in 3D, which turns under a finger, and in the axial, coronal and sagittal slices through it, picked on the bar along the brain&rsquo;s top, where Slice cuts into the 3D view; always on show beside the map on an iPad or a computer, beside the faces on a phone held sideways, and raised over them by the bar&rsquo;s <b>3D</b> tab on a phone upright. Brodmann Areas diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN &ndash; Institute for EEG-Neurofeedback / Neurofeedback Academy</a>.</p>
     <p>Brodmann numbered the cortex in 1909 by how its cells are layered, not by what it does, which is why the numbers wander about the brain and why several of his 52 have no agreed human counterpart. The 41 here are those the atlas labels; 12, 31 and 33 are drawn dashed because the atlas does not carry them, and 48, the peri-Sylvian and insular territory, is buried and reaches neither face. Each area is bilateral: Brodmann described cortical types, not hemispheres, so where a function is strongly one-sided the note says so. The boundaries are an approximation to begin with: they were drawn from a handful of post-mortem brains, and no two people&rsquo;s cortex is folded the same way. Read a boundary as a neighbourhood, not a border. Educational, not diagnostic.</p>
     <div class="credits">
       <p>Brodmann diagram adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN</a>. Area data from the Brodmann atlas in <a href="https://github.com/neurolabusc/MRIcron" target="_blank" rel="noopener">MRIcron</a> (BSD), on the MNI152 template, the brain rendered with <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a> (Rorden lab).</p>
@@ -775,6 +786,7 @@ body.ba-land{ padding-bottom:0; }
 <script src="assets/scan-look.js"></script>
 <script src="assets/zoom.js"></script>
 <script src="assets/slice-tool.js"></script>
+<script src="assets/view-bar.js"></script>
 <script src="assets/diagram-gestures.js"></script>
 <script>
 "use strict";
@@ -1008,7 +1020,7 @@ body.ba-land{ padding-bottom:0; }
   function select(ba, quiet){
     selected = (selected === ba) ? null : ba;
     read(); markCartoon(); markAddress();
-    paintScan();
+    paintScan(); centreScan();
     if (selected != null && window.MN && !quiet) MN.tap("light");
   }
 
@@ -1046,14 +1058,29 @@ body.ba-land{ padding-bottom:0; }
     });
   });
 
-  /* ── the brain in 3D ─────────────────────────────────────────────────────
-     The MNI152 template rendered in 3D with the Brodmann atlas volume over
-     it, the picked area lit in its lobe's colour, in a box of its own on
-     show in every layout; the viewer and the brain are fetched as the page
-     opens. One pick at a time, so the table lights one label and clears the
-     rest. */
-  var scanState = "idle", ren = null, home = null, slice = null, scanOpen = false;
+  /* ── the brain ─────────────────────────────────────────────────────────
+     The MNI152 template with the Brodmann atlas volume over it, the picked
+     area lit in its lobe's colour, in a box of its own on show in every
+     layout; the viewer and the brain are fetched as the page opens. One pick
+     at a time, so the table lights one label and clears the rest. Since
+     v12.34, at the owner's word, the box is the atlases' four views, drawn
+     and kept in step as theirs are: the 3D view and the axial, coronal and
+     sagittal slices, picked on the views' bar at its top (assets/view-bar.js;
+     the 3D view to begin with, the pick kept as vn-ba-scan-view), and the
+     slices brought through the picked area as it is picked. The banner that
+     named the box In 3D went with them, and its Reset: a double tap or
+     click on a view puts its zoom back, as on the atlases, not the angle. */
+  var PLANES = [
+    {id:"baRen", key:"render",   st:"RENDER"},
+    {id:"baAx",  key:"axial",    st:"AXIAL"},
+    {id:"baCor", key:"coronal",  st:"CORONAL"},
+    {id:"baSag", key:"sagittal", st:"SAGITTAL"}
+  ];
+  var scanState = "idle", byKey = {}, scanInstances = [], spots = null, slice = null, scanOpen = false;
   var scanEl = document.getElementById("baScan"), scanNote = document.getElementById("scanNote"), scanBtn = document.getElementById("scanBtn");
+  function stageOf(key){ var v = scanEl.querySelector('.view[data-box="' + key + '"]'); return v ? v.querySelector(".scan-stage") : null; }
+  var vbar = window.MN_VIEWBAR ? MN_VIEWBAR.attach({ main: scanEl, key: "vn-ba-scan-view", start: "render" }) : null;
+  if (vbar) vbar.show(vbar.picked(), false);
   function loadScript(src){
     return new Promise(function(res, rej){
       var el = document.createElement("script");
@@ -1091,71 +1118,141 @@ body.ba-land{ padding-bottom:0; }
     scanNote.textContent = "Loading the brain…";
     var p = (typeof niivue === "undefined") ? loadScript("assets/niivue.js") : Promise.resolve();
     p.then(function(){
+      /* a viewer to each view, attached in turn */
       var c = window.MN_LOOK ? MN_LOOK.colours() : {back:[0,0,0,1], cross:[1,1,1,1]};
-      ren = new niivue.Niivue({
-        backColor:c.back, crosshairColor:c.cross, show3Dcrosshair:false,
-        sliceType:niivue.SLICE_TYPE.RENDER, invertScrollDirection:true, dragAndDropEnabled:false, textHeight:0.04
+      return PLANES.reduce(function(chain, pl){
+        return chain.then(function(){
+          var nv = new niivue.Niivue({
+            backColor:c.back, crosshairColor:c.cross, show3Dcrosshair:false,
+            sliceType:niivue.SLICE_TYPE[pl.st], invertScrollDirection:true, dragAndDropEnabled:false, textHeight:0.04
+          });
+          byKey[pl.key] = nv; scanInstances.push(nv);
+          return Promise.resolve(nv.attachToCanvas(document.getElementById(pl.id))).then(function(){
+            if (window.MN_LIFE) MN_LIFE.register(nv);
+          });
+        });
+      }, Promise.resolve());
+    }).then(function(){
+      return Promise.all(scanInstances.map(function(nv){
+        return nv.loadVolumes([
+          {url:"assets/mni152.nii.gz", name:"mni152.nii.gz", colormap:"gray", opacity:1},
+          {url:"assets/brodmann.nii.gz", name:"brodmann.nii.gz", opacity:0.9}
+        ]);
+      }));
+    }).then(function(){
+      PLANES.forEach(function(pl){ byKey[pl.key].setSliceType(niivue.SLICE_TYPE[pl.st]); });
+      /* a crosshair moved in one slice moves the others */
+      scanInstances.forEach(function(nv){
+        nv.broadcastTo(scanInstances.filter(function(o){ return o !== nv; }), {"2d":true, "3d":true});
       });
-      return ren.attachToCanvas(document.getElementById("baRen"));
-    }).then(function(){
-      if (window.MN_LIFE) MN_LIFE.register(ren);
-      return ren.loadVolumes([
-        {url:"assets/mni152.nii.gz", name:"mni152.nii.gz", colormap:"gray", opacity:1},
-        {url:"assets/brodmann.nii.gz", name:"brodmann.nii.gz", opacity:0.9}
-      ]);
-    }).then(function(){
-      ren.setSliceType(niivue.SLICE_TYPE.RENDER);
-      home = { az: ren.scene.renderAzimuth, el: ren.scene.renderElevation, scale: ren.scene.volScaleMultiplier };
       if (window.MN_LOOK){ paintScene(); MN_LOOK.follow(paintScene); }
-      /* the wheel and a pinch zoom the brain, a drag turns it */
+      /* the wheel and a pinch zoom the brain, a drag turns it; the slices
+         answer to drag and touch, a pinch zooming and two fingers panning */
       var Z = window.MN_ZOOM || window.MN_WHEEL;
-      if (Z) Z.attach({ stage: scanEl.querySelector(".scan-stage"), nv: ren });
-      /* the cuts, as the atlases have them: Slice in the head puts a slider
-         on each edge of the stage, and Slice area takes the cuts through
-         the lit area with the brain; the head's Reset clears them with the view */
+      if (Z){
+        Z.attach({ stage: stageOf("render"), nv: byKey.render });
+        ["axial", "coronal", "sagittal"].forEach(function(k){
+          Z.attach({ stage: stageOf(k), nv: byKey[k], mode: "slice", wheel: "none" });
+        });
+      }
+      /* the cuts, as the atlases have them, on the 3D view: Slice on the
+         views' bar puts a slider on each edge of it, and Area beside it takes
+         the cuts through the lit area with the brain */
       if (window.MN_SLICE){
         /* the cuts are kept on the device with the pick (v12.1, at the owner's word) */
-        slice = MN_SLICE.attach({ stage: scanEl.querySelector(".scan-stage"), tools: document.getElementById("scanTools"), nv: ren, regions: "Slice area",
-          onChange: function(st){ try{ localStorage.setItem("vn-ba-cuts", JSON.stringify(st)); }catch(e){} } });
+        slice = MN_SLICE.attach({ stage: stageOf("render"), nv: byKey.render, regions: "Slice area",
+          onChange: function(st){
+            try{ localStorage.setItem("vn-ba-cuts", JSON.stringify(st)); }catch(e){}
+            if (window.MN_VIEWBAR) MN_VIEWBAR.paint();
+          } });
         try{ var keptCuts = JSON.parse(localStorage.getItem("vn-ba-cuts") || "null"); if (keptCuts && slice) slice.setState(keptCuts); }catch(e){}
+        if (slice && window.MN_VIEWBAR) MN_VIEWBAR.slice(slice);
       }
+      spots = findSpots(byKey.render.volumes[1]);
       scanState = "ready";
-      scanNote.textContent = "the MNI152 brain, the picked area lit";
+      scanNote.textContent = "";
       paintScan();
+      centreScan();
       if (window.MN_LIFE) MN_LIFE.remeasure();
     }).catch(function(err){
       scanState = "failed";
       scanNote.textContent = "The brain could not be loaded: " + (err && err.message ? err.message : err);
     });
   }
-  function paintScene(){ MN_LOOK.paint([{nv: ren, slice: false}]); }
+  function paintScene(){
+    MN_LOOK.paint(PLANES.map(function(pl){ return {nv: byKey[pl.key], slice: pl.key !== "render"}; }));
+  }
   function hexToRgb(h){ var n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
   /* one colour, the picked area's, in the table assets/scan-look.js pads so
-     no clear label beside the lit one is drawn black */
+     no clear label beside the lit one is drawn black, in every view */
   function paintScan(){
-    if (scanState !== "ready" || !window.MN_LOOK || !ren) return;
-    var n = B.MAX + 1, cm = MN_LOOK.labelTable(n, B.LABELS);
-    if (selected != null && selected < n && B.BY_BA[selected]){
-      var rgb = hexToRgb(LOBE_COLOUR[B.BY_BA[selected].lobe] || "#5A61D8");
-      cm.R[selected] = rgb[0]; cm.G[selected] = rgb[1]; cm.B[selected] = rgb[2]; cm.A[selected] = 255;
+    if (scanState !== "ready" || !window.MN_LOOK) return;
+    var n = B.MAX + 1, rgb = null;
+    if (selected != null && selected < n && B.BY_BA[selected]) rgb = hexToRgb(LOBE_COLOUR[B.BY_BA[selected].lobe] || "#5A61D8");
+    scanInstances.forEach(function(nv){
+      if (!nv.volumes || nv.volumes.length < 2) return;
+      var cm = MN_LOOK.labelTable(n, B.LABELS);
+      if (rgb){ cm.R[selected] = rgb[0]; cm.G[selected] = rgb[1]; cm.B[selected] = rgb[2]; cm.A[selected] = 255; }
+      nv.volumes[1].setColormapLabel(cm);
+      nv.updateGLVolume();
+    });
+  }
+  /* Where each area stands, for the slices: the voxel of its part in the left
+     hemisphere, the faces' side, nearest that part's middle, so the three
+     planes cross the area itself whatever its shape (an arc's middle can lie
+     outside it), or of the whole area where it has no left part. Found once
+     in the atlas's own grid as the brain comes in, and kept in millimetres,
+     since the template the crosshair is measured against is another grid. */
+  function findSpots(vol){
+    if (!vol || !vol.img || !vol.hdr || !vol.hdr.affine) return null;
+    var d = vol.hdr.dims, nx = d[1], ny = d[2], nz = d[3], img = vol.img, A = vol.hdr.affine;
+    var N = 256, left = new Float64Array(N * 4), all = new Float64Array(N * 4);
+    var i, j, k, v, at, x0, o;
+    for (k = 0; k < nz; k++) for (j = 0; j < ny; j++){
+      x0 = A[0][1] * j + A[0][2] * k + A[0][3]; at = (k * ny + j) * nx;
+      for (i = 0; i < nx; i++){
+        v = img[at + i];
+        if (!(v > 0 && v < N)) continue;
+        o = v * 4; all[o] += i; all[o + 1] += j; all[o + 2] += k; all[o + 3]++;
+        if (A[0][0] * i + x0 < 0){ left[o] += i; left[o + 1] += j; left[o + 2] += k; left[o + 3]++; }
+      }
     }
-    if (ren.volumes && ren.volumes.length > 1){ ren.volumes[1].setColormapLabel(cm); ren.updateGLVolume(); }
+    var mid = new Float64Array(N * 3), onLeft = new Uint8Array(N), best = new Float64Array(N), at3 = new Int32Array(N * 3);
+    for (v = 1; v < N; v++){
+      var sums = left[v * 4 + 3] ? left : all, c = sums[v * 4 + 3];
+      best[v] = c ? Infinity : -1;
+      if (!c) continue;
+      onLeft[v] = sums === left ? 1 : 0;
+      mid[v * 3] = sums[v * 4] / c; mid[v * 3 + 1] = sums[v * 4 + 1] / c; mid[v * 3 + 2] = sums[v * 4 + 2] / c;
+    }
+    for (k = 0; k < nz; k++) for (j = 0; j < ny; j++){
+      x0 = A[0][1] * j + A[0][2] * k + A[0][3]; at = (k * ny + j) * nx;
+      for (i = 0; i < nx; i++){
+        v = img[at + i];
+        if (!(v > 0 && v < N) || best[v] < 0) continue;
+        if (onLeft[v] && !(A[0][0] * i + x0 < 0)) continue;
+        var di = i - mid[v * 3], dj = j - mid[v * 3 + 1], dk = k - mid[v * 3 + 2], dd = di * di + dj * dj + dk * dk;
+        if (dd < best[v]){ best[v] = dd; at3[v * 3] = i; at3[v * 3 + 1] = j; at3[v * 3 + 2] = k; }
+      }
+    }
+    var out = {};
+    for (v = 1; v < N; v++){
+      if (!(best[v] >= 0 && best[v] < Infinity)) continue;
+      var p3 = [at3[v * 3], at3[v * 3 + 1], at3[v * 3 + 2]];
+      out[v] = [0, 1, 2].map(function(r){ return A[r][0] * p3[0] + A[r][1] * p3[1] + A[r][2] * p3[2] + A[r][3]; });
+    }
+    return out;
   }
-  /* the brain back at the angle and size it arrived at */
-  /* the view home and the brain whole: the one Reset in the head puts back
-     the angle and the scale, and clears any cuts the slice tool has made */
-  function resetView(){
-    if (!ren || !home) return;
-    if (slice) slice.reset();
-    try{
-      if (ren.setRenderAzimuthElevation) ren.setRenderAzimuthElevation(home.az, home.el);
-      else { ren.scene.renderAzimuth = home.az; ren.scene.renderElevation = home.el; }
-      ren.scene.volScaleMultiplier = home.scale;
-      ren.drawScene();
-    }catch(e){}
+  /* the slices through the picked area; nothing picked, they stay where they are */
+  function centreScan(){
+    if (scanState !== "ready" || selected == null || !spots || !spots[selected]) return;
+    var mm = spots[selected];
+    scanInstances.forEach(function(nv){
+      try{ nv.scene.crosshairPos = nv.mm2frac(mm); nv.drawScene(); }catch(e){}
+    });
   }
-  document.getElementById("scanReset").addEventListener("click", resetView);
-  scanEl.querySelector(".scan-stage").addEventListener("wheel", function(e){ e.preventDefault(); }, {capture:true, passive:false});
+  var renStage = stageOf("render");
+  if (renStage) renStage.addEventListener("wheel", function(e){ e.preventDefault(); }, {capture:true, passive:false});
   if (landQ){ if (landQ.addEventListener) landQ.addEventListener("change", onLand); else landQ.addListener(onLand); }
   if (wideQ){ if (wideQ.addEventListener) wideQ.addEventListener("change", fitSoon); else wideQ.addListener(fitSoon); }
 

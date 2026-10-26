@@ -15,7 +15,7 @@
    dismissed and, for the map, the crosshair 4 mm left of the midline as
    store/APP-STORE.md records. Since v12.9 the Brodmann shot is the Brodmann
    Area Atlas's own page (brodmann.html, since v11.12) on BA17, waiting for
-   the brain in 3D where the layout fetches it as the page opens (an iPad or
+   the brain where the layout fetches it as the page opens (an iPad or
    a tablet) and for the faces alone on a phone, where the brain waits for
    the bar's 3D tab; the pages being one screen each since v11.22 and after,
    the framing rules below scroll nothing on them and stay for the pages
@@ -77,7 +77,8 @@ const SHOTS = {
     ready: (p) => p.waitForFunction(() => document.getElementById('status').classList.contains('hidden'), null, { timeout: 300000 }) },
   brodmann: { url: 'brodmann.html#ba=17',
     ready: (p) => p.waitForFunction(() => !!document.querySelector('#cartLateral svg'), null, { timeout: 120000 })
-      .then(() => p.waitForFunction(() => !!document.querySelector('#scanTools .slice-btn') || document.getElementById('baScreen').classList.contains('one'), null, { timeout: 300000 }))
+      /* the brain is in when the views' bar's Slice wakes (v12.34; until then the tool's own Slice in the banner) */
+      .then(() => p.waitForFunction(() => { const b = document.querySelector('#baScan .vb-slice'); return (b && !b.disabled) || document.getElementById('baScreen').classList.contains('one'); }, null, { timeout: 300000 }))
       .then(() => p.waitForTimeout(1500)) },
   tracts: { url: 'tracts.html',
     /* the revolve is switched off before the shot: a software renderer cannot both spin the tractogram and hand over a frame */

@@ -1,5 +1,7 @@
 /* The views' bar, for the pages whose four views sit in a .views-wrap
-   (the 3D Region Atlas, the Network Atlas and the Hallucinations study).
+   (the 3D Region Atlas, the Network Atlas and the Hallucinations study),
+   and since v12.34 the Brodmann Area Atlas's brain, whose box holds the bar
+   and the four views alike.
 
    Since v12.33, at the owner's word, the views carry no bars of their own,
    no names, expand buttons or borders: one bar at the top of the stage, an
@@ -12,6 +14,8 @@
    experienced. The styles are in atlas-views.css and bar.css.
 
      var bar = MN_VIEWBAR.attach({ main: <main.screen>, key: "vn-atlas-view" })
+       main holds the bar and the views and takes .all; start, the view
+       shown until the person picks one, is all unless given
        bar.show(key, keep)   all, render, axial, coronal or sagittal; keep
                              makes it the person's pick and remembers it
        bar.picked()          the person's pick, kept for a larger screen
@@ -19,7 +23,8 @@
      MN_VIEWBAR.paint()      after the tool's state changes
 
    The bar's foot, measured from the stage's top, is written onto the main
-   as --vbar, so the sheets rising from the foot stop short of it. */
+   as --vbar, so the sheets rising from the foot stop short of it; a bar
+   with no .stage around it (the Brodmann page's) writes none. */
 window.MN_VIEWBAR = (function(){
 
 var page = null, tool = null;
@@ -31,7 +36,7 @@ function attach(o){
   var views = main.querySelectorAll(".views .view[data-box]");
   var viewBtns = bar.querySelectorAll("[data-view]");
   var sliceBtn = bar.querySelector(".vb-slice"), regionsBtn = bar.querySelector(".vb-regions");
-  var now = "all", picked = "all";
+  var now = o.start || "all", picked = now;
   try{
     var k = localStorage.getItem(o.key);
     if (k && (k === "all" || main.querySelector('.views .view[data-box="' + k + '"]'))) picked = k;

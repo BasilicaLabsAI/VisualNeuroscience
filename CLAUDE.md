@@ -443,11 +443,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   Network Atlas, Tractography) is gone, and the tool's own Reset cuts with it (`slice-tool.js` draws no reset button and
   takes no `reset` option), so Slice turned off shows the head whole, a slider drawn back to its centre mark undoes its
   cut and a double-click returns it at once; the tool's `reset()` stays for the pages' own Reset of the view
-  (Tractography's Reset view, the Brodmann page's head Reset, which put back the view and the cuts together). Slice
-  stands at the far left wherever it is: first on the views' bar of the four-view pages (v12.33; until then first in the
-  3D view's own bar), first on Tractography's bar and leading the Brodmann page's scan head (both v12.32). Since v12.33
-  `tools` is optional: left out, the tool draws no buttons and the page drives it through `open()`, `close()` and
-  `setRegions()`, reading `state()` back (the views' bar, Tractography); the Brodmann page still hands it `#scanTools`. Held sideways (v11.42: `main.screen.one.land`, the script's `land` query, a coarse pointer in
+  (Tractography's Reset view, which puts back the view and the cuts together; the Brodmann page's banner Reset did too
+  until v12.34). Slice stands at the far left wherever it is: first on the views' bar of the four-view pages (v12.33;
+  until then first in the 3D view's own bar) and of the Brodmann page's brain (v12.34; from v12.32 it led the brain's
+  banner), and first on Tractography's bar (v12.32). Since v12.33 `tools` is optional: left out, the tool draws no
+  buttons and the page drives it through `open()`, `close()` and `setRegions()`, reading `state()` back (the views' bar,
+  Tractography); since v12.34 no page hands it `tools`. Held sideways (v11.42: `main.screen.one.land`, the script's `land` query, a coarse pointer in
   landscape) the bar stands along the right edge, its buttons one to a row since v12.24, at the owner's word (two to a row, 66px
   cells in a 141px bar, from v11.58 took too much of the short screen's width), each its icon over its name as upright,
   in a 76px bar that scrolls when they run past its foot (the longest name carries a soft hyphen), the
@@ -461,18 +462,26 @@ Read this first in every session. It is the handover; nothing else needs pasting
   Since v11.15, at the owner's request, it is one screen and nothing else: the two faces of the map
   (`brodmann-outline.js`) and the reading of the picked area (`brodmann-areas.js`), fitted to the window under the
   header (the script measures `--screen-top`). On every screen the three views show together, the two faces, the
-  brain in 3D and the reading of the picked area. The brain (`#baScan`) is a grid item, `grid-area:scan`, shown once the
-  script marks the screen's layout (`.one`, `.land`, `.tall` or `.wide`), with one NiiVue render (`ren`, fetched as the
-  page opens by `applyScanMode` and `ensureScan`, `show3Dcrosshair:false`, the MNI152 template with
-  `assets/brodmann.nii.gz` over it at 0.9), the picked area lit by `paintScan` from `MN_LOOK.labelTable` and the lobe
-  colour, zoom and rotation from `zoom.js`, Reset (`resetView`, the angle and scale kept in `home`, clearing the cuts
-  too since v11.72) and the atlases' Slice tool (v11.71: `slice-tool.js`, attached as the scan becomes ready with its
-  buttons in `#scanTools` in the head, `regions: "Slice area"` cutting the lit area with the brain; its styles carried
-  inline as `.ts-btn`'s are; on a phone, `max-width:760px`, the head's note hides
-  while slicing is on, `:has(.slice-btn.active)`, the name staying since v11.81, and `.lbl-more` hides so the Area
-  button reads its one word; since v12.32, at the owner's word, the group leads the head, `#scanTools` before the name
-  (`.scan-tools:empty` hidden until the scan is ready), Slice at the far left as on every page that slices and Slice
-  area after it, so Slice keeps its place as the Area button comes and goes, with the head's Reset at the right). No list, graph or export; BA48, on neither face, is reached from the empty reading,
+  brain and the reading of the picked area. The brain (`#baScan`, `.scan.quad`) is a grid item, `grid-area:scan`, shown
+  once the script marks the screen's layout (`.one`, `.land`, `.tall` or `.wide`). Since v12.34, at the owner's word, it
+  is the atlases' four views, with no banner and no lines: the views' bar at its top (`nav.viewbar`, `view-bar.js` and
+  `atlas-views.css` as on the 3D Region Atlas, attached with the box itself as `main`, `start:"render"` and the pick
+  kept as `vn-ba-scan-view`: Slice at the far left, greyed while a slice is shown alone, Area beside it while slicing,
+  then All, 3D, Axial, Coronal and Sagittal; close-set on a phone by the page's own `.ba-screen.one .scan .viewbar`
+  rules, and the bottom bar's sideways button rules scoped to `.panelbar` so they leave it alone), and beneath it four
+  NiiVue instances (`PLANES`, `byKey`, `scanInstances`; fetched as the page opens by `applyScanMode` and `ensureScan`,
+  each with the MNI152 template and `assets/brodmann.nii.gz` over it at 0.9, `show3Dcrosshair:false`, kept in step by
+  `broadcastTo` and painted by `MN_LOOK.paint`), the 3D view to begin with, the picked area lit in all four by
+  `paintScan` from `MN_LOOK.labelTable` and the lobe colour, and the slices brought through it at each pick by
+  `centreScan`, from `findSpots`, run once as the brain comes in: for each label the voxel of its left-hemisphere part
+  (the faces' side; every area is bilateral, so the whole area's middle lies near the midline) nearest that part's
+  middle, which an arc's middle may miss, kept in millimetres for `mm2frac`. Zoom and rotation come from `zoom.js` (the
+  slices `mode:"slice", wheel:"none"`, as on the atlases), and the cuts from the atlases' Slice tool (v11.71:
+  `slice-tool.js` on the 3D view, attached without `tools` as the scan becomes ready, `regions: "Slice area"` cutting
+  the lit area with the brain, the cuts kept as `vn-ba-cuts`). Loading and failure are a line over the views
+  (`#scanNote`, `.scan-note`). Until v12.34 the box was one framed render under a banner, In 3D with its note, the
+  tool's own Slice and Slice area (leading it since v12.32) and Reset, which put back the angle, the scale and the
+  cuts; the banner and Reset went together, and a double tap or click puts a view's zoom back, not the angle. No list, graph or export; BA48, on neither face, is reached from the empty reading,
   and the page never links away to the 3D Region Atlas (the owner's wish, v11.59). `#ba=<n>` opens on an area, the
   address follows the pick, and the MCP server's `brodmann_area` answers link there. On an iPad or a computer (v11.66:
   `isWide()`, the `(min-width: 761px)` query and not `.land`) `arrange()` marks the screen `.tall` (taller than wide, an
@@ -500,7 +509,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `aspect-ratio:3 / 2`, centred), and the brain is a panel over the faces' cell (`.ba-screen.one .scan`, `grid-area:1 /
   1 / 2 / 2`, below the screen and `visibility:hidden` until `.in`) that the bar's 3D tab (`#scanBtn`, `setScan`,
   `scanOpen`; hidden on `.land`, `.tall` and `.wide`) slides up and down, fetched the first time it rises
-  (`applyScanMode` leaves `.one` alone), Escape lowering it after About and the text; the Outside, Inside and Both group
+  (`applyScanMode` leaves `.one` alone), Escape lowering it after About and the text; raised, its views' bar stands just
+  under the Best experienced line (v12.34); the Outside, Inside and Both group
   stays on the bar upright since v12.11, at the owner's word (hidden there from v11.81, which left a face remembered from
   an iPad or a phone held sideways, `vn-ba-view`, with no way back to Both; a face alone stands centred in the faces'
   room, `align-content:center`, and may take the whole height in `arrange()`; the bar's six buttons fit a 360px phone
@@ -523,8 +533,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   The old bar's 3D button, the Show in 3D button at the reading's foot (`#rTo3d`), the strip's own button (`#rMore`,
   v11.74 only) and the panel that rose over the faces are gone, the brain being always on show. In the app the first
   face's name makes 56px of room for the shell's back button. The
-  page carries viewer.css's `.ts-btn` inline and loads `stage-lifecycle.js`, `scan-look.js`, `zoom.js` and
-  `slice-tool.js`. The 3D Region Atlas keeps its own Brodmann list, and no map since v11.30; since v11.38
+  page loads `atlas-views.css` (since v12.34, after viewer.css as the atlases do), `stage-lifecycle.js`, `scan-look.js`,
+  `zoom.js`, `slice-tool.js` and `view-bar.js`; the inline copy of viewer.css's `.ts-btn` it once carried went with the
+  banner's buttons. The 3D Region Atlas keeps its own Brodmann list, and no map since v11.30; since v11.38
   the areas are picked through the same dropdown panel as the AAL regions (`dropPicker` in `regions.html`, shared by
   `#rpick` and `#bapick`: button `#bapickBtn`, panel `#bapickPop`, list `#balist` a `.rpick-list` grouped by lobe).
   `app/scripts/shoot-home-atlas.js` shoots the atlas's home twins through `MN_SEL.middle` (the crosshair to the middle of
@@ -566,7 +577,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (the screen, drawer, bar, pops, `.one` and `.land` rules, and the screen script with its `vn-hx-drawer` and
   `vn-hx-view` keys) is a copy of the atlas's with the same names: a change to the chrome belongs in both pages.
 - The 3D Region Atlas, the Network Atlas and, since v11.17, the Hallucinations study (`site/hallucinations.html`)
-  draw their four views alike, from shared files: the scans' look in either theme is `site/assets/scan-look.js`, and
+  draw their four views alike, and since v12.34 the Brodmann Area Atlas's brain draws them so too in a box of its own
+  (`.scan.quad`, holding the bar and the views; see that page above), from shared files: the scans' look in either theme is `site/assets/scan-look.js`, and
   the light-theme stages, the views' bar and the views' layout are `site/assets/atlas-views.css` with
   `site/assets/view-bar.js` (the bar's inks in `bar.css`). Since v12.33, at the owner's word, the views have no bars,
   names or borders of their own (each view's bar, its direction locks, Centre planes and the button that opened it over
@@ -574,13 +586,15 @@ Read this first in every session. It is the handover; nothing else needs pasting
   with them): the three pages are `main.screen.quad`, and one bar at the top of the stage, `nav.viewbar`, an island like
   the bar along the foot, holds Slice at the far left (`.vb-slice`, the slice tool's switch, greyed while Axial,
   Coronal or Sagittal is shown alone, the cuts being the 3D view's), Regions beside it while slicing (`.vb-regions`, the
-  cut through the highlighted regions too), and the views, All and each one alone (`[data-view]`), on every screen; on
-  a phone it stands just under the Best experienced line. `MN_VIEWBAR.attach({main, key})` wires it (the pick kept as
-  `vn-atlas-view`, `vn-hx-view` or `vn-net-view`; `show(key, keep)`, `picked()`), the page hands it the slice tool
+  cut through the highlighted regions too; Area on the Brodmann page, the lit area), and the views, All and each one alone (`[data-view]`), on every screen; on
+  a phone it stands just under the Best experienced line. `MN_VIEWBAR.attach({main, key, start})` wires it (the pick kept as
+  `vn-atlas-view`, `vn-hx-view`, `vn-net-view` or `vn-ba-scan-view`; `start` the view until one is picked, All unless
+  given; `show(key, keep)`, `picked()`), the page hands it the slice tool
   (`MN_VIEWBAR.slice(tool)`, `MN_VIEWBAR.paint()` from the tool's `onChange`), and it writes `--vbar`, the bar's foot
-  from the stage's top, so the sheets rising from the foot stop short of it (`bar.css`). All lays the four two by two,
-  one view alone fills the stage. A change to the views belongs in those files, so every page gets it; each page keeps
-  its own viewer setup. Region
+  from the stage's top, so the sheets rising from the foot stop short of it (`bar.css`; a bar with no `.stage` round it,
+  the Brodmann page's, writes none). All lays the four two by two, one view alone fills the stage; `atlas-views.css`'s
+  rules for them read `.quad` alone since v12.34, and its phone rules the three pages' `.screen.quad.one`. A change to
+  the views belongs in those files, so every page gets it; each page keeps its own viewer setup. Region
   colours reach the viewer through `MN_LOOK.labelTable` (and the same padding in `vision-scan.js`): the table is padded
   to a power of two, since at the atlas's 117 entries a highlighted label made the label just below it draw black.
 - A squat phone (v12.23, at the owner's word), the closed iPhone Duo's outer display at 466 by 678 points: every page

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.34 — 26 October 2026 — The Brodmann brain in four views
+Commit · Give the Brodmann Area Atlas's brain the atlases' four views under the views' bar, without its banner and frame
+
+The Brodmann Area Atlas's brain now has the views the 3D Region Atlas has. Its banner and the lines round it are gone, and a bar along its top picks what it shows: the brain in 3D, as before, the axial, coronal or sagittal slice, or all four together. The slices pass through the picked area, so it shows in every one of them, and move to the next area as it is picked. Slice stands at the bar's far left and cuts the 3D view, greyed out while a slice is shown alone, with Area beside it while slicing, to cut the lit area with the brain or leave it whole. On a phone the bar heads the brain as the 3D tab raises it, just under the line at the top. The Reset that stood in the banner went with it; a double tap still puts a view's zoom back. The apps take it with their next build.
+
 ## v12.33 — 26 October 2026 — One bar for the views
-Commit · Pick the views from one bar along the top of the four-view pages, and take each view's header and frame away
+Commit `91cbb5b` · Pick the views from one bar along the top of the four-view pages, and take each view's header and frame away
 
 The 3D Region Atlas, the Network Atlas and the Hallucinations study give the brain more of the screen. The views have lost their headers, their names and the lines round them, and one bar along the top now picks what is shown: all four views together, or the 3D, axial, coronal or sagittal view alone, on every screen. On a phone it sits just under the line at the top that says where the atlas is best experienced. Slice leads the bar at its far left; it cuts the 3D view, so it works with the 3D view or all four on show and is greyed out while a flat slice is shown alone, and while slicing Regions stands beside it, to cut the highlighted regions with the brain or leave them whole. The buttons that held a slice's crosshair to one direction, and those that centred it, went with the headers. The apps take it with their next build.
 
