@@ -709,8 +709,8 @@ main.screen.one.land{ flex-direction:row; }
       var id = meshIds[nv.canvas.id];
       if (id !== undefined){ try{ nv.setMeshProperty(id, "rgba255", inkColour()); }catch(e){} shade(nv, id); }
     });
-    /* the brain's cut pane follows the theme too */
-    if (brain.nv){ brain.nv.opts.clipPlaneColor = g.clip; drawBrain(); }
+    /* the brain's cut pane follows the theme too, and the ends their single colour's shade */
+    if (brain.nv){ brain.nv.opts.clipPlaneColor = g.clip; dressEnds(); drawBrain(); }
   }).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
   var colourMode = "Local";
 
@@ -792,7 +792,9 @@ main.screen.one.land{ flex-direction:row; }
     still: function(){ if (spinning && spinBtn) spinBtn.click(); },
     nv: function(){ return byKey.Ren; },
     /* settles once the brain the page opens with is in (at once while it is off) */
-    brain: function(){ return brain.loading ? brain.loading.then(function(){ return true; }) : Promise.resolve(false); }
+    brain: function(){ return brain.loading ? brain.loading.then(function(){ return true; }) : Promise.resolve(false); },
+    /* the ends standing out of the cut, for a check: how many points they hold, or null */
+    ends: function(){ return brain.ends ? { shown: !!brain.ends.visible, points: brain.ends.pts ? brain.ends.pts.length / 3 : 0, indices: brain.ends.indexCount || 0, radius: brain.ends.fiberRadius, meshes: brain.nv ? brain.nv.meshes.length : 0 } : null; }
   };
 
   var radiusEl = document.getElementById("radius");
@@ -802,6 +804,7 @@ main.screen.one.land{ flex-direction:row; }
     instances.forEach(function(nv){
       if (meshIds[nv.canvas.id] !== undefined) nv.setMeshProperty(meshIds[nv.canvas.id], "fiberRadius", Number(v));
     });
+    dressEnds();
   }
   radiusEl.addEventListener("input", function(){ applyRadius(radiusEl.value); rememberSoon(); });
 
@@ -820,6 +823,7 @@ main.screen.one.land{ flex-direction:row; }
       shade(nv, id);
       nv.drawScene();
     });
+    dressEnds();
     rememberSoon();
   }
   document.querySelectorAll("[data-colour]").forEach(function(btn){
@@ -851,7 +855,7 @@ main.screen.one.land{ flex-direction:row; }
      surface); the first quarter of a slider's travel, which cuts the air around the brain there,
      cuts them not at all, as on the atlas. The brain off, the slider's share is taken straight over
      the streamlines' own box. */
-  var TRACT_PAST = 2.5;
+  var TRACT_PAST = 5;   /* doubled in v12.41, at the owner's word */
   function cutBox(planes, past){
     past = past || 0;
     var lo = [-Infinity, -Infinity, -Infinity], hi = [Infinity, Infinity, Infinity], k, i;
@@ -891,6 +895,7 @@ main.screen.one.land{ flex-direction:row; }
     if (!whole.lengths && mesh.pts === whole.pts) whole.lengths = mesh.fiberLengths || null;
     var again = cutBrainPlanes(planes);   /* the brain's renderer first: the box is read off it */
     if (!planes.length){
+      setEnds(null);
       if (mesh.pts !== whole.pts){
         mesh.pts = whole.pts; mesh.offsetPt0 = whole.off; mesh.fiberLengths = whole.lengths;
         try{ mesh.updateMesh(nv.gl); }catch(e){}
@@ -899,27 +904,40 @@ main.screen.one.land{ flex-direction:row; }
       if (again) nv.drawScene();
       return;
     }
-    var box = cutBox(planes, brain.on && brain.nv ? TRACT_PAST : 0), lo = box.lo, hi = box.hi;
+    var withBrain = !!(brain.on && brain.nv);
+    var box = cutBox(planes, withBrain ? TRACT_PAST : 0), lo = box.lo, hi = box.hi;
+    /* the ends: the pieces that stand out past the brain's own cut, and a millimetre inside it
+       so each tube runs on through the face, gathered for the brain's viewer (setEnds) */
+    var inner = withBrain ? cutBox(planes, -1) : null;
     var P = whole.pts, O = whole.off, n = O.length - 1;
     var pts = new Float32Array(P.length), m = 0, offs = [0];
+    var ept = withBrain ? [] : null, eoffs = [0], erun = 0;
     for (var s = 0; s < n; s++){
       var run = 0;
       for (var i = O[s]; i < O[s + 1]; i++){
         var x = P[i * 3], y = P[i * 3 + 1], z = P[i * 3 + 2];
-        if (x >= lo[0] && x <= hi[0] && y >= lo[1] && y <= hi[1] && z >= lo[2] && z <= hi[2]){
+        var kept = x >= lo[0] && x <= hi[0] && y >= lo[1] && y <= hi[1] && z >= lo[2] && z <= hi[2];
+        if (kept){
           pts[m++] = x; pts[m++] = y; pts[m++] = z; run++;
         } else if (run){
           if (run >= 2) offs.push(m / 3); else m -= 3 * run;   /* a lone point is no line */
           run = 0;
         }
+        if (ept){
+          var deep = kept && x >= inner.lo[0] && x <= inner.hi[0] && y >= inner.lo[1] && y <= inner.hi[1] && z >= inner.lo[2] && z <= inner.hi[2];
+          if (kept && !deep){ ept.push(x, y, z); erun++; }
+          else if (erun){ if (erun >= 2) eoffs.push(ept.length / 3); else ept.length -= 3 * erun; erun = 0; }
+        }
       }
       if (run){ if (run >= 2) offs.push(m / 3); else m -= 3 * run; }
+      if (erun){ if (erun >= 2) eoffs.push(ept.length / 3); else ept.length -= 3 * erun; erun = 0; }
     }
     mesh.pts = pts.subarray(0, m);
     mesh.offsetPt0 = Uint32Array.from(offs);
     mesh.fiberLengths = null;
     try{ mesh.updateMesh(nv.gl); }catch(e){}
     frameBrain();   /* the frame is the whole box, whatever a cut leaves */
+    setEnds(ept && eoffs.length > 1 ? { pts: Float32Array.from(ept), offs: Uint32Array.from(eoffs) } : null);
     nv.drawScene();
   }
 
@@ -936,7 +954,7 @@ main.screen.one.land{ flex-direction:row; }
      three slices through its middle; both went at the owner's word, for the atlas's own render and its cuts. */
   var BRAIN_URL = "assets/mni152.nii.gz", BRAIN_LIFT = 1.5;
   /* on as the page opens since v12.36, at the owner's word, at 75 per cent transparency */
-  var brain = { on: true, trans: 75, nv: null, vol: null, box: null, loading: null, part: null };
+  var brain = { on: true, trans: 75, nv: null, vol: null, box: null, loading: null, part: null, ends: null };
   var brainCanvas = document.getElementById("tkBrain");
   var brainTrans = document.getElementById("brainTrans"), brainVal = document.getElementById("brainVal");
   var brainNote = document.getElementById("brainNote"), brainNoteText = brainNote.innerHTML;
@@ -994,8 +1012,18 @@ main.screen.one.land{ flex-direction:row; }
       var vol = await niivue.NVImage.loadFromUrl({ url: BRAIN_URL });
       b.addVolume(vol);
       b.setSliceType(niivue.SLICE_TYPE.RENDER);
+      /* the streamlines' ends that stand out of a cut, drawn in this viewer as well (v12.41, at
+         the owner's word): the renderer sets them against the head's depth, so they show from
+         any angle where they stand in front of the cut face and hide behind the head elsewhere,
+         where the streamlines' own viewer, beneath this one, could only show them past the
+         head's outline. A fibre mesh, as the renderer takes one (a colour with no alpha marks it),
+         holding two points until a cut fills it (setEnds) */
+      var em = new niivue.NVMesh(new Float32Array([0, 0, 0, 0, 0, 1]), new Uint32Array([0, 2]), "Tract ends", new Uint8Array([255, 255, 255, 0]), 1, false, b.gl);
+      b.addMesh(em);
+      brain.ends = em;
       var o = b.volumeObject3D;
       brain.nv = b; brain.vol = vol;
+      dressEnds();
       brain.box = { min: [o.extentsMin[0], o.extentsMin[1], o.extentsMin[2]], max: [o.extentsMax[0], o.extentsMax[1], o.extentsMax[2]] };
       if (window.MN_LIFE) MN_LIFE.register(b);
       placeBrain();
@@ -1003,6 +1031,32 @@ main.screen.one.land{ flex-direction:row; }
     })();
     brain.loading.catch(function(){ brain.loading = null; });   /* a later press tries again */
     return brain.loading;
+  }
+  /* the ends take the streamlines' own look: their colour, thickness, dither and shader */
+  function dressEnds(){
+    var b = brain.nv, em = brain.ends;
+    if (!b || !em) return;
+    try{
+      b.setMeshProperty(em.id, "fiberLength", 1);   /* the shortest piece kept, in mm; nought would build nothing */
+      b.setMeshProperty(em.id, "fiberDither", 0.1);
+      b.setMeshProperty(em.id, "fiberRadius", Number(radiusEl.value));
+      if (colourMode === "accent"){
+        b.setMeshProperty(em.id, "fiberColor", "Fixed");
+        b.setMeshProperty(em.id, "rgba255", inkColour());
+      } else b.setMeshProperty(em.id, "fiberColor", "Local");
+      shade(b, em.id);
+    }catch(e){}
+  }
+  /* the ends as the cut leaves them, or none */
+  function setEnds(band){
+    var b = brain.nv, em = brain.ends;
+    if (!b || !em) return;
+    if (!band){ em.visible = false; return; }
+    em.pts = band.pts;
+    em.offsetPt0 = band.offs;
+    em.fiberLengths = null;
+    em.visible = true;
+    try{ em.updateMesh(b.gl); }catch(e){ em.visible = false; }
   }
   /* the layer shown or hidden at its transparency, both viewers framed alike, the cuts set on the brain */
   function placeBrain(){

@@ -359,10 +359,20 @@ Read this first in every session. It is the handover; nothing else needs pasting
   off that viewer's `scene.clipPlanes` (each a vec4 in the volume's unit cube, the side where `dot(n, p − 0.5) + a <
   0` cut away) and turns them into millimetres through its `frac2mm`, so the streamlines end where the head is cut
   and the MRI shows at the cut face as on the atlas, or rather a little past it: since v12.39, at the owner's word,
-  the streamlines' own cut stands `TRACT_PAST` (2.5 mm) behind the brain's (`cutBox(planes, past)`), so their ends
-  stick out of the cut face at any transparency; the export's surface is cut with no such room (the first quarter of a
-  slider's travel cuts the air around the brain there, and nothing of the streamlines); the brain off, the planes are
-  read as before (`planeNormal`, the slider's share straight over the streamlines' box). The state's `brain` (`on`, `trans`) rides in `vn-tracts-last`
+  the streamlines' own cut stands `TRACT_PAST` behind the brain's (`cutBox(planes, past)`; 2.5 mm, doubled to 5 in
+  v12.41), so their ends stick out of the cut face at any transparency; the export's surface is cut with no such room
+  (the first quarter of a slider's travel cuts the air around the brain there, and nothing of the streamlines); the
+  brain off, the planes are read as before (`planeNormal`, the slider's share straight over the streamlines' box).
+  Since v12.41, at the owner's word, those ends are drawn in the brain's viewer as well, so they show from any angle:
+  the streamlines' viewer lies beneath the brain's canvas with no depth between the two, so the ends it drew showed
+  only past the head's outline; `applyCut` now gathers the pieces that stand past the brain's own cut, and a
+  millimetre inside it so each tube runs on through the face (`cutBox(planes, -1)`), into `brain.ends`, a fibre mesh
+  the brain's viewer holds (an `NVMesh` built from points and offsets, marked a fibre mesh by a colour with no alpha;
+  two points and hidden until a cut fills it, `setEnds`), which the renderer sets against the head's depth, in front of
+  the cut face and behind the head elsewhere; `dressEnds` gives it the streamlines' colour, thickness, dither and
+  shader, from `applyRadius`, `setColour` and the theme observer, with `fiberLength` 1 (the shortest piece kept, in
+  millimetres: the renderer builds nothing for a fibre mesh whose `fiberLength` is nought), and `MN_TRACTS.ends()`
+  reports it for a check. The state's `brain` (`on`, `trans`) rides in `vn-tracts-last`
   (`v: 2`; the `slices` v12.36 kept is ignored), and the export carries the brain while it shows as a surface drawn
   from the template on the first export (`brainForExport`: `MN_EXPORT3D.isoSurface` at a 2-voxel stride, lifted
   `BRAIN_LIFT` along its normals, cut by the box; the screen's brain is the renderer's and has no surface to give),

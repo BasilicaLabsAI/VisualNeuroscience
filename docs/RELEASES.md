@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.41 — 26 October 2026 — The fibres come through from any angle
+Commit · Draw the streamlines' ends in the brain's viewer too, so they come through the cut from any angle, and double their reach
+
+On Tractography the streamlines now stand five millimetres out of the brain's cut face, twice as far as before, and they can be seen coming through it from any angle: the ends are drawn in the brain's own viewer as well as the streamlines', set against the head's depth, where before they showed only past the head's outline, when the cut was looked at edge-on. The apps take it with their next build.
+
 ## v12.40 — 26 October 2026 — The views' bar under the island
-Commit · Centre the views' bar on the header's island rather than on the stage beside the drawer
+Commit `3476dfb` · Centre the views' bar on the header's island rather than on the stage beside the drawer
 
 The bar of views at the top of the 3D Region Atlas, the Network Atlas and the Hallucinations study now stands centred under the header's island of tabs, on the page's own centre, instead of on the stage to the right of the regions box, which had left it off to one side on a computer. Where the box and the bar meet, the box stands over the bar. In the app the bar centres on the screen the same way. The apps take it with their next build.
 
