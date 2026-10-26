@@ -31,9 +31,10 @@ const SHOTS = [['dark', 'atlas.jpg'], ['light', 'atlas-light.jpg']];
     await page.goto('http://127.0.0.1:8412/regions.html#sel=' + encodeURIComponent(SEL), { waitUntil: 'load' });
     await page.waitForFunction(() => document.getElementById('status').classList.contains('hidden'), null, { timeout: 300000 });
     await page.waitForTimeout(2500);
-    /* Centre planes reports the middle of the volume; the shot keeps its
-       height and depth and moves 4 mm into the left hemisphere */
-    await page.evaluate(() => { window.__mid = null; MN_SEL.onLocation(l => { if (l && l.mm) window.__mid = l.mm.slice(); }); document.querySelector('[data-centre]').click(); });
+    /* the crosshair at the middle of the volume reports it; the shot keeps
+       its height and depth and moves 4 mm into the left hemisphere (the page's
+       door, since the Centre planes buttons went with the views' bars in v12.33) */
+    await page.evaluate(() => { window.__mid = null; MN_SEL.onLocation(l => { if (l && l.mm) window.__mid = l.mm.slice(); }); MN_SEL.middle(); });
     await page.waitForFunction(() => window.__mid, null, { timeout: 30000 });
     await page.evaluate(() => MN_SEL.centreMm([-4, window.__mid[1], window.__mid[2]]));
     await page.waitForTimeout(2500);

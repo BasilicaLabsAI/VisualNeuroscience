@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.33 — 26 October 2026 — One bar for the views
+Commit · Pick the views from one bar along the top of the four-view pages, and take each view's header and frame away
+
+The 3D Region Atlas, the Network Atlas and the Hallucinations study give the brain more of the screen. The views have lost their headers, their names and the lines round them, and one bar along the top now picks what is shown: all four views together, or the 3D, axial, coronal or sagittal view alone, on every screen. On a phone it sits just under the line at the top that says where the atlas is best experienced. Slice leads the bar at its far left; it cuts the 3D view, so it works with the 3D view or all four on show and is greyed out while a flat slice is shown alone, and while slicing Regions stands beside it, to cut the highlighted regions with the brain or leave them whole. The buttons that held a slice's crosshair to one direction, and those that centred it, went with the headers. The apps take it with their next build.
+
 ## v12.32 — 26 October 2026 — Slice at the left, and no Reset slice
-Commit · Lead with Slice on every page that slices, drop Reset slice, and fold the streamline settings into Brain
+Commit `bfb668b` · Lead with Slice on every page that slices, drop Reset slice, and fold the streamline settings into Brain
 
 Slice now stands at the far left wherever it appears: first on the Tractography bar, and leading the 3D brain's header on the Brodmann Area Atlas, as it already did on the other atlases. Reset slice is gone from every page: turn Slice off to see the brain whole again, or draw a slider back to its centre mark, and a double-click on a slider returns it at once. On Tractography the streamlines' colour and thickness now sit in the Brain sheet with the brain itself, so the bar is one button shorter. The repository also carries the working notes for preparing App Store submissions.
 

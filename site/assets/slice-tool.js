@@ -23,7 +23,12 @@
 
      MN_SLICE.attach({ stage: <.mri-stage>, tools: <.view-tools>, nv: <Niivue>,
                        regions: "Slice regions" });
-       → { open, close, reset, state, setState }
+       → { open, close, reset, state, setState, setRegions }
+   tools is optional (v12.33): given, the tool puts its Slice button there,
+   and its regions button beside it; left out, it draws no buttons at all,
+   and the page drives it from a bar of its own through open(), close() and
+   setRegions(), reading state() back (the four-view pages' views bar,
+   assets/view-bar.js, and Tractography's bar).
    onChange is optional: given, it is called with state() whenever the
    cuts, the switch or the regions choice change, so a page can keep them
    (v12.1: every atlas remembers its last cuts on the device)
@@ -66,8 +71,8 @@ var NORMAL = {
 var STEP = 0.01;
 
 function attach(o){
-  var stage = o.stage, tools = o.tools, nv = o.nv;
-  if (!stage || !tools || !nv) return null;
+  var stage = o.stage, tools = o.tools || null, nv = o.nv;
+  if (!stage || !nv) return null;
 
   var cuts = {}, on = false;
   AXES.forEach(function(ax){ cuts[ax.id] = 0; });
@@ -113,17 +118,20 @@ function attach(o){
 
   stage.appendChild(panel);
 
-  var btn = document.createElement("button");
-  btn.type = "button";
-  btn.className = "ts-btn slice-btn";
-  btn.textContent = "Slice";
-  btn.setAttribute("aria-pressed", "false");
+  var btn = null;
+  if (tools){
+    btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "ts-btn slice-btn";
+    btn.textContent = "Slice";
+    btn.setAttribute("aria-pressed", "false");
+  }
 
   /* the cuts through the painted regions too, or through the scan alone:
      the viewer's isClipAllVolumes takes its clip planes from the scan to
      every volume it draws */
   var cutRegions = false, regionsBtn = null;
-  if (o.regions){
+  if (o.regions && tools){
     regionsBtn = document.createElement("button");
     regionsBtn.type = "button";
     regionsBtn.className = "ts-btn slice-regions";
@@ -156,8 +164,8 @@ function attach(o){
 
   /* before the Centre planes button where it shares the row, which holds
      the right-hand end */
-  var centre = tools.querySelector(".centre-btn");
-  [btn, regionsBtn].forEach(function(b){
+  var centre = tools ? tools.querySelector(".centre-btn") : null;
+  (tools ? [btn, regionsBtn] : []).forEach(function(b){
     if (!b) return;
     if (centre) tools.insertBefore(b, centre); else tools.appendChild(b);
   });
@@ -194,23 +202,25 @@ function attach(o){
   }
 
   function setOn(next){
-    if (next && !on && regionsBtn) cutRegions = true;
+    if (next && !on && o.regions) cutRegions = true;
     on = next;
     panel.classList.toggle("on", on);
-    btn.classList.toggle("active", on);
-    btn.setAttribute("aria-pressed", String(on));
+    if (btn){
+      btn.classList.toggle("active", on);
+      btn.setAttribute("aria-pressed", String(on));
+    }
     if (regionsBtn) regionsBtn.hidden = !on;
     paintRegions();
     apply();
   }
 
-  btn.addEventListener("click", function(){ setOn(!on); });
+  if (btn) btn.addEventListener("click", function(){ setOn(!on); });
 
   /* the cuts as a plain object, so a saved view can carry them */
   function state(){
     var c = {}; AXES.forEach(function(ax){ c[ax.id] = cuts[ax.id]; });
     var st = { on: on, cuts: c };
-    if (regionsBtn) st.regions = cutRegions;
+    if (o.regions) st.regions = cutRegions;
     return st;
   }
   function setState(st){
@@ -223,7 +233,7 @@ function attach(o){
       rows[ax.id].edge.classList.toggle("cutting", Math.abs(v) > 0.005);
     });
     setOn(!!st.on);
-    if (regionsBtn && typeof st.regions === "boolean") setRegions(st.regions);
+    if (o.regions && typeof st.regions === "boolean") setRegions(st.regions);
   }
 
   return {
@@ -231,7 +241,8 @@ function attach(o){
     close: function(){ setOn(false); },
     reset: resetAll,
     state: state,
-    setState: setState
+    setState: setState,
+    setRegions: setRegions
   };
 }
 

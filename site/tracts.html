@@ -182,10 +182,9 @@ main.screen{
 /* one view, the whole stage */
 .screen .views{ height:100%; display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(0,1fr); gap:0; min-width:0; }
 /* the tractogram is the whole stage, nothing framing it and no cap (v12.1, at
-   the owner's word): the bar holds every control, the slice tool's own
-   buttons standing unseen in .slice-holder */
+   the owner's word): the bar holds every control, the slice tool drawing no
+   buttons of its own (v12.33) */
 .screen .views .view{ min-height:0; min-width:0; display:flex; flex-direction:column; border:0; }
-.slice-holder{ display:none !important; }
 .pbtn:disabled{ opacity:.45; cursor:default; }
 .screen .views-wrap .views .view .mri-stage{ flex:1 1 auto; min-height:0; height:auto; max-height:none; aspect-ratio:auto; }
 /* on the page's own ground: dark, the theme's paper rather than the pure
@@ -362,8 +361,6 @@ main.screen.one.land{ flex-direction:row; }
       <div class="views-wrap">
         <div class="views">
           <div class="view" data-box="Ren">
-            <!-- the slice tool puts its own buttons here, unseen: Slice on the bar drives it (v12.1) -->
-            <div class="view-tools slice-holder" hidden></div>
             <div class="mri-stage"><canvas id="tkRen"></canvas><div class="stage-msg" id="stageMsg"><span class="caps" id="msgTitle">Loading the tractogram</span><div class="progress"><i id="msgBar"></i></div><p id="msgText">Several megabytes of streamlines are on their way.</p></div></div>
           </div>
         </div>
@@ -1044,7 +1041,7 @@ main.screen.one.land{ flex-direction:row; }
     }
     whole = { pts: P, off: mesh.offsetPt0, min: [mn[0], mn[1], mn[2]], max: [mx[0], mx[1], mx[2]], lengths: null };
     var renBox = document.querySelector('.view[data-box="Ren"]');
-    slice = MN_SLICE.attach({ stage: renBox.querySelector(".mri-stage"), tools: renBox.querySelector(".slice-holder"), nv: cutter,
+    slice = MN_SLICE.attach({ stage: renBox.querySelector(".mri-stage"), nv: cutter,
                               onChange: function(){ paintSliceBtn(); rememberSoon(); } });
     if (sliceBtn) sliceBtn.disabled = !slice;
     paintSliceBtn();

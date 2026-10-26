@@ -983,11 +983,6 @@ main.screen{
 .screen .views .view{ min-height:0; min-width:0; }
 .screen .views-wrap .views .view .mri-stage{ flex:1 1 auto; min-height:0; height:auto; max-height:none; aspect-ratio:auto; }
 
-/* a view too narrow for its bar's tools (four to a phone's screen) keeps
-   its name and the button that opens it; the tools wait in the opened view */
-@container view (max-width:300px){
-  .screen .views .view:not(.open) .view-tools, .screen .views .view:not(.open) .centre-btn{ display:none; }
-}
 
 /* the bar along the bottom: a material, like the header's */
 .panelbar{
@@ -1020,7 +1015,6 @@ main.screen{
   .panelbar .probe-btn::after{ content:""; position:absolute; left:0; right:0; top:-.7rem; bottom:-.7rem; }
 }
 @media (prefers-reduced-motion: reduce){ .probe-btn{ transition:none; } }
-.panelbar-views, .panelbar-all{ display:none; }
 .panelbar-btns{ display:flex; gap:.15rem; flex:none; margin-left:.4rem; }
 .panelbar-end{ display:flex; gap:.15rem; flex:none; margin-left:auto; padding-left:.6rem; }
 /* the reference stands at the far right, a line between it and the saving */
@@ -1150,11 +1144,11 @@ main.screen{
 /* the newsletter card keeps clear of the bar */
 body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
 
-/* ── a phone: one view at a time, the picker from the right ──────────────
-   Four views to a phone's screen are four thumbnails, so there the stage
-   holds one view at a time, edge to edge, the bar's first buttons pick it,
-   the drawer comes in from the right edge on its tab, and the readouts and
-   the expand button step aside. The page's script sets .one from the same
+/* ── a phone: the views close-set, the picker from the right ────────────
+   On a phone the stage holds the four close-set or one view edge to edge,
+   picked on the views' bar at the top (atlas-views.css, view-bar.js), the
+   drawer comes in from the right edge on its tab, and the readouts step
+   aside. The page's script sets .one from the same
    measure a phone answers to: 760 pixels wide, or a touch screen under 500
    tall (a phone held sideways). */
 .screen.one .stage{ padding:0; }
@@ -1163,21 +1157,12 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
    the sagittal one along the bottom stops short of it */
 .screen.one:not(.all) .slice-edge.right{ right:26px; }
 .screen.one:not(.all) .slice-edge.bottom{ right:74px; }
-.screen.one .views{ display:block; height:100%; }
-.screen.one .views .view{ display:none; height:100%; border:0; }
-.screen.one .views .view.shown{ display:flex; }
-.screen.one .views .view.open{ display:flex; }
-.screen.one .view-expand{ display:none; }
-/* the four together, when the bar's fifth button asks: two by two,
-   close-set, each with its expand button, which here opens the view alone */
-.screen.one.all .views{ display:grid; gap:6px; }
-.screen.one.all .views .view{ display:flex; height:auto; border:1px solid var(--hair); }
-.screen.one.all .view-expand{ display:inline-flex; }
 .screen.one .panelbar-stats{ display:none; }
-.screen.one .panelbar-views, .screen.one .panelbar-all{ display:flex; gap:.15rem; flex:none; padding-right:.45rem; margin-right:.3rem; border-right:1px solid var(--hair); }
 /* a squat phone, the closed iPhone Duo (the script's .short): the 3D view
-   alone, with its slicing, so the view buttons go too (v12.27) */
-.screen.one.short .panelbar-views{ display:none; }
+   alone, with its slicing, so the views' bar keeps Slice alone (v12.27, the
+   bar at the top since v12.33) */
+.screen.quad.one.short .viewbar-views{ display:none; }
+.screen.quad.one.short .viewbar-slice{ padding-right:0; margin-right:0; border-right:0; }
 .screen.one .panelbar-btns{ margin-left:0; }
 .screen.one .panelbar-end{ margin-left:0; padding-left:0; }
 .screen.one .pop{ left:0; right:0; bottom:0; max-height:76%; border-left:0; border-right:0; border-bottom:0; border-radius:18px 18px 0 0; }
@@ -1220,11 +1205,10 @@ main.screen.one.land{ flex-direction:row; }
 /* one to a row, each button its icon over its name, as the bar has them upright (since
    v12.24, at the owner's word: two to a row took too much of a short screen's width, and
    the bar scrolls when its buttons run past its foot) */
-.screen.one.land .panelbar-all, .screen.one.land .panelbar-views, .screen.one.land .panelbar-btns, .screen.one.land .panelbar-end{
+.screen.one.land .panelbar-btns, .screen.one.land .panelbar-end{
   display:grid; grid-template-columns:66px; gap:0; flex:none;
   margin:0 0 .25rem; padding:0 0 .25rem; border-right:0; border-bottom:1px solid var(--hair);
 }
-.screen.one.land .panelbar-all{ grid-template-columns:66px; justify-items:center; }
 .screen.one.land .panelbar-end{ padding-bottom:0; border-bottom:0; }
 .screen.one.land .pbtn{ position:relative; min-width:0; width:66px; min-height:48px; padding:.25rem .15rem .2rem; gap:.2rem; }
 .screen.one.land .pbtn.pbtn-ref{ margin-left:0; padding-left:.15rem; border-left:0; }
@@ -1235,14 +1219,6 @@ main.screen.one.land{ flex-direction:row; }
 .screen.one.land .pbtn svg{ width:22px; height:22px; }
 .screen.one.land .pop{ max-height:100%; }
 .screen.one.land.all .views{ grid-template-columns:repeat(4, minmax(0, 1fr)); grid-template-rows:minmax(0, 1fr); }
-/* the one view's bar: the tools and Centre at the left, the name at the right */
-.screen.one.land:not(.all) .views .view-cap{ flex-wrap:nowrap; justify-content:flex-start; }
-.screen.one.land:not(.all) .views .view-cap::before{ display:none; }
-.screen.one.land:not(.all) .views .view-cap .view-tools{ order:0; flex:none; }
-.screen.one.land:not(.all) .views .view-cap .view-end{ order:1; flex:none; justify-content:flex-start; }
-.screen.one.land:not(.all) .views .view-cap b{ order:2; margin-left:auto; margin-right:0; }
-/* the room the shell's back button takes at the top left */
-:root[data-shell]:not([data-shell-pad]) .screen.one.land:not(.all) .views .view-cap{ padding-left:56px; }
 /* the receptor window's graph tab, short of height: the controls stand in
    a column at the left and the graph has the rest */
 .screen.one.land #chart-pane{ display:grid; grid-template-columns:minmax(150px, 220px) minmax(0, 1fr); grid-template-rows:minmax(0, 1fr) auto auto; column-gap:.8rem; }
@@ -1288,7 +1264,7 @@ main.screen.one.land{ flex-direction:row; }
   </nav>
 </header>
 
-<main id="main" class="screen" aria-label="3D Region Atlas">
+<main id="main" class="screen quad" aria-label="3D Region Atlas">
   <h1 class="vh">3D Region Atlas</h1>
 
   <div class="deck" id="deck">
@@ -1368,22 +1344,33 @@ main.screen.one.land{ flex-direction:row; }
 
     <!-- the views, and the pop-ups the bar raises over them -->
     <section class="stage" aria-label="Brain viewports">
+      <!-- the views' bar (v12.33, at the owner's word): Slice at the far left, greyed while a flat view
+           is shown, Regions beside it while slicing, and the views; the views have no bars of their own -->
+      <nav class="viewbar" aria-label="Views">
+        <div class="viewbar-slice" role="group" aria-label="Slice">
+          <button class="pbtn vb-slice" type="button" aria-pressed="false" disabled title="A slider on each edge of the 3D view, each a cut taking the brain away from that side; off, it is whole again"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 21 8l-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5M3 16l9 5 9-5"/></svg><span>Slice</span></button>
+          <button class="pbtn vb-regions" type="button" aria-pressed="false" hidden title="Cut the highlighted regions with the brain, or leave them whole inside it"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 13a7.5 7.5 0 0 1 15 0"/><path d="M4.5 13a7.5 7.5 0 0 0 15 0" stroke-dasharray="1.6 2.6"/><path d="M2.5 13h19"/></svg><span>Regions</span></button>
+        </div>
+        <div class="viewbar-views" role="group" aria-label="View">
+          <button class="pbtn" type="button" data-view="all" aria-pressed="true" aria-label="All four views"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg><span>All</span></button>
+          <button class="pbtn" type="button" data-view="render" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>3D</span></button>
+          <button class="pbtn" type="button" data-view="axial" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16"/></svg><span>Axial</span></button>
+          <button class="pbtn" type="button" data-view="coronal" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8"/></svg><span>Coronal</span></button>
+          <button class="pbtn" type="button" data-view="sagittal" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 4v16"/></svg><span>Sagittal</span></button>
+        </div>
+      </nav>
       <div class="views-wrap">
         <div class="views" id="viewsGrid">
           <div class="view" data-box="axial">
-            <div class="view-cap"><b>Axial</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="axial" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="axial" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
             <div class="mri-stage"><canvas id="glAx"></canvas></div>
           </div>
           <div class="view" data-box="coronal">
-            <div class="view-cap"><b>Coronal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="coronal" role="group" aria-label="Coronal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Left&ndash;right only" aria-label="Left to right only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="coronal" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
             <div class="mri-stage"><canvas id="glCor"></canvas></div>
           </div>
           <div class="view" data-box="sagittal">
-            <div class="view-cap"><b>Sagittal</b><div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="sagittal" role="group" aria-label="Sagittal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement" aria-label="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Anterior&ndash;posterior only" aria-label="Anterior to posterior only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Superior&ndash;inferior only" aria-label="Superior to inferior only">&uarr;&darr;</button></div></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="sagittal" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
             <div class="mri-stage"><canvas id="glSag"></canvas></div>
           </div>
           <div class="view" data-box="render">
-            <div class="view-cap"><b>3D</b><div class="view-tools"></div><div class="view-end"><button class="ts-btn centre-btn" data-centre="render" type="button" aria-label="Centre planes">Centre<span class="lbl-more"> planes</span></button></div></div>
             <div class="mri-stage"><canvas id="glRen"></canvas></div>
           </div>
         </div>
@@ -1535,16 +1522,6 @@ main.screen.one.land{ flex-direction:row; }
       <div class="stat"><div class="k">Highlighted</div><div class="v" id="statCount">0 <small>regions</small></div></div>
         <div class="stat"><div class="k">Probe</div><div class="v probe-v"><span id="cursorRegion">—</span><small id="cursorCoords">hover a view · drag = crosshair</small></div></div>
     </div>
-    <!-- on a phone one view shows at a time, and these pick it -->
-    <div class="panelbar-all">
-      <button class="pbtn" type="button" data-view="all" aria-pressed="true" aria-label="All four views"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg><span>All</span></button>
-    </div>
-    <div class="panelbar-views" role="group" aria-label="One view">
-      <button class="pbtn" type="button" data-view="render" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>3D</span></button>
-      <button class="pbtn" type="button" data-view="axial" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16"/></svg><span>Axial</span></button>
-      <button class="pbtn" type="button" data-view="coronal" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8"/></svg><span>Coronal</span></button>
-      <button class="pbtn" type="button" data-view="sagittal" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 4v16"/></svg><span>Sagittal</span></button>
-    </div>
     <div class="panelbar-btns" role="group" aria-label="Panels">
       <button class="pbtn" type="button" data-pop="popNotes" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></svg><span>What they do</span></button>
       <button class="pbtn" type="button" data-pop="popRx" data-tab="chart" data-tabs="chart sources" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20h16M7 20v-7M12 20V6M17 20v-10"/></svg><span>Receptor graph</span></button>
@@ -1572,8 +1549,7 @@ main.screen.one.land{ flex-direction:row; }
 <script src="assets/diagram-gestures.js"></script>
 <script src="assets/slice-tool.js"></script>
 <script src="assets/scan-look.js"></script>
-<script src="assets/view-expand.js"></script>
-<script src="assets/view-fit.js"></script>
+<script src="assets/view-bar.js"></script>
 <script src="assets/zoom.js"></script>
 <script src="assets/export3d.js"></script>
 <script src="assets/models.js"></script>
@@ -1662,87 +1638,23 @@ main.screen.one.land{ flex-direction:row; }
   }
   MN_LOOK.follow(paintScene);
 
-  /* ── direction locks ────────────────────────────────────────────────
-     Each viewport can confine a drag to one direction. The stored value is
-     the axis left FREE to move: "x" left–right, "y" anterior–posterior,
-     "z" superior–inferior — which is also the index into a crosshair
-     position, NiiVue holding those as fractions of the volume. The 3D box
-     turns freely and has no lock. */
-  var LOCK_AXIS = {x:0, y:1, z:2};
-  var locks = {axial:"free", coronal:"free", sagittal:"free"};
-  var anchor = null;        /* crosshair position when the drag began */
-  var dragBox = null;       /* which viewport the drag started in */
-  var correcting = false;   /* guards the re-entry from our own redraw */
-
-  document.querySelectorAll(".seg[data-lock-for]").forEach(function(seg){
-    var key = seg.getAttribute("data-lock-for");
-    seg.querySelectorAll("[data-lock]").forEach(function(btn){
-      btn.addEventListener("click", function(){
-        seg.querySelectorAll("[data-lock]").forEach(function(b){
-          b.classList.toggle("active", b === btn);
-        });
-        locks[key] = btn.getAttribute("data-lock");
-      });
-    });
-  });
-
-  /* A drag starts from wherever the crosshair sits now. */
-  document.querySelectorAll(".view[data-box]").forEach(function(box){
-    var key = box.getAttribute("data-box");
-    var stage = box.querySelector(".mri-stage");
-    if (!stage) return;
-    stage.addEventListener("pointerdown", function(){
-      var nv = INSTANCES[key];
-      if (!nv) return;
-      dragBox = key;
-      anchor = nv.scene.crosshairPos.slice();
-    });
-  });
-
   /* Over the 3D box the wheel zooms it, and the page stays where it is:
      cancelling the scroll is what keeps the two from fighting. Over a slice
-     the wheel does nothing to the scan, so the page scrolls past as usual. */
+     the wheel does nothing to the scan, so the page scrolls past as usual.
+     (Each view's bar, with its direction locks, its Centre planes and the
+     button that opened it over the grid, went in v12.33, at the owner's
+     word; the views' bar at the top of the stage picks the views.) */
   document.querySelectorAll('.view[data-box="render"] .mri-stage').forEach(function(stage){
     stage.addEventListener("wheel", function(e){ e.preventDefault(); },
       {capture: true, passive: false});
   });
 
-  ["pointerup", "pointercancel"].forEach(function(evt){
-    window.addEventListener(evt, function(){ anchor = null; dragBox = null; });
-  });
-
-  /* Put the frozen axes back after NiiVue has moved the crosshair, then let
-     it recompute the readout so the probe reports where the crosshair
-     actually landed rather than where the pointer went. */
-  function applyLock(key, loc){
-    /* The boxes broadcast crosshair moves to one another, so only the box the
-       drag started in may impose its lock — otherwise one view's setting
-       would quietly constrain dragging in all the others. */
-    var free = locks[key];
-    var nv = INSTANCES[key];
-    if (correcting || key !== dragBox || free === "free" || !nv || !anchor){ onLoc(loc); return; }
-    var freeIdx = LOCK_AXIS[free];
-    var pos = nv.scene.crosshairPos;
-    var held = [anchor[0], anchor[1], anchor[2]];
-    held[freeIdx] = pos[freeIdx];
-    if (held[0] === pos[0] && held[1] === pos[1] && held[2] === pos[2]){ onLoc(loc); return; }
-    correcting = true;
-    try{
-      allNV().forEach(function(inst){
-        inst.scene.crosshairPos = held.slice();
-        inst.drawScene();
-      });
-      nv.createOnLocationChange();
-    } catch(e){ onLoc(loc); }
-    finally{ correcting = false; }
-  }
-
-  /* Put the crosshair back at the middle of the volume, so every plane shows
-     its central slice again, and undo any panning or zooming with it. */
+  /* The crosshair back at the middle of the volume, every plane at its
+     central slice, panning and zooming undone: no button calls it since the
+     views' bars went, but the shoot script does (MN_SEL.middle) */
   function centrePlanes(){
     var nvs = allNV();
     if (!nvs.length) return;
-    correcting = true;
     try{
       nvs.forEach(function(inst){
         inst.scene.crosshairPos = [0.5, 0.5, 0.5];
@@ -1751,17 +1663,8 @@ main.screen.one.land{ flex-direction:row; }
       });
       nvs[0].createOnLocationChange();
     } catch(e){}
-    finally{ correcting = false; }
   }
-  document.querySelectorAll("[data-centre]").forEach(function(btn){
-    btn.addEventListener("click", centrePlanes);
-  });
 
-  /* each view's bar ends in the button that opens it over the grid
-     (assets/view-expand.js), and the four are fitted to the screen where
-     they sit two to a row (assets/view-fit.js) */
-  if (window.MN_EXPAND) MN_EXPAND.attach(document.querySelector(".views-wrap"));
-  if (window.MN_FIT) MN_FIT.attach(document.querySelector(".views-wrap"));
   var selections = new Map();
 
   var chipsEl = document.getElementById("chips");
@@ -2371,7 +2274,9 @@ main.screen.one.land{ flex-direction:row; }
     },
     onChange: function(cb){ selWatchers.push(cb); },
     /* the shoot script's door (app/scripts/shoot-home-atlas.js): the crosshair
-       to a point in mm, and word of every location change */
+       to the middle of the volume or to a point in mm, and word of every
+       location change */
+    middle: function(){ centrePlanes(); },
     centreMm: function(mm){ centreMm(mm); },
     onLocation: function(cb){ locWatchers.push(cb); }
   };
@@ -2906,9 +2811,7 @@ main.screen.one.land{ flex-direction:row; }
         var p = PLANES[i];
         var nv = makeNV(p.st);
         await nv.attachToCanvas(document.getElementById(p.canvasId));
-        nv.onLocationChange = (function(key){
-          return function(loc){ applyLock(key, loc); };
-        })(p.key);
+        nv.onLocationChange = function(loc){ onLoc(loc); };
         INSTANCES[p.key] = nv;
         if (window.MN_LIFE) MN_LIFE.register(nv);
       }
@@ -2929,16 +2832,18 @@ main.screen.one.land{ flex-direction:row; }
       });
 
       /* The slice tool goes on the 3D box only: a clip plane cuts the volume,
-         which is what the render draws. The 2D planes already are slices. */
+         which is what the render draws. The 2D planes already are slices.
+         Its switch is Slice on the views' bar (v12.33), with Regions beside it */
       if (window.MN_SLICE){
         var renBox = document.querySelector('.view[data-box="render"]');
         if (renBox) sliceTool = MN_SLICE.attach({
           stage: renBox.querySelector(".mri-stage"),
-          tools: renBox.querySelector(".view-tools"),
           nv: INSTANCES.render,
           regions: "Slice regions",
-          onChange: function(){ rememberSoon(); }   /* the cuts are remembered with the selection (v12.1) */
+          /* the cuts are remembered with the selection (v12.1), and the bar shows them */
+          onChange: function(){ rememberSoon(); if (window.MN_VIEWBAR) MN_VIEWBAR.paint(); }
         });
+        if (sliceTool && window.MN_VIEWBAR) MN_VIEWBAR.slice(sliceTool);
       }
 
       /* the wheel zooms the 3D model rather than the 2D pan behind it */
@@ -3988,25 +3893,11 @@ if (location.hash === "#receptors") {
   tab.addEventListener("click", function(){ setDrawer(true, true); if (hideBtn) focusSoon(hideBtn); });
   if (hideBtn) hideBtn.addEventListener("click", function(){ setDrawer(false, true); focusSoon(tab); });
 
-  /* one view at a time on a phone, picked from the bar; the rest wait
-     hidden and keep in step through the viewer's own broadcast */
-  var viewBtns = document.querySelectorAll(".panelbar [data-view]");
-  var views = document.querySelectorAll(".views .view[data-box]");
-  var shown = "all";
-  try{ var k = localStorage.getItem("vn-atlas-view"); if (k && (k === "all" || document.querySelector('.views .view[data-box="' + k + '"]'))) shown = k; }catch(e){}
-  /* shown is the person's pick, kept; a squat screen shows the 3D view in
-     place of All without forgetting it */
-  function showView(key, keep){
-    if (keep) shown = key;
-    main.classList.toggle("all", key === "all");
-    views.forEach(function(v){ v.classList.toggle("shown", key === "all" || v.getAttribute("data-box") === key); });
-    viewBtns.forEach(function(b){
-      var on = b.getAttribute("data-view") === key;
-      b.classList.toggle("active", on); b.setAttribute("aria-pressed", String(on));
-    });
-    if (keep){ try{ localStorage.setItem("vn-atlas-view", key); }catch(e){} }
-    if (window.MN_LIFE) MN_LIFE.remeasure();
-  }
+  /* the views' bar at the top of the stage picks what the stage shows, on
+     every screen (v12.33, at the owner's word): All, the four two by two, or
+     one view alone, the rest waiting hidden and in step through the viewer's
+     own broadcast; the pick is kept as vn-atlas-view (assets/view-bar.js) */
+  var vbar = window.MN_VIEWBAR ? MN_VIEWBAR.attach({ main: main, key: "vn-atlas-view" }) : null;
   /* a keyboard rising over a field shortens the window, which on a phone
      read as held sideways and on an iPad held sideways as a phone: while a
      text field has the focus and the width is what it was, the layout stays */
@@ -4038,25 +3929,13 @@ if (location.hash === "#receptors") {
     main.classList.toggle("one", on);
     main.classList.toggle("land", sideways);
     main.classList.toggle("short", sq);
-    if (on) showView(sq ? "render" : shown, false); else if (window.MN_LIFE) MN_LIFE.remeasure();
+    if (vbar) vbar.show(sq ? "render" : vbar.picked(), false);
     soon();
   }
   oneView();
   [one, land].forEach(function(q){ if (!q) return; if (q.addEventListener) q.addEventListener("change", oneView); else if (q.addListener) q.addListener(oneView); });
   /* the closed Duo opened, or opened closed: the screen changes under the page */
   window.addEventListener("resize", oneView);
-  viewBtns.forEach(function(b){ b.addEventListener("click", function(){ showView(b.getAttribute("data-view"), true); }); });
-  /* in the grid of four, a view's expand button opens that view alone
-     rather than laying it over the grid */
-  document.addEventListener("click", function(e){
-    if (!main.classList.contains("one")) return;
-    var btn = e.target.closest ? e.target.closest(".view-expand") : null;
-    if (!btn) return;
-    var view = btn.closest(".view[data-box]");
-    if (!view) return;
-    e.preventDefault(); e.stopPropagation();
-    showView(view.getAttribute("data-box"), true);
-  }, true);
 
   /* the pop-ups */
   var pops = {}, current = null;

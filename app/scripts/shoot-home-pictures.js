@@ -154,11 +154,16 @@ function done(file, problems){ const [w, h] = size(file); console.log(path.basen
       await page.waitForTimeout(3000);
       await shotOf(page, '.view[data-box="render"]', tmp('hx-ren.png'));
       await shotOf(page, '.view[data-box="axial"]', tmp('hx-ax.png'));
-      const [w] = size(tmp('hx-ren.png')), H = Math.round(w / 1.1);
+      /* each view cut to the picture's half, 1.1 wide to 1 tall: from the top
+         of a view taller than that, or from the middle of one wider, as the
+         views have been since they lost their bars (v12.33), so the halves are
+         never stretched to fit */
+      const [w, h] = size(tmp('hx-ren.png'));
+      const [W, H, from] = h * 1.1 <= w ? [Math.round(h * 1.1), h, 'Center'] : [w, Math.round(w / 1.1), 'North'];
       const out = path.join(STUDIES, file);
       /* the seam between the two views is the page's black, the scans' ground since v12.1, or white */
       const ground = theme === 'dark' ? '#111111' : 'white';
-      sh(`convert \\( "${tmp('hx-ren.png')}" -gravity North -crop ${w}x${H}+0+0 +repage \\) \\( -size 8x10 "xc:${ground}" \\) \\( "${tmp('hx-ax.png')}" -gravity North -crop ${w}x${H}+0+0 +repage \\) -background "${ground}" +append -resize 902x409! "${out}"`);
+      sh(`convert \\( "${tmp('hx-ren.png')}" -gravity ${from} -crop ${W}x${H}+0+0 +repage \\) \\( -size 8x10 "xc:${ground}" \\) \\( "${tmp('hx-ax.png')}" -gravity ${from} -crop ${W}x${H}+0+0 +repage \\) -background "${ground}" +append -resize 902x409! "${out}"`);
       done(out, problems); await ctx.close();
     }
   }

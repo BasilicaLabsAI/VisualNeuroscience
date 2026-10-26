@@ -25,20 +25,26 @@
   --bar-fill:rgba(42,46,50,.9); --bar-fill-solid:#2A2E32;
 }
 
-/* the bar */
-.panelbar{
+/* the bar, and the views' bar at the top of the four-view pages (v12.33),
+   which wears the same island and buttons */
+.panelbar, .viewbar{
   color:var(--bar-ink); background:var(--bar-fill); border-color:var(--bar-line);
   -webkit-backdrop-filter:blur(16px) saturate(1.15); backdrop-filter:blur(16px) saturate(1.15);
 }
-.panelbar .panelbar-all, .panelbar .panelbar-views, .panelbar .panelbar-btns, .panelbar .panelbar-end, .panelbar .pbtn.pbtn-ref{ border-color:var(--bar-line); }
-.panelbar .pbtn{ color:var(--bar-soft); }
-.panelbar .pbtn span{ font-family:'Flux','Afacad Flux',system-ui,-apple-system,sans-serif; font-weight:400; font-size:.6rem; letter-spacing:.14em; line-height:1; }
-@media (hover: hover){ .panelbar .pbtn:hover{ color:var(--bar-ink); } }
+.viewbar{ border:1px solid var(--bar-line); }
+.panelbar .panelbar-btns, .panelbar .panelbar-end, .panelbar .pbtn.pbtn-ref, .viewbar .viewbar-slice{ border-color:var(--bar-line); }
+.panelbar .pbtn, .viewbar .pbtn{ color:var(--bar-soft); }
+.panelbar .pbtn span, .viewbar .pbtn span{ font-family:'Flux','Afacad Flux',system-ui,-apple-system,sans-serif; font-weight:400; font-size:.6rem; letter-spacing:.14em; line-height:1; }
+@media (hover: hover){ .panelbar .pbtn:hover, .viewbar .pbtn:hover:not(:disabled){ color:var(--bar-ink); } }
 /* a bar button given the hidden attribute stays out of the bar, which .pbtn's display would otherwise undo */
-.panelbar .pbtn[hidden]{ display:none; }
-.panelbar .pbtn:active{ color:var(--bar-ink); }
-.panelbar .pbtn.active, .panelbar .pbtn[aria-pressed="true"], .panelbar .pbtn[aria-expanded="true"]{ background:var(--bar-ink); color:var(--bar-fill-solid); }
-.panelbar .pbtn.active span, .panelbar .pbtn[aria-pressed="true"] span, .panelbar .pbtn[aria-expanded="true"] span{ font-weight:600; }
+.panelbar .pbtn[hidden], .viewbar .pbtn[hidden]{ display:none; }
+.panelbar .pbtn:active, .viewbar .pbtn:active{ color:var(--bar-ink); }
+.panelbar .pbtn.active, .panelbar .pbtn[aria-pressed="true"], .panelbar .pbtn[aria-expanded="true"],
+.viewbar .pbtn.active, .viewbar .pbtn[aria-pressed="true"]{ background:var(--bar-ink); color:var(--bar-fill-solid); }
+.panelbar .pbtn.active span, .panelbar .pbtn[aria-pressed="true"] span, .panelbar .pbtn[aria-expanded="true"] span,
+.viewbar .pbtn.active span, .viewbar .pbtn[aria-pressed="true"] span{ font-weight:600; }
+/* greyed: Slice while a flat view is shown (v12.33) */
+.viewbar .pbtn:disabled{ background:none; color:var(--bar-soft); opacity:.32; }
 /* the readouts at the bar's start, in the bar's inks */
 .panelbar .stat .k, .panelbar .stat .v small, .panelbar .probe-hint{ color:var(--bar-soft); }
 .panelbar .stat .v{ color:var(--bar-ink); }
@@ -47,7 +53,7 @@
 @media (hover: hover){ .panelbar .probe-btn:hover{ border-bottom-color:var(--bar-ink); } }
 .screen.one.land .pbtn span{ font-size:.5rem; }
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more){
-  .panelbar{ background:var(--bar-fill-solid); -webkit-backdrop-filter:none; backdrop-filter:none; }
+  .panelbar, .viewbar{ background:var(--bar-fill-solid); -webkit-backdrop-filter:none; backdrop-filter:none; }
 }
 
 /* the island (v12.1): on the pages whose bar is the screen's last row the
@@ -64,26 +70,27 @@
   border:1px solid var(--bar-line); padding-bottom:.45rem;
 }
 .screen > .deck > .stage{ margin-bottom:calc(-1 * var(--isle)); padding-bottom:calc(var(--gap, 14px) + var(--isle)); }
-.screen > .deck > .stage .pop{ bottom:calc(var(--gap, 14px) + var(--isle)); max-height:min(72%, calc(100% - var(--isle) - 2 * var(--gap, 14px))); }
+.screen > .deck > .stage .pop{ bottom:calc(var(--gap, 14px) + var(--isle)); max-height:min(72%, calc(100% - var(--isle) - 2 * var(--gap, 14px) - var(--vbar, 0px))); }
 .screen.one > .deck > .stage{ padding-bottom:calc(var(--gap, 14px) + var(--isle)); }
 .screen.one > .deck > .stage .pop{
   left:var(--gap, 14px); right:var(--gap, 14px); width:auto; bottom:calc(var(--isle) - 12px);
   border-left:1px solid var(--hair); border-right:1px solid var(--hair);
-  max-height:min(76%, calc(100% - var(--isle)));
+  max-height:min(76%, calc(100% - var(--isle) - var(--vbar, 0px)));
 }
 .screen.one.land > .panelbar{
   margin:var(--gap, 14px) var(--gap, 14px) calc(var(--gap, 14px) + env(safe-area-inset-bottom, 0px)); padding-bottom:.3rem;
 }
 .screen.one.land > .deck > .stage{ margin-bottom:0; padding-bottom:0; }
-.screen.one.land > .deck > .stage .pop{ left:0; right:0; width:auto; bottom:0; border-left:0; border-right:0; max-height:100%; }
+.screen.one.land > .deck > .stage .pop{ left:0; right:0; width:auto; bottom:0; border-left:0; border-right:0; max-height:calc(100% - var(--vbar, 0px)); }
 /* the two sheets whose height is set by name, the receptor window and the
-   network ring, keep to the room above the island as the others do */
-.screen > .deck > .stage #popRx{ height:max(min(84%, calc(100% - var(--isle) - 2 * var(--gap, 14px))), min(560px, calc(100% - var(--isle) - var(--gap, 14px)))); }
-.screen.one > .deck > .stage #popRx{ height:calc(100% - var(--isle)); }
-.screen.one.land > .deck > .stage #popRx{ height:100%; }
-.screen > .deck > .stage #popRing{ height:min(88%, calc(100% - var(--isle) - 2 * var(--gap, 14px))); }
-.screen.one > .deck > .stage #popRing{ height:auto; max-height:min(76%, calc(100% - var(--isle))); }
-.screen.one.land > .deck > .stage #popRing{ height:100%; max-height:100%; }
+   network ring, keep to the room above the island as the others do, and
+   below the views' bar where a page has one (v12.33) */
+.screen > .deck > .stage #popRx{ height:max(min(84%, calc(100% - var(--isle) - 2 * var(--gap, 14px) - var(--vbar, 0px))), min(560px, calc(100% - var(--isle) - var(--gap, 14px) - var(--vbar, 0px)))); }
+.screen.one > .deck > .stage #popRx{ height:calc(100% - var(--isle) - var(--vbar, 0px)); }
+.screen.one.land > .deck > .stage #popRx{ height:calc(100% - var(--vbar, 0px)); }
+.screen > .deck > .stage #popRing{ height:min(88%, calc(100% - var(--isle) - 2 * var(--gap, 14px) - var(--vbar, 0px))); }
+.screen.one > .deck > .stage #popRing{ height:auto; max-height:min(76%, calc(100% - var(--isle) - var(--vbar, 0px))); }
+.screen.one.land > .deck > .stage #popRing{ height:calc(100% - var(--vbar, 0px)); max-height:calc(100% - var(--vbar, 0px)); }
 /* the newsletter card stands above the island; where the bar is a column
    the card keeps to the foot */
 body.atlas-screen:has(> main.screen) .vn-news{ bottom:calc(var(--isle) + 14px); }
@@ -92,12 +99,11 @@ body.atlas-screen:has(> main.screen.one.land) .vn-news{ bottom:max(14px, env(saf
 /* a squat phone (v12.23), the closed iPhone Duo's outer display, whose
    screen is shorter for its width than any other iPhone's: the page's
    script marks the screen .short there, where one view stands at a time
-   and the bar's All goes, the four together being thumbnails on a screen
-   so short. The bar keeps the foot there as on any phone upright: from
-   v12.23 to v12.26 it stood down the right edge, beside the status column
-   the Duo itself keeps there, which was one bar too many (v12.27, at the
-   owner's word) */
-.screen.one.short .panelbar-all{ display:none; }
+   and the views' bar loses All (atlas-views.css), the four together being
+   thumbnails on a screen so short. The bar keeps the foot there as on any
+   phone upright: from v12.23 to v12.26 it stood down the right edge, beside
+   the status column the Duo itself keeps there, which was one bar too many
+   (v12.27, at the owner's word) */
 
 /* while a keyboard has shortened the page (a field has the focus and the
    window has lost a keyboard's height, which navbar.js marks vn-typing,

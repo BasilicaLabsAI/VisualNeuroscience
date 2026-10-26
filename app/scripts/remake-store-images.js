@@ -197,7 +197,7 @@ const SHOTS = [
   { name: 'iphone-06', dev: 'iphone', theme: 'dark', url: 'molecular.html?rx=D2', ready: molReady,
     top: 'iphone-top-dark-molecular', bottom: 'iphone-bottom-dark-atlases', out: '07-molecular.png', statement: 'Molecular anatomy:|Dynamic receptor atlas with|Neurotransmitter & Drug interactions' },
   { name: 'iphone-07', dev: 'iphone', theme: 'dark', url: 'hallucinations.html', ready: hxReady,
-    setup: async p => { await p.click('.panelbar [data-view="render"]'); await p.waitForTimeout(2500); await p.click('.panelbar [data-pop="popCircuit"]'); await p.waitForTimeout(1800); },
+    setup: async p => { await p.click('.viewbar [data-view="render"]'); await p.waitForTimeout(2500); await p.click('.panelbar [data-pop="popCircuit"]'); await p.waitForTimeout(1800); },
     top: 'iphone-top-dark-hallucinations', bottom: 'iphone-bottom-dark-library', out: '10-hallucinations.png', statement: 'Built-in study visualisation|on the live atlas' },
   { name: 'iphone-08', dev: 'iphone', theme: 'dark', url: 'practice.html', ready: pageReady, setup: question('A central ethical advantage of iPSCs'),
     top: 'iphone-top-dark-practice', bottom: 'iphone-bottom-dark-practice', out: '08-practice.png', statement: 'Revision question testing' },

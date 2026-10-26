@@ -277,7 +277,7 @@ Read this first in every session. It is the handover; nothing else needs pasting
   view's border and the stage's padding are nought; the cap with its name, Reset view and the Slice tool's buttons went; the
   zoom buttons had gone in v11.97, the wheel and a pinch zooming as before), and the bar
   carries Slice (`#sliceBtn`, v12.1: the slice tool's switch, lit while the edge sliders are out, disabled until
-  `attachSlice` has the mesh; the tool's own buttons land unseen in `.slice-holder` inside the view; first on the bar since
+  `attachSlice` has the mesh; the tool draws no buttons of its own, attached without `tools` since v12.33; first on the bar since
   v12.32, at the owner's word, as Slice leads wherever it stands, and no Reset slice beside it: see the slice tool under
   the 3D Region Atlas), Brain (`#popBrain`, v12.31: below; since v12.32 it holds the streamlines' Direction/Single
   colour and thickness too, under a Streamlines heading, and the Streamlines button and its `#popLines` are gone), View
@@ -417,16 +417,18 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (`toggleProbeBA`), and `paintProbe` keeps their pressed state and colour dot in step through `selWatchers`. Every element id the script uses is unchanged, so the pop-ups' contents
   still follow the selection; a chart is told to measure itself when its pop-up opens. The receptor types table
   (`#types-heat`, `.heat`) is `overflow:visible` and scrolls with the pop-up's body, so its sticky column names and
-  row labels hold; its header is as tall as the longest name (`th.col button` sized by its text, since v11.29). A view too narrow for its
-  bar's tools (a phone) shows the name and the expand button alone. The page's `--screen-top` is the header's
+  row labels hold; its header is as tall as the longest name (`th.col button` sized by its text, since v11.29). Since
+  v12.33, at the owner's word, the views have no bars of their own, no names, borders or expand buttons, and the
+  direction locks and Centre planes went with them: the views' bar at the top of the stage picks the views on every
+  screen (see the four views below). The page's `--screen-top` is the header's
   measured height, and the root is `overflow:hidden` with the body (`html:has(> body.atlas-screen)`), for Safari on a
   phone, which scrolls a body alone. In every 3D view, a drag on the wheel's button pans, as
   shift-drag does (`zoom.js`). Since v11.23 the bar's buttons are an icon over a word at every width (`.pbtn`, inline
   SVG), and on a phone (the script's `one` media query: 760px wide or less, or a coarse pointer under 500px tall) the
   screen is `main.screen.one`: the stage holds the four views two by two (`main.one.all`, the default since v11.28,
-  close-set with the expand buttons shown, which there open a view alone) or one view edge to edge (`.view.shown`), the
-  pick remembered as `vn-atlas-view`; the bar opens with the All button in a group of its own (`.panelbar-all`), a line,
-  the four single-view buttons (`.panelbar-views`, `[data-view]`), another line, then the pop-up buttons, the readouts and the expand buttons are hidden, the bar stays on show while a pop-up is open (since v11.82; from v11.54 to v11.81 `main.screen.popped`, which
+  close-set) or one view edge to edge (`.view.shown`), the pick remembered as `vn-atlas-view` and made since v12.33 on
+  the views' bar at the top, just under the Best experienced line (until then the bar along the foot opened with All
+  and the four single-view buttons on a phone); the bar along the foot holds the pop-up buttons, the readouts are hidden, the bar stays on show while a pop-up is open (since v11.82; from v11.54 to v11.81 `main.screen.popped`, which
   the pop script still sets, hid it upright and the pop-up had its room), the pop-up standing above it in the stage, its
   button lit, closing on that button, its cross or Escape, and swapped by another button, the region area is a drawer the height of the
   screen sliding over the view from the right (the box's elements, laid out so by `.screen.one`), shut at every load
@@ -442,15 +444,18 @@ Read this first in every session. It is the handover; nothing else needs pasting
   takes no `reset` option), so Slice turned off shows the head whole, a slider drawn back to its centre mark undoes its
   cut and a double-click returns it at once; the tool's `reset()` stays for the pages' own Reset of the view
   (Tractography's Reset view, the Brodmann page's head Reset, which put back the view and the cuts together). Slice
-  stands at the far left wherever it is: first in the 3D view's cap on the four-view pages (where it always stood),
-  first on Tractography's bar and leading the Brodmann page's scan head (both v12.32). Held sideways (v11.42: `main.screen.one.land`, the script's `land` query, a coarse pointer in
+  stands at the far left wherever it is: first on the views' bar of the four-view pages (v12.33; until then first in the
+  3D view's own bar), first on Tractography's bar and leading the Brodmann page's scan head (both v12.32). Since v12.33
+  `tools` is optional: left out, the tool draws no buttons and the page drives it through `open()`, `close()` and
+  `setRegions()`, reading `state()` back (the views' bar, Tractography); the Brodmann page still hands it `#scanTools`. Held sideways (v11.42: `main.screen.one.land`, the script's `land` query, a coarse pointer in
   landscape) the bar stands along the right edge, its buttons one to a row since v12.24, at the owner's word (two to a row, 66px
   cells in a 141px bar, from v11.58 took too much of the short screen's width), each its icon over its name as upright,
   in a 76px bar that scrolls when they run past its foot (the longest name carries a soft hyphen), the
-  drawer's handle off the bar's edge, the four views one row, the one view's tools and Centre at the left of its bar
-  and the name at the right, the masthead hidden; in the app's tabs the shell hides its bar on a phone sideways
+  drawer's handle off the bar's edge, the four views one row, the views' bar at the top (in the app 60px in from the
+  left, clear of the shell's back button), the masthead hidden; in the app's tabs the shell hides its bar on a phone sideways
   (`WebPage.sideways` in `ShellWeb.swift`, `BackOverPage` the back button it keeps at the top left) and the page's body
-  loses its top padding there, the view's bar making 56px of room for that button. The Brodmann Area Atlas is its own page again since v11.12 (retired
+  loses its top padding there, the views' bar standing 60px in from the left for that button (the view's own bar made
+  56px of room until v12.33). The Brodmann Area Atlas is its own page again since v11.12 (retired
   into the Region Atlas in v10.8): `site/brodmann.html`, with its nav entry and its box straight after the 3D Region
   Atlas.
   Since v11.15, at the owner's request, it is one screen and nothing else: the two faces of the map
@@ -522,7 +527,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `slice-tool.js`. The 3D Region Atlas keeps its own Brodmann list, and no map since v11.30; since v11.38
   the areas are picked through the same dropdown panel as the AAL regions (`dropPicker` in `regions.html`, shared by
   `#rpick` and `#bapick`: button `#bapickBtn`, panel `#bapickPop`, list `#balist` a `.rpick-list` grouped by lobe).
-  `app/scripts/shoot-home-atlas.js` shoots the atlas's home twins through `MN_SEL.centreMm` and `MN_SEL.onLocation`, the
+  `app/scripts/shoot-home-atlas.js` shoots the atlas's home twins through `MN_SEL.middle` (the crosshair to the middle of
+  the volume, the work Centre planes did until v12.33), `MN_SEL.centreMm` and `MN_SEL.onLocation`, the
   door the page keeps open for it (put back in v12.1 after the probe's rewrite had dropped it; `locWatchers` beside
   `selWatchers`, called from `onLoc`).
   Both atlases remember the last selection on the device without a save (v11.93, at the owner's word): the 3D Region
@@ -561,25 +567,30 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `vn-hx-view` keys) is a copy of the atlas's with the same names: a change to the chrome belongs in both pages.
 - The 3D Region Atlas, the Network Atlas and, since v11.17, the Hallucinations study (`site/hallucinations.html`)
   draw their four views alike, from shared files: the scans' look in either theme is `site/assets/scan-look.js`, and
-  the bar over each view, the stages' proportion, the light-theme stages and the view opened over the grid are
-  `site/assets/atlas-views.css` with `view-expand.js`. A change to the views belongs there, so every page gets it;
-  each page keeps its own viewer setup, locks and Centre planes. Wherever the four sit two to a row on a screen at
-  least 600 tall (a tablet from 700 wide, a computer from 901) they are fitted to the screen since v11.19: `view-fit.js`
-  measures the room above the grid and the bar's height into `--views-room` and `--view-bar` on the wrap, and
-  atlas-views.css sizes each stage so both rows fit under the header with the page at rest, capped at five to four
-  (`80cqw`; never a capped aspect ratio, which WebKit narrows inside the view) and floored at 180px. Elsewhere (a phone,
-  an iPad held upright) the stages are five to four since v11.20, the proportion a sideways iPad gives them; they were
-  square from v11.2 to v11.19. Region
+  the light-theme stages, the views' bar and the views' layout are `site/assets/atlas-views.css` with
+  `site/assets/view-bar.js` (the bar's inks in `bar.css`). Since v12.33, at the owner's word, the views have no bars,
+  names or borders of their own (each view's bar, its direction locks, Centre planes and the button that opened it over
+  the grid, `view-expand.js`, went, and `view-fit.js`, which fitted the four to the screen and had nothing left to fit,
+  with them): the three pages are `main.screen.quad`, and one bar at the top of the stage, `nav.viewbar`, an island like
+  the bar along the foot, holds Slice at the far left (`.vb-slice`, the slice tool's switch, greyed while Axial,
+  Coronal or Sagittal is shown alone, the cuts being the 3D view's), Regions beside it while slicing (`.vb-regions`, the
+  cut through the highlighted regions too), and the views, All and each one alone (`[data-view]`), on every screen; on
+  a phone it stands just under the Best experienced line. `MN_VIEWBAR.attach({main, key})` wires it (the pick kept as
+  `vn-atlas-view`, `vn-hx-view` or `vn-net-view`; `show(key, keep)`, `picked()`), the page hands it the slice tool
+  (`MN_VIEWBAR.slice(tool)`, `MN_VIEWBAR.paint()` from the tool's `onChange`), and it writes `--vbar`, the bar's foot
+  from the stage's top, so the sheets rising from the foot stop short of it (`bar.css`). All lays the four two by two,
+  one view alone fills the stage. A change to the views belongs in those files, so every page gets it; each page keeps
+  its own viewer setup. Region
   colours reach the viewer through `MN_LOOK.labelTable` (and the same padding in `vision-scan.js`): the table is padded
   to a power of two, since at the atlas's 117 entries a highlighted label made the label just below it draw black.
 - A squat phone (v12.23, at the owner's word), the closed iPhone Duo's outer display at 466 by 678 points: every page
   with a bar reads the screen's shape (`squat()`: a coarse pointer and a screen whose short side is under 600 and long
   side under 1.75 times it, which no other iPhone has, the SE's 375 by 667 the nearest at 1.78), so one rule holds in the
-  app and in Safari. On the three pages with four views it marks the phone screen `.short`, one view at a time (the All
-  button hidden by `bar.css`, a pick of All shown as the 3D view; `shown` is the person's pick, kept for a larger
+  app and in Safari. On the three pages with four views it marks the phone screen `.short`, one view at a time (All
+  hidden from the views' bar by `atlas-views.css`, a pick of All shown as the 3D view; the pick is kept for a larger
   screen, and only a press changes it), and the 3D Region Atlas shows its 3D view alone there, with its slicing, the
-  view buttons hidden too (`.screen.one.short .panelbar-views` in `regions.html`; v12.27, at the owner's word: the
-  screen is too short for the flat slices). Everything else is the phone's: the bar at the foot, the drawer, the
+  views' bar holding Slice alone (`.screen.quad.one.short .viewbar-views` in `regions.html`; v12.27, at the owner's word:
+  the screen is too short for the flat slices). Everything else is the phone's: the bar at the foot, the drawer, the
   sheets, the Brodmann Area Atlas and the molecular viewer as on any iPhone upright, and the shell's bars where iOS
   puts them (v12.23 to v12.26 stood the page's bar down the right edge, one bar too many). The Duo itself keeps its
   status bar and camera in a column down the right edge of both displays, and an app built with the iOS 27.1 SDK gets

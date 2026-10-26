@@ -1,8 +1,12 @@
 /* The four views the atlases share: the 3D Region Atlas, the Network Atlas
    and the Hallucinations study lay out their scans the same way, so the
-   look of the scans, the bar over each view, the stages' proportion and
-   the view opened over the grid live here, after viewer.css, for all three
-   pages. */
+   look of the scans in either theme and, since v12.33, the views' bar at
+   the top of the stage and the views it shows live here, after viewer.css,
+   for all three pages (Tractography and Microanatomy take the scans' look
+   alone). Until v12.33 each view had a bar of its own, its name, its tools
+   and a button that opened it over the grid, and the four were fitted to
+   the screen by assets/view-fit.js; the views' bar took the place of all of
+   it, at the owner's word. */
 
 /* ── the scans in the light theme ──────────────────────────────────────
    Light, the viewports are white rather than black (the viewers clear to
@@ -19,119 +23,43 @@
 :root:not([data-theme="dark"]) .slice-range::-moz-range-track{ background:rgba(0,0,0,.28); }
 :root:not([data-theme="dark"]) .slice-range:focus-visible{ outline-color:#111111; }
 
-/* ── one bar over each view ────────────────────────────────────────────
-   A view's caption and its tools share one line: the tools to the left,
-   the plane's name in the middle, and Centre planes and the button that
-   opens the view over the grid to the right, every control the same
-   height. The name holds the middle while both sides fit either side of
-   it and gives way to the wider side when they do not. Short of room (an
-   iPad's views, a laptop's narrower ones) the line tightens and its
-   buttons keep one word each, Centre, Slice, Regions, Reset, the full
-   name staying the button's name; only a view too narrow even for that (a
-   phone two to a row, a browser without container queries) puts its
-   tools on a second line under the name. */
+/* each view is a container, for the pages that size what floats over it by
+   its width (Microanatomy's Reset view) */
 .views .view{ container:view / inline-size; }
-.views .view-cap{
-  display:flex; flex-wrap:wrap; justify-content:normal; align-items:center;
-  gap:.4rem .6rem; padding:.45rem .8rem;
-}
-/* two lines: an empty start as wide as the end, so the name sits in the
-   middle of the first, and the tools taking the whole of the second */
-.views .view-cap::before{ content:""; order:0; flex:1 1 0; }
-.views .view-cap b{ order:1; flex:none; margin-right:-.28em; }
-.views .view-cap .view-end{ order:2; flex:1 1 0; display:flex; justify-content:flex-end; align-items:center; gap:.6rem; }
-.views .view-cap .view-tools{ order:3; flex:0 0 100%; padding:0; border:0; }
-/* the caption's italic is for its own words, not the tools' label nor
-   the second word of a button (Centre planes, Slice regions);
-   that word's space is inside its span, which a flex button would trim */
-.views .view-cap .tool-label{ font-family:var(--font-brand); font-style:normal; font-size:.55rem; color:var(--ink-60); }
-.views .view-cap .ts-btn span{ font:inherit; letter-spacing:inherit; color:inherit; white-space:pre; }
-.views .view-cap .centre-btn{ margin-left:0; }
-/* the drag-lock cells, border and all, as tall as the buttons beside them,
-   so every bar is the same height */
-.views .view-cap .seg-btn{ width:calc(1.8rem - 2px); height:calc(1.8rem - 2px); }
-/* one line wherever the 3D view's tools fit while slicing, so the four
-   bars always match: the tools take the start, as wide as the end */
-@container view (min-width:340px){
-  .views .view-cap{ flex-wrap:nowrap; }
-  .views .view-cap::before{ display:none; }
-  .views .view-cap .view-tools{ order:0; flex:1 1 0; flex-wrap:nowrap; }
-}
-/* short of room: a word to a button, and the line drawn tighter */
-@container view (max-width:559px){
-  .views .view-cap .lbl-more{ display:none; }
-  .views .view-cap{ gap:.3rem .4rem; padding-left:.55rem; padding-right:.55rem; }
-  .views .view-cap .view-tools, .views .view-cap .view-end{ gap:.4rem; }
-  .views .view-cap b{ letter-spacing:.16em; margin-right:-.16em; }
-  .views .view-cap .ts-btn{ padding-left:.5rem; padding-right:.5rem; letter-spacing:.14em; }
-}
-/* the words before the drag-lock cells go where the bar is short of room */
-@container view (max-width:559px){ .views .view-cap .tool-label{ display:none; } }
-@media (max-width:760px){
-  .views .view-cap{ padding:.35rem .55rem; gap:.3rem .45rem; }
-  .views .view-cap .view-end{ gap:.45rem; }
-  .views .view-cap .seg-btn{ width:calc(1.6rem - 2px); height:calc(1.6rem - 2px); }
-}
-/* under a finger the controls are 44 points tall, so the bar keeps little
-   room around them */
-@media (pointer:coarse){
-  .views .view-cap{ padding-top:.3rem; padding-bottom:.3rem; }
-  .views .view-cap .seg-btn{ width:42px; height:42px; }
-}
 
-/* the scans' proportion: five wide to four tall, the one an iPad held
-   sideways gives them, wherever the screen does not fit them flatter below
-   (a phone, an iPad held upright); they were square from v11.2 to v11.19 */
-.views-wrap .views .view .mri-stage{ height:auto; aspect-ratio:5 / 4; }
-/* On a tablet the four views sit two to a row from 700 pixels wide; a
-   phone held sideways is too short for it and keeps its own. */
-@media (pointer:coarse) and (min-width:700px) and (min-height:600px){
-  .views-wrap .views{ grid-template-columns:1fr 1fr; }
+/* ── the views' bar and the views (v12.33, at the owner's word) ────────
+   On the pages with four views (main.screen.quad) the views have no bars,
+   names or borders: they fill the stage under one bar, an island like the
+   bar along the foot (its inks in bar.css), which holds Slice at the far
+   left, greyed while a flat view is shown, Regions beside it while slicing,
+   and the views to pick from, All and each one alone, on every screen
+   (assets/view-bar.js). All lays the four two by two; one view alone fills
+   the stage. */
+.screen.quad .viewbar{
+  flex:none; display:flex; align-items:center; gap:.15rem;
+  margin:0 0 var(--gap, 14px); padding:.35rem .45rem;
+  overflow-x:auto; overflow-y:hidden; scrollbar-width:none; white-space:nowrap;
+  position:relative; z-index:6;
 }
-/* Wherever the four sit two to a row on a screen with the height (a tablet
-   from 700 wide, a computer from 901; narrower, the pages stack them), the
-   stages are fitted to the screen, both rows under whatever stands above
-   the grid with the page at rest, as on an iPad: four squares do not fit a
-   computer's screen. assets/view-fit.js measures the room above the grid
-   and the bar's height into --views-room and --view-bar on the wrap; what
-   is left after the two bars, the gap between the rows, the borders and a
-   margin below is shared by the two rows. A stage is never taller than
-   five to four (the proportion above, where the screen has the room, as
-   on an iPad held upright) and never under 180 pixels (a short window
-   scrolls instead).
-   The stage is given its height outright and the whole of the view's
-   width: left to the aspect ratio, a stage held to a maximum height stays
-   square in WebKit, narrower than its view, and the scan sat in a square
-   at one end of the box. */
-@media (min-width:901px) and (min-height:600px), (pointer:coarse) and (min-width:700px) and (min-height:600px){
-  .views-wrap .views .view .mri-stage{
-    width:100%; aspect-ratio:auto;
-    height:calc((100vh - var(--views-room, 11rem) - 2 * var(--view-bar, 2.75rem) - 2 * var(--gap, 14px) - 4px) / 2);
-    height:clamp(180px, calc((100vh - var(--views-room, 11rem) - 2 * var(--view-bar, 2.75rem) - 2 * var(--gap, 14px) - 4px) / 2), 80cqw);
-    height:clamp(180px, calc((100dvh - var(--views-room, 11rem) - 2 * var(--view-bar, 2.75rem) - 2 * var(--gap, 14px) - 4px) / 2), 80cqw);
-  }
-}
-
-/* ── a view opened over the grid ── the button at the end of each bar
-   lays its view over all four; the opened view covers the grid exactly,
-   its scan taking the height the bar leaves */
-/* the button stands as tall as the buttons beside it, and as wide */
-.view-expand{
-  position:relative; flex:none; align-self:center;
-  width:1.8rem; height:1.8rem; padding:0;
-  display:inline-flex; align-items:center; justify-content:center;
-  border:1px solid var(--hair); background:var(--paper); color:var(--ink); cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.view-expand::after{ content:""; position:absolute; inset:-9px; }
-.view-expand svg{ width:.78rem; height:.78rem; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:square; }
-@media (max-width:760px){ .view-expand{ width:1.6rem; height:1.6rem; } }
-@media (pointer:coarse){ .view-expand{ width:44px; height:44px; } .view-expand::after{ inset:0; } }
-@media (hover: hover){ .view-expand:hover{ background:var(--ink); color:var(--paper); } }
-.view-expand:active{ background:var(--ink); color:var(--paper); }
-.views-wrap .views .view.open{
-  position:absolute; inset:0; z-index:12; background:var(--paper);
-}
-.views-wrap .views .view.open .mri-stage{ flex:1 1 auto; height:auto; min-height:0; max-height:none; aspect-ratio:auto; }
-.views-wrap .views .view.closing{ position:relative; z-index:12; background:var(--paper); }
-.views .view-hold{ visibility:hidden; }
+.screen.quad .viewbar::-webkit-scrollbar{ display:none; }
+.screen.quad .viewbar-slice, .screen.quad .viewbar-views{ display:flex; gap:.15rem; flex:none; }
+.screen.quad .viewbar-slice{ padding-right:.45rem; margin-right:.3rem; border-right:1px solid var(--hair); }
+.screen.quad .viewbar .pbtn:disabled{ cursor:default; }
+.screen.quad .views .view{ border:0; }
+.screen.quad:not(.all) .views{ display:block; }
+.screen.quad:not(.all) .views .view{ display:none; height:100%; }
+.screen.quad:not(.all) .views .view.shown{ display:flex; }
+/* a phone: the bar just under the line that says where the atlas is best
+   experienced, in from the edges as the foot's is, its buttons drawn close
+   so the six fit a phone's width; the four close-set */
+.screen.quad.one .viewbar{ margin:8px var(--gap, 14px) 8px; padding:.3rem .3rem; }
+.screen.quad.one .viewbar .pbtn{ min-width:0; padding:.3rem .42rem .25rem; }
+.screen.quad.one .viewbar-slice{ padding-right:.3rem; margin-right:.2rem; }
+.screen.quad.one.all .views{ gap:6px; }
+/* held sideways the bar stays at the top, its buttons a little lower, and
+   in the app it keeps clear of the shell's back button at the top left */
+.screen.quad.one.land .viewbar{ margin:6px var(--gap, 14px) 6px; }
+.screen.quad.one.land .viewbar .pbtn{ min-height:40px; padding-top:.2rem; padding-bottom:.15rem; gap:.18rem; }
+:root[data-shell]:not([data-shell-pad]) .screen.quad.one.land .viewbar{ margin-left:60px; }
+/* a squat phone (the script's .short) shows one view at a time: no All */
+.screen.quad.one.short .viewbar [data-view="all"]{ display:none; }
