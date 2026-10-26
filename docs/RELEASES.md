@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.42 — 26 October 2026 — The Tractography bar remade
+Commit · Remake the Tractography bar as six buttons that slide and Tractography pinned, with the brain's solidity a tall bar, the faces a list and the cut back to two and a half millimetres
+
+Tractography's bar is now Slice, Brain, Tract, Thicken, View and Revolve, then a line and Tractography, which stays on show while the six slide wherever the bar is too narrow for them. Brain and Tract are switches, each showing or hiding the brain or the streamlines at a press. Thicken raises a tall bar over its button that makes the brain more solid or more see-through, and View a short list of the faces, Left, Right, Front, Back, Top, Bottom and Home, with Reset slice beneath, which puts every cut back. Reset view, the single colour and the streamline thickness are gone, the streamlines drawn at one thickness in their direction colours, and Tractography holds what it is, the export and the reference in one sheet. The streamlines stand two and a half millimetres out of the cut again, half of what the last release gave them. The apps take it with their next build.
+
 ## v12.41 — 26 October 2026 — The fibres come through from any angle
-Commit · Draw the streamlines' ends in the brain's viewer too, so they come through the cut from any angle, and double their reach
+Commit `173012b` · Draw the streamlines' ends in the brain's viewer too, so they come through the cut from any angle, and double their reach
 
 On Tractography the streamlines now stand five millimetres out of the brain's cut face, twice as far as before, and they can be seen coming through it from any angle: the ends are drawn in the brain's own viewer as well as the streamlines', set against the head's depth, where before they showed only past the head's outline, when the cut was looked at edge-on. The apps take it with their next build.
 

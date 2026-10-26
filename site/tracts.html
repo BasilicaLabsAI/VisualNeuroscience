@@ -119,19 +119,6 @@ svg{ display:block; }
   background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
 }
 
-/* the view cube: six faces laid out as a folded box */
-.cube{
-  display:grid; grid-template-columns:repeat(3,1fr); gap:3px;
-  margin:.2rem 0 .6rem;
-}
-.cube .ts-btn{ padding:.42rem .2rem .36rem; font-size:.52rem; letter-spacing:.1em; }
-.cube-t{ grid-area:1/2; }
-.cube-l{ grid-area:2/1; }
-.cube-f{ grid-area:2/2; }
-.cube-r{ grid-area:2/3; }
-.cube-k{ grid-area:3/2; }
-.cube-b{ grid-area:3/1; }
-.cube-i{ grid-area:3/3; }
 /* loading and failure states, drawn over the stage in the page's paper and ink */
 .stage-msg{
   position:absolute; inset:0; z-index:5;
@@ -200,10 +187,12 @@ main.screen{
   border-top:1px solid var(--hair);
   background:color-mix(in srgb, var(--paper) 84%, transparent);
   -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
-  overflow-x:auto; overflow-y:hidden; scrollbar-width:none; white-space:nowrap;
+  overflow:hidden; white-space:nowrap;
 }
-.panelbar::-webkit-scrollbar{ display:none; }
-.panelbar-btns{ display:flex; gap:.15rem; flex:none; }
+/* the buttons slide while Tractography, behind its line, stays on show (v12.42, at the owner's word): the
+   group is the scroller, shrinking to the room the pinned button leaves */
+.panelbar-btns{ display:flex; gap:.15rem; flex:1 1 auto; min-width:0; overflow-x:auto; overflow-y:hidden; scrollbar-width:none; }
+.panelbar-btns::-webkit-scrollbar{ display:none; }
 .panelbar-end{ display:flex; gap:.15rem; flex:none; margin-left:auto; padding-left:.6rem; }
 .pbtn.pbtn-ref{ margin-left:.3rem; padding-left:.65rem; border-left:1px solid var(--hair); }
 .pbtn{
@@ -215,9 +204,9 @@ main.screen{
 .pbtn span{ font-family:var(--font-brand); font-weight:500; font-size:.5rem; letter-spacing:.14em; text-transform:uppercase; white-space:nowrap; }
 @media (hover: hover){ .pbtn:hover{ color:var(--ink); } }
 .pbtn:active{ color:var(--ink); }
-/* lit, a window open or a mode on: a block of ink, as the view buttons are (v11.98) */
-.pbtn.active, .pbtn[aria-pressed="true"]{ background:var(--ink); color:var(--paper); border-radius:10px; }
-.pbtn.active span, .pbtn[aria-pressed="true"] span{ font-weight:600; }
+/* lit, a window or a mini open or a mode on: a block of ink, as the view buttons are (v11.98) */
+.pbtn.active, .pbtn[aria-pressed="true"], .pbtn[aria-expanded="true"]{ background:var(--ink); color:var(--paper); border-radius:10px; }
+.pbtn.active span, .pbtn[aria-pressed="true"] span, .pbtn[aria-expanded="true"] span{ font-weight:600; }
 @media (pointer:coarse){ .pbtn{ min-height:44px; } }
 /* a sheet: one at a time, sliding up out of the bar over the view and back
    into it when closed (the stage clips it at the bar's edge) */
@@ -269,10 +258,6 @@ main.screen{
   font-family:var(--font-serif); font-style:italic;
   font-size:.8rem; color:var(--ink-60); margin:.6rem 0 0;
 }
-/* the brain's transparency: its name and value on one line, the slider the width beneath, as on the atlases */
-.rail-row.trans-row{ display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:.6rem; row-gap:.15rem; align-items:center; }
-.rail-row.trans-row .tool-label{ width:auto; flex:none; }
-.rail-row.trans-row input[type="range"]{ grid-column:1 / -1; width:100%; margin:0; }
 .pop-body p{ margin:0 0 .8rem; font-size:.95rem; line-height:1.55; }
 .pop .key{ display:flex; flex-wrap:wrap; gap:.4rem 1.4rem; margin:.2rem 0 1rem; }
 .key-item{
@@ -291,13 +276,47 @@ main.screen{
 .pop .ref-line b{ font-family:var(--font-brand); font-weight:500; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); margin-right:.5rem; }
 .pop .ref-line a{ color:var(--ink); text-decoration:underline; text-underline-offset:3px; }
 /* the brain's own viewer (v12.38): a canvas over the streamlines' that takes no pointer, shown while the
-   brain shows; its opacity is the transparency the slider sets */
+   brain shows; its opacity is the solidity Thicken's bar sets */
 .view[data-box="Ren"] .mri-stage .brain-layer{ pointer-events:none; visibility:hidden; }
+/* a mini (v12.42, at the owner's word): a small window that comes up out of its bar button, the brain's
+   solidity as a tall bar under Thicken and the faces of the brain, with Reset slice, under View. The page's
+   script stands it over its button, or beside it where the bar is a column, in the bar's material and inks,
+   and it arrives from the button as the sheets do from the bar; one thing is raised at a time */
+.mini{
+  position:fixed; z-index:40; display:flex; flex-direction:column; align-items:stretch;
+  min-width:6.4rem; max-height:calc(100vh - 16px); max-height:calc(100dvh - 16px); overflow-y:auto; padding:.35rem; border-radius:14px;
+  color:var(--bar-ink, var(--ink)); background:var(--bar-fill, var(--paper)); border:1px solid var(--bar-line, var(--hair));
+  -webkit-backdrop-filter:blur(16px) saturate(1.15); backdrop-filter:blur(16px) saturate(1.15);
+  box-shadow:0 12px 36px rgba(0,0,0,.28);
+  transform-origin:50% 100%; transform:translateY(8px) scale(.94); opacity:0;
+  transition:transform .22s cubic-bezier(.32,.72,0,1), opacity .18s ease;
+}
+.mini[hidden]{ display:none; }
+.mini.in{ transform:none; opacity:1; }
+main.screen.one.land .mini{ transform-origin:100% 50%; transform:translateX(8px) scale(.94); }
+main.screen.one.land .mini.in{ transform:none; }
+.mini-item{
+  display:block; width:100%; border:0; background:none; color:var(--bar-soft, var(--ink-60)); cursor:pointer;
+  font-family:var(--font-brand); font-weight:400; font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; line-height:1;
+  padding:.62rem .9rem .56rem; border-radius:9px; text-align:center; -webkit-tap-highlight-color:transparent;
+  transition:color .18s, background-color .18s;
+}
+@media (hover: hover){ .mini-item:hover{ color:var(--bar-ink, var(--ink)); } }
+.mini-item:active{ background:var(--bar-ink, var(--ink)); color:var(--bar-fill-solid, var(--paper)); }
+@media (pointer:coarse){ .mini-item{ min-height:44px; } }
+/* held sideways the list stands beside the bar's column and keeps to the short screen's height */
+main.screen.one.land .mini-item{ min-height:38px; padding:.5rem .9rem .44rem; }
+.mini-rule{ border:0; border-top:1px solid var(--bar-line, var(--hair)); margin:.3rem .4rem; }
+/* the tall bar: the slider stood on end, how solid the brain is above it */
+.mini-tall{ align-items:center; padding:.55rem .45rem .5rem; }
+.mini-tall .slider-val{ min-width:0; text-align:center; color:var(--bar-soft, var(--ink-60)); margin-bottom:.35rem; }
+.tall{ position:relative; width:44px; height:150px; }
+.tall input[type="range"]{ position:absolute; left:50%; top:50%; width:150px; height:30px; margin:0; transform:translate(-50%,-50%) rotate(-90deg); }
 
 /* ── a phone: the view edge to edge, the sheets the width of the screen ── */
 .screen.one .stage{ padding:0; }
 .screen.one .views .view{ border:0; }
-.screen.one .panelbar-end{ margin-left:0; padding-left:0; }
+.screen.one .panelbar-end{ padding-left:.3rem; }
 .screen.one .pop{ left:0; right:0; bottom:0; max-height:76%; border-left:0; border-right:0; border-bottom:0; border-radius:18px 18px 0 0; }
 .screen.one .pop-sm, .screen.one .pop-sm.pop-left, .screen.one .pop-md{ width:100%; left:0; right:0; }
 
@@ -309,16 +328,17 @@ main.screen.one.land{ flex-direction:row; }
 .screen.one.land .panelbar{
   flex:none; flex-direction:column; align-items:stretch; justify-content:flex-start; gap:0;
   padding:.3rem .25rem calc(.3rem + env(safe-area-inset-bottom, 0px));
-  border-top:0; border-left:1px solid var(--hair); overflow-x:hidden; overflow-y:auto; white-space:normal; scrollbar-width:none;
+  border-top:0; border-left:1px solid var(--hair); overflow:hidden; white-space:normal;
 }
-.screen.one.land .panelbar::-webkit-scrollbar{ display:none; }
 .screen.one.land .panelbar > :first-child{ margin-top:auto; }
 .screen.one.land .panelbar > :last-child{ margin-bottom:auto; }
-/* one to a row since v12.24, at the owner's word, the bar scrolling when they overrun it */
+/* one to a row since v12.24, at the owner's word; the group scrolls when they overrun the column and
+   Tractography keeps its foot (v12.42) */
 .screen.one.land .panelbar-btns, .screen.one.land .panelbar-end{
   display:grid; grid-template-columns:66px; gap:0; flex:none;
   margin:0 0 .25rem; padding:0 0 .25rem; border-right:0; border-bottom:1px solid var(--hair);
 }
+.screen.one.land .panelbar-btns{ flex:0 1 auto; min-height:0; align-content:start; overflow-y:auto; overflow-x:hidden; }
 .screen.one.land .panelbar-end{ padding-bottom:0; border-bottom:0; }
 .screen.one.land .pbtn{ position:relative; min-width:0; width:66px; min-height:48px; padding:.25rem .15rem .2rem; gap:.2rem; }
 .screen.one.land .pbtn.pbtn-ref{ margin-left:0; padding-left:.15rem; border-left:0; }
@@ -335,6 +355,7 @@ main.screen.one.land{ flex-direction:row; }
 @media (prefers-reduced-motion: reduce){
   .pop{ transform:none; opacity:0; transition:opacity .18s ease; }
   .pop.in{ opacity:1; transition-duration:.18s; }
+  .mini, main.screen.one.land .mini{ transform:none; transition:opacity .18s ease; }
 }
 </style>
 <link rel="stylesheet" href="assets/bar.css">
@@ -373,57 +394,22 @@ main.screen.one.land{ flex-direction:row; }
         </div>
       </div>
 
-      <!-- the brain and how the streamlines are drawn, one sheet since v12.32 -->
-      <div class="pop pop-sm pop-left" id="popBrain" hidden aria-labelledby="popBrainH">
-        <header class="pop-head"><b id="popBrainH">Brain</b><small>the brain around the streamlines, and how they are drawn</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+      <!-- Tractography, the one sheet, raised by the button pinned at the bar's far right (v12.42, at the
+           owner's word): what tractography is (v12.36), the model to download and where it all comes from -->
+      <div class="pop pop-md" id="popTract" hidden aria-labelledby="popTractH">
+        <header class="pop-head"><b id="popTractH">Tractography</b><small>what it is, the model to download, and where it comes from</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
         <div class="pop-body">
-          <h2>Brain</h2>
-          <!-- on as the page opens since v12.36, at the owner's word -->
-          <div class="mode-group" role="group" aria-label="Show the brain">
-            <button class="ts-btn" data-brain="off" type="button" aria-pressed="false">Off</button>
-            <button class="ts-btn active" data-brain="on" type="button" aria-pressed="true" title="The MNI152 brain, as the 3D Region Atlas draws it, around the streamlines">On</button>
+          <h2>What it is</h2>
+          <p>A <em>tractogram</em> is a reconstruction of the brain&rsquo;s wiring, built from diffusion MRI: the scanner measures which way water molecules are free to move in each voxel, and since water travels more easily along a nerve fibre than across it, those measurements trace out the paths that bundles of axons follow. Each thread here is a <em>streamline</em>, an estimate of one such path through the white matter.</p>
+          <p>The colours are not tissue types or measurements &mdash; they say which way a fibre is running at that point, the standard convention in the field:</p>
+          <div class="key">
+            <span class="key-item"><span class="key-swatch" style="background:#E1554C"></span>left &ndash; right</span>
+            <span class="key-item"><span class="key-swatch" style="background:#4FB06A"></span>front &ndash; back</span>
+            <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
           </div>
-          <!-- the slider reads as transparency, as the atlases' do: nought is a solid brain -->
-          <div class="rail-row trans-row">
-            <span class="tool-label">Brain transparency</span>
-            <span class="slider-val" id="brainVal">75%</span>
-            <input type="range" id="brainTrans" min="0" max="95" step="1" value="75" aria-label="How far the brain lets the streamlines through">
-          </div>
-          <p class="rail-note" id="brainNote">The MNI152 brain as the 3D Region Atlas draws it, around the streamlines. Slice cuts it with them and shows the MRI at the cut, as it does there.</p>
-          <h2>Streamlines</h2>
-          <div class="mode-group" role="group" aria-label="Streamline colour">
-            <button class="ts-btn active" data-colour="Local" type="button" title="Colour each segment by the direction it runs">Direction</button>
-            <button class="ts-btn" data-colour="accent" type="button" title="A single colour: a lit dark grey on the light theme, white on the dark">Single</button>
-          </div>
-          <div class="rail-row">
-            <span class="tool-label">Thick</span>
-            <input type="range" id="radius" min="0.05" max="0.9" step="0.05" value="0.3" aria-label="Streamline thickness">
-            <span class="slider-val" id="radiusVal">0.30</span>
-          </div>
-          <p class="rail-note">Direction is the field&rsquo;s convention: red runs left to right, green front to back, blue up and down.</p>
-        </div>
-      </div>
-
-      <div class="pop pop-sm pop-left" id="popView" hidden aria-labelledby="popViewH">
-        <header class="pop-head"><b id="popViewH">View from</b><small>a face of the brain, or the opening view</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
-        <div class="pop-body">
-          <div class="cube" role="group" aria-label="View from">
-            <button class="ts-btn cube-t" data-face="sup" type="button">Sup</button>
-            <button class="ts-btn cube-l" data-face="left" type="button">Left</button>
-            <button class="ts-btn cube-f" data-face="ant" type="button">Ant</button>
-            <button class="ts-btn cube-r" data-face="right" type="button">Right</button>
-            <button class="ts-btn cube-k" data-face="post" type="button">Post</button>
-            <button class="ts-btn cube-b" data-face="inf" type="button">Inf</button>
-            <button class="ts-btn cube-i" data-face="iso" type="button" title="The three-quarter view the page opens with">Iso</button>
-          </div>
-          <button class="btn-wide ts-btn" data-reset type="button">Reset view</button>
-          <p class="rail-note">Drag the brain to turn it, and pinch or scroll over the view to zoom. Reset puts it back where it started, cuts and all.</p>
-        </div>
-      </div>
-
-      <div class="pop pop-sm" id="popExport" hidden aria-labelledby="popExportH">
-        <header class="pop-head"><b id="popExportH">Export</b><small>the streamlines as a 3D model, the brain with them when it shows</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
-        <div class="pop-body">
+          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the streamlines and the brain away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there; Tract shows or hides the streamlines; Thicken raises a tall bar that makes the brain more solid or more see-through; View turns the brain to one of its faces, or home to the view the page opens with; and Revolve sets it turning until you take hold of it. The page remembers how you left it: the brain and how solid it is, the streamlines, the cuts and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
+          <h2>Export</h2>
+          <p class="rail-note" style="margin:0 0 .2rem">The streamlines as a 3D model, an even sample of them at the number picked, and the brain with them while it shows, cut as the screen has it.</p>
           <div class="rail-row">
             <span class="tool-label">Lines</span>
             <div class="selwrap"><select id="exportDensity" aria-label="How many streamlines to export">
@@ -433,29 +419,7 @@ main.screen.one.land{ flex-direction:row; }
             </select></div>
           </div>
           <div id="export3d"></div>
-        </div>
-      </div>
-
-      <!-- what tractography is (v12.36, at the owner's word: the notes the About window held,
-           its sources now under Reference at the bar's far right) -->
-      <div class="pop pop-md" id="popWhat" hidden aria-labelledby="popWhatH">
-        <header class="pop-head"><b id="popWhatH">What it is</b><small>what tractography is, and what you are looking at</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
-        <div class="pop-body">
-          <p>A <em>tractogram</em> is a reconstruction of the brain&rsquo;s wiring, built from diffusion MRI: the scanner measures which way water molecules are free to move in each voxel, and since water travels more easily along a nerve fibre than across it, those measurements trace out the paths that bundles of axons follow. Each thread here is a <em>streamline</em>, an estimate of one such path through the white matter.</p>
-          <p>The colours are not tissue types or measurements &mdash; they say which way a fibre is running at that point, the standard convention in the field:</p>
-          <div class="key">
-            <span class="key-item"><span class="key-swatch" style="background:#E1554C"></span>left &ndash; right</span>
-            <span class="key-item"><span class="key-swatch" style="background:#4FB06A"></span>front &ndash; back</span>
-            <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
-          </div>
-          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the streamlines (and the brain, while it shows) away from that side: draw a slider back to its centre mark to undo its cut, or turn Slice off to see everything whole. Brain draws the MNI152 brain around the fibres as the 3D Region Atlas draws it, as see-through as its slider leaves it, and a cut opens it to show the MRI at the cut face, as it does there; the sheet holds the streamlines&rsquo; colour and thickness too. Revolve sets the brain turning until you take hold of it, and Reset view under View from puts everything back where it started. The page remembers how you left it: the colour, the thickness, the brain, the cuts and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share; where the tractogram and the brain come from is under Reference, at the bar&rsquo;s far right.</p>
-        </div>
-      </div>
-
-      <!-- the sources, at the bar's far right as on the 3D Region Atlas (v12.36, at the owner's word) -->
-      <div class="pop pop-md" id="popRef" hidden aria-labelledby="popRefH">
-        <header class="pop-head"><b id="popRefH">Reference</b><small>where the tractogram and the brain come from</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
-        <div class="pop-body">
+          <h2>Reference</h2>
           <p class="ref-line"><b>Tractogram</b> the HCP1065 population-averaged tractography atlas: Yeh FC, <a href="https://doi.org/10.1038/s41467-022-32595-4" target="_blank" rel="noopener">Population-based tract-to-region connectome of the human brain and its hierarchical topology</a>, <em>Nat Commun</em> 13:4933 (2022), CC BY-SA 4.0.</p>
           <p class="ref-line"><b>Brain</b> the MNI152 template (ICBM 2009c), McConnell Brain Imaging Centre, Montreal Neurological Institute, drawn around the streamlines as the 3D Region Atlas draws it, the MRI showing where a cut opens it.</p>
           <p class="ref-line"><b>Data</b> provided in part by the Human Connectome Project, WU-Minn Consortium (Principal Investigators: David Van Essen and Kamil Ugurbil; 1U54MH091657) funded by the 16 NIH Institutes and Centers that support the NIH Blueprint for Neuroscience Research; and by the McDonnell Center for Systems Neuroscience at Washington University.</p>
@@ -470,20 +434,41 @@ main.screen.one.land{ flex-direction:row; }
   </div>
 
   <nav class="panelbar" aria-label="Tractography panels">
-    <div class="panelbar-btns" role="group" aria-label="Panels">
-      <!-- Slice leads the bar on every page that slices (v12.32); off, the streamlines are whole again, and no Reset slice stands beside it -->
+    <!-- the buttons, which slide when they overrun the bar, and Tractography behind its line, always on show
+         (v12.42, at the owner's word): Slice, Brain, Tract, Thicken, View, Revolve -->
+    <div class="panelbar-btns" role="group" aria-label="Controls">
+      <!-- Slice leads the bar on every page that slices (v12.32); off, the streamlines are whole again -->
       <button class="pbtn" type="button" id="sliceBtn" aria-pressed="false" disabled title="A slider on each edge of the view, each a cut taking the streamlines, and the brain while it shows, away from that side; off, they are whole again"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 21 8l-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5M3 16l9 5 9-5"/></svg><span>Slice</span></button>
-      <button class="pbtn" type="button" data-pop="popBrain" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4.5v15.1"/><path d="M12 4.5C10.9 3.4 8.6 3.6 7.9 5.2 6.1 5 4.6 6.6 5 8.4 3.5 9.3 3.4 11.6 4.6 12.6 3.9 14.3 4.9 16.3 6.7 16.6 6.9 18.5 8.9 19.7 10.6 19c.6.6 1.1.7 1.4.6"/><path d="M12 4.5c1.1-1.1 3.4-.9 4.1.7 1.8-.2 3.3 1.4 2.9 3.2 1.5.9 1.6 3.2.4 4.2.7 1.7-.3 3.7-2.1 4-.2 1.9-2.2 3.1-3.9 2.4-.6.6-1.1.7-1.4.6"/><path d="M8.3 9.2c1.3.1 2.2 1 2.4 2.3M15.7 9.2c-1.3.1-2.2 1-2.4 2.3M7.2 13.6c1.2-.2 2.3.4 2.8 1.5M16.8 13.6c-1.2-.2-2.3.4-2.8 1.5"/></svg><span>Brain</span></button>
-      <button class="pbtn" type="button" data-pop="popView" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>View from</span></button>
+      <!-- the brain and the streamlines, each shown or hidden by its own button (v12.42) -->
+      <button class="pbtn" type="button" id="brainBtn" aria-pressed="true" title="The MNI152 brain around the streamlines, as the 3D Region Atlas draws it: shown or hidden"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4.5v15.1"/><path d="M12 4.5C10.9 3.4 8.6 3.6 7.9 5.2 6.1 5 4.6 6.6 5 8.4 3.5 9.3 3.4 11.6 4.6 12.6 3.9 14.3 4.9 16.3 6.7 16.6 6.9 18.5 8.9 19.7 10.6 19c.6.6 1.1.7 1.4.6"/><path d="M12 4.5c1.1-1.1 3.4-.9 4.1.7 1.8-.2 3.3 1.4 2.9 3.2 1.5.9 1.6 3.2.4 4.2.7 1.7-.3 3.7-2.1 4-.2 1.9-2.2 3.1-3.9 2.4-.6.6-1.1.7-1.4.6"/><path d="M8.3 9.2c1.3.1 2.2 1 2.4 2.3M15.7 9.2c-1.3.1-2.2 1-2.4 2.3M7.2 13.6c1.2-.2 2.3.4 2.8 1.5M16.8 13.6c-1.2-.2-2.3.4-2.8 1.5"/></svg><span>Brain</span></button>
+      <button class="pbtn" type="button" id="tractBtn" aria-pressed="true" title="The streamlines: shown or hidden"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 7.5c3.5-3 6 2.5 9 .5s5.5-4 9-1"/><path d="M3 12.5c3.5-3 6 2.5 9 .5s5.5-4 9-1"/><path d="M3 17.5c3.5-3 6 2.5 9 .5s5.5-4 9-1"/></svg><span>Tract</span></button>
+      <!-- Thicken and View each raise a mini over the button: the brain's solidity as a tall bar, and the faces
+           of the brain with Reset slice -->
+      <button class="pbtn" type="button" id="thickBtn" aria-haspopup="true" aria-expanded="false" aria-controls="thickPop" title="How solid the brain is drawn"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 4v16M16 4v16"/><path d="M5 14.5h6M13 9.5h6"/></svg><span>Thicken</span></button>
+      <button class="pbtn" type="button" id="viewBtn" aria-haspopup="true" aria-expanded="false" aria-controls="viewPop" title="Turn the brain to one of its faces, or put the cuts back"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>View</span></button>
       <button class="pbtn" type="button" id="spinBtn" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 3v5.5h-5.5"/></svg><span>Revolve</span></button>
-      <!-- what tractography is, where About stood until v12.36 -->
-      <button class="pbtn" type="button" data-pop="popWhat" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></svg><span>What it is</span></button>
     </div>
-    <div class="panelbar-end" role="group" aria-label="Export and reference">
-      <button class="pbtn" type="button" data-pop="popExport" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15V4M8 8l4-4 4 4M5 13v7h14v-7"/></svg><span>Export</span></button>
-      <button class="pbtn pbtn-ref" type="button" data-pop="popRef" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/></svg><span>Reference</span></button>
+    <div class="panelbar-end" role="group" aria-label="About tractography">
+      <button class="pbtn pbtn-ref" type="button" data-pop="popTract" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></svg><span>Tractography</span></button>
     </div>
   </nav>
+  <!-- the minis (v12.42): how solid the brain is, a slider stood on end, and the faces of the brain with Reset
+       slice beneath them, each placed over its button by the screen script -->
+  <div class="mini mini-tall" id="thickPop" hidden role="group" aria-label="How solid the brain is">
+    <span class="slider-val" id="brainVal">25%</span>
+    <div class="tall"><input type="range" id="brainTrans" min="5" max="100" step="1" value="25" aria-label="How solid the brain is drawn" aria-orientation="vertical"></div>
+  </div>
+  <div class="mini" id="viewPop" hidden role="group" aria-label="View from">
+    <button class="mini-item" type="button" data-face="left">Left</button>
+    <button class="mini-item" type="button" data-face="right">Right</button>
+    <button class="mini-item" type="button" data-face="ant">Front</button>
+    <button class="mini-item" type="button" data-face="post">Back</button>
+    <button class="mini-item" type="button" data-face="sup">Top</button>
+    <button class="mini-item" type="button" data-face="inf">Bottom</button>
+    <button class="mini-item" type="button" data-face="iso" title="The view the page opens with">Home</button>
+    <hr class="mini-rule">
+    <button class="mini-item" type="button" id="sliceReset" title="Every cut back to the centre mark; the view stays as it is">Reset slice</button>
+  </div>
 </main>
 
 <script src="assets/native.js"></script>
@@ -499,7 +484,8 @@ main.screen.one.land{ flex-direction:row; }
    drawer and its view switch: the header's height is measured into
    --screen-top so the tractogram fills the rest, on a phone the screen is
    marked one and, held sideways, land, with the bar at the right edge,
-   and the bar's buttons raise one sheet at a time over the view. */
+   and the bar's buttons raise one sheet at a time over the view, or one of
+   the minis, Thicken's tall bar and View's faces (v12.42). */
 (function(){
   var root = document.documentElement, main = document.getElementById("main");
   var head = document.querySelector(".masthead"), bar = document.querySelector(".panelbar");
@@ -571,6 +557,7 @@ main.screen.one.land{ flex-direction:row; }
   function openPop(id){
     if (current === id) return;
     if (current) hide();
+    closeMini();   /* one thing raised at a time */
     var p = pops[id];
     if (!p) return;
     clearTimeout(p._leaving);
@@ -585,6 +572,66 @@ main.screen.one.land{ flex-direction:row; }
   buttons.forEach(function(b){ b.addEventListener("click", function(){ show(b.getAttribute("data-pop")); }); });
   document.querySelectorAll(".pop .pop-x").forEach(function(x){ x.addEventListener("click", hide); });
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && current) hide(); });
+
+  /* the minis (v12.42, at the owner's word): Thicken's tall bar and View's faces, each a small window that
+     comes up out of its button (aria-controls names it), one at a time, stood over the button, or beside it
+     where the bar is a column, and put away by its button, a press anywhere else, Escape or a sheet rising */
+  var minis = {}, miniOpen = null;
+  document.querySelectorAll(".panelbar [aria-controls]").forEach(function(b){
+    var m = document.getElementById(b.getAttribute("aria-controls"));
+    if (m) minis[m.id] = { el: m, btn: b };
+  });
+  function placeMini(id){
+    var x = minis[id];
+    if (!x) return;
+    var m = x.el, r = x.btn.getBoundingClientRect(), w = m.offsetWidth, h = m.offsetHeight, edge = 8, left, top;
+    if (main.classList.contains("land")){ left = r.left - edge - w; top = r.top + r.height / 2 - h / 2; }
+    else { left = r.left + r.width / 2 - w / 2; top = r.top - edge - h; }
+    left = Math.max(edge, Math.min(window.innerWidth - w - edge, left));
+    top = Math.max(edge, Math.min(window.innerHeight - h - edge, top));
+    m.style.left = Math.round(left) + "px";
+    m.style.top = Math.round(top) + "px";
+  }
+  function closeMini(){
+    if (!miniOpen) return;
+    var x = minis[miniOpen];
+    miniOpen = null;
+    x.el.classList.remove("in");
+    x.btn.setAttribute("aria-expanded", "false");
+    x.btn.classList.remove("active");
+    clearTimeout(x.el._leaving);
+    x.el._leaving = setTimeout(function(){ if (!x.el.classList.contains("in")) x.el.hidden = true; }, 240);
+  }
+  function openMini(id){
+    var x = minis[id];
+    if (!x || miniOpen === id) return;
+    if (miniOpen) closeMini();
+    hide();
+    /* a button half slid out of the group comes back into it first */
+    try{ x.btn.scrollIntoView({ block: "nearest", inline: "nearest" }); }catch(e){}
+    clearTimeout(x.el._leaving);
+    x.el.hidden = false;
+    miniOpen = id;
+    placeMini(id);
+    void x.el.offsetWidth;
+    x.el.classList.add("in");
+    x.btn.setAttribute("aria-expanded", "true");
+    x.btn.classList.add("active");
+  }
+  Object.keys(minis).forEach(function(id){
+    minis[id].btn.addEventListener("click", function(){ if (miniOpen === id) closeMini(); else openMini(id); });
+  });
+  document.addEventListener("pointerdown", function(e){
+    if (!miniOpen) return;
+    var x = minis[miniOpen];
+    if (x.el.contains(e.target) || x.btn.contains(e.target)) return;
+    closeMini();
+  }, true);
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && miniOpen) closeMini(); });
+  window.addEventListener("resize", function(){ if (miniOpen) placeMini(miniOpen); });
+  var btnsGroup = document.querySelector(".panelbar-btns");
+  if (btnsGroup) btnsGroup.addEventListener("scroll", function(){ if (miniOpen) placeMini(miniOpen); }, {passive: true});
+  window.TK_MINI = { open: openMini, closeAll: closeMini, current: function(){ return miniOpen; } };
 })();
 </script>
 <script>
@@ -594,24 +641,6 @@ main.screen.one.land{ flex-direction:row; }
   /* .trx is what ships; a rebuild from the published atlas writes .trk,
      so accept either rather than breaking on the file that is there. */
   var TRACT_URLS = ["assets/tracts/hcp1065.trx", "assets/tracts/hcp1065.trk"];
-  /* the single colour: white on the dark theme's black (v11.98), and on the light theme a dark
-     grey (v12.1, at the owner's word: the ink was too dark to read) lit with a shine of its own */
-  function inkColour(){ return document.documentElement.getAttribute("data-theme") === "dark" ? [255, 255, 255, 255] : [84, 84, 84, 255]; }
-  /* the shine: the renderer draws the streamlines as thin tubes and lights them with its
-     Phong shader, which leaves a dark grey flat, so the light theme's single colour takes a
-     shader of its own, satin: more light on the lit side and a brighter, tighter highlight
-     from a lamp above and to the left of the viewer. Direction keeps the renderer's own. */
-  var SATIN = "#version 300 es\nprecision highp int;\nprecision highp float;\nuniform float opacity;\nin vec4 vClr;\nin vec3 vN;\nout vec4 color;\n" +
-    "void main(){\n  vec3 r = vec3(0.0, 0.0, 1.0);\n  vec3 n = normalize(vN);\n  vec3 l = normalize(vec3(-0.4, 0.8, -0.5));\n" +
-    "  float d = max(dot(n, l), 0.0);\n  float s = 0.5 * pow(max(dot(reflect(l, n), r), 0.0), 18.0);\n" +
-    "  color = vec4(vClr.rgb * (0.45 + 0.55 * d) + s, opacity);\n}\n";
-  function shade(nv, id){
-    var satin = colourMode === "accent" && document.documentElement.getAttribute("data-theme") !== "dark";
-    try{
-      if (satin && nv.vnSatin === undefined) nv.vnSatin = nv.setCustomMeshShader(SATIN, "Satin");
-      nv.setMeshShader(id, satin ? nv.vnSatin : "Phong");
-    }catch(e){}
-  }
 
   var stageMsg = document.getElementById("stageMsg");
   var msgTitle = document.getElementById("msgTitle");
@@ -705,14 +734,9 @@ main.screen.one.land{ flex-direction:row; }
   new MutationObserver(function(){
     var g = ground();
     instances.forEach(function(nv){ nv.opts.backColor = g.back; nv.opts.clipPlaneColor = g.clip; try{ nv.drawScene(); }catch(e){} });
-    if (colourMode === "accent") instances.forEach(function(nv){
-      var id = meshIds[nv.canvas.id];
-      if (id !== undefined){ try{ nv.setMeshProperty(id, "rgba255", inkColour()); }catch(e){} shade(nv, id); }
-    });
-    /* the brain's cut pane follows the theme too, and the ends their single colour's shade */
-    if (brain.nv){ brain.nv.opts.clipPlaneColor = g.clip; dressEnds(); drawBrain(); }
+    /* the brain's cut pane follows the theme too */
+    if (brain.nv){ brain.nv.opts.clipPlaneColor = g.clip; drawBrain(); }
   }).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
-  var colourMode = "Local";
 
   function wireViewControls(){
     document.querySelectorAll(".mri-stage").forEach(function(stage){
@@ -722,18 +746,24 @@ main.screen.one.land{ flex-direction:row; }
     });
   }
 
-  /* the cube turns the camera to a named face */
+  /* View's faces turn the camera to a named face; Home (iso) is the view the page opens with, its zoom and
+     its place put back as well, the cuts left alone (v12.42: Reset view went, at the owner's word) */
   function faceTo(name){
     var f = FACES[name], nv = byKey.Ren;
     if (!f || !nv) return;
     nv.scene.renderAzimuth = f[0];
     nv.scene.renderElevation = f[1];
+    if (name === "iso"){
+      nv.scene.pan2Dxyzmm = [0, 0, 0, 1];
+      if (nv.position) nv.position = [0, 0, 0];
+      applyZoom(HOME_ZOOM);
+    }
     nv.drawScene();
     touched();
     rememberSoon();
   }
   document.querySelectorAll("[data-face]").forEach(function(btn){
-    btn.addEventListener("click", function(){ faceTo(btn.getAttribute("data-face")); });
+    btn.addEventListener("click", function(){ faceTo(btn.getAttribute("data-face")); if (window.TK_MINI) TK_MINI.closeAll(); });
   });
 
 
@@ -797,38 +827,35 @@ main.screen.one.land{ flex-direction:row; }
     ends: function(){ return brain.ends ? { shown: !!brain.ends.visible, points: brain.ends.pts ? brain.ends.pts.length / 3 : 0, indices: brain.ends.indexCount || 0, radius: brain.ends.fiberRadius, meshes: brain.nv ? brain.nv.meshes.length : 0 } : null; }
   };
 
-  var radiusEl = document.getElementById("radius");
-  var radiusVal = document.getElementById("radiusVal");
+  /* the streamlines' thickness, one for all since v12.42, at the owner's word (the Thick slider went with the
+     Brain sheet, and the single colour with it: Direction alone); the ends in the brain's viewer take the same */
+  var TRACT_RADIUS = 0.3;
   function applyRadius(v){
-    radiusVal.textContent = Number(v).toFixed(2);
     instances.forEach(function(nv){
       if (meshIds[nv.canvas.id] !== undefined) nv.setMeshProperty(meshIds[nv.canvas.id], "fiberRadius", Number(v));
     });
     dressEnds();
   }
-  radiusEl.addEventListener("input", function(){ applyRadius(radiusEl.value); rememberSoon(); });
 
-  function setColour(mode){
-    colourMode = mode;
-    document.querySelectorAll("[data-colour]").forEach(function(b){ b.classList.toggle("active", b.getAttribute("data-colour") === mode); });
-    instances.forEach(function(nv){
-      var id = meshIds[nv.canvas.id];
-      if (id === undefined) return;
-      if (mode === "accent"){
-        nv.setMeshProperty(id, "fiberColor", "Fixed");
-        nv.setMeshProperty(id, "rgba255", inkColour());
-      } else {
-        nv.setMeshProperty(id, "fiberColor", "Local");
-      }
-      shade(nv, id);
-      nv.drawScene();
-    });
-    dressEnds();
+  /* ── the streamlines shown or hidden by Tract on the bar (v12.42, at the owner's word) ──
+     the mesh keeps its points and its cuts and is simply not drawn, the ends in the brain's viewer with it */
+  var tract = { on: true };
+  var tractBtn = document.getElementById("tractBtn");
+  function paintTractBtn(){
+    if (!tractBtn) return;
+    tractBtn.classList.toggle("active", tract.on);
+    tractBtn.setAttribute("aria-pressed", String(tract.on));
+  }
+  function showTract(on){
+    tract.on = !!on;
+    paintTractBtn();
+    var nv = byKey.Ren, mesh = nv && nv.meshes && nv.meshes[0];
+    if (mesh) mesh.visible = tract.on;
+    if (brain.ends) brain.ends.visible = !!(tract.on && brain.endsOn);
+    if (nv) nv.drawScene();
     rememberSoon();
   }
-  document.querySelectorAll("[data-colour]").forEach(function(btn){
-    btn.addEventListener("click", function(){ setColour(btn.getAttribute("data-colour")); });
-  });
+  if (tractBtn) tractBtn.addEventListener("click", function(){ showTract(!tract.on); });
 
 
   /* ── slice: the atlases' Slice tool, cutting the streamlines themselves (v11.98) ──
@@ -855,7 +882,7 @@ main.screen.one.land{ flex-direction:row; }
      surface); the first quarter of a slider's travel, which cuts the air around the brain there,
      cuts them not at all, as on the atlas. The brain off, the slider's share is taken straight over
      the streamlines' own box. */
-  var TRACT_PAST = 5;   /* doubled in v12.41, at the owner's word */
+  var TRACT_PAST = 2.5;   /* v12.39; doubled in v12.41 and halved again in v12.42, at the owner's word */
   function cutBox(planes, past){
     past = past || 0;
     var lo = [-Infinity, -Infinity, -Infinity], hi = [Infinity, Infinity, Infinity], k, i;
@@ -953,11 +980,11 @@ main.screen.one.land{ flex-direction:row; }
      (followDraws, mirror). v12.31 drew the brain as a surface of glass in the streamlines' viewer and v12.36 laid
      three slices through its middle; both went at the owner's word, for the atlas's own render and its cuts. */
   var BRAIN_URL = "assets/mni152.nii.gz", BRAIN_LIFT = 1.5;
-  /* on as the page opens since v12.36, at the owner's word, at 75 per cent transparency */
-  var brain = { on: true, trans: 75, nv: null, vol: null, box: null, loading: null, part: null, ends: null };
+  /* on as the page opens since v12.36, at the owner's word, at 75 per cent transparency (a quarter solid, as
+     Thicken's bar reads it since v12.42); endsOn says whether a cut has filled the ends */
+  var brain = { on: true, trans: 75, nv: null, vol: null, box: null, loading: null, part: null, ends: null, endsOn: false };
   var brainCanvas = document.getElementById("tkBrain");
   var brainTrans = document.getElementById("brainTrans"), brainVal = document.getElementById("brainVal");
-  var brainNote = document.getElementById("brainNote"), brainNoteText = brainNote.innerHTML;
   /* the brain's viewer takes the streamlines' camera: its turn, its zoom and where the hand has slid it */
   function mirror(){
     var a = byKey.Ren, b = brain.nv;
@@ -1032,31 +1059,30 @@ main.screen.one.land{ flex-direction:row; }
     brain.loading.catch(function(){ brain.loading = null; });   /* a later press tries again */
     return brain.loading;
   }
-  /* the ends take the streamlines' own look: their colour, thickness, dither and shader */
+  /* the ends take the streamlines' own look: their direction colours, thickness and dither */
   function dressEnds(){
     var b = brain.nv, em = brain.ends;
     if (!b || !em) return;
     try{
       b.setMeshProperty(em.id, "fiberLength", 1);   /* the shortest piece kept, in mm; nought would build nothing */
       b.setMeshProperty(em.id, "fiberDither", 0.1);
-      b.setMeshProperty(em.id, "fiberRadius", Number(radiusEl.value));
-      if (colourMode === "accent"){
-        b.setMeshProperty(em.id, "fiberColor", "Fixed");
-        b.setMeshProperty(em.id, "rgba255", inkColour());
-      } else b.setMeshProperty(em.id, "fiberColor", "Local");
-      shade(b, em.id);
+      b.setMeshProperty(em.id, "fiberRadius", TRACT_RADIUS);
+      b.setMeshProperty(em.id, "fiberColor", "Local");
     }catch(e){}
   }
-  /* the ends as the cut leaves them, or none */
+  /* the ends as the cut leaves them, or none; shown while the streamlines are (v12.42) */
   function setEnds(band){
     var b = brain.nv, em = brain.ends;
     if (!b || !em) return;
-    if (!band){ em.visible = false; return; }
-    em.pts = band.pts;
-    em.offsetPt0 = band.offs;
-    em.fiberLengths = null;
-    em.visible = true;
-    try{ em.updateMesh(b.gl); }catch(e){ em.visible = false; }
+    brain.endsOn = false;
+    if (band){
+      em.pts = band.pts;
+      em.offsetPt0 = band.offs;
+      em.fiberLengths = null;
+      em.visible = true;
+      try{ em.updateMesh(b.gl); brain.endsOn = true; }catch(e){}
+    }
+    em.visible = !!(tract.on && brain.endsOn);
   }
   /* the layer shown or hidden at its transparency, both viewers framed alike, the cuts set on the brain */
   function placeBrain(){
@@ -1066,42 +1092,43 @@ main.screen.one.land{ flex-direction:row; }
     applyCut(lastPlanes);   /* the cut's share is read over the volume while the brain shows */
     if (byKey.Ren) byKey.Ren.drawScene();
   }
-  function paintBrainBtns(){
-    document.querySelectorAll("[data-brain]").forEach(function(b){
-      var lit = (b.getAttribute("data-brain") === "on") === brain.on;
-      b.classList.toggle("active", lit);
-      b.setAttribute("aria-pressed", String(lit));
-    });
+  /* Brain on the bar shows or hides it (v12.42, at the owner's word: a button, where the sheet's Off and On stood) */
+  var brainBtn = document.getElementById("brainBtn");
+  function paintBrainBtn(){
+    if (!brainBtn) return;
+    brainBtn.classList.toggle("active", brain.on);
+    brainBtn.setAttribute("aria-pressed", String(brain.on));
   }
   function showBrain(on){
     brain.on = !!on;
-    paintBrainBtns();
+    paintBrainBtn();
     if (brain.nv || !brain.on) placeBrain();
     else if (byKey.Ren){
-      brainNote.textContent = "Drawing the brain from the template…";
-      loadBrain().then(function(){ brainNote.innerHTML = brainNoteText; }, function(err){
+      loadBrain().then(null, function(err){
         brain.on = false;
-        paintBrainBtns();
+        paintBrainBtn();
         placeBrain();
+        /* the failure stands over the view for a moment, as the loading did */
         var why = err && err.message ? err.message : String(err);
-        brainNote.textContent = /fetch|network|load/i.test(why)
-          ? "The brain could not be fetched. Press On again once the connection is back."
-          : "The brain could not be drawn: " + why;
+        showMessage("The brain could not be drawn", /fetch|network|load/i.test(why)
+          ? "The brain could not be fetched. Press Brain again once the connection is back." : why, false);
+        clearTimeout(showBrain.gone);
+        showBrain.gone = setTimeout(hideMessage, 5000);
         rememberSoon();
       });
     }
     rememberSoon();
   }
+  /* how solid the brain is, Thicken's tall bar (v12.42): the slider reads 5 to 100 per cent solid, and the
+     brain keeps its transparency underneath, 0 to 95, as the kept state and the export's alpha have it */
   function applyBrainTrans(v){
     var t = Math.round(Number(v));
     brain.trans = isFinite(t) ? Math.max(0, Math.min(95, t)) : 75;
-    brainTrans.value = String(brain.trans);
-    brainVal.textContent = brain.trans + "%";
+    brainTrans.value = String(100 - brain.trans);
+    brainVal.textContent = (100 - brain.trans) + "%";
     brainCanvas.style.opacity = String(1 - brain.trans / 100);
   }
-  document.querySelectorAll("[data-brain]").forEach(function(b){
-    b.addEventListener("click", function(){ showBrain(b.getAttribute("data-brain") === "on"); });
-  });
+  if (brainBtn) brainBtn.addEventListener("click", function(){ showBrain(!brain.on); });
   /* the surface the export carries while the brain shows: the screen's brain is the renderer's own and has no
      surface to give, so one is drawn from the template on the first export, through the 3D export's own surface
      at a 2-voxel stride, lifted a millimetre and a half along its normals so the streamlines' ends stay inside
@@ -1128,9 +1155,9 @@ main.screen.one.land{ flex-direction:row; }
     if (!idx.length) return null;
     return { pos: b.pos, nrm: b.nrm, idx: idx, volumeMm3: b.volumeMm3 };
   }
-  /* moving the slider shows the brain, so the change it makes is seen */
+  /* moving the bar shows the brain, so the change it makes is seen */
   brainTrans.addEventListener("input", function(){
-    applyBrainTrans(brainTrans.value);
+    applyBrainTrans(100 - Number(brainTrans.value));
     if (!brain.on) showBrain(true); else rememberSoon();
   });
   var cutter = {
@@ -1171,10 +1198,11 @@ main.screen.one.land{ flex-direction:row; }
   });
 
   /* ── the last state, kept on the device (v12.1, at the owner's word) ──
-     the colour, the thickness, the brain (v12.31), the cuts and the view,
-     written a moment after each change once the page is up, and read back
-     as the tractogram comes in; nothing in the address asks for anything
-     else on this page */
+     the brain (v12.31) and how solid it is, the streamlines (v12.42), the
+     cuts and the view, written a moment after each change once the page is
+     up, and read back as the tractogram comes in; nothing in the address
+     asks for anything else on this page. A state kept before v12.42 (v 2)
+     carried a colour and a thickness, read no more. */
   var keepReady = false, keepTimer = 0;
   function rememberSoon(){
     if (!keepReady) return;
@@ -1183,8 +1211,9 @@ main.screen.one.land{ flex-direction:row; }
       var nv = byKey.Ren;
       try{
         localStorage.setItem("vn-tracts-last", JSON.stringify({
-          v: 2, colour: colourMode, radius: Number(radiusEl.value),
+          v: 3,
           brain: { on: brain.on, trans: brain.trans },
+          tract: tract.on,
           cuts: slice ? slice.state() : null,
           view: nv ? { az: nv.scene.renderAzimuth, el: nv.scene.renderElevation, zoom: zoom } : null
         }));
@@ -1195,8 +1224,6 @@ main.screen.one.land{ flex-direction:row; }
     var m = null;
     try{ m = JSON.parse(localStorage.getItem("vn-tracts-last") || "null"); }catch(e){}
     if (!m || typeof m !== "object") return;
-    if (m.radius > 0){ radiusEl.value = String(m.radius); applyRadius(radiusEl.value); }
-    if (m.colour === "accent" || m.colour === "Local") setColour(m.colour);
     if (m.brain && typeof m.brain === "object"){
       if (m.brain.trans != null) applyBrainTrans(m.brain.trans);
       /* on or off as it was left, before the cuts come back, so they are read over the
@@ -1204,6 +1231,8 @@ main.screen.one.land{ flex-direction:row; }
          stayed so unless pressed, opens on the new default, the brain on */
       if (m.v >= 2 && typeof m.brain.on === "boolean") brain.on = m.brain.on;
     }
+    /* the streamlines as they were left (v12.42); a state kept before it had them always on */
+    if (m.v >= 3 && typeof m.tract === "boolean") tract.on = m.tract;
     if (m.cuts && slice) slice.setState(m.cuts);
     var nv = byKey.Ren;
     if (nv && m.view){
@@ -1221,7 +1250,7 @@ main.screen.one.land{ flex-direction:row; }
 
   /* ── 3D export ────────────────────────────────────────────────────────
      An even sample of the streamlines as polylines, coloured by direction
-     as the page draws them (or the single accent colour if that is showing).
+     as the page draws them, while they show, and the brain while it does.
      Formats with no line primitive get thin three-sided tubes, and fewer
      of them, because a million-point tube mesh is nobody's idea of a file. */
   if (window.MN_EXPORT3D){
@@ -1232,39 +1261,33 @@ main.screen.one.land{ flex-direction:row; }
       build: function(ctx){
         var nv = byKey.Ren, mesh = nv && nv.meshes && nv.meshes[0];
         if (!mesh || !mesh.pts || !mesh.offsetPt0) throw new Error("The tractogram is still loading.");
-        var total = mesh.offsetPt0.length - 1;
-        var cap = densityEl.value === "all" ? total : (Number(densityEl.value) || 5000);
-        if (!ctx.format.lines) cap = Math.min(cap, 1500);
-        var sample = MN_EXPORT3D.sampleLines(mesh.pts, mesh.offsetPt0, cap);
-        var part = MN_EXPORT3D.lines(sample.pts, sample.offsets, {
-          name: "HCP1065 streamlines (" + sample.count + " of " + (mesh.offsetPt0.length - 1) + ")",
-          colour: colourMode === "accent" ? inkColour().slice(0, 3).map(function(v){ return v / 255; }) : null
-        });
-        var parts = [part];
+        var parts = [];
+        if (tract.on){
+          var total = mesh.offsetPt0.length - 1;
+          var cap = densityEl.value === "all" ? total : (Number(densityEl.value) || 5000);
+          if (!ctx.format.lines) cap = Math.min(cap, 1500);
+          var sample = MN_EXPORT3D.sampleLines(mesh.pts, mesh.offsetPt0, cap);
+          parts.push(MN_EXPORT3D.lines(sample.pts, sample.offsets, {
+            name: "HCP1065 streamlines (" + sample.count + " of " + total + ")"
+          }));
+        }
         /* the brain goes with them while it shows, as a surface drawn from the template for the file,
            cut as the screen has it, at its opacity */
         var bp = brain.on ? brainForExport() : null;
         if (bp) parts.push({ kind: "mesh", name: "Brain surface (MNI152)", pos: bp.pos, idx: bp.idx, nrm: bp.nrm,
                              colour: [0.82, 0.80, 0.78], alpha: 1 - brain.trans / 100, volumeMm3: bp.volumeMm3 });
-        return { name: "VisualNeuroscience tractogram", parts: parts, tubeRadius: 0.3 };
+        if (!parts.length) throw new Error("Turn the streamlines or the brain on to export them.");
+        return { name: "VisualNeuroscience tractogram", parts: parts, tubeRadius: TRACT_RADIUS };
       }
     });
   }
 
-  function resetView(){
-    var nv = byKey.Ren;
-    if (!nv) return;
-    nv.scene.renderAzimuth = HOME[0];
-    nv.scene.renderElevation = HOME[1];
-    nv.scene.pan2Dxyzmm = [0, 0, 0, 1];
-    if (nv.position) nv.position = [0, 0, 0];
-    applyZoom(HOME_ZOOM);
+  /* Reset slice, under View (v12.42, at the owner's word): every cut back to its centre mark, the tool left
+     on and the view as it is; the tool's onChange paints Slice and remembers */
+  var sliceReset = document.getElementById("sliceReset");
+  if (sliceReset) sliceReset.addEventListener("click", function(){
     if (slice) slice.reset();
-    touched();
-    rememberSoon();
-  }
-  document.querySelectorAll("[data-reset]").forEach(function(btn){
-    btn.addEventListener("click", resetView);
+    if (window.TK_MINI) TK_MINI.closeAll();
   });
 
   async function boot(){
@@ -1342,12 +1365,13 @@ main.screen.one.land{ flex-direction:row; }
         });
       }
 
-      applyRadius(radiusEl.value);
+      applyRadius(TRACT_RADIUS);
       byKey.Ren.scene.renderAzimuth = HOME[0];
       byKey.Ren.scene.renderElevation = HOME[1];
       applyZoom(zoom);
       restoreKept();          /* how the page was left, if it was left at all */
       showBrain(brain.on);    /* on as it opens, unless it was left off (v12.36) */
+      showTract(tract.on);    /* the streamlines likewise (v12.42) */
       keepReady = true;
       rememberSoon();
       instances.forEach(function(nv){ nv.drawScene(); });
