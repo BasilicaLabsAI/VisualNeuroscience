@@ -967,15 +967,35 @@ main.screen.one.land{ flex-direction:row; }
     return {lo: lo, hi: hi};
   }
   var lastPlanes = [];
+  /* the pieces of the whole tractogram outside a box, for the ends (Slice tract off, v12.48) */
+  function freePieces(inner){
+    var P = whole.pts, O = whole.off, n = O.length - 1, lo = inner.lo, hi = inner.hi;
+    var ept = [], eoffs = [0], erun = 0;
+    for (var s = 0; s < n; s++){
+      for (var i = O[s]; i < O[s + 1]; i++){
+        var x = P[i * 3], y = P[i * 3 + 1], z = P[i * 3 + 2];
+        var deep = x >= lo[0] && x <= hi[0] && y >= lo[1] && y <= hi[1] && z >= lo[2] && z <= hi[2];
+        if (!deep){ ept.push(x, y, z); erun++; }
+        else if (erun){ if (erun >= 2) eoffs.push(ept.length / 3); else ept.length -= 3 * erun; erun = 0; }
+      }
+      if (erun){ if (erun >= 2) eoffs.push(ept.length / 3); else ept.length -= 3 * erun; erun = 0; }
+    }
+    return eoffs.length > 1 ? { pts: Float32Array.from(ept), offs: Uint32Array.from(eoffs) } : null;
+  }
   function applyCut(planes){
     var nv = byKey.Ren, mesh = nv && nv.meshes && nv.meshes[0];
     if (!mesh || !whole) return;
     lastPlanes = planes;
     if (!whole.lengths && mesh.pts === whole.pts) whole.lengths = mesh.fiberLengths || null;
     var again = cutBrainPlanes(planes);   /* the brain's renderer first: the box is read off it */
-    /* no cut, or Slice tract off (v12.44): the streamlines stand whole, the brain alone cut */
+    /* no cut, or Slice tract off (v12.44): the streamlines stand whole, the brain alone cut. The
+       pieces that stand in the cut-away space are drawn in the brain's viewer as well (v12.48, at the
+       owner's word), where the renderer sets them against the head's depth, in front of the cut face
+       where they are in front of it: the brain's canvas lies over the streamlines' with no depth
+       between the two, and its cut face covered them (freePieces, the whole tractogram outside the
+       box the brain keeps, a millimetre inside its cut so each tube runs on through the face). */
     if (!planes.length || !sliceTract){
-      setEnds(null);
+      setEnds(planes.length && brain.on && brain.nv ? freePieces(cutBox(planes, -1)) : null);
       if (mesh.pts !== whole.pts){
         mesh.pts = whole.pts; mesh.offsetPt0 = whole.off; mesh.fiberLengths = whole.lengths;
         try{ mesh.updateMesh(nv.gl); }catch(e){}

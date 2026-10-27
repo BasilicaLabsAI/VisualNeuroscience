@@ -513,13 +513,13 @@ html{ touch-action:manipulation; }
 .fold{ border-top:1px solid var(--ink-35); margin-top:.7rem; }
 .fold > summary{
   list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:.5rem;
-  font-family:var(--font-brand); font-weight:500; font-size:.62rem; letter-spacing:.24em; text-transform:uppercase;
-  color:var(--ink-60); padding:.6rem .1rem .45rem; -webkit-tap-highlight-color:transparent;
+  font-family:var(--font-brand); font-weight:500; font-size:.72rem; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--ink); padding:.6rem .1rem .45rem; -webkit-tap-highlight-color:transparent;
 }
 .fold > summary::-webkit-details-marker{ display:none; }
 .fold > summary::after{
-  content:""; flex:none; width:.42rem; height:.42rem; margin-right:.25rem;
-  border-right:1px solid currentColor; border-bottom:1px solid currentColor;
+  content:""; flex:none; width:.5rem; height:.5rem; margin-right:.3rem;
+  border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor;
   transform:rotate(-45deg); transition:transform .18s ease;
 }
 .fold[open] > summary::after{ transform:rotate(45deg); }
@@ -527,7 +527,7 @@ html{ touch-action:manipulation; }
 .fold > summary:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
 .fold-in{ padding:.1rem 0 .4rem; }
 .models .fold{ margin-top:.45rem; }
-.models .fold > summary{ font-size:.55rem; }
+.models .fold > summary{ font-size:.72rem; }
 @media (prefers-reduced-motion: reduce){ .fold > summary::after{ transition:none; } }
 .models .mrow{ display:flex; align-items:center; gap:.5rem; border:1px solid var(--hair); padding:.3rem .35rem .3rem .6rem; }
 .models .mname{
@@ -542,6 +542,8 @@ html{ touch-action:manipulation; }
   font-size:.95rem; line-height:1; cursor:pointer; padding:0;
 }
 .models .mdel.armed{ width:auto; padding:0 .45rem; font-family:var(--font-brand); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; background:var(--ink); color:var(--paper); border-color:var(--ink); }
+/* Save reads Replace? for a moment when the name is kept with another view (v12.48) */
+.models .mform .btn.armed{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
 @media (hover: hover){ .models .mdel:hover{ background:var(--ink); color:var(--paper); } }
 @media (pointer: coarse){ .models .mdel{ min-width:36px; min-height:36px; } }
 

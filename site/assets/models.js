@@ -117,30 +117,11 @@ function attach(o){
   var mode = "device", items = [], user = null, busy = false, flash = null, flashErr = false;
 
   function say(msg, err){ flash = msg || null; flashErr = !!err; renderNote(); }
+  /* the note carries only what just happened (v12.48, at the owner's word): a map opened, saved,
+     deleted or moved, or what went wrong; the standing lines on where the maps are kept went */
   function renderNote(){
     note.classList.toggle("err", !!(flash && flashErr));
-    if (flash){ note.textContent = flash; return; }
-    note.textContent = "";
-    if (mode === "account"){
-      note.textContent = items.length
-        ? "Saved to your account. Open any of them on any device you log in on."
-        : "Name the view above and press Save; it goes to your account.";
-    } else {
-      var canLogin = auth && auth.enabled;
-      note.textContent = (items.length
-        ? "Saved on this device only."
-        : "Name the view above and press Save; it stays on this device.") +
-        (canLogin ? " " : "");
-      if (canLogin){
-        var a = document.createElement("a"); a.href = "#"; a.textContent = "Log in";
-        a.addEventListener("click", function(e){
-          e.preventDefault();
-          var b = document.querySelector(".vn-auth-btn"); if (b) b.click();
-        });
-        note.appendChild(a);
-        note.appendChild(document.createTextNode(" to keep " + noun + "s in your account and open them anywhere."));
-      }
-    }
+    note.textContent = flash || "";
   }
 
   function renderList(){
@@ -235,10 +216,22 @@ function attach(o){
     if (!data){ say("There is nothing to save yet."); return Promise.resolve(); }
     data.updated = Date.now(); data.name = name;
     var existed = items.some(function(it){ return it.name === name; });
+    /* a name already kept (v12.48, at the owner's word): the same view again is let be, and a
+       different one is replaced only on a second press of Save, which reads Replace? for a moment */
+    if (existed && replaceArmed !== name){
+      setBusy(true);
+      var had = mode === "account" ? files.load(tool, name) : Promise.resolve((readLocal(tool)[name] || {}).data);
+      return had.then(function(old){
+        setBusy(false);
+        if (old && sameView(old, data)){ say("“" + name + "” is already kept, just as it is."); return; }
+        armReplace(name);
+      }, function(){ setBusy(false); armReplace(name); });
+    }
+    disarmReplace();
     setBusy(true);
+    if (ownFold) ownFold.open = true;   /* the list shows what was just kept */
     var p;
     if (mode === "account"){
-      if (ownFold) ownFold.open = true;   /* the list shows what was just kept */
       p = files.save(tool, name, data).then(function(){
         return refresh().then(function(){ say((existed ? "Replaced " : "Saved ") + "“" + name + "” in your account."); });
       }).catch(function(err){
@@ -254,6 +247,39 @@ function attach(o){
       });
     }
     return p.then(function(){ input.value = ""; }).then(function(){ setBusy(false); }, function(){ setBusy(false); });
+  }
+
+  /* the second press: Save reads Replace? for four seconds, and a press then replaces */
+  var replaceArmed = null, replaceTimer = 0;
+  function armReplace(name){
+    replaceArmed = name;
+    saveBtn.textContent = "Replace?"; saveBtn.classList.add("armed");
+    say("“" + name + "” is kept already, with a different view. Press Replace? to replace it, or give this one another name.");
+    clearTimeout(replaceTimer);
+    replaceTimer = setTimeout(disarmReplace, 4000);
+  }
+  function disarmReplace(){
+    clearTimeout(replaceTimer); replaceTimer = 0;
+    if (replaceArmed === null) return;
+    replaceArmed = null;
+    saveBtn.textContent = "Save"; saveBtn.classList.remove("armed");
+    if (flash && /Press Replace\?/.test(flash)) say(null);
+  }
+  input.addEventListener("input", disarmReplace);
+  /* the same view: the model as kept against the one in hand, the name and the time aside,
+     numbers to the millimetre */
+  function sameView(a, b){
+    function plain(v){
+      if (Array.isArray(v)) return v.map(plain);
+      if (v && typeof v === "object"){
+        var o = {};
+        Object.keys(v).sort().forEach(function(k){ if (k !== "updated" && k !== "name") o[k] = plain(v[k]); });
+        return o;
+      }
+      if (typeof v === "number") return Math.round(v * 1000) / 1000;
+      return v;
+    }
+    try{ return JSON.stringify(plain(a)) === JSON.stringify(plain(b)); }catch(e){ return false; }
   }
 
   function load(name){

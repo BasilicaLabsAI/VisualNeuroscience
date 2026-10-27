@@ -1896,6 +1896,27 @@ main.screen.one.land{ flex-direction:row; }
     span.appendChild(highlightText((from > 0 ? "…" : "") + text.slice(from), marks));
     return span;
   }
+  /* shared by the picker's list: the search is case-blind, and a match is marked in the name */
+  function norm(s){ return String(s).toLowerCase(); }
+  function highlightText(text, terms){
+    if (!terms.length) return document.createTextNode(text);
+    var frag = document.createDocumentFragment();
+    var low = norm(text), i = 0;
+    while (i < text.length){
+      var best = -1, bestLen = 0;
+      terms.forEach(function(term){
+        var at = low.indexOf(term, i);
+        if (at !== -1 && (best === -1 || at < best)){ best = at; bestLen = term.length; }
+      });
+      if (best === -1){ frag.appendChild(document.createTextNode(text.slice(i))); break; }
+      if (best > i) frag.appendChild(document.createTextNode(text.slice(i, best)));
+      var mk = document.createElement("mark");
+      mk.textContent = text.slice(best, best + bestLen);
+      frag.appendChild(mk);
+      i = best + bestLen;
+    }
+    return frag;
+  }
   function buildRegionList(raw){
     var terms = norm(raw).split(/\s+/).filter(Boolean);
     var items = [];

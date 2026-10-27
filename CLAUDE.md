@@ -334,7 +334,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   it as solidity, 5 to 100, for that one release; `applyBrainTrans`), Tract (`#tractBtn`, v12.42: the streamlines
   shown or hidden, `showTract`, the mesh's `visible` and the ends' with it), Slice tract (`#sliceTractBtn`, v12.44, at
   the owner's word: a switch, `sliceTract`, cutting the streamlines with the brain, on again each time Slice is
-  turned on; off, `applyCut` leaves them whole and the brain alone is cut), Offset (`#offsetBtn`, v12.44: a switch,
+  turned on; off, `applyCut` leaves them whole and the brain alone is cut, and since v12.48, at the owner's word,
+  the pieces that stand in the cut-away space go into `brain.ends` as well (`freePieces`, the whole tractogram
+  outside `cutBox(planes, -1)`), since the brain's canvas lies over the streamlines' and its cut face covered the
+  whole streamlines in front of it), Offset (`#offsetBtn`, v12.44: a switch,
   `offsetOn`, standing their cut ends out of the brain's cut face by Distance's millimetres; off, or the brain off,
   the cut is the brain's own, `effectivePast()` nought), Distance (`#distBtn`, v12.43's Offset renamed in v12.44: a
   mini, `#offsetPop`, how far, `#offset` 0 to 10 mm in halves, 2.5 to begin, `applyOffset` setting `tractPast` and
@@ -485,7 +488,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   its Regions part holds Add a region, Mirror and then Saved maps as a fold (`details.fold#savedFold`, `.fold` in
   `viewer.css`, shut until pressed; the bar's Saved maps button and `#popSaved` went), inside which `models.js`
   (`folds: true` in `attach`) draws the name box, Export and Import files and two folds of its own, Saved (the
-  person's maps, None until one is kept, opened as one is saved) and Examples, each shut until pressed; and its
+  person's maps, None until one is kept, opened as one is saved) and Examples, each shut until pressed (the fold
+  headings `.72rem` in the ink since v12.48, at the owner's word, and the widget's standing line on where the maps
+  are kept gone, `renderNote` carrying only what just happened; a save under a kept name with a different view
+  arms Save as Replace? for four seconds, `armReplace`, a second press replacing, and an identical view is let be,
+  `sameView`, the name and the time aside and numbers to the millimetre); and its
   Highlighted part carries switches: one on the heading (`#allSwitch`, `master` in the script, `all` in a model) for
   every region at once and one on each layer's heading (`.tier-switch` in `renderChips`, each entry's `off`), every
   region under it off the scan and on again while it stays in the list, hollow-dotted (`.rchip.off`); the layers'
@@ -681,7 +688,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `brodmann.html`, a saved model's `atlas: "ba"` entries skipped on restore, and the MCP worker's `save_model`
   refusing a `B:` item and naming the Brodmann Area Atlas (`resolveItem` in `account.js`; its test expects the
   refusal; live with the next deploy). The home page's atlas box and its twin in `Shell.swift` no longer name the
-  areas.
+  areas. The removal took `norm` and `highlightText` with it, which the region picker's list shares, so v12.47's
+  Add a region list threw and showed nothing; v12.48 put the two back beside `buildRegionList`. A check of the
+  picker as a person uses it, the button pressed, a word typed and Enter, is the one that catches this.
   `app/scripts/shoot-home-atlas.js` shoots the atlas's home twins through `MN_SEL.middle` (the crosshair to the middle of
   the volume, the work Centre planes did until v12.33), `MN_SEL.centreMm` and `MN_SEL.onLocation`, the
   door the page keeps open for it (put back in v12.1 after the probe's rewrite had dropped it; `locWatchers` beside
