@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.44 — 27 October 2026 — Slice tract and Offset switches
+Commit · Add Slice tract and Offset switches beside Tract, name the offset's bar Distance, and narrow the pinned Tractography button to match the bar's ends
+
+Tractography's bar gains two switches beside Tract. Slice tract, on whenever Slice is turned on, cuts the streamlines with the brain, and off leaves them whole while the brain alone is cut. Offset stands their cut ends out of the brain's cut face, by the millimetres the bar now called Distance sets, and off ends them at the face; both are greyed while the brain is off, as each switch is whenever it has no say. The pinned Tractography button is now as narrow as the others, its name in smaller type, and the sliding part of the bar ends the same distance before its line as it starts from the bar's left edge. The apps take it with their next build.
+
 ## v12.43 — 26 October 2026 — The bar in groups, with Offset and Thicken
-Commit · Group the Tractography bar behind lines with Transparency, Offset and Thicken as slim tall bars, and reword the developer's message
+Commit `1186b6f` · Group the Tractography bar behind lines with Transparency, Offset and Thicken as slim tall bars, and reword the developer's message
 
 Tractography's bar now stands in four groups behind thin lines: Slice; Brain and Transparency; Tract, Offset and Thicken; View and Revolve, with Tractography on show at the end as before. Transparency is the last release's tall bar renamed, read the atlases' way with nought solid, and slimmed to the width of its thumb. Offset is new: while Slice is on it sets how far the streamlines stand out of the cut face, from nought to ten millimetres, two and a half to begin, and it is greyed while Slice is off. Thicken sets the streamlines' thickness again, over the range it had before, as a tall bar of its own, and the page keeps the offset and the thickness with the rest. On the About page the developer's message no longer opens with I am a solo developer, says the app was built with knowledge from the post-grad in Applied Neuroscience and experience in software development, and asks for features added or improved, with corrections to be sent in the same breath. The apps take it with their next build.
 

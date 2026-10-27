@@ -182,7 +182,7 @@ main.screen{
 :root[data-theme="dark"] .views .view[data-box="Ren"] .mri-stage{ background:#111111 !important; }
 :root:not([data-theme="dark"]) .views .view[data-box="Ren"] .mri-stage{ background:#FFFFFF !important; }
 .panelbar{
-  flex:none; display:flex; align-items:center; gap:.6rem;
+  flex:none; display:flex; align-items:center; gap:0;
   padding:.45rem var(--gap) calc(.45rem + env(safe-area-inset-bottom, 0px));
   border-top:1px solid var(--hair);
   background:color-mix(in srgb, var(--paper) 84%, transparent);
@@ -198,8 +198,12 @@ main.screen{
 .pgroup{ display:flex; gap:.15rem; flex:none; padding:0 .3rem; border-left:1px solid var(--bar-line, var(--hair)); }
 .pgroup:first-child{ padding-left:0; border-left:0; }
 .pgroup:last-child{ padding-right:0; }
-.panelbar-end{ display:flex; gap:.15rem; flex:none; margin-left:auto; padding-left:.6rem; }
-.pbtn.pbtn-ref{ margin-left:.3rem; padding-left:.65rem; border-left:1px solid var(--hair); }
+.panelbar-end{ display:flex; gap:.15rem; flex:none; margin-left:auto; padding-left:0; }
+/* Tractography, the pinned button, as narrow as the others, its long name in smaller, tighter type (v12.44, at the
+   owner's word), and its line standing --gap after the sliding group, as far as the group stands from the bar's left
+   edge, so the two ends match */
+.pbtn.pbtn-ref{ margin-left:var(--gap); padding-left:.3rem; padding-right:.3rem; border-left:1px solid var(--hair); }
+.panelbar .pbtn.pbtn-ref span{ font-size:.46rem; letter-spacing:.04em; }
 .pbtn{
   flex:none; display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:.28rem;
   min-width:3.9rem; padding:.3rem .55rem .25rem; border:0; background:none; color:var(--ink-60); cursor:pointer;
@@ -212,6 +216,9 @@ main.screen{
 /* lit, a window or a mini open or a mode on: a block of ink, as the view buttons are (v11.98) */
 .pbtn.active, .pbtn[aria-pressed="true"], .pbtn[aria-expanded="true"]{ background:var(--ink); color:var(--paper); border-radius:10px; }
 .pbtn.active span, .pbtn[aria-pressed="true"] span, .pbtn[aria-expanded="true"] span{ font-weight:600; }
+/* greyed: a switch that has no say just now (Slice tract, Offset and Distance, v12.44) shows no block, as the views'
+   bar's greyed buttons do (the lit selectors repeated with :disabled, to outrank bar.css's lit rule) */
+.panelbar .pbtn:disabled, .panelbar .pbtn.active:disabled, .panelbar .pbtn[aria-pressed="true"]:disabled{ background:none; color:var(--bar-soft, var(--ink-60)); opacity:.32; }
 @media (pointer:coarse){ .pbtn{ min-height:44px; } }
 /* a sheet: one at a time, sliding up out of the bar over the view and back
    into it when closed (the stage clips it at the bar's edge) */
@@ -323,7 +330,6 @@ main.screen.one.land .mini-item{ min-height:38px; padding:.5rem .9rem .44rem; }
 /* ── a phone: the view edge to edge, the sheets the width of the screen ── */
 .screen.one .stage{ padding:0; }
 .screen.one .views .view{ border:0; }
-.screen.one .panelbar-end{ padding-left:.3rem; }
 .screen.one .pop{ left:0; right:0; bottom:0; max-height:76%; border-left:0; border-right:0; border-bottom:0; border-radius:18px 18px 0 0; }
 .screen.one .pop-sm, .screen.one .pop-sm.pop-left, .screen.one .pop-md{ width:100%; left:0; right:0; }
 
@@ -416,7 +422,7 @@ main.screen.one.land{ flex-direction:row; }
             <span class="key-item"><span class="key-swatch" style="background:#4FB06A"></span>front &ndash; back</span>
             <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
           </div>
-          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the streamlines and the brain away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there, and Transparency raises a tall bar that makes it more see-through or more solid. Tract shows or hides the streamlines; Offset, while Slice is on, sets how far they stand out of the cut face, in millimetres; and Thicken sets how thick they are drawn. View turns the brain to one of its faces, or home to the view the page opens with, and Revolve sets it turning until you take hold of it. The page remembers how you left it: the brain and its transparency, the streamlines, their offset and thickness, the cuts and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
+          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the brain, and the streamlines with it, away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there, and Transparency raises a tall bar that makes it more see-through or more solid. Tract shows or hides the streamlines. Slice tract, on whenever Slice is turned on, cuts them with the brain, and off leaves them whole while the brain alone is cut; Offset stands their cut ends out of the brain&rsquo;s cut face and Distance sets how far, in millimetres, both greyed while the brain is off; and Thicken sets how thick they are drawn. View turns the brain to one of its faces, or home to the view the page opens with, and Revolve sets it turning until you take hold of it. The page remembers how you left it: the brain and its transparency, the streamlines with their switches, offset and thickness, the cuts and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
           <h2>Export</h2>
           <p class="rail-note" style="margin:0 0 .2rem">The streamlines as a 3D model, an even sample of them at the number picked, and the brain with them while it shows, cut as the screen has it.</p>
           <div class="rail-row">
@@ -457,10 +463,15 @@ main.screen.one.land{ flex-direction:row; }
         <button class="pbtn" type="button" id="transBtn" aria-haspopup="true" aria-expanded="false" aria-controls="transPop" title="How see-through the brain is drawn"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor" stroke="none"/></svg><span>Trans&shy;parency</span></button>
       </div>
       <div class="pgroup">
-        <!-- the streamlines, shown or hidden by their button (v12.42), how far they stand out of a cut and how thick
-             they are drawn, each a tall bar (v12.43) -->
+        <!-- the streamlines, shown or hidden by their button (v12.42); Slice tract and Offset, two switches (v12.44),
+             the first cutting them with the brain, on whenever Slice is turned on, the second standing their cut ends
+             out of the brain's cut face; Distance, how far, and Thicken, how thick they are drawn, each a tall bar
+             (v12.43). A switch with no say just now is greyed: Slice tract while Slice is off, Offset while Slice or
+             Slice tract is off or the brain is, Distance while any of those or Offset is off -->
         <button class="pbtn" type="button" id="tractBtn" aria-pressed="true" title="The streamlines: shown or hidden"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 7.5c3.5-3 6 2.5 9 .5s5.5-4 9-1"/><path d="M3 12.5c3.5-3 6 2.5 9 .5s5.5-4 9-1"/><path d="M3 17.5c3.5-3 6 2.5 9 .5s5.5-4 9-1"/></svg><span>Tract</span></button>
-        <button class="pbtn" type="button" id="offsetBtn" aria-haspopup="true" aria-expanded="false" aria-controls="offsetPop" disabled title="How far the streamlines stand out of the cut face, while Slice is on"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 5v14M19 5v14"/><path d="M8.5 12h7M13 9.5l2.5 2.5-2.5 2.5"/></svg><span>Offset</span></button>
+        <button class="pbtn" type="button" id="sliceTractBtn" aria-pressed="true" disabled title="Cut the streamlines with the brain while Slice is on; off, they stay whole and the brain alone is cut"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 10.5 21 14.5l-9 4-9-4 9-4z"/><path d="M12 3v7.5M12 18.5V21"/></svg><span>Slice tract</span></button>
+        <button class="pbtn" type="button" id="offsetBtn" aria-pressed="true" disabled title="Stand the streamlines' cut ends out of the brain's cut face by the distance set; off, they end at the face"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 4v16"/><path d="M9.5 12h8M14.5 9l3 3-3 3"/></svg><span>Offset</span></button>
+        <button class="pbtn" type="button" id="distBtn" aria-haspopup="true" aria-expanded="false" aria-controls="offsetPop" disabled title="How far the streamlines stand out of the cut face, in millimetres"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 5v14M19 5v14"/><path d="M8 12h8M11 9.5 8.5 12l2.5 2.5M13 9.5l2.5 2.5-2.5 2.5"/></svg><span>Distance</span></button>
         <button class="pbtn" type="button" id="thickBtn" aria-haspopup="true" aria-expanded="false" aria-controls="thickPop" title="How thick the streamlines are drawn"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6.5h16" stroke-width="1"/><path d="M4 12h16" stroke-width="2"/><path d="M4 17.5h16" stroke-width="3.2"/></svg><span>Thicken</span></button>
       </div>
       <div class="pgroup">
@@ -854,6 +865,7 @@ main.screen.one.land{ flex-direction:row; }
     brain: function(){ return brain.loading ? brain.loading.then(function(){ return true; }) : Promise.resolve(false); },
     /* the streamlines' offset from the cut face and their thickness, for a check */
     offset: function(){ return tractPast; },
+    switches: function(){ return { sliceTract: sliceTract, offsetOn: offsetOn }; },
     radius: function(){ return tractRadius; },
     /* the ends standing out of the cut, for a check: how many points they hold, or null */
     ends: function(){ return brain.ends ? { shown: !!brain.ends.visible, points: brain.ends.pts ? brain.ends.pts.length / 3 : 0, indices: brain.ends.indexCount || 0, radius: brain.ends.fiberRadius, meshes: brain.nv ? brain.nv.meshes.length : 0 } : null; }
@@ -961,7 +973,8 @@ main.screen.one.land{ flex-direction:row; }
     lastPlanes = planes;
     if (!whole.lengths && mesh.pts === whole.pts) whole.lengths = mesh.fiberLengths || null;
     var again = cutBrainPlanes(planes);   /* the brain's renderer first: the box is read off it */
-    if (!planes.length){
+    /* no cut, or Slice tract off (v12.44): the streamlines stand whole, the brain alone cut */
+    if (!planes.length || !sliceTract){
       setEnds(null);
       if (mesh.pts !== whole.pts){
         mesh.pts = whole.pts; mesh.offsetPt0 = whole.off; mesh.fiberLengths = whole.lengths;
@@ -972,7 +985,7 @@ main.screen.one.land{ flex-direction:row; }
       return;
     }
     var withBrain = !!(brain.on && brain.nv);
-    var box = cutBox(planes, tractPast), lo = box.lo, hi = box.hi;
+    var box = cutBox(planes, effectivePast()), lo = box.lo, hi = box.hi;
     /* the ends: the pieces that stand out past the brain's own cut, and a millimetre inside it
        so each tube runs on through the face, gathered for the brain's viewer (setEnds) */
     var inner = withBrain ? cutBox(planes, -1) : null;
@@ -1142,11 +1155,13 @@ main.screen.one.land{ flex-direction:row; }
   function showBrain(on){
     brain.on = !!on;
     paintBrainBtn();
+    paintTractBtns();   /* Offset and Distance have their say only while the brain shows (v12.44) */
     if (brain.nv || !brain.on) placeBrain();
     else if (byKey.Ren){
-      loadBrain().then(null, function(err){
+      loadBrain().then(function(){ paintTractBtns(); }, function(err){
         brain.on = false;
         paintBrainBtn();
+        paintTractBtns();
         placeBrain();
         /* the failure stands over the view for a moment, as the loading did */
         var why = err && err.message ? err.message : String(err);
@@ -1223,6 +1238,26 @@ main.screen.one.land{ flex-direction:row; }
     if (!cutFrame) cutFrame = requestAnimationFrame(function(){ cutFrame = 0; applyCut(pendingPlanes); });
   }
   if (offsetEl) offsetEl.addEventListener("input", function(){ applyOffset(offsetEl.value); recut(); rememberSoon(); });
+
+  /* ── Slice tract and Offset, the switches beside Tract (v12.44, at the owner's word) ──
+     Slice tract cuts the streamlines with the brain, on whenever Slice is turned on; off, they stand whole while the
+     brain alone is cut. Offset stands their cut ends out of the brain's cut face by the distance Distance's bar sets;
+     off, or while the brain is off, the cut is the brain's own (effectivePast nought). Each switch is greyed while it
+     has no say: Slice tract while Slice is off, Offset while Slice or Slice tract is off or the brain is, Distance
+     while any of those or Offset is off, its bar put away then; a greyed switch shows no lit block. */
+  var sliceTract = true, offsetOn = true;
+  var sliceTractBtn = document.getElementById("sliceTractBtn"), offsetBtn = document.getElementById("offsetBtn"), distBtn = document.getElementById("distBtn");
+  function effectivePast(){ return offsetOn && brain.on && brain.nv ? tractPast : 0; }
+  function paintTractBtns(){
+    var sliceOn = !!(slice && slice.state().on);
+    var paint = function(b, on, can){ if (!b) return; b.disabled = !can; b.setAttribute("aria-pressed", String(on)); b.classList.toggle("active", on); };
+    paint(sliceTractBtn, sliceTract, sliceOn);
+    paint(offsetBtn, offsetOn, sliceOn && sliceTract && brain.on);
+    if (distBtn) distBtn.disabled = !(sliceOn && sliceTract && brain.on && offsetOn);
+    if (distBtn && distBtn.disabled && window.TK_MINI && TK_MINI.current() === "offsetPop") TK_MINI.closeAll();
+  }
+  if (sliceTractBtn) sliceTractBtn.addEventListener("click", function(){ sliceTract = !sliceTract; paintTractBtns(); recut(); rememberSoon(); });
+  if (offsetBtn) offsetBtn.addEventListener("click", function(){ offsetOn = !offsetOn; paintTractBtns(); recut(); rememberSoon(); });
   function attachSlice(){
     var nv = byKey.Ren, mesh = nv && nv.meshes && nv.meshes[0];
     if (!mesh || !window.MN_SLICE || slice) return;
@@ -1238,20 +1273,19 @@ main.screen.one.land{ flex-direction:row; }
     if (sliceBtn) sliceBtn.disabled = !slice;
     paintSliceBtn();
   }
-  /* Slice on the bar is the tool's switch (v12.1): lit while the edge sliders are out */
-  var sliceBtn = document.getElementById("sliceBtn"), offsetBtn = document.getElementById("offsetBtn");
+  /* Slice on the bar is the tool's switch (v12.1): lit while the edge sliders are out; the switches beside Tract
+     follow it (v12.44), and Slice tract is on again each time Slice is turned on */
+  var sliceBtn = document.getElementById("sliceBtn");
   function paintSliceBtn(){
     if (!sliceBtn) return;
     var on = !!(slice && slice.state().on);
     sliceBtn.setAttribute("aria-pressed", String(on));
     sliceBtn.classList.toggle("active", on);
-    /* Offset has its say only while Slice is on (v12.43, at the owner's word): greyed otherwise, its bar put away */
-    if (offsetBtn) offsetBtn.disabled = !on;
-    if (!on && window.TK_MINI && TK_MINI.current() === "offsetPop") TK_MINI.closeAll();
+    paintTractBtns();
   }
   if (sliceBtn) sliceBtn.addEventListener("click", function(){
     if (!slice) return;
-    if (slice.state().on) slice.close(); else slice.open();
+    if (slice.state().on) slice.close(); else { sliceTract = true; slice.open(); }
     paintSliceBtn();
   });
 
@@ -1270,9 +1304,9 @@ main.screen.one.land{ flex-direction:row; }
       var nv = byKey.Ren;
       try{
         localStorage.setItem("vn-tracts-last", JSON.stringify({
-          v: 4,
+          v: 5,
           brain: { on: brain.on, trans: brain.trans },
-          tract: tract.on,
+          tract: tract.on, sliceTract: sliceTract, offsetOn: offsetOn,
           radius: tractRadius, past: tractPast,
           cuts: slice ? slice.state() : null,
           view: nv ? { az: nv.scene.renderAzimuth, el: nv.scene.renderElevation, zoom: zoom } : null
@@ -1296,6 +1330,11 @@ main.screen.one.land{ flex-direction:row; }
     /* their thickness (v2 kept one too) and, since v12.43, their offset, before the cuts come back */
     if (m.radius > 0) applyRadius(m.radius);
     if (m.v >= 4 && isFinite(m.past)) applyOffset(m.past);
+    /* the two switches (v12.44), before the cuts come back */
+    if (m.v >= 5){
+      if (typeof m.sliceTract === "boolean") sliceTract = m.sliceTract;
+      if (typeof m.offsetOn === "boolean") offsetOn = m.offsetOn;
+    }
     if (m.cuts && slice) slice.setState(m.cuts);
     var nv = byKey.Ren;
     if (nv && m.view){

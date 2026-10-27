@@ -283,8 +283,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   view's border and the stage's padding are nought; the cap with its name, Reset view and the Slice tool's buttons went; the
   zoom buttons had gone in v11.97, the wheel and a pinch zooming as before), and the bar, since v12.42 at the owner's
   word, carries the buttons that slide and one that stays, the sliding ones in four groups behind lines since v12.43,
-  at the owner's word (`.pgroup`: Slice | Brain, Transparency | Tract, Offset, Thicken | View, Revolve, each group
-  after the first behind a `border-left` in the row and a `border-top` in the column): Slice (`#sliceBtn`, v12.1: the slice tool's switch, lit while
+  at the owner's word (`.pgroup`: Slice | Brain, Transparency | Tract, Slice tract, Offset, Distance, Thicken | View,
+  Revolve, each group after the first behind a `border-left` in the row and a `border-top` in the column): Slice (`#sliceBtn`, v12.1: the slice tool's switch, lit while
   the edge sliders are out, disabled until `attachSlice` has the mesh; the tool draws no buttons of its own, attached
   without `tools` since v12.33; first on the bar since v12.32, at the owner's word, as Slice leads wherever it stands:
   see the slice tool under the 3D Region Atlas), Brain (`#brainBtn`, `aria-pressed`, lit while the brain shows,
@@ -292,10 +292,16 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `aria-expanded`: a mini, `#transPop`, the brain's transparency as a tall bar, `#brainTrans` stood on end in `.tall`,
   0 solid to 95 with its value `#brainVal` above it, as the sheet's slider read until v12.42, whose Thicken had read
   it as solidity, 5 to 100, for that one release; `applyBrainTrans`), Tract (`#tractBtn`, v12.42: the streamlines
-  shown or hidden, `showTract`, the mesh's `visible` and the ends' with it), Offset (`#offsetBtn`, v12.43: a mini,
-  `#offsetPop`, how far the streamlines stand out of the cut face, `#offset` 0 to 10 mm in halves, 2.5 to begin,
-  `applyOffset` setting `tractPast` and `recut` cutting again on the next frame; greyed, `disabled`, while Slice is
-  off and its bar put away then, by `paintSliceBtn`), Thicken (`#thickBtn`, v12.43: a mini, `#thickPop`, the
+  shown or hidden, `showTract`, the mesh's `visible` and the ends' with it), Slice tract (`#sliceTractBtn`, v12.44, at
+  the owner's word: a switch, `sliceTract`, cutting the streamlines with the brain, on again each time Slice is
+  turned on; off, `applyCut` leaves them whole and the brain alone is cut), Offset (`#offsetBtn`, v12.44: a switch,
+  `offsetOn`, standing their cut ends out of the brain's cut face by Distance's millimetres; off, or the brain off,
+  the cut is the brain's own, `effectivePast()` nought), Distance (`#distBtn`, v12.43's Offset renamed in v12.44: a
+  mini, `#offsetPop`, how far, `#offset` 0 to 10 mm in halves, 2.5 to begin, `applyOffset` setting `tractPast` and
+  `recut` cutting again on the next frame; each of the three greyed, `disabled`, while it has no say, by
+  `paintTractBtns` from `paintSliceBtn` and `showBrain`: Slice tract while Slice is off, Offset while Slice or Slice
+  tract is off or the brain is, Distance while any of those or Offset is off, its bar put away then, and a greyed
+  switch shows no lit block, `.panelbar .pbtn:disabled`), Thicken (`#thickBtn`, v12.43: a mini, `#thickPop`, the
   streamlines' thickness, `#radius` 0.05 to 0.9 in twentieths, 0.3 to begin, `applyRadius` setting `tractRadius` on
   the mesh and on the ends, the range the Brain sheet's Thick slider had until v12.42, when it went for that one
   release), View (`#viewBtn`: a mini, `#viewPop`, of the
@@ -303,8 +309,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   Home the opening view with its zoom and its place put back, then behind a rule Reset slice, `#sliceReset`, every
   cut back to its centre mark with the view left as it is, which the owner asked back here after v12.32 had taken it
   off every bar; the cube and Reset view went), Revolve (`#spinBtn`, a `.pbtn` lit while it turns; off at launch since
-  v11.98, at the owner's word) and, at the far right behind a line, always on show, Tractography (`.pbtn-ref`,
-  `#popTract`: the one sheet, What it is (v12.36: what tractography is, the colour key and how the page works, the
+  v11.98, at the owner's word) and, at the far right behind a line, always on show, Tractography (`.pbtn-ref`, as
+  narrow as the others since v12.44, at the owner's word, its name in smaller, tighter type, `.panelbar
+  .pbtn.pbtn-ref span`, and its line standing `--gap` after the sliding group as the group stands from the bar's
+  left edge, the bar's `gap` nought and the button's `margin-left` the gap; `#popTract`: the one sheet, What it is (v12.36: what tractography is, the colour key and how the page works, the
   notes the About window held), Export (the density select `#exportDensity` and `#export3d`) and Reference (the
   sources as `.ref-line`s, the HCP1065 paper, Yeh 2022, linked by its DOI, the template, the HCP's acknowledgement and
   NiiVue) under three `h2`s; the What it is, Export and Reference buttons and their sheets went with v12.42, the About
@@ -371,8 +379,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   its own on the light, and a thickness slider; both went with v12.42, at the owner's word (above). `MN_TRACTS.nv()`
   hands the viewer to a check. The page keeps its last state on the device (v12.1): `vn-tracts-last`, the brain and
   its transparency, the streamlines (v12.42), their offset and thickness (v12.43), the cuts and the view (azimuth,
-  elevation, zoom), written by `rememberSoon` a moment after each change (Brain, Tract, the three tall bars, a face,
-  the slice tool's `onChange`, and the hand letting go of the view) once the page is up, and read back by
+  elevation, zoom), written by `rememberSoon` a moment after each change (Brain, Tract, the two switches, the three
+  tall bars, a face, the slice tool's `onChange`, and the hand letting go of the view) once the page is up, and read back by
   `restoreKept` as the tractogram comes in. Since v12.31, at the owner's word, the brain can stand around the
   streamlines, and since v12.38, at the owner's word, it is the 3D Region Atlas's own 3D view: Brain on the bar shows
   and hides it (on as the page opens since v12.36, at the owner's word) and Transparency's bar sets how see-through
@@ -393,11 +401,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   0` cut away) and turns them into millimetres through its `frac2mm`, so the streamlines end where the head is cut
   and the MRI shows at the cut face as on the atlas, or rather a little past it: since v12.39, at the owner's word,
   the streamlines' own cut stands `tractPast` behind the brain's (`cutBox(planes, past)`; `TRACT_PAST_DEFAULT` 2.5 mm,
-  doubled to 5 in v12.41 and halved again in v12.42, at the owner's word each time, and since v12.43 Offset's bar
-  sets it, 0 to 10 mm), so their ends stick out of the cut face at any transparency; the export's surface is cut with
+  doubled to 5 in v12.41 and halved again in v12.42, at the owner's word each time, and since v12.43 Distance's bar
+  sets it, 0 to 10 mm, while the Offset switch is on, v12.44, `effectivePast`), so their ends stick out of the cut
+  face at any transparency; the export's surface is cut with
   no such room (the first quarter of a slider's travel cuts the air around the brain there, and nothing of the
   streamlines); the brain off, the planes are read as before (`planeNormal`, the slider's share straight over the
-  streamlines' box, the same millimetres past it since v12.43).
+  streamlines' box, with no offset since v12.44, the Offset switch having no say without the brain).
   Since v12.41, at the owner's word, those ends are drawn in the brain's viewer as well, so they show from any angle:
   the streamlines' viewer lies beneath the brain's canvas with no depth between the two, so the ends it drew showed
   only past the head's outline; `applyCut` now gathers the pieces that stand past the brain's own cut, and a
@@ -408,9 +417,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   head elsewhere; `dressEnds` gives it the streamlines' direction colours, `tractRadius` and dither, from
   `applyRadius`, with `fiberLength` 1 (the shortest piece kept, in millimetres: the renderer builds nothing for a
   fibre mesh whose `fiberLength` is nought), and `MN_TRACTS.ends()` reports it for a check (`offset()` and `radius()`
-  the two settings). The state's `brain` (`on`, `trans`), since v12.42 `tract` and since v12.43 `radius` and `past`
-  ride in `vn-tracts-last` (`v: 4`; v2's colour and the `slices` v12.36 kept are ignored, v2's thickness read
-  again), and the export carries the brain while it shows as a surface drawn
+  the two settings, `switches()` the two switches). The state's `brain` (`on`, `trans`), since v12.42 `tract`, since
+  v12.43 `radius` and `past` and since v12.44 `sliceTract` and `offsetOn` ride in `vn-tracts-last` (`v: 5`; v2's
+  colour and the `slices` v12.36 kept are ignored, v2's thickness read again), and the export carries the brain while it shows as a surface drawn
   from the template on the first export (`brainForExport`: `MN_EXPORT3D.isoSurface` at a 2-voxel stride, lifted
   `BRAIN_LIFT` along its normals, cut by the box; the screen's brain is the renderer's and has no surface to give),
   at its opacity. v12.31's surface of glass (`GLASS`, the lifted isosurface drawn after the streamlines, cut by
