@@ -274,8 +274,16 @@ svg{ display:block; }
 
 <p class="acct-quiet" id="acctWait">Checking whether you are logged in&hellip;</p>
 
+<!-- the module that reads the account has not answered (v12.45): the page says so after twelve seconds, with
+     whatever it caught, rather than wait on the line above for ever, as a TestFlight build was seen to -->
+<section id="acctStuck" hidden>
+  <p class="note">The sign-in module has not answered. Close this page and open it again; if it keeps happening, write to <a href="mailto:fkarim@visualneuroscience.ai?subject=Account%20page%20stuck"><b>fkarim@visualneuroscience.ai</b></a> and say so, with the line below if there is one.</p>
+  <p class="acct-status err" id="acctStuckWhy"></p>
+</section>
+
 <section id="acctOff" hidden>
-  <p class="note">Accounts are switched off in this copy of the app, so nothing about you is stored here.</p>
+  <p class="note" id="acctOffNote">Accounts are switched off in this copy of the app, so nothing about you is stored here.</p>
+  <p class="note" id="acctWhy" hidden></p>
 </section>
 
 <section id="acctOut" hidden>
@@ -357,6 +365,25 @@ svg{ display:block; }
     themeBtn.setAttribute("aria-pressed", String(!dark));
     try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
   });
+})();
+/* the watchdog (v12.45): the account module must answer, logged in, out or
+   off; if it has not within twelve seconds the page says so, with the first
+   error it caught, a script that would not load or a promise nobody kept */
+(function(){
+  var first = null;
+  function note(m){ if (!first && m) first = String(m).slice(0, 300); }
+  window.addEventListener("error", function(e){
+    if (!e) return;
+    if (e.message) note(e.message);
+    else if (e.target && e.target.src) note("could not load " + e.target.src);
+  }, true);
+  window.addEventListener("unhandledrejection", function(e){ note(e && e.reason && (e.reason.message || e.reason)); });
+  setTimeout(function(){
+    var wait = document.getElementById("acctWait"), stuck = document.getElementById("acctStuck"), why = document.getElementById("acctStuckWhy");
+    if (!wait || wait.hidden || !stuck) return;
+    stuck.hidden = false;
+    if (why && first) why.textContent = first;
+  }, 12000);
 })();
 </script>
 
@@ -619,6 +646,7 @@ async function del(){
 
 function draw(u){
   $("acctWait").hidden = true;
+  $("acctStuck").hidden = true;
   $("acctIn").hidden = !u;
   $("acctOut").hidden = !!u;
   $("acctGone").hidden = !(deleting && !u);
@@ -632,8 +660,15 @@ function draw(u){
 
 if (!auth.enabled){
   $("acctWait").hidden = true;
+  $("acctStuck").hidden = true;
   $("acctOff").hidden = false;
   $("acctDelSteps").hidden = true;
+  /* not dormant but failed (v12.45): the reason, in place of the switched-off line */
+  if (auth.reason){
+    $("acctOffNote").hidden = true;
+    $("acctWhy").textContent = "Accounts could not start: " + auth.reason + ". Close this page and open it again; if it keeps happening, write to fkarim@visualneuroscience.ai and quote this line.";
+    $("acctWhy").hidden = false;
+  }
 } else {
   $("acctLogin").addEventListener("click", () => window.VN_ACCOUNT_UI && VN_ACCOUNT_UI.openLogin());
   $("acctEdit").addEventListener("click", () => window.VN_ACCOUNT_UI && VN_ACCOUNT_UI.openAccount());

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.45 — 27 October 2026 — The account page never waits for ever
+Commit · Keep the account page from waiting on the sign-in module for ever, and say why it could not start
+
+On the iOS app the account page was seen sitting on Checking whether you are logged in, with no way to log in or create an account, because the module that reads the account had stopped before it could answer. The page now waits at most twelve seconds before saying the module has not answered, with the first error it caught, and the module itself gives up on the sign-in library after twenty seconds, no longer waits on the usage counter's native call, and reports a failure to start as a line on the page rather than leaving every page that needs it hanging. The apps take it with their next build.
+
 ## v12.44 — 27 October 2026 — Slice tract and Offset switches
-Commit · Add Slice tract and Offset switches beside Tract, name the offset's bar Distance, and narrow the pinned Tractography button to match the bar's ends
+Commit `bc09580` · Add Slice tract and Offset switches beside Tract, name the offset's bar Distance, and narrow the pinned Tractography button to match the bar's ends
 
 Tractography's bar gains two switches beside Tract. Slice tract, on whenever Slice is turned on, cuts the streamlines with the brain, and off leaves them whole while the brain alone is cut. Offset stands their cut ends out of the brain's cut face, by the millimetres the bar now called Distance sets, and off ends them at the face; both are greyed while the brain is off, as each switch is whenever it has no say. The pinned Tractography button is now as narrow as the others, its name in smaller type, and the sliding part of the bar ends the same distance before its line as it starts from the bar's left edge. The apps take it with their next build.
 

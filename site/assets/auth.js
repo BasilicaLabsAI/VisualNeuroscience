@@ -95,10 +95,14 @@ function friendly(err){
 }
 
 /* ── dormant stub ─────────────────────────────────────────────────────── */
-function dormant(){
+/* with no config the feature is dormant; with a reason it could not start
+   (the library did not load, or the SDK refused), and the account page
+   says so (v12.45): until then a failure left every importer waiting */
+function dormant(reason){
   const off = () => Promise.reject(friendly({ code: "vn/disabled" }));
   return {
     enabled: false,
+    reason: reason ? String((reason && reason.message) || reason) : null,
     onUser(cb){ cb(null); return () => {}; },
     currentUser: () => null,
     providers: { google:false, apple:false, linkedin:false, emailLink:false },
@@ -113,9 +117,18 @@ function dormant(){
   };
 }
 
+/* a wait with a limit (v12.45): the sign-in library must arrive, or the
+   page must hear why, rather than wait on it for ever */
+function within(ms, what, p){
+  return new Promise((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error(what)), ms);
+    p.then(v => { clearTimeout(t); resolve(v); }, e => { clearTimeout(t); reject(e); });
+  });
+}
+
 /* ── the live module ──────────────────────────────────────────────────── */
 async function build(){
-  const sdk = await import("../vendor/firebase/firebase-bundle.js");
+  const sdk = await within(20000, "the sign-in library did not load within 20 seconds", import("../vendor/firebase/firebase-bundle.js"));
   const app  = sdk.initializeApp(CFG);
 
   const cap = typeof window !== "undefined" ? window.Capacitor : null;
@@ -162,7 +175,9 @@ async function build(){
   const gaLive = isNative ? window.VN_STORE !== false : /(^|\.)visualneuroscience\.ai$/i.test(location.hostname);
   let ga = null;
   if (gaPlug){
-    try{ await gaPlug.setEnabled({ enabled: gaWant !== false && gaLive }); }catch(_){}
+    /* not waited on (v12.45): a native call that never answered held every
+       sign-in behind it, and counting never gets in the way of signing in */
+    try{ Promise.resolve(gaPlug.setEnabled({ enabled: gaWant !== false && gaLive })).catch(() => {}); }catch(_){}
     if (gaWant !== false && gaLive){
       const page = (location.pathname.split("/").pop() || "index.html").replace(/\.html$/, "");
       try{ gaPlug.setCurrentScreen({ screenName: page }).catch(() => {}); }catch(_){}
@@ -763,6 +778,7 @@ async function build(){
   };
 }
 
-const VN_AUTH = CFG ? await build() : dormant();
+/* a failure to start is reported, never left to hang the importers (v12.45) */
+const VN_AUTH = CFG ? await build().catch(err => { try{ console.error("accounts could not start:", err); }catch(_){} return dormant(err); }) : dormant();
 if (typeof window !== "undefined") window.VN_AUTH = VN_AUTH;
 export default VN_AUTH;

@@ -248,7 +248,17 @@ Read this first in every session. It is the handover; nothing else needs pasting
   spot. The bundle exports those names (`scripts/firebase/entry.js`; rebuilt here from a scratch `npm install
   firebase@<NOTICE version>` with `NODE_PATH` pointing at it, since `app/node_modules` is absent). The
   feature-announcements box offered as an account is made starts clear (PECR), in the account box and on the Create
-  account form (`newsCheck` in `auth-ui.js`).
+  account form (`newsCheck` in `auth-ui.js`). In the iOS app the only door to signing in is the Account tab's Account
+  box, Open your account, which pushes `account.html`, whose Logged out section's Log in raises the sheet
+  (`VN_ACCOUNT_UI.openLogin`), since the pages inside the tabs draw no header and so no Log in button; on 27 October
+  2026 the owner's TestFlight build sat on that page's Checking whether you are logged in line for good, so since
+  v12.45 the module cannot hang its importers: `build()` in `auth.js` waits for the SDK's import at most 20 seconds
+  (`within`), no longer waits on the native analytics plugin's `setEnabled` (a native call that never answered would
+  have held every sign-in behind it), and a failure to start is caught into the dormant stub with a `reason`
+  (`dormant(err)`), which the account page shows in place of its switched-off line (`#acctWhy`); the page also keeps a
+  watchdog in its classic script, `#acctStuck` after twelve seconds with the first error it caught (`error` and
+  `unhandledrejection`), and `draw` and the off branch put it away. The cause on the device is still to be read from
+  Safari's Web Inspector against the next TestFlight build.
 - The owner's research documents on single regions are kept as supplied in `backend/data/regions/` (see its README).
   Detailed region function descriptions are to be written from them only when the owner asks; until then, store new
   ones there unchanged.
