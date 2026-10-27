@@ -352,11 +352,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   Home the opening view with its zoom and its place put back, then behind a rule Reset slice, `#sliceReset`, every
   cut back to its centre mark with the view left as it is, which the owner asked back here after v12.32 had taken it
   off every bar; the cube and Reset view went), Revolve (`#spinBtn`, a `.pbtn` lit while it turns; off at launch since
-  v11.98, at the owner's word) and, at the far right behind a line, always on show, Tractography (`.pbtn-ref`, as
+  v11.98, at the owner's word) and, at the far right, always on show, Export (v12.50, at the owner's word: a plain
+  `.pbtn` in `.panelbar-end` before the line, as the 3D Region Atlas has it, raising `#popExport`, the density select
+  `#exportDensity` and `#export3d`, which stood in the Tractography sheet's middle until then) and, behind a line,
+  Tractography (`.pbtn-ref`, as
   narrow as the others since v12.44, at the owner's word, its name in smaller, tighter type, `.panelbar
   .pbtn.pbtn-ref span`, and its line standing `--gap` after the sliding group as the group stands from the bar's
-  left edge, the bar's `gap` nought and the button's `margin-left` the gap; `#popTract`: the one sheet, What it is (v12.36: what tractography is, the colour key and how the page works, the
-  notes the About window held), Export (the density select `#exportDensity` and `#export3d`) and Reference (the
+  left edge, the bar's `gap` nought and the button's `margin-left` the gap; `#popTract`: the sheet of What it is (v12.36: what tractography is, the colour key and how the page works, the
+  notes the About window held) and Reference (the
   sources as `.ref-line`s, the HCP1065 paper, Yeh 2022, linked by its DOI, the template, the HCP's acknowledgement and
   NiiVue) under three `h2`s; the What it is, Export and Reference buttons and their sheets went with v12.42, the About
   button with v12.36). The six slide: `.panelbar-btns` is the scroller (`flex:1 1 auto; min-width:0;

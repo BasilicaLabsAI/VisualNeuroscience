@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.50 — 27 October 2026 — Export on the Tractography bar
+Commit · Give Tractography's bar an Export button of its own beside the pinned Tractography button
+
+Tractography's bar now carries Export at the far right beside the pinned Tractography button, as the 3D Region Atlas's bar does, raising a sheet of its own with the number of streamlines to write and the model to download; the Tractography sheet keeps What it is and Reference. The apps take it with their next build.
+
 ## v12.49 — 27 October 2026 — Distance to 50 mm
-Commit · Let Tractography's Distance bar reach 50 mm
+Commit `c1d1662` · Let Tractography's Distance bar reach 50 mm
 
 On Tractography the Distance bar, which sets how far the cut streamlines stand out of the brain's cut face while Offset is on, now reaches 50 mm where it stopped at 10, still in halves and 2.5 to begin. The apps take it with their next build.
 
