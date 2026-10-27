@@ -340,7 +340,7 @@ Read this first in every session. It is the handover; nothing else needs pasting
   whole streamlines in front of it), Offset (`#offsetBtn`, v12.44: a switch,
   `offsetOn`, standing their cut ends out of the brain's cut face by Distance's millimetres; off, or the brain off,
   the cut is the brain's own, `effectivePast()` nought), Distance (`#distBtn`, v12.43's Offset renamed in v12.44: a
-  mini, `#offsetPop`, how far, `#offset` 0 to 10 mm in halves, 2.5 to begin, `applyOffset` setting `tractPast` and
+  mini, `#offsetPop`, how far, `#offset` 0 to 50 mm in halves since v12.49, at the owner's word (0 to 10 until then), 2.5 to begin, `applyOffset` setting `tractPast` and
   `recut` cutting again on the next frame; each of the three greyed, `disabled`, while it has no say, by
   `paintTractBtns` from `paintSliceBtn` and `showBrain`: Slice tract while Slice is off, Offset while Slice or Slice
   tract is off or the brain is, Distance while any of those or Offset is off, its bar put away then, and a greyed
@@ -445,7 +445,7 @@ Read this first in every session. It is the handover; nothing else needs pasting
   and the MRI shows at the cut face as on the atlas, or rather a little past it: since v12.39, at the owner's word,
   the streamlines' own cut stands `tractPast` behind the brain's (`cutBox(planes, past)`; `TRACT_PAST_DEFAULT` 2.5 mm,
   doubled to 5 in v12.41 and halved again in v12.42, at the owner's word each time, and since v12.43 Distance's bar
-  sets it, 0 to 10 mm, while the Offset switch is on, v12.44, `effectivePast`), so their ends stick out of the cut
+  sets it, 0 to 50 mm, while the Offset switch is on, v12.44, `effectivePast`), so their ends stick out of the cut
   face at any transparency; the export's surface is cut with
   no such room (the first quarter of a slider's travel cuts the air around the brain there, and nothing of the
   streamlines); the brain off, the planes are read as before (`planeNormal`, the slider's share straight over the

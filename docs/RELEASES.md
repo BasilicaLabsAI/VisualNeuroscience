@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.49 — 27 October 2026 — Distance to 50 mm
+Commit · Let Tractography's Distance bar reach 50 mm
+
+On Tractography the Distance bar, which sets how far the cut streamlines stand out of the brain's cut face while Offset is on, now reaches 50 mm where it stopped at 10, still in halves and 2.5 to begin. The apps take it with their next build.
+
 ## v12.48 — 27 October 2026 — Whole streamlines in front of the cut face, and the region list mended
-Commit · Draw the whole streamlines in front of the brain's cut face when Slice tract is off, mend the region list and ask before replacing a saved map
+Commit `8655c76` · Draw the whole streamlines in front of the brain's cut face when Slice tract is off, mend the region list and ask before replacing a saved map
 
 On Tractography with Slice tract off, the brain's cut face hid the streamlines standing in the space the cut had opened, since the brain is drawn on a layer over them. The pieces that stand outside the cut brain are now drawn in the brain's own viewer as well, where depth sorts them, so they show in front of the cut face where they are in front of it and behind the head where they are not. On the 3D Region Atlas the Add a region list works again, which the last release had broken by taking two of its helpers out with the Brodmann areas; Saved maps asks before replacing a map kept under the same name with a different view, Save reading Replace? for a moment, and lets an identical one be; its headings are larger and the standing line on where the maps are kept is gone. The apps take it with their next build.
 
