@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.56 — 27 October 2026 — A region's own window, and the study's regions solid
+Commit · Raise a pressed region's own window on the atlas and draw the study's regions solid
+
+On the 3D Region Atlas a press on a region in the Highlighted list now raises a window for that region alone: what it does, then Associated brain disorders and When damaged, the two names the What they do window's notes take as well. In the Hallucinations study the Region transparency slider has gone and the highlighted regions are drawn solid, as the atlas's are; its reading is unchanged. The apps take it with their next build.
+
 ## v12.55 — 27 October 2026 — The password in a popup of its own
-Commit · Raise the password change in a popup of its own from a Change password button
+Commit `2120671` · Raise the password change in a popup of its own from a Change password button
 
 The password is no longer a section of the account page: a Change password button beside Change username or university raises a popup of its own, built as the login and account boxes are, with the current password, the new one twice, Change password and Email me a reset instead; an account that logs in through Google, Apple or an emailed link is told there is none to change. The app's Change your password row opens that popup. The apps take it with their next build.
 

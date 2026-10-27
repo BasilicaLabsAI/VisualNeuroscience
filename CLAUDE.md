@@ -357,9 +357,7 @@ Read this first in every session. It is the handover; nothing else needs pasting
   the state's box (`#ringBox`, a second `.drawer-box` with `.ring-box`: the box's width and no taller than 40vh, 44dvh
   on a phone, the square diagram centred in it; the drawer is a flex column with the gap between, the state's box
   shrinking to make the room and scrolling inside), and the slider stands
-  in the box's foot (`.drawer-foot`, outside the scroller, no heading) as Region transparency: every opacity slider on
-  the Network Atlas and the Hallucinations study reads as transparency since v12.7 (the 3D Region Atlas's went in
-  v12.47, at the owner's word, its regions drawn solid, `opacityOf()` a hundred) (`.trans-row`,
+  in the box's foot (`.drawer-foot`, outside the scroller, no heading) as Region transparency: every opacity slider on the Network Atlas and the Hallucinations study read as transparency since v12.7 (the 3D Region Atlas's went in v12.47, at the owner's word, its regions drawn solid, `opacityOf()` a hundred, and the study's in v12.56, at the owner's word, its regions drawn solid too, `applyOpacity` setting one and the kept `trans` ignored) (`.trans-row`,
   the name and value on one line and the slider beneath; nought the regions solid, the range 0 to 90 where the opacity
   ran 10 to 100), while the viewer, the saved models and the device's memory keep an opacity, a hundred apart
   (`opacityOf()`).
@@ -549,11 +547,7 @@ Read this first in every session. It is the handover; nothing else needs pasting
   layers that were on show again), `vis(s)` governs the label table, the chart, the probe and the 3D export, and
   the headings are set bigger (`.rchip-head`, `.72rem`). A map opened from the list or a file changes the regions
   alone, the cuts, the camera and the crosshair left as they are (`restore(m, {keepView: true})` from the widget;
-  the memory's restore at boot still puts its cuts back), and a row of the Highlighted list pressed, its name and
-  side one button (`.rread`, v12.52, at the owner's word; v12.47 had the pick from Add a region raise it, which only
-  adds now), raises What they do scrolled to its note (`readAbout`, through the pop script's `MN_SCREEN.open`; the
-  cells carry `data-key`), as the study's list raises its reading. Each note carries two lines of health since v12.47, at the owner's word, Disease
-  and Damage (`disease` and `damage` in `region-notes.js`, concise teaching notes, not clinical advice; `.rnote h4`
+  the memory's restore at boot still puts its cuts back), and a row of the Highlighted list pressed, its name and side one button (`.rread`, v12.52, at the owner's word; v12.47 had the pick from Add a region raise it, which only adds now), raises that region's own window since v12.56, at the owner's word (`#popRegion`, a `.pop` in the stage with no bar button, 560px wide on a wide screen, `readAbout` filling `#popRegionH` with the name, `#popRegionWhere` with the layer and side and `#popRegionBody` with three kickers, What it does, Associated brain disorders and When damaged, from `region-notes.js`, then `MN_SCREEN.open`; from v12.52 to v12.55 it raised What they do scrolled to the region's note, whose cells still carry `data-key`), as the study's list raises its reading. Each note carries two lines of health since v12.47, at the owner's word, Disease and Damage, named Associated brain disorders and When damaged on the atlas since v12.56 (the study keeps the two words) (`disease` and `damage` in `region-notes.js`, concise teaching notes, not clinical advice; `.rnote h4`
   and `.more`), which the study's reading shows under What it does from its region's first parcel (`m-disease`,
   `m-damage`, Crus I for the cerebellum) and the MCP server's `region_info` answers carry (`build_mcp_data.mjs`,
   `doRegion`). The box's

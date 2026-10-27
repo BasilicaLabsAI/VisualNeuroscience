@@ -156,10 +156,6 @@ svg{ display:block; }
   font-family:var(--font-brand); font-size:.6rem; letter-spacing:.1em;
   font-variant-numeric:tabular-nums; color:var(--ink-60); min-width:2.4rem; text-align:right;
 }
-/* the transparency slider: its name and value on one line, the slider the width beneath (v12.7) */
-.rail-row.trans-row{ display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:.6rem; row-gap:.15rem; align-items:center; }
-.rail-row.trans-row .tool-label{ width:auto; flex:none; }
-.rail-row.trans-row input[type="range"]{ grid-column:1 / -1; width:100%; margin:0; }
 
 /* the region list: what the schematic diagram used to be */
 .rlist{ display:flex; flex-direction:column; gap:2px; }
@@ -584,12 +580,6 @@ main.screen.one.land{ flex-direction:row; }
         <button class="ts-btn" data-role="aud" type="button" aria-pressed="false">Auditory</button>
         <button class="ts-btn" data-role="lang" type="button" aria-pressed="false">Language</button>
         <button class="ts-btn" data-role="ctrl" type="button" aria-pressed="false">Control</button>
-      </div>
-          <!-- the slider reads as transparency since v12.7, nought being solid -->
-          <div class="rail-row trans-row">
-        <span class="tool-label">Region transparency</span>
-        <span class="slider-val" id="overlayVal">15%</span>
-        <input type="range" id="overlayOpacity" min="0" max="100" step="5" value="15" aria-label="How far the highlighted regions let the scan through">
       </div>
           <div class="rlist" id="rlist" role="group" aria-label="Brain regions"></div>
           <p class="rail-note" id="coverage"></p>
@@ -1355,7 +1345,7 @@ async function ensureScan(){
     }
     await Promise.all(scanInstances.map(nv => nv.loadVolumes([
       {url:tplUrl, name:"mni152.nii.gz", colormap:"gray", opacity:1},
-      {url:atlasUrl, name:"aal.nii.gz", opacity:0.85}
+      {url:atlasUrl, name:"aal.nii.gz", opacity:1}
     ])));
     PLANES.forEach(p => byKey[p.key].setSliceType(niivue.SLICE_TYPE[p.st]));
     paintScene();
@@ -1427,28 +1417,16 @@ function keptScans(){
   });
 }
 
-/* how strongly the regions cover the scan: the newest value at most every
-   tenth of a second, with one rebuild per view, so a drag is not held up by
-   the viewer rebuilding its layers for every step; the last value always
-   lands */
-const opacityEl = $("overlayOpacity"), opacityVal = $("overlayVal");
-let opacityTimer = 0, opacityLast = 0;
+/* the regions cover the scan solid (v12.56, at the owner's word): the Region
+   transparency slider went, with the transparency it kept (v12.7's reading of
+   v11.43's opacity), and every view draws the label volume at one */
 function applyOpacity(){
-  opacityTimer = 0; opacityLast = performance.now();
-  const v = (100 - Number(opacityEl.value)) / 100;   /* transparency on the slider, opacity for the viewer (v12.7) */
   for (const nv of scanInstances){
     if (!nv.volumes || nv.volumes.length < 2) continue;
-    nv.volumes[1].opacity = v;
+    nv.volumes[1].opacity = 1;
     try{ nv.updateGLVolume(); }catch(e){}
   }
 }
-opacityEl.addEventListener("input", () => {
-  opacityVal.textContent = opacityEl.value + "%";
-  rememberSoon();
-  if (opacityTimer) return;
-  opacityTimer = setTimeout(() => requestAnimationFrame(applyOpacity),
-                            Math.max(0, 100 - (performance.now() - opacityLast)));
-});
 
 /* ── 3D export ──────────────────────────────────────────────────────────
    The circuit as a model: each region's parcels as one surface in the
@@ -1513,7 +1491,7 @@ themeBtn.addEventListener("click", () => {
    The first time after the app is launched the study opens as on a first
    visit: the paper's window raised over the views and the rest as it comes.
    Coming back to it while the app still runs, it opens where it was left:
-   the state, the region picked, the systems filtered, the transparency, the
+   the state, the region picked, the systems filtered, the
    drawer, the view, the window open and how far down it was read, the cuts,
    the brain's turn, zoom and place, each slice's zoom and pan, and the
    crosshair. A launch after the app has been closed for good (a swipe up
@@ -1531,7 +1509,7 @@ function rememberSoon(){
     const S = window.HX_SCREEN, ren = byKey.render, k = HX_KEPT || {};
     const ready = scanState === "ready" && !!ren;
     MN_KEEP.set("hx", {
-      v: 1, state, selected, roles: roleFilter.slice(), trans: Number(opacityEl.value),
+      v: 1, state, selected, roles: roleFilter.slice(),
       drawer: S ? S.drawer() : k.drawer, view: S ? S.view() : k.view,
       pop: S ? S.current() : k.pop, scroll: S ? S.scroll() : k.scroll,
       /* until the scans are in, what was kept of them stands */
@@ -1556,10 +1534,6 @@ if (HX_KEPT){
       btn.setAttribute("aria-pressed", String(on));
       btn.classList.toggle("active", on);
     });
-  }
-  if (isFinite(HX_KEPT.trans) && HX_KEPT.trans !== null){
-    opacityEl.value = String(HX_KEPT.trans);
-    opacityVal.textContent = opacityEl.value + "%";
   }
 }
 /* the view and the drawer were kept on the device for good until v12.35 */

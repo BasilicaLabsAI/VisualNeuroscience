@@ -865,6 +865,12 @@ mark{ background:var(--ink); color:var(--paper); }
   color:var(--ink-60); margin:.6rem 0 .1rem;
 }
 .rnote .more p{ margin:0; }
+/* one region's own window (v12.56): narrower than the others on a wide screen, its note bare, its texts a size up */
+.screen:not(.one) #popRegion{ left:auto; width:min(560px, calc(100% - 2 * var(--gap) - 10px)); }
+.region-note{ border:0; padding:.1rem .1rem .3rem; }
+.region-note h4{ font-size:.6rem; margin:.9rem 0 .2rem; }
+.region-note h4:first-child{ margin-top:.1rem; }
+.region-note p{ font-size:.95rem; line-height:1.55; color:var(--ink); }
 
 .stats{ margin-top:var(--gap); }
 .probe-v{ font-size:.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -1355,6 +1361,12 @@ main.screen.one.land{ flex-direction:row; }
         </div>
       </div>
 
+      <!-- one region's own window (v12.56, at the owner's word): a press on a Highlighted row raises it, with
+           what the region does, the disorders a fault in it is part of and what damage to it has shown -->
+      <div class="pop" id="popRegion" hidden aria-labelledby="popRegionH">
+        <header class="pop-head"><b id="popRegionH">Region</b><small id="popRegionWhere"></small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body"><div class="rnote region-note" id="popRegionBody"></div></div>
+      </div>
       <div class="pop" id="popNotes" hidden aria-labelledby="popNotesH">
         <header class="pop-head"><b id="popNotesH">What they do</b><small id="notesCount"></small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
         <div class="pop-body">
@@ -1732,10 +1744,11 @@ main.screen.one.land{ flex-direction:row; }
         var p = document.createElement("p");
         p.textContent = row.note.fn;
         cell.appendChild(h); cell.appendChild(p);
-        /* the two lines of health (v12.47): the disorders a fault here is part of, and what a lesion has shown */
+        /* the two lines of health (v12.47): the disorders a fault here is part of, and what a lesion has shown;
+           named Associated brain disorders and When damaged since v12.56, at the owner's word, as the region's own window names them */
         if (row.note.disease || row.note.damage){
           var more = document.createElement("div"); more.className = "more";
-          [["Disease", row.note.disease], ["Damage", row.note.damage]].forEach(function(pair){
+          [["Associated brain disorders", row.note.disease], ["When damaged", row.note.damage]].forEach(function(pair){
             if (!pair[1]) return;
             var k = document.createElement("h4"); k.textContent = pair[0];
             var t = document.createElement("p"); t.textContent = pair[1];
@@ -2247,19 +2260,33 @@ main.screen.one.land{ flex-direction:row; }
     }
     selectEl.value = "";
   });
-  /* a row of the Highlighted list pressed is a wish to read about it (v12.52,
-     at the owner's word, as the study's list raises its reading; v12.47 had
-     the pick from Add a region raise it, which only adds now): What they do
-     rises, scrolled to that region's note */
+  /* a row of the Highlighted list pressed (v12.52) raises the region's own
+     window (v12.56, at the owner's word; What they do, scrolled to its note,
+     until then): what it does, then Associated brain disorders and When
+     damaged, from region-notes.js */
   function readAbout(key){
     if (!window.MN_SCREEN) return;
-    MN_SCREEN.open("popNotes");
-    var cell = notesSec.querySelector('.rnote[data-key="' + key + '"]');
-    var body = document.querySelector("#popNotes .pop-body");
-    if (!cell || !body) return;
-    requestAnimationFrame(function(){
-      body.scrollTop = Math.max(0, cell.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop - 8);
+    var s = selections.get(key);
+    if (!s) return;
+    var all = window.MN_NOTES, note = all && all.NOTES ? all.NOTES[s.base] : null;
+    var tier = note && all.TIERS ? all.TIERS.filter(function(t){ return t.id === note.tier; })[0] : null;
+    document.getElementById("popRegionH").textContent = s.name;
+    /* the layer's label is written as HTML (its middle dot an entity): read as text here */
+    var label = ""; if (tier){ var tmp = document.createElement("span"); tmp.innerHTML = tier.label; label = tmp.textContent; }
+    document.getElementById("popRegionWhere").textContent = [label, s.sideTag].filter(Boolean).join(" \u00B7 ");
+    var body = document.getElementById("popRegionBody");
+    body.innerHTML = "";
+    [["What it does", note ? note.fn : "No note on this region yet."],
+     ["Associated brain disorders", note && note.disease],
+     ["When damaged", note && note.damage]].forEach(function(pair){
+      if (!pair[1]) return;
+      var k = document.createElement("h4"); k.textContent = pair[0];
+      var t = document.createElement("p"); t.textContent = pair[1];
+      body.appendChild(k); body.appendChild(t);
     });
+    MN_SCREEN.open("popRegion");
+    var scroller = document.querySelector("#popRegion .pop-body");
+    if (scroller) scroller.scrollTop = 0;
   }
 
   mirrorEl.addEventListener("change", function(){ renderDropdown(); rememberSoon(); });
