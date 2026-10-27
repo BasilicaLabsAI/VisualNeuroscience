@@ -403,10 +403,14 @@ async function build(){
   const METHOD = { "google.com": "google", "apple.com": "apple", password: "email", emailLink: "email_link" };
   function method(id){ return METHOD[id] || (id ? String(id).replace(/\.com$/, "") : "unknown"); }
 
-  /* user state: null until the first state, or undefined while a native
-     account is being followed, so nobody hears logged out meanwhile */
+  /* user state: undefined until the first state is heard (v12.55: on the
+     website too, so no page takes an unknown state for logged out; until
+     then a listener was called at once with null and the account page
+     opened its login box on #password with the session still to come), and
+     while a native account is being followed (v12.46), so nobody hears
+     logged out meanwhile; null from the first state on with nobody */
   const listeners = new Set();
-  let user = nativeUser ? undefined : null, readyResolve, first = true, lastUid;
+  let user, readyResolve, first = true, lastUid;
   const ready = new Promise(r => { readyResolve = r; });
   function notify(){ listeners.forEach(cb => { try{ cb(user); }catch(e){ console.error(e); } }); }
   function took(u){

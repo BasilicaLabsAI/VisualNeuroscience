@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.55 — 27 October 2026 — The password in a popup of its own
+Commit · Raise the password change in a popup of its own from a Change password button
+
+The password is no longer a section of the account page: a Change password button beside Change username or university raises a popup of its own, built as the login and account boxes are, with the current password, the new one twice, Change password and Email me a reset instead; an account that logs in through Google, Apple or an emailed link is told there is none to change. The app's Change your password row opens that popup. The apps take it with their next build.
+
 ## v12.54 — 27 October 2026 — The account kept on the device
-Commit · Keep the account on the device from login, so the pages open on it and pull nothing
+Commit `588d373` · Keep the account on the device from login, so the pages open on it and pull nothing
 
 Opening the account page, the 3D Region Atlas's Saved maps or Practice no longer pulls the account from the server: what the account holds, the profile with its username, every saved map with its regions and the practice progress, is loaded into the device's own storage at login, kept in step by every save, and read from there at once. In the iOS app the Account tab's own login reads it natively and hands it to every page as it opens, read again on each return to the front, so a page shows the account even where it could not take the session itself. The website and Android keep the same copy from their own login. The apps take it with their next build.
 

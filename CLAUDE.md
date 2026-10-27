@@ -240,13 +240,18 @@ Read this first in every session. It is the handover; nothing else needs pasting
   every page beside the privacy policy and from the app's Account tab (`PageRow` rows in `Shell.swift`: privacy, terms,
   Change your password since v12.9, which opens `account.html#password`, and Delete your account, which opens
   `account.html#delete`); the Play listing's deletion link is the deletion page and
-  the App Store notes name it (`app/store/LISTING.md`, `PLAY-STORE.md`). Since v12.9, at the owner's word, the account
-  page has a Password section (`#password`; `#acctPwWrap` the form, shown for an account whose sign-in is a password,
-  `#acctPwNone` the line for the rest): `changePassword(current, next, confirm)` in `auth.js` signs the person in again
-  with the current password (`reauthenticateWithCredential` with an `EmailAuthProvider` credential, a wrong one answered
-  as `vn/current-wrong`) and calls `updatePassword`, both names added to the bundle's entry and the bundle rebuilt;
-  `hasPassword(u)` says whether there is one, and the form's second button sends the reset email (`sendReset`). The
-  page jumps to the section once when opened on `#password`, which the app's row does. Account deletion (`deleteAccount` in
+  the App Store notes name it (`app/store/LISTING.md`, `PLAY-STORE.md`). Since v12.9, at the owner's word, the
+  password can be changed from the account page, and since v12.55, at the owner's word, in a popup of its own: the
+  Change password button beside Change username or university (`#acctPwBtn`, shown for an account whose sign-in is a
+  password) raises it, built by `auth-ui.js` as the login and account boxes are (`openPasswordModal`,
+  `VN_ACCOUNT_UI.openPassword(user)`; the form's `data-key` is `pw`, which `closeModal` keeps no draft of), with the
+  current password, the new one twice, Change password and Email me a reset instead, and for an account without a
+  password the line that there is none to change; `changePassword(current, next, confirm)` in `auth.js` signs the
+  person in again with the current password (`reauthenticateWithCredential` with an `EmailAuthProvider` credential, a
+  wrong one answered as `vn/current-wrong`) and calls `updatePassword`, both names added to the bundle's entry and the
+  bundle rebuilt; `hasPassword(u)` says whether there is one, and the popup's second button sends the reset email
+  (`sendReset`). The page raises the popup once when opened on `#password`, which the app's row does, or the login box
+  when nobody is logged in there. Account deletion (`deleteAccount` in
   `site/assets/auth.js`) revokes Sign in with Apple as the account goes: in the apps the native layer signs in with
   Apple again, revokes with the authorization code (`revokeAccessToken`) and deletes the user, on the web the popup's
   access token goes to the SDK's `revokeAccessToken`; a Google account Firebase asks to sign in again does so on the
@@ -315,7 +320,7 @@ Read this first in every session. It is the handover; nothing else needs pasting
   Google's tokens or the email and password, `handoff`, never Apple's token, which is spent once), and `auth.js`
   follows it before anyone hears the first state (`followNative` from the first `onAuthStateChanged`, the states it
   raises reported once through `took`, `user` undefined meanwhile so no page shows logged out while it is being
-  signed in): `signInWithCustomToken`, or the credential, after which the page tells the shell `{auth:"took"}` and
+  signed in; since v12.55 `user` is undefined until the first state on the website as well, so no page takes an unknown state for logged out, where a listener was called at once with null): `signInWithCustomToken`, or the credential, after which the page tells the shell `{auth:"took"}` and
   the credential is spent (`tellShell`, the `vnShell` handler's `auth` messages, `heard(auth:)` in `ShellWeb.swift`,
   `handoffTaken`); a native sign-in that nothing can pass on, an Apple one without the worker, leaves the page logged
   out with a line naming the person and the reason (`#acctNative` in `account.html`, `nativeUser` and `nativeWhy` on

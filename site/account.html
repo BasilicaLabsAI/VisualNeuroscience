@@ -197,20 +197,6 @@ svg{ display:block; }
 @media (prefers-reduced-motion: reduce){
   .acct-btn:not(:disabled):active, .acct-danger:not(:disabled):active{ transform:none; }
 }
-/* the password form (v12.9): the page's own fields, one to a line */
-.acct-form{ display:grid; gap:.8rem; max-width:30rem; margin:0 0 1rem; }
-.acct-form label{
-  display:grid; gap:.35rem; font-family:var(--font-brand); font-weight:500; font-size:.6rem;
-  letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60);
-}
-.acct-form input[type="password"]{
-  font:inherit; font-size:1rem; letter-spacing:.06em; color:var(--ink); background:var(--paper);
-  border:1px solid var(--hair); border-radius:0; padding:.55rem .7rem; min-height:44px; width:100%; box-sizing:border-box;
-}
-.acct-form input:focus-visible{ outline:2px solid var(--ink); outline-offset:1px; }
-.acct-form .acct-row{ margin:.2rem 0 .4rem; }
-/* the email, for a password manager to file the new password under, out of sight */
-.acct-hidden{ position:absolute; width:1px; height:1px; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); opacity:0; pointer-events:none; }
 .policy .acct-tool{
   font-family:var(--font-brand); font-weight:500; font-size:.6rem; letter-spacing:.22em;
   text-transform:uppercase; color:var(--ink-60); margin:1rem 0 .4rem;
@@ -300,25 +286,9 @@ svg{ display:block; }
   <dl class="acct-facts" id="acctFacts"></dl>
   <div class="acct-row">
     <button class="acct-btn quiet" id="acctEdit" type="button">Change username or university</button>
+    <button class="acct-btn quiet" id="acctPwBtn" type="button" hidden>Change password</button>
     <button class="acct-btn quiet" id="acctLogout" type="button">Log out</button>
   </div>
-
-  <h2 id="password">Password</h2>
-  <div id="acctPwWrap" hidden>
-    <p>A new password for the email address on the account, for the site and the apps alike. The current one proves it is you; if it has gone from memory, have a reset emailed instead.</p>
-    <form class="acct-form" id="acctPwForm" novalidate>
-      <input type="email" name="username" autocomplete="username" class="acct-hidden" tabindex="-1" aria-hidden="true" readonly>
-      <label>Current password<input type="password" name="current" autocomplete="current-password" required></label>
-      <label>New password<input type="password" name="next" autocomplete="new-password" required minlength="6"></label>
-      <label>New password again<input type="password" name="confirm" autocomplete="new-password" required minlength="6"></label>
-      <div class="acct-row">
-        <button class="acct-btn" id="acctPwSave" type="submit">Change password</button>
-        <button class="acct-btn quiet" id="acctPwReset" type="button">Email me a reset instead</button>
-      </div>
-      <p class="acct-status" id="acctPwStatus" aria-live="polite"></p>
-    </form>
-  </div>
-  <p class="acct-quiet" id="acctPwNone" hidden>This account logs in without a password of its own, through Google, Apple or an emailed link, so there is none to change here.</p>
 
   <h2>Saved models</h2>
   <div id="acctModels"><p class="acct-quiet">Reading the account&hellip;</p></div>
@@ -555,53 +525,24 @@ async function copy(){
   }
 }
 
-/* the password (v12.9): only an account that logs in with one has one to
-   change; the current password proves it is the person, and the reset email
-   is there for a forgotten one. The app's Change your password row opens the
-   page on #password, which is inside the logged-in section, so the jump is
-   made here once the section shows. */
-let pwBusy = false, jumped = false;
+/* the password (v12.9), in a popup of its own since v12.55, at the owner's
+   word: the button shows for an account that logs in with one, and raises the
+   popup auth-ui.js builds (VN_ACCOUNT_UI.openPassword); the app's Change your
+   password row opens the page on #password, which raises it once as the
+   account is drawn, or the login box when nobody is logged in here. */
+let jumped = false;
 function passwordBox(u){
   const has = !!(auth.hasPassword && auth.hasPassword(u));
-  $("acctPwWrap").hidden = !has;
-  $("acctPwNone").hidden = has;
-  if (has) $("acctPwForm").elements.username.value = u.email || "";
+  $("acctPwBtn").hidden = !has;
   if (!jumped && location.hash === "#password"){
     jumped = true;
-    requestAnimationFrame(() => { const h = $("password"); if (h) h.scrollIntoView({ block: "start" }); });
+    setTimeout(() => { if (window.VN_ACCOUNT_UI) VN_ACCOUNT_UI.openPassword(u); }, 150);
   }
 }
-async function changePw(e){
-  e.preventDefault();
-  if (pwBusy) return;
-  const f = $("acctPwForm").elements, st = $("acctPwStatus"), b = $("acctPwSave");
-  pwBusy = true; b.disabled = true; st.classList.remove("err"); st.textContent = "Changing the password…";
-  try{
-    await auth.changePassword(f.current.value, f.next.value, f.confirm.value);
-    f.current.value = ""; f.next.value = ""; f.confirm.value = "";
-    st.textContent = "Done: the new password is the one to log in with from now on, here and in the apps.";
-  }catch(err){
-    st.classList.add("err");
-    st.textContent = (err && err.message) || "The password could not be changed. Try again.";
-    if (err && err.code === "vn/current-wrong"){ f.current.value = ""; f.current.focus(); }
-  }finally{
-    pwBusy = false; b.disabled = false;
-  }
-}
-async function resetPw(){
-  const u = auth.currentUser();
-  if (!u || !u.email) return;
-  const st = $("acctPwStatus"), b = $("acctPwReset");
-  b.disabled = true; st.classList.remove("err"); st.textContent = "Sending…";
-  try{
-    await auth.sendReset(u.email);
-    st.textContent = "Sent to " + u.email + ": the link in it sets a new password.";
-  }catch(err){
-    st.classList.add("err");
-    st.textContent = (err && err.message) || "The email could not be sent. Try again.";
-  }finally{
-    b.disabled = false;
-  }
+function askLogin(){
+  if (jumped || location.hash !== "#password") return;
+  jumped = true;
+  setTimeout(() => { if (window.VN_ACCOUNT_UI) VN_ACCOUNT_UI.openLogin(); }, 150);
 }
 
 /* two presses, as in the account box: the first arms it, the second
@@ -686,9 +627,10 @@ function draw(u){
   /* what needs this page's own session: the password and the deletion */
   $("acctDelWrap").hidden = !u;
   $("acctDelSteps").hidden = !!u;
+  if (!u){ $("acctPwBtn").hidden = true; if (u === null) askLogin(); }
   if (!inside) return;
   if (shown){ detailsFrom(shown); modelsFrom(shown); practiceFrom(shown); }
-  if (u) passwordBox(u); else { $("acctPwWrap").hidden = true; $("acctPwNone").hidden = true; }
+  if (u) passwordBox(u);
 }
 
 if (!auth.enabled) off();
@@ -698,12 +640,18 @@ else {
   $("acctLogout").addEventListener("click", () => auth.signOut());
   $("acctCopy").addEventListener("click", () => copy());
   $("acctDelete").addEventListener("click", del);
-  $("acctPwForm").addEventListener("submit", changePw);
-  $("acctPwReset").addEventListener("click", resetPw);
+  $("acctPwBtn").addEventListener("click", () => window.VN_ACCOUNT_UI && VN_ACCOUNT_UI.openPassword(auth.currentUser()));
   /* the copy changed: a username saved in the account box, a map kept on another page, the
      account read whole; the page draws again from it */
   let heard = false;
   window.addEventListener("vn-account", () => draw(heard ? auth.currentUser() : undefined));
+  /* a link to #password from the page itself raises the popup as a fresh opening would */
+  window.addEventListener("hashchange", () => {
+    if (location.hash !== "#password" || !heard) return;
+    jumped = false;
+    const u = auth.currentUser();
+    if (u) passwordBox(u); else if (u === null) askLogin();
+  });
   draw(undefined);                       /* the device's copy, at once, with nothing pulled */
   auth.onUser(u => { heard = true; draw(u); });
 }

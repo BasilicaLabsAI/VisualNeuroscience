@@ -2,7 +2,7 @@
    provider buttons above the three email tabs (Sign in / Create account /
    Reset), the signed-in state showing the person's username, and an account card
    with the username and university, Save and Log out side by side, and
-   the door marked deletion. All behaviour lives in assets/auth.js; this file only draws,
+   the door marked deletion, and (v12.55) the password's own popup. All behaviour lives in assets/auth.js; this file only draws,
    and passes the address of a new account that ticks the feature-announcements
    box to the newsletter's worker.
 
@@ -146,6 +146,7 @@ function mount(){
   .vn-page{ display:inline-block; margin-top:1.1rem; font-size:.9rem; color:var(--ink,#111);
     text-underline-offset:3px; }
   .vn-submit:disabled{ opacity:.45; cursor:default; }
+  .vn-form .vn-hidden{ position:absolute; opacity:0; width:1px; height:1px; min-height:0; padding:0; margin:0; border:0; pointer-events:none; }
   .vn-human{ display:flex; align-items:center; gap:.8rem; position:relative; cursor:pointer;
     border:1px solid var(--hair,#111); padding:.75rem .85rem; font-size:.95rem; line-height:1.35;
     -webkit-user-select:none; user-select:none; }
@@ -406,6 +407,82 @@ function mount(){
     wrap.classList.add("vn-in");
     document.addEventListener("keydown", onEsc);
     if (!prof.username) setTimeout(() => inUser.focus(), 50);
+  }
+
+  /* ── the password, in a popup of its own (v12.55, at the owner's word) ──
+     Raised by the account page's Change password button, and by the app's
+     Change your password row through account.html#password. Only an account
+     that logs in with a password has one to change (v12.9): the current one
+     proves it is the person, and the reset email is there for a forgotten
+     one; the rest are told there is none. The form keeps no draft on
+     closing (closeModal), passwords being nothing to keep. */
+  function openPasswordModal(user){
+    closeModal();
+    wrap = document.createElement("div");
+    wrap.className = "vn-modal-wrap";
+    const box = document.createElement("div");
+    box.className = "vn-modal";
+    box.setAttribute("role", "dialog");
+    box.setAttribute("aria-label", "Change password");
+    const close = document.createElement("button");
+    close.type = "button"; close.className = "vn-close"; close.innerHTML = "&#215;";
+    close.setAttribute("aria-label", "Close");
+    close.addEventListener("click", () => closeModal({ keep: false }));
+    const h = document.createElement("h2");
+    h.textContent = "Change password";
+    const who = document.createElement("p");
+    who.className = "vn-who";
+    box.append(close, h, who);
+    const has = !!(user && auth.hasPassword(user));
+    let current = null;
+    if (has){
+      who.textContent = "A new password for " + (user.email || "the email address on the account") + ", for the site and the apps alike. The current one proves it is you; if it has gone from memory, have a reset emailed instead.";
+      const f = document.createElement("form");
+      f.className = "vn-form active"; f.dataset.key = "pw"; f.noValidate = true;
+      /* the email, for a password manager to file the new password under, out of sight */
+      const email = field("email", "username", "Email", "username");
+      email.value = user.email || ""; email.readOnly = true; email.required = false; email.tabIndex = -1;
+      email.setAttribute("aria-hidden", "true"); email.className = "vn-hidden";
+      current = field("password", "current", "Current password", "current-password");
+      const next = field("password", "next", "New password", "new-password"); next.minLength = 6;
+      const again = field("password", "confirm", "New password again", "new-password"); again.minLength = 6;
+      const go = document.createElement("button");
+      go.type = "submit"; go.className = "vn-submit"; go.textContent = "Change password";
+      const reset = document.createElement("button");
+      reset.type = "button"; reset.className = "vn-alt"; reset.textContent = "Email me a reset instead";
+      reset.addEventListener("click", () => run(reset, async () => {
+        await auth.sendReset(user.email);
+        throw Object.assign(new Error("Sent to " + user.email + ": the link in it sets a new password."), { keepOpen: true });
+      }));
+      f.append(email, current, next, again, go, reset);
+      const was = current;
+      f.addEventListener("submit", e => {
+        e.preventDefault();
+        run(f, async () => {
+          try{ await auth.changePassword(was.value, next.value, again.value); }
+          catch(err){
+            if (err && err.code === "vn/current-wrong"){ was.value = ""; setTimeout(() => was.focus(), 50); }
+            throw err;
+          }
+          was.value = ""; next.value = ""; again.value = "";
+          throw Object.assign(new Error("Done: the new password is the one to log in with from now on, here and in the apps."), { keepOpen: true });
+        });
+      });
+      box.append(f);
+    } else {
+      who.textContent = "This account logs in without a password of its own, through Google, Apple or an emailed link, so there is none to change.";
+    }
+    statusEl = document.createElement("p");
+    statusEl.className = "vn-status";
+    statusEl.setAttribute("aria-live", "polite");
+    box.append(statusEl);
+    wrap.appendChild(box);
+    document.body.appendChild(wrap);
+    if (fading){ fading.remove(); fading = null; }
+    void wrap.offsetWidth;   /* the closed state is laid out, so the open one can be reached from it */
+    wrap.classList.add("vn-in");
+    document.addEventListener("keydown", onEsc);
+    if (current) setTimeout(() => current.focus(), 50);
   }
 
   /* ── modal ───────────────────────────────────────────────────────────── */
@@ -694,9 +771,9 @@ function mount(){
       if (opts && opts.keep === false) draft = null;
       else {
         draft = { tab: currentTab, fields: {} };
-        forms.forEach(f => f.querySelectorAll("input").forEach(i => {
+        forms.forEach(f => { if (f.dataset.key === "pw") return; f.querySelectorAll("input").forEach(i => {
           draft.fields[f.dataset.key + "." + i.name] = i.type === "checkbox" ? i.checked : i.value;
-        }));
+        }); });
       }
     }
     document.removeEventListener("keydown", onEsc);
@@ -719,7 +796,9 @@ function mount(){
   /* the account page opens the same two boxes from its own buttons */
   window.VN_ACCOUNT_UI = {
     openLogin: () => openModal(),
-    openAccount: () => { const u = auth.currentUser(); if (u) openAccountModal(u); else openModal(); }
+    openAccount: () => { const u = auth.currentUser(); if (u) openAccountModal(u); else openModal(); },
+    /* the password's popup (v12.55), or the login box when nobody is logged in here */
+    openPassword: (u) => { const user = u || auth.currentUser(); if (user) openPasswordModal(user); else openModal(); }
   };
 
   /* arriving on a passwordless sign-in link: finish it, asking for the
