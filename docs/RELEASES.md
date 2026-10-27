@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.51 — 27 October 2026 — The atlases in a new order
+Commit · Put the six atlases in one order on the home page, the app's Atlases tab and the Android menu
+
+The six atlases now stand in one order everywhere they are listed, on the home page, in the app's Atlases tab and in the Android menu: the 3D Region Atlas, then Tractography and Molecular beside it on a wide screen, then Microanatomy, the Brodmann Area Atlas and, last, the Network Atlas. The apps take it with their next build.
+
 ## v12.50 — 27 October 2026 — Export on the Tractography bar
-Commit · Give Tractography's bar an Export button of its own beside the pinned Tractography button
+Commit `e28b8d6` · Give Tractography's bar an Export button of its own beside the pinned Tractography button
 
 Tractography's bar now carries Export at the far right beside the pinned Tractography button, as the 3D Region Atlas's bar does, raising a sheet of its own with the number of streamlines to write and the model to download; the Tractography sheet keeps What it is and Reference. The apps take it with their next build.
 

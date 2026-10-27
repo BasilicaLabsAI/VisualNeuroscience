@@ -181,9 +181,10 @@
 
   /* the sections, behind a button at the right of the bar: the same list
      the website's header carries, the page it is on marked */
-  var SECTIONS = [["index.html", "Home"], ["regions.html", "3D Region Atlas"], ["brodmann.html", "Brodmann Area Atlas"],
-    ["microanatomy.html", "Microanatomy"], ["molecular.html", "Molecular"], ["network-atlas.html", "Network Atlas"],
-    ["tracts.html", "Tractography"], ["studies.html", "Visualizing Studies"], ["textbook.html", "Digital Textbook"],
+  /* the atlases in the home page's order (v12.51, at the owner's word) */
+  var SECTIONS = [["index.html", "Home"], ["regions.html", "3D Region Atlas"], ["tracts.html", "Tractography"],
+    ["molecular.html", "Molecular"], ["microanatomy.html", "Microanatomy"], ["brodmann.html", "Brodmann Area Atlas"],
+    ["network-atlas.html", "Network Atlas"], ["studies.html", "Visualizing Studies"], ["textbook.html", "Digital Textbook"],
     ["practice.html", "Practice"], ["about.html", "About"]];
   var menuBtn = make("button", "vn-menu-btn");
   menuBtn.type = "button";

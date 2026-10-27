@@ -263,8 +263,9 @@ struct PageBox: View {
 
 // MARK: - The tabs
 
-/// The atlases: the regions in 3D, the Brodmann areas beneath them, the
-/// cell, the receptors, the white matter and, last, the networks.
+/// The atlases in the home page's order (v12.51, at the owner's word): the
+/// regions in 3D, the white matter, the receptors, the cell, the Brodmann
+/// areas and, last, the networks.
 struct AtlasTab: View {
     var body: some View {
         TabPage {
@@ -273,26 +274,26 @@ struct AtlasTab: View {
                     shot: Shot("assets/home/atlas.jpg", light: "assets/home/atlas-light.jpg"),
                     meta: "116 parcels · four viewports · receptor densities · slice tool · PNG and 3D export · saved and example maps",
                     go: "Open the atlas")
-            PageBox(page: .brodmann, kicker: "Cytoarchitecture",
-                    text: "Brodmann’s 41 areas of the cortex on a map of both faces of the hemisphere. Tap one and what it does appears beside it.",
-                    shot: Shot("assets/home/brodmann.jpg", light: "assets/home/brodmann-light.jpg"),
-                    meta: "41 areas · both faces · what each one does",
-                    go: "Open the map")
-            PageBox(page: .microanatomy, kicker: "Under the microscope",
-                    text: "The neuron and its synapses at the cell’s scale, down to the neurotransmitters and their receptors.",
-                    shot: Shot("assets/home/cells.jpg", light: "assets/home/cells-light.jpg"),
-                    meta: "2 cells drawn · 37 structures · explore and test modes",
-                    go: "Open the cell")
-            PageBox(page: .molecular, kicker: "The molecules",
-                    text: "The dopamine and serotonin receptors in three dimensions, with the transmitters and drugs that bind them.",
-                    shot: Shot("assets/home/molecular.jpg", light: "assets/home/molecular-light.jpg"),
-                    meta: "17 receptors · 39 structures · 24 drugs · binding tour · compare",
-                    go: "Open the receptors")
             PageBox(page: .tractography, kicker: "White matter",
                     text: "The white matter’s million fibre pathways, from the HCP1065 population average, in full 3D.",
                     shot: Shot("assets/home/tracts.jpg", light: "assets/home/tracts-light.jpg"),
                     meta: "Direction-coloured streamlines · free rotation",
                     go: "Open the tractogram")
+            PageBox(page: .molecular, kicker: "The molecules",
+                    text: "The dopamine and serotonin receptors in three dimensions, with the transmitters and drugs that bind them.",
+                    shot: Shot("assets/home/molecular.jpg", light: "assets/home/molecular-light.jpg"),
+                    meta: "17 receptors · 39 structures · 24 drugs · binding tour · compare",
+                    go: "Open the receptors")
+            PageBox(page: .microanatomy, kicker: "Under the microscope",
+                    text: "The neuron and its synapses at the cell’s scale, down to the neurotransmitters and their receptors.",
+                    shot: Shot("assets/home/cells.jpg", light: "assets/home/cells-light.jpg"),
+                    meta: "2 cells drawn · 37 structures · explore and test modes",
+                    go: "Open the cell")
+            PageBox(page: .brodmann, kicker: "Cytoarchitecture",
+                    text: "Brodmann’s 41 areas of the cortex on a map of both faces of the hemisphere. Tap one and what it does appears beside it.",
+                    shot: Shot("assets/home/brodmann.jpg", light: "assets/home/brodmann-light.jpg"),
+                    meta: "41 areas · both faces · what each one does",
+                    go: "Open the map")
             PageBox(page: .networkAtlas, kicker: "Systems",
                     text: "The brain’s large-scale networks in six states, from flow to meditation, mapped onto the scan.",
                     shot: Shot("assets/home/network.jpg", light: "assets/home/network-light.jpg"),

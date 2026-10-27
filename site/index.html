@@ -156,21 +156,23 @@ img{ max-width:100%; height:auto; display:block; }
    Twelve columns on desktop, so the boxes can take unequal widths the way
    columns on a front page do: a lead that runs two rows deep, a pair of
    half-width sections beside it, then a narrow and a wide one below. On a
-   phone the whole thing collapses to a single box per line. The Brodmann
-   box follows the lead in the markup, so a phone reads it straight after
-   the 3D Region Atlas; dense placement keeps the network and tractography
-   boxes beside the lead on wider screens, with the Brodmann box beneath. */
+   phone the whole thing collapses to a single box per line. The order is
+   the owner's since v12.51: the 3D Region Atlas, Tractography, Molecular,
+   Microanatomy, the Brodmann Area Atlas and, last, the Network Atlas; dense
+   placement keeps the tractography and molecular boxes beside the lead on
+   wider screens, with the cell, the Brodmann and the network boxes beneath
+   (the app's Atlases tab and the Android menu read the same order). */
 .mosaic{
   display:grid; gap:var(--gap); grid-auto-flow:row dense;
   grid-template-columns:repeat(12,minmax(0,1fr));
 }
 .m-atlas  { grid-column:span 7; grid-row:span 2; }
 .m-brodmann{ grid-column:span 12; }
-.m-network{ grid-column:span 5; }
+.m-network{ grid-column:span 12; }
 .m-tracts { grid-column:span 5; }
 .m-studies{ grid-column:span 12; }
 .m-cells  { grid-column:span 12; }
-.m-molecular{ grid-column:span 12; }
+.m-molecular{ grid-column:span 5; }
 .m-practice{ grid-column:span 6; }
 .m-textbook{ grid-column:span 6; }
 .m-posters{ grid-column:span 12; }
@@ -350,11 +352,11 @@ img{ max-width:100%; height:auto; display:block; }
   .mosaic{ grid-template-columns:repeat(6,minmax(0,1fr)); }
   .m-atlas  { grid-column:span 6; grid-row:auto; }
   .m-brodmann{ grid-column:span 6; }
-  .m-network{ grid-column:span 3; }
+  .m-network{ grid-column:span 6; }
   .m-tracts { grid-column:span 3; }
   .m-studies{ grid-column:span 6; }
   .m-cells  { grid-column:span 6; }
-  .m-molecular{ grid-column:span 6; }
+  .m-molecular{ grid-column:span 3; }
   .m-practice{ grid-column:span 3; }
   .m-textbook{ grid-column:span 3; }
   .m-posters{ grid-column:span 6; }
@@ -425,28 +427,6 @@ img{ max-width:100%; height:auto; display:block; }
       <div class="go">Open the atlas &rarr;</div>
     </a>
 
-    <!-- ── the Brodmann map ───────────────────────────────────────── -->
-    <a class="box m-brodmann box-h" href="brodmann.html">
-      <div class="side">
-        <div class="kicker">Cytoarchitecture</div>
-        <h2>Brodmann Area Atlas</h2>
-        <p>Brodmann&rsquo;s 41 areas of the cortex on a map of both faces of the hemisphere. Tap one and what it does appears beside it.</p>
-        <div class="meta">41 areas &middot; both faces &middot; what each one does</div>
-        <div class="go">Open the map &rarr;</div>
-      </div>
-      <div class="plate themed"><img class="for-dark" src="assets/home/brodmann.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/home/brodmann-light.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
-    </a>
-
-    <!-- ── the ring ───────────────────────────────────────────────── -->
-    <a class="box m-network" href="network-atlas.html">
-      <div class="kicker">Systems</div>
-      <h2>Network Atlas</h2>
-      <p>The brain&rsquo;s large-scale networks in six states, from flow to meditation, mapped onto the scan.</p>
-      <div class="plate themed"><img class="for-dark" src="assets/home/network.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/home/network-light.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
-      <div class="meta">6 states &middot; 7 systems &middot; 20 nodes</div>
-      <div class="go">Open the ring &rarr;</div>
-    </a>
-
     <!-- ── the tractogram ─────────────────────────────────────────── -->
     <a class="box m-tracts" href="tracts.html">
       <div class="kicker">White matter</div>
@@ -459,17 +439,14 @@ img{ max-width:100%; height:auto; display:block; }
       <div class="go">Open the tractogram &rarr;</div>
     </a>
 
-
-    <!-- ── the papers ─────────────────────────────────────────────── -->
-    <a class="box m-studies box-h" href="studies.html">
-      <div class="side">
-        <div class="kicker">The Papers</div>
-        <h2>Visualizing Studies</h2>
-        <p>Published neuroimaging studies drawn directly on the brain, region by region.</p>
-        <div class="meta">1 study drawn &middot; more to come</div>
-        <div class="go">Open the shelf &rarr;</div>
-      </div>
-      <div class="plate themed"><img class="for-dark" src="assets/studies/hallucinations.png" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/studies/hallucinations-light.png" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+    <!-- ── the molecules ──────────────────────────────────────────── -->
+    <a class="box m-molecular" href="molecular.html">
+      <div class="kicker">The molecules</div>
+      <h2>Molecular</h2>
+      <p>The dopamine and serotonin receptors in three dimensions, with the transmitters and drugs that bind them.</p>
+      <div class="plate themed"><img class="for-dark" src="assets/home/molecular.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/home/molecular-light.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+      <div class="meta">17 receptors &middot; 39 structures &middot; 24 drugs &middot; binding tour &middot; compare</div>
+      <div class="go">Open the receptors &rarr;</div>
     </a>
 
     <!-- ── the cells ──────────────────────────────────────────────── -->
@@ -484,17 +461,48 @@ img{ max-width:100%; height:auto; display:block; }
       <div class="plate themed"><img class="for-dark" src="assets/home/cells.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/home/cells-light.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
     </a>
 
-    <!-- ── the molecules ──────────────────────────────────────────── -->
-    <a class="box m-molecular box-h" href="molecular.html">
+    <!-- ── the Brodmann map ───────────────────────────────────────── -->
+    <a class="box m-brodmann box-h" href="brodmann.html">
       <div class="side">
-        <div class="kicker">The molecules</div>
-        <h2>Molecular</h2>
-        <p>The dopamine and serotonin receptors in three dimensions, with the transmitters and drugs that bind them.</p>
-        <div class="meta">17 receptors &middot; 39 structures &middot; 24 drugs &middot; binding tour &middot; compare</div>
-        <div class="go">Open the receptors &rarr;</div>
+        <div class="kicker">Cytoarchitecture</div>
+        <h2>Brodmann Area Atlas</h2>
+        <p>Brodmann&rsquo;s 41 areas of the cortex on a map of both faces of the hemisphere. Tap one and what it does appears beside it.</p>
+        <div class="meta">41 areas &middot; both faces &middot; what each one does</div>
+        <div class="go">Open the map &rarr;</div>
       </div>
-      <div class="plate themed"><img class="for-dark" src="assets/home/molecular.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/home/molecular-light.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+      <div class="plate themed"><img class="for-dark" src="assets/home/brodmann.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/home/brodmann-light.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
     </a>
+
+    <!-- ── the ring ───────────────────────────────────────────────── -->
+    <a class="box m-network box-h" href="network-atlas.html">
+      <div class="side">
+        <div class="kicker">Systems</div>
+        <h2>Network Atlas</h2>
+        <p>The brain&rsquo;s large-scale networks in six states, from flow to meditation, mapped onto the scan.</p>
+        <div class="meta">6 states &middot; 7 systems &middot; 20 nodes</div>
+        <div class="go">Open the ring &rarr;</div>
+      </div>
+      <div class="plate themed"><img class="for-dark" src="assets/home/network.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/home/network-light.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+    </a>
+
+
+
+
+
+
+    <!-- ── the papers ─────────────────────────────────────────────── -->
+    <a class="box m-studies box-h" href="studies.html">
+      <div class="side">
+        <div class="kicker">The Papers</div>
+        <h2>Visualizing Studies</h2>
+        <p>Published neuroimaging studies drawn directly on the brain, region by region.</p>
+        <div class="meta">1 study drawn &middot; more to come</div>
+        <div class="go">Open the shelf &rarr;</div>
+      </div>
+      <div class="plate themed"><img class="for-dark" src="assets/studies/hallucinations.png" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/studies/hallucinations-light.png" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+    </a>
+
+
 
     <!-- ── the practice ───────────────────────────────────────────── -->
     <a class="box m-practice" href="practice.html">

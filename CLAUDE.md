@@ -49,7 +49,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   double tap on a region row once magnified the whole atlas page), and `viewer.css` sets `touch-action:manipulation` on
   `html` (the molecular viewer's `base.css` too), which takes WebKit's double-tap zoom off every page on the website as
   well, where a pinch still enlarges the page for whoever needs it. When a home-page box's text or picture changes,
-  change its twin in `Shell.swift` too. Every box's picture has a twin for the light theme since v11.67
+  change its twin in `Shell.swift` too. Since v12.51, at the owner's word, the six atlas boxes stand in one order on
+  the home page, the app's Atlases tab and the Android menu (`SECTIONS` in `navbar.js`): the 3D Region Atlas,
+  Tractography, Molecular, Microanatomy, the Brodmann Area Atlas and, last, the Network Atlas; on the home page's
+  twelve columns the tractography and molecular boxes stand beside the lead (`span 5`, Molecular drawn as a narrow box
+  with its plate beneath its words) and the cell, the Brodmann and the network boxes beneath (`span 12`, Network Atlas
+  a `box-h` with its plate beside its words), the six-column and one-column layouts following. Every box's picture has a twin for the light theme since v11.67
   (`assets/home/*-light.jpg`, `assets/studies/hallucinations-light.png`), shot from the live pages by
   `app/scripts/shoot-home-pictures.js` (the atlas's by `shoot-home-atlas.js`); the website swaps them by theme
   (`.shot.themed` and `.plate.themed` in `index.html`, the plate following the paper) and the app through
