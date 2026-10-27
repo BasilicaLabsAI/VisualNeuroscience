@@ -262,8 +262,20 @@ Read this first in every session. It is the handover; nothing else needs pasting
   have held every sign-in behind it), and a failure to start is caught into the dormant stub with a `reason`
   (`dormant(err)`), which the account page shows in place of its switched-off line (`#acctWhy`); the page also keeps a
   watchdog in its classic script, `#acctStuck` after twelve seconds with the first error it caught (`error` and
-  `unhandledrejection`), and `draw` and the off branch put it away. The cause on the device is still to be read from
-  Safari's Web Inspector against the next TestFlight build. Since v12.46, at the owner's word, the Account tab logs in
+  `unhandledrejection`), and `draw` and the off branch put it away. The cause was read on 27 October 2026 from that
+  watchdog's line on the owner's iPad, Cannot access 'auth' before initialization: `auth.js` ended on `await build()`,
+  and the module loader in WebKit before Safari 27 (iOS 26's web view; WebKit's post Fixing Top-Level Await in Safari)
+  runs a second module script, the account page's own, before an imported module's top-level await is over, so the
+  page's first read of the import threw, its script died and nothing registered `onUser`; Chromium never shows it.
+  Since v12.53 the module has no top-level await: its default export is a face built at once (`face()` at the foot of
+  `auth.js`: `enabled` while the config exists, the synchronous reads empty until the build settles, each call waiting
+  on it, `onUser` kept and bound once the module is up, `up` the promise that settles when it is, before any state is
+  heard, and the dormant stub with its `reason` standing in should the build fail), the platform bits (`cap`,
+  `isNative`, `plugin`, `browser`, `appPlug`, `providers`) stand above `build()`, `account.html` reaches its off
+  branch through `draw` as well (`off()`), `auth-ui.js` takes its slot out on a late failure and completes an email
+  link on `up`, and `connect.html` says so in its state hook. **No module another module imports may await at its top
+  level**, and a page may carry two module scripts only on that condition; the check is `npx -y esbuild@0.25.10 <file>
+  --bundle --format=iife`, which refuses a top-level await. Since v12.46, at the owner's word, the Account tab logs in
   natively (`app/ios/App/App/AccountAuth.swift`; `AccountBox` with `AccountField`, `InkButton`, `QuietLink`, `ActRow`
   and `AccountNote` in `Shell.swift`; `account` an `@StateObject` of `ShellRoot` in the environment): Firebase's own
   iOS SDK (`FirebaseAuth` and `GoogleSignIn`, reached through the Capacitor Firebase package the app already links;

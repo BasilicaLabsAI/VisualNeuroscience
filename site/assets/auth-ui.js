@@ -11,7 +11,9 @@
    the site's brand and restyling means changing tokens, not selectors.
 
    While accounts are dormant (window.VN_FIREBASE = null) auth.enabled is
-   false and this module mounts nothing at all. */
+   false and this module mounts nothing at all; the module says enabled
+   while it builds (v12.53, no top-level await), so a build that fails
+   afterwards takes the slot out again. */
 
 import auth from "./auth.js";
 
@@ -710,7 +712,9 @@ function mount(){
   }
 
   /* ── boot ────────────────────────────────────────────────────────────── */
-  auth.onUser(drawSlot);
+  /* a module that could not start after all takes the slot out again
+     (v12.53: it says enabled while it builds, and mounts this at once) */
+  auth.onUser(u => { if (!auth.enabled){ slot.remove(); return; } drawSlot(u); });
   auth.onUser(u => { if (u) setFails(0); });
   /* the account page opens the same two boxes from its own buttons */
   window.VN_ACCOUNT_UI = {
@@ -719,8 +723,10 @@ function mount(){
   };
 
   /* arriving on a passwordless sign-in link: finish it, asking for the
-     email only if this browser never stored it */
-  if (auth.pendingEmailLink){
+     email only if this browser never stored it (once the module is up,
+     v12.53: the link is read with the library) */
+  auth.up.then(() => {
+    if (!auth.pendingEmailLink) return;
     auth.completeSignInLink().catch(err => {
       if (err && err.code === "vn/needs-email"){
         openModal({ status: "Confirm the email this sign-in link was sent to, then press Sign in — no password needed." });
@@ -736,5 +742,5 @@ function mount(){
         openModal({ status: err && err.message, err: true });
       }
     });
-  }
+  });
 }

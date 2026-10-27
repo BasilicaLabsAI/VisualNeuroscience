@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.53 — 27 October 2026 — The account page answers in the iPad app
+Commit · Build the sign-in module's face without a top-level await, which left the account page dead in the iOS app's web view
+
+In the iOS app the account page sat on Checking whether you are logged in, with the line Cannot access 'auth' before initialization beneath it: the web view's module loader, WebKit before Safari 27, ran the page's own script before the sign-in module's top-level await was over. The module now builds its face at once, with no top-level await, so every page that imports it reads it safely, and a build that fails still ends in a reason on the account page. The website is unchanged in use; the apps take it with their next build.
+
 ## v12.52 — 27 October 2026 — The highlighted rows read, in one scrolling box
-Commit · Raise What they do from a press on a highlighted row rather than on adding a region, and let the list scroll only with the box
+Commit `8498801` · Raise What they do from a press on a highlighted row rather than on adding a region, and let the list scroll only with the box
 
 On the 3D Region Atlas a press on a region's name in the Highlighted list now raises What they do on that region, and adding a region from the list only adds it, as asked; and the Highlighted list no longer scrolls on its own, the region box scrolling as one piece with the list within it. The apps take it with their next build.
 

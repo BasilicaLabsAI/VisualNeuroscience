@@ -373,6 +373,8 @@ else {
       $("loopback").hidden = !j.loopback;
       $("detail").hidden = false;
       auth.onUser(u => {
+        /* the module could not start after all (v12.53: it says enabled while it builds) */
+        if (!auth.enabled){ fail("Accounts could not start" + (auth.reason ? ": " + auth.reason : "") + ". Close this page and open it again from the assistant."); return; }
         $("login").hidden = !!u; $("allow").hidden = !u; $("deny").hidden = false;
         if (u){
           const p = auth.profile();

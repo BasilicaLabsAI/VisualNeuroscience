@@ -127,13 +127,35 @@ function within(ms, what, p){
   });
 }
 
+/* ── the platform ─────────────────────────────────────────────────────── */
+/* read before the library is in (hoisted from build in v12.53, so the face
+   below can say which providers there are before the build settles) */
+const cap = typeof window !== "undefined" ? window.Capacitor : null;
+const isNative = !!(cap && cap.isNativePlatform && cap.isNativePlatform());
+const plugin  = isNative && cap.Plugins ? cap.Plugins.FirebaseAuthentication : null;
+const browser = isNative && cap.Plugins ? cap.Plugins.Browser : null;
+const appPlug = isNative && cap.Plugins ? cap.Plugins.App : null;
+const wantP = Object.assign({ google:true, apple:true, linkedin:true, emailLink:true },
+                            (CFG && CFG.providers) || {});
+/* what can actually work HERE: native Google/Apple need the plugin;
+   LinkedIn needs the worker, and inside an app also a system browser to
+   do OAuth in (webviews are unwelcome at OAuth endpoints) plus the deep
+   link listener to come home on. A provider flag may also be the string
+   "app": offered only inside the wrapped apps — the shape of Sign in
+   with Apple when the App Store build carries it before the web has its
+   Services ID. */
+const on = v => v === true || (v === "app" && isNative);
+const providers = {
+  google:   on(wantP.google)   && (!isNative || !!plugin),
+  apple:    on(wantP.apple)    && (!isNative || !!plugin),
+  linkedin: on(wantP.linkedin) && !!(CFG && CFG.linkedinWorker) && (!isNative || (!!browser && !!appPlug)),
+  emailLink: wantP.emailLink !== false
+};
+
 /* ── the live module ──────────────────────────────────────────────────── */
 async function build(){
   const sdk = await within(20000, "the sign-in library did not load within 20 seconds", import("../vendor/firebase/firebase-bundle.js"));
   const app  = sdk.initializeApp(CFG);
-
-  const cap = typeof window !== "undefined" ? window.Capacitor : null;
-  const isNative = !!(cap && cap.isNativePlatform && cap.isNativePlatform());
 
   /* Inside the apps, auth is initialised without the popup-redirect helper.
      getAuth() attaches one, and on iOS that helper loads a hidden Google
@@ -147,9 +169,6 @@ async function build(){
     ? sdk.initializeAuth(app, { persistence: [sdk.indexedDBLocalPersistence, sdk.browserLocalPersistence] })
     : sdk.getAuth(app);
   const db   = sdk.getFirestore(app);
-  const plugin  = isNative && cap.Plugins ? cap.Plugins.FirebaseAuthentication : null;
-  const browser = isNative && cap.Plugins ? cap.Plugins.Browser : null;
-  const appPlug = isNative && cap.Plugins ? cap.Plugins.App : null;
 
   /* ── the native account (v12.46) ─────────────────────────────────────
      In the iOS app the Account tab logs in natively (AccountAuth.swift),
@@ -257,23 +276,6 @@ async function build(){
   /* the way a sign-in was made, as the counts name it */
   const METHOD = { "google.com": "google", "apple.com": "apple", password: "email", emailLink: "email_link" };
   function method(id){ return METHOD[id] || (id ? String(id).replace(/\.com$/, "") : "unknown"); }
-
-  const wantP = Object.assign({ google:true, apple:true, linkedin:true, emailLink:true },
-                              CFG.providers || {});
-  /* what can actually work HERE: native Google/Apple need the plugin;
-     LinkedIn needs the worker, and inside an app also a system browser to
-     do OAuth in (webviews are unwelcome at OAuth endpoints) plus the deep
-     link listener to come home on. A provider flag may also be the string
-     "app": offered only inside the wrapped apps — the shape of Sign in
-     with Apple when the App Store build carries it before the web has its
-     Services ID. */
-  const on = v => v === true || (v === "app" && isNative);
-  const providers = {
-    google:   on(wantP.google)   && (!isNative || !!plugin),
-    apple:    on(wantP.apple)    && (!isNative || !!plugin),
-    linkedin: on(wantP.linkedin) && !!CFG.linkedinWorker && (!isNative || (!!browser && !!appPlug)),
-    emailLink: wantP.emailLink !== false
-  };
 
   /* user state: null until the first state, or undefined while a native
      account is being followed, so nobody hears logged out meanwhile */
@@ -865,7 +867,72 @@ async function build(){
   };
 }
 
-/* a failure to start is reported, never left to hang the importers (v12.45) */
-const VN_AUTH = CFG ? await build().catch(err => { try{ console.error("accounts could not start:", err); }catch(_){} return dormant(err); }) : dormant();
+/* ── the face ─────────────────────────────────────────────────────────── */
+/* What an importer gets is made here, at once, with no top-level await.
+   Until v12.53 the module ended on `await build()`, and the module loader in
+   WebKit before Safari 27 (the iOS app's web view on iOS 26; WebKit's post
+   "Fixing Top-Level Await in Safari") could run a second module script, the
+   account page's own, before that wait was over: the page's first read of
+   the import threw "Cannot access 'auth' before initialization", its script
+   died, and the page sat on Checking whether you are logged in for good,
+   which is the line v12.45's watchdog showed on the owner's iPad. So nothing
+   another module imports may await at its top level. The face answers at
+   once: enabled while there is a config, its synchronous reads empty until
+   the module is up, every call waiting for the build, onUser kept and bound
+   once the module is up, and the dormant stub, with its reason, standing in
+   should the build fail (a failure to start is reported, never left to hang
+   the importers, v12.45: the page then hears logged out and reads the
+   reason). `up` settles once the module is built, before any state is heard,
+   for what the UI does then (an email link to complete). */
+function face(){
+  let live = null, kept = [];
+  const start = CFG
+    ? build().catch(err => { try{ console.error("accounts could not start:", err); }catch(_){} return dormant(err); })
+    : Promise.resolve(dormant());
+  const up = start.then(m => {
+    live = m;
+    const q = kept; kept = [];
+    /* a listener that throws is reported, as notify reports one, never let
+       reject `up` and every call waiting on it */
+    q.forEach(fn => { try{ fn(m); }catch(e){ try{ console.error(e); }catch(_){} } });
+  });
+  const later = name => function(){
+    const args = arguments;
+    return live ? live[name].apply(live, args) : up.then(() => live[name].apply(live, args));
+  };
+  return {
+    get enabled(){ return live ? live.enabled : !!CFG; },
+    get reason(){ return live ? (live.reason || null) : null; },
+    get providers(){ return live ? live.providers : providers; },
+    onUser(cb){
+      if (live) return live.onUser(cb);
+      let off = null, gone = false;
+      kept.push(m => { if (!gone) off = m.onUser(cb); });
+      return () => { gone = true; if (off) off(); };
+    },
+    currentUser(){ return live ? live.currentUser() : null; },
+    get nativeUser(){ return live ? live.nativeUser : null; },
+    get nativeWhy(){ return live ? live.nativeWhy : null; },
+    signInWithGoogle: later("signInWithGoogle"), signInWithApple: later("signInWithApple"), signInWithLinkedIn: later("signInWithLinkedIn"),
+    signUpWithEmail: later("signUpWithEmail"), signInWithEmail: later("signInWithEmail"), sendReset: later("sendReset"),
+    sendSignInLink: later("sendSignInLink"), completeSignInLink: later("completeSignInLink"),
+    get pendingEmailLink(){ return live ? live.pendingEmailLink : false; },
+    get pendingLink(){ return live ? live.pendingLink : null; },
+    linkProvider: later("linkProvider"),
+    signOut: later("signOut"),
+    deleteAccount: later("deleteAccount"),
+    changePassword: later("changePassword"),
+    hasPassword(u){ return live ? live.hasPassword(u) : false; },
+    usernameFree: later("usernameFree"), setUsername: later("setUsername"), setUniversity: later("setUniversity"),
+    loadProfile: later("loadProfile"),
+    profile(){ return live ? live.profile() : null; },
+    track(name, params){ if (live) live.track(name, params); else up.then(() => live.track(name, params)); },
+    get ready(){ return live ? live.ready : up.then(() => live.ready); },
+    get up(){ return up; },
+    get db(){ return live ? live.db : null; },
+    get sdk(){ return live ? live.sdk : null; }
+  };
+}
+const VN_AUTH = face();
 if (typeof window !== "undefined") window.VN_AUTH = VN_AUTH;
 export default VN_AUTH;

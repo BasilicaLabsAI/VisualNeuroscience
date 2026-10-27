@@ -645,7 +645,25 @@ async function del(){
   }
 }
 
+/* accounts are off in this copy, or could not start (v12.45): since v12.53
+   the module says enabled while it builds, so a failed build arrives here
+   through draw as well, logged out with its reason */
+function off(){
+  $("acctWait").hidden = true;
+  $("acctStuck").hidden = true;
+  $("acctIn").hidden = true;
+  $("acctOut").hidden = true;
+  $("acctOff").hidden = false;
+  $("acctDelSteps").hidden = true;
+  /* not dormant but failed (v12.45): the reason, in place of the switched-off line */
+  if (auth.reason){
+    $("acctOffNote").hidden = true;
+    $("acctWhy").textContent = "Accounts could not start: " + auth.reason + ". Close this page and open it again; if it keeps happening, write to fkarim@visualneuroscience.ai and quote this line.";
+    $("acctWhy").hidden = false;
+  }
+}
 function draw(u){
+  if (!auth.enabled){ off(); return; }
   $("acctWait").hidden = true;
   $("acctStuck").hidden = true;
   $("acctIn").hidden = !u;
@@ -665,18 +683,8 @@ function draw(u){
   tools(u).then(list => { models(list); practice(); });
 }
 
-if (!auth.enabled){
-  $("acctWait").hidden = true;
-  $("acctStuck").hidden = true;
-  $("acctOff").hidden = false;
-  $("acctDelSteps").hidden = true;
-  /* not dormant but failed (v12.45): the reason, in place of the switched-off line */
-  if (auth.reason){
-    $("acctOffNote").hidden = true;
-    $("acctWhy").textContent = "Accounts could not start: " + auth.reason + ". Close this page and open it again; if it keeps happening, write to fkarim@visualneuroscience.ai and quote this line.";
-    $("acctWhy").hidden = false;
-  }
-} else {
+if (!auth.enabled) off();
+else {
   $("acctLogin").addEventListener("click", () => window.VN_ACCOUNT_UI && VN_ACCOUNT_UI.openLogin());
   $("acctEdit").addEventListener("click", () => window.VN_ACCOUNT_UI && VN_ACCOUNT_UI.openAccount());
   $("acctLogout").addEventListener("click", () => auth.signOut());
