@@ -54,6 +54,8 @@ export default {
       if (url.pathname === "/auth/linkedin/callback") return callback(req, url, env);
       if (url.pathname === "/auth/linkedin/link")
         return req.method === "OPTIONS" ? cors(env, req) : link(req, env);
+      if (url.pathname === "/auth/exchange")
+        return req.method === "OPTIONS" ? cors(env, req) : exchange(req, env);
       return new Response("Not found", { status: 404 });
     }catch(err){
       console.error(err && err.stack || err);
@@ -327,6 +329,30 @@ async function link(req, env){
   if (!r.ok)
     return new Response(JSON.stringify({ error: "store-failed" }), { status: 500, headers });
   return new Response(JSON.stringify({ ok: true }), { headers });
+}
+
+/* ── the apps' exchange (v12.46) ───────────────────────────────────────
+   The iOS app logs in natively, and its pages, each a web view with a
+   session of its own, sign in with a custom token minted here from the
+   native session's ID token: the same person, by uid, with no claims. The
+   app sends no Origin and gets no CORS header; a browser on an allowed
+   origin may call it too. */
+async function exchange(req, env){
+  const headers = { "Content-Type": "application/json" };
+  const o = req.headers.get("Origin");
+  if (o && origins(env).includes(o)) headers["Access-Control-Allow-Origin"] = o;
+  if (req.method !== "POST")
+    return new Response(JSON.stringify({ error: "post-only" }), { status: 405, headers });
+  let body = null;
+  try{ body = await req.json(); }catch(_){}
+  const idToken = body && typeof body.idToken === "string" ? body.idToken : "";
+  if (!idToken)
+    return new Response(JSON.stringify({ error: "no-token" }), { status: 400, headers });
+  const uid = await verifyIdToken(env, idToken);
+  if (!uid)
+    return new Response(JSON.stringify({ error: "not-authorised" }), { status: 401, headers });
+  const token = await customToken(env, uid, {});
+  return new Response(JSON.stringify({ token }), { headers });
 }
 
 /* Firebase ID token check against Google's published JWKS — issuer,

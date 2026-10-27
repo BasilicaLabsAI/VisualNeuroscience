@@ -317,6 +317,34 @@ change, paste `firestore.rules` into the console again** (or
 `firebase deploy --only firestore:rules`), or every claim is refused and
 every account reads as "Set username".
 
+## 7c · The exchange for the iOS app
+
+Since v12.46 the iOS app logs in natively on its Account tab
+(`app/ios/App/App/AccountAuth.swift`), and each page it opens is a web view
+with a sign-in of its own. A Google or an email sign-in reaches the pages by
+itself: the page signs in again with the same credential. An Apple sign-in
+cannot, since Apple's token is spent the moment the native layer uses it, so
+the pages take a Firebase custom token instead, which the auth worker mints
+from the native session's ID token at `POST /auth/exchange` (`{ "idToken": … }`
+in, `{ "token": … }` out, the ID token verified against Google's published
+keys first). The route needs the service account and nothing of LinkedIn.
+
+1. Steps 4 to 6 above: `FIREBASE_PROJECT_ID` and `SA_EMAIL` in
+   `auth-worker/wrangler.jsonc`, the `SA_PRIVATE_KEY` secret, then
+   `npx wrangler deploy`. `LINKEDIN_CLIENT_ID` can stay as it is until §7
+   is done; those routes simply fail until then.
+2. The deploy prints the worker's address,
+   `https://visualneuroscience-auth.<your-account>.workers.dev`.
+3. Put that address, with no path, into `app/ios/App/App/Info.plist` as
+   `VNAuthWorker`, and build. The Account tab then asks the worker for a
+   token as it logs in and the pages sign in with it, whatever the way in;
+   a page that logs in by itself with Apple or Google hands its own ID
+   token back through the same exchange, so the tab follows.
+
+Until the address is set, an Apple sign-in on the tab leaves the account
+page logged out with a line saying the session could not be passed to it;
+logging in on the page too joins the two.
+
 ## 8 · When you switch it on, say so
 
 **site/privacy.html** already describes accounts and the usage counts

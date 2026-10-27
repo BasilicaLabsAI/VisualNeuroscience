@@ -82,6 +82,7 @@ struct WebPage: View {
     let page: Page
 
     @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var account: AccountAuth
     @Environment(\.dismiss) private var dismiss
     @Environment(\.horizontalSizeClass) private var horizontalSize
     @Environment(\.verticalSizeClass) private var verticalSize
@@ -108,7 +109,7 @@ struct WebPage: View {
     }
 
     var body: some View {
-        BridgeView(page: page, store: store, pad: pad,
+        BridgeView(page: page, store: store, account: account, pad: pad,
                    open: { link in
                        next = link
                        showingNext = true
@@ -171,6 +172,7 @@ struct BackOverPage: View {
 struct BridgeView: UIViewControllerRepresentable {
     let page: Page
     let store: AppStore
+    let account: AccountAuth
     let pad: Bool
     let open: (Page) -> Void
     let home: () -> Void
@@ -178,6 +180,7 @@ struct BridgeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> PageBridgeController {
         let controller = PageBridgeController(page: page, startTheme: store.hasTheme ? store.theme : nil, startPad: pad)
         controller.store = store
+        controller.account = account
         controller.onOpen = open
         controller.onHome = home
         return controller
@@ -198,6 +201,9 @@ struct BridgeView: UIViewControllerRepresentable {
 final class PageBridgeController: CAPBridgeViewController {
     let page: Page
     weak var store: AppStore?
+    /// The native account (v12.46), told to the page as it opens and told
+    /// of what the page does itself.
+    weak var account: AccountAuth?
     var onOpen: ((Page) -> Void)?
     var onHome: (() -> Void)?
 
@@ -280,12 +286,14 @@ final class PageBridgeController: CAPBridgeViewController {
     /// this runs), pins the viewport so the page cannot zoom (a double tap on
     /// a region once magnified a whole atlas page; the views pinch on their
     /// own), writes
-    /// the shell's theme where the page reads its own, opens it on its
+    /// the shell's theme where the page reads its own, tells it who is logged
+    /// in natively (VN_NATIVE_AUTH, v12.46), opens it on its
     /// fragment, and once it is built has it say which theme it came up in.
     private var startScript: String {
         var lines = [
             "window.VN_STORE = \(Self.fromStore);",
             "window.VN_LAUNCH = \(Self.literal(Self.launch));",
+            "window.VN_NATIVE_AUTH = \(nativeAuth);",
             "var pad = \(pad);",
             "var mark = function () { var root = document.documentElement; if (root) { root.setAttribute('data-shell', 'tabs'); if (pad) root.setAttribute('data-shell-pad', ''); } return !!root; };",
             "if (!mark()) new MutationObserver(function (records, watch) { if (mark()) watch.disconnect(); }).observe(document, { childList: true });",
@@ -340,18 +348,55 @@ final class PageBridgeController: CAPBridgeViewController {
         webView?.evaluateJavaScript(script, completionHandler: nil)
     }
 
-    /// A message from the page: so far only the theme it came up in. The
-    /// shell takes it if it has none yet; otherwise the page is brought to
-    /// the shell's. The iPad's mark is written again then, in case the room
-    /// changed while the page was loading.
+    /// Who is logged in natively, as the page's own sign-in reads it at
+    /// document start (v12.46): AccountAuth's state as a JSON literal, the
+    /// person and a token or credential their SDK can sign in with, or
+    /// {user: null} with nobody.
+    private var nativeAuth: String {
+        let state = account?.pageState() ?? ["user": NSNull()]
+        if let data = try? JSONSerialization.data(withJSONObject: state),
+           let json = String(data: data, encoding: .utf8) {
+            return "JSON.parse(\(Self.literal(json)))"
+        }
+        return "{ user: null }"
+    }
+
+    /// A message from the page: the theme it came up in, or (v12.46) its
+    /// word on the account. The shell takes the theme if it has none yet;
+    /// otherwise the page is brought to the shell's. The iPad's mark is
+    /// written again then, in case the room changed while the page was
+    /// loading.
     fileprivate func received(_ body: Any) {
-        guard let message = body as? [String: Any],
-              let raw = message["theme"] as? String,
+        guard let message = body as? [String: Any] else { return }
+        if let word = message["auth"] as? String {
+            heard(auth: word, message)
+            return
+        }
+        guard let raw = message["theme"] as? String,
               let reported = Theme(rawValue: raw) else { return }
         pageTheme = reported
         store?.pageReported(reported)
         if let wanted = store?.theme { show(theme: wanted) }
         markPad()
+    }
+
+    /// The page's word on the account (v12.46): it took the credential it
+    /// was handed, it signed in by itself, or it signed out; the native
+    /// account follows (AccountAuth).
+    private func heard(auth word: String, _ message: [String: Any]) {
+        switch word {
+        case "took":
+            account?.handoffTaken()
+        case "signedIn":
+            account?.pageSignedIn(provider: message["provider"] as? String ?? "",
+                                  email: message["email"] as? String,
+                                  password: message["password"] as? String,
+                                  idToken: message["idToken"] as? String)
+        case "signedOut":
+            account?.pageSignedOut()
+        default:
+            break
+        }
     }
 
     /// A link on the page asked for another page.

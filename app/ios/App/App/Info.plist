@@ -110,5 +110,13 @@
 	<false/>
 	<key>FIREBASE_ANALYTICS_COLLECTION_ENABLED</key>
 	<false/>
+	<!-- The auth worker's address (auth-worker/, docs/AUTH-SETUP.md §7c),
+	     https://… with no path, once it is deployed: the Account tab's
+	     native sign-in (AccountAuth.swift) asks it for a token the pages
+	     sign in with, so an Apple sign-in reaches them too. Empty, Google
+	     and email sign-ins still reach the pages, by their own credential,
+	     and an Apple one stays on the tab. -->
+	<key>VNAuthWorker</key>
+	<string></string>
 </dict>
 </plist>

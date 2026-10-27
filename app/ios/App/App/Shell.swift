@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import AuthenticationServices
 
 /* The app's root since v11: one system tab bar over the web app's pages.
    The site's navigation falls into four groups, and each is a tab that
@@ -199,6 +200,7 @@ final class UpdateCheck: ObservableObject {
 struct ShellRoot: View {
     @StateObject private var store = AppStore()
     @StateObject private var update = UpdateCheck()
+    @StateObject private var account = AccountAuth()
     @Environment(\.openURL) private var openURL
 
     init() {}
@@ -206,6 +208,7 @@ struct ShellRoot: View {
     var body: some View {
         ShellTabs()
             .environmentObject(store)
+            .environmentObject(account)
             .tint(Palette.ink)
             .preferredColorScheme(store.theme == .dark ? .dark : .light)
             .task { await update.look() }
@@ -479,9 +482,7 @@ struct AccountTab: View {
 
     var body: some View {
         TabPage {
-            PageBox(page: .account, kicker: "Your account", title: "Account",
-                    text: "Log in to see your details, your saved models and your practice progress, change your password, download a copy of all of it, or delete the account. An account is optional: everything works without one.",
-                    go: "Open your account")
+            AccountBox()
             Box(kicker: "Preferences", title: "Appearance",
                 text: "Light or dark, for these pages, the atlas pages and the scans.") {
                 Picker("Appearance", selection: $store.theme) {
@@ -509,6 +510,237 @@ struct AccountTab: View {
                 .padding(.top, 10)
             }
             Credits()
+        }
+    }
+}
+
+// MARK: - The account
+
+/// The account's box on the Account tab (v12.46, at the owner's word): the
+/// ways in, natively, through Firebase's own SDK (AccountAuth.swift), where
+/// the box had sent the person to the account page's own sign-in, which a
+/// TestFlight build never finished loading. Logged out it offers Sign in
+/// with Apple, Google and an email with a password, with Create account
+/// and a reset; logged in it says who, opens the account's page and logs
+/// out. The pages inside the tabs hear of the account as they open
+/// (ShellWeb.swift).
+struct AccountBox: View {
+    @EnvironmentObject private var account: AccountAuth
+    @EnvironmentObject private var store: AppStore
+    @State private var email = ""
+    @State private var password = ""
+    @State private var creating = false
+
+    init() {}
+
+    var body: some View {
+        Group {
+            if let person = account.person {
+                Box(kicker: "Your account", title: "Logged in", text: Self.signedIn(person)) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        PageRow(name: "Your account's page",
+                                text: "Your details, your saved models and your progress; a copy of all of it; the password; deletion",
+                                page: .account)
+                        ActRow(name: "Log out", text: "On this device; the account and what it holds stay",
+                               icon: "rectangle.portrait.and.arrow.right") { account.logOut() }
+                    }
+                    .padding(.top, 10)
+                    AccountNote()
+                }
+            } else {
+                Box(kicker: "Your account", title: "Account",
+                    text: "Log in to keep your saved models and your practice progress with the account, here and on the website, or create one. An account is optional: everything works without one.") {
+                    VStack(alignment: .leading, spacing: 12) {
+                        SignInWithAppleButton(.continue) { request in
+                            request.requestedScopes = [.fullName, .email]
+                            request.nonce = account.beginApple()
+                        } onCompletion: { result in
+                            Task { await account.finishApple(result) }
+                        }
+                        .signInWithAppleButtonStyle(store.theme == .dark ? .white : .black)
+                        .frame(height: 48)
+                        InkButton(name: "Continue with Google", filled: false) {
+                            Task { await account.logInWithGoogle() }
+                        }
+                        Text("OR WITH AN EMAIL")
+                            .font(Faces.brand(10, .caption2))
+                            .tracking(2.6)
+                            .foregroundColor(Palette.ink60)
+                            .padding(.top, 6)
+                        AccountField(name: "Email", text: $email)
+                        AccountField(name: "Password", text: $password, secure: true, creating: creating)
+                        InkButton(name: creating ? "Create the account" : "Log in") {
+                            let given = email, secret = password
+                            Task {
+                                if creating { await account.createAccount(email: given, password: secret) }
+                                else { await account.logIn(email: given, password: secret) }
+                            }
+                        }
+                        HStack {
+                            QuietLink(name: creating ? "I have an account" : "Create an account") {
+                                creating.toggle()
+                                account.note = nil
+                            }
+                            Spacer()
+                            if !creating {
+                                QuietLink(name: "Forgot the password?") {
+                                    let given = email
+                                    Task { await account.sendReset(email: given) }
+                                }
+                            }
+                        }
+                    }
+                    .padding(.top, 14)
+                    .disabled(account.busy)
+                    AccountNote()
+                }
+            }
+        }
+        .onChange(of: account.person) { now in
+            if now != nil {
+                password = ""
+                creating = false
+            }
+        }
+    }
+
+    /// The standfirst once logged in: who, and what the account keeps.
+    private static func signedIn(_ person: Person) -> String {
+        let who = (person.email?.isEmpty == false ? person.email : nil) ?? person.name ?? "your account"
+        return "As \(who). Your saved models and your practice progress are kept with the account, here and on the website. The account's page shows your details, changes the password, downloads a copy of all of it or deletes the account."
+    }
+}
+
+/// A field of the account's form: a kicker over a box of the paper, in
+/// the site's reading face.
+struct AccountField: View {
+    let name: String
+    @Binding var text: String
+    var secure = false
+    /// A new password is being made, so the keyboard offers one.
+    var creating = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text(name.uppercased())
+                .font(Faces.brand(10, .caption2))
+                .tracking(2.6)
+                .foregroundColor(Palette.ink60)
+            Group {
+                if secure {
+                    SecureField("", text: $text)
+                        .textContentType(creating ? .newPassword : .password)
+                } else {
+                    TextField("", text: $text)
+                        .keyboardType(.emailAddress)
+                        .textContentType(.emailAddress)
+                }
+            }
+            .font(Faces.serif(17, .body))
+            .foregroundColor(Palette.ink)
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled()
+            .padding(.horizontal, 12)
+            .frame(minHeight: 44)
+            .background(Palette.paper)
+            .overlay {
+                Rectangle().strokeBorder(Palette.ink35, lineWidth: 1)
+            }
+        }
+    }
+}
+
+/// A button in the site's manner: a block of ink with its name in paper,
+/// or the paper with an ink border.
+struct InkButton: View {
+    let name: String
+    var filled = true
+    let act: () -> Void
+
+    var body: some View {
+        Button(action: act) {
+            Text(name.uppercased())
+                .font(Faces.brand(12, .footnote))
+                .tracking(2.4)
+                .foregroundColor(filled ? Palette.paper : Palette.ink)
+                .frame(maxWidth: .infinity, minHeight: 48)
+                .background(filled ? Palette.ink : Palette.paper)
+                .overlay {
+                    Rectangle().strokeBorder(Palette.ink, lineWidth: 1)
+                }
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(PressStyle())
+    }
+}
+
+/// A small signpost of a button: Create an account, Forgot the password?
+struct QuietLink: View {
+    let name: String
+    let act: () -> Void
+
+    var body: some View {
+        Button(action: act) {
+            Text(name.uppercased())
+                .font(Faces.brand(10, .caption2))
+                .tracking(2)
+                .foregroundColor(Palette.ink60)
+                .padding(.vertical, 6)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+/// A row that does something on the spot, in PageRow's manner: Log out.
+struct ActRow: View {
+    let name: String
+    let text: String
+    let icon: String
+    let act: () -> Void
+
+    var body: some View {
+        Button(action: act) {
+            HStack(alignment: .firstTextBaseline) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(name.uppercased())
+                        .font(Faces.brand(11, .footnote))
+                        .tracking(2.4)
+                        .foregroundColor(Palette.ink)
+                    Text(text)
+                        .font(Faces.serif(16, .body))
+                        .foregroundColor(Palette.ink60)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 8)
+                Image(systemName: icon)
+                    .font(Faces.brand(12, .footnote))
+                    .foregroundColor(Palette.ink)
+                    .accessibilityHidden(true)
+            }
+            .padding(.vertical, 12)
+            .overlay(alignment: .top) {
+                Rectangle().fill(Palette.ink35).frame(height: 1)
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(PressStyle())
+        .accessibilityElement(children: .combine)
+    }
+}
+
+/// The line under the account's controls: the wait, an error in plain
+/// words, or a word when a step is done.
+struct AccountNote: View {
+    @EnvironmentObject private var account: AccountAuth
+
+    var body: some View {
+        if let note = account.note, !note.isEmpty {
+            Text(note)
+                .font(Faces.serifItalic(15, .subheadline))
+                .foregroundColor(Palette.ink60)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.top, 10)
         }
     }
 }

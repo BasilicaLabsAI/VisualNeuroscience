@@ -290,6 +290,7 @@ svg{ display:block; }
   <h2>Logged out</h2>
   <p class="note" id="acctGone" hidden>Your account has been deleted, with its profile, username, saved models and practice progress. Nothing of it is kept.</p>
   <p>Log in to see what your account holds, change its password, download a copy of it, or delete it.</p>
+  <p class="note" id="acctNative" hidden></p>
   <div class="acct-row"><button class="acct-btn" id="acctLogin" type="button">Log in</button></div>
 </section>
 
@@ -649,6 +650,12 @@ function draw(u){
   $("acctStuck").hidden = true;
   $("acctIn").hidden = !u;
   $("acctOut").hidden = !!u;
+  /* the app's Account tab is logged in but this page could not follow (v12.46) */
+  const held = !u && auth.nativeUser;
+  $("acctNative").hidden = !held;
+  if (held) $("acctNative").textContent = "The app is logged in as " + (held.email || "your account") +
+    " on the Account tab, but this page could not take that session" + (auth.nativeWhy ? ": " + auth.nativeWhy : "") +
+    ". Log in here too and it is the same account.";
   $("acctGone").hidden = !(deleting && !u);
   $("acctDelWrap").hidden = !u;
   $("acctDelSteps").hidden = !!u;

@@ -248,8 +248,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   spot. The bundle exports those names (`scripts/firebase/entry.js`; rebuilt here from a scratch `npm install
   firebase@<NOTICE version>` with `NODE_PATH` pointing at it, since `app/node_modules` is absent). The
   feature-announcements box offered as an account is made starts clear (PECR), in the account box and on the Create
-  account form (`newsCheck` in `auth-ui.js`). In the iOS app the only door to signing in is the Account tab's Account
-  box, Open your account, which pushes `account.html`, whose Logged out section's Log in raises the sheet
+  account form (`newsCheck` in `auth-ui.js`). Until v12.46 the iOS app's only door to signing in was the Account tab's
+  Account box, Open your account, which pushed `account.html`, whose Logged out section's Log in raises the sheet
   (`VN_ACCOUNT_UI.openLogin`), since the pages inside the tabs draw no header and so no Log in button; on 27 October
   2026 the owner's TestFlight build sat on that page's Checking whether you are logged in line for good, so since
   v12.45 the module cannot hang its importers: `build()` in `auth.js` waits for the SDK's import at most 20 seconds
@@ -258,7 +258,36 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (`dormant(err)`), which the account page shows in place of its switched-off line (`#acctWhy`); the page also keeps a
   watchdog in its classic script, `#acctStuck` after twelve seconds with the first error it caught (`error` and
   `unhandledrejection`), and `draw` and the off branch put it away. The cause on the device is still to be read from
-  Safari's Web Inspector against the next TestFlight build.
+  Safari's Web Inspector against the next TestFlight build. Since v12.46, at the owner's word, the Account tab logs in
+  natively (`app/ios/App/App/AccountAuth.swift`; `AccountBox` with `AccountField`, `InkButton`, `QuietLink`, `ActRow`
+  and `AccountNote` in `Shell.swift`; `account` an `@StateObject` of `ShellRoot` in the environment): Firebase's own
+  iOS SDK (`FirebaseAuth` and `GoogleSignIn`, reached through the Capacitor Firebase package the app already links;
+  should Xcode say No such module, add the two products to the App target's Frameworks, Libraries and Embedded Content
+  from the resolved packages), Sign in with Apple (`SignInWithAppleButton`, a nonce hashed for Apple and kept raw for
+  Firebase, `beginApple` and `finishApple`), Continue with Google (`GIDSignIn`, the client ID from
+  `GoogleService-Info.plist`, its way home handled in `SceneDelegate`), an email and password with Create an account
+  and Forgot the password, Log out, the errors in the site's words (`words(for:)`), and once logged in who it is and
+  the account's page as a row; `AccountAuth.configure()` in `AppDelegate` has Firebase up before the shell or a
+  page's plugin asks. Every page's bridge is told who is logged in at document start (`window.VN_NATIVE_AUTH` in
+  `startScript`, `AccountAuth.pageState()`: the person, a custom token the auth worker minted from the native
+  session's ID token (`mintPageToken`, `exchange`) where the worker is deployed and named in `Info.plist` as
+  `VNAuthWorker`, empty until the owner deploys it, and the credential the sign-in made where it can be used again,
+  Google's tokens or the email and password, `handoff`, never Apple's token, which is spent once), and `auth.js`
+  follows it before anyone hears the first state (`followNative` from the first `onAuthStateChanged`, the states it
+  raises reported once through `took`, `user` undefined meanwhile so no page shows logged out while it is being
+  signed in): `signInWithCustomToken`, or the credential, after which the page tells the shell `{auth:"took"}` and
+  the credential is spent (`tellShell`, the `vnShell` handler's `auth` messages, `heard(auth:)` in `ShellWeb.swift`,
+  `handoffTaken`); a native sign-in that nothing can pass on, an Apple one without the worker, leaves the page logged
+  out with a line naming the person and the reason (`#acctNative` in `account.html`, `nativeUser` and `nativeWhy` on
+  `VN_AUTH`, null on the website and in the dormant stub). A page that signs in by itself tells the shell
+  (`heardSignIn` at the end of `settled` and of `signUpWithEmail`: the provider, the email, the password an email
+  sign-in used, held in `lastPassword` for the shell alone, and the ID token), and the native layer follows
+  (`pageSignedIn`: the password straight away, otherwise through the worker's exchange of the ID token), and a page
+  that signs out signs it out (`pageSignedOut` from `doSignOut`). The worker's new route is `/auth/exchange`
+  (`exchange` in `auth-worker/worker.js`: POST `{idToken}`, the Firebase ID token verified against Google's published
+  keys by `verifyIdToken`, a custom token for the same uid out through `customToken`; `docs/AUTH-SETUP.md` §7c), tested
+  offline with keys of its own in the session; it answers nothing until the owner deploys the worker. The website,
+  the Android app and the pages' own sheets are unchanged, and the Swift is unverified until the owner's build.
 - The owner's research documents on single regions are kept as supplied in `backend/data/regions/` (see its README).
   Detailed region function descriptions are to be written from them only when the owner asks; until then, store new
   ones there unchanged.

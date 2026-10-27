@@ -1,13 +1,17 @@
-// The auth-worker: LinkedIn sign-in for VisualNeuroscience.AI, deployed
+// The auth-worker: LinkedIn sign-in for VisualNeuroscience.AI and, since
+// v12.46, the iOS app's exchange (/auth/exchange: the native session's ID
+// token in, a custom token its pages sign in with out), deployed
 // separately from the site so the static deployment never changes shape.
 //
 //   cd auth-worker
-//   npx wrangler secret put LINKEDIN_CLIENT_SECRET
-//   npx wrangler secret put SA_PRIVATE_KEY        # the PEM from the SA JSON
+//   npx wrangler secret put LINKEDIN_CLIENT_SECRET  # LinkedIn only; any value until §7 is done
+//   npx wrangler secret put SA_PRIVATE_KEY          # the PEM from the SA JSON
 //   npx wrangler deploy
 //
 // Fill in the vars below first — docs/AUTH-SETUP.md walks through where
-// each value comes from.
+// each value comes from (§7c for the exchange alone: FIREBASE_PROJECT_ID,
+// SA_EMAIL and the key are all it needs). The deployed address then goes
+// into the iOS app's Info.plist as VNAuthWorker.
 {
   "name": "visualneuroscience-auth",
   "main": "worker.js",

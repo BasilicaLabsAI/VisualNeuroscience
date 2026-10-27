@@ -21,6 +21,7 @@
 		B3ED0F658349A15503C1584E /* Shell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2E371885174327623F0235 /* Shell.swift */; };
 		357C30B6009E0E04EB5C0591 /* ShellKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211A39312E7FFD60F660439C /* ShellKit.swift */; };
 		E8C1C92D98F0948A46D7C4E6 /* ShellWeb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610BBE6327462B6DC5EE68CF /* ShellWeb.swift */; };
+		C0A1B2C3D4E5F60718293A4B /* AccountAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B2C3D4E5F6071829304A5C /* AccountAuth.swift */; };
 		2FC7FD94D57EAB9710DC4CE5 /* Flux.otf in Resources */ = {isa = PBXBuildFile; fileRef = A20771A48C1FCDC7B3E7443D /* Flux.otf */; };
 		8B0F66478023B05AAA7C0003 /* Newsreader-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64511C588C8CAC615A91A1E6 /* Newsreader-Regular.ttf */; };
 		70248CAB7E95606EFCA9646F /* Newsreader-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 647BC1488A9E180741120884 /* Newsreader-Italic.ttf */; };
@@ -45,6 +46,7 @@
 		6A2E371885174327623F0235 /* Shell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shell.swift; sourceTree = "<group>"; };
 		211A39312E7FFD60F660439C /* ShellKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellKit.swift; sourceTree = "<group>"; };
 		610BBE6327462B6DC5EE68CF /* ShellWeb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellWeb.swift; sourceTree = "<group>"; };
+		D1B2C3D4E5F6071829304A5C /* AccountAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAuth.swift; sourceTree = "<group>"; };
 		A20771A48C1FCDC7B3E7443D /* Flux.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Flux.otf; sourceTree = "<group>"; };
 		64511C588C8CAC615A91A1E6 /* Newsreader-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Newsreader-Regular.ttf; sourceTree = "<group>"; };
 		647BC1488A9E180741120884 /* Newsreader-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Newsreader-Italic.ttf; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 				6A2E371885174327623F0235 /* Shell.swift */,
 				211A39312E7FFD60F660439C /* ShellKit.swift */,
 				610BBE6327462B6DC5EE68CF /* ShellWeb.swift */,
+				D1B2C3D4E5F6071829304A5C /* AccountAuth.swift */,
 				7706E8EAA1A337CF8EC4FB03 /* Fonts */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
@@ -207,6 +210,7 @@
 				B3ED0F658349A15503C1584E /* Shell.swift in Sources */,
 				357C30B6009E0E04EB5C0591 /* ShellKit.swift in Sources */,
 				E8C1C92D98F0948A46D7C4E6 /* ShellWeb.swift in Sources */,
+				C0A1B2C3D4E5F60718293A4B /* AccountAuth.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

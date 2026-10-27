@@ -7,7 +7,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Firebase is up before the shell or any page's plugin asks for it:
+        // the Account tab logs in natively (AccountAuth.swift, v12.46).
+        AccountAuth.configure()
         return true
     }
 

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.46 — 27 October 2026 — Log in on the Account tab itself
+Commit · Log in and create an account natively on the iOS Account tab, and hand the account to the pages
+
+In the iOS app the Account tab now logs in by itself: Sign in with Apple, Continue with Google, or an email and a password, with Create an account and Forgot the password under them, and once logged in it says who you are, opens your account's page and logs out. Until now the tab only sent you to the account page, which a TestFlight build never finished loading. Every page opened from the tabs is told who is logged in as it opens and signs in as the same person: a Google or an email sign-in straight away, and an Apple sign-in once the sign-in worker that mints the pages' token is deployed; until then the account page says so, and logging in there too joins the two. A page you log in or out on tells the tab, and the tab follows. The website and the Android app are unchanged. The apps take it with their next build.
+
 ## v12.45 — 27 October 2026 — The account page never waits for ever
-Commit · Keep the account page from waiting on the sign-in module for ever, and say why it could not start
+Commit `fcf6668` · Keep the account page from waiting on the sign-in module for ever, and say why it could not start
 
 On the iOS app the account page was seen sitting on Checking whether you are logged in, with no way to log in or create an account, because the module that reads the account had stopped before it could answer. The page now waits at most twelve seconds before saying the module has not answered, with the first error it caught, and the module itself gives up on the sign-in library after twenty seconds, no longer waits on the usage counter's native call, and reports a failure to start as a line on the page rather than leaving every page that needs it hanging. The apps take it with their next build.
 

@@ -46,7 +46,7 @@ position. Account comes last and gathers what is not a section of the site.
 | Library | `books.vertical` | Visualizing Studies, Digital Textbook |
 | Practice | `checklist` | Neuroscience Practice |
 | About | `info.circle` | the MCP server, the developer's message, YouTube, Instagram, LinkedIn and email |
-| Account | `person` | the account page (sign-in, your data, deletion), Appearance (dark or light), App icon (the white and the black tile pictured, the one in use boxed), support and the privacy page, the credits |
+| Account | `person` | the account itself since v12.46 (Sign in with Apple, Google, or an email and password with Create an account and a reset; logged in, who it is, the account page as a row and Log out; `AccountAuth.swift`), Appearance (dark or light), App icon (the white and the black tile pictured, the one in use boxed), support and the privacy page, the credits |
 
 There is no badge, because nothing in the app is waiting to be done:
 practice is adaptive and keeps no queue of due questions. If it ever does,

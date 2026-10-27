@@ -113,7 +113,8 @@ function dormant(reason){
     usernameFree: off, setUsername: off, setUniversity: off, loadProfile: () => Promise.resolve(null), profile: () => null,
     pendingEmailLink: false, pendingLink: null, db: null, sdk: null,
     track(){},
-    ready: Promise.resolve(null)
+    ready: Promise.resolve(null),
+    nativeUser: null, nativeWhy: null
   };
 }
 
@@ -149,6 +150,68 @@ async function build(){
   const plugin  = isNative && cap.Plugins ? cap.Plugins.FirebaseAuthentication : null;
   const browser = isNative && cap.Plugins ? cap.Plugins.Browser : null;
   const appPlug = isNative && cap.Plugins ? cap.Plugins.App : null;
+
+  /* ── the native account (v12.46) ─────────────────────────────────────
+     In the iOS app the Account tab logs in natively (AccountAuth.swift),
+     and the shell writes window.VN_NATIVE_AUTH into every page at document
+     start: who is logged in, a custom token the auth worker minted for the
+     page where the worker is deployed, and the credential the sign-in made
+     where it can be used again (Google's tokens, an email and password;
+     never Apple's token, which is spent once). The page's own SDK follows
+     it before anyone hears the first state (followNative): signs in where
+     the native layer is and the page is not, or is someone else, and signs
+     out where the native layer has no one; a page that signs in or out by
+     itself tells the shell (tellShell), and the native layer follows. The
+     website, the Android app and a shell that writes nothing see none of
+     this. */
+  const native = isNative && window.VN_NATIVE_AUTH && typeof window.VN_NATIVE_AUTH === "object"
+    ? window.VN_NATIVE_AUTH : null;
+  const nativeUser = native && native.user && native.user.uid ? native.user : null;
+  let nativeWhy = null;
+  function tellShell(msg){
+    try{ window.webkit.messageHandlers.vnShell.postMessage(msg); }catch(_){}
+  }
+  let following = false;
+  async function followNative(current){
+    if (!native) return;
+    following = true;
+    try{
+      if (!nativeUser){
+        if (current) await sdk.signOut(auth);
+        return;
+      }
+      if (current && current.uid === nativeUser.uid) return;
+      const h = native.handoff;
+      if (native.token){
+        await within(15000, "the sign-in took too long", sdk.signInWithCustomToken(auth, native.token));
+      } else if (h && h.provider === "google.com" && h.idToken){
+        await within(15000, "the sign-in took too long",
+          sdk.signInWithCredential(auth, sdk.GoogleAuthProvider.credential(h.idToken, h.accessToken || null)));
+        tellShell({ auth: "took" });
+      } else if (h && h.provider === "password" && h.email && h.password){
+        await within(15000, "the sign-in took too long", sdk.signInWithEmailAndPassword(auth, h.email, h.password));
+        tellShell({ auth: "took" });
+      } else {
+        nativeWhy = "that sign-in cannot be passed to a page without the auth worker";
+      }
+    }catch(err){
+      nativeWhy = (err && err.message) || String(err);
+      try{ console.warn("the native account could not be followed:", err); }catch(_){}
+    }finally{ following = false; }
+  }
+  /* the password the page's own email sign-in used, for the shell alone;
+     never written anywhere else */
+  let lastPassword = null;
+  function heardSignIn(u){
+    const password = lastPassword;
+    lastPassword = null;
+    if (!native || !u) return;
+    const provider = (u.providerData && u.providerData[0] && u.providerData[0].providerId) || "password";
+    Promise.resolve().then(() => u.getIdToken()).catch(() => "").then(idToken => {
+      tellShell({ auth: "signedIn", provider, email: u.email || "",
+                  password: provider === "password" && password ? password : "", idToken: idToken || "" });
+    });
+  }
 
   /* ── usage counts ──────────────────────────────────────────────────────
      Google Analytics for Firebase, named on the privacy page: which pages
@@ -212,12 +275,16 @@ async function build(){
     emailLink: wantP.emailLink !== false
   };
 
-  /* user state */
+  /* user state: null until the first state, or undefined while a native
+     account is being followed, so nobody hears logged out meanwhile */
   const listeners = new Set();
-  let user = null, readyResolve;
+  let user = nativeUser ? undefined : null, readyResolve, first = true, lastUid;
   const ready = new Promise(r => { readyResolve = r; });
   function notify(){ listeners.forEach(cb => { try{ cb(user); }catch(e){ console.error(e); } }); }
-  sdk.onAuthStateChanged(auth, u => {
+  function took(u){
+    const id = u ? u.uid : null;
+    if (!readyResolve && id === lastUid) return;
+    lastUid = id;
     user = u || null;
     if (readyResolve){ readyResolve(user); readyResolve = null; }
     notify();
@@ -225,6 +292,17 @@ async function build(){
        listeners hear again, so a name drawn from the email is corrected */
     if (user) loadProfile(user).then(notify, () => {});
     else profileCache = null;
+  }
+  sdk.onAuthStateChanged(auth, u => {
+    /* the first state: the native account is followed first (v12.46), and
+       the states the following raises are reported once, after it */
+    if (first){
+      first = false;
+      followNative(u || null).then(() => took(auth.currentUser));
+      return;
+    }
+    if (following) return;
+    took(u);
   });
 
   /* ── the profile document and the username ────────────────────────────
@@ -410,6 +488,7 @@ async function build(){
     await adoptName(u, name);
     await saveProfile(u, Object.assign({ name }, extra));
     await finishPendingLink(u);
+    heardSignIn(u);
     return u;
   }
 
@@ -572,12 +651,16 @@ async function build(){
     try{ claimed = await claimUsername(res.user, wanted); }catch(err){ refusal = err; }
     await saveProfile(res.user, { firstName, lastName, name, username: claimed ? wanted : "", university: String(university || "").trim() });
     await finishPendingLink(res.user);
+    lastPassword = password;
+    heardSignIn(res.user);
     if (!claimed) throw Object.assign(refusal || friendly({ code: "vn/username-taken" }), { keepOpen: true, user: res.user });
     return res.user;
   }
 
   async function signInWithEmail(email, password){
-    return settled(sdk.signInWithEmailAndPassword(auth, email, password));
+    lastPassword = password;
+    try{ return await settled(sdk.signInWithEmailAndPassword(auth, email, password)); }
+    finally{ lastPassword = null; }
   }
 
   async function sendReset(email){
@@ -639,6 +722,7 @@ async function build(){
   async function doSignOut(){
     if (plugin){ try{ await plugin.signOut(); }catch(_){} }
     try{ await sdk.signOut(auth); }catch(_){}
+    if (native) tellShell({ auth: "signedOut" });
   }
 
   /* ── delete the account, and the data with it ────────────────────────
@@ -763,6 +847,9 @@ async function build(){
     providers,
     onUser(cb){ listeners.add(cb); if (user !== undefined) cb(user); return () => listeners.delete(cb); },
     currentUser: () => user,
+    /* the account the iOS shell holds (v12.46), and why the page could not
+       take it, where it could not */
+    nativeUser, get nativeWhy(){ return nativeWhy; },
     signInWithGoogle, signInWithApple, signInWithLinkedIn,
     signUpWithEmail, signInWithEmail, sendReset,
     sendSignInLink, completeSignInLink,

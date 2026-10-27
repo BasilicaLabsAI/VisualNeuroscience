@@ -1,6 +1,7 @@
 import UIKit
 import SwiftUI
 import Capacitor
+import GoogleSignIn
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
@@ -20,6 +21,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        // the native Google sign-in's way home (AccountAuth.swift, v12.46);
+        // Capacitor's plugins hear of the link below as before
+        for context in URLContexts {
+            _ = GIDSignIn.sharedInstance.handle(context.url)
+        }
         SceneDelegateProxy.shared.scene(scene, openURLContexts: URLContexts)
     }
 
