@@ -376,17 +376,20 @@ main.screen{
 .drawer-box{
   position:relative; flex:0 1 auto; width:var(--box-w); max-height:100%; min-height:0;
   display:flex; flex-direction:column;
-  border:1px solid var(--hair); border-radius:16px; background:var(--paper);
+  border:1px solid var(--bar-line); border-radius:16px; background:var(--bar-fill); color:var(--ink);
+  -webkit-backdrop-filter:blur(16px) saturate(1.15); backdrop-filter:blur(16px) saturate(1.15);
   box-shadow:0 1px 2px rgba(0,0,0,.08), 0 10px 30px rgba(0,0,0,.14);
   transition:transform .32s cubic-bezier(.32,.72,0,1);
 }
-.drawer-in.card{ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; border:0; padding:var(--gap) var(--gap) 1.4rem; }
+/* the box wears the island bars' material since v12.47, at the owner's word (bar.css's --bar-fill and --bar-line) */
+@media (prefers-reduced-transparency: reduce){ .drawer-box{ background:var(--bar-fill-solid); -webkit-backdrop-filter:none; backdrop-filter:none; } }
+.drawer-in.card{ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; border:0; padding:var(--gap) var(--gap) 1.4rem; background:transparent; }
 .deck.shut .drawer{ flex-basis:0; width:0; padding-left:0; visibility:hidden; transition-delay:0s, 0s, 0s, .32s; }
 .deck.shut .drawer-box{ transform:translateX(calc(-100% - var(--gap) - 22px)); }
 .drawer-tab{
   position:absolute; z-index:16; top:50%; transform:translateY(-50%);
   width:22px; height:64px; padding:0; display:flex; align-items:center; justify-content:center;
-  border:1px solid var(--hair); border-left:0; background:var(--paper); color:var(--ink); cursor:pointer;
+  border:1px solid var(--bar-line); border-left:0; background:var(--bar-fill-solid); color:var(--bar-ink); cursor:pointer;
   -webkit-tap-highlight-color:transparent;
 }
 .drawer-tab::after{ content:""; position:absolute; inset:-8px -10px; }
@@ -479,7 +482,7 @@ main.screen{
 .screen.one .drawer{ left:auto; right:0; padding:0; }
 .screen.one .drawer-box{ flex:1 1 auto; max-height:none; border-width:0 0 0 1px; border-radius:0; box-shadow:-8px 0 30px rgba(0,0,0,.25); }
 .screen.one .deck.shut .drawer-box{ transform:translateX(calc(100% + 22px)); }
-.screen.one .drawer-tab{ border-left:1px solid var(--hair); border-right:0; }
+.screen.one .drawer-tab{ border-left:1px solid var(--bar-line); border-right:0; }
 .screen.one .drawer-hide{ right:auto; left:-22px; border-radius:10px 0 0 10px; }
 .screen.one .drawer-hide svg{ transform:rotate(180deg); }
 .screen.one .drawer-show{ left:auto; right:0; border-radius:10px 0 0 10px; }
@@ -673,6 +676,11 @@ main.screen.one.land{ flex-direction:row; }
               <div class="panel-latin" id="m-latin"></div>
               <h3>What it does</h3>
               <p id="m-role"></p>
+              <!-- the two lines of health from the atlas's region notes (v12.47, at the owner's word) -->
+              <h3>Disease</h3>
+              <p id="m-disease"></p>
+              <h3>Damage</h3>
+              <p id="m-damage"></p>
               <h3 class="m-tag" id="m-healthyh">When perception is intact</h3>
               <p id="m-healthy"></p>
               <h3 class="m-tag" id="m-halluch">In hallucinating people</h3>
@@ -899,6 +907,7 @@ main.screen.one.land{ flex-direction:row; }
   </nav>
 </main>
 
+<script src="assets/region-notes.js"></script>
 <script src="assets/native.js"></script>
 <script src="assets/navbar.js"></script>
 <script src="assets/newsletter.js" defer></script>
@@ -1167,6 +1176,12 @@ function renderPanel(){
   $("m-title").textContent = d.t;
   $("m-latin").textContent = d.l + (region.note ? " · " + region.note : "");
   $("m-role").textContent = d.role;
+  /* the two lines of health (v12.47, at the owner's word): the atlas's
+     region notes for the region's first parcel (the cognitive cerebellum,
+     Crus I, for the cerebellum as a whole) */
+  const note = window.MN_NOTES ? MN_NOTES.NOTES[region.prefix ? "Cerebelum_Crus1" : region.bases[0]] : null;
+  $("m-disease").textContent = (note && note.disease) || "No note yet.";
+  $("m-damage").textContent = (note && note.damage) || "No note yet.";
   /* both states, whichever is showing, the one showing marked; a region
      the editorial reports no change in says so rather than falling silent */
   $("m-healthy").textContent = d.healthy;

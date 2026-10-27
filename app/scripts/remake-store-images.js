@@ -153,7 +153,7 @@ const probeTap = async (p, ctx, dpr) => {
   await p.waitForTimeout(1500);
 };
 const caudate = async (p, ctx, d) => {
-  await p.evaluate(() => { const o = document.getElementById('opacity'); o.value = '0'; o.dispatchEvent(new Event('input', { bubbles: true })); MN_SEL.centreMm([-16, 14, 15]); });
+  await p.evaluate(() => { MN_SEL.centreMm([-16, 14, 15]); });   /* the regions are drawn solid since v12.47; the slider went */
   await p.waitForTimeout(3000);
   await probeTap(p, ctx, d ? d.dpr : 2);
 };

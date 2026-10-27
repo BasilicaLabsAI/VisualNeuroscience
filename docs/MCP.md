@@ -5,9 +5,10 @@ over streamable HTTP. Any assistant that talks MCP can search the atlas,
 ask what a region or Brodmann area does, read receptor densities and the
 brain-state stories, and every answer links straight into the view it
 describes — `regions.html#sel=…`, `brodmann.html#ba=…` and
-`network-atlas.html#state=…` are real deep links the pages restore (the 3D
-Region Atlas also takes a Brodmann area as `B:17` in its list, which is how a
-saved model carries one).
+`network-atlas.html#state=…` are real deep links the pages restore. A saved
+model carries AAL regions alone since v12.47, when the Brodmann areas left
+the 3D Region Atlas for the Brodmann Area Atlas; `save_model` refuses a
+`B:17` item and says where the areas live.
 
 Five tools, all read-only and annotated as such: `search_brain`,
 `region_info`, `brodmann_area`, `receptor_density`, `brain_state`.

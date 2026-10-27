@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.47 — 27 October 2026 — The region box remade
+Commit · Remake the 3D Region Atlas's region box with saved and example maps, layer switches and health notes, take its Brodmann areas and transparency slider out, and dress every drawer in the bars' grey
+
+The 3D Region Atlas's region box is remade. Saved maps live in it now, as a fold under Add a region, shut until pressed, with your own maps and seven example maps in folds of their own: Memory circuit, Visual pathway, Serotonin receptor hotspots, Basal ganglia motor loop, Language network, Default mode network and Dopamine reward circuit, each a press to open and yours to change and save; opening a map leaves your cuts and your view as they are. The Highlighted list's headings are larger and each carries a switch that takes its whole layer off the scan and back without losing a region, with one switch over all of them that keeps each layer's own setting. Picking a region from the list raises What they do on that region, and every note now ends with two short lines of health, Disease and Damage, which the Visualizing Studies reading shows as well and the AI connector answers with. The regions are drawn solid, the transparency slider gone, and the Brodmann areas have left this atlas for the Brodmann Area Atlas. The region boxes of the 3D Region Atlas, the Network Atlas, the study and Microanatomy wear the island bars' grey; on Tractography, Transparency is greyed while the brain is off; and on the web the views' bar no longer jumps as a sheet opens. The apps take it with their next build.
+
 ## v12.46 — 27 October 2026 — Log in on the Account tab itself
-Commit · Log in and create an account natively on the iOS Account tab, and hand the account to the pages
+Commit `f69fe32` · Log in and create an account natively on the iOS Account tab, and hand the account to the pages
 
 In the iOS app the Account tab now logs in by itself: Sign in with Apple, Continue with Google, or an email and a password, with Create an account and Forgot the password under them, and once logged in it says who you are, opens your account's page and logs out. Until now the tab only sent you to the account page, which a TestFlight build never finished loading. Every page opened from the tabs is told who is logged in as it opens and signs in as the same person: a Google or an email sign-in straight away, and an Apple sign-in once the sign-in worker that mints the pages' token is deployed; until then the account page says so, and logging in there too joins the two. A page you log in or out on tells the tab, and the tab follows. The website and the Android app are unchanged. The apps take it with their next build.
 

@@ -10,7 +10,7 @@
      my_account    who is signed in: username, university, email
      list_models   the Region Atlas models saved to the account
      load_model    one saved model: its regions and the link that opens it
-     save_model    a new model from a list of regions and Brodmann areas,
+     save_model    a new model from a list of regions,
                    saved where the app's Saved models card will find it
 
    A saved model is the document the Region Atlas itself writes
@@ -95,11 +95,9 @@ function resolveItem(item, used){
   const s = String(item == null ? "" : item).trim();
   if (!s) return { error: "an empty entry" };
   let m = s.match(/^(?:B:|BA\s*|brodmann(?:\s+area)?\s+)(\d{1,2})$/i);
-  if (m){
-    const a = DATA.brodmann.find(x => x.ba === Number(m[1]));
-    if (!a) return { error: "Brodmann area " + m[1] + " is not in the atlas volume" };
-    return { key: "B:" + a.ba, entry: { atlas: "ba", ba: a.ba, name: a.name, base: "BA" + a.ba, sideTag: "BA" + a.ba, indices: [a.ba] } };
-  }
+  /* a Brodmann area cannot go in a model since v12.47: the 3D Region Atlas
+     carries the AAL regions alone, the Brodmann Area Atlas the areas */
+  if (m) return { error: "Brodmann area " + m[1] + " cannot go in a Region Atlas model: the 3D Region Atlas carries AAL regions alone, and the Brodmann Area Atlas shows the areas (brodmann_area links there)" };
   let mode = null, name = s;
   m = s.match(/^([LRPS]):(.+)$/);
   if (m){ mode = m[1]; name = m[2]; }
@@ -157,7 +155,7 @@ export const ACCOUNT_TOOLS = [
   {
     name: "load_model",
     title: "One saved model",
-    description: "One of the signed-in person's saved Region Atlas models by name: the regions and Brodmann areas it holds, and a link that opens it highlighted on the scan. Needs sign-in.",
+    description: "One of the signed-in person's saved Region Atlas models by name: the regions it holds, and a link that opens it highlighted on the scan. Needs sign-in.",
     annotations: Object.assign({ title: "One saved model" }, RO),
     inputSchema: { type: "object", properties: { name: { type: "string", description: "The model's name, as saved" } }, required: ["name"] }
   },
@@ -165,16 +163,16 @@ export const ACCOUNT_TOOLS = [
     name: "save_model",
     title: "Save a Region Atlas model",
     description:
-      "Save a new Region Atlas model to the signed-in person's account from a list of regions and Brodmann areas, " +
+      "Save a new Region Atlas model to the signed-in person's account from a list of AAL regions, " +
       "so it appears in the app's Saved models and opens highlighted on the scan. Items are AAL region names " +
-      "('hippocampus', 'left amygdala', 'R:Putamen') and Brodmann areas ('BA17', 'B:44'). Creates only: a name " +
-      "already in use is refused, never replaced. Needs sign-in.",
+      "('hippocampus', 'left amygdala', 'R:Putamen'); a Brodmann area cannot go in one, the Brodmann Area Atlas " +
+      "showing those. Creates only: a name already in use is refused, never replaced. Needs sign-in.",
     annotations: { title: "Save a Region Atlas model", readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false },
     inputSchema: {
       type: "object",
       properties: {
         name: { type: "string", description: "A name for the model, up to " + NAME_MAX + " characters" },
-        regions: { type: "array", items: { type: "string" }, minItems: 1, description: "Regions and Brodmann areas to highlight, e.g. ['hippocampus', 'left amygdala', 'BA17']" }
+        regions: { type: "array", items: { type: "string" }, minItems: 1, description: "Regions to highlight, e.g. ['hippocampus', 'left amygdala', 'R:Putamen']" }
       },
       required: ["name", "regions"]
     }

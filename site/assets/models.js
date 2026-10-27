@@ -18,7 +18,14 @@
    model between devices as a JSON file, the same object Save keeps, with no
    account needed: the apps hand it to the Files app and the share sheet
    through MN.saveFile, the web downloads it, and a file picker reads one
-   back and the page's restore builds the view from it. */
+   back and the page's restore builds the view from it. Example maps
+   (v12.47, at the owner's word) stand in a section under the person's own,
+   which reads None until they save one: attach's examples, each a name, a
+   note and the model as a save keeps it, opened with a press, the name box
+   filled so Save keeps a copy, with nothing to delete. With folds the two
+   sections are details elements, Saved and Examples, shut until pressed
+   (the 3D Region Atlas, where the whole widget stands in a fold of the
+   region box since v12.47); Saved opens as a map is saved. */
 window.MN_MODELS = (function(){
 "use strict";
 
@@ -49,8 +56,9 @@ function when(v){
 }
 
 function attach(o){
-  var tool = o.tool, host = o.host, noun = o.noun || "model";
+  var tool = o.tool, host = o.host, noun = o.noun || "model", things = o.things || (noun + "s"), folds = !!o.folds;
   if (!tool || !host || !o.capture || !o.restore) return null;
+  var examples = Array.isArray(o.examples) ? o.examples.filter(function(ex){ return ex && ex.name && ex.data; }) : [];
 
   var wrap = document.createElement("div"); wrap.className = "models";
   var form = document.createElement("form"); form.className = "mform";
@@ -73,8 +81,38 @@ function attach(o){
   var picker = document.createElement("input"); picker.type = "file"; picker.accept = ".json,application/json"; picker.hidden = true;
   picker.setAttribute("aria-label", "A saved " + noun + " file");
   fileRow.appendChild(exportBtn); fileRow.appendChild(importBtn); fileRow.appendChild(picker);
-  wrap.appendChild(form); wrap.appendChild(fileRow); wrap.appendChild(list); wrap.appendChild(note);
+  wrap.appendChild(form); wrap.appendChild(fileRow);
+  /* the person's own under a heading, None until there is one, and the
+     examples under theirs */
+  var exList = null, ownFold = null;
+  if (examples.length){
+    exList = document.createElement("div"); exList.className = "mlist examples"; exList.setAttribute("role", "list");
+    if (folds){
+      ownFold = fold("Saved", list);
+      wrap.appendChild(ownFold);
+      wrap.appendChild(fold("Examples", exList));
+    } else {
+      wrap.appendChild(heading("Your " + things));
+      wrap.appendChild(list);
+      wrap.appendChild(heading("Example " + things));
+      wrap.appendChild(exList);
+    }
+  } else {
+    wrap.appendChild(list);
+  }
+  wrap.appendChild(note);
   host.appendChild(wrap);
+  function heading(text){
+    var h = document.createElement("div"); h.className = "mhead"; h.textContent = text;
+    return h;
+  }
+  function fold(text, body){
+    var d = document.createElement("details"); d.className = "fold";
+    var sm = document.createElement("summary"); sm.textContent = text;
+    var inn = document.createElement("div"); inn.className = "fold-in";
+    inn.appendChild(body); d.appendChild(sm); d.appendChild(inn);
+    return d;
+  }
 
   var mode = "device", items = [], user = null, busy = false, flash = null, flashErr = false;
 
@@ -86,12 +124,12 @@ function attach(o){
     if (mode === "account"){
       note.textContent = items.length
         ? "Saved to your account. Open any of them on any device you log in on."
-        : "Nothing saved yet. Name the view above and press Save; it goes to your account.";
+        : "Name the view above and press Save; it goes to your account.";
     } else {
       var canLogin = auth && auth.enabled;
       note.textContent = (items.length
         ? "Saved on this device only."
-        : "Nothing saved yet. Name the view above and press Save; it stays on this device.") +
+        : "Name the view above and press Save; it stays on this device.") +
         (canLogin ? " " : "");
       if (canLogin){
         var a = document.createElement("a"); a.href = "#"; a.textContent = "Log in";
@@ -107,6 +145,11 @@ function attach(o){
 
   function renderList(){
     list.innerHTML = "";
+    if (!items.length && exList){
+      var none = document.createElement("div"); none.className = "mnone"; none.setAttribute("role", "listitem");
+      none.textContent = "None";
+      list.appendChild(none);
+    }
     items.forEach(function(it){
       var row = document.createElement("div"); row.className = "mrow"; row.setAttribute("role", "listitem");
       var name = document.createElement("button"); name.type = "button"; name.className = "mname"; name.textContent = it.name;
@@ -124,8 +167,38 @@ function attach(o){
       row.appendChild(name); row.appendChild(date); row.appendChild(del);
       list.appendChild(row);
     });
-    list.hidden = !items.length;
+    list.hidden = !items.length && !exList;
     renderNote();
+  }
+
+  /* the examples: a press opens one, and the note says what it shows */
+  function renderExamples(){
+    if (!exList) return;
+    exList.innerHTML = "";
+    examples.forEach(function(ex){
+      var row = document.createElement("div"); row.className = "mrow example"; row.setAttribute("role", "listitem");
+      var name = document.createElement("button"); name.type = "button"; name.className = "mname"; name.textContent = ex.name;
+      name.title = ex.note || ("Open " + ex.name);
+      name.addEventListener("click", function(){ if (!busy) openExample(ex); });
+      var count = document.createElement("span"); count.className = "mdate";
+      var n = Array.isArray(ex.data.selections) ? ex.data.selections.length : 0;
+      count.textContent = n ? n + (n === 1 ? " region" : " regions") : "";
+      row.appendChild(name); row.appendChild(count);
+      exList.appendChild(row);
+    });
+  }
+  function openExample(ex){
+    setBusy(true);
+    try{
+      o.restore(JSON.parse(JSON.stringify(ex.data)));
+      input.value = ex.name;
+      if (window.MN) MN.tap("light");
+      say("Opened “" + ex.name + "”." + (ex.note ? " " + ex.note : "") + " Change it as you like and press Save to keep a copy of your own.");
+    }catch(err){
+      console.warn("example open:", err && err.message);
+      say((err && err.message) || "Could not open the " + noun + ".", true);
+    }
+    setBusy(false);
   }
 
   function localItems(){
@@ -149,7 +222,10 @@ function attach(o){
     return Promise.resolve();
   }
 
-  function setBusy(b){ busy = b; saveBtn.disabled = b; exportBtn.disabled = b; importBtn.disabled = b; list.classList.toggle("busy", b); }
+  function setBusy(b){
+    busy = b; saveBtn.disabled = b; exportBtn.disabled = b; importBtn.disabled = b;
+    list.classList.toggle("busy", b); if (exList) exList.classList.toggle("busy", b);
+  }
 
   function save(name){
     name = String(name || "").trim();
@@ -162,6 +238,7 @@ function attach(o){
     setBusy(true);
     var p;
     if (mode === "account"){
+      if (ownFold) ownFold.open = true;   /* the list shows what was just kept */
       p = files.save(tool, name, data).then(function(){
         return refresh().then(function(){ say((existed ? "Replaced " : "Saved ") + "“" + name + "” in your account."); });
       }).catch(function(err){
@@ -290,8 +367,10 @@ function attach(o){
   form.addEventListener("submit", function(e){ e.preventDefault(); if (!busy) save(input.value); });
 
   var w = { tool: tool, onUser: onUser, refresh: refresh, save: save, load: load, remove: remove,
+            openExample: openExample, get examples(){ return examples.slice(); },
             get mode(){ return mode; }, get items(){ return items.slice(); }, element: wrap };
   widgets.push(w);
+  renderExamples();
   if (user === null && auth && auth.currentUser) onUser(auth.currentUser()); else refresh();
   return w;
 }

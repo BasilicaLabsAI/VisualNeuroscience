@@ -242,7 +242,7 @@ at the end of the first. 4,000 characters allowed; both together come to
 • Every atlas fills the screen like an anatomy app: the views take the room, the tools run along a bar at the foot, and the regions sit in a drawer you can hide. Each atlas remembers where you left it, cuts and all.
 • Microanatomy: a neuron drawn part by part, with twenty structures to tap and a quiz to learn them, seventeen neurotransmitters drawn the way chemists draw them, and a hundred and fifty receptors, channels and transporters, each with the drugs that act on it.
 • Molecular: the dopamine and serotonin receptors themselves in 3D, built from thirty-nine experimental structures. Watch the neurotransmitter dock and switch the receptor on, see where antipsychotics, triptans, LSD and psilocin sit in the same pocket, and compare the subtypes. The binding tour reads at two levels, Simple and Detailed.
-• The Brodmann Area Atlas: both faces of the cortex on one screen, with the brain in 3D and what each area does beside it. The areas light up on the scan in the 3D Region Atlas too, searchable by number, name or what they do.
+• The Brodmann Area Atlas: both faces of the cortex on one screen, with the brain in 3D and what each area does beside it, searchable by number, name or what they do.
 • Receptor densities now come from published PET and autoradiography, with a source behind every number, in a tabbed window: the graph, the table of every receptor against every region, the receptor's own drawings, the receptor types and the sources.
 • Tractography fills the screen and can be sliced like the atlas, and the Network Atlas shows its ring of connections beside the scans.
 • The slice tool marks the centre of each slider, and Reset slice puts every cut back.

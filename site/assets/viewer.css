@@ -499,6 +499,36 @@ html{ touch-action:manipulation; }
 .models .mfile .btn{ flex:1 1 0; width:auto; padding:.55rem .6rem .48rem; letter-spacing:.18em; font-size:.66rem; }
 .models .mlist{ display:flex; flex-direction:column; gap:.3rem; }
 .models .mlist.busy{ opacity:.55; pointer-events:none; }
+/* the person's own maps under a heading, None until there is one, and the
+   example maps under theirs (v12.47) */
+.models .mhead{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--ink-60); border-bottom:1px solid var(--ink-35); padding:.55rem .1rem .3rem; margin-top:.2rem;
+}
+.models .mnone{ font-family:var(--font-serif); font-style:italic; font-size:.86rem; color:var(--ink-60); padding:.25rem .1rem; }
+.models .mrow.example .mdate{ letter-spacing:.1em; }
+/* a folded section (v12.47, at the owner's word): Saved maps in the
+   atlas's region box, and the widget's own Saved and Examples inside it,
+   each shut until its heading is pressed */
+.fold{ border-top:1px solid var(--ink-35); margin-top:.7rem; }
+.fold > summary{
+  list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:.5rem;
+  font-family:var(--font-brand); font-weight:500; font-size:.62rem; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--ink-60); padding:.6rem .1rem .45rem; -webkit-tap-highlight-color:transparent;
+}
+.fold > summary::-webkit-details-marker{ display:none; }
+.fold > summary::after{
+  content:""; flex:none; width:.42rem; height:.42rem; margin-right:.25rem;
+  border-right:1px solid currentColor; border-bottom:1px solid currentColor;
+  transform:rotate(-45deg); transition:transform .18s ease;
+}
+.fold[open] > summary::after{ transform:rotate(45deg); }
+@media (hover: hover){ .fold > summary:hover{ color:var(--ink); } }
+.fold > summary:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+.fold-in{ padding:.1rem 0 .4rem; }
+.models .fold{ margin-top:.45rem; }
+.models .fold > summary{ font-size:.55rem; }
+@media (prefers-reduced-motion: reduce){ .fold > summary::after{ transition:none; } }
 .models .mrow{ display:flex; align-items:center; gap:.5rem; border:1px solid var(--hair); padding:.3rem .35rem .3rem .6rem; }
 .models .mname{
   flex:1; min-width:0; text-align:left; background:none; border:0; padding:.15rem 0; cursor:pointer;

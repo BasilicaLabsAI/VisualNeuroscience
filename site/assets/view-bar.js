@@ -109,14 +109,27 @@ function attach(o){
      app's pages, the masthead scrolled away): slid sideways by the difference from the
      stage's own centre, never off the screen's left edge, and not at all on a phone held
      sideways, where the bar along the right edge and the shell's back button leave no room */
+  /* The shift is worked out from where the bar stands with no shift (its
+     rect less the shift it wears), never by clearing the transform first
+     and measuring: until v12.47 every measure cleared it and set it again,
+     and the bar was seen to jump a little and come back as a sheet opened
+     (the sheet's measure sends a resize). The style is touched only when
+     the shift changes. */
+  var shiftNow = 0;
   function centre(){
-    bar.style.transform = "";
-    if (!stage || main.classList.contains("land")) return;
+    if (!stage || main.classList.contains("land")){
+      if (shiftNow){ shiftNow = 0; bar.style.transform = ""; }
+      return;
+    }
     var isle = document.querySelector(".vn-isle"), ir = isle ? isle.getBoundingClientRect() : null;
     var target = ir && ir.width > 0 && ir.bottom > 0 ? ir.left + ir.width / 2 : window.innerWidth / 2;
-    var b = bar.getBoundingClientRect(), shift = Math.round(target - (b.left + b.width / 2));
-    if (b.left + shift < 6) shift = Math.round(6 - b.left);
-    if (Math.abs(shift) > 1) bar.style.transform = "translateX(" + shift + "px)";
+    var b = bar.getBoundingClientRect(), left0 = b.left - shiftNow;
+    var shift = Math.round(target - (left0 + b.width / 2));
+    if (left0 + shift < 6) shift = Math.round(6 - left0);
+    if (Math.abs(shift) <= 1) shift = 0;
+    if (shift === shiftNow) return;
+    shiftNow = shift;
+    bar.style.transform = shift ? "translateX(" + shift + "px)" : "";
   }
   /* the bar's foot from the stage's top, for the sheets; measured once
      layout has settled, never inside an observer's own turn */
@@ -126,7 +139,8 @@ function attach(o){
     centre();
     if (!stage) return;
     var foot = bar.offsetParent ? bar.getBoundingClientRect().bottom - stage.getBoundingClientRect().top : 0;
-    main.style.setProperty("--vbar", Math.max(0, Math.round(foot)) + "px");
+    var vbar = Math.max(0, Math.round(foot)) + "px";
+    if (main.style.getPropertyValue("--vbar") !== vbar) main.style.setProperty("--vbar", vbar);
   }
   function soon(){ if (!queued) queued = requestAnimationFrame(measure); }
   measure();

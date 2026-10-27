@@ -1247,6 +1247,7 @@ main.screen.one.land{ flex-direction:row; }
      while any of those or Offset is off, its bar put away then; a greyed switch shows no lit block. */
   var sliceTract = true, offsetOn = true;
   var sliceTractBtn = document.getElementById("sliceTractBtn"), offsetBtn = document.getElementById("offsetBtn"), distBtn = document.getElementById("distBtn");
+  var transBtn = document.getElementById("transBtn");
   function effectivePast(){ return offsetOn && brain.on && brain.nv ? tractPast : 0; }
   function paintTractBtns(){
     var sliceOn = !!(slice && slice.state().on);
@@ -1255,6 +1256,9 @@ main.screen.one.land{ flex-direction:row; }
     paint(offsetBtn, offsetOn, sliceOn && sliceTract && brain.on);
     if (distBtn) distBtn.disabled = !(sliceOn && sliceTract && brain.on && offsetOn);
     if (distBtn && distBtn.disabled && window.TK_MINI && TK_MINI.current() === "offsetPop") TK_MINI.closeAll();
+    /* Transparency has its say only while the brain shows (v12.47, at the owner's word) */
+    if (transBtn) transBtn.disabled = !brain.on;
+    if (transBtn && transBtn.disabled && window.TK_MINI && TK_MINI.current() === "transPop") TK_MINI.closeAll();
   }
   if (sliceTractBtn) sliceTractBtn.addEventListener("click", function(){ sliceTract = !sliceTract; paintTractBtns(); recut(); rememberSoon(); });
   if (offsetBtn) offsetBtn.addEventListener("click", function(){ offsetOn = !offsetOn; paintTractBtns(); recut(); rememberSoon(); });

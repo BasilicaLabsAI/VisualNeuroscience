@@ -149,14 +149,19 @@ r = await rpc({ jsonrpc: "2.0", id: 11, method: "tools/call", params: { name: "m
 assert.ok(m.result.content[0].text.startsWith("**fid_kk**")); assert.ok(m.result.content[0].text.includes("KCL"));
 r = await rpc({ jsonrpc: "2.0", id: 12, method: "tools/call", params: { name: "list_models", arguments: {} } }, auth); m = await r.json();
 assert.ok(m.result.content[0].text.includes("No Region Atlas models"));
-r = await rpc({ jsonrpc: "2.0", id: 13, method: "tools/call", params: { name: "save_model", arguments: { name: "Memory circuit", regions: ["hippocampus", "left amygdala", "BA17"] } } }, auth); m = await r.json();
+/* a Brodmann area cannot go in a model since v12.47: refused, with where the areas live */
+r = await rpc({ jsonrpc: "2.0", id: 19, method: "tools/call", params: { name: "save_model", arguments: { name: "Area test", regions: ["hippocampus", "BA17"] } } }, auth); m = await r.json();
+assert.equal(m.result.isError, true); assert.ok(m.result.content[0].text.includes("Brodmann Area Atlas"), m.result.content[0].text);
+assert.ok(!firestore["/users/uid-1/tools/regions/files/Area%20test"]);
+r = await rpc({ jsonrpc: "2.0", id: 13, method: "tools/call", params: { name: "save_model", arguments: { name: "Memory circuit", regions: ["hippocampus", "left amygdala", "thalamus"] } } }, auth); m = await r.json();
 assert.equal(m.result.isError, undefined, m.result.content[0].text); assert.ok(m.result.content[0].text.includes("Saved **Memory circuit**"));
 const saved = firestore["/users/uid-1/tools/regions/files/Memory%20circuit"]; assert.ok(saved);
 const data = saved.fields.data.mapValue.fields;
 assert.equal(data.tool.stringValue, "regions"); assert.equal(data.selections.arrayValue.values.length, 3);
 assert.equal(data.selections.arrayValue.values[0].mapValue.fields.key.stringValue, "P:Hippocampus");
 assert.deepEqual(data.selections.arrayValue.values[0].mapValue.fields.indices.arrayValue.values.map(v => Number(v.integerValue)), [37, 38]);
-assert.equal(data.selections.arrayValue.values[2].mapValue.fields.atlas.stringValue, "ba");
+assert.equal(data.selections.arrayValue.values[2].mapValue.fields.key.stringValue, "P:Thalamus");
+assert.equal(data.selections.arrayValue.values[2].mapValue.fields.atlas.stringValue, "aal");
 assert.ok(firestore["/users/uid-1/meta/toolindex"].fields.regions.booleanValue);
 const fsCall = calls.find(c => c.method === "POST" && c.url.includes("/files?documentId=")); assert.equal(fsCall.auth, "Bearer " + tok.access_token);
 r = await rpc({ jsonrpc: "2.0", id: 14, method: "tools/call", params: { name: "save_model", arguments: { name: "Memory circuit", regions: ["putamen"] } } }, auth); m = await r.json();
@@ -164,9 +169,9 @@ assert.equal(m.result.isError, true); assert.ok(m.result.content[0].text.include
 r = await rpc({ jsonrpc: "2.0", id: 15, method: "tools/call", params: { name: "save_model", arguments: { name: "Bad", regions: ["nowhere land"] } } }, auth); m = await r.json();
 assert.equal(m.result.isError, true); assert.ok(m.result.content[0].text.includes("nowhere land"));
 r = await rpc({ jsonrpc: "2.0", id: 16, method: "tools/call", params: { name: "list_models", arguments: {} } }, auth); m = await r.json();
-assert.ok(m.result.content[0].text.includes("1 model saved")); assert.ok(m.result.content[0].text.includes("regions.html#sel=P:Hippocampus|L:Amygdala|B:17"));
+assert.ok(m.result.content[0].text.includes("1 model saved")); assert.ok(m.result.content[0].text.includes("regions.html#sel=P:Hippocampus|L:Amygdala|P:Thalamus"));
 r = await rpc({ jsonrpc: "2.0", id: 17, method: "tools/call", params: { name: "load_model", arguments: { name: "Memory circuit" } } }, auth); m = await r.json();
-assert.ok(m.result.content[0].text.includes("Amygdala, left")); assert.ok(m.result.content[0].text.includes("BA17"));
+assert.ok(m.result.content[0].text.includes("Amygdala, left")); assert.ok(m.result.content[0].text.includes("Thalamus"));
 r = await rpc({ jsonrpc: "2.0", id: 18, method: "tools/call", params: { name: "load_model", arguments: { name: "Nope" } } }, auth); m = await r.json();
 assert.equal(m.result.isError, true);
 /* a batch that mixes a public and an account call is gated as a whole */

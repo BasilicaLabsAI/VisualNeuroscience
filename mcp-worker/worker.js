@@ -183,8 +183,12 @@ function doRegion({ name }){
     "",
     r.fn || "No function note yet.",
     "",
-    "Layer: " + (DATA.tiers[r.tier] || "unplaced") + " · Atlas: AAL-116 on the MNI152 template.",
   ];
+  /* the two lines of health (v12.47): teaching notes, not clinical advice */
+  if (r.disease) lines.push("Disease: " + r.disease);
+  if (r.damage) lines.push("Damage: " + r.damage);
+  if (r.disease || r.damage) lines.push("");
+  lines.push("Layer: " + (DATA.tiers[r.tier] || "unplaced") + " · Atlas: AAL-116 on the MNI152 template.");
   if (DATA.receptors.regions.some(s => s.base === r.base))
     lines.push("Receptor densities are charted for this region — ask receptor_density.");
   lines.push("", regionLink(r) + " — it opens highlighted on the scan, in three planes and 3D.");

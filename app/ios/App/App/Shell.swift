@@ -269,9 +269,9 @@ struct AtlasTab: View {
     var body: some View {
         TabPage {
             PageBox(page: .regionAtlas, kicker: "The Atlas",
-                    text: "A detailed 3D atlas of the human brain, with the Brodmann areas, receptor density maps and a functional breakdown of every region.",
+                    text: "A detailed 3D atlas of the human brain, with receptor density maps and a functional breakdown of every region, what goes wrong in it and what damage has shown.",
                     shot: Shot("assets/home/atlas.jpg", light: "assets/home/atlas-light.jpg"),
-                    meta: "116 parcels · 41 Brodmann areas · four viewports · receptor densities · slice tool · PNG and 3D export · saved models",
+                    meta: "116 parcels · four viewports · receptor densities · slice tool · PNG and 3D export · saved and example maps",
                     go: "Open the atlas")
             PageBox(page: .brodmann, kicker: "Cytoarchitecture",
                     text: "Brodmann’s 41 areas of the cortex on a map of both faces of the hemisphere. Tap one and what it does appears beside it.",

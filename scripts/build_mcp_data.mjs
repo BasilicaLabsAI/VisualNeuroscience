@@ -44,6 +44,8 @@ const regions = ATLAS.REGIONS.map(r => {
     base: r.base, name: r.pretty, group: r.group,
     sides: r.S != null ? "single" : "paired",
     tier: note.tier || null, fn: note.fn || null,
+    /* the two lines of health (v12.47): the disorders a fault here is part of, and what a lesion has shown */
+    disease: note.disease || null, damage: note.damage || null,
     sel: (r.S != null ? "S:" : "P:") + r.base,
     /* the AAL label numbers, so a model saved from a chat carries the same
        indices the Region Atlas keeps for a selection */

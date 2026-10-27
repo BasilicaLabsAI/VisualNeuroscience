@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>3D Region Atlas — VisualNeuroscience.AI</title>
-<meta name="description" content="Explore the brain in the browser: highlight any AAL-116 region or Brodmann area on the MNI152 template across axial, coronal, sagittal and 3D views. Free, fast, nothing to install.">
+<meta name="description" content="Explore the brain in the browser: highlight any AAL-116 region on the MNI152 template across axial, coronal, sagittal and 3D views. Free, fast, nothing to install.">
 <!-- link previews. The card is built by site/share.html and rendered to
      assets/social-card.jpg; og:image has to be absolute, so this origin is
      the one thing to change if the site moves to its own domain. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="VisualNeuroscience.AI">
 <meta property="og:title" content="3D Region Atlas — VisualNeuroscience.AI">
-<meta property="og:description" content="Explore the brain in the browser: highlight any AAL-116 region or Brodmann area on the MNI152 template across axial, coronal, sagittal and 3D views. Free, fast, nothing to install.">
+<meta property="og:description" content="Explore the brain in the browser: highlight any AAL-116 region on the MNI152 template across axial, coronal, sagittal and 3D views. Free, fast, nothing to install.">
 <meta property="og:url" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/regions.html">
 <meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -316,9 +316,6 @@ a{ color:var(--ink); text-decoration:none; }
   font-size:.8rem; font-variant-numeric:tabular-nums;
 }
 /* the transparency slider: its name and value on one line, the slider the width beneath (v12.7) */
-.row.trans-row{ display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:.6rem; row-gap:.15rem; align-items:center; }
-.row.trans-row label{ width:auto; flex:none; }
-.row.trans-row input[type="range"]{ grid-column:1 / -1; width:100%; margin:0; }
 input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); height:3px; touch-action:none; }
 .toggles{ display:grid; grid-template-columns:1fr 1fr; gap:.35rem .8rem; margin:.5rem 0 .1rem; }
 .toggle{
@@ -326,10 +323,6 @@ input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); height:3px; tou
   font-family:var(--font-brand); font-size:.76rem; letter-spacing:.05em; color:var(--ink-60);
 }
 .toggle input{ width:14px; height:14px; accent-color:var(--ink); }
-/* which atlas the picker offers: the AAL parcels, or the Brodmann areas
-   with their map beneath the viewports; what is highlighted stays either way */
-.atlas-mode{ display:grid; grid-template-columns:1fr; gap:.35rem; margin:.15rem 0 .75rem; }
-.atlas-mode .ts-btn{ text-align:left; line-height:1.3; padding:.5rem .7rem .44rem; white-space:normal; }
 .btns{ display:flex; gap:.6rem; margin-top:.6rem; }
 .btns .btn{ flex:1; padding:.55rem .4rem .48rem; letter-spacing:.18em; font-size:.66rem; }
 
@@ -697,13 +690,32 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 .rchip .x:hover{ background:var(--ink); color:var(--paper); }
 /* the subheading over each layer's rows, set as the picker heads its lobes */
 .rchip-head{
-  display:flex; align-items:baseline; justify-content:space-between; gap:.5rem;
-  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
-  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
-  border-bottom:1px solid var(--ink-35); padding:.55rem .1rem .3rem; margin-top:.35rem;
+  display:flex; align-items:center; gap:.5rem;
+  font-family:var(--font-brand); font-weight:500; font-size:.72rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  border-bottom:1px solid var(--ink-35); padding:.55rem .1rem .35rem; margin-top:.35rem;
 }
 #emptyMsg + .rchip-head{ margin-top:0; }
-.rchip-head .n{ letter-spacing:.1em; }
+.rchip-head .n{ letter-spacing:.1em; font-size:.6rem; color:var(--ink-60); margin-right:auto; }
+/* the switches (v12.47, at the owner's word): one on the Highlighted
+   heading for every region at once, one on each layer's heading for the
+   regions under it, each off the scan and on again, still in the list */
+.tier-switch{
+  flex:none; width:34px; height:20px; padding:0; border:1px solid var(--ink); border-radius:10px;
+  background:var(--ink); position:relative; cursor:pointer; -webkit-tap-highlight-color:transparent;
+}
+.tier-switch::after{
+  content:""; position:absolute; top:2px; left:16px; width:14px; height:14px; border-radius:50%;
+  background:var(--paper); transition:left .18s ease;
+}
+.tier-switch[aria-pressed="false"]{ background:transparent; }
+.tier-switch[aria-pressed="false"]::after{ left:2px; background:var(--ink); }
+.tier-switch:disabled{ opacity:.35; cursor:default; }
+.tier-switch:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+.rail-part h2.with-switch{ position:relative; }
+.rail-part h2.with-switch .tier-switch{ position:absolute; right:0; top:-3px; }
+.rchip.off .dot{ background:transparent !important; opacity:.6; }
+.rchip.off .name, .rchip.off .side{ color:var(--ink-60); }
 .empty-note{ font-family:var(--font-serif); font-style:italic; font-size:.9rem; color:var(--ink-60); }
 
 /* the viewports — each plane a framed radiograph: canvases stay ink-black in both themes */
@@ -726,11 +738,9 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 }
 .hidden{ display:none !important; }
 
-/* ── the Brodmann areas ────────────────────────────────────────────────
-   A search box and a list grouped by lobe, beside the AAL dropdown. The
-   list is the navigation: forty-one entries with names and functions are
-   worth seeing at once and worth searching. A picked row inverts and its
-   swatch takes the colour the area wears on the scan. */
+/* ── the region picker's search box ────────────────────────────────
+   The search field and its count at the head of the picker's panel; the
+   Brodmann list that stood beside the picker left the page in v12.47. */
 .searchwrap{ position:relative; margin-bottom:.55rem; }
 .searchwrap input{
   width:100%; padding:.55rem 2rem .5rem .6rem;
@@ -750,35 +760,11 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
   font-family:var(--font-serif); font-style:italic; font-size:.78rem;
   color:var(--ink-60); margin:0 0 .5rem;
 }
-.balobe{
-  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
-  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
-  border-bottom:1px solid var(--ink-35); padding:.5rem .1rem .3rem; margin-top:.5rem;
-}
-.balobe:first-child{ margin-top:0; }
-.barow{
-  display:flex; align-items:baseline; gap:.5rem; width:100%;
-  border:0; border-bottom:1px solid var(--hair); background:none;
-  color:var(--ink); text-align:left; cursor:pointer;
-  padding:.42rem .25rem .38rem; font-family:var(--font-serif); font-size:.9rem;
-}
-@media (hover: hover){ .barow:hover{ background:color-mix(in srgb, var(--ink) 9%, transparent); } }
-.barow[aria-pressed="true"]{ background:var(--ink); color:var(--paper); }
-.barow .num{
-  font-family:var(--font-brand); font-weight:500; font-size:.72rem;
-  letter-spacing:.06em; min-width:2.6rem; flex:none; font-variant-numeric:tabular-nums;
-}
-.barow .nm{ min-width:0; line-height:1.3; }
-.barow .swatch{
-  width:.6rem; height:.6rem; flex:none; border:1px solid currentColor;
-  align-self:center; margin-left:auto; background:var(--sel, transparent);
-}
 .balist-empty{
   font-family:var(--font-serif); font-style:italic; font-size:.85rem;
   color:var(--ink-60); padding:.8rem .2rem;
 }
 mark{ background:var(--ink); color:var(--paper); }
-.barow[aria-pressed="true"] mark{ background:var(--paper); color:var(--ink); }
 
 /* ── the region picker ─────────────────────────────────────────────────
    The AAL list runs to a hundred and sixteen names with the pairs split,
@@ -864,12 +850,13 @@ mark{ background:var(--ink); color:var(--paper); }
   .rpick-pop::before{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
 }
 
-/* the Brodmann block among the notes: one tier of its own, below the
-   three layers, with the caveat that belongs with each area */
-.rnote .caveat{
-  font-style:italic; font-size:.84rem; color:var(--ink-60);
-  border-left:2px solid var(--ink-35); padding-left:.6rem; margin-top:.45rem;
+/* the two lines of health under each note (v12.47, at the owner's word):
+   Disease and Damage, each a kicker over its sentence */
+.rnote h4{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--ink-60); margin:.6rem 0 .1rem;
 }
+.rnote .more p{ margin:0; }
 
 .stats{ margin-top:var(--gap); }
 .probe-v{ font-size:.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -951,11 +938,14 @@ main.screen{
 .drawer-box{
   position:relative; flex:0 1 auto; width:var(--box-w); max-height:100%; min-height:0;
   display:flex; flex-direction:column;
-  border:1px solid var(--hair); border-radius:16px; background:var(--paper);
+  border:1px solid var(--bar-line); border-radius:16px; background:var(--bar-fill); color:var(--ink);
+  -webkit-backdrop-filter:blur(16px) saturate(1.15); backdrop-filter:blur(16px) saturate(1.15);
   box-shadow:0 1px 2px rgba(0,0,0,.08), 0 10px 30px rgba(0,0,0,.14);
   transition:transform .32s cubic-bezier(.32,.72,0,1);
 }
-.drawer-in.card{ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; border:0; padding:var(--gap) var(--gap) 1.4rem; }
+/* the box wears the island bars' material since v12.47, at the owner's word (bar.css's --bar-fill and --bar-line) */
+@media (prefers-reduced-transparency: reduce){ .drawer-box{ background:var(--bar-fill-solid); -webkit-backdrop-filter:none; backdrop-filter:none; } }
+.drawer-in.card{ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; border:0; padding:var(--gap) var(--gap) 1.4rem; background:transparent; }
 .drawer .rchips{ max-height:none; }
 .deck.shut .drawer{ flex-basis:0; width:0; padding-left:0; visibility:hidden; transition-delay:0s, 0s, 0s, .32s; }
 .deck.shut .drawer-box{ transform:translateX(calc(-100% - var(--gap) - 22px)); }
@@ -964,7 +954,7 @@ main.screen{
 .drawer-tab{
   position:absolute; z-index:16; top:50%; transform:translateY(-50%);
   width:22px; height:64px; padding:0; display:flex; align-items:center; justify-content:center;
-  border:1px solid var(--hair); border-left:0; background:var(--paper); color:var(--ink); cursor:pointer;
+  border:1px solid var(--bar-line); border-left:0; background:var(--bar-fill-solid); color:var(--bar-ink); cursor:pointer;
   -webkit-tap-highlight-color:transparent;
 }
 .drawer-tab::after{ content:""; position:absolute; inset:-8px -10px; }
@@ -1173,7 +1163,7 @@ body.atlas-screen .vn-news{ bottom:calc(var(--bar-h, 64px) + 14px); }
 .screen.one .drawer{ left:auto; right:0; padding:0; }
 .screen.one .drawer-box{ flex:1 1 auto; max-height:none; border-width:0 0 0 1px; border-radius:0; box-shadow:-8px 0 30px rgba(0,0,0,.25); }
 .screen.one .deck.shut .drawer-box{ transform:translateX(calc(100% + 22px)); }
-.screen.one .drawer-tab{ border-left:1px solid var(--hair); border-right:0; }
+.screen.one .drawer-tab{ border-left:1px solid var(--bar-line); border-right:0; }
 .screen.one .drawer-hide{ right:auto; left:-22px; border-radius:10px 0 0 10px; }
 .screen.one .drawer-hide svg{ transform:rotate(180deg); }
 .screen.one .drawer-show{ left:auto; right:0; border-radius:10px 0 0 10px; }
@@ -1277,11 +1267,7 @@ main.screen.one.land{ flex-direction:row; }
         <div class="drawer-in card rail-box">
         <section class="rail-part">
           <h2>Regions</h2>
-          <div class="atlas-mode" role="group" aria-label="Which atlas to pick from">
-            <button class="ts-btn active" type="button" id="atlasAAL" data-atlas="aal" aria-pressed="true">Automated Anatomical Labelling (AAL)</button>
-            <button class="ts-btn" type="button" id="atlasBA" data-atlas="ba" aria-pressed="false">Brodmann areas</button>
-          </div>
-          <div class="atlas-pane" id="aalPane">
+          <div id="aalPane">
             <div class="selwrap rpick" id="rpick">
               <button class="rpick-btn" id="rpickBtn" type="button" aria-haspopup="listbox" aria-expanded="false"
                       aria-controls="rpickPop">Add a region&hellip;</button>
@@ -1303,37 +1289,18 @@ main.screen.one.land{ flex-direction:row; }
               <label class="toggle"><input type="checkbox" id="mirrorToggle" checked> Mirror left / right pairs</label>
             </div>
           </div>
-          <div class="atlas-pane hidden" id="baPane">
-            <div class="selwrap rpick" id="bapick">
-              <button class="rpick-btn" id="bapickBtn" type="button" aria-haspopup="listbox" aria-expanded="false"
-                      aria-controls="bapickPop">Add a Brodmann area&hellip;</button>
-              <div class="rpick-pop" id="bapickPop" hidden>
-                <div class="searchwrap">
-                  <input type="search" id="baq" enterkeyhint="search" role="combobox" aria-expanded="true" aria-controls="balist"
-                         aria-autocomplete="list" aria-describedby="baqcount" autocomplete="off" spellcheck="false"
-                         placeholder="number, name, or what it does&hellip;"
-                         aria-label="Search Brodmann areas by number, anatomical name, or function">
-                  <button class="clear hidden" id="baqclear" type="button" aria-label="Clear search">&times;</button>
-                </div>
-                <p class="search-count" id="baqcount" aria-live="polite"></p>
-                <div class="rpick-list" id="balist" role="listbox" aria-label="Brodmann areas"></div>
-              </div>
-            </div>
-          </div>
-          <!-- how far the highlighted regions and areas let the scan through,
-               for either atlas, so it sits under both panes; the slider reads
-               as transparency since v12.7, nought being solid, while the model
-               keeps an opacity as it always did -->
-          <div class="row trans-row">
-            <label for="opacity">Region transparency</label>
-            <span class="val" id="opacityVal">10%</span>
-            <input type="range" id="opacity" min="0" max="90" value="10" aria-label="How far the highlighted regions let the scan through">
-          </div>
+          <!-- Saved maps (v12.47, at the owner's word): a fold under the
+               picker, shut until pressed, holding the name box, the files and
+               two folds of its own, Saved and Examples (models.js) -->
+          <details class="fold" id="savedFold">
+            <summary>Saved maps</summary>
+            <div class="fold-in" id="models"></div>
+          </details>
         </section>
         <section class="rail-part">
-          <h2>Highlighted</h2>
+          <h2 class="with-switch"><span>Highlighted</span><button class="tier-switch" id="allSwitch" type="button" aria-pressed="true" aria-label="Hide every highlighted region on the scan" title="Every highlighted region off the scan, or on, in one press; each layer's own switch is kept" disabled></button></h2>
           <div class="rchips" id="chips">
-            <div class="empty-note" id="emptyMsg">Nothing highlighted yet — pick a region or a Brodmann area above.</div>
+            <div class="empty-note" id="emptyMsg">Nothing highlighted yet — pick a region above.</div>
           </div>
           <div class="btns"><button class="btn" id="clearBtn" type="button">Clear all</button></div>
         </section>
@@ -1384,7 +1351,7 @@ main.screen.one.land{ flex-direction:row; }
         <header class="pop-head"><b id="popNotesH">What they do</b><small id="notesCount"></small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
         <div class="pop-body">
           <section class="notes" id="notesSec" aria-label="Highlighted regions">
-            <p class="notes-empty" id="notesEmpty">Add a region or a Brodmann area above and what it does appears here, stacked by layer: the cortex at the top, the limbic midbrain beneath it, the reptilian core at the bottom, and the Brodmann areas in a block of their own.</p>
+            <p class="notes-empty" id="notesEmpty">Add a region above and what it does appears here, stacked by layer: the cortex at the top, the limbic midbrain beneath it, the reptilian core at the bottom, and the Brodmann areas in a block of their own.</p>
     <div id="notesTiers"></div>
     <p class="notes-caveat">The three layers are MacLean's triune scheme. It stacks a brain map tidily and it is poor evolutionary history — the &ldquo;reptilian&rdquo; structures are not reptilian, and every layer here is present in every vertebrate with a brain. The grouping is a way of reading the map, not a claim about how it was built.</p>
           </section>
@@ -1410,7 +1377,7 @@ main.screen.one.land{ flex-direction:row; }
         <div class="pop-body">
           <section class="rxsec" id="receptorSec" aria-labelledby="rx-h">
             <!-- the fuller account, kept for later and shown nowhere -->
-            <p class="rx-lede rx-lede-long" hidden>How thickly each receptor sits in each region, from two open sources: in vivo PET, one group-average tracer map per receptor or transporter, averaged over each AAL region; and ex vivo autoradiography, absolute densities in fmol/mg protein from post-mortem cortex, mapped onto the regions area by area. The two measure different things and are never put on one axis. Click a region&rsquo;s name and it lights up in the viewports above as a highlighted region like any other; whatever is highlighted above lights its bar here in the same colour, and a Brodmann area lights the regions most of it lies in. Pick a receptor and what binds it and what it sits in are drawn beneath the chart, with its source, tracer, sample and caveat under those.</p>
+            <p class="rx-lede rx-lede-long" hidden>How thickly each receptor sits in each region, from two open sources: in vivo PET, one group-average tracer map per receptor or transporter, averaged over each AAL region; and ex vivo autoradiography, absolute densities in fmol/mg protein from post-mortem cortex, mapped onto the regions area by area. The two measure different things and are never put on one axis. Click a region&rsquo;s name and it lights up in the viewports above as a highlighted region like any other; whatever is highlighted above lights its bar here in the same colour. Pick a receptor and what binds it and what it sits in are drawn beneath the chart, with its source, tracer, sample and caveat under those.</p>
             <div class="rx-tab rx-fill" id="chart-pane" role="tabpanel" aria-labelledby="rxtab-chart">
               <div class="rx-controls">
                 <div class="rx-switches">
@@ -1490,19 +1457,10 @@ main.screen.one.land{ flex-direction:row; }
                text the receptor window's Sources tab carries (v11.83) -->
           <p class="ref-line"><b>Template</b> MNI152 T1, 0.74&thinsp;mm isotropic, rendered with <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a> (Rorden lab).</p>
           <p class="ref-line"><b>Regions</b> AAL-116: Tzourio-Mazoyer N, Landeau B, Papathanassiou D, et al. Automated anatomical labeling of activations in SPM using a macroscopic anatomical parcellation of the MNI MRI single-subject brain. <i>NeuroImage</i> 2002;15:273&ndash;289.</p>
-          <p class="ref-line"><b>Brodmann areas</b> 41 areas from the Brodmann atlas in <a href="https://github.com/neurolabusc/MRIcron" target="_blank" rel="noopener">MRIcron</a> (BSD), on the MNI152 template; the drawn map on the Brodmann Area Atlas is adapted with permission from <a href="https://neurofeedback-academy.com" target="_blank" rel="noopener">IFEN</a>.</p>
           <div id="ref-sources"><p class="ref-line"><b>Receptors</b> The receptor dataset did not load, and its sources with it.</p></div>
           <p class="ref-line"><b>More</b> How the numbers should be read, and which receptors have no open human data, in <a href="#sources" data-open-pop="popRx" data-open-tab="sources">the receptor window&rsquo;s Sources tab</a>.</p>
           <p class="estab">Runs fully offline · single file · no server</p>
           <p class="credits">© 2026 VisualNeuroscience.AI · set in Flux, Newsreader &amp; Prata &middot; <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></p>
-        </div>
-      </div>
-
-      <div class="pop pop-sm" id="popSaved" hidden aria-labelledby="popSavedH">
-        <header class="pop-head"><b id="popSavedH">Saved maps</b><small>this map, named and kept</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
-        <div class="pop-body">
-                    <p class="empty-note">Name the view &mdash; the highlighted regions, their colours, the camera and any cuts &mdash; and open it again later. Export writes it as a file to open on any other device; Import reads one in.</p>
-          <div id="models"></div>
         </div>
       </div>
 
@@ -1530,7 +1488,6 @@ main.screen.one.land{ flex-direction:row; }
       <button class="pbtn" type="button" data-pop="popRx" data-tab="primer" data-tabs="primer" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="8" width="12.5" height="12" rx="1.5"/><path d="M8 8V5.5A1.5 1.5 0 0 1 9.5 4h9A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H16"/></svg><span>Receptor types</span></button>
     </div>
     <div class="panelbar-end" role="group" aria-label="Saving and reference">
-      <button class="pbtn" type="button" data-pop="popSaved" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3.5h10v17l-5-3.6-5 3.6z"/></svg><span>Saved maps</span></button>
       <button class="pbtn" type="button" data-pop="popExport" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15V4M8 8l4-4 4 4M5 13v7h14v-7"/></svg><span>Export</span></button>
       <button class="pbtn pbtn-ref" type="button" data-pop="popRef" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/></svg><span>Reference</span></button>
     </div>
@@ -1544,7 +1501,6 @@ main.screen.one.land{ flex-direction:row; }
 <script src="assets/stage-lifecycle.js"></script>
 <script src="assets/niivue.js"></script>
 <script src="assets/atlas-data.js"></script>
-<script src="assets/brodmann-areas.js"></script>
 <script src="assets/region-notes.js"></script>
 <script src="assets/diagram-gestures.js"></script>
 <script src="assets/slice-tool.js"></script>
@@ -1553,6 +1509,7 @@ main.screen.one.land{ flex-direction:row; }
 <script src="assets/zoom.js"></script>
 <script src="assets/export3d.js"></script>
 <script src="assets/models.js"></script>
+<script src="assets/example-maps.js"></script>
 <script src="assets/rxfig.js"></script>
 <script src="assets/receptor-data.js"></script>
 <script>
@@ -1561,13 +1518,6 @@ main.screen.one.land{ flex-direction:row; }
   var TPL_URL = MN_ATLAS.TPL_URL, ATLAS_URL = MN_ATLAS.ATLAS_URL;
   var REGIONS = MN_ATLAS.REGIONS, RAW_LABELS = MN_ATLAS.RAW_LABELS;
   var N_LABELS = RAW_LABELS.length;
-
-  /* The Brodmann areas ride alongside the AAL parcels: a second label
-     volume on the same scan, its own list in the rail, and a place in the
-     same highlighted set, so a region and an area can be lit together. */
-  var B = window.MN_BRODMANN || null;
-  var BA_URL = "assets/brodmann.nii.gz";
-  var N_BA = B ? B.MAX + 1 : 0;
 
   var PALETTE = ["#915AD8","#D85AC9","#FE4B83","#FF7847","#E6C14C","#AFF05B","#52F667","#4AE8B7","#4FBEE3","#5575DD"];
 
@@ -1682,13 +1632,31 @@ main.screen.one.land{ flex-direction:row; }
     return PALETTE[selections.size % PALETTE.length];
   }
 
-  function isBA(s){ return s.atlas === "ba"; }
   /* the table padded as assets/scan-look.js pads it, so no clear label
-     beside a painted one is drawn black */
-  function labelMap(n, labels, which){
+     beside a painted one is drawn black; a region switched off by its
+     layer's switch (v12.47) stays clear */
+  /* every region at once (v12.47): the master switch on the Highlighted
+     heading hides them all and shows them again, each layer's own switch
+     kept underneath; a layer switched on under a master that is off brings
+     the master on with it, so the layers that were on show again too */
+  var master = true;
+  function vis(s){ return master && !s.off; }
+  var allSwitch = document.getElementById("allSwitch");
+  function paintAll(){
+    if (!allSwitch) return;
+    allSwitch.setAttribute("aria-pressed", String(master));
+    allSwitch.setAttribute("aria-label", master ? "Hide every highlighted region on the scan" : "Show the highlighted regions on the scan again");
+    allSwitch.disabled = !selections.size;
+  }
+  if (allSwitch) allSwitch.addEventListener("click", function(){
+    master = !master;
+    renderChips(); applyColormap();
+    if (window.MN) MN.tap("light");
+  });
+  function labelMap(n, labels){
     var t = MN_LOOK.labelTable(n, labels);
     selections.forEach(function(s){
-      if (isBA(s) !== which) return;
+      if (!vis(s)) return;
       var rgb = hexToRgb(s.color);
       s.indices.forEach(function(idx){
         if (idx < 0 || idx >= n) return;
@@ -1698,15 +1666,12 @@ main.screen.one.land{ flex-direction:row; }
     return t;
   }
   function applyColormap(){
-    var aal = labelMap(N_LABELS, RAW_LABELS, false);
-    var ba = B ? labelMap(N_BA, B.LABELS, true) : null;
+    var aal = labelMap(N_LABELS, RAW_LABELS);
     allNV().forEach(function(nv){
       if (!nv.volumes || nv.volumes.length < 2) return;
       nv.volumes[1].setColormapLabel(aal);
-      if (ba && nv.volumes.length > 2) nv.volumes[2].setColormapLabel(ba);
       nv.updateGLVolume();
     });
-    markBAList();
   }
 
 
@@ -1725,12 +1690,11 @@ main.screen.one.land{ flex-direction:row; }
     notesCount.textContent = countText();
     if (!selections.size || typeof MN_NOTES === "undefined") return;
 
-    var bucket = {}, areas = [];
-    selections.forEach(function(sel){
-      if (isBA(sel)){ areas.push(sel); return; }
+    var bucket = {};
+    selections.forEach(function(sel, key){
       var note = MN_NOTES.NOTES[sel.base];
       if (!note) return;
-      (bucket[note.tier] = bucket[note.tier] || []).push({sel: sel, note: note});
+      (bucket[note.tier] = bucket[note.tier] || []).push({sel: sel, note: note, key: key});
     });
 
     MN_NOTES.TIERS.forEach(function(tier){
@@ -1746,6 +1710,7 @@ main.screen.one.land{ flex-direction:row; }
       var body = document.createElement("div"); body.className = "tier-body";
       rows.forEach(function(row){
         var cell = document.createElement("div"); cell.className = "rnote";
+        cell.setAttribute("data-key", row.key);   /* a pick from the list scrolls to it (readAbout) */
         var h = document.createElement("h3");
         var dot = document.createElement("span");
         dot.className = "dot"; dot.style.background = row.sel.color;
@@ -1759,61 +1724,40 @@ main.screen.one.land{ flex-direction:row; }
         var p = document.createElement("p");
         p.textContent = row.note.fn;
         cell.appendChild(h); cell.appendChild(p);
+        /* the two lines of health (v12.47): the disorders a fault here is part of, and what a lesion has shown */
+        if (row.note.disease || row.note.damage){
+          var more = document.createElement("div"); more.className = "more";
+          [["Disease", row.note.disease], ["Damage", row.note.damage]].forEach(function(pair){
+            if (!pair[1]) return;
+            var k = document.createElement("h4"); k.textContent = pair[0];
+            var t = document.createElement("p"); t.textContent = pair[1];
+            more.appendChild(k); more.appendChild(t);
+          });
+          cell.appendChild(more);
+        }
         body.appendChild(cell);
       });
       box.appendChild(body);
       notesSec.appendChild(box);
     });
 
-    /* the Brodmann areas, in a block of their own below the three layers:
-       cytoarchitecture is a different way of cutting the cortex up, and
-       the areas do not belong to MacLean's tiers */
-    if (areas.length && B){
-      var bbox = document.createElement("div"); bbox.className = "tier";
-      var bhead = document.createElement("div"); bhead.className = "tier-head";
-      bhead.innerHTML = "<b>Brodmann areas</b><span>cytoarchitecture, 1909</span>" +
-        '<span class="n">' + areas.length + "</span>";
-      bbox.appendChild(bhead);
-      var bbody = document.createElement("div"); bbody.className = "tier-body";
-      areas.forEach(function(sel){
-        var a = B.BY_BA[sel.ba]; if (!a) return;
-        var lobe = B.LOBES.filter(function(l){ return l.id === a.lobe; })[0];
-        var cell = document.createElement("div"); cell.className = "rnote";
-        var h = document.createElement("h3");
-        var dot = document.createElement("span"); dot.className = "dot"; dot.style.background = sel.color;
-        h.appendChild(dot);
-        h.appendChild(document.createTextNode(a.name));
-        var side = document.createElement("span"); side.className = "side";
-        side.textContent = "BA" + a.ba + (lobe ? " \u00B7 " + lobe.label : "");
-        h.appendChild(side);
-        var p = document.createElement("p"); p.textContent = a.fn;
-        cell.appendChild(h); cell.appendChild(p);
-        if (a.note){ var c = document.createElement("p"); c.className = "caveat"; c.textContent = a.note; cell.appendChild(c); }
-        bbody.appendChild(cell);
-      });
-      bbox.appendChild(bbody);
-      notesSec.appendChild(bbox);
-    }
   }
 
-  /* "2 regions · 1 area", or whichever of the two is there */
+  /* "2 regions" */
   function countText(){
-    var r = 0, a = 0;
-    selections.forEach(function(s){ if (isBA(s)) a++; else r++; });
-    var bits = [];
-    if (r) bits.push(r + (r === 1 ? " region" : " regions"));
-    if (a) bits.push(a + (a === 1 ? " area" : " areas"));
-    return bits.join(" \u00B7 ");
+    var r = selections.size;
+    return r + (r === 1 ? " region" : " regions");
   }
 
   function notifySel(){
     selWatchers.forEach(function(cb){ try{ cb(); }catch(e){} });
   }
   /* The rows stand under a subheading for each layer of the brain, in the
-     notes' fixed order — cortex, limbic midbrain, reptilian core — with
-     the Brodmann areas in a block of their own beneath, as the What-they-do
-     pop-up stacks the same regions. A layer with nothing lit in it is left
-     out rather than headed empty. */
+     notes' fixed order — cortex, limbic midbrain, reptilian core — as the
+     What-they-do pop-up stacks the same regions, each heading with a switch
+     (v12.47, at the owner's word) that takes every region under it off the
+     scan and back, the rows staying in the list, hollow-dotted while off. A
+     layer with nothing lit in it is left out rather than headed empty. */
   function renderChips(){
     rememberSoon();
     notifySel();
@@ -1823,19 +1767,33 @@ main.screen.one.land{ flex-direction:row; }
       ? countText().replace(/(\d+) ([a-z]+)/g, "$1 <small>$2</small>")
       : "0 <small>highlighted</small>";
     var notes = typeof MN_NOTES !== "undefined" ? MN_NOTES : null;
-    var bucket = {}, areas = [], loose = [];
+    var bucket = {}, loose = [];
     selections.forEach(function(s, key){
-      if (isBA(s)){ areas.push([key, s]); return; }
       var note = notes && notes.NOTES[s.base], tier = note && note.tier;
       if (tier) (bucket[tier] = bucket[tier] || []).push([key, s]); else loose.push([key, s]);
     });
-    function heading(label, n){
+    function heading(label, rows){
       var h = document.createElement("div"); h.className = "rchip-head";
-      h.innerHTML = "<span>" + label + "</span><span class=\"n\">" + n + "</span>";
+      h.innerHTML = "<span>" + label + "</span><span class=\"n\">" + rows.length + "</span>";
+      /* the layer's switch: every region under the heading off the scan, or on, in one press */
+      var allOff = rows.every(function(r){ return !!r[1].off; });
+      var sw = document.createElement("button"); sw.type = "button"; sw.className = "tier-switch";
+      sw.setAttribute("aria-pressed", String(!allOff));
+      var plain = label.replace(/&middot;/g, "and");
+      sw.setAttribute("aria-label", (allOff ? "Show the " : "Hide the ") + plain + " regions on the scan");
+      sw.title = allOff ? "Show these regions on the scan" : "Hide these regions on the scan; they stay in the list";
+      sw.addEventListener("click", function(){
+        var off = !allOff;
+        rows.forEach(function(r){ r[1].off = off; });
+        if (!off) master = true;   /* a layer switched on shows, with every layer that was on */
+        renderChips(); applyColormap();
+        if (window.MN) MN.tap("light");
+      });
+      h.appendChild(sw);
       chipsEl.appendChild(h);
     }
     function chip(key, s){
-      var row = document.createElement("div"); row.className = "rchip";
+      var row = document.createElement("div"); row.className = "rchip" + (vis(s) ? "" : " off");
       var dot = document.createElement("span"); dot.className = "dot"; dot.style.background = s.color;
       var name = document.createElement("span"); name.className = "name"; name.textContent = s.name;
       name.title = s.name;
@@ -1851,14 +1809,11 @@ main.screen.one.land{ flex-direction:row; }
     (notes ? notes.TIERS : []).forEach(function(tier){
       var rows = bucket[tier.id];
       if (!rows || !rows.length) return;
-      heading(tier.label, rows.length);
+      heading(tier.label, rows);
       rows.forEach(function(r){ chip(r[0], r[1]); });
     });
     loose.forEach(function(r){ chip(r[0], r[1]); });
-    if (areas.length){
-      heading("Brodmann areas", areas.length);
-      areas.forEach(function(r){ chip(r[0], r[1]); });
-    }
+    paintAll();
     renderNotes();
   }
 
@@ -1949,7 +1904,7 @@ main.screen.one.land{ flex-direction:row; }
         items.push({value: o.value, text: o.textContent, group: og.label, hay: regionHay(o, og.label)});
       });
     });
-    /* as in the Brodmann search: several words are tried as a phrase first */
+    /* several words are tried as a phrase first */
     var whole = norm(raw).trim().replace(/\s+/g, " ");
     var phrase = terms.length > 1 && items.some(function(it){ return regionHas(it.hay, whole); }) ? whole : null;
     var marks = phrase ? [phrase] : terms;
@@ -2007,7 +1962,7 @@ main.screen.one.land{ flex-direction:row; }
     return {opts: opts, first: terms.length && opts.length ? (named !== -1 ? named : 0) : -1};
   }
   /* ── the pickers' behaviour, shared ─────────────────────────────────
-     The AAL regions and the Brodmann areas are picked alike: a button that
+     The AAL regions are picked from a button that
      opens a panel hung from the region box, a search field at its head and
      the list beneath, filtered as the field is typed in, the arrow keys
      walking it while the focus stays in the field, as a combobox's does,
@@ -2174,62 +2129,13 @@ main.screen.one.land{ flex-direction:row; }
     return {key: side + ":" + r.base, entry: {name: r.pretty, base: r.base, sideTag: side, indices: [indices[0]]}};
   }
 
-  /* Where a Brodmann area falls on the chart. The chart is drawn region by
-     region in AAL and an area is not an AAL region, so it is placed by
-     overlap: the two label volumes share one grid, and an area lights every
-     region that holds at least a fifth of it, and always the one that holds
-     most. Brodmann's areas are cortex, so the deep nuclei and the
-     cerebellum, which an area's edge reaches only where the two atlases
-     disagree, are left out of the count. Worked out once, the first time an
-     area needs placing. */
-  var NOT_CORTEX = {"Subcortical": 1, "Cerebellum": 1, "Vermis": 1};
-  var baReach = null;
-  function buildBAReach(){
-    var nv = allNV()[0];
-    if (!nv || !nv.volumes || nv.volumes.length < 3) return null;
-    var aal = nv.volumes[1].img, ba = nv.volumes[2].img;
-    if (!aal || !ba || aal.length !== ba.length) return null;
-    var NR = REGIONS.length, row = new Int16Array(N_LABELS).fill(-1);
-    REGIONS.forEach(function(r, k){
-      if (NOT_CORTEX[r.group]) return;
-      [r.L, r.R, r.S].forEach(function(p){ if (p != null && p < N_LABELS) row[p] = k; });
-    });
-    var n = new Uint32Array(N_BA * NR);
-    for (var v = 0; v < ba.length; v++){
-      var b = ba[v];
-      if (b > 0 && b < N_BA){ var k = row[aal[v]]; if (k >= 0) n[b * NR + k]++; }
-    }
-    var reach = {};
-    for (var a = 1; a < N_BA; a++){
-      var tot = 0, top = 0, lit = {};
-      for (var j = 0; j < NR; j++){ tot += n[a * NR + j]; if (n[a * NR + j] > n[a * NR + top]) top = j; }
-      if (!tot) continue;
-      for (var j2 = 0; j2 < NR; j2++){
-        var c = n[a * NR + j2], r = REGIONS[j2];
-        if (!c || (j2 !== top && c * 5 < tot)) continue;
-        if (r.L != null) lit[r.L] = 1;
-        if (r.R != null) lit[r.R] = 1;
-        if (r.S != null) lit[r.S] = 1;
-      }
-      reach[a] = lit;
-    }
-    return reach;
-  }
-  /* The colour the chart lights a structure in, or null. A highlight of its
-     own, both sides or either one, comes before a Brodmann area lying mostly
-     within it, so a name clicked on the chart shows even where an area has
-     already lit it. */
+  /* The colour the chart lights a structure in, or null: a highlight of
+     its own, both sides or either one, and on the scan (not switched off). */
   function litColour(indices){
     var want = {}, colour = null;
     indices.forEach(function(i){ if (i != null) want[i] = 1; });
     selections.forEach(function(s){
-      if (!colour && !isBA(s) && s.indices.some(function(i){ return want[i]; })) colour = s.color;
-    });
-    selections.forEach(function(s){
-      if (colour || !isBA(s)) return;
-      if (!baReach) baReach = buildBAReach();
-      var lit = baReach && baReach[s.ba];
-      if (lit && indices.some(function(i){ return lit[i]; })) colour = s.color;
+      if (!colour && vis(s) && s.indices.some(function(i){ return want[i]; })) colour = s.color;
     });
     return colour;
   }
@@ -2302,75 +2208,35 @@ main.screen.one.land{ flex-direction:row; }
         else if (mode === "L") entry = {name: r.pretty, base: r.base, sideTag: "L", indices: [r.L], color: nextColor()};
         else if (mode === "R") entry = {name: r.pretty, base: r.base, sideTag: "R", indices: [r.R], color: nextColor()};
         else if (mode === "S") entry = {name: r.pretty, base: r.base, sideTag: "", indices: [r.S], color: nextColor()};
-        if (entry){ selections.set(key, entry); renderChips(); applyColormap(); }
+        if (entry){ selections.set(key, entry); renderChips(); applyColormap(); readAbout(key); }
       }
     }
     selectEl.value = "";
   });
+  /* a region picked from the list is a wish to read about it (v12.47, at
+     the owner's word, as the study's list raises its reading): What they do
+     rises, scrolled to that region's note */
+  function readAbout(key){
+    if (!window.MN_SCREEN) return;
+    MN_SCREEN.open("popNotes");
+    var cell = notesSec.querySelector('.rnote[data-key="' + key + '"]');
+    var body = document.querySelector("#popNotes .pop-body");
+    if (!cell || !body) return;
+    requestAnimationFrame(function(){
+      body.scrollTop = Math.max(0, cell.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop - 8);
+    });
+  }
 
   mirrorEl.addEventListener("change", function(){ renderDropdown(); rememberSoon(); });
-
-  /* ── which atlas the picker offers ────────────────────────────────────
-     The AAL parcels, or the Brodmann areas with their map beneath the
-     viewports. The choice only changes what can be picked next: whatever
-     is already highlighted, from either atlas, stays in the one list. The
-     last choice is kept, and a link that lands on a Brodmann area opens on
-     that side. */
-  var atlasBtns = Array.prototype.slice.call(document.querySelectorAll(".atlas-mode [data-atlas]"));
-  var aalPane = document.getElementById("aalPane"), baPane = document.getElementById("baPane");
-  function setAtlasMode(mode, quiet){
-    if (mode !== "ba" || !B) mode = "aal";
-    atlasBtns.forEach(function(b){
-      var on = b.getAttribute("data-atlas") === mode;
-      b.classList.toggle("active", on);
-      b.setAttribute("aria-pressed", String(on));
-    });
-    aalPane.classList.toggle("hidden", mode !== "aal");
-    baPane.classList.toggle("hidden", mode !== "ba");
-    if (!quiet){ try{ localStorage.setItem("mn-atlas-mode", mode); }catch(e){} }
-  }
-  atlasBtns.forEach(function(b){
-    b.addEventListener("click", function(){ setAtlasMode(b.getAttribute("data-atlas")); });
-  });
-  if (!B) document.getElementById("atlasBA").classList.add("hidden");
-  (function(){
-    var mode = null, m = location.hash.match(/^#sel=(.+)$/), toks = [];
-    if (m){ try{ toks = decodeURIComponent(m[1]).split(/[|,]/); }catch(e){} }
-    if (/^#ba=?\d{1,2}$/i.test(location.hash) || toks.some(function(t){ return /^B:/i.test(t); })) mode = "ba";
-    if (!mode){ try{ mode = localStorage.getItem("mn-atlas-mode"); }catch(e){} }
-    setAtlasMode(mode, true);
-  })();
 
   document.getElementById("clearBtn").addEventListener("click", function(){
     selections.clear(); renderChips(); applyColormap();
   });
 
-  var opacityEl = document.getElementById("opacity");
-  var opacityVal = document.getElementById("opacityVal");
-  /* A drag sends many values a frame, and the viewer rebuilds every layer
-     of a view each time an opacity is set. The overlays take the newest
-     value at most every tenth of a second instead, with one rebuild per
-     view, which leaves the frames between for the thumb to follow the
-     finger; the last value always lands. */
-  var opacityTimer = 0, opacityLast = 0;
-  /* the slider reads as transparency (v12.7); the viewer and the saved models want an opacity */
-  function opacityOf(){ return (100 - Number(opacityEl.value)) / 100; }
-  function applyOpacity(){
-    opacityTimer = 0; opacityLast = performance.now();
-    var v = opacityOf();
-    allNV().forEach(function(nv){
-      if (!nv.volumes || nv.volumes.length < 2) return;
-      for (var i = 1; i < nv.volumes.length; i++) nv.volumes[i].opacity = v;
-      try{ nv.updateGLVolume(); }catch(e){}
-    });
-  }
-  opacityEl.addEventListener("input", function(){
-    rememberSoon();
-    opacityVal.textContent = opacityEl.value + "%";
-    if (opacityTimer) return;
-    opacityTimer = setTimeout(function(){ requestAnimationFrame(applyOpacity); },
-                              Math.max(0, 100 - (performance.now() - opacityLast)));
-  });
+  /* the regions are drawn solid (v12.47, at the owner's word): the
+     transparency slider went, and the viewer, the saved models and the
+     device's memory keep an opacity of a hundred */
+  function opacityOf(){ return 1; }
 
   /* the four boxes are the one layout: the grid */
   var viewsGrid = document.getElementById("viewsGrid");
@@ -2437,10 +2303,10 @@ main.screen.one.land{ flex-direction:row; }
   /* The probe's names are buttons. The region's lights the side the
      crosshair is on, or both sides while Mirror is ticked, as the list's
      dropdown would; lit already, by any entry that covers the label, a tap
-     puts those out. The area's lights or puts out the Brodmann area. The
-     buttons are rebuilt only as the names change, so a tap is never
+     puts those out, or turns them on again where the layer's switch had
+     put them off. The buttons are rebuilt only as the names change, so a tap is never
      landing on a button the readout has just replaced. */
-  var probeIdx = 0, probeBA = 0, probeBtn = null, probeBABtn = null;
+  var probeIdx = 0, probeBtn = null;
   function probeButton(text, onTap){
     var b = document.createElement("button");
     b.type = "button"; b.className = "probe-btn";
@@ -2451,7 +2317,7 @@ main.screen.one.land{ flex-direction:row; }
   }
   function litBy(idx){      /* the keys of every region entry lighting a label */
     var keys = [];
-    selections.forEach(function(s, k){ if (!isBA(s) && s.indices.indexOf(idx) >= 0) keys.push(k); });
+    selections.forEach(function(s, k){ if (s.indices.indexOf(idx) >= 0) keys.push(k); });
     return keys;
   }
   function paintProbeBtn(b, colour){
@@ -2461,15 +2327,17 @@ main.screen.one.land{ flex-direction:row; }
     b.title = colour ? "Highlighted · tap to put it out" : "Tap to highlight";
   }
   function paintProbe(){
-    var keys = probeIdx ? litBy(probeIdx) : [];
+    var keys = probeIdx ? litBy(probeIdx).filter(function(k){ return vis(selections.get(k)); }) : [];
     paintProbeBtn(probeBtn, keys.length ? selections.get(keys[0]).color : null);
-    paintProbeBtn(probeBABtn, probeBA ? baColour(probeBA) : null);
   }
   function toggleProbe(){
     var r = byIndex[probeIdx];
     if (!r) return;
     var on = litBy(probeIdx);
-    if (on.length) on.forEach(function(k){ selections.delete(k); });
+    if (on.length && !on.some(function(k){ return vis(selections.get(k)); })){
+      on.forEach(function(k){ selections.get(k).off = false; });
+      master = true;
+    } else if (on.length) on.forEach(function(k){ selections.delete(k); });
     else {
       var k = selKeyFor(mirrorEl.checked && r.L != null ? [r.L, r.R] : [probeIdx]);
       if (!k) return;
@@ -2479,12 +2347,6 @@ main.screen.one.land{ flex-direction:row; }
     renderChips(); applyColormap();
     if (window.MN) MN.tap("light");
   }
-  function toggleProbeBA(){
-    var key = "B:" + probeBA;
-    if (selections.has(key)){ selections.delete(key); renderChips(); applyColormap(); }
-    else if (!addBA(probeBA)) return;
-    if (window.MN) MN.tap("light");
-  }
   selWatchers.push(paintProbe);
   function onLoc(loc){
     locWatchers.forEach(function(cb){ try{ cb(loc); }catch(e){} });
@@ -2492,170 +2354,18 @@ main.screen.one.land{ flex-direction:row; }
       if (loc && loc.mm){
         coordsOut.textContent = "MNI " + loc.mm[0].toFixed(0) + " " + loc.mm[1].toFixed(0) + " " + loc.mm[2].toFixed(0) + " mm";
       }
-      var idx = 0, ba = 0;
+      var idx = 0;
       if (loc && loc.values && loc.values.length > 1 && loc.values[1]) idx = Math.round(loc.values[1].value || 0);
-      if (loc && loc.values && loc.values.length > 2 && loc.values[2]) ba = Math.round(loc.values[2].value || 0);
       if (!(idx > 0 && PRETTY[idx])) idx = 0;
-      if (!(ba > 0 && B && B.BY_BA[ba])) ba = 0;
-      if (idx !== probeIdx || ba !== probeBA || !regionOut.firstChild){
-        probeIdx = idx; probeBA = ba; probeBtn = null; probeBABtn = null;
+      if (idx !== probeIdx || !regionOut.firstChild){
+        probeIdx = idx; probeBtn = null;
         regionOut.textContent = "";
         if (idx){ probeBtn = probeButton(PRETTY[idx], toggleProbe); regionOut.appendChild(probeBtn); }
-        if (ba){
-          if (idx) regionOut.appendChild(document.createTextNode(" · "));
-          probeBABtn = probeButton("BA" + ba, toggleProbeBA); regionOut.appendChild(probeBABtn);
-        }
-        if (!idx && !ba) regionOut.textContent = "—";
+        else regionOut.textContent = "—";
       }
       paintProbe();
     } catch(e){}
   }
-
-  /* ── the Brodmann areas ───────────────────────────────────────────────
-     An area is a selection like any other, keyed B:<number>, drawn on the
-     second label volume in a palette colour of its own. It can be picked
-     from the searchable list in the rail, from the two-face map below the
-     notes, or by a deep link. */
-  function baEntry(a, colour){
-    return { atlas: "ba", ba: a.ba, name: a.name, base: "BA" + a.ba, sideTag: "BA" + a.ba,
-             indices: [a.ba], color: colour };
-  }
-  function addBA(ba, quiet){
-    var a = B && B.BY_BA[ba];
-    if (!a) return false;
-    var key = "B:" + a.ba;
-    if (selections.has(key)) return false;
-    selections.set(key, baEntry(a, nextColor()));
-    if (!quiet){ renderChips(); applyColormap(); }
-    return true;
-  }
-  function centreOnBA(ba){
-    var a = B && B.BY_BA[ba];
-    if (a && a.at) centreMm(a.at);
-  }
-  function baColour(ba){
-    var e = selections.get("B:" + ba);
-    return e ? e.color : null;
-  }
-
-  var baListEl = document.getElementById("balist");
-  var baQ = document.getElementById("baq");
-  var baQClear = document.getElementById("baqclear");
-  var baQCount = document.getElementById("baqcount");
-
-  function norm(s){ return String(s).toLowerCase(); }
-  function hayFor(a){
-    return norm("ba" + a.ba + " " + a.ba + " " + a.name + " " + a.region + " " +
-                a.fn + " " + a.note + " " + a.lobe + " " + (a.tags || ""));
-  }
-  /* Two passes, because loose matching on several words is too generous:
-     a multi-word query is tried as a phrase first, and only if nothing
-     carries the phrase does it fall back to every-word-somewhere. */
-  function baMatches(a, terms, phrase){
-    if (!terms.length) return true;
-    var hay = hayFor(a);
-    if (phrase) return hay.indexOf(phrase) !== -1;
-    return terms.every(function(t){ return hay.indexOf(t) !== -1; });
-  }
-  function phraseFor(terms, raw){
-    if (terms.length < 2 || !B) return null;
-    var whole = norm(raw).trim().replace(/\s+/g, " ");
-    return B.AREAS.some(function(a){ return hayFor(a).indexOf(whole) !== -1; }) ? whole : null;
-  }
-  function highlightText(text, terms){
-    if (!terms.length) return document.createTextNode(text);
-    var frag = document.createDocumentFragment();
-    var low = norm(text), i = 0;
-    while (i < text.length){
-      var best = -1, bestLen = 0;
-      terms.forEach(function(term){
-        var at = low.indexOf(term, i);
-        if (at !== -1 && (best === -1 || at < best)){ best = at; bestLen = term.length; }
-      });
-      if (best === -1){ frag.appendChild(document.createTextNode(text.slice(i))); break; }
-      if (best > i) frag.appendChild(document.createTextNode(text.slice(i, best)));
-      var mk = document.createElement("mark");
-      mk.textContent = text.slice(best, best + bestLen);
-      frag.appendChild(mk);
-      i = best + bestLen;
-    }
-    return frag;
-  }
-  /* The rows are the AAL list's: grouped by lobe, the number and the name,
-     a swatch on an area already highlighted, and, where the name does not
-     carry the match, the stretch of what the area does that holds it.
-     Enter takes the area whose number was typed, then the first named by
-     what was typed, then the first found at all. */
-  function buildBAList(raw){
-    var terms = norm(raw).split(/\s+/).filter(Boolean);
-    var phrase = phraseFor(terms, raw);
-    var marks = phrase ? [phrase] : terms;
-    var asked = terms.length === 1 && /^(ba)?\d{1,2}$/.test(terms[0]) ? Number(terms[0].replace(/^ba/, "")) : null;
-    baListEl.innerHTML = "";
-    var opts = [], named = -1, exact = -1;
-    B.LOBES.forEach(function(lobe){
-      var mine = B.AREAS.filter(function(a){ return a.lobe === lobe.id && baMatches(a, terms, phrase); });
-      if (!mine.length) return;
-      var groupEl = document.createElement("div");
-      groupEl.setAttribute("role", "group");
-      var h = document.createElement("div");
-      h.className = "balobe"; h.id = "bapick-g" + opts.length;
-      h.appendChild(highlightText(lobe.label + " \u00B7 " + lobe.sub, marks));
-      groupEl.setAttribute("aria-labelledby", h.id);
-      groupEl.appendChild(h);
-      baListEl.appendChild(groupEl);
-      mine.forEach(function(a){
-        var k = opts.length;
-        var row = document.createElement("div");
-        row.className = "barow rpick-opt"; row.id = "bapick-o" + k;
-        row.setAttribute("role", "option"); row.setAttribute("aria-selected", "false");
-        row.setAttribute("data-value", String(a.ba));
-        var num = document.createElement("span"); num.className = "num";
-        num.appendChild(highlightText("BA" + a.ba, marks));
-        var nm = document.createElement("span"); nm.className = "nm";
-        nm.appendChild(highlightText(a.name, marks));
-        if (marks.length && !marks.some(function(m){ return norm("ba" + a.ba + " " + a.name).indexOf(m) !== -1; })){
-          var why = whyFrom(a.fn, marks);
-          if (why) nm.appendChild(why);
-        }
-        row.appendChild(num); row.appendChild(nm);
-        var c = baColour(a.ba);
-        if (c){
-          var sw = document.createElement("span"); sw.className = "swatch";
-          sw.style.background = c; sw.title = "Highlighted";
-          row.appendChild(sw);
-          row.setAttribute("aria-label", "BA" + a.ba + " " + a.name + ", highlighted");
-        }
-        if (asked !== null && a.ba === asked) exact = k;
-        if (named === -1 && marks.length && marks.every(function(m){ return norm("ba" + a.ba + " " + a.name).indexOf(m) !== -1; })) named = k;
-        groupEl.appendChild(row);
-        opts.push({el: row, value: String(a.ba)});
-      });
-    });
-    if (!opts.length){
-      var e = document.createElement("p");
-      e.className = "balist-empty";
-      e.textContent = "Nothing matches \u201C" + raw.trim() + "\u201D. Try a number, a gyrus, or what you want the area to do.";
-      baListEl.appendChild(e);
-    }
-    baQCount.textContent = terms.length
-      ? opts.length + (opts.length === 1 ? " area matches" : " areas match")
-      : "All " + B.AREAS.length + " areas.";
-    return {opts: opts, first: !terms.length || !opts.length ? -1 : exact !== -1 ? exact : named !== -1 ? named : 0};
-  }
-  /* a pick adds the area and centres the planes on it; one already
-     highlighted stays as it is, as a region picked again does */
-  var baPicker = B && baListEl ? dropPicker({
-    wrap: document.getElementById("bapick"), btn: document.getElementById("bapickBtn"),
-    pop: document.getElementById("bapickPop"), q: baQ, list: baListEl, clear: baQClear,
-    build: buildBAList,
-    pick: function(v){
-      var ba = Number(v);
-      if (addBA(ba)){ centreOnBA(ba); if (window.MN) MN.tap("light"); }
-    }
-  }) : null;
-  /* the open list follows the highlights, as the chips do */
-  function markBAList(){ if (baPicker && baPicker.isOpen()) baPicker.rebuild(); }
 
   renderDropdown();
   renderChips();
@@ -2665,9 +2375,10 @@ main.screen.one.land{ flex-direction:row; }
      a link — from the MCP server, a lecture slide, a chat answer — opens
      the exact view. P pairs, L and R take a side, S is a single structure. */
   function applyHashSelections(){
-    /* #ba=17 and #ba17, the Brodmann Area Atlas's own links, pick that area here too */
+    /* #ba=17 and #ba17 are the Brodmann Area Atlas's own links: the areas
+       left this page in v12.47, so the link goes on to that page */
     var old = location.hash.match(/^#ba=?(\d{1,2})$/i);
-    if (old){ addBA(Number(old[1]), true); if (selections.size){ renderChips(); applyColormap(); centreOnBA(Number(old[1])); } return; }
+    if (old){ location.replace("brodmann.html#ba=" + old[1]); return; }
     var m = location.hash.match(/^#sel=(.+)$/);
     if (!m) return;
     var tokens;
@@ -2675,7 +2386,6 @@ main.screen.one.land{ flex-direction:row; }
     tokens.forEach(function(tok){
       var mode = tok.slice(0, 1), base = tok.slice(2), r = byBase[base];
       if (tok.slice(1, 2) !== ":") return;
-      if (mode === "B"){ addBA(Number(base), true); return; }
       if (!r) return;
       var key = mode + ":" + base;
       if (selections.has(key)) return;
@@ -2702,11 +2412,9 @@ main.screen.one.land{ flex-direction:row; }
       build: function(ctx){
         return MN_EXPORT3D.volumes(allNV()[0], ATLAS_URL, TPL_URL).then(function(v){
           var atlas = v[0], tpl = v[1], parts = [];
-          var nv0 = allNV()[0], baVol = nv0 && nv0.volumes && nv0.volumes.length > 2 ? nv0.volumes[2] : null;
           selections.forEach(function(s){
-            var vol = isBA(s) ? baVol : atlas;
-            if (!vol) return;
-            parts.push(MN_EXPORT3D.labelSurface(vol, s.indices, {
+            if (!vis(s)) return;   /* off the scan, off the model */
+            parts.push(MN_EXPORT3D.labelSurface(atlas, s.indices, {
               name: s.name + (s.sideTag ? " (" + s.sideTag + ")" : ""),
               colour: MN_EXPORT3D.hexColour(s.color)
             }));
@@ -2755,10 +2463,10 @@ main.screen.one.land{ flex-direction:row; }
         var ren = INSTANCES.render, sels = [];
         selections.forEach(function(s, key){
           sels.push({ key: key, name: s.name, base: s.base, sideTag: s.sideTag, indices: s.indices.slice(), color: s.color,
-                      atlas: s.atlas || "aal", ba: s.ba });
+                      atlas: "aal", off: !!s.off });
         });
         return {
-          v: 1, tool: "regions", selections: sels,
+          v: 1, tool: "regions", selections: sels, all: master,
           opacity: Math.round(opacityOf() * 100), mirror: mirrorEl.checked, view: activeView(),
           camera: ren ? { azimuth: ren.scene.renderAzimuth, elevation: ren.scene.renderElevation,
                           zoom: Number(ren.scene.volScaleMultiplier) || 1 } : null,
@@ -2766,24 +2474,26 @@ main.screen.one.land{ flex-direction:row; }
           cuts: sliceTool && sliceTool.state ? sliceTool.state() : null
         };
       },
-      restore: function(m){
+      /* opts.keepView (v12.47, at the owner's word): a map opened from the
+         list, or a file, changes the regions alone and leaves the cuts, the
+         camera and the crosshair as they are; the memory's restore at boot
+         puts its cuts back */
+      restore: function(m, opts){
         if (!m || m.tool !== "regions" || !Array.isArray(m.selections)) throw new Error("That is not a Region Atlas model.");
+        var keepView = !!(opts && opts.keepView);
         selections.clear();
+        master = m.all !== false;
         m.selections.forEach(function(s){
           if (!s || !s.key || !Array.isArray(s.indices)) return;
           var colour = /^#[0-9A-Fa-f]{6}$/.test(s.color || "") ? s.color : nextColor();
-          if (s.atlas === "ba"){
-            var a = B && B.BY_BA[Number(s.ba)];
-            if (a) selections.set("B:" + a.ba, baEntry(a, colour));
-            return;
-          }
+          if (s.atlas === "ba") return;   /* a Brodmann area, which left this page in v12.47 */
           selections.set(s.key, { name: s.name || s.base || "Region", base: s.base, sideTag: s.sideTag || "",
-                                  indices: s.indices.map(Number), color: colour });
+                                  indices: s.indices.map(Number), color: colour, off: s.off === true });
         });
         renderChips(); applyColormap();
-        if (m.opacity){ opacityEl.value = String(100 - Number(m.opacity)); opacityEl.dispatchEvent(new Event("input")); }
         if (typeof m.mirror === "boolean" && mirrorEl.checked !== m.mirror){ mirrorEl.checked = m.mirror; renderDropdown(); }
         var ren = INSTANCES.render;
+        if (keepView){ allNV().forEach(function(nv){ try{ nv.drawScene(); }catch(e){} }); return; }
         if (ren && m.camera){
           if (isFinite(m.camera.azimuth)) ren.scene.renderAzimuth = Number(m.camera.azimuth);
           if (isFinite(m.camera.elevation)) ren.scene.renderElevation = Number(m.camera.elevation);
@@ -2795,11 +2505,39 @@ main.screen.one.land{ flex-direction:row; }
         allNV().forEach(function(nv){ try{ nv.drawScene(); }catch(e){} });
       }
   };
+  /* the example maps (v12.47, at the owner's word): assets/example-maps.js
+     names each one's regions as the atlas keeps a selection, resolved here
+     into a model as a save keeps one, coloured in the palette's order */
+  function exampleMaps(){
+    var out = [], byBase = {};
+    REGIONS.forEach(function(r){ byBase[r.base] = r; });
+    (window.VN_EXAMPLE_MAPS || []).forEach(function(ex){
+      var sels = [];
+      (ex.regions || []).forEach(function(item){
+        var m = /^([LRPS]):(.+)$/.exec(String(item)), r = m && byBase[m[2]];
+        if (!r) return;
+        var mode = m[1], indices = mode === "P" ? [r.L, r.R] : mode === "S" ? [r.S] : [mode === "L" ? r.L : r.R];
+        if (indices.some(function(i){ return i == null; })) return;
+        var k = selKeyFor(indices);
+        if (!k) return;
+        k.entry.key = k.key; k.entry.atlas = "aal"; k.entry.color = PALETTE[sels.length % PALETTE.length];
+        sels.push(k.entry);
+      });
+      if (!sels.length) return;
+      out.push({ name: ex.name, note: ex.note || "", data: {
+        v: 1, tool: "regions", selections: sels,
+        opacity: 100, mirror: ex.mirror !== false, view: "3d", camera: null, crosshair: null, cuts: null
+      } });
+    });
+    return out;
+  }
   if (window.MN_MODELS){
     MN_MODELS.attach({
-      tool: "regions", noun: "model",
+      tool: "regions", noun: "model", things: "maps", folds: true,
       host: document.getElementById("models"),
-      capture: modelApi.capture, restore: modelApi.restore
+      capture: modelApi.capture,
+      restore: function(m){ modelApi.restore(m, { keepView: true }); },
+      examples: exampleMaps()
     });
   }
 
@@ -2818,8 +2556,7 @@ main.screen.one.land{ flex-direction:row; }
       await Promise.all(PLANES.map(function(p){
         return INSTANCES[p.key].loadVolumes([
           {url: tplUrl, name: "mni152.nii.gz", colormap: "gray", opacity: 1},
-          {url: atlasUrl, name: "aal.nii.gz", opacity: 0.9},
-          {url: BA_URL, name: "brodmann.nii.gz", opacity: 0.9}
+          {url: atlasUrl, name: "aal.nii.gz", opacity: 1}
         ]);
       }));
       PLANES.forEach(function(p){ INSTANCES[p.key].setSliceType(p.st); });
@@ -2869,7 +2606,7 @@ main.screen.one.land{ flex-direction:row; }
       if (!selections.size && lastKept){ try{ modelApi.restore(lastKept); }catch(e){} }
       keepReady = true;
       rememberSoon();   /* what the address or the memory put up is itself remembered */
-      notifySel();      /* both label volumes are in, so the chart can place a Brodmann area */
+      notifySel();      /* the label volume is in, so the chart can draw */
       statusEl.classList.add("hidden");
     } catch(err){
       console.error(err);
@@ -3993,6 +3730,8 @@ if (location.hash === "#receptors") {
   buttons.forEach(function(b){
     b.addEventListener("click", function(){ show(b.getAttribute("data-pop"), b.getAttribute("data-tab"), b); });
   });
+  /* the door the page's own script opens a window through (readAbout, v12.47) */
+  window.MN_SCREEN = { open: function(id){ if (current !== id) show(id); }, hide: hide, current: function(){ return current; } };
   document.querySelectorAll(".pop .pop-x").forEach(function(x){ x.addEventListener("click", hide); });
   document.querySelectorAll("#popRx [data-tab]").forEach(function(t){ t.addEventListener("click", press); });
   /* a link inside a window that opens another window on one of its tabs:

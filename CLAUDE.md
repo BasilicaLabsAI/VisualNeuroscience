@@ -313,7 +313,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   on a phone, the square diagram centred in it; the drawer is a flex column with the gap between, the state's box
   shrinking to make the room and scrolling inside), and the slider stands
   in the box's foot (`.drawer-foot`, outside the scroller, no heading) as Region transparency: every opacity slider on
-  the Network Atlas, the 3D Region Atlas and the Hallucinations study reads as transparency since v12.7 (`.trans-row`,
+  the Network Atlas and the Hallucinations study reads as transparency since v12.7 (the 3D Region Atlas's went in
+  v12.47, at the owner's word, its regions drawn solid, `opacityOf()` a hundred) (`.trans-row`,
   the name and value on one line and the slider beneath; nought the regions solid, the range 0 to 90 where the opacity
   ran 10 to 100), while the viewer, the saved models and the device's memory keep an opacity, a hundred apart
   (`opacityOf()`).
@@ -477,7 +478,28 @@ Read this first in every session. It is the handover; nothing else needs pasting
   like the molecular viewer's boxes since v11.33, as are the pop-ups and their tabs; `#drawer` is the
   column the views make room for, `#drawerBox` the box, as tall as its content up to the room, scrolling inside in
   `.drawer-in`; hidden on the tab at its edge, `#drawerHide`, shown again on the handle `#drawerTab` at the screen's
-  edge; beside the views from 901px and over them below, remembered in `localStorage` as `vn-atlas-drawer`). The box's
+  edge; beside the views from 901px and over them below, remembered in `localStorage` as `vn-atlas-drawer`). Since
+  v12.47, at the owner's word, the box wears the island bars' material (`.drawer-box`: `--bar-fill`, `--bar-line`,
+  the blur, `--bar-fill-solid` under `prefers-reduced-transparency`; `.drawer-in.card` clear; the tab and the handle
+  the same; the Network Atlas's two boxes and foot, the Hallucinations study's and Microanatomy's boxes likewise),
+  its Regions part holds Add a region, Mirror and then Saved maps as a fold (`details.fold#savedFold`, `.fold` in
+  `viewer.css`, shut until pressed; the bar's Saved maps button and `#popSaved` went), inside which `models.js`
+  (`folds: true` in `attach`) draws the name box, Export and Import files and two folds of its own, Saved (the
+  person's maps, None until one is kept, opened as one is saved) and Examples, each shut until pressed; and its
+  Highlighted part carries switches: one on the heading (`#allSwitch`, `master` in the script, `all` in a model) for
+  every region at once and one on each layer's heading (`.tier-switch` in `renderChips`, each entry's `off`), every
+  region under it off the scan and on again while it stays in the list, hollow-dotted (`.rchip.off`); the layers'
+  own settings survive the master (a layer switched on under a master that is off brings the master on, so the
+  layers that were on show again), `vis(s)` governs the label table, the chart, the probe and the 3D export, and
+  the headings are set bigger (`.rchip-head`, `.72rem`). A map opened from the list or a file changes the regions
+  alone, the cuts, the camera and the crosshair left as they are (`restore(m, {keepView: true})` from the widget;
+  the memory's restore at boot still puts its cuts back), and a region picked from the list raises What they do
+  scrolled to its note (`readAbout`, through the pop script's `MN_SCREEN.open`; the cells carry `data-key`), as the
+  study's list raises its reading. Each note carries two lines of health since v12.47, at the owner's word, Disease
+  and Damage (`disease` and `damage` in `region-notes.js`, concise teaching notes, not clinical advice; `.rnote h4`
+  and `.more`), which the study's reading shows under What it does from its region's first parcel (`m-disease`,
+  `m-damage`, Crus I for the cerebellum) and the MCP server's `region_info` answers carry (`build_mcp_data.mjs`,
+  `doRegion`). The box's
   Highlighted rows (`#chips`, `renderChips`) stand under a subheading per layer (`.rchip-head`, v11.65) in the order of
   `MN_NOTES.TIERS` (the cortex, labelled so since v11.65 under the id `cerebrum`, limbic midbrain, reptilian core; each region's `tier` in `region-notes.js`), the Brodmann
   areas in a block of their own beneath, as the What-they-do pop-up stacks them. The
@@ -520,15 +542,16 @@ Read this first in every session. It is the handover; nothing else needs pasting
   press: since v11.84 four of them, Receptor graph for the Graph and Sources tabs, Receptor for the Receptor tab, Neurotransmitters
   for its tab and Receptor types for the cards and the table; up to 1000px wide the readouts make room for them, the count
   hidden, the probe's hint hidden and its name capped, the buttons' padding and the bar's gaps a little tighter, and under
-  800px the name shorter still, so the bar fits an iPad upright without scrolling); then Saved
-  maps, Export and, at the far right behind a line,
+  800px the name shorter still, so the bar fits an iPad upright without scrolling); then Export (Saved maps stood
+  before it until v12.47, when the widget moved into the region box) and, at the far right behind a line,
   Reference (`.pbtn-ref`, since v11.31; since v11.83 its window lists every source in full rather than sending the reader to the
   receptor window: the two receptor lines are written into `#ref-sources` by `renderSources()` from the receptor data, the
   same text the receptor window's Sources tab carries, through `sourceLines()`, and ends with a line that opens the receptor
   window on its Sources tab, `[data-open-pop]`/`[data-open-tab]` bound by the pop script, v11.84); the Brodmann map left the page in v11.30, the Brodmann Area Atlas having it). The readouts sit at the bar's start; since v11.51 the Probe readout's names are buttons (`.probe-btn`, built in `onLoc`
   only as the names change): the region's lights the side under the crosshair, or the pair while Mirror is ticked, and puts
-  out whatever entry covers the label (`toggleProbe`, `litBy`), the area's lights or puts out the Brodmann area
-  (`toggleProbeBA`), and `paintProbe` keeps their pressed state and colour dot in step through `selWatchers`. Every element id the script uses is unchanged, so the pop-ups' contents
+  out whatever entry covers the label, or turns it on again where a switch had put it off (`toggleProbe`, `litBy`; the
+  Brodmann area's button went with the areas in v12.47), and `paintProbe` keeps their pressed state and colour dot in
+  step through `selWatchers`. Every element id the script uses is unchanged, so the pop-ups' contents
   still follow the selection; a chart is told to measure itself when its pop-up opens. The receptor types table
   (`#types-heat`, `.heat`) is `overflow:visible` and scrolls with the pop-up's body, so its sticky column names and
   row labels hold; its header is as tall as the longest name (`th.col button` sized by its text, since v11.29). Since
@@ -651,9 +674,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   face's name makes 56px of room for the shell's back button. The
   page loads `atlas-views.css` (since v12.34, after viewer.css as the atlases do), `stage-lifecycle.js`, `scan-look.js`,
   `zoom.js`, `slice-tool.js` and `view-bar.js`; the inline copy of viewer.css's `.ts-btn` it once carried went with the
-  banner's buttons. The 3D Region Atlas keeps its own Brodmann list, and no map since v11.30; since v11.38
-  the areas are picked through the same dropdown panel as the AAL regions (`dropPicker` in `regions.html`, shared by
-  `#rpick` and `#bapick`: button `#bapickBtn`, panel `#bapickPop`, list `#balist` a `.rpick-list` grouped by lobe).
+  banner's buttons. The 3D Region Atlas carried its own Brodmann list until v12.47 (no map since v11.30; from v11.38
+  picked through `dropPicker`, which `#rpick` keeps), when the areas left it at the owner's word: no second label
+  volume (`brodmann.nii.gz` is the Brodmann page's alone), no AAL-or-Brodmann switch, no picker, no block among the
+  chips, the notes or the Reference window, no area under the probe or on the chart, a `#ba=` link forwarded to
+  `brodmann.html`, a saved model's `atlas: "ba"` entries skipped on restore, and the MCP worker's `save_model`
+  refusing a `B:` item and naming the Brodmann Area Atlas (`resolveItem` in `account.js`; its test expects the
+  refusal; live with the next deploy). The home page's atlas box and its twin in `Shell.swift` no longer name the
+  areas.
   `app/scripts/shoot-home-atlas.js` shoots the atlas's home twins through `MN_SEL.middle` (the crosshair to the middle of
   the volume, the work Centre planes did until v12.33), `MN_SEL.centreMm` and `MN_SEL.onLocation`, the
   door the page keeps open for it (put back in v12.1 after the probe's rewrite had dropped it; `locWatchers` beside
@@ -675,7 +703,19 @@ Read this first in every session. It is the handover; nothing else needs pasting
   a save keeps, as `brain-regions[-name].json` through `MN.saveFile` (the Files app and the share sheet in the apps, a
   download on the web) and the second reading one through a file picker into `restore()`, which refuses another
   tool's file; no account is needed, and the import fills the name box so Save can keep it. The Vision Pro app has no
-  saved models, so it has no part in this.
+  saved models, so it has no part in this. Since v12.47, at the owner's word, the widget carries Example maps under
+  the person's own: `attach`'s `examples` (each a name, a note and a model as a save keeps one), `things`, the
+  plural for its headings, and `folds` (the two sections as `details.fold`, Saved and Examples, as the atlas has them
+  since the widget moved into its region box the same day; without `folds`, `.mhead` headings, Your maps then
+  Example maps; the own list reads None, `.mnone`, until one is saved), the examples drawn as rows with their region
+  count where the date stands and no delete button, a press opening one through `restore` (`openExample`, a copy of
+  the data), filling the name box so Save keeps a copy and saying the note under the lists. The maps are `site/assets/example-maps.js`
+  (`VN_EXAMPLE_MAPS`: name, note, `regions` as `P:`, `L:`, `R:` or `S:` and the AAL base, `opacity`, `mirror`),
+  resolved by `exampleMaps()` in `regions.html` through `selKeyFor` and coloured in `PALETTE`'s order, and precached:
+  Memory circuit, Visual pathway and Serotonin receptor hotspots as the owner's account had them (the Amygdala map and
+  the MCP connector's test left out), the hotspots the regions `receptor-data.js` ranks highest for its six serotonin
+  tracers, then Basal ganglia motor loop, Language network (the left side alone, mirror off), Default mode network and
+  Dopamine reward circuit. The MCP server's `list_models` lists the account's files alone, as before.
 - The Hallucinations study (`site/hallucinations.html`, the visualisation of Boksa 2009 that the owner calls the
   schizophrenia visualisation) is one screen in the 3D Region Atlas's manner since v11.43: `body.atlas-screen`,
   `main#main.screen`, the drawer (`#drawerBox`: Brain state, then Regions with the system filters, the list and the
@@ -731,7 +771,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   drawer's column beside the views had pushed off the page's: `centre()` in `view-bar.js`, run with each measure,
   slides the bar by the difference (`transform`), to the screen's centre where there is no island (the app's pages),
   never off the left edge and not at all on a phone held sideways, and `.quad .drawer{ z-index:7 }` in
-  `atlas-views.css` stands the drawer over the bar where the two meet. On the Brodmann Area
+  `atlas-views.css` stands the drawer over the bar where the two meet. Since v12.47 `centre()` works the shift out
+  from the bar's rect less the shift it wears (`shiftNow`) and touches the style only when the shift changes: until
+  then every measure cleared the transform and set it again, and the owner saw the bar jump a little and come back
+  on the web as a sheet opened (the sheet's measure sends a resize). On the Brodmann Area
   Atlas the same bar stands in the bar along the foot on an iPad or a computer since v12.37, at the owner's word, after
   the faces' group where there is room (`#barScan`, a `.panelbar-scan` slot; `.panelbar .viewbar` undoes its island;
   `arrange()` moves `nav#baViewbar` there while the screen is `.tall` or `.wide` and back to the head of the brain's box
