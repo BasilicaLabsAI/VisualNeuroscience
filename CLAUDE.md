@@ -488,7 +488,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   scrolls, the region picker and the highlighted list are a box in the deck's corner (since v11.24, rounded and lifted
   like the molecular viewer's boxes since v11.33, as are the pop-ups and their tabs; `#drawer` is the
   column the views make room for, `#drawerBox` the box, as tall as its content up to the room, scrolling inside in
-  `.drawer-in`; hidden on the tab at its edge, `#drawerHide`, shown again on the handle `#drawerTab` at the screen's
+  `.drawer-in`, the one scroller in it since v12.52, at the owner's word (`.rchips` is `overflow:visible`, its own
+  `overflow-y:auto` and 24rem cap gone, which WebKit had read as a scroll of the list's own); hidden on the tab at its edge, `#drawerHide`, shown again on the handle `#drawerTab` at the screen's
   edge; beside the views from 901px and over them below, remembered in `localStorage` as `vn-atlas-drawer`). Since
   v12.47, at the owner's word, the box wears the island bars' material (`.drawer-box`: `--bar-fill`, `--bar-line`,
   the blur, `--bar-fill-solid` under `prefers-reduced-transparency`; `.drawer-in.card` clear; the tab and the handle
@@ -508,9 +509,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   layers that were on show again), `vis(s)` governs the label table, the chart, the probe and the 3D export, and
   the headings are set bigger (`.rchip-head`, `.72rem`). A map opened from the list or a file changes the regions
   alone, the cuts, the camera and the crosshair left as they are (`restore(m, {keepView: true})` from the widget;
-  the memory's restore at boot still puts its cuts back), and a region picked from the list raises What they do
-  scrolled to its note (`readAbout`, through the pop script's `MN_SCREEN.open`; the cells carry `data-key`), as the
-  study's list raises its reading. Each note carries two lines of health since v12.47, at the owner's word, Disease
+  the memory's restore at boot still puts its cuts back), and a row of the Highlighted list pressed, its name and
+  side one button (`.rread`, v12.52, at the owner's word; v12.47 had the pick from Add a region raise it, which only
+  adds now), raises What they do scrolled to its note (`readAbout`, through the pop script's `MN_SCREEN.open`; the
+  cells carry `data-key`), as the study's list raises its reading. Each note carries two lines of health since v12.47, at the owner's word, Disease
   and Damage (`disease` and `damage` in `region-notes.js`, concise teaching notes, not clinical advice; `.rnote h4`
   and `.more`), which the study's reading shows under What it does from its region's first parcel (`m-disease`,
   `m-damage`, Crus I for the cerebellum) and the MCP server's `region_info` answers carry (`build_mcp_data.mjs`,

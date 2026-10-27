@@ -679,6 +679,14 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
   border:1px solid var(--hair); padding:.42rem .5rem .38rem;
 }
 .rchip .dot{ width:.62rem; height:.62rem; flex:none; border:1px solid var(--ink); }
+/* the name and side as one press (v12.52): What they do on this region */
+.rchip .rread{
+  display:flex; flex:1 1 auto; min-width:0; align-items:center; gap:.55rem;
+  background:none; border:0; padding:0; margin:0; color:inherit; font:inherit; text-align:left; cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+@media (hover: hover){ .rchip .rread:hover .name{ text-decoration:underline; } }
+.rchip .rread:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
 .rchip .name{ flex:1; font-family:var(--font-serif); font-size:.95rem; line-height:1.25;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .rchip .side{ flex:none; font-family:var(--font-brand); font-weight:500; font-size:.56rem;
@@ -870,7 +878,8 @@ mark{ background:var(--ink); color:var(--paper); }
    in the box scrolls. Where the rail runs under the scans as a row, the
    parts sit two to a line. */
 .rail-box{ display:grid; grid-template-columns:minmax(0,1fr); row-gap:1.4rem; align-items:start; }
-.rchips{ max-height:24rem; overflow-y:auto; overscroll-behavior:contain; }
+/* the list never scrolls on its own (v12.52, at the owner's word): the region box scrolls as one, in .drawer-in */
+.rchips{ max-height:none; overflow:visible; }
 .rchips > *{ flex-shrink:0; }
 @media (max-width:1100px) and (orientation:portrait), (max-width:900px) and (orientation:landscape){
   .rail .rail-box{ grid-column:1 / -1; grid-template-columns:repeat(2, minmax(0,1fr)); column-gap:1.6rem; }
@@ -946,7 +955,6 @@ main.screen{
 /* the box wears the island bars' material since v12.47, at the owner's word (bar.css's --bar-fill and --bar-line) */
 @media (prefers-reduced-transparency: reduce){ .drawer-box{ background:var(--bar-fill-solid); -webkit-backdrop-filter:none; backdrop-filter:none; } }
 .drawer-in.card{ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; border:0; padding:var(--gap) var(--gap) 1.4rem; background:transparent; }
-.drawer .rchips{ max-height:none; }
 .deck.shut .drawer{ flex-basis:0; width:0; padding-left:0; visibility:hidden; transition-delay:0s, 0s, 0s, .32s; }
 .deck.shut .drawer-box{ transform:translateX(calc(-100% - var(--gap) - 22px)); }
 /* the tab and the handle: one shape, the tab on the box's edge at its
@@ -1795,15 +1803,20 @@ main.screen.one.land{ flex-direction:row; }
     function chip(key, s){
       var row = document.createElement("div"); row.className = "rchip" + (vis(s) ? "" : " off");
       var dot = document.createElement("span"); dot.className = "dot"; dot.style.background = s.color;
+      /* the name is a button (v12.52): a press raises What they do on this region */
+      var read = document.createElement("button"); read.type = "button"; read.className = "rread";
+      read.title = "What " + s.name + " does";
+      read.setAttribute("aria-label", "What " + s.name + " does");
       var name = document.createElement("span"); name.className = "name"; name.textContent = s.name;
-      name.title = s.name;
       var side = document.createElement("span"); side.className = "side"; side.textContent = s.sideTag;
+      read.appendChild(name); read.appendChild(side);
+      read.addEventListener("click", function(){ readAbout(key); });
       var x = document.createElement("button"); x.className = "x"; x.type = "button"; x.textContent = "\u00D7";
       x.setAttribute("aria-label", "Remove " + s.name);
       x.addEventListener("click", function(){
         selections.delete(key); renderChips(); applyColormap();
       });
-      row.appendChild(dot); row.appendChild(name); row.appendChild(side); row.appendChild(x);
+      row.appendChild(dot); row.appendChild(read); row.appendChild(x);
       chipsEl.appendChild(row);
     }
     (notes ? notes.TIERS : []).forEach(function(tier){
@@ -2229,13 +2242,14 @@ main.screen.one.land{ flex-direction:row; }
         else if (mode === "L") entry = {name: r.pretty, base: r.base, sideTag: "L", indices: [r.L], color: nextColor()};
         else if (mode === "R") entry = {name: r.pretty, base: r.base, sideTag: "R", indices: [r.R], color: nextColor()};
         else if (mode === "S") entry = {name: r.pretty, base: r.base, sideTag: "", indices: [r.S], color: nextColor()};
-        if (entry){ selections.set(key, entry); renderChips(); applyColormap(); readAbout(key); }
+        if (entry){ selections.set(key, entry); renderChips(); applyColormap(); }
       }
     }
     selectEl.value = "";
   });
-  /* a region picked from the list is a wish to read about it (v12.47, at
-     the owner's word, as the study's list raises its reading): What they do
+  /* a row of the Highlighted list pressed is a wish to read about it (v12.52,
+     at the owner's word, as the study's list raises its reading; v12.47 had
+     the pick from Add a region raise it, which only adds now): What they do
      rises, scrolled to that region's note */
   function readAbout(key){
     if (!window.MN_SCREEN) return;

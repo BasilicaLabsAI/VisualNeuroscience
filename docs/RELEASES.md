@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.52 — 27 October 2026 — The highlighted rows read, in one scrolling box
+Commit · Raise What they do from a press on a highlighted row rather than on adding a region, and let the list scroll only with the box
+
+On the 3D Region Atlas a press on a region's name in the Highlighted list now raises What they do on that region, and adding a region from the list only adds it, as asked; and the Highlighted list no longer scrolls on its own, the region box scrolling as one piece with the list within it. The apps take it with their next build.
+
 ## v12.51 — 27 October 2026 — The atlases in a new order
-Commit · Put the six atlases in one order on the home page, the app's Atlases tab and the Android menu
+Commit `cf2e61a` · Put the six atlases in one order on the home page, the app's Atlases tab and the Android menu
 
 The six atlases now stand in one order everywhere they are listed, on the home page, in the app's Atlases tab and in the Android menu: the 3D Region Atlas, then Tractography and Molecular beside it on a wide screen, then Microanatomy, the Brodmann Area Atlas and, last, the Network Atlas. The apps take it with their next build.
 
