@@ -914,7 +914,13 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `app/store/screenshots/` (the browser's, every set retaken on the v12.9 pages by `app/scripts/shoot-store.js`, whose
   Brodmann shot is the Brodmann Area Atlas page since v12.9) and the App Store's own images in `app/store/sell/`: since
   v12.10 `app/scripts/remake-store-images.js` remakes them from the live pages (served on 8412, run from `app/`,
-  an hour; name shots `ipad-01`…`iphone-10`, `duo-01`…`open-10` for a few): ten shots since v12.15, each the iPad's at 2752×2064 and the
+  an hour; name shots `ipad-01`…`iphone-11`, `duo-01`…`open-11` for a few): eleven shots since v12.57, ten since
+  v12.15 (the eleventh, at the owner's word, is Tractography as the owner's iPad capture of 27 October 2026 had it,
+  the brain nearly solid with its left hemisphere's near side cut away and the tractogram standing whole in the space,
+  preset through the page's own memory, `TRACT_STATE` as `vn-tracts-last`, under the statement Wiring System
+  Tractogram, `03-tractography.png`, its iPhone bar the Molecular strip titled Tractography in Inter SemiBold,
+  `iphone-top-dark-tractography`; ten is the most a size takes in App Store Connect, so one of the eleven stays out of
+  each upload, the owner's choice), each the iPad's at 2752×2064 and the
   iPhone's at two sizes from one render, `iphone-6.3-` at 1206×2622, the medium display App Store Connect has required
   since October 2026 (the 6.9-inch refused there as "File dimensions are invalid"), and `iphone-6.9-` at 1320×2868, now
   optional, to replace 1.0's in that slot, and since v12.23 the iPhone Duo's own two (v12.20 set the iPad renders in

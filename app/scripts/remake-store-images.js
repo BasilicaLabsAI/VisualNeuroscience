@@ -3,7 +3,8 @@
      cd app && node scripts/remake-store-images.js [shot ...]
 
    Each image in app/store/sell is a capture of the app under a statement
-   (store-sell.js): ten shots, each the iPad's at 2752×2064, the iPhone's at
+   (store-sell.js): eleven shots (ten is the most a size takes in App Store
+   Connect, so one stays out of each upload), each the iPad's at 2752×2064, the iPhone's at
    two sizes from the one render, 1206×2622 (the medium display App Store
    Connect requires since October 2026) and 1320×2868 (the 6.9-inch,
    optional), and since v12.23 the iPhone Duo's two, its outer display
@@ -53,9 +54,16 @@
    VN_SITE names another address. Uses the global Playwright install and
    the bundled Chromium, drawing WebGL with SwiftShader, so the atlas pages
    take a minute or two each; the whole set takes an hour or so. The
-   shots are named ipad-01 to ipad-10 and iphone-01 to iphone-10, as the
-   captures were numbered, and duo-01 to duo-10 and open-01 to open-10;
-   name some to remake only those.
+   shots are named ipad-01 to ipad-11 and iphone-01 to iphone-11, as the
+   captures were numbered, and duo-01 to duo-11 and open-01 to open-11;
+   name some to remake only those. The eleventh (v12.57, at the owner's
+   word) is Tractography in the state of the owner's iPad capture of 27
+   October 2026: the brain on and nearly solid, its left hemisphere's near
+   side cut away by the slice tool, Slice tract off so the tractogram stands
+   whole in the cut-away space, the view turned from the page's three-quarter
+   one to look into the cut, all preset through the page's own memory
+   (vn-tracts-last, TRACT_STATE); the iPhone's bar for it is the Molecular
+   strip titled Tractography in Inter SemiBold (iphone-top-dark-tractography).
 
    The page is marked as the shell marks it (data-shell, data-shell-pad on
    the iPad, data-native, a Capacitor stub so native.js takes it for the
@@ -102,9 +110,22 @@ const SEL_PH  = 'P:Thalamus|P:Amygdala|P:Frontal_Mid';
 /* when a page is ready to be shot */
 const atlasReady = p => p.waitForFunction(() => document.getElementById('status').classList.contains('hidden'), null, { timeout: 400000 }).then(() => p.waitForTimeout(2500));
 const cellsReady = p => p.waitForFunction(() => { const s = document.getElementById('plate'); return s && s.children.length > 3; }, null, { timeout: 120000 }).then(() => p.waitForTimeout(1500));
-const hxReady = p => p.waitForFunction(() => !!document.querySelector('.view[data-box="render"] .slice-btn'), null, { timeout: 400000 }).then(() => p.waitForTimeout(2500));
+/* the study's scans are in once the views' bar's Slice button is live, which the page enables as it hands the bar
+   its slice tool (v12.33; until v12.57 this waited for the 3D view's own slice button, gone with the views' bars) */
+const hxReady = p => p.waitForFunction(() => { const b = document.querySelector('.viewbar .vb-slice'); return !!b && !b.disabled; }, null, { timeout: 400000 }).then(() => p.waitForTimeout(2500));
 const molReady = p => p.waitForFunction(() => { const f = document.getElementById('viewer'); try { return !!(f && f.contentWindow && f.contentWindow.receptorViewer); } catch (e) { return false; } }, null, { timeout: 180000 }).then(() => p.waitForTimeout(6000));
 const pageReady = p => p.waitForTimeout(2500);
+/* the tractogram and the brain in, and the cut's rebuild, slow in software, come to rest */
+const tractReady = async p => {
+  await p.waitForFunction(() => { const nv = window.MN_TRACTS && MN_TRACTS.nv(); return !!(nv && nv.meshes && nv.meshes[0] && nv.meshes[0].pts && nv.meshes[0].pts.length); }, null, { timeout: 400000 });
+  await p.evaluate(() => MN_TRACTS.brain());
+  await p.waitForTimeout(12000);
+};
+/* the state of the owner's capture (v12.57): the brain on and nearly solid, Slice on with the one cut
+   through the left hemisphere, Slice tract off, Offset on at the opening distance, the view turned
+   twenty degrees from the page's three-quarter one towards the cut */
+const TRACT_STATE = JSON.stringify({ v: 5, brain: { on: true, trans: 25 }, tract: true, sliceTract: false, offsetOn: true, radius: 0.3, past: 2.5,
+  cuts: { on: true, cuts: { ax: 0, cor: 0, sag: -0.5 } }, view: { az: 140, el: 15, zoom: 1.4 } });
 
 /* what each capture had open */
 const click = (sel, ms) => async p => { await p.click(sel); await p.waitForTimeout(ms || 1500); };
@@ -179,6 +200,9 @@ const SHOTS = [
     top: 'ipad-top-dark-practice', out: '08-practice.png', statement: 'Revision question testing' },
   { name: 'ipad-09', dev: 'ipad', theme: 'light', url: 'regions.html', ready: atlasReady,
     top: 'ipad-top-light-atlases', out: '02-atlas-light.png', statement: 'Light mode' },
+  /* the tractogram (v12.57, at the owner's word), as the owner's capture had it */
+  { name: 'ipad-11', dev: 'ipad', theme: 'dark', url: 'tracts.html', ready: tractReady, store: { 'vn-tracts-last': TRACT_STATE },
+    top: 'ipad-top-dark-atlases', out: '03-tractography.png', statement: 'Wiring System Tractogram' },
   /* the first two on the iPhone are the owner's own captures from the
      TestFlight build, 25 October 2026, taken whole: the atlas's four views
      with the three regions lit, and the What they do window over them; the
@@ -201,6 +225,8 @@ const SHOTS = [
     top: 'iphone-top-dark-hallucinations', bottom: 'iphone-bottom-dark-library', out: '10-hallucinations.png', statement: 'Built-in study visualisation|on the live atlas' },
   { name: 'iphone-08', dev: 'iphone', theme: 'dark', url: 'practice.html', ready: pageReady, setup: question('A central ethical advantage of iPSCs'),
     top: 'iphone-top-dark-practice', bottom: 'iphone-bottom-dark-practice', out: '08-practice.png', statement: 'Revision question testing' },
+  { name: 'iphone-11', dev: 'iphone', theme: 'dark', url: 'tracts.html', ready: tractReady, store: { 'vn-tracts-last': TRACT_STATE },
+    top: 'iphone-top-dark-tractography', bottom: 'iphone-bottom-dark-atlases', out: '03-tractography.png', statement: 'Wiring System Tractogram' },
   /* the MCP server's page as the About tab opens it */
   { name: 'ipad-10', dev: 'ipad', theme: 'dark', url: 'mcp.html', ready: pageReady,
     top: 'ipad-top-dark-about', out: '11-mcp.png', statement: 'AI Connector:|Connect to your AI Provider with the MCP Server' },
@@ -226,7 +252,7 @@ const SHOTS = [
    take the atlas's), the tabs stood on end in the column, the atlas's
    opening shot the 3D view with the three regions lit, and the last the
    Atlases page in light mode, the light shot of the iPad's */
-const TAB = { '06-microanatomy.png': 'atlases', '07-molecular.png': 'atlases', '10-hallucinations.png': 'library', '08-practice.png': 'practice', '11-mcp.png': 'about' };
+const TAB = { '03-tractography.png': 'atlases', '06-microanatomy.png': 'atlases', '07-molecular.png': 'atlases', '10-hallucinations.png': 'library', '08-practice.png': 'practice', '11-mcp.png': 'about' };
 for (const s of SHOTS.filter(x => x.dev === 'ipad'))
   SHOTS.push(Object.assign({}, s, { name: s.name.replace('ipad', 'open'), dev: 'duoOpen', tab: TAB[s.out] || 'atlases' }));
 const PHONE_SAID = Object.fromEntries(SHOTS.filter(x => x.dev === 'iphone').map(x => [x.out, x.statement]));
@@ -241,6 +267,7 @@ SHOTS.push(
   { name: 'duo-08', dev: 'duo', theme: 'dark', url: 'practice.html', ready: pageReady, setup: question('A central ethical advantage of iPSCs'), out: '08-practice.png', statement: PHONE_SAID['08-practice.png'] },
   { name: 'duo-09', dev: 'duo', theme: 'light', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, out: '02-atlas-light.png', statement: 'Light mode' },
   { name: 'duo-10', dev: 'duo', theme: 'dark', url: 'mcp.html', ready: pageReady, out: '11-mcp.png', statement: PHONE_SAID['11-mcp.png'] },
+  { name: 'duo-11', dev: 'duo', theme: 'dark', url: 'tracts.html', ready: tractReady, store: { 'vn-tracts-last': TRACT_STATE }, out: '03-tractography.png', statement: PHONE_SAID['03-tractography.png'] },
 );
 const PHONE = Object.fromEntries(SHOTS.filter(x => x.dev === 'iphone' && x.top).map(x => [x.out, x]));
 for (const s of SHOTS) if (s.dev === 'duo') s.top = PHONE[s.out] ? PHONE[s.out].top : 'iphone-top-dark-3d-region-atlas';

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.57 — 27 October 2026 — The App Store images remade, with the tractogram
+Commit · Remake the App Store images from today's pages and add the tractogram under Wiring System Tractogram
+
+The App Store images for the iPad, the iPhone and the iPhone Duo are remade from today's pages, and an eleventh joins them: Tractography as the owner's iPad capture had it, the brain nearly solid with one hemisphere's near side cut away and the wiring standing whole in the space, under the statement Wiring System Tractogram. App Store Connect takes ten images a size, so one of the eleven stays out of each upload. Nothing on the website or in the apps changes with this release.
+
 ## v12.56 — 27 October 2026 — A region's own window, and the study's regions solid
-Commit · Raise a pressed region's own window on the atlas and draw the study's regions solid
+Commit `ddb6634` · Raise a pressed region's own window on the atlas and draw the study's regions solid
 
 On the 3D Region Atlas a press on a region in the Highlighted list now raises a window for that region alone: what it does, then Associated brain disorders and When damaged, the two names the What they do window's notes take as well. In the Hallucinations study the Region transparency slider has gone and the highlighted regions are drawn solid, as the atlas's are; its reading is unchanged. The apps take it with their next build.
 

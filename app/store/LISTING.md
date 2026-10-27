@@ -159,7 +159,7 @@ The iPhone and iPad screenshots in `app/store/screenshots/` were taken from
 the pages in a browser (`scripts/shoot-store.js`, every set retaken on the
 v12.9 pages) and show the website's own header, not the tab bar the app has
 had since v11; the Android sets among them are what Play takes. The App
-Store's images are the fifty in `app/store/sell/` below: ten shots, each
+Store's images are the fifty-five in `app/store/sell/` below: eleven shots (ten is the most a size takes in App Store Connect, so one of the eleven stays out of each upload), each
 for the iPad at 2752×2064, for the iPhone at two sizes, and since v12.23
 for the iPhone Duo's two displays: closed, the outer display at 1398×2034
 (`iphone-duo-`), the pages as they lay themselves out there, one view at a
@@ -209,13 +209,22 @@ than the device's, and the device's safe areas are not reproduced, which
 stands the page's bar a little closer to the tab bar than the app does; a
 capture from a device is still the truest image, and `store-sell.js` takes
 one as before. Run it with the site served on port 8412, from `app/`:
-`node scripts/remake-store-images.js`, half an hour for the set, or name
-the shots (`ipad-01` to `ipad-10`, `iphone-01` to `iphone-10`) to remake a
-few. Uploaded, each set goes in the owner's order: 01 Human Brain Anatomy,
-02 Brain region functions explained, 03 Receptor Density, 04 Neurotransmitter and
-Receptor Profiles, 05 Micro-anatomy, 06 Molecular anatomy, 07 Built-in study
-visualisation, 08 Revision question testing, 09 Light mode, 10 AI Connector
-(ten is the most a size takes).
+`node scripts/remake-store-images.js`, an hour for the set, or name
+the shots (`ipad-01` to `ipad-11`, `iphone-01` to `iphone-11`, `duo-` and
+`open-` likewise) to remake a few. The eleventh (v12.57, at the owner's
+word) is Tractography as the owner's iPad capture of 27 October 2026 had
+it, the brain nearly solid with its left hemisphere's near side cut away and
+the tractogram standing whole in the space, under the statement Wiring
+System Tractogram; its iPhone bar is the Molecular strip titled Tractography
+in Inter SemiBold (`iphone-top-dark-tractography`). Uploaded, each set goes
+in the owner's order: 01 Human Brain Anatomy, 02 Brain region functions
+explained, 03 Receptor Density, 04 Neurotransmitter and Receptor Profiles,
+05 Micro-anatomy, 06 Molecular anatomy, 07 Built-in study visualisation,
+08 Revision question testing, 09 Light mode, 10 AI Connector, 11 Wiring
+System Tractogram; ten is the most a size takes, so one of the eleven stays
+out, the owner's choice (the tractogram would stand well in the atlases'
+run, after Neurotransmitter and Receptor Profiles, with Light mode the one
+to drop).
 
 A capture from a device becomes a store image with the sell above it through
 `app/scripts/store-sell.js`: the statement in Flux, the site's brand face, on
@@ -337,12 +346,12 @@ Also on the web at visualneuroscience.ai
    an account signed in with Apple (it should leave the app's entry under
    Settings → Apple ID → Sign in with Apple), the 3D Region Atlas held
    sideways, and the Hallucinations study's bar.
-3. **The screenshots.** The images in `app/store/sell/`, in the order above:
-   the `ipad-13-land-` ten into the 13-inch iPad display, the `iphone-6.3-`
-   ten into the iPhone medium display (required), the `iphone-6.9-` ten
-   into the 6.9-inch display in place of 1.0's, and in the iPhone Duo tab
-   the `iphone-duo-` ten for the outer display and the `iphone-duo-land-`
-   ten for the inner display. Optional, and shown on iOS 27
+3. **The screenshots.** The images in `app/store/sell/`, in the order above,
+   ten of the eleven: the `ipad-13-land-` set into the 13-inch iPad display,
+   the `iphone-6.3-` set into the iPhone medium display (required), the
+   `iphone-6.9-` set into the 6.9-inch display in place of 1.0's, and in the
+   iPhone Duo tab the `iphone-duo-` set for the outer display and the
+   `iphone-duo-land-` set for the inner display. Optional, and shown on iOS 27
    and iPadOS 27 or later: a product page header and a search results
    picture, made in the app's Asset Library (the header 21:9 at 3840×1646,
    JPEG or PNG; search results 3:2, 1920×1280 to 3840×2560; or one universal
