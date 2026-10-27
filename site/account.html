@@ -296,6 +296,7 @@ svg{ display:block; }
 
 <section id="acctIn" hidden>
   <h2>Your details</h2>
+  <p class="note" id="acctHeld" hidden></p>
   <dl class="acct-facts" id="acctFacts"></dl>
   <div class="acct-row">
     <button class="acct-btn quiet" id="acctEdit" type="button">Change username or university</button>
@@ -431,38 +432,29 @@ function el(tag, cls, text){
   if (text != null) e.textContent = text;
   return e;
 }
-function signIns(u){
-  const names = (u.providerData || []).map(p => SIGN_INS[p.providerId] || p.providerId).filter(Boolean);
-  return [...new Set(names)].join(", ");
-}
 
-async function details(u){
-  let p = null;
-  try{ p = await auth.loadProfile(u); }catch(_){}
-  p = p || auth.profile() || {};
+/* the account as the device keeps it (v12.54, at the owner's word): the page
+   draws from the copy (auth.kept) and pulls nothing. The copy is warmed at
+   login, kept in step by every write, handed in by the app's native layer at
+   document start, and announced as vn-account, on which the page draws
+   again. */
+function providerNames(list){
+  return [...new Set((list || []).map(p => SIGN_INS[p] || p).filter(Boolean))].join(", ");
+}
+function detailsFrom(k){
+  const p = k.profile || {};
   const dl = $("acctFacts"); dl.textContent = "";
   const fact = (label, value, empty) => {
     dl.append(el("dt", null, label), el("dd", value ? null : "quiet", value || empty));
   };
-  fact("Name", p.name || p.displayName || u.displayName, "not given");
-  fact("Email", u.email || p.email, "none");
-  fact("Username", p.username, "not chosen yet");
-  fact("University", p.university, "not given");
-  fact("Logged in with", signIns(u), "unknown");
-  fact("Account made", when(u.metadata && u.metadata.creationTime), "unknown");
-  fact("Last logged in", when(u.metadata && u.metadata.lastSignInTime), "unknown");
-  return p;
-}
-
-/* every tool that ever saved is listed in the account's index; the two
-   the site has are asked for whether or not it lists them */
-async function tools(u){
-  const out = new Set(["regions", "practice"]);
-  try{
-    const s = auth.sdk, snap = await s.getDoc(s.doc(auth.db, "users", u.uid, "meta", "toolindex"));
-    if (snap.exists()) Object.keys(snap.data() || {}).forEach(t => out.add(t));
-  }catch(_){}
-  return [...out];
+  const reading = !k.profile && !k.warmed;
+  fact("Name", p.name || p.displayName || k.name, "not given");
+  fact("Email", k.email || p.email, "none");
+  fact("Username", p.username, reading ? "…" : "not chosen yet");
+  fact("University", p.university, reading ? "…" : "not given");
+  fact("Logged in with", providerNames(k.providers), "unknown");
+  fact("Account made", when(k.created), "unknown");
+  fact("Last logged in", when(k.lastSignIn), "unknown");
 }
 
 function regionLink(data){
@@ -470,37 +462,39 @@ function regionLink(data){
   return keys.length ? "regions.html#sel=" + encodeURIComponent(keys.join("|")) : "regions.html";
 }
 
-async function models(list){
+function modelsFrom(k){
   const host = $("acctModels"); host.textContent = "";
+  if (!k.warmed){ host.append(el("p", "acct-quiet", "Reading your saved models…")); return; }
+  const tools = k.tools || {};
   let any = false;
-  for (const tool of list.filter(t => t !== "practice")){
-    let saved = [];
-    try{ saved = await files.list(tool); }catch(_){ continue; }
+  for (const tool of Object.keys(tools).filter(t => t !== "practice").sort()){
+    const saved = Array.isArray(tools[tool]) ? tools[tool] : [];
     if (!saved.length) continue;
     any = true;
     host.append(el("p", "acct-tool", (TOOL_NAMES[tool] || tool) + " · " + saved.length + (saved.length === 1 ? " model" : " models")));
     const ul = el("ul", "acct-list");
     for (const f of saved){
       const li = el("li");
-      li.append(el("span", "nm", f.name), el("span", "when", when(f.updatedAt)));
+      li.append(el("span", "nm", f.name), el("span", "when", when(f.updated)));
       if (tool === "regions"){
         const a = el("a", null, "Open");
-        a.href = "regions.html";
+        a.href = regionLink(f.data);
         a.setAttribute("aria-label", "Open " + f.name + " in the 3D Region Atlas");
-        files.load(tool, f.name).then(d => { a.href = regionLink(d); }).catch(() => {});
         li.append(a);
       }
       ul.append(li);
     }
     host.append(ul);
   }
-  if (!any) host.append(el("p", "acct-quiet", "No saved models yet. Save one in the 3D Region Atlas, under Saved models, and it is listed here."));
+  if (!any) host.append(el("p", "acct-quiet", "No saved models yet. Save one in the 3D Region Atlas, under Saved maps, and it is listed here."));
 }
 
-async function practice(){
+function practiceFrom(k){
   const host = $("acctPractice"); host.textContent = "";
-  let st = null;
-  try{ st = await files.load("practice", "progress"); }catch(_){}
+  if (!k.warmed){ host.append(el("p", "acct-quiet", "Reading your practice progress…")); return; }
+  const rows = k.tools && Array.isArray(k.tools.practice) ? k.tools.practice : [];
+  const row = rows.find(r => r.name === "progress");
+  const st = row ? row.data : null;
   if (!st || !st.answered){
     host.append(el("p", "acct-quiet", "No practice progress yet. Answer a question on the Practice page and it is kept here."));
     return;
@@ -519,32 +513,30 @@ async function practice(){
   host.append(p);
 }
 
-async function copy(u){
+/* the copy of everything, from the device's copy of the account */
+async function copy(){
   const btn = $("acctCopy"), st = $("acctCopyStatus");
-  btn.disabled = true; st.classList.remove("err"); st.textContent = "Gathering everything…";
+  const k = auth.kept();
+  st.classList.remove("err");
+  if (!k || !k.warmed){ st.classList.add("err"); st.textContent = "Your account is still being read. Try again in a moment."; return; }
+  btn.disabled = true; st.textContent = "Gathering everything…";
   try{
-    const prof = await auth.loadProfile(u).catch(() => null) || auth.profile() || {};
     const out = {
       what: "Everything the VisualNeuroscience.AI account holds",
       exported: new Date().toISOString(),
       account: {
-        id: u.uid, email: u.email || "", name: u.displayName || "",
-        loggedInWith: signIns(u),
-        made: toDate(u.metadata && u.metadata.creationTime) ? toDate(u.metadata.creationTime).toISOString() : null,
-        lastLoggedIn: toDate(u.metadata && u.metadata.lastSignInTime) ? toDate(u.metadata.lastSignInTime).toISOString() : null
+        id: k.uid, email: k.email || "", name: k.name || (k.profile && (k.profile.displayName || k.profile.name)) || "",
+        loggedInWith: providerNames(k.providers),
+        made: k.created || null,
+        lastLoggedIn: k.lastSignIn || null
       },
-      profile: plain(prof),
+      profile: k.profile || {},
       saved: {}
     };
-    for (const tool of await tools(u)){
-      let saved = [];
-      try{ saved = await files.list(tool); }catch(_){ continue; }
-      if (!saved.length) continue;
-      out.saved[tool] = [];
-      for (const f of saved){
-        out.saved[tool].push({ name: f.name, updated: toDate(f.updatedAt) ? toDate(f.updatedAt).toISOString() : null,
-                               data: plain(await files.load(tool, f.name)) });
-      }
+    for (const tool of Object.keys(k.tools || {}).sort()){
+      const rows = Array.isArray(k.tools[tool]) ? k.tools[tool] : [];
+      if (!rows.length) continue;
+      out.saved[tool] = rows.map(f => ({ name: f.name, updated: f.updated || null, data: f.data }));
     }
     const blob = new Blob([JSON.stringify(out, null, 2)], { type: "application/json" });
     const name = "visualneuroscience-account-" + new Date().toISOString().slice(0, 10) + ".json";
@@ -662,25 +654,41 @@ function off(){
     $("acctWhy").hidden = false;
   }
 }
+/* `u` is this page's own session: undefined until the first state is heard,
+   null when there is none. The copy is shown when it is this session's, or,
+   with no session, when the app's Account tab holds the account whose copy
+   it is (v12.46: a sign-in the page could not take), or before the first
+   state, trusting it: a state that says logged out clears it (forget in
+   auth.js) and the page draws again. */
 function draw(u){
   if (!auth.enabled){ off(); return; }
+  const k = auth.kept();
+  const native = auth.nativeUser;
+  const held = !u && !!native;
+  const mine = !!k && (u ? k.uid === u.uid : (held ? k.uid === native.uid : u === undefined));
+  const shown = mine ? k : null;
+  if (u === undefined && !shown) return;
   $("acctWait").hidden = true;
   $("acctStuck").hidden = true;
-  $("acctIn").hidden = !u;
-  $("acctOut").hidden = !!u;
-  /* the app's Account tab is logged in but this page could not follow (v12.46) */
-  const held = !u && auth.nativeUser;
-  $("acctNative").hidden = !held;
-  if (held) $("acctNative").textContent = "The app is logged in as " + (held.email || "your account") +
-    " on the Account tab, but this page could not take that session" + (auth.nativeWhy ? ": " + auth.nativeWhy : "") +
-    ". Log in here too and it is the same account.";
+  const inside = !!(u || shown);
+  $("acctIn").hidden = !inside;
+  $("acctOut").hidden = inside;
   $("acctGone").hidden = !(deleting && !u);
+  /* the app's Account tab is logged in but this page could not follow (v12.46): with the app's
+     copy the page shows the account all the same (v12.54), and says what needs a session here */
+  const because = auth.nativeWhy ? ": " + auth.nativeWhy : "";
+  $("acctNative").hidden = !(held && !inside);
+  if (held && !inside) $("acctNative").textContent = "The app is logged in as " + (native.email || "your account") +
+    " on the Account tab, but this page could not take that session" + because + ". Log in here too and it is the same account.";
+  $("acctHeld").hidden = !(held && inside);
+  if (held && inside) $("acctHeld").textContent = "Shown from the app's own copy of the account, logged in as " + (native.email || "your account") +
+    " on the Account tab. This page could not take that session" + because + ", so to change the password or delete the account, log in here too: it is the same account.";
+  /* what needs this page's own session: the password and the deletion */
   $("acctDelWrap").hidden = !u;
   $("acctDelSteps").hidden = !!u;
-  if (!u) return;
-  details(u);
-  passwordBox(u);
-  tools(u).then(list => { models(list); practice(); });
+  if (!inside) return;
+  if (shown){ detailsFrom(shown); modelsFrom(shown); practiceFrom(shown); }
+  if (u) passwordBox(u); else { $("acctPwWrap").hidden = true; $("acctPwNone").hidden = true; }
 }
 
 if (!auth.enabled) off();
@@ -688,13 +696,16 @@ else {
   $("acctLogin").addEventListener("click", () => window.VN_ACCOUNT_UI && VN_ACCOUNT_UI.openLogin());
   $("acctEdit").addEventListener("click", () => window.VN_ACCOUNT_UI && VN_ACCOUNT_UI.openAccount());
   $("acctLogout").addEventListener("click", () => auth.signOut());
-  $("acctCopy").addEventListener("click", () => { const u = auth.currentUser(); if (u) copy(u); });
+  $("acctCopy").addEventListener("click", () => copy());
   $("acctDelete").addEventListener("click", del);
   $("acctPwForm").addEventListener("submit", changePw);
   $("acctPwReset").addEventListener("click", resetPw);
-  /* the account box saved a new username or university */
-  window.addEventListener("vn-profile", () => { const u = auth.currentUser(); if (u) details(u); });
-  auth.onUser(draw);
+  /* the copy changed: a username saved in the account box, a map kept on another page, the
+     account read whole; the page draws again from it */
+  let heard = false;
+  window.addEventListener("vn-account", () => draw(heard ? auth.currentUser() : undefined));
+  draw(undefined);                       /* the device's copy, at once, with nothing pulled */
+  auth.onUser(u => { heard = true; draw(u); });
 }
 </script>
 </body>

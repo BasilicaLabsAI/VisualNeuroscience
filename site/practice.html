@@ -948,9 +948,16 @@ if (auth.enabled && window.PRACTICE){
   };
   window.addEventListener("pagehide", () => { clearTimeout(timer); flush(); });
   auth.onUser(async (u) => {
-    if (!u){ PRACTICE.cloud(false); return; }
-    let remote = null;
-    try { remote = await files.load("practice", "progress"); } catch(e){ remote = null; }
+    /* the account's progress as the device keeps it (v12.54, at the owner's word): nothing is
+       pulled on opening, and the server is read only where the copy has no progress */
+    let remote = files.keptData ? files.keptData("practice", "progress") : undefined;
+    if (!u){
+      /* the app holds the account but this page could not take its session (v12.46): a newer copy
+         is adopted all the same, and saving stays on the device */
+      if (remote && auth.nativeUser && (remote.updated || 0) > (PRACTICE.get().updated || 0)) PRACTICE.adopt(remote);
+      PRACTICE.cloud(false); return;
+    }
+    if (remote === undefined){ try { remote = await files.load("practice", "progress"); } catch(e){ remote = null; } }
     const local = PRACTICE.get();
     if (remote && (remote.updated || 0) > (local.updated || 0)) PRACTICE.adopt(remote);
     else if ((local.answered || 0) > 0 || !remote) push(local);

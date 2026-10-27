@@ -275,7 +275,30 @@ Read this first in every session. It is the handover; nothing else needs pasting
   branch through `draw` as well (`off()`), `auth-ui.js` takes its slot out on a late failure and completes an email
   link on `up`, and `connect.html` says so in its state hook. **No module another module imports may await at its top
   level**, and a page may carry two module scripts only on that condition; the check is `npx -y esbuild@0.25.10 <file>
-  --bundle --format=iife`, which refuses a top-level await. Since v12.46, at the owner's word, the Account tab logs in
+  --bundle --format=iife`, which refuses a top-level await. Since v12.54, at the owner's word, opening a page pulls
+  nothing of the account: what it holds is loaded into the device's own storage at login and read from there. The copy
+  is `vn-account` in localStorage (`auth.js`: `readKept`, `writeKept`, `clearKept`, `changeKept`; on the face
+  `kept()`, `keep(fn)`, `keptFiles(tool)`, `keepFiles(tool, rows)`, `iso`, `plain` and `changed()`): who (uid, email,
+  name, the sign-ins, when the account was made and last logged in), the profile document, every tool's files with
+  their data, `warmed`, when it was last read whole, and `from`, the page or the native layer. `took(u)` writes who at
+  once and `warm` reads the rest, the profile, the toolindex and each tool's files, unless the copy is under five
+  minutes old or, in the app, was ever read whole; `loadProfile`, `saveProfile` and `adoptName` keep the profile in
+  step and `userdata.js` the files (`list` writes every row with its data, `save`, `load`, `rename` and `remove` the
+  one file; `kept(tool)`, `keptData(tool, name)` and `keptAt()` read the copy); `doSignOut` and the deletion sweep
+  clear it, `took(null)` clears it unless the app holds that account (`forget`), and every change is announced on
+  window as `vn-account`. The iOS shell hands in what the native layer read at its own login: `AccountAuth.warm()`
+  fetches the profile, the toolindex and each tool's files over Firestore's REST API with the native ID token
+  (`readAccount`, `restGet`), at login, at launch, on each return to the front at most once a minute (`ShellRoot`'s
+  `didBecomeActive`) and when a page says `{auth:"changed"}` after a write, keeps the JSON in UserDefaults
+  (`vn-account-kept` and `-for`), and `pageState()` adds it as `account` beside a `user` that carries `name`,
+  `created` and `lastSignIn` as well; `takeHandover` in `auth.js` decodes the REST shapes (`fromRest`, `restDoc`,
+  `restFiles`) into the copy at document start unless the page's own copy is newer. `account.html` draws from the copy
+  at once (`draw(undefined)` before the first state; `detailsFrom`, `modelsFrom`, `practiceFrom`; the copy of
+  everything from it), draws again on `vn-account`, and where the app holds the account but the page could not take
+  its session shows the copy all the same, `#acctHeld` saying what needs a log-in here (the password and the
+  deletion); `models.js` lists the account's maps from the copy (`keptItems`, `onKept`, `keptOr`; `held` where the app
+  alone holds the account), reading the server only without a copy or past five minutes; `practice.html` adopts the
+  kept progress and reads the server only without one. The Swift is verified by the owner's build. Since v12.46, at the owner's word, the Account tab logs in
   natively (`app/ios/App/App/AccountAuth.swift`; `AccountBox` with `AccountField`, `InkButton`, `QuietLink`, `ActRow`
   and `AccountNote` in `Shell.swift`; `account` an `@StateObject` of `ShellRoot` in the environment): Firebase's own
   iOS SDK (`FirebaseAuth` and `GoogleSignIn`, reached through the Capacitor Firebase package the app already links;

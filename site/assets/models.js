@@ -30,6 +30,8 @@ window.MN_MODELS = (function(){
 "use strict";
 
 var auth = null, files = null, widgets = [];
+/* the account's copy on the device changed, here or on another page (v12.54): every widget's list follows */
+if (typeof window !== "undefined") window.addEventListener("vn-account", function(){ widgets.forEach(function(w){ if (w.onKept) w.onKept(); }); });
 
 function key(tool){ return "vn-models-" + tool; }
 function readLocal(tool){
@@ -188,19 +190,43 @@ function attach(o){
       .sort(function(a, b){ return a.name.localeCompare(b.name); });
   }
 
+  /* the account's list is drawn from the device's copy (v12.54, at the owner's word), and the
+     server is read only where there is no copy or it is old, and never while the app alone holds
+     the account (held) */
+  function keptItems(){
+    var rows = files && files.kept ? files.kept(tool) : null;
+    return rows ? rows.map(function(r){ return { name: r.name, updated: r.updatedAt }; }) : null;
+  }
   function refresh(){
     if (mode === "account"){
+      var kept = keptItems();
+      if (kept){
+        items = kept; renderList();
+        if (held || Date.now() - files.keptAt() < 5 * 60 * 1000) return Promise.resolve();
+      }
       return files.list(tool).then(function(rows){
         items = rows.map(function(r){ return { name: r.name, updated: r.updatedAt }; });
         renderList();
       }).catch(function(err){
         console.warn("models list:", err && err.message);
+        if (kept) return;
         say("Could not read your account's saved " + noun + "s: " + (err && err.message), true);
         items = []; renderList();
       });
     }
     items = localItems(); renderList();
     return Promise.resolve();
+  }
+  /* the copy changed: the list follows */
+  function onKept(){
+    if (mode !== "account" || busy) return;
+    var kept = keptItems();
+    if (kept){ items = kept; renderList(); }
+  }
+  /* a kept file's data from the device's copy where it has it, else the server */
+  function keptOr(name){
+    var k = files.keptData ? files.keptData(tool, name) : undefined;
+    return k !== undefined ? Promise.resolve(k) : files.load(tool, name);
   }
 
   function setBusy(b){
@@ -220,7 +246,7 @@ function attach(o){
        different one is replaced only on a second press of Save, which reads Replace? for a moment */
     if (existed && replaceArmed !== name){
       setBusy(true);
-      var had = mode === "account" ? files.load(tool, name) : Promise.resolve((readLocal(tool)[name] || {}).data);
+      var had = mode === "account" ? keptOr(name) : Promise.resolve((readLocal(tool)[name] || {}).data);
       return had.then(function(old){
         setBusy(false);
         if (old && sameView(old, data)){ say("“" + name + "” is already kept, just as it is."); return; }
@@ -284,7 +310,7 @@ function attach(o){
 
   function load(name){
     setBusy(true);
-    var p = mode === "account" ? files.load(tool, name) : Promise.resolve((readLocal(tool)[name] || {}).data);
+    var p = mode === "account" ? keptOr(name) : Promise.resolve((readLocal(tool)[name] || {}).data);
     return p.then(function(data){
       if (!data) throw new Error("No saved " + noun + " called “" + name + "”.");
       o.restore(data);
@@ -325,10 +351,15 @@ function attach(o){
     });
   }
 
+  var held = false;
   function onUser(u){
     user = u;
-    if (u && files){
+    /* the app holds the account and this page could not take its session (v12.46): the app's
+       copy is shown all the same (v12.54), and a save then stays on the device */
+    held = !u && !!files && !!(auth && auth.nativeUser && auth.kept && auth.kept() && auth.kept().uid === auth.nativeUser.uid && files.kept && files.kept(tool));
+    if ((u || held) && files){
       mode = "account";
+      if (held){ refresh(); return; }
       migrate().then(function(moved){
         return refresh().then(function(){ if (moved) say(moved + " saved " + noun + (moved === 1 ? "" : "s") + " from this device moved to your account."); });
       }).catch(function(err){
@@ -392,7 +423,7 @@ function attach(o){
 
   form.addEventListener("submit", function(e){ e.preventDefault(); if (!busy) save(input.value); });
 
-  var w = { tool: tool, onUser: onUser, refresh: refresh, save: save, load: load, remove: remove,
+  var w = { tool: tool, onUser: onUser, onKept: onKept, refresh: refresh, save: save, load: load, remove: remove,
             openExample: openExample, get examples(){ return examples.slice(); },
             get mode(){ return mode; }, get items(){ return items.slice(); }, element: wrap };
   widgets.push(w);

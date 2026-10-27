@@ -213,6 +213,7 @@ struct ShellRoot: View {
             .preferredColorScheme(store.theme == .dark ? .dark : .light)
             .task { await update.look() }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                account.warm()   // the account's copy for the pages, read again on each return to the front (v12.54)
                 Task { await update.look() }
             }
             .alert("Update Available", isPresented: $update.asking, presenting: update.newer) { _ in

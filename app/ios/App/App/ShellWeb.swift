@@ -394,6 +394,9 @@ final class PageBridgeController: CAPBridgeViewController {
                                   idToken: message["idToken"] as? String)
         case "signedOut":
             account?.pageSignedOut()
+        case "changed":
+            // the page wrote something (v12.54): the native copy of the account is read again
+            account?.warm(force: true)
         default:
             break
         }

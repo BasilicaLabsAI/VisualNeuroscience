@@ -112,7 +112,7 @@ function dormant(reason){
     linkProvider: off, deleteAccount: off, changePassword: off, hasPassword: () => false, signOut: () => Promise.resolve(),
     usernameFree: off, setUsername: off, setUniversity: off, loadProfile: () => Promise.resolve(null), profile: () => null,
     pendingEmailLink: false, pendingLink: null, db: null, sdk: null,
-    track(){},
+    track(){}, changed(){},
     ready: Promise.resolve(null),
     nativeUser: null, nativeWhy: null
   };
@@ -152,6 +152,133 @@ const providers = {
   emailLink: wantP.emailLink !== false
 };
 
+/* ── the account kept on the device ───────────────────────────────────── */
+/* Opening a page must not pull the account (v12.54, at the owner's word):
+   what it holds is loaded into the device's own storage at login and read
+   from there. One record, vn-account in localStorage: who (uid, email, name,
+   the sign-ins, when the account was made and last logged in), the profile
+   document (the username and the university), every tool's files with their
+   data (the saved maps, the practice progress), `warmed`, when it was last
+   read whole from the server, and `from`, the page or the native layer. It
+   is written as a sign-in settles (warm, from took), kept in step by every
+   write the pages make (saveProfile here, userdata.js for the files), handed
+   in by the iOS shell at document start from what the native layer read at
+   its own login (VN_NATIVE_AUTH.account, Firestore's REST documents, decoded
+   by fromRest and written by takeHandover below), read again quietly when it
+   is old, and cleared at sign-out and deletion. Every change is announced on
+   window as vn-account, which the pages draw again on. */
+const KEPT_KEY = "vn-account", KEPT_V = 1, FRESH_FOR = 5 * 60 * 1000;
+function readKept(){
+  try{
+    const o = JSON.parse(localStorage.getItem(KEPT_KEY) || "null");
+    return o && o.v === KEPT_V && o.uid ? o : null;
+  }catch(_){ return null; }
+}
+function writeKept(o){
+  try{ localStorage.setItem(KEPT_KEY, JSON.stringify(o)); }catch(_){}
+  announce();
+}
+function clearKept(){
+  let had = false;
+  try{ had = !!localStorage.getItem(KEPT_KEY); localStorage.removeItem(KEPT_KEY); }catch(_){}
+  if (had) announce();
+}
+function announce(){ try{ window.dispatchEvent(new CustomEvent("vn-account")); }catch(_){} }
+/* a change to the copy of one account, or to whatever copy there is; nothing without one */
+function changeKept(uid, fn){
+  const o = readKept();
+  if (!o || (uid && o.uid !== uid)) return false;
+  fn(o);
+  writeKept(o);
+  return true;
+}
+/* a time as the copy keeps it, ISO text: from the SDK's Timestamp, a Date, a number or text */
+function iso(v){
+  if (!v) return null;
+  try{
+    if (typeof v.toDate === "function") return v.toDate().toISOString();
+    if (v instanceof Date) return v.toISOString();
+    if (typeof v === "number") return new Date(v).toISOString();
+    if (typeof v === "object" && typeof v.seconds === "number") return new Date(v.seconds * 1000).toISOString();
+    const d = new Date(v);
+    return isNaN(d.getTime()) ? null : d.toISOString();
+  }catch(_){ return null; }
+}
+/* a document as the copy keeps it: plain values, its times ISO text */
+function plainDoc(o){
+  if (Array.isArray(o)) return o.map(plainDoc);
+  if (o && typeof o === "object"){
+    if (typeof o.toDate === "function") return iso(o);
+    const out = {};
+    Object.keys(o).forEach(k => { out[k] = plainDoc(o[k]); });
+    return out;
+  }
+  return o === undefined ? null : o;
+}
+/* Firestore's REST shapes, as the native layer reads them, as plain values */
+function fromRest(v){
+  if (!v || typeof v !== "object") return null;
+  if ("stringValue" in v) return v.stringValue;
+  if ("integerValue" in v) return Number(v.integerValue);
+  if ("doubleValue" in v) return v.doubleValue;
+  if ("booleanValue" in v) return v.booleanValue;
+  if ("nullValue" in v) return null;
+  if ("timestampValue" in v) return v.timestampValue;
+  if ("mapValue" in v) return fromRestFields(v.mapValue && v.mapValue.fields);
+  if ("arrayValue" in v) return ((v.arrayValue && v.arrayValue.values) || []).map(fromRest);
+  if ("referenceValue" in v) return v.referenceValue;
+  if ("geoPointValue" in v) return v.geoPointValue;
+  if ("bytesValue" in v) return v.bytesValue;
+  return null;
+}
+function fromRestFields(fields){
+  const out = {};
+  Object.keys(fields || {}).forEach(k => { out[k] = fromRest(fields[k]); });
+  return out;
+}
+/* a document's fields, {} for one with none, null for none at all */
+function restDoc(d){
+  if (!d || typeof d !== "object" || d.error) return null;
+  if (d.fields) return fromRestFields(d.fields);
+  return d.name ? {} : null;
+}
+/* a collection's documents as the copy keeps a tool's files */
+function restFiles(list){
+  const docs = list && Array.isArray(list.documents) ? list.documents : [];
+  const rows = docs.map(d => {
+    const v = restDoc(d) || {};
+    const id = String(d.name || "").split("/").pop();
+    return { name: v.name || safeDecode(id), updated: iso(v.updatedAt), data: v.data === undefined ? null : v.data };
+  });
+  rows.sort((a, b) => a.name.localeCompare(b.name));
+  return rows;
+}
+function safeDecode(s){ try{ return decodeURIComponent(s); }catch(_){ return s; } }
+/* the iOS shell's hand-over: what the native layer read at its login, into
+   the copy before the page reads it, unless the page's own copy is newer */
+function takeHandover(h){
+  if (!h || !h.user || !h.user.uid || !h.account || typeof h.account !== "object") return false;
+  const a = h.account, at = Number(a.at) || Date.now();
+  const have = readKept();
+  if (have && have.uid === h.user.uid && (have.warmed || 0) >= at) return false;
+  const tools = {};
+  Object.keys(a.tools || {}).forEach(t => { tools[t] = restFiles(a.tools[t]); });
+  const profile = restDoc(a.profile) || (have && have.uid === h.user.uid ? have.profile : null);
+  writeKept({
+    v: KEPT_V, uid: h.user.uid,
+    email: h.user.email || (profile && profile.email) || "",
+    name: h.user.name || (profile && (profile.displayName || profile.name)) || "",
+    providers: h.user.provider ? [h.user.provider] : [],
+    created: iso(h.user.created), lastSignIn: iso(h.user.lastSignIn),
+    profile: profile ? plainDoc(profile) : null, tools, warmed: at, from: "native"
+  });
+  return true;
+}
+/* the shell's word on the account, as it wrote it at document start (v12.46) */
+const NATIVE = isNative && typeof window !== "undefined" && window.VN_NATIVE_AUTH && typeof window.VN_NATIVE_AUTH === "object"
+  ? window.VN_NATIVE_AUTH : null;
+takeHandover(NATIVE);
+
 /* ── the live module ──────────────────────────────────────────────────── */
 async function build(){
   const sdk = await within(20000, "the sign-in library did not load within 20 seconds", import("../vendor/firebase/firebase-bundle.js"));
@@ -183,8 +310,7 @@ async function build(){
      itself tells the shell (tellShell), and the native layer follows. The
      website, the Android app and a shell that writes nothing see none of
      this. */
-  const native = isNative && window.VN_NATIVE_AUTH && typeof window.VN_NATIVE_AUTH === "object"
-    ? window.VN_NATIVE_AUTH : null;
+  const native = NATIVE;
   const nativeUser = native && native.user && native.user.uid ? native.user : null;
   let nativeWhy = null;
   function tellShell(msg){
@@ -291,9 +417,58 @@ async function build(){
     if (readyResolve){ readyResolve(user); readyResolve = null; }
     notify();
     /* the profile carries the username the nav shows; once it is read the
-       listeners hear again, so a name drawn from the email is corrected */
-    if (user) loadProfile(user).then(notify, () => {});
-    else profileCache = null;
+       listeners hear again, so a name drawn from the email is corrected;
+       and from here the account is kept on the device (warm, v12.54) */
+    if (user){ const p = loadProfile(user); p.then(notify, () => {}); warm(user, p); }
+    else { profileCache = null; forget(); }
+  }
+  /* the account kept on the device (v12.54, at the owner's word): who, at
+     once, then the whole of it from the server, unless the copy is fresh; in
+     the app the native layer reads it at its own login and on each return to
+     the front and hands it to every page, so a page there pulls only when
+     nothing was ever read whole */
+  let warming = null;
+  function warm(u, profileP){
+    if (warming) return warming;
+    const have = readKept();
+    const base = have && have.uid === u.uid ? have : { v: KEPT_V, uid: u.uid, profile: null, tools: {}, warmed: 0 };
+    Object.assign(base, {
+      email: u.email || "", name: u.displayName || "",
+      providers: (u.providerData || []).map(p => p && p.providerId).filter(Boolean),
+      created: iso(u.metadata && u.metadata.creationTime), lastSignIn: iso(u.metadata && u.metadata.lastSignInTime)
+    });
+    if (!base.from) base.from = "page";
+    writeKept(base);
+    const fresh = base.warmed && Date.now() - base.warmed < FRESH_FOR;
+    if (fresh || (native && base.warmed)) return Promise.resolve();
+    warming = (async () => {
+      const prof = await (profileP || loadProfile(u));
+      const idx = await sdk.getDoc(sdk.doc(db, "users", u.uid, "meta", "toolindex")).catch(() => null);
+      const names = new Set(["regions", "practice"]);
+      if (idx && idx.exists()) Object.keys(idx.data() || {}).forEach(t => names.add(t));
+      const tools = {};
+      for (const t of names){
+        const snap = await sdk.getDocs(sdk.collection(db, "users", u.uid, "tools", t, "files"));
+        const rows = [];
+        snap.forEach(d => {
+          const v = d.data() || {};
+          rows.push({ name: v.name || safeDecode(d.id), updated: iso(v.updatedAt), data: v.data === undefined ? null : plainDoc(v.data) });
+        });
+        rows.sort((a, b) => a.name.localeCompare(b.name));
+        tools[t] = rows;
+      }
+      changeKept(u.uid, o => { if (prof) o.profile = plainDoc(prof); o.tools = tools; o.warmed = Date.now(); o.from = "page"; });
+    })().catch(e => { try{ console.warn("the account could not be read whole:", e && e.message); }catch(_){} })
+      .then(() => { warming = null; });
+    return warming;
+  }
+  /* logged out: the copy goes, unless the app holds the account and this
+     page could not take its session, when the app's copy stands */
+  function forget(){
+    const have = readKept();
+    if (!have) return;
+    if (nativeUser && have.uid === nativeUser.uid) return;
+    clearKept();
   }
   sdk.onAuthStateChanged(auth, u => {
     /* the first state: the native account is followed first (v12.46), and
@@ -323,6 +498,7 @@ async function build(){
       const snap = await sdk.getDoc(sdk.doc(db, "users", u.uid, "meta", "profile"));
       profileCache = Object.assign({ uid: u.uid }, snap.exists() ? snap.data() : {});
     }catch(e){ profileCache = profileCache || { uid: u.uid }; }
+    changeKept(u.uid, o => { o.profile = plainDoc(profileCache); });
     return profileCache;
   }
   function profile(){ return profileCache; }
@@ -416,12 +592,13 @@ async function build(){
       if (u.photoURL || (extra && extra.picture)) data.photoURL = u.photoURL || extra.picture;
       await sdk.setDoc(refDoc, data, { merge: true });
       profileCache = Object.assign({ uid: u.uid }, profileCache || {}, data, { updatedAt: null });
+      changeKept(u.uid, o => { o.profile = plainDoc(profileCache); });
     }catch(e){ console.warn("profile save skipped:", e && e.message); }
   }
 
   async function adoptName(u, name){
     if (!name || (u.displayName && u.displayName.trim())) return;
-    try{ await sdk.updateProfile(u, { displayName: name }); }catch(e){}
+    try{ await sdk.updateProfile(u, { displayName: name }); changeKept(u.uid, o => { o.name = name; }); }catch(e){}
   }
 
   /* ── account linking ──────────────────────────────────────────────────
@@ -722,6 +899,7 @@ async function build(){
 
   /* ── sign out: both layers, always ───────────────────────────────────── */
   async function doSignOut(){
+    clearKept();
     if (plugin){ try{ await plugin.signOut(); }catch(_){} }
     try{ await sdk.signOut(auth); }catch(_){}
     if (native) tellShell({ auth: "signedOut" });
@@ -756,6 +934,7 @@ async function build(){
       if (prof && prof.username) await releaseUsername(prof.username);
       await sdk.deleteDoc(sdk.doc(db, "users", u.uid, "meta", "profile")).catch(() => {});
       profileCache = null;
+      clearKept();
     }catch(e){ console.warn("data cleanup incomplete:", e && e.message); }
   }
   function usesProvider(u, id){ return (u.providerData || []).some(p => p && p.providerId === id); }
@@ -863,6 +1042,8 @@ async function build(){
     changePassword, hasPassword,
     usernameFree, setUsername, setUniversity, loadProfile, profile,
     track,
+    /* a write the page made, for the shell's own copy of the account (v12.54) */
+    changed(){ if (native) tellShell({ auth: "changed" }); },
     ready, db, sdk
   };
 }
@@ -927,6 +1108,14 @@ function face(){
     loadProfile: later("loadProfile"),
     profile(){ return live ? live.profile() : null; },
     track(name, params){ if (live) live.track(name, params); else up.then(() => live.track(name, params)); },
+    changed: later("changed"),
+    /* the account kept on the device (v12.54): the copy, a change to it, a tool's files in it, and
+       the two helpers userdata.js keeps it with */
+    kept: readKept,
+    keep(fn){ return changeKept(null, fn); },
+    keptFiles(tool){ const o = readKept(); const rows = o && o.tools && o.tools[tool]; return Array.isArray(rows) ? rows : null; },
+    keepFiles(tool, rows){ return changeKept(null, o => { o.tools = o.tools || {}; o.tools[tool] = rows; }); },
+    iso, plain: plainDoc,
     get ready(){ return live ? live.ready : up.then(() => live.ready); },
     get up(){ return up; },
     get db(){ return live ? live.db : null; },

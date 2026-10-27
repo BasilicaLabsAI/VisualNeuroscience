@@ -31,7 +31,7 @@ nonisolated struct Person: Equatable, Sendable {
 }
 
 nonisolated enum AccountError: Error {
-    case noUser, noWorker
+    case noUser, noWorker, unread
 }
 
 /// The native account: Firebase's user, the ways in and out, and what the
@@ -67,6 +67,8 @@ final class AccountAuth: ObservableObject {
             Task { @MainActor [weak self] in self?.became(now) }
         }
         if person != nil { mintPageToken() }
+        restoreKept()
+        if person != nil { warm() }
     }
 
     /// Firebase is configured once per process, by whoever asks first, this
@@ -91,8 +93,10 @@ final class AccountAuth: ObservableObject {
             handoff = nil
             pageToken = nil
             pageTokenAt = nil
+            dropKept()
         } else if changed || pageToken == nil {
             mintPageToken()
+            if changed { warm(force: true) }
         }
     }
 
@@ -208,6 +212,7 @@ final class AccountAuth: ObservableObject {
         handoff = nil
         pageToken = nil
         pageTokenAt = nil
+        dropKept()
         note = nil
     }
 
@@ -218,7 +223,15 @@ final class AccountAuth: ObservableObject {
     /// older than fifty minutes is renewed for the next page.
     func pageState() -> [String: Any] {
         guard let p = person else { return ["user": NSNull()] }
-        var state: [String: Any] = ["user": ["uid": p.uid, "email": p.email ?? "", "provider": p.provider]]
+        var who: [String: Any] = ["uid": p.uid, "email": p.email ?? "", "provider": p.provider, "name": p.name ?? ""]
+        if let user = Auth.auth().currentUser {
+            let clock = ISO8601DateFormatter()
+            if let made = user.metadata.creationDate { who["created"] = clock.string(from: made) }
+            if let last = user.metadata.lastSignInDate { who["lastSignIn"] = clock.string(from: last) }
+        }
+        var state: [String: Any] = ["user": who]
+        // the account as read at login (v12.54), for the page's copy on the device
+        if let account, let read = try? JSONSerialization.jsonObject(with: account) { state["account"] = read }
         if let token = pageToken, let at = pageTokenAt, Date().timeIntervalSince(at) < 50 * 60 {
             state["token"] = token
         } else {
@@ -291,6 +304,85 @@ final class AccountAuth: ObservableObject {
               let token = body["token"] as? String, !token.isEmpty
         else { throw AccountError.noWorker }
         return token
+    }
+
+    // MARK: - The account kept on the device (v12.54, at the owner's word)
+
+    /// What the account holds, read at login over Firestore's REST API with
+    /// the native session's ID token, kept here and in UserDefaults, and
+    /// handed to every page at document start (pageState; auth.js writes it
+    /// into the device's copy before the page reads it, so the page pulls
+    /// nothing): the profile, the tool index and each tool's files, as
+    /// Firestore's REST documents, which the page decodes. Read again on each
+    /// return to the front, at most once a minute, and at once when a page
+    /// says it changed something.
+    private var account: Data?
+    private var accountAt: Date?
+    private var reading = false
+    private static let keptKey = "vn-account-kept"
+    private static let keptForKey = "vn-account-kept-for"
+
+    func warm(force: Bool = false) {
+        guard let user = Auth.auth().currentUser, !reading else { return }
+        if !force, let at = accountAt, Date().timeIntervalSince(at) < 60 { return }
+        reading = true
+        let uid = user.uid
+        user.getIDToken { [weak self] token, _ in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                defer { self.reading = false }
+                guard let token, let project = FirebaseApp.app()?.options.projectID,
+                      let read = try? await Self.readAccount(uid: uid, token: token, project: project) else { return }
+                self.account = read
+                self.accountAt = Date()
+                UserDefaults.standard.set(read, forKey: Self.keptKey)
+                UserDefaults.standard.set(uid, forKey: Self.keptForKey)
+            }
+        }
+    }
+
+    /// The copy from the last run, for the person still logged in.
+    private func restoreKept() {
+        let defaults = UserDefaults.standard
+        guard let uid = Auth.auth().currentUser?.uid, defaults.string(forKey: Self.keptForKey) == uid,
+              let data = defaults.data(forKey: Self.keptKey) else { return }
+        account = data
+    }
+
+    private func dropKept() {
+        account = nil
+        accountAt = nil
+        UserDefaults.standard.removeObject(forKey: Self.keptKey)
+        UserDefaults.standard.removeObject(forKey: Self.keptForKey)
+    }
+
+    /// The reads, as JSON for the page: {profile, toolindex, tools: {tool: list}, at}.
+    nonisolated static func readAccount(uid: String, token: String, project: String) async throws -> Data {
+        let base = "https://firestore.googleapis.com/v1/projects/\(project)/databases/(default)/documents/users/\(uid)"
+        let profile = try await restGet(base + "/meta/profile", token: token)
+        let index = try await restGet(base + "/meta/toolindex", token: token)
+        var tools: Set<String> = ["regions", "practice"]
+        if let fields = index?["fields"] as? [String: Any] { tools.formUnion(fields.keys) }
+        var files: [String: Any] = [:]
+        for tool in tools.sorted() {
+            let path = tool.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? tool
+            files[tool] = try await restGet(base + "/tools/\(path)/files?pageSize=300", token: token) ?? ["documents": [Any]()]
+        }
+        let read: [String: Any] = ["profile": profile ?? NSNull(), "toolindex": index ?? NSNull(), "tools": files,
+                                   "at": Int(Date().timeIntervalSince1970 * 1000)]
+        return try JSONSerialization.data(withJSONObject: read)
+    }
+
+    /// One GET: the JSON object, nil for a document that is not there.
+    nonisolated private static func restGet(_ address: String, token: String) async throws -> [String: Any]? {
+        guard let url = URL(string: address) else { throw AccountError.unread }
+        var request = URLRequest(url: url, timeoutInterval: 20)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+        if status == 404 { return nil }
+        guard status == 200 else { throw AccountError.unread }
+        return try JSONSerialization.jsonObject(with: data) as? [String: Any]
     }
 
     // MARK: - Helpers

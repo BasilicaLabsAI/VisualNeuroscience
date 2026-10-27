@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.54 — 27 October 2026 — The account kept on the device
+Commit · Keep the account on the device from login, so the pages open on it and pull nothing
+
+Opening the account page, the 3D Region Atlas's Saved maps or Practice no longer pulls the account from the server: what the account holds, the profile with its username, every saved map with its regions and the practice progress, is loaded into the device's own storage at login, kept in step by every save, and read from there at once. In the iOS app the Account tab's own login reads it natively and hands it to every page as it opens, read again on each return to the front, so a page shows the account even where it could not take the session itself. The website and Android keep the same copy from their own login. The apps take it with their next build.
+
 ## v12.53 — 27 October 2026 — The account page answers in the iPad app
-Commit · Build the sign-in module's face without a top-level await, which left the account page dead in the iOS app's web view
+Commit `55977fb` · Build the sign-in module's face without a top-level await, which left the account page dead in the iOS app's web view
 
 In the iOS app the account page sat on Checking whether you are logged in, with the line Cannot access 'auth' before initialization beneath it: the web view's module loader, WebKit before Safari 27, ran the page's own script before the sign-in module's top-level await was over. The module now builds its face at once, with no top-level await, so every page that imports it reads it safely, and a build that fails still ends in a reason on the account page. The website is unchanged in use; the apps take it with their next build.
 
