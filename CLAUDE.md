@@ -528,8 +528,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   with `region-box.css` (`MN_REGIONBOX.attach({host, box, link, onChange, onRead})`: the atlas's picker line for
   line, built from `MN_ATLAS.REGIONS` by lobe with the Mirror toggle, searched by name, lobe or what a region does,
   the Highlighted rows under their layers with a colour each from the atlas's palette, Clear all, a count line
-  (`api.count`) and a switch of two `.ts-btn`s, All through or Connecting, greyed under two regions, standing at All
-  with one and turning itself to Connecting as the list goes from one to two, the person's own after that;
+  (`api.count`), a switch of two `.ts-btn`s, All through or Connecting, greyed under two regions, standing at All
+  with one and turning itself to Connecting as the list goes from one to two, the person's own after that, and under
+  Mirror a Highlight the regions toggle, off to begin with (v12.60, at the owner's word; `light`, `api.light`,
+  `setLight`), without which the regions themselves are not drawn;
   `MN_REGIONBOX.fillNote` fills a region's own window; the atlas keeps its own copy of the picker, so a change to how
   a region is picked belongs in both). Which streamlines run through which region is an index built once offline by
   `scripts/make_tract_regions.py` into `site/assets/tracts/hcp1065-regions.json` (for each AAL label, in
@@ -539,14 +541,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   empty streamline NiiVue's reader closes the offsets with; a rebuilt tractogram needs the script run again). In
   `tracts.html` the pick leaves `shown`, the subset the cuts, the ends and the export read in place of `whole`
   (`base()`; All through is any streamline through any highlighted region, Connecting those through two of them:
-  `regionIds`, `applyRegions`), the view keeping the whole tractogram's frame; each highlighted region stands among
+  `regionIds`, `applyRegions`), the view keeping the whole tractogram's frame; while Highlight the regions is on, each highlighted region stands among
   the fibres as a surface of its voxels in its colour (`lightRegions`: `MN_EXPORT3D.labelSurface` on the AAL
   volume, fetched once through `MN_EXPORT3D.volume`, an `NVMesh` of triangles in the streamlines' viewer, cut as the
   brain is by `cutRegions` from `applyCut`, `cutBox(planes, 0)`); a row's name pressed raises `#popRegion`
   (`readAbout`; `TK_SCREEN`, the sheets' door the screen script exposes beside `TK_MINI`, and `TK_DRAWER` the
-  drawer's); the regions, the mirror toggle and the switch ride in `vn-tracts-last` (`v: 6`: `regions` as the
-  atlas's keys, `mirror`, `link`); and `MN_TRACTS.regions` (`set`, `keys`, `link`, `setLink`, `shown`, `drawn`,
-  `indexed`) is the door for a check or a shoot. The store shots and the home twins set the drawer shut, so the
+  drawer's); the regions, the mirror toggle and the switches ride in `vn-tracts-last` (`v: 6`: `regions` as the
+  atlas's keys, `mirror`, `link` and, since v12.60, `light`); and `MN_TRACTS.regions` (`set`, `keys`, `link`,
+  `setLink`, `light`, `setLight`, `shown`, `drawn`, `indexed`) is the door for a check or a shoot. The store shots and the home twins set the drawer shut, so the
   tractogram keeps its room.
 - The Region Atlas is called the 3D Region Atlas wherever its name shows (nav, titles, home page, the app) since
   v11.12; its file stays `regions.html`. Since v11.22, at the owner's request, it is one screen in the manner of an

@@ -526,7 +526,7 @@ main.screen.one.land{ flex-direction:row; }
             <span class="key-item"><span class="key-swatch" style="background:#4FB06A"></span>front &ndash; back</span>
             <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
           </div>
-          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the brain, and the streamlines with it, away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there, and Transparency raises a tall bar that makes it more see-through or more solid. Tract shows or hides the streamlines. Slice tract, on whenever Slice is turned on, cuts them with the brain, and off leaves them whole while the brain alone is cut; Offset stands their cut ends out of the brain&rsquo;s cut face and Distance sets how far, in millimetres, both greyed while the brain is off; and Thicken sets how thick they are drawn. View turns the brain to one of its faces, or home to the view the page opens with, Revolve sets it turning until you take hold of it, and Export, at the end of the bar, offers the streamlines and the brain as a 3D model. The region box beside the view, the 3D Region Atlas&rsquo;s own, folds away on its tab: highlight a region there and only the streamlines that run through it are drawn, the region itself standing among them in its colour, cut as the brain is. Highlight two or more and the switch turns to Connecting, only the streamlines that run between them, or back to All through, every streamline through any of them; a press on a region&rsquo;s name opens its note. The page remembers how you left it: the brain and its transparency, the streamlines with their switches, offset and thickness, the regions highlighted and the switch, the cuts and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
+          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the brain, and the streamlines with it, away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there, and Transparency raises a tall bar that makes it more see-through or more solid. Tract shows or hides the streamlines. Slice tract, on whenever Slice is turned on, cuts them with the brain, and off leaves them whole while the brain alone is cut; Offset stands their cut ends out of the brain&rsquo;s cut face and Distance sets how far, in millimetres, both greyed while the brain is off; and Thicken sets how thick they are drawn. View turns the brain to one of its faces, or home to the view the page opens with, Revolve sets it turning until you take hold of it, and Export, at the end of the bar, offers the streamlines and the brain as a 3D model. The region box beside the view, the 3D Region Atlas&rsquo;s own, folds away on its tab: highlight a region there and only the streamlines that run through it are drawn, and with Highlight the regions ticked the region itself stands among them in its colour, cut as the brain is. Highlight two or more and the switch turns to Connecting, only the streamlines that run between them, or back to All through, every streamline through any of them; a press on a region&rsquo;s name opens its note. The page remembers how you left it: the brain and its transparency, the streamlines with their switches, offset and thickness, the regions highlighted with their two switches, the cuts and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
           <h2>Reference</h2>
           <p class="ref-line"><b>Tractogram</b> the HCP1065 population-averaged tractography atlas: Yeh FC, <a href="https://doi.org/10.1038/s41467-022-32595-4" target="_blank" rel="noopener">Population-based tract-to-region connectome of the human brain and its hierarchical topology</a>, <em>Nat Commun</em> 13:4933 (2022), CC BY-SA 4.0.</p>
           <p class="ref-line"><b>Brain</b> the MNI152 template (ICBM 2009c), McConnell Brain Imaging Centre, Montreal Neurological Institute, drawn around the streamlines as the 3D Region Atlas draws it, the MRI showing where a cut opens it.</p>
@@ -1005,6 +1005,8 @@ main.screen.one.land{ flex-direction:row; }
       keys: function(){ return regionBox ? regionBox.keys() : []; },
       link: function(){ return regionBox ? regionBox.link() : "all"; },
       setLink: function(v){ if (regionBox) regionBox.setLink(v); },
+      light: function(){ return regionBox ? regionBox.light() : false; },
+      setLight: function(v){ if (regionBox) regionBox.setLight(v); },
       shown: function(){ var b = base(); return b ? b.off.length - 1 : 0; },
       drawn: function(){ return Object.keys(regionMeshes).length; },
       indexed: function(){ return !!regionIndex; }
@@ -1468,8 +1470,9 @@ main.screen.one.land{ flex-direction:row; }
      chrome). A region highlighted there leaves only the streamlines that run through it, read from an index
      built once offline (scripts/make_tract_regions.py, assets/tracts/hcp1065-regions.json: for each AAL region,
      the streamlines whose drawn line enters the region's own voxels, walked every millimetre, with no margin
-     around the region at the owner's word), and the region itself stands among them as a surface of its voxels
-     in its colour (MN_EXPORT3D.labelSurface, the 3D export's own, smoothed), cut as the brain is. The box's
+     around the region at the owner's word), and, while the box's Highlight the regions toggle is on (off to begin
+     with, v12.60, at the owner's word), the region itself stands among them as a surface of its voxels in its
+     colour (MN_EXPORT3D.labelSurface, the 3D export's own, smoothed), cut as the brain is. The box's
      switch reads All through, every streamline through any highlighted region, or Connecting, only those that
      run through two of them; it stands at All, greyed, under two regions and turns itself to Connecting as the
      list goes from one to two. The filtered set stands in for the whole one wherever the cuts, the ends and
@@ -1561,12 +1564,13 @@ main.screen.one.land{ flex-direction:row; }
     }
     return atlasLoad;
   }
-  /* each highlighted region as a surface in its colour among the streamlines, cut as the brain is */
+  /* each highlighted region as a surface in its colour among the streamlines, cut as the brain is, while the
+     box's Highlight the regions toggle is on; off, any surface drawn goes */
   function lightRegions(){
     var nv = byKey.Ren;
     if (!nv || !regionBox) return;
     var want = {};
-    regionBox.entries().forEach(function(e){ want[e.key] = e; });
+    if (regionBox.light()) regionBox.entries().forEach(function(e){ want[e.key] = e; });
     Object.keys(regionMeshes).forEach(function(key){
       if (want[key] && want[key].color === regionMeshes[key].color) return;
       try{ nv.removeMesh(regionMeshes[key].mesh); }catch(e){}
@@ -1623,14 +1627,14 @@ main.screen.one.land{ flex-direction:row; }
     var host = document.getElementById("regionBox");
     if (!host || !window.MN_REGIONBOX || !window.MN_ATLAS || regionBox) return;
     regionBox = MN_REGIONBOX.attach({
-      host: host, box: document.getElementById("drawerBox"), link: true,
+      host: host, box: document.getElementById("drawerBox"), link: true, light: true,
       onChange: function(){ applyRegions(); rememberSoon(); },
       onRead: readAbout
     });
     if (keptRegions && keptRegions.keys.length){
-      regionBox.set(keptRegions.keys, { mirror: keptRegions.mirror, link: keptRegions.link });
+      regionBox.set(keptRegions.keys, { mirror: keptRegions.mirror, link: keptRegions.link, light: keptRegions.light });
     } else {
-      if (keptRegions && typeof keptRegions.mirror === "boolean") regionBox.set([], { mirror: keptRegions.mirror });
+      if (keptRegions) regionBox.set([], { mirror: keptRegions.mirror, light: keptRegions.light });
       applyRegions();
     }
     keptRegions = null;
@@ -1643,7 +1647,8 @@ main.screen.one.land{ flex-direction:row; }
      comes in; nothing in the address asks for anything else on this page. A
      state kept before v12.42 (v 2) carried a colour, read no more, and a
      thickness, read again since v12.43. Since v12.59 the regions highlighted,
-     the mirror toggle and the switch ride with them (v 6). */
+     the mirror toggle and the switch ride with them (v 6), and since v12.60
+     the Highlight the regions toggle, off unless it was left on. */
   var keepReady = false, keepTimer = 0;
   function rememberSoon(){
     if (!keepReady) return;
@@ -1657,6 +1662,7 @@ main.screen.one.land{ flex-direction:row; }
           tract: tract.on, sliceTract: sliceTract, offsetOn: offsetOn,
           radius: tractRadius, past: tractPast,
           regions: regionBox ? regionBox.keys() : [], mirror: regionBox ? regionBox.mirror() : true, link: regionBox ? regionBox.link() : "all",
+          light: regionBox ? regionBox.light() : false,
           cuts: slice ? slice.state() : null,
           view: nv ? { az: nv.scene.renderAzimuth, el: nv.scene.renderElevation, zoom: zoom } : null
         }));
@@ -1689,7 +1695,8 @@ main.screen.one.land{ flex-direction:row; }
     if (m.v >= 6 && Array.isArray(m.regions)){
       keptRegions = { keys: m.regions.filter(function(k){ return typeof k === "string"; }),
                       mirror: typeof m.mirror === "boolean" ? m.mirror : undefined,
-                      link: m.link === "connecting" ? "connecting" : "all" };
+                      link: m.link === "connecting" ? "connecting" : "all",
+                      light: m.light === true };
     }
     var nv = byKey.Ren;
     if (nv && m.view){

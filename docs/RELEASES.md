@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.60 — 28 October 2026 — A switch to highlight the regions themselves
+Commit · Add a Highlight the regions switch to the Tractography page's region box, off to begin with
+
+The region box on the Tractography page carries a new switch, Highlight the regions, off to begin with. The streamlines through the regions you pick are drawn either way; the regions themselves stand among them in their colours only while the switch is on. The page remembers it with the rest.
+
 ## v12.59 — 28 October 2026 — The streamlines through the regions you pick
-Commit · Show the streamlines through picked regions on the Tractography page, with the atlas's region box, a Connecting switch and Export in the sliding group
+Commit `765bbe6` · Show the streamlines through picked regions on the Tractography page, with the atlas's region box, a Connecting switch and Export in the sliding group
 
 The Tractography page now shows the wiring of the regions you pick. The 3D Region Atlas's region box stands beside the tractogram: add a region and only the streamlines that run through it are drawn, the region itself standing among them in its colour and cut with the brain. Add a second and the box turns to Connecting, only the streamlines that run between them, with All through a press away for every streamline through any of them, and a press on a region's name opens its note, as on the atlas. Which streamlines run through which region was worked out once from the atlas and shipped with the page, counting only those whose line enters the region's own voxels. Export has moved to the end of the sliding group, and the page remembers the regions and the switch with the rest.
 

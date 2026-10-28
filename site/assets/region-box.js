@@ -13,17 +13,21 @@
    through or Connecting, which the page reads: it stands at All, greyed,
    while fewer than two regions are highlighted, and turns itself to
    Connecting the moment the list goes from one region to two, the person's
-   own choice kept after that. The atlas keeps its own copy of the picker;
-   a change to how a region is picked belongs in both.
+   own choice kept after that; and under the Mirror toggle a second,
+   Highlight the regions, off to begin with (v12.60, at the owner's word),
+   which the page reads to draw the regions themselves or not. The atlas
+   keeps its own copy of the picker; a change to how a region is picked
+   belongs in both.
 
-     MN_REGIONBOX.attach({host, box, onChange, onRead, link})  → api
+     MN_REGIONBOX.attach({host, box, onChange, onRead, link, light})  → api
        host      the element the parts are built in (the box's scroller)
        box       the box the picker's panel hangs from
-       onChange  (api, reason) after any change: add, remove, clear, set, link, mirror
+       onChange  (api, reason) after any change: add, remove, clear, set, link, mirror, light
        onRead    (key, entry) when a row's name is pressed
        link      true for the All through / Connecting switch
-     api.entries() keys() get(key) add(key) remove(key) clear() set(keys, {mirror, link})
-        link() setLink(v) mirror() count(text) colourOf(key)
+       light     true for the Highlight the regions toggle, off to begin with
+     api.entries() keys() get(key) add(key) remove(key) clear() set(keys, {mirror, link, light})
+        link() setLink(v) mirror() light() setLight(v) count(text) colourOf(key)
      MN_REGIONBOX.fillNote(headEl, whereEl, bodyEl, entry)   the region's own
         window: What it does, Associated brain disorders, When damaged
      MN_REGIONBOX.PALETTE   the colours, in the order the atlas gives them */
@@ -88,7 +92,7 @@ window.MN_REGIONBOX = (function(){
     var REGIONS = window.MN_ATLAS ? MN_ATLAS.REGIONS : [];
     var byBase = {};
     REGIONS.forEach(function(r){ byBase[r.base] = r; });
-    var selections = new Map(), link = "all", mirror = true;
+    var selections = new Map(), link = "all", mirror = true, light = false;
     var id = "rb" + (++seq) + "-";
     host.classList.add("region-box");
 
@@ -117,7 +121,16 @@ window.MN_REGIONBOX = (function(){
     var toggles = el("div", "toggles"), toggle = el("label", "toggle");
     var mirrorEl = document.createElement("input"); mirrorEl.type = "checkbox"; mirrorEl.checked = true; mirrorEl.className = "rb-mirror";
     toggle.appendChild(mirrorEl); toggle.appendChild(document.createTextNode(" Mirror left / right pairs"));
-    toggles.appendChild(toggle); partPick.appendChild(toggles);
+    toggles.appendChild(toggle);
+    var lightEl = null;
+    if (o.light){
+      var lightRow = el("label", "toggle");
+      lightEl = document.createElement("input"); lightEl.type = "checkbox"; lightEl.checked = false; lightEl.className = "rb-light";
+      lightRow.appendChild(lightEl); lightRow.appendChild(document.createTextNode(" Highlight the regions"));
+      lightRow.title = "Draw the highlighted regions themselves among the streamlines, each in its colour";
+      toggles.appendChild(lightRow);
+    }
+    partPick.appendChild(toggles);
     var linkWrap = null, linkBtns = {}, noteEl = null;
     if (o.link){
       linkWrap = el("div", "rb-link"); linkWrap.setAttribute("role", "group"); linkWrap.setAttribute("aria-label", "Which streamlines to show");
@@ -230,6 +243,7 @@ window.MN_REGIONBOX = (function(){
         selections.set(k, e);
       });
       if (typeof opts.mirror === "boolean"){ mirror = opts.mirror; mirrorEl.checked = mirror; }
+      if (typeof opts.light === "boolean" && lightEl){ light = opts.light; lightEl.checked = light; }
       settleLink(prev);
       if (opts.link === "all" || opts.link === "connecting") setLink(opts.link, true);
       renderRows();
@@ -469,6 +483,10 @@ window.MN_REGIONBOX = (function(){
       if (o.onChange) o.onChange(api, "mirror");
     });
     clearBtn.addEventListener("click", clear);
+    if (lightEl) lightEl.addEventListener("change", function(){
+      light = lightEl.checked;
+      if (o.onChange) o.onChange(api, "light");
+    });
 
     api = {
       entries: function(){ var out = []; selections.forEach(function(s, k){ out.push({key: k, name: s.name, base: s.base, sideTag: s.sideTag, indices: s.indices.slice(), color: s.color}); }); return out; },
@@ -479,6 +497,8 @@ window.MN_REGIONBOX = (function(){
       link: function(){ return link; },
       setLink: function(v){ setLink(v, false); },
       mirror: function(){ return mirror; },
+      light: function(){ return !!(lightEl && light); },
+      setLight: function(v){ if (!lightEl) return; light = !!v; lightEl.checked = light; if (o.onChange) o.onChange(api, "light"); },
       colourOf: function(k){ var s = selections.get(k); return s ? s.color : null; },
       count: function(text){ countEl.textContent = text || ""; },
       picker: regionPicker
