@@ -365,9 +365,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   view switch: since v12.1, at the owner's word, the tractogram is the whole stage with nothing framing it and no cap (the
   view's border and the stage's padding are nought; the cap with its name, Reset view and the Slice tool's buttons went; the
   zoom buttons had gone in v11.97, the wheel and a pinch zooming as before), and the bar, since v12.42 at the owner's
-  word, carries the buttons that slide and one that stays, the sliding ones in four groups behind lines since v12.43,
+  word, carries the buttons that slide and one that stays, the sliding ones in five groups behind lines since v12.59 (four from v12.43),
   at the owner's word (`.pgroup`: Slice | Brain, Transparency | Tract, Slice tract, Offset, Distance, Thicken | View,
-  Revolve, each group after the first behind a `border-left` in the row and a `border-top` in the column): Slice (`#sliceBtn`, v12.1: the slice tool's switch, lit while
+  Revolve | Export, each group after the first behind a `border-left` in the row and a `border-top` in the column): Slice (`#sliceBtn`, v12.1: the slice tool's switch, lit while
   the edge sliders are out, disabled until `attachSlice` has the mesh; the tool draws no buttons of its own, attached
   without `tools` since v12.33; first on the bar since v12.32, at the owner's word, as Slice leads wherever it stands:
   see the slice tool under the 3D Region Atlas), Brain (`#brainBtn`, `aria-pressed`, lit while the brain shows,
@@ -395,17 +395,17 @@ Read this first in every session. It is the handover; nothing else needs pasting
   Home the opening view with its zoom and its place put back, then behind a rule Reset slice, `#sliceReset`, every
   cut back to its centre mark with the view left as it is, which the owner asked back here after v12.32 had taken it
   off every bar; the cube and Reset view went), Revolve (`#spinBtn`, a `.pbtn` lit while it turns; off at launch since
-  v11.98, at the owner's word) and, at the far right, always on show, Export (v12.50, at the owner's word: a plain
-  `.pbtn` in `.panelbar-end` before the line, as the 3D Region Atlas has it, raising `#popExport`, the density select
-  `#exportDensity` and `#export3d`, which stood in the Tractography sheet's middle until then) and, behind a line,
-  Tractography (`.pbtn-ref`, as
+  v11.98, at the owner's word) and, last in the sliding group since v12.59, at the owner's word, Export (v12.50: raising `#popExport`, the
+  density select `#exportDensity` and `#export3d`, which stood in the Tractography sheet's middle until then; from v12.50
+  to v12.58 it stood always on show in `.panelbar-end` before the line) and, at the far right behind a line, always on
+  show, Tractography (`.pbtn-ref`, as
   narrow as the others since v12.44, at the owner's word, its name in smaller, tighter type, `.panelbar
   .pbtn.pbtn-ref span`, and its line standing `--gap` after the sliding group as the group stands from the bar's
   left edge, the bar's `gap` nought and the button's `margin-left` the gap; `#popTract`: the sheet of What it is (v12.36: what tractography is, the colour key and how the page works, the
   notes the About window held) and Reference (the
   sources as `.ref-line`s, the HCP1065 paper, Yeh 2022, linked by its DOI, the template, the HCP's acknowledgement and
   NiiVue) under three `h2`s; the What it is, Export and Reference buttons and their sheets went with v12.42, the About
-  button with v12.36). The six slide: `.panelbar-btns` is the scroller (`flex:1 1 auto; min-width:0;
+  button with v12.36). The groups slide: `.panelbar-btns` is the scroller (`flex:1 1 auto; min-width:0;
   overflow-x:auto`, no scrollbar) and `.panelbar-end` keeps its place, the bar itself `overflow:hidden`; held sideways
   the group scrolls down its column (`flex:0 1 auto; min-height:0; overflow-y:auto`) and Tractography keeps its foot.
   A mini (`.mini`, the four standing after the nav in `main`, `position:fixed`, z 40, in the bar's material and inks;
@@ -519,6 +519,35 @@ Read this first in every session. It is the handover; nothing else needs pasting
   chrome now
   lives in six pages (the 3D Region Atlas, the Brodmann Area Atlas, the Hallucinations study, the molecular viewer, the
   Network Atlas and Tractography); a change to it belongs in all of them.
+- Since v12.59, at the owner's word, the Tractography page shows the streamlines through the regions a person picks.
+  The 3D Region Atlas's region box stands beside the view as a drawer (the atlas's chrome copied into `tracts.html`:
+  `#drawer`, `#drawerBox`, `#drawerHide`, `#drawerTab`, `.deck.shut`, kept as `vn-tracts-drawer`, open on a wide
+  screen unless shut and shut at every load on a phone, where it slides in from the right; the slice tool's left
+  slider stands 26px in and the bottom one starts past it so the box's tab and handle never cover them, and on a
+  phone the right one stands in as on the atlas), and what the box holds is a widget, `site/assets/region-box.js`
+  with `region-box.css` (`MN_REGIONBOX.attach({host, box, link, onChange, onRead})`: the atlas's picker line for
+  line, built from `MN_ATLAS.REGIONS` by lobe with the Mirror toggle, searched by name, lobe or what a region does,
+  the Highlighted rows under their layers with a colour each from the atlas's palette, Clear all, a count line
+  (`api.count`) and a switch of two `.ts-btn`s, All through or Connecting, greyed under two regions, standing at All
+  with one and turning itself to Connecting as the list goes from one to two, the person's own after that;
+  `MN_REGIONBOX.fillNote` fills a region's own window; the atlas keeps its own copy of the picker, so a change to how
+  a region is picked belongs in both). Which streamlines run through which region is an index built once offline by
+  `scripts/make_tract_regions.py` into `site/assets/tracts/hcp1065-regions.json` (for each AAL label, in
+  `atlas-data.js`'s order, the streamlines whose drawn line enters the region's own voxels, every segment walked at
+  1 mm; no margin around a region, at the owner's word, so a bundle skirting an edge does not count; 465 KB, read by
+  the page beside the tractogram and checked against its streamline count, `streamlineCount`, which leaves out the
+  empty streamline NiiVue's reader closes the offsets with; a rebuilt tractogram needs the script run again). In
+  `tracts.html` the pick leaves `shown`, the subset the cuts, the ends and the export read in place of `whole`
+  (`base()`; All through is any streamline through any highlighted region, Connecting those through two of them:
+  `regionIds`, `applyRegions`), the view keeping the whole tractogram's frame; each highlighted region stands among
+  the fibres as a surface of its voxels in its colour (`lightRegions`: `MN_EXPORT3D.labelSurface` on the AAL
+  volume, fetched once through `MN_EXPORT3D.volume`, an `NVMesh` of triangles in the streamlines' viewer, cut as the
+  brain is by `cutRegions` from `applyCut`, `cutBox(planes, 0)`); a row's name pressed raises `#popRegion`
+  (`readAbout`; `TK_SCREEN`, the sheets' door the screen script exposes beside `TK_MINI`, and `TK_DRAWER` the
+  drawer's); the regions, the mirror toggle and the switch ride in `vn-tracts-last` (`v: 6`: `regions` as the
+  atlas's keys, `mirror`, `link`); and `MN_TRACTS.regions` (`set`, `keys`, `link`, `setLink`, `shown`, `drawn`,
+  `indexed`) is the door for a check or a shoot. The store shots and the home twins set the drawer shut, so the
+  tractogram keeps its room.
 - The Region Atlas is called the 3D Region Atlas wherever its name shows (nav, titles, home page, the app) since
   v11.12; its file stays `regions.html`. Since v11.22, at the owner's request, it is one screen in the manner of an
   anatomy app (`body.atlas-screen`, `main.screen`, the style block "the screen" and the script "the screen" at the end
@@ -917,8 +946,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   an hour; name shots `ipad-01`…`iphone-11`, `duo-01`…`open-11` for a few): eleven shots since v12.57, ten since
   v12.15 (the eleventh, at the owner's word, is Tractography as the owner's iPad capture of 27 October 2026 had it,
   the brain nearly solid with its left hemisphere's near side cut away and the tractogram standing whole in the space,
-  preset through the page's own memory, `TRACT_STATE` as `vn-tracts-last`, under the statement Wiring System
-  Tractogram, `03-tractography.png`, its iPhone bar the Molecular strip titled Tractography in Inter SemiBold,
+  preset through the page's own memory, `TRACT_STATE` as `vn-tracts-last`, the region box shut (`vn-tracts-drawer`,
+  v12.59), under the statement Wiring System Tractogram, `03-tractography.png`, its iPhone bar the Molecular strip titled Tractography in Inter SemiBold,
   `iphone-top-dark-tractography`; ten is the most a size takes in App Store Connect, so one of the eleven stays out of
   each upload, the owner's choice), each the iPad's at 2752×2064 and the
   iPhone's at two sizes from one render, `iphone-6.3-` at 1206×2622, the medium display App Store Connect has required

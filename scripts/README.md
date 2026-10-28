@@ -45,6 +45,22 @@ Which does, in order:
 It prints the size it is heading for at each step, then the final count. If it
 exits complaining it is still too large, lower `--count`.
 
+## 2b. The region index
+
+The Tractography page can show the streamlines through the regions a person
+picks (v12.59). Which streamline runs through which AAL region is worked out
+once, here, and shipped beside the tractogram:
+
+    python3 scripts/make_tract_regions.py
+
+reads `site/assets/tracts/hcp1065.trx` (or a `.trk`, through nibabel) and
+`site/assets/aal.nii.gz`, walks every segment of every streamline at 1 mm and
+writes `site/assets/tracts/hcp1065-regions.json`, for each AAL label the
+streamlines whose drawn line enters the region's own voxels, with no margin
+around a region. The page checks the file's streamline count against the
+tractogram it drew, so run this again after any rebuild of the tractogram.
+Takes a few seconds; numpy alone.
+
 ## 3. Check it
 
     npx wrangler dev          # or: npx http-server site

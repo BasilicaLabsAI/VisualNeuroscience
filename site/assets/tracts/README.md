@@ -11,5 +11,12 @@ redistribution that ships with NiiVue (`packages/niivue/demos/images/yeh2022.trx
 which is already at the streamline count the page wants. The attribution on the
 page is required by the licence — leave it in place.
 
+`hcp1065-regions.json` (v12.59) says which streamlines run through which AAL
+region, for the page's region box: for each label, in `assets/atlas-data.js`'s
+order, the streamlines whose drawn line enters the region's own voxels, walked
+at 1 mm, with no margin. It is written by `scripts/make_tract_regions.py` from
+the tractogram and `assets/aal.nii.gz`, and must be written again whenever the
+tractogram is rebuilt: the page checks its streamline count.
+
 To rebuild from the full published atlas instead — if you want a different
 streamline count, or the bundles filtered — see `scripts/README.md`.

@@ -1,0 +1,200 @@
+/* The region box's inside (v12.59, at the owner's word): the 3D Region
+   Atlas's region picker and its Highlighted list, carried to the Tractography
+   page as a widget (assets/region-box.js) so a person can pick regions there
+   and see the streamlines through them. The rules are the atlas's own for
+   the same parts, scoped to the widget's root (.region-box) so they reach
+   nothing else on a page; the atlas keeps its own copy in its style block.
+   The drawer around the box, its tab and its handle are each page's chrome
+   and stay in the page. */
+
+.region-box.rail-box{ display:grid; grid-template-columns:minmax(0,1fr); row-gap:1.4rem; align-items:start; }
+.region-box .rail-part{ min-width:0; }
+
+/* ── the picker: a button that opens a searchable list hung from the box ── */
+.region-box .searchwrap{ position:relative; margin-bottom:.55rem; }
+.region-box .searchwrap input{
+  width:100%; padding:.55rem 2rem .5rem .6rem;
+  font-family:var(--font-serif); font-size:.95rem;
+  color:var(--ink); background:var(--paper);
+  border:1px solid var(--hair); border-radius:0;
+}
+.region-box .searchwrap input::placeholder{ color:var(--ink-35); font-style:italic; }
+.region-box .searchwrap input:focus{ outline:2px solid var(--ink); outline-offset:1px; }
+.region-box .searchwrap input::-webkit-search-cancel-button{ -webkit-appearance:none; appearance:none; }
+.region-box .searchwrap .clear{
+  position:absolute; right:.3rem; top:50%; transform:translateY(-50%);
+  border:0; background:none; color:var(--ink-60); cursor:pointer;
+  font-size:1.1rem; line-height:1; padding:.2rem .3rem;
+}
+.region-box .searchwrap .clear.hidden{ display:none; }
+@media (hover: hover){ .region-box .searchwrap .clear:hover{ color:var(--ink); } }
+.region-box .search-count{
+  font-family:var(--font-serif); font-style:italic; font-size:.78rem;
+  color:var(--ink-60); margin:0 0 .5rem;
+}
+.region-box .balist-empty{
+  font-family:var(--font-serif); font-style:italic; font-size:.85rem;
+  color:var(--ink-60); padding:.8rem .2rem;
+}
+.region-box mark{ background:var(--ink); color:var(--paper); }
+.region-box .rpick-btn{
+  display:block; width:100%; text-align:left; cursor:pointer;
+  border:1px solid var(--hair); border-radius:0; background:var(--paper); color:var(--ink);
+  font-family:var(--font-brand); font-size:.92rem; padding:.55rem 1.8rem .5rem .6rem;
+  transition:box-shadow .12s ease; position:relative;
+}
+@media (hover: hover){ .region-box .rpick-btn:hover{ box-shadow:0 0 0 1px var(--ink) inset; } }
+.region-box .rpick-btn:active, .region-box .rpick-btn[aria-expanded="true"]{ box-shadow:0 0 0 1px var(--ink) inset; }
+/* the wrapper is not positioned, so the panel hangs from the box around it
+   (the script sets where, from the button) and escapes the box's scroller;
+   the chevron sits on the button for the same reason */
+.region-box .rpick{ position:static; }
+.region-box .rpick::after{ content:none; }
+.region-box .rpick-btn::after{
+  content:""; position:absolute; right:.75rem; top:50%; transform:translateY(-35%);
+  border-left:4px solid transparent; border-right:4px solid transparent;
+  border-top:5px solid var(--ink); pointer-events:none;
+  transition:transform .22s cubic-bezier(.32,.72,0,1);
+}
+.region-box .rpick.open .rpick-btn::after{ transform:translateY(-35%) rotate(180deg); }
+.region-box .rpick-pop{
+  position:absolute; z-index:40; left:var(--pop-left, 0); right:auto; width:var(--pop-w, 100%); top:var(--pop-top, calc(100% + 4px));
+  padding:.6rem .6rem .35rem; border:1px solid var(--hair); border-radius:12px;
+  box-shadow:0 14px 30px rgba(0,0,0,.25);
+  opacity:0; transform:translateY(-8px) scale(.985); transform-origin:top left;
+  transition:opacity .18s cubic-bezier(.32,.72,0,1), transform .22s cubic-bezier(.32,.72,0,1);
+}
+.region-box .rpick-pop[hidden]{ display:none; }
+/* beside the view the box is narrow, so the open list is let out past its
+   edge, where the names and the line of what each does have room */
+@media (min-width:1101px), (min-width:901px) and (orientation:landscape){
+  .region-box .rpick-pop{ right:auto; width:21rem; }
+}
+/* the material is a layer behind the panel's contents rather than the panel
+   itself: iOS can leave a list unscrollable inside an element that carries a
+   backdrop filter, so the filter sits on a layer the list is not inside */
+.region-box .rpick-pop::before{
+  content:""; position:absolute; inset:0; z-index:-1; border-radius:inherit;
+  background:color-mix(in srgb, var(--paper) 94%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
+}
+.region-box .rpick.open .rpick-pop{ opacity:1; transform:none; }
+.region-box .rpick-list{
+  max-height:min(46vh,420px); max-height:min(46dvh,420px); overflow-y:auto; overscroll-behavior:contain;
+  touch-action:pan-y; margin:0 -.2rem; padding:0 .2rem;
+}
+.region-box .rpick-list .balobe{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--ink-60); padding:.35rem .3rem .2rem; margin-top:.5rem; border-bottom:1px solid var(--ink-35);
+}
+.region-box .rpick-list [role="group"]:first-child .balobe{ margin-top:0; }
+.region-box .rpick-opt{
+  display:flex; align-items:center; gap:.5rem; padding:.42rem .4rem .38rem; cursor:pointer; border-radius:6px;
+  font-family:var(--font-serif); font-size:.92rem; line-height:1.3; -webkit-user-select:none; user-select:none;
+}
+@media (hover: hover){ .region-box .rpick-opt:hover{ background:color-mix(in srgb, var(--ink) 6%, transparent); } }
+.region-box .rpick-opt .nm{ flex:1 1 auto; min-width:0; overflow:hidden; }
+.region-box .rpick-opt .why{
+  display:block; font-style:italic; font-size:.78rem; color:var(--ink-60);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:.1rem;
+}
+.region-box .rpick-opt.active{ background:color-mix(in srgb, var(--ink) 9%, transparent); }
+.region-box .rpick-opt .swatch{ width:10px; height:10px; flex:none; border:1px solid var(--ink-60); }
+/* under a finger the field is set at 16px, the size below which a phone
+   zooms the page to read what is typed */
+@media (pointer:coarse){
+  .region-box .rpick-btn{ min-height:44px; }
+  .region-box .searchwrap input{ font-size:16px; }
+  .region-box .rpick-opt{ min-height:44px; }
+}
+
+/* ── the mirror toggle, the switch and its line ── */
+.region-box .toggles{ display:grid; grid-template-columns:1fr; gap:.35rem .8rem; margin:.5rem 0 .1rem; }
+.region-box .toggle{
+  display:flex; align-items:center; gap:.45rem; cursor:pointer; user-select:none;
+  font-family:var(--font-brand); font-size:.76rem; letter-spacing:.05em; color:var(--ink-60);
+}
+.region-box .toggle input{ width:14px; height:14px; accent-color:var(--ink); }
+/* All through or Connecting (v12.59, at the owner's word): two buttons as the study's state buttons stand,
+   greyed while fewer than two regions are highlighted, since one region connects to nothing */
+.region-box .rb-link{ display:flex; gap:.4rem; margin:.6rem 0 0; }
+.region-box .rb-link .ts-btn{ flex:1; text-align:center; }
+.region-box .rb-link .ts-btn[aria-pressed="true"]{ background:var(--ink); color:var(--paper); }
+.region-box .rb-link .ts-btn:disabled{ opacity:.4; cursor:default; }
+@media (hover: hover){ .region-box .rb-link .ts-btn:disabled:hover{ background:var(--paper); color:var(--ink); } }
+.region-box .rb-note{ font-family:var(--font-serif); font-style:italic; font-size:.8rem; color:var(--ink-60); margin:.5rem 0 0; }
+
+/* ── the highlighted rows, as the atlas lists them ── */
+.region-box .rchips{ display:flex; flex-direction:column; gap:.4rem; max-height:none; overflow:visible; }
+.region-box .rchips > *{ flex-shrink:0; }
+.region-box .rchip{
+  display:flex; align-items:center; gap:.55rem;
+  border:1px solid var(--hair); padding:.42rem .5rem .38rem;
+}
+.region-box .rchip .dot{ width:.62rem; height:.62rem; flex:none; border:1px solid var(--ink); }
+/* the name and side as one press (v12.52): the region's own window */
+.region-box .rchip .rread{
+  display:flex; flex:1 1 auto; min-width:0; align-items:center; gap:.55rem;
+  background:none; border:0; padding:0; margin:0; color:inherit; font:inherit; text-align:left; cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+@media (hover: hover){ .region-box .rchip .rread:hover .name{ text-decoration:underline; } }
+.region-box .rchip .rread:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+.region-box .rchip .name{ flex:1; font-family:var(--font-serif); font-size:.95rem; line-height:1.25;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.region-box .rchip .side{ flex:none; font-family:var(--font-brand); font-weight:500; font-size:.56rem;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-60); }
+.region-box .rchip .x{
+  flex:none; border:0; background:none; color:var(--ink); cursor:pointer;
+  font-size:1rem; line-height:1; padding:.05rem .3rem;
+}
+@media (hover: hover){ .region-box .rchip .x:hover{ background:var(--ink); color:var(--paper); } }
+@media (pointer:coarse){ .region-box .rchip button.x{ min-width:36px; min-height:36px; } }
+/* the subheading over each layer's rows, set as the picker heads its lobes */
+.region-box .rchip-head{
+  display:flex; align-items:center; gap:.5rem;
+  font-family:var(--font-brand); font-weight:500; font-size:.72rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  border-bottom:1px solid var(--ink-35); padding:.55rem .1rem .35rem; margin-top:.35rem;
+}
+.region-box .empty-note + .rchip-head, .region-box .rchip-head:first-child{ margin-top:0; }
+.region-box .rchip-head .n{ letter-spacing:.1em; font-size:.6rem; color:var(--ink-60); margin-left:auto; }
+.region-box .empty-note{ font-family:var(--font-serif); font-style:italic; font-size:.9rem; color:var(--ink-60); }
+.region-box .empty-note.hidden{ display:none; }
+/* how many streamlines the pick leaves, under the rows */
+.region-box .rb-count{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--ink-60); margin:.55rem 0 0; font-variant-numeric:tabular-nums;
+}
+.region-box .rb-count:empty{ display:none; }
+.region-box .btns{ display:flex; gap:.6rem; margin-top:.6rem; }
+.region-box .btn{
+  display:inline-block; font-family:var(--font-brand); font-weight:500;
+  font-size:.66rem; letter-spacing:.18em; text-transform:uppercase;
+  border:1px solid var(--ink); background:var(--paper); color:var(--ink);
+  padding:.55rem .4rem .48rem; cursor:pointer; flex:1;
+}
+@media (hover: hover){ .region-box .btn:hover{ background:var(--ink); color:var(--paper); text-decoration:none; } }
+.region-box .btn:disabled{ opacity:.4; cursor:default; }
+@media (hover: hover){ .region-box .btn:disabled:hover{ background:var(--paper); color:var(--ink); } }
+
+/* ── one region's own window: its note bare, a kicker over each part ── */
+.region-note{ border:0; padding:.1rem .1rem .3rem; }
+.region-note h4{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--ink-60); margin:.9rem 0 .2rem;
+}
+.region-note h4:first-child{ margin-top:.1rem; }
+.region-note p{ font-size:.95rem; line-height:1.55; color:var(--ink); margin:0; }
+
+@media (prefers-reduced-motion: reduce){
+  .region-box .rpick-pop{ transform:none; transition:opacity .15s ease; }
+  .region-box .rpick-btn::after{ transition:none; }
+}
+@media (prefers-reduced-transparency: reduce){
+  .region-box .rpick-pop::before{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
+}
+@media (prefers-contrast: more){
+  .region-box .rpick-pop{ border-color:var(--ink); }
+  .region-box .rpick-pop::before{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
+}

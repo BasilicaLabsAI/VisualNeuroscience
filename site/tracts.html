@@ -29,6 +29,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="assets/viewer.css">
 <link rel="stylesheet" href="assets/atlas-views.css">
+<link rel="stylesheet" href="assets/region-box.css">
 <link rel="stylesheet" href="fonts/fonts.css">
 
 <script>/* Dark is the default; only an explicit choice of light overrides it.
@@ -150,8 +151,9 @@ svg{ display:block; }
    bottom, nothing scrolls, and the controls, the export and the notes
    that stood beside and below it rise from the bar's buttons as sheets
    over the view, one at a time. The chrome is the study's
-   (hallucinations.html, "the screen") without its drawer and its view
-   switch; a change to it belongs in every page that carries it.
+   (hallucinations.html, "the screen") without its view switch, and since
+   v12.59, at the owner's word, with the 3D Region Atlas's drawer, the region
+   box beside the view; a change to it belongs in every page that carries it.
    --screen-top is the header's height, measured by the page's script;
    --bar-h is the bar's. */
 body.atlas-screen{ overflow:hidden; margin:0; padding-bottom:0; }
@@ -164,6 +166,57 @@ main.screen{
 }
 .screen .vh{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }
 .deck{ flex:1 1 auto; min-height:0; display:flex; position:relative; }
+/* the region box (v12.59, at the owner's word): the 3D Region Atlas's drawer, a box in the deck's corner beside the
+   view on a wide screen and over it on a narrow one, as tall as what it holds up to the room between the header and
+   the bar, scrolling inside, folding away on the tab at its edge and coming back on the handle the tab leaves at the
+   screen's edge; the column it stands in is what the view makes room for, and it slides off whole rather than
+   reflowing as the column closes. The rules are the atlas's own (regions.html, "the screen"); what the box holds is
+   the widget's (assets/region-box.css). */
+.drawer{
+  --box-w:300px;
+  position:relative; z-index:7; flex:0 0 calc(var(--box-w) + var(--gap)); width:calc(var(--box-w) + var(--gap)); min-width:0; min-height:0;
+  display:flex; flex-direction:column; align-items:flex-start; padding:var(--gap) 0 var(--gap) var(--gap);
+  transition:flex-basis .32s cubic-bezier(.32,.72,0,1), width .32s cubic-bezier(.32,.72,0,1), padding .32s cubic-bezier(.32,.72,0,1), visibility 0s 0s;
+}
+.drawer-box{
+  position:relative; flex:0 1 auto; width:var(--box-w); max-height:100%; min-height:0;
+  display:flex; flex-direction:column;
+  border:1px solid var(--bar-line); border-radius:16px; background:var(--bar-fill); color:var(--ink);
+  -webkit-backdrop-filter:blur(16px) saturate(1.15); backdrop-filter:blur(16px) saturate(1.15);
+  box-shadow:0 1px 2px rgba(0,0,0,.08), 0 10px 30px rgba(0,0,0,.14);
+  transition:transform .32s cubic-bezier(.32,.72,0,1);
+}
+@media (prefers-reduced-transparency: reduce){ .drawer-box{ background:var(--bar-fill-solid); -webkit-backdrop-filter:none; backdrop-filter:none; } }
+.drawer-in.card{ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; border:0; padding:var(--gap) var(--gap) 1.4rem; background:transparent; }
+.deck.shut .drawer{ flex-basis:0; width:0; padding-left:0; visibility:hidden; transition-delay:0s, 0s, 0s, .32s; }
+.deck.shut .drawer-box{ transform:translateX(calc(-100% - var(--gap) - 22px)); }
+/* the tab and the handle: one shape, the tab on the box's edge at its middle, the handle at the screen's edge
+   while the box is away */
+.drawer-tab{
+  position:absolute; z-index:16; top:50%; transform:translateY(-50%);
+  width:22px; height:64px; padding:0; display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--bar-line); border-left:0; background:var(--bar-fill-solid); color:var(--bar-ink); cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.drawer-tab::after{ content:""; position:absolute; inset:-8px -10px; }
+.drawer-tab svg{ width:10px; height:16px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:square; }
+.drawer-hide{ right:-22px; border-radius:0 10px 10px 0; }
+.drawer-show{ left:0; border-radius:0 10px 10px 0; visibility:hidden; opacity:0; transition:opacity .2s ease, visibility 0s .2s; }
+.drawer-show svg{ transform:rotate(180deg); }
+.deck.shut .drawer-show{ visibility:visible; opacity:1; transition-delay:.14s, .14s; }
+@media (hover: hover){ .drawer-tab:hover{ background:var(--ink); color:var(--paper); } }
+.drawer-tab:active{ background:var(--ink); color:var(--paper); }
+/* the slice tool's edge sliders stand clear of the box's tab and handle, which sit at the middle of the view's left
+   edge on a wide screen, the tab 22px into the view and the handle at its edge while the box is away: the left slider
+   26px in and the bottom one starting past it; on a phone the box comes from the right and the right-hand slider
+   stands in instead, the bottom one stopping short of it, as on the atlas */
+.screen:not(.one) .slice-edge.left{ left:26px; }
+.screen:not(.one) .slice-edge.bottom{ left:62px; }
+@media (pointer:coarse){ .screen:not(.one) .slice-edge.bottom{ left:74px; } }
+.screen.one .slice-edge.right{ right:26px; }
+.screen.one .slice-edge.bottom{ right:74px; }
+/* one region's own window (v12.59, as the atlas has it since v12.56): narrower than the others on a wide screen */
+.screen:not(.one) #popRegion{ left:auto; width:min(560px, calc(100% - 2 * var(--gap) - 10px)); }
 .stage{ flex:1 1 auto; min-width:0; min-height:0; display:flex; flex-direction:column; position:relative; overflow:hidden; padding:0; }
 .screen .views-wrap{ position:relative; flex:1 1 auto; min-height:0; }
 /* one view, the whole stage */
@@ -332,6 +385,15 @@ main.screen.one.land .mini-item{ min-height:38px; padding:.5rem .9rem .44rem; }
 .screen.one .views .view{ border:0; }
 .screen.one .pop{ left:0; right:0; bottom:0; max-height:76%; border-left:0; border-right:0; border-bottom:0; border-radius:18px 18px 0 0; }
 .screen.one .pop-sm, .screen.one .pop-sm.pop-left, .screen.one .pop-md{ width:100%; left:0; right:0; }
+/* the region box a drawer the height of the screen sliding over the view from the right, shut at every load */
+.screen.one .drawer{ left:auto; right:0; padding:0; }
+.screen.one .drawer-box{ flex:1 1 auto; max-height:none; border-width:0 0 0 1px; border-radius:0; box-shadow:-8px 0 30px rgba(0,0,0,.25); }
+.screen.one .deck.shut .drawer-box{ transform:translateX(calc(100% + 22px)); }
+.screen.one .drawer-tab{ border-left:1px solid var(--bar-line); border-right:0; }
+.screen.one .drawer-hide{ right:auto; left:-22px; border-radius:10px 0 0 10px; }
+.screen.one .drawer-hide svg{ transform:rotate(180deg); }
+.screen.one .drawer-show{ left:auto; right:0; border-radius:10px 0 0 10px; }
+.screen.one .drawer-show svg{ transform:none; }
 
 /* ── a phone held sideways: the bar along the right edge ── */
 body.atlas-screen:has(> main.screen.one.land) .masthead{ display:none; }
@@ -364,10 +426,17 @@ main.screen.one.land{ flex-direction:row; }
 .screen.one.land .pbtn svg{ width:22px; height:22px; }
 .screen.one.land .pop{ max-height:100%; }
 
+/* narrower than 901 pixels the box lies over the view instead */
+@media (max-width:900px){
+  .drawer{ --box-w:min(320px, 100vw - 60px); position:absolute; left:0; top:0; bottom:0; z-index:15; flex:none; width:auto; transition:visibility 0s 0s; }
+  .deck.shut .drawer{ width:auto; padding-left:var(--gap); visibility:hidden; transition-delay:.32s; }
+  .drawer-box{ box-shadow:0 10px 30px rgba(0,0,0,.25); }
+}
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more){
   .panelbar, .pop{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; }
 }
 @media (prefers-reduced-motion: reduce){
+  .drawer, .drawer-box, .drawer-tab, .drawer-tab svg{ transition:none; }
   .pop{ transform:none; opacity:0; transition:opacity .18s ease; }
   .pop.in{ opacity:1; transition-duration:.18s; }
   .mini, main.screen.one.land .mini{ transform:none; transition:opacity .18s ease; }
@@ -398,6 +467,17 @@ main.screen.one.land{ flex-direction:row; }
 
   <div class="deck" id="deck">
 
+    <!-- the region box (v12.59, at the owner's word): the 3D Region Atlas's region picker, a box over the deck's
+         corner folding away on the tab at its edge and coming back on the handle left at the screen's; its inside,
+         the picker, the All through or Connecting switch and the highlighted rows, is built by assets/region-box.js -->
+    <aside class="drawer" id="drawer" aria-label="Region picker">
+      <div class="drawer-box" id="drawerBox">
+        <button class="drawer-tab drawer-hide" id="drawerHide" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Hide the region picker" title="Hide the region picker"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
+        <div class="drawer-in card rail-box" id="regionBox"></div>
+      </div>
+    </aside>
+    <button class="drawer-tab drawer-show" id="drawerTab" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Show the region picker" title="Show the region picker"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
+
     <!-- the tractogram, and the sheets the bar raises over it: the controls
          that stood beside it, the export, and the notes that stood below -->
     <section class="stage" aria-label="Tractogram">
@@ -413,6 +493,12 @@ main.screen.one.land{ flex-direction:row; }
            owner's word): what tractography is (v12.36), the model to download and where it all comes from -->
       <!-- Export (v12.50, at the owner's word): a sheet of its own, raised by the bar's Export button beside the
            pinned Tractography button, as the 3D Region Atlas has it; it held the Tractography sheet's middle until then -->
+      <!-- one region's own window (v12.59, as the atlas has it since v12.56): a press on a highlighted row's name
+           raises it, with what the region does, the disorders a fault in it is part of and what damage to it has shown -->
+      <div class="pop" id="popRegion" hidden aria-labelledby="popRegionH">
+        <header class="pop-head"><b id="popRegionH">Region</b><small id="popRegionWhere"></small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
+        <div class="pop-body"><div class="region-note" id="popRegionBody"></div></div>
+      </div>
       <div class="pop pop-sm" id="popExport" hidden aria-labelledby="popExportH">
         <header class="pop-head"><b id="popExportH">Export</b><small>the streamlines, and the brain with them, as a 3D model</small><button class="pop-x" type="button" aria-label="Close">&times;</button></header>
         <div class="pop-body">
@@ -440,7 +526,7 @@ main.screen.one.land{ flex-direction:row; }
             <span class="key-item"><span class="key-swatch" style="background:#4FB06A"></span>front &ndash; back</span>
             <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
           </div>
-          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the brain, and the streamlines with it, away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there, and Transparency raises a tall bar that makes it more see-through or more solid. Tract shows or hides the streamlines. Slice tract, on whenever Slice is turned on, cuts them with the brain, and off leaves them whole while the brain alone is cut; Offset stands their cut ends out of the brain&rsquo;s cut face and Distance sets how far, in millimetres, both greyed while the brain is off; and Thicken sets how thick they are drawn. View turns the brain to one of its faces, or home to the view the page opens with, and Revolve sets it turning until you take hold of it. The page remembers how you left it: the brain and its transparency, the streamlines with their switches, offset and thickness, the cuts and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
+          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the brain, and the streamlines with it, away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there, and Transparency raises a tall bar that makes it more see-through or more solid. Tract shows or hides the streamlines. Slice tract, on whenever Slice is turned on, cuts them with the brain, and off leaves them whole while the brain alone is cut; Offset stands their cut ends out of the brain&rsquo;s cut face and Distance sets how far, in millimetres, both greyed while the brain is off; and Thicken sets how thick they are drawn. View turns the brain to one of its faces, or home to the view the page opens with, Revolve sets it turning until you take hold of it, and Export, at the end of the bar, offers the streamlines and the brain as a 3D model. The region box beside the view, the 3D Region Atlas&rsquo;s own, folds away on its tab: highlight a region there and only the streamlines that run through it are drawn, the region itself standing among them in its colour, cut as the brain is. Highlight two or more and the switch turns to Connecting, only the streamlines that run between them, or back to All through, every streamline through any of them; a press on a region&rsquo;s name opens its note. The page remembers how you left it: the brain and its transparency, the streamlines with their switches, offset and thickness, the regions highlighted and the switch, the cuts and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
           <h2>Reference</h2>
           <p class="ref-line"><b>Tractogram</b> the HCP1065 population-averaged tractography atlas: Yeh FC, <a href="https://doi.org/10.1038/s41467-022-32595-4" target="_blank" rel="noopener">Population-based tract-to-region connectome of the human brain and its hierarchical topology</a>, <em>Nat Commun</em> 13:4933 (2022), CC BY-SA 4.0.</p>
           <p class="ref-line"><b>Brain</b> the MNI152 template (ICBM 2009c), McConnell Brain Imaging Centre, Montreal Neurological Institute, drawn around the streamlines as the 3D Region Atlas draws it, the MRI showing where a cut opens it.</p>
@@ -456,9 +542,9 @@ main.screen.one.land{ flex-direction:row; }
   </div>
 
   <nav class="panelbar" aria-label="Tractography panels">
-    <!-- the buttons in four groups behind their lines (v12.43, at the owner's word), which slide when they overrun
+    <!-- the buttons in five groups behind their lines (v12.43, at the owner's word), which slide when they overrun
          the bar, and Tractography behind its own line, always on show (v12.42):
-         Slice | Brain, Transparency | Tract, Offset, Thicken | View, Revolve -->
+         Slice | Brain, Transparency | Tract, Slice tract, Offset, Distance, Thicken | View, Revolve | Export -->
     <div class="panelbar-btns" role="group" aria-label="Controls">
       <div class="pgroup">
         <!-- Slice leads the bar on every page that slices (v12.32); off, the streamlines are whole again -->
@@ -485,9 +571,13 @@ main.screen.one.land{ flex-direction:row; }
         <button class="pbtn" type="button" id="viewBtn" aria-haspopup="true" aria-expanded="false" aria-controls="viewPop" title="Turn the brain to one of its faces, or put the cuts back"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>View</span></button>
         <button class="pbtn" type="button" id="spinBtn" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 3v5.5h-5.5"/></svg><span>Revolve</span></button>
       </div>
+      <div class="pgroup">
+        <!-- Export, at the end of the sliding group since v12.59, at the owner's word (always on show beside the
+             pinned button from v12.50 until then) -->
+        <button class="pbtn" type="button" data-pop="popExport" aria-pressed="false" title="The streamlines and the brain as a 3D model"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15V4M8 8l4-4 4 4M5 13v7h14v-7"/></svg><span>Export</span></button>
+      </div>
     </div>
-    <div class="panelbar-end" role="group" aria-label="Export and about">
-      <button class="pbtn" type="button" data-pop="popExport" aria-pressed="false" title="The streamlines and the brain as a 3D model"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15V4M8 8l4-4 4 4M5 13v7h14v-7"/></svg><span>Export</span></button>
+    <div class="panelbar-end" role="group" aria-label="About">
       <button class="pbtn pbtn-ref" type="button" data-pop="popTract" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></svg><span>Tractography</span></button>
     </div>
   </nav>
@@ -526,6 +616,9 @@ main.screen.one.land{ flex-direction:row; }
 <script src="assets/slice-tool.js"></script>
 <script src="assets/zoom.js"></script>
 <script src="assets/export3d.js"></script>
+<script src="assets/atlas-data.js"></script>
+<script src="assets/region-notes.js"></script>
+<script src="assets/region-box.js"></script>
 <script>
 /* ── the screen ──────────────────────────────────────────────────────────
    The study's screen (hallucinations.html), carried here without its
@@ -680,6 +773,36 @@ main.screen.one.land{ flex-direction:row; }
   var btnsGroup = document.querySelector(".panelbar-btns");
   if (btnsGroup) btnsGroup.addEventListener("scroll", function(){ if (miniOpen) placeMini(miniOpen); }, {passive: true});
   window.TK_MINI = { open: openMini, closeAll: closeMini, current: function(){ return miniOpen; } };
+  /* the sheets' door for the page's script (v12.59): the region's own window is raised from a row, not a button */
+  window.TK_SCREEN = { open: openPop, hide: hide, current: function(){ return current; } };
+
+  /* the drawer (v12.59, the atlas's): open beside the view on a wide screen, folded over it on a narrow one,
+     and as it was last left (vn-tracts-drawer); the tab on the box hides it, the handle at the edge brings it
+     back; on a phone it is shut whenever the page opens */
+  var deck = document.getElementById("deck"), tab = document.getElementById("drawerTab"), hideBtn = document.getElementById("drawerHide");
+  var narrow = window.matchMedia ? window.matchMedia("(max-width:900px)") : null;
+  var drawerOpen;
+  try{
+    var kept = localStorage.getItem("vn-tracts-drawer");
+    drawerOpen = kept === "open" ? true : kept === "shut" ? false : !(narrow && narrow.matches);
+  } catch(e){ drawerOpen = !(narrow && narrow.matches); }
+  if (one && one.matches) drawerOpen = false;
+  function setDrawer(on, keep){
+    drawerOpen = on;
+    deck.classList.toggle("shut", !on);
+    tab.setAttribute("aria-expanded", String(on));
+    if (hideBtn) hideBtn.setAttribute("aria-expanded", String(on));
+    if (keep){ try{ localStorage.setItem("vn-tracts-drawer", on ? "open" : "shut"); }catch(e){} }
+    if (window.MN_LIFE) MN_LIFE.remeasure();
+  }
+  /* the focus follows the box: the button pressed is about to go */
+  function focusSoon(el){ setTimeout(function(){ try{ el.focus({preventScroll: true}); }catch(e){} }, 360); }
+  if (deck && tab){
+    setDrawer(drawerOpen, false);
+    tab.addEventListener("click", function(){ setDrawer(true, true); if (hideBtn) focusSoon(hideBtn); });
+    if (hideBtn) hideBtn.addEventListener("click", function(){ setDrawer(false, true); focusSoon(tab); });
+  }
+  window.TK_DRAWER = { set: function(on){ setDrawer(!!on, false); }, open: function(){ return drawerOpen; } };
 })();
 </script>
 <script>
@@ -875,6 +998,17 @@ main.screen.one.land{ flex-direction:row; }
     offset: function(){ return tractPast; },
     switches: function(){ return { sliceTract: sliceTract, offsetOn: offsetOn }; },
     radius: function(){ return tractRadius; },
+    /* the region box (v12.59), for a check or a shoot: the keys highlighted, the switch, how many streamlines
+       stand and how many regions are drawn */
+    regions: {
+      set: function(keys, opts){ if (regionBox) regionBox.set(keys || [], opts || {}); },
+      keys: function(){ return regionBox ? regionBox.keys() : []; },
+      link: function(){ return regionBox ? regionBox.link() : "all"; },
+      setLink: function(v){ if (regionBox) regionBox.setLink(v); },
+      shown: function(){ var b = base(); return b ? b.off.length - 1 : 0; },
+      drawn: function(){ return Object.keys(regionMeshes).length; },
+      indexed: function(){ return !!regionIndex; }
+    },
     /* the ends standing out of the cut, for a check: how many points they hold, or null */
     ends: function(){ return brain.ends ? { shown: !!brain.ends.visible, points: brain.ends.pts ? brain.ends.pts.length / 3 : 0, indices: brain.ends.indexCount || 0, radius: brain.ends.fiberRadius, meshes: brain.nv ? brain.nv.meshes.length : 0 } : null; }
   };
@@ -926,6 +1060,10 @@ main.screen.one.land{ flex-direction:row; }
      it, the whole tractogram kept aside to restore. A rebuild waits for the
      next frame, so a slider dragged fast costs one a frame. */
   var slice = null, whole = null, pendingPlanes = null, cutFrame = 0;
+  /* the set the cuts, the ends and the export read (v12.59): the streamlines through the highlighted regions
+     while any are, or the whole tractogram */
+  var shown = null;
+  function base(){ return shown || whole; }
   function planeNormal(azi, elev){
     /* the viewer's own maths for a clip plane given as depth, azimuth, elevation */
     var a = -elev * Math.PI / 180, g = ((((azi + 180 - 90) % 360) + 360) % 360) * Math.PI / 180;
@@ -977,7 +1115,7 @@ main.screen.one.land{ flex-direction:row; }
   var lastPlanes = [];
   /* the pieces of the whole tractogram outside a box, for the ends (Slice tract off, v12.48) */
   function freePieces(inner){
-    var P = whole.pts, O = whole.off, n = O.length - 1, lo = inner.lo, hi = inner.hi;
+    var src = base(), P = src.pts, O = src.off, n = O.length - 1, lo = inner.lo, hi = inner.hi;
     var ept = [], eoffs = [0], erun = 0;
     for (var s = 0; s < n; s++){
       for (var i = O[s]; i < O[s + 1]; i++){
@@ -1002,13 +1140,16 @@ main.screen.one.land{ flex-direction:row; }
        where they are in front of it: the brain's canvas lies over the streamlines' with no depth
        between the two, and its cut face covered them (freePieces, the whole tractogram outside the
        box the brain keeps, a millimetre inside its cut so each tube runs on through the face). */
+    var src = base();
     if (!planes.length || !sliceTract){
       setEnds(planes.length && brain.on && brain.nv ? freePieces(cutBox(planes, -1)) : null);
-      if (mesh.pts !== whole.pts){
-        mesh.pts = whole.pts; mesh.offsetPt0 = whole.off; mesh.fiberLengths = whole.lengths;
+      if (mesh.pts !== src.pts){
+        mesh.pts = src.pts; mesh.offsetPt0 = src.off; mesh.fiberLengths = src === whole ? whole.lengths : null;
         try{ mesh.updateMesh(nv.gl); }catch(e){}
         again = true;
       }
+      /* the highlighted regions are cut as the brain is, whole again with it (v12.59) */
+      if (cutRegions(planes.length ? cutBox(planes, 0) : null)) again = true;
       if (again) nv.drawScene();
       return;
     }
@@ -1017,7 +1158,7 @@ main.screen.one.land{ flex-direction:row; }
     /* the ends: the pieces that stand out past the brain's own cut, and a millimetre inside it
        so each tube runs on through the face, gathered for the brain's viewer (setEnds) */
     var inner = withBrain ? cutBox(planes, -1) : null;
-    var P = whole.pts, O = whole.off, n = O.length - 1;
+    var P = src.pts, O = src.off, n = O.length - 1;
     var pts = new Float32Array(P.length), m = 0, offs = [0];
     var ept = withBrain ? [] : null, eoffs = [0], erun = 0;
     for (var s = 0; s < n; s++){
@@ -1046,6 +1187,7 @@ main.screen.one.land{ flex-direction:row; }
     try{ mesh.updateMesh(nv.gl); }catch(e){}
     frameBrain();   /* the frame is the whole box, whatever a cut leaves */
     setEnds(ept && eoffs.length > 1 ? { pts: Float32Array.from(ept), offs: Uint32Array.from(eoffs) } : null);
+    cutRegions(cutBox(planes, 0));   /* the regions cut as the brain is (v12.59) */
     nv.drawScene();
   }
 
@@ -1321,13 +1463,187 @@ main.screen.one.land{ flex-direction:row; }
     paintSliceBtn();
   });
 
+  /* ── the streamlines through the regions a person picks (v12.59, at the owner's word) ──
+     The 3D Region Atlas's region box stands beside the view (assets/region-box.js, the drawer the page's own
+     chrome). A region highlighted there leaves only the streamlines that run through it, read from an index
+     built once offline (scripts/make_tract_regions.py, assets/tracts/hcp1065-regions.json: for each AAL region,
+     the streamlines whose drawn line enters the region's own voxels, walked every millimetre, with no margin
+     around the region at the owner's word), and the region itself stands among them as a surface of its voxels
+     in its colour (MN_EXPORT3D.labelSurface, the 3D export's own, smoothed), cut as the brain is. The box's
+     switch reads All through, every streamline through any highlighted region, or Connecting, only those that
+     run through two of them; it stands at All, greyed, under two regions and turns itself to Connecting as the
+     list goes from one to two. The filtered set stands in for the whole one wherever the cuts, the ends and
+     the export read it (base()), and the view keeps the whole tractogram's frame, so nothing jumps as the pick
+     changes; a press on a row's name raises the region's own window, as on the atlas. The index is checked
+     against the tractogram's streamline count, so a rebuilt tractogram needs it built again. */
+  var REGION_INDEX_URL = "assets/tracts/hcp1065-regions.json";
+  var regionBox = null, regionIndex = null, regionIndexWhy = null, keptRegions = null, atlasLoad = null;
+  var regionMeshes = {};   /* key → { mesh, part, color }, each a surface in the streamlines' viewer */
+  function fetchRegionIndex(){
+    return fetch(REGION_INDEX_URL).then(function(res){
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    }).then(function(j){
+      if (!j || !Array.isArray(j.through)) throw new Error("not a region index");
+      regionIndex = j;
+      regionIndexWhy = null;
+      applyRegions();
+    }).catch(function(err){
+      regionIndexWhy = "The streamlines cannot be filtered by region: the index could not be read (" + (err && err.message ? err.message : err) + ").";
+      applyRegions();
+    });
+  }
+  function hexToRgb(h){ return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]; }
+  /* how many streamlines the file holds: the viewer's reader closes the offsets with the point count, which
+     leaves one empty streamline after the last, and the index counts the real ones */
+  function streamlineCount(){
+    var O = whole.off, n = O.length - 1;
+    while (n > 0 && O[n] === O[n - 1]) n--;
+    return n;
+  }
+  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  /* the streamlines the pick leaves, by index into the whole tractogram, or null for every one */
+  function regionIds(){
+    if (!regionIndex || !regionBox || !whole) return null;
+    var entries = regionBox.entries();
+    if (!entries.length) return null;
+    var N = streamlineCount();
+    if (regionIndex.streamlines !== N) return null;
+    var count = new Uint8Array(N), seen = new Uint8Array(N);
+    entries.forEach(function(e){
+      seen.fill(0);
+      e.indices.forEach(function(l){
+        var list = regionIndex.through[l];
+        if (!list) return;
+        for (var i = 0; i < list.length; i++){ var s = list[i]; if (s < N && !seen[s]){ seen[s] = 1; count[s]++; } }
+      });
+    });
+    var need = regionBox.link() === "connecting" && entries.length >= 2 ? 2 : 1, ids = [];
+    for (var s = 0; s < N; s++) if (count[s] >= need) ids.push(s);
+    return ids;
+  }
+  function applyRegions(){
+    var nv = byKey.Ren, mesh = nv && nv.meshes && nv.meshes[0];
+    if (!mesh || !whole || !regionBox) return;
+    var N = streamlineCount(), entries = regionBox.entries();
+    var mismatch = !!(regionIndex && regionIndex.streamlines !== N);
+    var ids = mismatch ? null : regionIds();
+    if (!ids) shown = null;
+    else {
+      var P = whole.pts, O = whole.off, total = 0, j, s, i;
+      for (j = 0; j < ids.length; j++) total += O[ids[j] + 1] - O[ids[j]];
+      var pts = new Float32Array(total * 3), offs = new Uint32Array(ids.length + 1), m = 0;
+      for (j = 0; j < ids.length; j++){
+        s = ids[j];
+        for (i = O[s]; i < O[s + 1]; i++){ pts[m++] = P[i * 3]; pts[m++] = P[i * 3 + 1]; pts[m++] = P[i * 3 + 2]; }
+        offs[j + 1] = m / 3;
+      }
+      shown = { pts: pts, off: offs };
+    }
+    /* the line under the rows */
+    var text = "";
+    if (!entries.length) text = "";
+    else if (regionIndexWhy) text = regionIndexWhy;
+    else if (mismatch) text = "The region index was built for another tractogram; run scripts/make_tract_regions.py again.";
+    else if (!regionIndex) text = "Reading the region index\u2026";
+    else if (!ids.length) text = regionBox.link() === "connecting" && entries.length >= 2
+      ? "No streamline in the atlas runs between them" : "No streamline in the atlas runs through " + (entries.length > 1 ? "them" : "it");
+    else text = fmt(ids.length) + " of " + fmt(N) + " streamlines";
+    regionBox.count(text);
+    lightRegions();
+    applyCut(lastPlanes);   /* the set is read again through the cuts, whole or cut as they stand */
+  }
+  /* the AAL volume, for the regions' surfaces; fetched once, when the first region is highlighted */
+  function ensureAtlas(){
+    if (!atlasLoad){
+      atlasLoad = window.MN_EXPORT3D && window.MN_ATLAS ? MN_EXPORT3D.volume(MN_ATLAS.ATLAS_URL) : Promise.reject(new Error("The atlas is not loaded."));
+      atlasLoad.catch(function(){ atlasLoad = null; });
+    }
+    return atlasLoad;
+  }
+  /* each highlighted region as a surface in its colour among the streamlines, cut as the brain is */
+  function lightRegions(){
+    var nv = byKey.Ren;
+    if (!nv || !regionBox) return;
+    var want = {};
+    regionBox.entries().forEach(function(e){ want[e.key] = e; });
+    Object.keys(regionMeshes).forEach(function(key){
+      if (want[key] && want[key].color === regionMeshes[key].color) return;
+      try{ nv.removeMesh(regionMeshes[key].mesh); }catch(e){}
+      delete regionMeshes[key];
+    });
+    var missing = Object.keys(want).filter(function(k){ return !regionMeshes[k]; });
+    if (!missing.length) return;
+    ensureAtlas().then(function(vol){
+      missing.forEach(function(key){
+        var e = want[key];
+        if (!regionBox.has(key) || regionMeshes[key]) return;   /* gone, or in, meanwhile */
+        var part = MN_EXPORT3D.labelSurface(vol, e.indices, { name: e.name });
+        if (!part) return;
+        var rgb = hexToRgb(e.color);
+        var m = new niivue.NVMesh(part.pos, part.idx, e.name, new Uint8Array([rgb[0], rgb[1], rgb[2], 255]), 1, true, nv.gl);
+        nv.addMesh(m);
+        regionMeshes[key] = { mesh: m, part: part, color: e.color };
+      });
+      cutRegions(lastPlanes.length ? cutBox(lastPlanes, 0) : null);
+      nv.drawScene();
+    }).catch(function(err){ console.warn("The region could not be drawn:", err && err.message ? err.message : err); });
+  }
+  /* the regions' surfaces cut to a box, the triangles whose corners lie inside it, or whole; says whether
+     anything changed */
+  function cutRegions(box){
+    var nv = byKey.Ren, changed = false;
+    Object.keys(regionMeshes).forEach(function(key){
+      var r = regionMeshes[key], idx = r.part.idx, pos = r.part.pos, tris;
+      if (!box) tris = idx;
+      else {
+        var lo = box.lo, hi = box.hi, out = [];
+        var inside = function(v){ var j = v * 3; return pos[j] >= lo[0] && pos[j] <= hi[0] && pos[j + 1] >= lo[1] && pos[j + 1] <= hi[1] && pos[j + 2] >= lo[2] && pos[j + 2] <= hi[2]; };
+        for (var t = 0; t < idx.length; t += 3) if (inside(idx[t]) && inside(idx[t + 1]) && inside(idx[t + 2])) out.push(idx[t], idx[t + 1], idx[t + 2]);
+        tris = out.length === idx.length ? idx : Uint32Array.from(out);
+      }
+      if (r.mesh.tris === tris && r.cut === !!box) return;
+      r.cut = !!box;
+      r.mesh.tris = tris;
+      r.mesh.visible = tris.length > 0;
+      if (tris.length){ try{ r.mesh.updateMesh(nv.gl); }catch(e){} }
+      changed = true;
+    });
+    return changed;
+  }
+  /* a row's name pressed: the region's own window, filled as the atlas fills it */
+  function readAbout(key, entry){
+    if (!window.TK_SCREEN || !window.MN_REGIONBOX) return;
+    MN_REGIONBOX.fillNote(document.getElementById("popRegionH"), document.getElementById("popRegionWhere"), document.getElementById("popRegionBody"), entry);
+    TK_SCREEN.open("popRegion");
+    var scroller = document.querySelector("#popRegion .pop-body");
+    if (scroller) scroller.scrollTop = 0;
+  }
+  function attachRegions(){
+    var host = document.getElementById("regionBox");
+    if (!host || !window.MN_REGIONBOX || !window.MN_ATLAS || regionBox) return;
+    regionBox = MN_REGIONBOX.attach({
+      host: host, box: document.getElementById("drawerBox"), link: true,
+      onChange: function(){ applyRegions(); rememberSoon(); },
+      onRead: readAbout
+    });
+    if (keptRegions && keptRegions.keys.length){
+      regionBox.set(keptRegions.keys, { mirror: keptRegions.mirror, link: keptRegions.link });
+    } else {
+      if (keptRegions && typeof keptRegions.mirror === "boolean") regionBox.set([], { mirror: keptRegions.mirror });
+      applyRegions();
+    }
+    keptRegions = null;
+  }
+
   /* ── the last state, kept on the device (v12.1, at the owner's word) ──
      the brain (v12.31) and its transparency, the streamlines (v12.42), their
      offset and thickness (v12.43), the cuts and the view, written a moment
      after each change once the page is up, and read back as the tractogram
      comes in; nothing in the address asks for anything else on this page. A
      state kept before v12.42 (v 2) carried a colour, read no more, and a
-     thickness, read again since v12.43. */
+     thickness, read again since v12.43. Since v12.59 the regions highlighted,
+     the mirror toggle and the switch ride with them (v 6). */
   var keepReady = false, keepTimer = 0;
   function rememberSoon(){
     if (!keepReady) return;
@@ -1336,10 +1652,11 @@ main.screen.one.land{ flex-direction:row; }
       var nv = byKey.Ren;
       try{
         localStorage.setItem("vn-tracts-last", JSON.stringify({
-          v: 5,
+          v: 6,
           brain: { on: brain.on, trans: brain.trans },
           tract: tract.on, sliceTract: sliceTract, offsetOn: offsetOn,
           radius: tractRadius, past: tractPast,
+          regions: regionBox ? regionBox.keys() : [], mirror: regionBox ? regionBox.mirror() : true, link: regionBox ? regionBox.link() : "all",
           cuts: slice ? slice.state() : null,
           view: nv ? { az: nv.scene.renderAzimuth, el: nv.scene.renderElevation, zoom: zoom } : null
         }));
@@ -1368,6 +1685,12 @@ main.screen.one.land{ flex-direction:row; }
       if (typeof m.offsetOn === "boolean") offsetOn = m.offsetOn;
     }
     if (m.cuts && slice) slice.setState(m.cuts);
+    /* the regions highlighted, the mirror toggle and the switch (v12.59), taken up as the box attaches */
+    if (m.v >= 6 && Array.isArray(m.regions)){
+      keptRegions = { keys: m.regions.filter(function(k){ return typeof k === "string"; }),
+                      mirror: typeof m.mirror === "boolean" ? m.mirror : undefined,
+                      link: m.link === "connecting" ? "connecting" : "all" };
+    }
     var nv = byKey.Ren;
     if (nv && m.view){
       if (isFinite(m.view.az)) nv.scene.renderAzimuth = Number(m.view.az);
@@ -1430,6 +1753,7 @@ main.screen.one.land{ flex-direction:row; }
       if (typeof niivue === "undefined") await loadScript("assets/niivue.js");
 
       showMessage("Loading the tractogram", "Several megabytes of streamlines are on their way.", true);
+      fetchRegionIndex();   /* the region index comes in beside it (v12.59) */
       var url = null, buffer = null, lastErr = null;
       for (var i = 0; i < TRACT_URLS.length; i++){
         try { buffer = await fetchWithProgress(TRACT_URLS[i]); url = TRACT_URLS[i]; break; }
@@ -1506,6 +1830,7 @@ main.screen.one.land{ flex-direction:row; }
       restoreKept();          /* how the page was left, if it was left at all */
       showBrain(brain.on);    /* on as it opens, unless it was left off (v12.36) */
       showTract(tract.on);    /* the streamlines likewise (v12.42) */
+      attachRegions();        /* the region box, with the regions it was left with (v12.59) */
       keepReady = true;
       rememberSoon();
       instances.forEach(function(nv){ nv.drawScene(); });

@@ -62,7 +62,8 @@
    side cut away by the slice tool, Slice tract off so the tractogram stands
    whole in the cut-away space, the view turned from the page's three-quarter
    one to look into the cut, all preset through the page's own memory
-   (vn-tracts-last, TRACT_STATE); the iPhone's bar for it is the Molecular
+   (vn-tracts-last, TRACT_STATE), and the region box shut (vn-tracts-drawer,
+   v12.59); the iPhone's bar for it is the Molecular
    strip titled Tractography in Inter SemiBold (iphone-top-dark-tractography).
 
    The page is marked as the shell marks it (data-shell, data-shell-pad on
@@ -214,7 +215,7 @@ const SHOTS = [
   { name: 'ipad-09', dev: 'ipad', theme: 'light', url: 'regions.html', ready: atlasReady,
     top: 'ipad-top-light-atlases', out: '02-atlas-light.png', statement: 'Light mode' },
   /* the tractogram (v12.57, at the owner's word), as the owner's capture had it */
-  { name: 'ipad-11', dev: 'ipad', theme: 'dark', url: 'tracts.html', ready: tractReady, store: { 'vn-tracts-last': TRACT_STATE },
+  { name: 'ipad-11', dev: 'ipad', theme: 'dark', url: 'tracts.html', ready: tractReady, store: { 'vn-tracts-last': TRACT_STATE, 'vn-tracts-drawer': 'shut' },
     top: 'ipad-top-dark-atlases', out: '03-tractography.png', statement: 'Wiring System Tractogram' },
   /* the atlas's four views with the three regions lit, rendered from the
      page since v12.58, at the owner's word: from v12.21 it was the owner's
@@ -242,7 +243,7 @@ const SHOTS = [
     top: 'iphone-top-dark-hallucinations', bottom: 'iphone-bottom-dark-library', out: '10-hallucinations.png', statement: 'Built-in study visualisation|on the live atlas' },
   { name: 'iphone-08', dev: 'iphone', theme: 'dark', url: 'practice.html', ready: pageReady, setup: question('A central ethical advantage of iPSCs'),
     top: 'iphone-top-dark-practice', bottom: 'iphone-bottom-dark-practice', out: '08-practice.png', statement: 'Revision question testing' },
-  { name: 'iphone-11', dev: 'iphone', theme: 'dark', url: 'tracts.html', ready: tractReady, store: { 'vn-tracts-last': TRACT_STATE },
+  { name: 'iphone-11', dev: 'iphone', theme: 'dark', url: 'tracts.html', ready: tractReady, store: { 'vn-tracts-last': TRACT_STATE, 'vn-tracts-drawer': 'shut' },
     top: 'iphone-top-dark-tractography', bottom: 'iphone-bottom-dark-atlases', out: '03-tractography.png', statement: 'Wiring System Tractogram' },
   /* the MCP server's page as the About tab opens it */
   { name: 'ipad-10', dev: 'ipad', theme: 'dark', url: 'mcp.html', ready: pageReady,
@@ -284,7 +285,7 @@ SHOTS.push(
   { name: 'duo-08', dev: 'duo', theme: 'dark', url: 'practice.html', ready: pageReady, setup: question('A central ethical advantage of iPSCs'), out: '08-practice.png', statement: PHONE_SAID['08-practice.png'] },
   { name: 'duo-09', dev: 'duo', theme: 'light', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, out: '02-atlas-light.png', statement: 'Light mode' },
   { name: 'duo-10', dev: 'duo', theme: 'dark', url: 'mcp.html', ready: pageReady, out: '11-mcp.png', statement: PHONE_SAID['11-mcp.png'] },
-  { name: 'duo-11', dev: 'duo', theme: 'dark', url: 'tracts.html', ready: tractReady, store: { 'vn-tracts-last': TRACT_STATE }, out: '03-tractography.png', statement: PHONE_SAID['03-tractography.png'] },
+  { name: 'duo-11', dev: 'duo', theme: 'dark', url: 'tracts.html', ready: tractReady, store: { 'vn-tracts-last': TRACT_STATE, 'vn-tracts-drawer': 'shut' }, out: '03-tractography.png', statement: PHONE_SAID['03-tractography.png'] },
 );
 const PHONE = Object.fromEntries(SHOTS.filter(x => x.dev === 'iphone' && x.top).map(x => [x.out, x]));
 for (const s of SHOTS) if (s.dev === 'duo') s.top = PHONE[s.out] ? PHONE[s.out].top : 'iphone-top-dark-3d-region-atlas';

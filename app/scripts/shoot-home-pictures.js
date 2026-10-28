@@ -135,8 +135,10 @@ function done(file, problems){ const [w, h] = size(file); console.log(path.basen
      streamlines, and the door says when they are in */
   if (want('tracts')){
     for (const [theme, file] of [['dark', 'tracts.jpg'], ['light', 'tracts-light.jpg']]){
-      const { ctx, page, problems } = await open(browser, theme, 'tracts.html', { width: 1240, height: 930 });
+      /* the region box (v12.59) shut, so the tractogram has the whole stage */
+      const { ctx, page, problems } = await open(browser, theme, 'tracts.html', { width: 1240, height: 930 }, () => { try { localStorage.setItem('vn-tracts-drawer', 'shut'); } catch (e) {} });
       await page.waitForFunction(() => document.getElementById('stageMsg').classList.contains('hidden'), null, { timeout: 500000 });
+      await page.addStyleTag({ content: '.drawer-tab{ display:none !important }' });   /* the shut box's handle, out of the picture */
       await page.evaluate(() => MN_TRACTS.brain());
       await page.evaluate(() => { MN_TRACTS.still(); MN_TRACTS.zoom(1.2); MN_TRACTS.home(); });
       await page.waitForTimeout(2500);

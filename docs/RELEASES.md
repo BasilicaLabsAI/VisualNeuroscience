@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.59 — 28 October 2026 — The streamlines through the regions you pick
+Commit · Show the streamlines through picked regions on the Tractography page, with the atlas's region box, a Connecting switch and Export in the sliding group
+
+The Tractography page now shows the wiring of the regions you pick. The 3D Region Atlas's region box stands beside the tractogram: add a region and only the streamlines that run through it are drawn, the region itself standing among them in its colour and cut with the brain. Add a second and the box turns to Connecting, only the streamlines that run between them, with All through a press away for every streamline through any of them, and a press on a region's name opens its note, as on the atlas. Which streamlines run through which region was worked out once from the atlas and shipped with the page, counting only those whose line enters the region's own voxels. Export has moved to the end of the sliding group, and the page remembers the regions and the switch with the rest.
+
 ## v12.58 — 28 October 2026 — The iPhone's first App Store image rendered from today's atlas
-Commit · Render the iPhone's Human Brain Anatomy image from today's atlas instead of the 25 October capture
+Commit `f4b6d5d` · Render the iPhone's Human Brain Anatomy image from today's atlas instead of the 25 October capture
 
 The iPhone's first App Store image, Human Brain Anatomy, is rendered from today's 3D Region Atlas as the rest of the set is. It had been the owner's own capture from the TestFlight build of 25 October, whose four views still wore the bars of their own that v12.33 took off. The second image, the What they do window over the views, stays that capture at the owner's word. The render now tells the browser the iPhone's own screen size, without which the page took the web view for a squat phone and drew the 3D view alone, and stands the crosshair in the thalamus as the capture had it. Nothing on the website or in the apps changes with this release.
 
