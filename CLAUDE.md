@@ -938,9 +938,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (`duoTop()`); no Duo capture exists; `store-sell.js` covers no status bar on them (`BAR`);
   the second shot's statement is Brain region functions explained (`openPop` waits
   for a raised sheet to come to rest, which at 3× with software 3D takes longer than the slide); since v12.21 the
-  iPhone's first two are the owner's own captures from the TestFlight build of 25 October 2026, taken whole
-  (`capture`, kept in `app/store/chrome/` as `iphone-capture-atlas` and `iphone-capture-what-they-do`, with the
-  notice line painted out in the page's black by `cover`); the tenth, AI Connector, is `mcp.html` under About strips made from the
+  iPhone's second, What they do, is the owner's own capture from the TestFlight build of 25 October 2026, taken whole
+  (`capture`, kept in `app/store/chrome/` as `iphone-capture-what-they-do`, with the notice line painted out in the
+  page's black by `cover`; the first, the four views, was that build's capture too until v12.58, at the owner's word,
+  when it became a render like the rest, the capture's views still wearing the bars of their own that v12.33 took
+  off, and `iphone-capture-atlas` left the repository; the render gives the browser the iPhone's screen, `screen`
+  402 by 874 in `DEV`, since without it the pages read the 402 by 675 web view as a squat phone and the atlas drew
+  its 3D view alone, and sets the crosshair in the left thalamus, `thalamus`, so the sagittal view is not the bare
+  midline); the tenth, AI Connector, is `mcp.html` under About strips made from the
   others (`ipad-top-dark-about`, `iphone-top-dark-mcp-server` titled in Inter SemiBold, `iphone-bottom-dark-about` with
   Practice's pill moved under About), and the v12.14 notice line is hidden in every render. Each page rendered as the
   app shows it (the shell's marks and

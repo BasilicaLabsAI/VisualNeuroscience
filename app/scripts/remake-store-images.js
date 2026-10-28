@@ -94,7 +94,10 @@ const only = process.argv.slice(2);
    measure of a squat phone */
 const DEV = {
   ipad:    { w: 1210, h: 748, dpr: 2, pad: true,  top: 172, capture: [2420, 1668], families: ['ipad-13-land'] },
-  iphone:  { w: 402,  h: 675, dpr: 3, pad: false, top: 348, bottom: 2373, capture: [1206, 2622], families: ['iphone-6.3', 'iphone-6.9'] },
+  /* the iPhone's screen is given as well (v12.58): without it the browser's
+     screen is the web view, 402 by 675, which the pages read as a squat
+     phone, the closed Duo's shape, and the atlas drew its 3D view alone */
+  iphone:  { w: 402,  h: 675, dpr: 3, pad: false, screen: [402, 874], top: 348, bottom: 2373, capture: [1206, 2622], families: ['iphone-6.3', 'iphone-6.9'] },
   duo:     { w: 402,  h: 595, dpr: 3, pad: false, screen: [466, 678], column: 'outer', top: 249, capture: [1398, 2034], families: ['iphone-duo'] },
   duoOpen: { w: 887,  h: 583, dpr: 3, pad: true,  screen: [951, 669], column: 'inner', top: 258, capture: [2853, 2007], families: ['iphone-duo-land'] },
 };
@@ -178,6 +181,16 @@ const caudate = async (p, ctx, d) => {
   await p.waitForTimeout(3000);
   await probeTap(p, ctx, d ? d.dpr : 2);
 };
+/* the iPhone's atlas shot (v12.58): the crosshair a little off the midline,
+   in the left thalamus, as the owner's capture had it, so the sagittal view
+   shows the medial wall with the thalamus lit; on the midline itself, where
+   a bilateral pick's middle lies, the fissure leaves the cortex dim and the
+   view shows little but the brainstem and the cerebellum. A phone hides the
+   readouts, so no tap follows */
+const thalamus = async p => {
+  await p.evaluate(() => { MN_SEL.centreMm([-6, -18, 8]); });
+  await p.waitForTimeout(3000);
+};
 
 /* the twenty: the page and its state, the chrome strips, the image (after
    the size's name) and its statement */
@@ -203,13 +216,17 @@ const SHOTS = [
   /* the tractogram (v12.57, at the owner's word), as the owner's capture had it */
   { name: 'ipad-11', dev: 'ipad', theme: 'dark', url: 'tracts.html', ready: tractReady, store: { 'vn-tracts-last': TRACT_STATE },
     top: 'ipad-top-dark-atlases', out: '03-tractography.png', statement: 'Wiring System Tractogram' },
-  /* the first two on the iPhone are the owner's own captures from the
-     TestFlight build, 25 October 2026, taken whole: the atlas's four views
-     with the three regions lit, and the What they do window over them; the
-     one line a phone shows at the top, Best experienced on iPad, is painted
-     out in the page's black (cover: x, y, width, height in the capture) */
-  { name: 'iphone-01', dev: 'iphone', capture: 'iphone-capture-atlas', cover: [[440, 360, 326, 28]],
-    out: '02-atlas.png', statement: 'Human Brain Anatomy:|Interactive 3D Brain Atlas' },
+  /* the atlas's four views with the three regions lit, rendered from the
+     page since v12.58, at the owner's word: from v12.21 it was the owner's
+     own capture from the TestFlight build of 25 October 2026, whose views
+     still wore the bars of their own that v12.33 took off */
+  { name: 'iphone-01', dev: 'iphone', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, setup: thalamus,
+    top: 'iphone-top-dark-3d-region-atlas', bottom: 'iphone-bottom-dark-atlases', out: '02-atlas.png', statement: 'Human Brain Anatomy:|Interactive 3D Brain Atlas' },
+  /* the second on the iPhone is the owner's own capture from that
+     TestFlight build, taken whole: the What they do window over the atlas's
+     four views; the one line a phone shows at the top, Best experienced on
+     iPad, is painted out in the page's black (cover: x, y, width, height in
+     the capture) */
   { name: 'iphone-02', dev: 'iphone', capture: 'iphone-capture-what-they-do', cover: [[440, 360, 326, 28]],
     out: '02-atlas-what-they-do.png', statement: 'Brain region functions explained' },
   { name: 'iphone-03', dev: 'iphone', theme: 'dark', url: 'regions.html#sel=' + enc(SEL_PH), ready: atlasReady, setup: chartD2,

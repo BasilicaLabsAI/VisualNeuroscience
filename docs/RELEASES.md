@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.58 — 28 October 2026 — The iPhone's first App Store image rendered from today's atlas
+Commit · Render the iPhone's Human Brain Anatomy image from today's atlas instead of the 25 October capture
+
+The iPhone's first App Store image, Human Brain Anatomy, is rendered from today's 3D Region Atlas as the rest of the set is. It had been the owner's own capture from the TestFlight build of 25 October, whose four views still wore the bars of their own that v12.33 took off. The second image, the What they do window over the views, stays that capture at the owner's word. The render now tells the browser the iPhone's own screen size, without which the page took the web view for a squat phone and drew the 3D view alone, and stands the crosshair in the thalamus as the capture had it. Nothing on the website or in the apps changes with this release.
+
 ## v12.57 — 27 October 2026 — The App Store images remade, with the tractogram
-Commit · Remake the App Store images from today's pages and add the tractogram under Wiring System Tractogram
+Commit `053a1e3` · Remake the App Store images from today's pages and add the tractogram under Wiring System Tractogram
 
 The App Store images for the iPad, the iPhone and the iPhone Duo are remade from today's pages, and an eleventh joins them: Tractography as the owner's iPad capture had it, the brain nearly solid with one hemisphere's near side cut away and the wiring standing whole in the space, under the statement Wiring System Tractogram. App Store Connect takes ten images a size, so one of the eleven stays out of each upload. Nothing on the website or in the apps changes with this release.
 
