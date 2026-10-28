@@ -526,7 +526,7 @@ main.screen.one.land{ flex-direction:row; }
             <span class="key-item"><span class="key-swatch" style="background:#4FB06A"></span>front &ndash; back</span>
             <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
           </div>
-          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the brain, and the streamlines with it, away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there, and Transparency raises a tall bar that makes it more see-through or more solid. Tract shows or hides the streamlines. Slice tract, on whenever Slice is turned on, cuts them with the brain, and off leaves them whole while the brain alone is cut; Offset stands their cut ends out of the brain&rsquo;s cut face and Distance sets how far, in millimetres, both greyed while the brain is off; and Thicken sets how thick they are drawn. View turns the brain to one of its faces, or home to the view the page opens with, Revolve sets it turning until you take hold of it, and Export, at the end of the bar, offers the streamlines and the brain as a 3D model. The region box beside the view, the 3D Region Atlas&rsquo;s own, folds away on its tab: highlight a region there and only the streamlines that run through it are drawn, and with Highlight the regions ticked the region itself stands among them in its colour, cut as the brain is. Highlight two or more and the switch turns to Connecting, only the streamlines that run between them, or back to All through, every streamline through any of them; a press on a region&rsquo;s name opens its note. The page remembers how you left it: the brain and its transparency, the streamlines with their switches, offset and thickness, the regions highlighted with their two switches, the cuts and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
+          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the brain, and the streamlines with it, away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there, and Transparency raises a tall bar that makes it more see-through or more solid. Tract shows or hides the streamlines. Slice tract, on whenever Slice is turned on, cuts them with the brain, and off leaves them whole while the brain alone is cut; Offset stands their cut ends out of the brain&rsquo;s cut face and Distance sets how far, in millimetres, both greyed while the brain is off; and Thicken sets how thick they are drawn. View turns the brain to one of its faces, or home to the view the page opens with, Revolve sets it turning until you take hold of it, and Export, at the end of the bar, offers the streamlines and the brain as a 3D model. The region box beside the view, the 3D Region Atlas&rsquo;s own, folds away on its tab: highlight a region there and only the streamlines that run through it are drawn, and with Highlight the regions ticked the region itself stands among them in its colour, cut as the brain is. Highlight two or more and the switch turns to Connecting, only the streamlines that run between them, or back to All through, every streamline through any of them; a press on a region&rsquo;s name opens its note. The page opens with the brain on at 65 per cent transparency, the streamlines on and nothing sliced, and remembers the rest of how you left it: the streamlines&rsquo; switches, offset and thickness, the regions highlighted with their two switches, and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
           <h2>Reference</h2>
           <p class="ref-line"><b>Tractogram</b> the HCP1065 population-averaged tractography atlas: Yeh FC, <a href="https://doi.org/10.1038/s41467-022-32595-4" target="_blank" rel="noopener">Population-based tract-to-region connectome of the human brain and its hierarchical topology</a>, <em>Nat Commun</em> 13:4933 (2022), CC BY-SA 4.0.</p>
           <p class="ref-line"><b>Brain</b> the MNI152 template (ICBM 2009c), McConnell Brain Imaging Centre, Montreal Neurological Institute, drawn around the streamlines as the 3D Region Atlas draws it, the MRI showing where a cut opens it.</p>
@@ -585,8 +585,8 @@ main.screen.one.land{ flex-direction:row; }
        brain's transparency, the streamlines' offset from the cut face and their thickness, and the faces of the
        brain with Reset slice beneath them -->
   <div class="mini mini-tall" id="transPop" hidden role="group" aria-label="Brain transparency">
-    <span class="slider-val" id="brainVal">75%</span>
-    <div class="tall"><input type="range" id="brainTrans" min="0" max="95" step="1" value="75" aria-label="How far the brain lets the streamlines through" aria-orientation="vertical"></div>
+    <span class="slider-val" id="brainVal">65%</span>
+    <div class="tall"><input type="range" id="brainTrans" min="0" max="95" step="1" value="65" aria-label="How far the brain lets the streamlines through" aria-orientation="vertical"></div>
   </div>
   <div class="mini mini-tall" id="offsetPop" hidden role="group" aria-label="Streamline offset">
     <span class="slider-val" id="offsetVal">2.5 mm</span>
@@ -991,6 +991,19 @@ main.screen.one.land{ flex-direction:row; }
       nv.drawScene();
     },
     still: function(){ if (spinning && spinBtn) spinBtn.click(); },
+    /* a state to stand the page in at once, every part of it as the kept state carries it, the brain, the
+       streamlines and the cuts included, which the opening leaves at their defaults since v12.61: the store
+       shots' door (app/scripts/remake-store-images.js) */
+    restore: function(m){
+      if (typeof m === "string"){ try{ m = JSON.parse(m); }catch(e){ return false; } }
+      if (!m || typeof m !== "object") return false;
+      restoreKept(m, true);
+      showBrain(brain.on);
+      showTract(tract.on);
+      paintSliceBtn();
+      if (byKey.Ren) byKey.Ren.drawScene();
+      return true;
+    },
     nv: function(){ return byKey.Ren; },
     /* settles once the brain the page opens with is in (at once while it is off) */
     brain: function(){ return brain.loading ? brain.loading.then(function(){ return true; }) : Promise.resolve(false); },
@@ -1205,9 +1218,10 @@ main.screen.one.land{ flex-direction:row; }
      (followDraws, mirror). v12.31 drew the brain as a surface of glass in the streamlines' viewer and v12.36 laid
      three slices through its middle; both went at the owner's word, for the atlas's own render and its cuts. */
   var BRAIN_URL = "assets/mni152.nii.gz", BRAIN_LIFT = 1.5;
-  /* on as the page opens since v12.36, at the owner's word, at 75 per cent transparency (Transparency's bar since
-     v12.43; v12.42's Thicken read it as solidity); endsOn says whether a cut has filled the ends */
-  var brain = { on: true, trans: 75, nv: null, vol: null, box: null, loading: null, part: null, ends: null, endsOn: false };
+  /* on as the page opens since v12.36, at the owner's word, at 65 per cent transparency since v12.61, at the owner's
+     word (75 until then; Transparency's bar since v12.43, v12.42's Thicken reading it as solidity); endsOn says
+     whether a cut has filled the ends */
+  var brain = { on: true, trans: 65, nv: null, vol: null, box: null, loading: null, part: null, ends: null, endsOn: false };
   var brainCanvas = document.getElementById("tkBrain");
   var brainTrans = document.getElementById("brainTrans"), brainVal = document.getElementById("brainVal");
   /* the brain's viewer takes the streamlines' camera: its turn, its zoom and where the hand has slid it */
@@ -1347,10 +1361,11 @@ main.screen.one.land{ flex-direction:row; }
     rememberSoon();
   }
   /* the brain's transparency, Transparency's tall bar (v12.43, at the owner's word; v12.42's Thicken read it
-     as solidity): 0 solid to 95, 75 to begin, as the atlases' sliders read, the kept state and the export's alpha */
+     as solidity): 0 solid to 95, 65 to begin (v12.61; 75 until then), as the atlases' sliders read, the kept state
+     and the export's alpha */
   function applyBrainTrans(v){
     var t = Math.round(Number(v));
-    brain.trans = isFinite(t) ? Math.max(0, Math.min(95, t)) : 75;
+    brain.trans = isFinite(t) ? Math.max(0, Math.min(95, t)) : 65;
     brainTrans.value = String(brain.trans);
     brainVal.textContent = brain.trans + "%";
     brainCanvas.style.opacity = String(1 - brain.trans / 100);
@@ -1648,7 +1663,13 @@ main.screen.one.land{ flex-direction:row; }
      state kept before v12.42 (v 2) carried a colour, read no more, and a
      thickness, read again since v12.43. Since v12.59 the regions highlighted,
      the mirror toggle and the switch ride with them (v 6), and since v12.60
-     the Highlight the regions toggle, off unless it was left on. */
+     the Highlight the regions toggle, off unless it was left on. Since v12.61,
+     at the owner's word, the page opens as it does the first time, the brain
+     on at 65 per cent transparency, the streamlines on and nothing sliced,
+     whatever was left: restoreKept passes over the brain, the streamlines and
+     the cuts unless asked for everything, as MN_TRACTS.restore asks for a
+     shoot, and the rest comes back as before (the view, the thickness, the
+     offset with its switch, the regions and the drawer). */
   var keepReady = false, keepTimer = 0;
   function rememberSoon(){
     if (!keepReady) return;
@@ -1669,19 +1690,22 @@ main.screen.one.land{ flex-direction:row; }
       }catch(e){}
     }, 300);
   }
-  function restoreKept(){
-    var m = null;
-    try{ m = JSON.parse(localStorage.getItem("vn-tracts-last") || "null"); }catch(e){}
-    if (!m || typeof m !== "object") return;
-    if (m.brain && typeof m.brain === "object"){
-      if (m.brain.trans != null) applyBrainTrans(m.brain.trans);
-      /* on or off as it was left, before the cuts come back, so they are read over the
-         brain from the start; a state kept before v12.36, when the brain began off and
-         stayed so unless pressed, opens on the new default, the brain on */
-      if (m.v >= 2 && typeof m.brain.on === "boolean") brain.on = m.brain.on;
+  function restoreKept(m, everything){
+    if (m === undefined){
+      try{ m = JSON.parse(localStorage.getItem("vn-tracts-last") || "null"); }catch(e){ m = null; }
     }
-    /* the streamlines as they were left (v12.42); a state kept before it had them always on */
-    if (m.v >= 3 && typeof m.tract === "boolean") tract.on = m.tract;
+    if (!m || typeof m !== "object") return;
+    /* the brain, its transparency and the streamlines come back only when everything is asked for (v12.61): the
+       page opens with the brain on at 65 per cent and the streamlines on, whatever was left */
+    if (everything){
+      if (m.brain && typeof m.brain === "object"){
+        if (m.brain.trans != null) applyBrainTrans(m.brain.trans);
+        /* on or off as it was left, before the cuts come back, so they are read over the brain from the start */
+        if (m.v >= 2 && typeof m.brain.on === "boolean") brain.on = m.brain.on;
+      }
+      /* the streamlines as they were left (v12.42) */
+      if (m.v >= 3 && typeof m.tract === "boolean") tract.on = m.tract;
+    }
     /* their thickness (v2 kept one too) and, since v12.43, their offset, before the cuts come back */
     if (m.radius > 0) applyRadius(m.radius);
     if (m.v >= 4 && isFinite(m.past)) applyOffset(m.past);
@@ -1690,13 +1714,17 @@ main.screen.one.land{ flex-direction:row; }
       if (typeof m.sliceTract === "boolean") sliceTract = m.sliceTract;
       if (typeof m.offsetOn === "boolean") offsetOn = m.offsetOn;
     }
-    if (m.cuts && slice) slice.setState(m.cuts);
-    /* the regions highlighted, the mirror toggle and the switch (v12.59), taken up as the box attaches */
+    /* the cuts likewise: the page opens with nothing sliced (v12.61), Slice off and every slider at its mark */
+    if (everything && m.cuts && slice) slice.setState(m.cuts);
+    /* the regions highlighted, the mirror toggle and the switches (v12.59), taken up as the box attaches, or
+       at once where it already has */
     if (m.v >= 6 && Array.isArray(m.regions)){
-      keptRegions = { keys: m.regions.filter(function(k){ return typeof k === "string"; }),
-                      mirror: typeof m.mirror === "boolean" ? m.mirror : undefined,
-                      link: m.link === "connecting" ? "connecting" : "all",
-                      light: m.light === true };
+      var kr = { keys: m.regions.filter(function(k){ return typeof k === "string"; }),
+                 mirror: typeof m.mirror === "boolean" ? m.mirror : undefined,
+                 link: m.link === "connecting" ? "connecting" : "all",
+                 light: m.light === true };
+      if (regionBox) regionBox.set(kr.keys, { mirror: kr.mirror, link: kr.link, light: kr.light });
+      else keptRegions = kr;
     }
     var nv = byKey.Ren;
     if (nv && m.view){

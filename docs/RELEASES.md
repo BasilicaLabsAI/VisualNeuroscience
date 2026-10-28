@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.61 — 28 October 2026 — Tractography opens the same way every time
+Commit · Open the Tractography page with the brain on at 65 per cent, the streamlines on and nothing sliced
+
+The Tractography page now opens the same way every time: the brain on at 65 per cent transparency, the streamlines on and nothing sliced, whatever it was left with. The view, the streamlines' thickness and offset, the regions you picked and the region box still come back as you left them.
+
 ## v12.60 — 28 October 2026 — A switch to highlight the regions themselves
-Commit · Add a Highlight the regions switch to the Tractography page's region box, off to begin with
+Commit `3fb577c` · Add a Highlight the regions switch to the Tractography page's region box, off to begin with
 
 The region box on the Tractography page carries a new switch, Highlight the regions, off to begin with. The streamlines through the regions you pick are drawn either way; the regions themselves stand among them in their colours only while the switch is on. The page remembers it with the rest.
 

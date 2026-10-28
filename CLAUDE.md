@@ -470,10 +470,14 @@ Read this first in every session. It is the handover; nothing else needs pasting
   its transparency, the streamlines (v12.42), their offset and thickness (v12.43), the cuts and the view (azimuth,
   elevation, zoom), written by `rememberSoon` a moment after each change (Brain, Tract, the two switches, the three
   tall bars, a face, the slice tool's `onChange`, and the hand letting go of the view) once the page is up, and read back by
-  `restoreKept` as the tractogram comes in. Since v12.31, at the owner's word, the brain can stand around the
+  `restoreKept` as the tractogram comes in; since v12.61, at the owner's word, the page opens as it does the first
+  time, the brain on at 65 per cent transparency, the streamlines on and nothing sliced (Slice off, every slider at its
+  mark), whatever was left, `restoreKept(m, everything)` passing over the brain, the streamlines and the cuts unless
+  `everything`, which `MN_TRACTS.restore(state)` asks for (the store shots' door), the view, the thickness, the
+  offset with its switch, the regions and the drawer coming back as before. Since v12.31, at the owner's word, the brain can stand around the
   streamlines, and since v12.38, at the owner's word, it is the 3D Region Atlas's own 3D view: Brain on the bar shows
   and hides it (on as the page opens since v12.36, at the owner's word) and Transparency's bar sets how see-through
-  it is (`#brainTrans`, 0 to 95, 75 to begin, `brain.trans`; moving it shows the brain; v12.42's Thicken read it as
+  it is (`#brainTrans`, 0 to 95, 65 to begin since v12.61, 75 until then, `brain.trans`; moving it shows the brain; v12.42's Thicken read it as
   solidity for that one release). The brain is a second NiiVue viewer (`brain.nv`) on `#tkBrain`, a `.brain-layer` canvas laid over the
   streamlines' `#tkRen` in the same `.mri-stage` that takes no pointer, holding the MNI152 template
   (`assets/mni152.nii.gz` through `NVImage.loadFromUrl` on the first On, `addVolume`, `SLICE_TYPE.RENDER`, no
@@ -948,8 +952,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   an hour; name shots `ipad-01`…`iphone-11`, `duo-01`…`open-11` for a few): eleven shots since v12.57, ten since
   v12.15 (the eleventh, at the owner's word, is Tractography as the owner's iPad capture of 27 October 2026 had it,
   the brain nearly solid with its left hemisphere's near side cut away and the tractogram standing whole in the space,
-  preset through the page's own memory, `TRACT_STATE` as `vn-tracts-last`, the region box shut (`vn-tracts-drawer`,
-  v12.59), under the statement Wiring System Tractogram, `03-tractography.png`, its iPhone bar the Molecular strip titled Tractography in Inter SemiBold,
+  set through the page's door once it is up, `MN_TRACTS.restore(TRACT_STATE)` (through its memory, `vn-tracts-last`,
+  until v12.61, when the page began to open on its own defaults), the region box shut (`vn-tracts-drawer`, v12.59), under the statement Wiring System Tractogram, `03-tractography.png`, its iPhone bar the Molecular strip titled Tractography in Inter SemiBold,
   `iphone-top-dark-tractography`; ten is the most a size takes in App Store Connect, so one of the eleven stays out of
   each upload, the owner's choice), each the iPad's at 2752×2064 and the
   iPhone's at two sizes from one render, `iphone-6.3-` at 1206×2622, the medium display App Store Connect has required
