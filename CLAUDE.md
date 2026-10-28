@@ -548,7 +548,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `regionIds`, `applyRegions`), the view keeping the whole tractogram's frame; while Highlight the regions is on, each highlighted region stands among
   the fibres as a surface of its voxels in its colour (`lightRegions`: `MN_EXPORT3D.labelSurface` on the AAL
   volume, fetched once through `MN_EXPORT3D.volume`, an `NVMesh` of triangles in the streamlines' viewer, cut as the
-  brain is by `cutRegions` from `applyCut`, `cutBox(planes, 0)`); a row's name pressed raises `#popRegion`
+  brain is by `cutRegions` from `applyCut`, `cutBox(planes, 0)`), and since v12.62, at the owner's word, is painted
+  in the brain itself as the atlas paints it, so a cut shows it on the cut face (`paintBrainRegions`: the AAL volume,
+  fetched the first time it is wanted, laid in the brain's viewer as a second volume in `MN_LOOK.labelTable`'s colours,
+  `scan-look.js` now loaded by the page, and cut with the brain, the viewer's `isClipAllVolumes` on as the atlas's
+  Slice regions sets it; at the brain's own transparency, as the MRI on the face is); a row's name pressed raises `#popRegion`
   (`readAbout`; `TK_SCREEN`, the sheets' door the screen script exposes beside `TK_MINI`, and `TK_DRAWER` the
   drawer's); the regions, the mirror toggle and the switches ride in `vn-tracts-last` (`v: 6`: `regions` as the
   atlas's keys, `mirror`, `link` and, since v12.60, `light`); and `MN_TRACTS.regions` (`set`, `keys`, `link`,

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.62 — 28 October 2026 — The highlighted regions on the Tractography brain's cut face
+Commit · Paint the highlighted regions in the Tractography brain, so a cut shows them on its face as the atlas does
+
+On the Tractography page, a cut through the brain now shows the highlighted regions on its face in their colours, as the 3D Region Atlas does. The regions are painted in the brain itself and cut with it, so slicing across the amygdala or down the side of the hippocampus shows each region's outline where the cut passes. They show while Highlight the regions is on, at the brain's own transparency, so lowering Transparency makes the slice and its regions stronger.
+
 ## v12.61 — 28 October 2026 — Tractography opens the same way every time
-Commit · Open the Tractography page with the brain on at 65 per cent, the streamlines on and nothing sliced
+Commit `8afe5c4` · Open the Tractography page with the brain on at 65 per cent, the streamlines on and nothing sliced
 
 The Tractography page now opens the same way every time: the brain on at 65 per cent transparency, the streamlines on and nothing sliced, whatever it was left with. The view, the streamlines' thickness and offset, the regions you picked and the region box still come back as you left them.
 

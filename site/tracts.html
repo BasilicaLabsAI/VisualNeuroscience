@@ -526,7 +526,7 @@ main.screen.one.land{ flex-direction:row; }
             <span class="key-item"><span class="key-swatch" style="background:#4FB06A"></span>front &ndash; back</span>
             <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
           </div>
-          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the brain, and the streamlines with it, away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there, and Transparency raises a tall bar that makes it more see-through or more solid. Tract shows or hides the streamlines. Slice tract, on whenever Slice is turned on, cuts them with the brain, and off leaves them whole while the brain alone is cut; Offset stands their cut ends out of the brain&rsquo;s cut face and Distance sets how far, in millimetres, both greyed while the brain is off; and Thicken sets how thick they are drawn. View turns the brain to one of its faces, or home to the view the page opens with, Revolve sets it turning until you take hold of it, and Export, at the end of the bar, offers the streamlines and the brain as a 3D model. The region box beside the view, the 3D Region Atlas&rsquo;s own, folds away on its tab: highlight a region there and only the streamlines that run through it are drawn, and with Highlight the regions ticked the region itself stands among them in its colour, cut as the brain is. Highlight two or more and the switch turns to Connecting, only the streamlines that run between them, or back to All through, every streamline through any of them; a press on a region&rsquo;s name opens its note. The page opens with the brain on at 65 per cent transparency, the streamlines on and nothing sliced, and remembers the rest of how you left it: the streamlines&rsquo; switches, offset and thickness, the regions highlighted with their two switches, and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
+          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the brain, and the streamlines with it, away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there, and Transparency raises a tall bar that makes it more see-through or more solid. Tract shows or hides the streamlines. Slice tract, on whenever Slice is turned on, cuts them with the brain, and off leaves them whole while the brain alone is cut; Offset stands their cut ends out of the brain&rsquo;s cut face and Distance sets how far, in millimetres, both greyed while the brain is off; and Thicken sets how thick they are drawn. View turns the brain to one of its faces, or home to the view the page opens with, Revolve sets it turning until you take hold of it, and Export, at the end of the bar, offers the streamlines and the brain as a 3D model. The region box beside the view, the 3D Region Atlas&rsquo;s own, folds away on its tab: highlight a region there and only the streamlines that run through it are drawn, and with Highlight the regions ticked the region itself stands among them in its colour, cut as the brain is, and shows on the brain&rsquo;s cut face as it does on the 3D Region Atlas. Highlight two or more and the switch turns to Connecting, only the streamlines that run between them, or back to All through, every streamline through any of them; a press on a region&rsquo;s name opens its note. The page opens with the brain on at 65 per cent transparency, the streamlines on and nothing sliced, and remembers the rest of how you left it: the streamlines&rsquo; switches, offset and thickness, the regions highlighted with their two switches, and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
           <h2>Reference</h2>
           <p class="ref-line"><b>Tractogram</b> the HCP1065 population-averaged tractography atlas: Yeh FC, <a href="https://doi.org/10.1038/s41467-022-32595-4" target="_blank" rel="noopener">Population-based tract-to-region connectome of the human brain and its hierarchical topology</a>, <em>Nat Commun</em> 13:4933 (2022), CC BY-SA 4.0.</p>
           <p class="ref-line"><b>Brain</b> the MNI152 template (ICBM 2009c), McConnell Brain Imaging Centre, Montreal Neurological Institute, drawn around the streamlines as the 3D Region Atlas draws it, the MRI showing where a cut opens it.</p>
@@ -619,6 +619,7 @@ main.screen.one.land{ flex-direction:row; }
 <script src="assets/atlas-data.js"></script>
 <script src="assets/region-notes.js"></script>
 <script src="assets/region-box.js"></script>
+<script src="assets/scan-look.js"></script>
 <script>
 /* ── the screen ──────────────────────────────────────────────────────────
    The study's screen (hallucinations.html), carried here without its
@@ -1274,6 +1275,9 @@ main.screen.one.land{ flex-direction:row; }
         clipPlaneColor: ground().clip
       });
       await b.attachToCanvas(brainCanvas);
+      /* the cuts take every volume the viewer holds, the highlighted regions with the brain (v12.62), so their
+         colours lie on the cut face as on the atlas, whose Slice regions does the same */
+      b.opts.isClipAllVolumes = true;
       /* fetched here rather than through the export's cache, which would keep a failed fetch for good */
       var vol = await niivue.NVImage.loadFromUrl({ url: BRAIN_URL });
       b.addVolume(vol);
@@ -1293,6 +1297,7 @@ main.screen.one.land{ flex-direction:row; }
       brain.box = { min: [o.extentsMin[0], o.extentsMin[1], o.extentsMin[2]], max: [o.extentsMax[0], o.extentsMax[1], o.extentsMax[2]] };
       if (window.MN_LIFE) MN_LIFE.register(b);
       placeBrain();
+      paintBrainRegions();   /* the highlighted regions in it, where Highlight the regions asks (v12.62) */
       return b;
     })();
     brain.loading.catch(function(){ brain.loading = null; });   /* a later press tries again */
@@ -1487,7 +1492,8 @@ main.screen.one.land{ flex-direction:row; }
      the streamlines whose drawn line enters the region's own voxels, walked every millimetre, with no margin
      around the region at the owner's word), and, while the box's Highlight the regions toggle is on (off to begin
      with, v12.60, at the owner's word), the region itself stands among them as a surface of its voxels in its
-     colour (MN_EXPORT3D.labelSurface, the 3D export's own, smoothed), cut as the brain is. The box's
+     colour (MN_EXPORT3D.labelSurface, the 3D export's own, smoothed), cut as the brain is, and is painted in the
+     brain as the atlas paints it, so a cut shows it on the cut face (v12.62, paintBrainRegions). The box's
      switch reads All through, every streamline through any highlighted region, or Connecting, only those that
      run through two of them; it stands at All, greyed, under two regions and turns itself to Connecting as the
      list goes from one to two. The filtered set stands in for the whole one wherever the cuts, the ends and
@@ -1569,7 +1575,48 @@ main.screen.one.land{ flex-direction:row; }
     else text = fmt(ids.length) + " of " + fmt(N) + " streamlines";
     regionBox.count(text);
     lightRegions();
+    paintBrainRegions();
     applyCut(lastPlanes);   /* the set is read again through the cuts, whole or cut as they stand */
+  }
+  /* the highlighted regions in the brain itself (v12.62, at the owner's word): the AAL volume laid in the brain's
+     viewer as the 3D Region Atlas lays it in its 3D view, each highlighted region painted in its colour and the rest
+     clear (MN_LOOK.labelTable, padded as the atlases pad it), and cut with the brain, the viewer's
+     isClipAllVolumes on, so a cut through the brain shows the regions on its face as the atlas does, and the
+     brain's surface shows them where they reach it; drawn while Highlight the regions is on, at the brain's own
+     transparency, the volume fetched the first time it is wanted */
+  var brainLabels = { vol: null, loading: null, b: null };
+  function labelTableFor(entries){
+    var names = MN_ATLAS.RAW_LABELS, n = names.length, t = MN_LOOK.labelTable(n, names);
+    entries.forEach(function(e){
+      var rgb = hexToRgb(e.color);
+      e.indices.forEach(function(i){ if (i > 0 && i < n){ t.R[i] = rgb[0]; t.G[i] = rgb[1]; t.B[i] = rgb[2]; t.A[i] = 255; } });
+    });
+    return t;
+  }
+  function paintBrainRegions(){
+    var b = brain.nv;
+    if (!b || !regionBox || !window.MN_LOOK || !window.MN_ATLAS) return;
+    var entries = regionBox.light() ? regionBox.entries() : [];
+    if (!brainLabels.vol || brainLabels.b !== b){
+      if (!entries.length || brainLabels.loading) return;
+      brainLabels.loading = niivue.NVImage.loadFromUrl({ url: MN_ATLAS.ATLAS_URL }).then(function(v){
+        brainLabels.loading = null;
+        if (brain.nv !== b) return;
+        v.opacity = 1;
+        v.setColormapLabel(labelTableFor([]));   /* clear before it is first drawn */
+        b.addVolume(v);
+        brainLabels.vol = v; brainLabels.b = b;
+        if (lastPlanes.length) cutBrainPlanes(lastPlanes);
+        paintBrainRegions();
+      }, function(err){
+        brainLabels.loading = null;
+        console.warn("The regions could not be laid in the brain:", err && err.message ? err.message : err);
+      });
+      return;
+    }
+    brainLabels.vol.setColormapLabel(labelTableFor(entries));
+    try{ b.updateGLVolume(); }catch(e){}
+    drawBrain();
   }
   /* the AAL volume, for the regions' surfaces; fetched once, when the first region is highlighted */
   function ensureAtlas(){
