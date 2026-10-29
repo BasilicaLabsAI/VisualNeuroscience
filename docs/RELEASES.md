@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.64 — 29 October 2026 — A new sharing card: the tractogram under Visual Neuroscience
+Commit · Make the sharing card the iOS tractogram under the title Visual Neuroscience and the store's heading line
+
+A link to the site now shares a new picture. The tractogram from the App Store's Tractography image, the brain's wiring in colour standing in the brain with its near half cut away, sits beside the title Visual Neuroscience and the line from the store's first image, Human Brain Anatomy: Interactive 3D Brain Atlas, on the store images' own light backdrop and type. It is the picture link previews show on messages and social networks.
+
 ## v12.63 — 29 October 2026 — Named bundles on the Tractography page, drawn smooth
-Commit · Name and colour the Tractography bundles, and draw the streamlines smooth and shaded
+Commit `49af1d1` · Name and colour the Tractography bundles, and draw the streamlines smooth and shaded
 
 The Tractography page now knows its bundles. The atlas names one for every streamline, 46 in all, from the arcuate fasciculus and the corpus callosum to the cranial nerves, and a new Bundles list under the regions in the box beside the view shows them by system: association, projection, commissural, cerebellar and the cranial nerves. By bundle gives each one a colour of its own in place of the direction colours; L and R show or hide each side, and a press on a name shows that bundle alone. Tap any fibre and a small window names its bundle, with its side, its system, how many streamlines it holds and what it joins, and Alone to see it by itself. The fewer streamlines you show, the finer they are drawn, smoothed into curves and rounder, and where fibres crowd they are shaded darker, so the depth of the tractogram reads at a glance. An exported model keeps the bundle colours.
 

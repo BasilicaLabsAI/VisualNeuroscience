@@ -154,10 +154,17 @@ Read this first in every session. It is the handover; nothing else needs pasting
   with a box around the one in use) asks the system for it, and the system keeps the choice. Android and the web app keep the white tile, their launchers taking one icon at install. Since v12.23, at the owner's
   word, the brain is the mark everywhere the ring stood: `site/assets/logo.svg`, every page's masthead mark (drawn at the
   text's height since then, `.brand .mark{ width:1em }` in each page and `textbook.css`) and its browser tab, is the colour
-  file again, which `trace.py` writes beside it; `favicon-32.png` is the same drawn at 32px on nothing; the sharing card
-  (`share.html`, shot to `assets/social-card.jpg`, the `og:image`) and the Play feature graphic
-  (`app/store/play/feature-graphic.html`, shot to `feature-graphic.jpg` with Playwright at 1024×500; the `shoot-play.js`
-  it once named is not in the repository) carry it where the ring stood, their strapline alone at the foot's middle;
+  file again, which `trace.py` writes beside it; `favicon-32.png` is the same drawn at 32px on nothing; the Play feature
+  graphic (`app/store/play/feature-graphic.html`, shot to `feature-graphic.jpg` with Playwright at 1024×500; the
+  `shoot-play.js` it once named is not in the repository) carries it where the ring stood, its strapline alone at the
+  foot's middle, as the sharing card did until v12.64 (since then, at the owner's word, the sharing card, `share.html`
+  shot to `assets/social-card.jpg`, the `og:image` every page names with the `og:image:alt` to match, is the App Store
+  images' manner at 1200×630: their light backdrop by `store-sell.js`'s own sums, the title Visual Neuroscience and,
+  beneath it, the first store image's heading line, Human Brain Anatomy: Interactive 3D Brain Atlas, in Flux in the
+  ink, and at the right the tractogram of the iOS store image, Wiring System Tractogram, framed as the store frames its
+  screens; `app/scripts/shoot-social-card.js` renders that tractogram in the store shot's state without the page's
+  bars to `assets/social/tractogram.jpg` and shoots the card at twice its size, brought down to 1200×630, `card` alone
+  shooting the card from the tractogram already there; the slices `make_social.py` cut stay for the feature graphic);
   the posters inline it from `logo.svg` (`logo_svg()` in `scripts/posters/common.py`; their pictures in
   `site/assets/posters/` were cut again from the posters re-rendered with it); and the browser's store screenshots were
   retaken. `scripts/make_logo.py` still draws the ring and holds the palette the brain wears, and writes logo.svg no more.

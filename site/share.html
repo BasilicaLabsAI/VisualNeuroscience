@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Share Card — VisualNeuroscience.AI</title>
-<meta name="description" content="The sharing card: the brain mark between greyscale MNI152 slices, under the wordmark.">
+<meta name="description" content="The sharing card: the tractogram of the iOS store image under the title Visual Neuroscience and the store's heading line.">
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="stylesheet" href="fonts/fonts.css">
@@ -17,71 +17,51 @@
 }
 *{ box-sizing:border-box; margin:0; padding:0; }
 body{
-  background:#0A0705; color:#FFFFFF;
+  background:#111111; color:#FFFFFF;
   font-family:'Newsreader',Georgia,serif;
   display:flex; flex-direction:column; align-items:center; gap:22px;
   padding:28px 16px 64px;
 }
 
-/* ── the card ───────────────────────────────────────────────────────────
-   Fixed at 1200x630, the size link previews are cut to. Three bands: the
-   name across the top, the mark and the two sections through the middle,
-   and the strapline along the foot. Everything is laid out in absolute
-   pixels rather than viewport units so the rendered JPEG and the page
-   agree exactly. */
+/* ── the card (v12.64, at the owner's word) ─────────────────────────────
+   Fixed at 1200x630, the size link previews are cut to, and laid out in
+   absolute pixels so the rendered JPEG and the page agree exactly. It is
+   the App Store images' own manner: their light backdrop (the gradient
+   store-sell.js draws, set below by the same sums), their heading in Flux
+   in the page's ink, and the screen framed as they frame it. The title,
+   Visual Neuroscience, and the heading line of the first store image,
+   Human Brain Anatomy: Interactive 3D Brain Atlas, stand at the left; the
+   tractogram of the iOS store image (Wiring System Tractogram) at the
+   right, rendered in the same state without the app's bars by
+   app/scripts/shoot-social-card.js, which shoots this card too. */
 .card{
   position:relative; width:1200px; height:630px; flex:none;
-  background:#0A0705; overflow:hidden;
-  border:1px solid rgba(255,160,80,.28);
+  background:#DCE9EC; overflow:hidden; color:#111111;
 }
-
-/* the middle band, between the name and the strapline */
-.card{ --band:354px; }
-
-/* the scans: the side section on the left, the plan view on the right,
-   each sized to sit whole inside the frame and clear of the mark, with
-   nothing laid over them */
-.scans img{
-  position:absolute; top:var(--band); transform:translateY(-50%);
-  height:290px; width:auto; display:block;
-  filter:contrast(1.06);
+.words{
+  position:absolute; left:66px; top:0; bottom:0; width:520px;
+  display:flex; flex-direction:column; justify-content:center;
 }
-.scans .sag{ left:54px; }
-.scans .ax{ right:112px; }
-
-/* the mark, the brain the app icon carries (since v12.23, where the ring
-   stood), through the centre of that band */
-.mark{
-  position:absolute; left:50%; top:var(--band); transform:translate(-50%,-50%);
-  width:300px; height:300px;
+.title{
+  font-family:'Flux','Afacad Flux',sans-serif; font-weight:400;
+  font-size:88px; line-height:1.02; letter-spacing:.005em; color:#111111;
 }
-.mark img{ width:100%; height:100%; display:block; object-fit:contain; }
-
-/* the name across the top */
-.word{
-  position:absolute; left:0; right:0; top:38px; text-align:center;
-  font-family:'Flux','Afacad Flux',sans-serif; font-weight:500;
-  font-size:104px; line-height:1; letter-spacing:.01em; color:#FFFFFF;
+.sub{
+  margin-top:30px;
+  font-family:'Flux','Afacad Flux',sans-serif; font-weight:400;
+  font-size:33px; line-height:1.22; letter-spacing:.005em; color:#111111;
 }
-
-/* the foot: the strapline in the middle and, at the right, what the scans
-   are drawn from — one line (the left held the ring's state until v12.23,
-   and stays empty so the strapline keeps the middle) */
-.footline{
-  position:absolute; left:44px; right:44px; bottom:38px;
-  display:grid; grid-template-columns:1fr auto 1fr; align-items:baseline; gap:20px;
-  font-family:'Flux','Afacad Flux',sans-serif; font-weight:500;
-  text-transform:uppercase; white-space:nowrap;
+.shot{
+  position:absolute; right:52px; top:48px; bottom:48px; width:560px;
+  background:#111111; border:2px solid rgba(17,17,17,.28); overflow:hidden;
 }
-.footline .side{ font-size:15px; letter-spacing:.24em; color:#C98A56; }
-.footline .side.quiet{ color:#8A6547; justify-self:end; }
-.footline .strap{ font-size:24px; letter-spacing:.3em; color:#FFB26B; }
+.shot img{ display:block; width:100%; height:100%; object-fit:cover; object-position:50% 50%; }
 
 .note{
   font-family:'Newsreader',Georgia,serif; font-style:italic;
-  font-size:.92rem; color:#B79B87; max-width:1200px; padding:0 4px;
+  font-size:.92rem; color:#B7B7B7; max-width:1200px; padding:0 4px;
 }
-.note b{ font-style:normal; font-weight:400; color:#FFB26B; }
+.note b{ font-style:normal; font-weight:400; color:#FFFFFF; }
 @media (max-width:1280px){
   /* the card keeps its true pixel size; the page just lets it scroll */
   body{ align-items:flex-start; overflow-x:auto; }
@@ -96,24 +76,34 @@ body{
 <body>
 
 <div class="card" id="card">
-  <div class="scans">
-    <img class="sag" src="assets/social/sagittal.png" alt="" width="256" height="215">
-    <img class="ax" src="assets/social/axial.png" alt="" width="207" height="256">
+  <div class="words">
+    <h1 class="title">Visual<br>Neuroscience</h1>
+    <p class="sub">Human Brain Anatomy:<br>Interactive 3D Brain Atlas</p>
   </div>
-
-  <div class="mark"><img src="assets/logo.svg" alt="VisualNeuroscience.AI"></div>
-
-  <div class="word">VisualNeuroscience.AI</div>
-
-  <div class="footline">
-    <span></span>
-    <span class="strap">Mapping the brain in the browser</span>
-    <span class="side quiet">MNI152 &middot; AAL-116</span>
-  </div>
+  <div class="shot"><img src="assets/social/tractogram.jpg" alt="The tractogram, the brain's wiring in colour, standing in the brain with its near half cut away" width="1787" height="1711"></div>
 </div>
 
-<p class="note">The sharing card, at its true size of <b>1200&thinsp;&times;&thinsp;630</b> — the ratio link previews crop to. The scans are real slices of the MNI152 template the site ships, cut by <b>scripts/make_social.py</b> and put under the standard greyscale; the mark is the brain the app icon carries. Rendered to <b>assets/social-card.jpg</b>, which every page points at for <b>og:image</b>.</p>
+<p class="note">The sharing card, at its true size of <b>1200&thinsp;&times;&thinsp;630</b> — the ratio link previews crop to. The picture is the tractogram of the iOS store image, Wiring System Tractogram, in the same state without the app&rsquo;s bars, and the words are the title and the heading line of the first store image, in the store images&rsquo; own type, ink and backdrop. <b>app/scripts/shoot-social-card.js</b> renders the tractogram to <b>assets/social/tractogram.jpg</b> and the card to <b>assets/social-card.jpg</b>, which every page points at for <b>og:image</b>.</p>
 
+<script>
+/* the App Store images' light backdrop, by store-sell.js's own sums: the viewer's two light colours split at a
+   32-degree field's horizon, half way down, with the horizon's faint glow */
+(function(){
+  var TOP = [0xDC, 0xE9, 0xEC], BOT = [0xEC, 0xE5, 0xEF];
+  var smooth = function(a, b, x){ var t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  var tanHalf = Math.tan(16 * Math.PI / 180), ts = [];
+  for (var i = 0; i <= 96; i++) ts.push(i / 96);
+  ts.push(0.5 - 0.01 / (2 * tanHalf), 0.5 + 0.01 / (2 * tanHalf));
+  ts.sort(function(a, b){ return a - b; });
+  var stops = ts.map(function(t){
+    var dy = (0.5 - t) * 2 * tanHalf;
+    var s = smooth(-0.01, 0.01, dy), h = 1 - smooth(0, 0.75, Math.abs(dy));
+    var c = TOP.map(function(v, k){ return Math.round(Math.min(255, BOT[k] + (v - BOT[k]) * s + h * 0.02 * 255)); });
+    return "rgb(" + c.join(",") + ") " + (t * 100).toFixed(2) + "%";
+  }).join(", ");
+  document.getElementById("card").style.background = "linear-gradient(180deg, " + stops + ")";
+})();
+</script>
 <script src="assets/native.js"></script>
 </body>
 </html>
