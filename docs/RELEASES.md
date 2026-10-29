@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.65 — 29 October 2026 — The sharing card says iOS and web
+Commit · Add iOS and web under the sharing card's heading line
+
+The sharing card now says where Visual Neuroscience runs: iOS and web, under Human Brain Anatomy: Interactive 3D Brain Atlas, so a shared link shows at a glance that the atlas is an app and a website.
+
 ## v12.64 — 29 October 2026 — A new sharing card: the tractogram under Visual Neuroscience
-Commit · Make the sharing card the iOS tractogram under the title Visual Neuroscience and the store's heading line
+Commit `00eae41` · Make the sharing card the iOS tractogram under the title Visual Neuroscience and the store's heading line
 
 A link to the site now shares a new picture. The tractogram from the App Store's Tractography image, the brain's wiring in colour standing in the brain with its near half cut away, sits beside the title Visual Neuroscience and the line from the store's first image, Human Brain Anatomy: Interactive 3D Brain Atlas, on the store images' own light backdrop and type. It is the picture link previews show on messages and social networks.
 
