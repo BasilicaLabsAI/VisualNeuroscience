@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.67 — 29 October 2026 — The sharing card on the app's black
+Commit · Put the sharing card on the app's black, its words in white
+
+The sharing card now stands on the app's own black, the ground the tractogram has in the iOS app and its store image, in place of the pale backdrop. The title and the heading line are white, iOS and web a quieter grey beneath them, and the brain mark keeps the bottom right corner.
+
 ## v12.66 — 29 October 2026 — The sharing card's tractogram on a clear ground, with the brain mark
-Commit · Stand the sharing card's tractogram on its backdrop with a clear ground, and put the brain mark at its corner
+Commit `121780d` · Stand the sharing card's tractogram on its backdrop with a clear ground, and put the brain mark at its corner
 
 The tractogram on the sharing card no longer sits in a dark box: rendered again with a clear ground, the brain and its wiring stand straight on the card's pale backdrop, the brain's surface reading as glass over it. The brain mark now stands in the bottom right corner.
 

@@ -25,18 +25,18 @@ body{
 
 /* ── the card (v12.64, at the owner's word) ─────────────────────────────
    Fixed at 1200x630, the size link previews are cut to, and laid out in
-   absolute pixels so the rendered JPEG and the page agree exactly. It is
-   the App Store images' own manner: their light backdrop (the gradient
-   store-sell.js draws, set below by the same sums), their heading in Flux
-   in the page's ink, and the screen framed as they frame it. The title,
-   Visual Neuroscience, and the heading line of the first store image,
-   Human Brain Anatomy: Interactive 3D Brain Atlas, stand at the left; the
-   tractogram of the iOS store image (Wiring System Tractogram) at the
-   right, rendered in the same state without the app's bars by
+   absolute pixels so the rendered JPEG and the page agree exactly. It
+   stands on the app's black (v12.67, at the owner's word; the App Store
+   images' light backdrop until then), the ground the tractogram has in
+   the iOS store image, with the store images' heading in Flux in white.
+   The title, Visual Neuroscience, and the heading line of the first store
+   image, Human Brain Anatomy: Interactive 3D Brain Atlas, stand at the
+   left; the tractogram of the iOS store image (Wiring System Tractogram)
+   at the right, rendered in the same state without the app's bars by
    app/scripts/shoot-social-card.js, which shoots this card too. */
 .card{
   position:relative; width:1200px; height:630px; flex:none;
-  background:#DCE9EC; overflow:hidden; color:#111111;
+  background:#111111; overflow:hidden; color:#FFFFFF;
 }
 .words{
   position:absolute; left:66px; top:0; bottom:0; width:520px;
@@ -44,21 +44,21 @@ body{
 }
 .title{
   font-family:'Flux','Afacad Flux',sans-serif; font-weight:400;
-  font-size:88px; line-height:1.02; letter-spacing:.005em; color:#111111;
+  font-size:88px; line-height:1.02; letter-spacing:.005em; color:#FFFFFF;
 }
 .sub{
   margin-top:30px;
   font-family:'Flux','Afacad Flux',sans-serif; font-weight:400;
-  font-size:33px; line-height:1.22; letter-spacing:.005em; color:#111111;
+  font-size:33px; line-height:1.22; letter-spacing:.005em; color:#FFFFFF;
 }
 /* where it runs (v12.65, at the owner's word), under the heading line and quieter than it */
 .where{
   margin-top:26px;
   font-family:'Flux','Afacad Flux',sans-serif; font-weight:400;
-  font-size:27px; line-height:1.2; letter-spacing:.01em; color:#4A4A4A;
+  font-size:27px; line-height:1.2; letter-spacing:.01em; color:#A9A9A9;
 }
 /* the tractogram on the backdrop itself, its ground clear (v12.66, at the owner's word; framed on the app's black
-   in v12.64 and v12.65) */
+   in v12.64 and v12.65, when the card was light) */
 .shot{ position:absolute; right:58px; top:28px; bottom:28px; width:580px; }
 .shot img{ display:block; width:100%; height:100%; object-fit:contain; object-position:50% 50%; }
 /* the brain mark at the foot's right (v12.66, at the owner's word) */
@@ -93,27 +93,8 @@ body{
   <div class="mark"><img src="assets/logo.svg" alt="VisualNeuroscience.AI"></div>
 </div>
 
-<p class="note">The sharing card, at its true size of <b>1200&thinsp;&times;&thinsp;630</b> — the ratio link previews crop to. The picture is the tractogram of the iOS store image, Wiring System Tractogram, in the same state without the app&rsquo;s bars and on a clear ground, standing on the backdrop itself; the words are the title and the heading line of the first store image, in the store images&rsquo; own type, ink and backdrop, with where it runs beneath; and the brain mark stands at the foot&rsquo;s right. <b>app/scripts/shoot-social-card.js</b> renders the tractogram to <b>assets/social/tractogram.webp</b> and the card to <b>assets/social-card.jpg</b>, which every page points at for <b>og:image</b>.</p>
+<p class="note">The sharing card, at its true size of <b>1200&thinsp;&times;&thinsp;630</b> — the ratio link previews crop to. The picture is the tractogram of the iOS store image, Wiring System Tractogram, in the same state without the app&rsquo;s bars and on a clear ground, standing on the app&rsquo;s black as it does there; the words are the title and the heading line of the first store image, in the store images&rsquo; own type in white, with where it runs beneath; and the brain mark stands at the foot&rsquo;s right. <b>app/scripts/shoot-social-card.js</b> renders the tractogram to <b>assets/social/tractogram.webp</b> and the card to <b>assets/social-card.jpg</b>, which every page points at for <b>og:image</b>.</p>
 
-<script>
-/* the App Store images' light backdrop, by store-sell.js's own sums: the viewer's two light colours split at a
-   32-degree field's horizon, half way down, with the horizon's faint glow */
-(function(){
-  var TOP = [0xDC, 0xE9, 0xEC], BOT = [0xEC, 0xE5, 0xEF];
-  var smooth = function(a, b, x){ var t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
-  var tanHalf = Math.tan(16 * Math.PI / 180), ts = [];
-  for (var i = 0; i <= 96; i++) ts.push(i / 96);
-  ts.push(0.5 - 0.01 / (2 * tanHalf), 0.5 + 0.01 / (2 * tanHalf));
-  ts.sort(function(a, b){ return a - b; });
-  var stops = ts.map(function(t){
-    var dy = (0.5 - t) * 2 * tanHalf;
-    var s = smooth(-0.01, 0.01, dy), h = 1 - smooth(0, 0.75, Math.abs(dy));
-    var c = TOP.map(function(v, k){ return Math.round(Math.min(255, BOT[k] + (v - BOT[k]) * s + h * 0.02 * 255)); });
-    return "rgb(" + c.join(",") + ") " + (t * 100).toFixed(2) + "%";
-  }).join(", ");
-  document.getElementById("card").style.background = "linear-gradient(180deg, " + stops + ")";
-})();
-</script>
 <script src="assets/native.js"></script>
 </body>
 </html>
