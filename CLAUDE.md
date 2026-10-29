@@ -161,9 +161,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   shot to `assets/social-card.jpg`, the `og:image` every page names with the `og:image:alt` to match, is the App Store
   images' manner at 1200×630: their light backdrop by `store-sell.js`'s own sums, the title Visual Neuroscience and,
   beneath it, the first store image's heading line, Human Brain Anatomy: Interactive 3D Brain Atlas, in Flux in the
-  ink, under that, quieter, iOS and web (v12.65, at the owner's word), and at the right the tractogram of the iOS store image, Wiring System Tractogram, framed as the store frames its
-  screens; `app/scripts/shoot-social-card.js` renders that tractogram in the store shot's state without the page's
-  bars to `assets/social/tractogram.jpg` and shoots the card at twice its size, brought down to 1200×630, `card` alone
+  ink, under that, quieter, iOS and web (v12.65, at the owner's word), and at the right the tractogram of the iOS store image, Wiring System Tractogram, standing on the backdrop itself
+  with its ground clear since v12.66, at the owner's word (framed on the app's black until then), the brain mark
+  (`logo.svg`) at the foot's right since the same release; `app/scripts/shoot-social-card.js` renders that tractogram
+  in the store shot's state without the page's bars, the stage and the viewer's back made clear and the shot taken
+  with no background, to `assets/social/tractogram.webp` with its transparency, and shoots the card at twice its size, brought down to 1200×630, `card` alone
   shooting the card from the tractogram already there; the slices `make_social.py` cut stay for the feature graphic);
   the posters inline it from `logo.svg` (`logo_svg()` in `scripts/posters/common.py`; their pictures in
   `site/assets/posters/` were cut again from the posters re-rendered with it); and the browser's store screenshots were

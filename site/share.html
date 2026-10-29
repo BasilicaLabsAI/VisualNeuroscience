@@ -57,11 +57,13 @@ body{
   font-family:'Flux','Afacad Flux',sans-serif; font-weight:400;
   font-size:27px; line-height:1.2; letter-spacing:.01em; color:#4A4A4A;
 }
-.shot{
-  position:absolute; right:52px; top:48px; bottom:48px; width:560px;
-  background:#111111; border:2px solid rgba(17,17,17,.28); overflow:hidden;
-}
-.shot img{ display:block; width:100%; height:100%; object-fit:cover; object-position:50% 50%; }
+/* the tractogram on the backdrop itself, its ground clear (v12.66, at the owner's word; framed on the app's black
+   in v12.64 and v12.65) */
+.shot{ position:absolute; right:58px; top:28px; bottom:28px; width:580px; }
+.shot img{ display:block; width:100%; height:100%; object-fit:contain; object-position:50% 50%; }
+/* the brain mark at the foot's right (v12.66, at the owner's word) */
+.mark{ position:absolute; right:34px; bottom:28px; width:66px; height:66px; }
+.mark img{ display:block; width:100%; height:100%; object-fit:contain; }
 
 .note{
   font-family:'Newsreader',Georgia,serif; font-style:italic;
@@ -87,10 +89,11 @@ body{
     <p class="sub">Human Brain Anatomy:<br>Interactive 3D Brain Atlas</p>
     <p class="where">iOS and web</p>
   </div>
-  <div class="shot"><img src="assets/social/tractogram.jpg" alt="The tractogram, the brain's wiring in colour, standing in the brain with its near half cut away" width="1787" height="1711"></div>
+  <div class="shot"><img src="assets/social/tractogram.webp" alt="The tractogram, the brain's wiring in colour, standing in the brain with its near half cut away"></div>
+  <div class="mark"><img src="assets/logo.svg" alt="VisualNeuroscience.AI"></div>
 </div>
 
-<p class="note">The sharing card, at its true size of <b>1200&thinsp;&times;&thinsp;630</b> — the ratio link previews crop to. The picture is the tractogram of the iOS store image, Wiring System Tractogram, in the same state without the app&rsquo;s bars, and the words are the title and the heading line of the first store image, in the store images&rsquo; own type, ink and backdrop. <b>app/scripts/shoot-social-card.js</b> renders the tractogram to <b>assets/social/tractogram.jpg</b> and the card to <b>assets/social-card.jpg</b>, which every page points at for <b>og:image</b>.</p>
+<p class="note">The sharing card, at its true size of <b>1200&thinsp;&times;&thinsp;630</b> — the ratio link previews crop to. The picture is the tractogram of the iOS store image, Wiring System Tractogram, in the same state without the app&rsquo;s bars and on a clear ground, standing on the backdrop itself; the words are the title and the heading line of the first store image, in the store images&rsquo; own type, ink and backdrop, with where it runs beneath; and the brain mark stands at the foot&rsquo;s right. <b>app/scripts/shoot-social-card.js</b> renders the tractogram to <b>assets/social/tractogram.webp</b> and the card to <b>assets/social-card.jpg</b>, which every page points at for <b>og:image</b>.</p>
 
 <script>
 /* the App Store images' light backdrop, by store-sell.js's own sums: the viewer's two light colours split at a
