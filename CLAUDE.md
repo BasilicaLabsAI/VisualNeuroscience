@@ -558,6 +558,34 @@ Read this first in every session. It is the handover; nothing else needs pasting
   atlas's keys, `mirror`, `link` and, since v12.60, `light`); and `MN_TRACTS.regions` (`set`, `keys`, `link`,
   `setLink`, `light`, `setLight`, `shown`, `drawn`, `indexed`) is the door for a check or a shoot. The store shots and the home twins set the drawer shut, so the
   tractogram keeps its room.
+- Since v12.63, at the owner's word (items 1 and 2 of the list at the foot of this file), the Tractography page draws
+  the bundles as the professional tools do. The file names a bundle for every streamline (`hcp1065.trx`'s `groups/`,
+  87 groups, each a side of one of 46 bundles), and `site/assets/tracts/hcp1065-bundles.js` (`MN_BUNDLES`: `SYSTEMS`,
+  `LIST` of base, name, system, a line on what it joins and a colour, `find`) names them, in five systems,
+  association, projection, commissural, cerebellar and the cranial nerves, the colours stepped round the hue wheel by
+  the golden angle in OKLCH so a bundle and the next in the list never share a hue, both sides one colour. Under the
+  regions in the drawer stands a Bundles part, built by the page (`attachBundles`, `paintBundles`; the atlas's
+  `.tier-switch` copied into the page): By direction or By bundle (`setColour`, NiiVue's `fiberGroupColormap`), a
+  switch for every bundle on the heading and one for each system on its heading, and a row per bundle with its colour,
+  its name, whose press shows that bundle alone and a second press every bundle (`soloBundle`, `showAllBundles`,
+  `soloBase`), and its sides, L and R or On for one across the midline. A tap on a fibre names its bundle in a small
+  window by the finger (`#tkPick`: the name, side, system and streamline count, what it joins, Alone or Show all and a
+  cross; `wireTaps`, `tapAt`, `pickAt`, which projects the points drawn through the viewer's own
+  `calculateMvpMatrix` and takes the nearest the eye within 7 px, 16 under a finger, the streamlines left out while
+  the brain stands under 25 per cent transparent, the ends kept). What is drawn is `display` (`base()`), built by
+  `rebuildDisplay` from the regions picked and the bundles shown and kept while neither changes (`displayKey`):
+  each of the file's streamlines is 24 points, so the set is smoothed by Catmull-Rom (`smoothSet`), two to four
+  points to a step, and drawn with five to eight tube sides, as many as fit a budget of 3 million tube vertices
+  (`TUBE_BUDGET`, the whole tractogram's 580,968 points at five sides, so a phone does no more than before; the
+  whole stays as the file has it, a single bundle is drawn smooth and round); and the streamlines are shaded darker
+  where they crowd (`CROWD_SHADE`, NiiVue's `fiberOcclusion`, 0.4), from a density worked out once per set by
+  `densityFor`, NiiVue's own measure redone so it can be carried through every cut and onto the ends, which keeps a
+  cut as cheap as before and the shade still as a slider moves. Every piece a cut or the ends keep carries its
+  streamline's bundle (`tkBun` on the mesh, the mesh's `groups` made from it by `groupsFrom`, `setFibers` setting the
+  points, the groups, the density and the look together). The colouring and the bundles hidden ride in
+  `vn-tracts-last` (`v: 7`, `bundles: {colour, hidden}`), the export carries the bundle colours while they show
+  (`vcol`, sampled as the lines are), and `MN_TRACTS.bundles` (`list`, `colour`, `setColour`, `hidden`, `setHidden`,
+  `solo`, `all`, `pick`, `tap`, `label`, `drawn`, `spot`) is the door for a check or a shoot.
 - The Region Atlas is called the 3D Region Atlas wherever its name shows (nav, titles, home page, the app) since
   v11.12; its file stays `regions.html`. Since v11.22, at the owner's request, it is one screen in the manner of an
   anatomy app (`body.atlas-screen`, `main.screen`, the style block "the screen" and the script "the screen" at the end
@@ -1029,3 +1057,29 @@ Read this first in every session. It is the handover; nothing else needs pasting
   authenticate the domain (`docs/NEWSLETTER.md`). The email route stays off.
 - Two Firebase API keys are flagged by secret scanning: restrict them (bundle ID / Identity Toolkit API) and
   close the alerts as "won't fix"; do not rotate or rewrite history.
+
+## What's left to build (the owner's list: answer from it when asked what's left)
+The owner asked on 29 October 2026 that the steps toward the professional tools' level of tract display be kept here
+as tasks and read back when they ask what is left. Best value first; strike each as it ships, naming the release.
+1. Bundles: done in v12.63 (the bundle colours, the Bundles list in the drawer, a tap naming the bundle; see the
+   Tractography bullets above).
+2. Smoothness and depth: done in v12.63 (the streamlines smoothed into curves, more finely as fewer are drawn, rounder
+   tubes for small sets, the crowding shade).
+3. Connections done right: an index of where each streamline ends (beside `scripts/make_tract_regions.py`), so
+   Connecting means a streamline with an end in each region and a new Ending in shows connections rather than fibres
+   passing through. Measured on the shipped file: the left amygdala has 279 streamlines through it and none ending
+   there, the left thalamus 2,859 through and 1,661 ending; with a 2 mm search 83 per cent of streamlines end in a
+   region at both ends, 868 region pairs, 431 of them with ten or more. Each bundle then lists the regions it joins.
+4. The textbook slice: the atlases' four views on Tractography (`view-bar.js`, `atlas-views.css`), the axial, coronal
+   and sagittal slices of the template each showing the streamlines within a few millimetres (NiiVue's
+   `meshThicknessOn2D`), a bundles-here readout at the crosshair and, as a choice, each bundle's density as a heat map
+   on the slices.
+5. A simplified teaching mode: one or a few smooth, labelled tubes per bundle (cluster centroids) and see-through bundle
+   envelopes (`MN_EXPORT3D.isoSurface` on each bundle's density); the same curves serve the Circuit Atlas.
+6. Better data: rebuild from the full HCP1065 atlas (brain.labsolver.org/hcp_trk_atlas.html, blocked from a session:
+   the owner downloads it on the Mac or allows the host in the environment's network settings) with a minimum per
+   bundle, so the cranial nerves show (2 to 22 streamlines each in the shipped file), and thinning that keeps the curves
+   (every shipped streamline is 24 points, 2 to 6.5 mm apart), with a lighter copy for phones;
+   `scripts/make_tractogram.py` samples at random and needs the per-bundle minimum.
+Out of reach with this atlas, and said so: patient scans, tracking of our own, and measures along a tract such as FA
+(the file carries the lines' positions and their bundles, nothing else).

@@ -71,7 +71,7 @@ var BY_ID = {};
 FORMATS.forEach(function(f){ BY_ID[f.id] = f; });
 
 var CREDIT = "VisualNeuroscience.AI · MNI152 template (MNI) · AAL parcellation (GIN) · " +
-             "Brodmann atlas (MRIcron, BSD) · HCP1065 tractography (Yeh 2018, CC BY-SA 4.0)";
+             "Brodmann atlas (MRIcron, BSD) · HCP1065 tractography (Yeh 2022, CC BY-SA 4.0)";
 
 /* ── surface nets ──────────────────────────────────────────────────────────
    Mikola Lysenko's naive surface nets: one vertex per cell the surface

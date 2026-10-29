@@ -217,6 +217,81 @@ main.screen{
 .screen.one .slice-edge.bottom{ right:74px; }
 /* one region's own window (v12.59, as the atlas has it since v12.56): narrower than the others on a wide screen */
 .screen:not(.one) #popRegion{ left:auto; width:min(560px, calc(100% - 2 * var(--gap) - 10px)); }
+/* the bundles (v12.63, at the owner's word): a part of the box under the regions, the colour switch and the atlas's
+   87 named bundles by system, each row a bundle with its colour, its name (a press shows it alone) and its sides, the
+   system's heading and the part's heading each carrying the atlas's switch (regions.html's .tier-switch, copied) */
+.tier-switch{
+  flex:none; width:34px; height:20px; padding:0; border:1px solid var(--ink); border-radius:10px;
+  background:var(--ink); position:relative; cursor:pointer; -webkit-tap-highlight-color:transparent;
+}
+.tier-switch::after{
+  content:""; position:absolute; top:2px; left:16px; width:14px; height:14px; border-radius:50%;
+  background:var(--paper); transition:left .18s ease;
+}
+.tier-switch[aria-pressed="false"]{ background:transparent; }
+.tier-switch[aria-pressed="false"]::after{ left:2px; background:var(--ink); }
+.tier-switch:disabled{ opacity:.35; cursor:default; }
+.tier-switch:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+.rail-part h2.with-switch{ position:relative; }
+.rail-part h2.with-switch .tier-switch{ position:absolute; right:0; top:-3px; }
+.tb-part .tb-colour{ margin-top:0; }
+.tb-part .tb-list{ margin-top:.7rem; }
+.tb-part .tb-head .tier-switch{ margin-left:.5rem; }
+.tb-row{ display:flex; align-items:center; gap:.5rem; padding:.28rem .05rem .28rem .1rem; }
+.tb-row + .tb-row{ border-top:1px solid color-mix(in srgb, var(--ink) 9%, transparent); }
+.tb-row .dot{ width:.62rem; height:.62rem; flex:none; border-radius:2px; }
+.tb-row .tb-name{
+  flex:1 1 auto; min-width:0; padding:0; margin:0; border:0; background:none; color:var(--ink); cursor:pointer; text-align:left;
+  font-family:var(--font-serif); font-size:.9rem; line-height:1.25; overflow-wrap:anywhere;
+  -webkit-tap-highlight-color:transparent;
+}
+@media (hover: hover){ .tb-row .tb-name:hover{ text-decoration:underline; text-underline-offset:3px; } }
+.tb-row.solo .tb-name{ font-weight:600; }
+.tb-row.off .tb-name{ color:var(--ink-60); }
+.tb-row.off .dot{ opacity:.3; }
+.tb-sides{ flex:none; display:flex; gap:.25rem; }
+.tb-side{
+  min-width:1.75rem; height:1.45rem; padding:0 .4rem; border:1px solid var(--ink); border-radius:999px; background:transparent; color:var(--ink);
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem; letter-spacing:.12em; text-transform:uppercase; cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.tb-side[aria-pressed="true"]{ background:var(--ink); color:var(--paper); }
+.tb-side:focus-visible, .tb-row .tb-name:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+@media (pointer:coarse){ .tb-row{ min-height:44px; } .tb-side{ min-width:2.3rem; height:2.1rem; } }
+/* a tap on a fibre names its bundle (v12.63): a small window by the finger, in the bar's material */
+.tk-pick{
+  position:absolute; z-index:6; left:0; top:0; width:max-content; max-width:min(330px, calc(100% - 16px));
+  display:flex; align-items:flex-start; gap:.6rem; padding:.6rem .55rem .6rem .75rem; border-radius:14px;
+  color:var(--bar-ink, var(--ink)); background:var(--bar-fill, var(--paper)); border:1px solid var(--bar-line, var(--hair));
+  -webkit-backdrop-filter:blur(16px) saturate(1.15); backdrop-filter:blur(16px) saturate(1.15);
+  box-shadow:0 10px 30px rgba(0,0,0,.25); opacity:0; transform:scale(.96); transform-origin:var(--from, 0 100%);
+  transition:opacity .16s ease, transform .2s cubic-bezier(.32,.72,0,1);
+}
+.tk-pick[hidden]{ display:none; }
+.tk-pick.in{ opacity:1; transform:none; }
+.tk-pick-dot{ width:.7rem; height:.7rem; flex:none; margin-top:.32rem; border-radius:2px; }
+.tk-pick-t{ min-width:0; }
+.tk-pick-t b{ display:block; font-family:var(--font-serif); font-weight:500; font-size:.98rem; line-height:1.25; }
+.tk-pick-t small{
+  display:block; margin-top:.2rem; font-family:var(--font-brand); font-weight:500; font-size:.54rem; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--bar-soft, var(--ink-60));
+}
+.tk-pick-j{ display:block; margin-top:.35rem; font-family:var(--font-serif); font-style:italic; font-size:.8rem; line-height:1.4; color:var(--bar-soft, var(--ink-60)); }
+.tk-pick-acts{ flex:none; display:flex; flex-direction:column; align-items:flex-end; gap:.45rem; }
+.tk-pick-x{
+  width:1.6rem; height:1.6rem; padding:0; border:1px solid var(--bar-line, var(--hair)); border-radius:50%; background:none;
+  color:inherit; font-size:1rem; line-height:1; cursor:pointer; -webkit-tap-highlight-color:transparent;
+}
+.tk-pick-solo{
+  padding:.38rem .6rem .34rem; border:1px solid currentColor; border-radius:999px; background:none; color:inherit; cursor:pointer;
+  font-family:var(--font-brand); font-weight:500; font-size:.54rem; letter-spacing:.16em; text-transform:uppercase; white-space:nowrap;
+  -webkit-tap-highlight-color:transparent;
+}
+@media (hover: hover){ .tk-pick-x:hover, .tk-pick-solo:hover{ background:var(--bar-ink, var(--ink)); color:var(--bar-fill-solid, var(--paper)); } }
+.tk-pick-x:active, .tk-pick-solo:active{ background:var(--bar-ink, var(--ink)); color:var(--bar-fill-solid, var(--paper)); }
+@media (pointer:coarse){ .tk-pick-x{ width:36px; height:36px; } .tk-pick-solo{ min-height:36px; } }
+@media (prefers-reduced-transparency: reduce){ .tk-pick{ background:var(--bar-fill-solid, var(--paper)); -webkit-backdrop-filter:none; backdrop-filter:none; } }
+@media (prefers-reduced-motion: reduce){ .tk-pick{ transform:none; transition:opacity .15s ease; } .tier-switch::after{ transition:none; } }
 .stage{ flex:1 1 auto; min-width:0; min-height:0; display:flex; flex-direction:column; position:relative; overflow:hidden; padding:0; }
 .screen .views-wrap{ position:relative; flex:1 1 auto; min-height:0; }
 /* one view, the whole stage */
@@ -469,14 +544,15 @@ main.screen.one.land{ flex-direction:row; }
 
     <!-- the region box (v12.59, at the owner's word): the 3D Region Atlas's region picker, a box over the deck's
          corner folding away on the tab at its edge and coming back on the handle left at the screen's; its inside,
-         the picker, the All through or Connecting switch and the highlighted rows, is built by assets/region-box.js -->
-    <aside class="drawer" id="drawer" aria-label="Region picker">
+         the picker, the All through or Connecting switch and the highlighted rows, is built by assets/region-box.js,
+         and under them, since v12.63, the bundles, built by the page's own script -->
+    <aside class="drawer" id="drawer" aria-label="Regions and bundles">
       <div class="drawer-box" id="drawerBox">
-        <button class="drawer-tab drawer-hide" id="drawerHide" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Hide the region picker" title="Hide the region picker"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
+        <button class="drawer-tab drawer-hide" id="drawerHide" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Hide the regions and bundles" title="Hide the regions and bundles"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
         <div class="drawer-in card rail-box" id="regionBox"></div>
       </div>
     </aside>
-    <button class="drawer-tab drawer-show" id="drawerTab" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Show the region picker" title="Show the region picker"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
+    <button class="drawer-tab drawer-show" id="drawerTab" type="button" aria-controls="drawer" aria-expanded="true" aria-label="Show the regions and bundles" title="Show the regions and bundles"><svg viewBox="0 0 10 16" aria-hidden="true" focusable="false"><path d="M8 1 2 8l6 7"/></svg></button>
 
     <!-- the tractogram, and the sheets the bar raises over it: the controls
          that stood beside it, the export, and the notes that stood below -->
@@ -484,7 +560,7 @@ main.screen.one.land{ flex-direction:row; }
       <div class="views-wrap">
         <div class="views">
           <div class="view" data-box="Ren">
-            <div class="mri-stage"><canvas id="tkRen"></canvas><canvas id="tkBrain" class="brain-layer" aria-hidden="true"></canvas><div class="stage-msg" id="stageMsg"><span class="caps" id="msgTitle">Loading the tractogram</span><div class="progress"><i id="msgBar"></i></div><p id="msgText">Several megabytes of streamlines are on their way.</p></div></div>
+            <div class="mri-stage"><canvas id="tkRen"></canvas><canvas id="tkBrain" class="brain-layer" aria-hidden="true"></canvas><div class="tk-pick" id="tkPick" hidden role="status" aria-live="polite"><span class="tk-pick-dot" id="tkPickDot" aria-hidden="true"></span><span class="tk-pick-t"><b id="tkPickName"></b><small id="tkPickWhere"></small><span class="tk-pick-j" id="tkPickJoins"></span></span><span class="tk-pick-acts"><button class="tk-pick-x" id="tkPickX" type="button" aria-label="Close">&times;</button><button class="tk-pick-solo" id="tkPickSolo" type="button">Alone</button></span></div><div class="stage-msg" id="stageMsg"><span class="caps" id="msgTitle">Loading the tractogram</span><div class="progress"><i id="msgBar"></i></div><p id="msgText">Several megabytes of streamlines are on their way.</p></div></div>
           </div>
         </div>
       </div>
@@ -526,7 +602,8 @@ main.screen.one.land{ flex-direction:row; }
             <span class="key-item"><span class="key-swatch" style="background:#4FB06A"></span>front &ndash; back</span>
             <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
           </div>
-          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the brain, and the streamlines with it, away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there, and Transparency raises a tall bar that makes it more see-through or more solid. Tract shows or hides the streamlines. Slice tract, on whenever Slice is turned on, cuts them with the brain, and off leaves them whole while the brain alone is cut; Offset stands their cut ends out of the brain&rsquo;s cut face and Distance sets how far, in millimetres, both greyed while the brain is off; and Thicken sets how thick they are drawn. View turns the brain to one of its faces, or home to the view the page opens with, Revolve sets it turning until you take hold of it, and Export, at the end of the bar, offers the streamlines and the brain as a 3D model. The region box beside the view, the 3D Region Atlas&rsquo;s own, folds away on its tab: highlight a region there and only the streamlines that run through it are drawn, and with Highlight the regions ticked the region itself stands among them in its colour, cut as the brain is, and shows on the brain&rsquo;s cut face as it does on the 3D Region Atlas. Highlight two or more and the switch turns to Connecting, only the streamlines that run between them, or back to All through, every streamline through any of them; a press on a region&rsquo;s name opens its note. The page opens with the brain on at 65 per cent transparency, the streamlines on and nothing sliced, and remembers the rest of how you left it: the streamlines&rsquo; switches, offset and thickness, the regions highlighted with their two switches, and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
+          <p>Or, with By bundle under Bundles in the box beside the view, each of the 46 bundles the atlas names takes a colour of its own, as the field&rsquo;s atlases draw them, and a tap on a fibre names its bundle whichever colouring is on.</p>
+          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the brain, and the streamlines with it, away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there, and Transparency raises a tall bar that makes it more see-through or more solid. Tract shows or hides the streamlines. Slice tract, on whenever Slice is turned on, cuts them with the brain, and off leaves them whole while the brain alone is cut; Offset stands their cut ends out of the brain&rsquo;s cut face and Distance sets how far, in millimetres, both greyed while the brain is off; and Thicken sets how thick they are drawn. View turns the brain to one of its faces, or home to the view the page opens with, Revolve sets it turning until you take hold of it, and Export, at the end of the bar, offers the streamlines and the brain as a 3D model. The region box beside the view, the 3D Region Atlas&rsquo;s own, folds away on its tab: highlight a region there and only the streamlines that run through it are drawn, and with Highlight the regions ticked the region itself stands among them in its colour, cut as the brain is, and shows on the brain&rsquo;s cut face as it does on the 3D Region Atlas. Highlight two or more and the switch turns to Connecting, only the streamlines that run between them, or back to All through, every streamline through any of them; a press on a region&rsquo;s name opens its note. Under the regions, Bundles lists the bundles the atlas names, by system: association, projection, commissural, cerebellar and the cranial nerves. L and R show or hide each side of a bundle, the switches a whole system or every bundle, and a press on a name shows that bundle alone, a second press every bundle again; a tap on a fibre names its bundle in a small window, whose Alone does the same. The fewer streamlines are drawn, the more finely they are drawn, smoothed into curves and rounder, and where they crowd they are shaded darker, which shows their depth. The page opens with the brain on at 65 per cent transparency, the streamlines on and nothing sliced, and remembers the rest of how you left it: the streamlines&rsquo; switches, offset and thickness, the regions highlighted with their two switches, the bundles shown and their colouring, and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
           <h2>Reference</h2>
           <p class="ref-line"><b>Tractogram</b> the HCP1065 population-averaged tractography atlas: Yeh FC, <a href="https://doi.org/10.1038/s41467-022-32595-4" target="_blank" rel="noopener">Population-based tract-to-region connectome of the human brain and its hierarchical topology</a>, <em>Nat Commun</em> 13:4933 (2022), CC BY-SA 4.0.</p>
           <p class="ref-line"><b>Brain</b> the MNI152 template (ICBM 2009c), McConnell Brain Imaging Centre, Montreal Neurological Institute, drawn around the streamlines as the 3D Region Atlas draws it, the MRI showing where a cut opens it.</p>
@@ -620,6 +697,7 @@ main.screen.one.land{ flex-direction:row; }
 <script src="assets/region-notes.js"></script>
 <script src="assets/region-box.js"></script>
 <script src="assets/scan-look.js"></script>
+<script src="assets/tracts/hcp1065-bundles.js"></script>
 <script>
 /* ── the screen ──────────────────────────────────────────────────────────
    The study's screen (hallucinations.html), carried here without its
@@ -1002,6 +1080,9 @@ main.screen.one.land{ flex-direction:row; }
       showBrain(brain.on);
       showTract(tract.on);
       paintSliceBtn();
+      recolour();
+      refresh(false);
+      paintBundles();
       if (byKey.Ren) byKey.Ren.drawScene();
       return true;
     },
@@ -1021,9 +1102,26 @@ main.screen.one.land{ flex-direction:row; }
       setLink: function(v){ if (regionBox) regionBox.setLink(v); },
       light: function(){ return regionBox ? regionBox.light() : false; },
       setLight: function(v){ if (regionBox) regionBox.setLight(v); },
-      shown: function(){ var b = base(); return b ? b.off.length - 1 : 0; },
+      shown: function(){ return display ? display.n : 0; },
       drawn: function(){ return Object.keys(regionMeshes).length; },
       indexed: function(){ return !!regionIndex; }
+    },
+    /* the bundles (v12.63), for a check or a shoot: the groups the file names, the colouring, the bundles hidden,
+       one shown alone or all again, what a tap at a point of the window names, and how finely the set is drawn */
+    bundles: {
+      list: function(){ return bundles.groups.map(function(g){ return g.id; }); },
+      colour: function(){ return bundles.colour; },
+      setColour: function(m){ setColour(m); },
+      hidden: function(){ return hiddenIds(); },
+      setHidden: function(ids){ bundles.hidden = {}; (ids || []).forEach(function(id){ bundles.hidden[id] = true; }); bundlesChanged(); },
+      solo: function(base){ soloBundle(base); },
+      all: function(){ showAllBundles(); },
+      pick: function(x, y){ var g = pickAt(x, y); return g ? g.id : null; },
+      tap: function(x, y){ return tapAt(x, y, "mouse"); },
+      label: function(){ return pickEl && !pickEl.hidden ? document.getElementById("tkPickName").textContent : null; },
+      drawn: function(){ return display ? { streamlines: display.n, points: display.pts.length / 3, smooth: display.f, sides: display.sides } : null; },
+      /* where in the window a point of a group's streamlines is drawn, nearest the eye, for a check of the naming */
+      spot: function(id){ return spotOf(id); }
     },
     /* the ends standing out of the cut, for a check: how many points they hold, or null */
     ends: function(){ return brain.ends ? { shown: !!brain.ends.visible, points: brain.ends.pts ? brain.ends.pts.length / 3 : 0, indices: brain.ends.indexCount || 0, radius: brain.ends.fiberRadius, meshes: brain.nv ? brain.nv.meshes.length : 0 } : null; }
@@ -1077,9 +1175,10 @@ main.screen.one.land{ flex-direction:row; }
      next frame, so a slider dragged fast costs one a frame. */
   var slice = null, whole = null, pendingPlanes = null, cutFrame = 0;
   /* the set the cuts, the ends and the export read (v12.59): the streamlines through the highlighted regions
-     while any are, or the whole tractogram */
-  var shown = null;
-  function base(){ return shown || whole; }
+     while any are, and since v12.63 in the bundles shown, drawn as smooth curves as finely as the set's size
+     allows (rebuildDisplay, below), or the whole tractogram as the file holds it */
+  var display = null;
+  function base(){ return display || whole; }
   function planeNormal(azi, elev){
     /* the viewer's own maths for a clip plane given as depth, azimuth, elevation */
     var a = -elev * Math.PI / 180, g = ((((azi + 180 - 90) % 360) + 360) % 360) * Math.PI / 180;
@@ -1131,24 +1230,28 @@ main.screen.one.land{ flex-direction:row; }
   var lastPlanes = [];
   /* the pieces of the whole tractogram outside a box, for the ends (Slice tract off, v12.48) */
   function freePieces(inner){
-    var src = base(), P = src.pts, O = src.off, n = O.length - 1, lo = inner.lo, hi = inner.hi;
-    var ept = [], eoffs = [0], erun = 0;
+    var src = base(), P = src.pts, O = src.off, n = O.length - 1, lo = inner.lo, hi = inner.hi, sb = src.bun, D = densityFor(src);
+    var ept = [], eden = [], eoffs = [0], ebun = [], erun = 0;
+    var close = function(s){
+      if (erun >= 2){ eoffs.push(ept.length / 3); ebun.push(sb ? sb[s] : NO_BUNDLE); }
+      else { ept.length -= 3 * erun; eden.length -= erun; }
+      erun = 0;
+    };
     for (var s = 0; s < n; s++){
       for (var i = O[s]; i < O[s + 1]; i++){
         var x = P[i * 3], y = P[i * 3 + 1], z = P[i * 3 + 2];
         var deep = x >= lo[0] && x <= hi[0] && y >= lo[1] && y <= hi[1] && z >= lo[2] && z <= hi[2];
-        if (!deep){ ept.push(x, y, z); erun++; }
-        else if (erun){ if (erun >= 2) eoffs.push(ept.length / 3); else ept.length -= 3 * erun; erun = 0; }
+        if (!deep){ ept.push(x, y, z); eden.push(D[i]); erun++; }
+        else if (erun) close(s);
       }
-      if (erun){ if (erun >= 2) eoffs.push(ept.length / 3); else ept.length -= 3 * erun; erun = 0; }
+      if (erun) close(s);
     }
-    return eoffs.length > 1 ? { pts: Float32Array.from(ept), offs: Uint32Array.from(eoffs) } : null;
+    return eoffs.length > 1 ? { pts: Float32Array.from(ept), offs: Uint32Array.from(eoffs), bun: Uint16Array.from(ebun), dens: Float32Array.from(eden) } : null;
   }
   function applyCut(planes){
     var nv = byKey.Ren, mesh = nv && nv.meshes && nv.meshes[0];
     if (!mesh || !whole) return;
     lastPlanes = planes;
-    if (!whole.lengths && mesh.pts === whole.pts) whole.lengths = mesh.fiberLengths || null;
     var again = cutBrainPlanes(planes);   /* the brain's renderer first: the box is read off it */
     /* no cut, or Slice tract off (v12.44): the streamlines stand whole, the brain alone cut. The
        pieces that stand in the cut-away space are drawn in the brain's viewer as well (v12.48, at the
@@ -1159,9 +1262,9 @@ main.screen.one.land{ flex-direction:row; }
     var src = base();
     if (!planes.length || !sliceTract){
       setEnds(planes.length && brain.on && brain.nv ? freePieces(cutBox(planes, -1)) : null);
-      if (mesh.pts !== src.pts){
-        mesh.pts = src.pts; mesh.offsetPt0 = src.off; mesh.fiberLengths = src === whole ? whole.lengths : null;
-        try{ mesh.updateMesh(nv.gl); }catch(e){}
+      if (mesh.tkSrc !== src){
+        setFibers(nv.gl, mesh, src.pts, src.off, src.bun, src.sides, densityFor(src));
+        mesh.tkSrc = src;
         again = true;
       }
       /* the highlighted regions are cut as the brain is, whole again with it (v12.59) */
@@ -1174,35 +1277,41 @@ main.screen.one.land{ flex-direction:row; }
     /* the ends: the pieces that stand out past the brain's own cut, and a millimetre inside it
        so each tube runs on through the face, gathered for the brain's viewer (setEnds) */
     var inner = withBrain ? cutBox(planes, -1) : null;
-    var P = src.pts, O = src.off, n = O.length - 1;
-    var pts = new Float32Array(P.length), m = 0, offs = [0];
-    var ept = withBrain ? [] : null, eoffs = [0], erun = 0;
+    var P = src.pts, O = src.off, n = O.length - 1, sb = src.bun, D = densityFor(src);
+    /* each piece keeps its streamline's bundle (v12.63), for the bundle colours and the naming, and each point its
+       crowding, for the shade */
+    var pts = new Float32Array(P.length), den = new Float32Array(P.length / 3), m = 0, offs = [0], pbun = [];
+    var ept = withBrain ? [] : null, eden = [], eoffs = [0], ebun = [], erun = 0;
+    var closeEnd = function(g){
+      if (erun >= 2){ eoffs.push(ept.length / 3); ebun.push(g); }
+      else { ept.length -= 3 * erun; eden.length -= erun; }
+      erun = 0;
+    };
     for (var s = 0; s < n; s++){
-      var run = 0;
+      var run = 0, g = sb ? sb[s] : NO_BUNDLE;
       for (var i = O[s]; i < O[s + 1]; i++){
         var x = P[i * 3], y = P[i * 3 + 1], z = P[i * 3 + 2];
         var kept = x >= lo[0] && x <= hi[0] && y >= lo[1] && y <= hi[1] && z >= lo[2] && z <= hi[2];
         if (kept){
+          den[m / 3] = D[i];
           pts[m++] = x; pts[m++] = y; pts[m++] = z; run++;
         } else if (run){
-          if (run >= 2) offs.push(m / 3); else m -= 3 * run;   /* a lone point is no line */
+          if (run >= 2){ offs.push(m / 3); pbun.push(g); } else m -= 3 * run;   /* a lone point is no line */
           run = 0;
         }
         if (ept){
           var deep = kept && x >= inner.lo[0] && x <= inner.hi[0] && y >= inner.lo[1] && y <= inner.hi[1] && z >= inner.lo[2] && z <= inner.hi[2];
-          if (kept && !deep){ ept.push(x, y, z); erun++; }
-          else if (erun){ if (erun >= 2) eoffs.push(ept.length / 3); else ept.length -= 3 * erun; erun = 0; }
+          if (kept && !deep){ ept.push(x, y, z); eden.push(D[i]); erun++; }
+          else if (erun) closeEnd(g);
         }
       }
-      if (run){ if (run >= 2) offs.push(m / 3); else m -= 3 * run; }
-      if (erun){ if (erun >= 2) eoffs.push(ept.length / 3); else ept.length -= 3 * erun; erun = 0; }
+      if (run){ if (run >= 2){ offs.push(m / 3); pbun.push(g); } else m -= 3 * run; }
+      if (erun) closeEnd(g);
     }
-    mesh.pts = pts.subarray(0, m);
-    mesh.offsetPt0 = Uint32Array.from(offs);
-    mesh.fiberLengths = null;
-    try{ mesh.updateMesh(nv.gl); }catch(e){}
+    setFibers(nv.gl, mesh, pts.subarray(0, m), Uint32Array.from(offs), Uint16Array.from(pbun), src.sides, den.subarray(0, m / 3));
+    mesh.tkSrc = null;   /* a cut, not the set itself */
     frameBrain();   /* the frame is the whole box, whatever a cut leaves */
-    setEnds(ept && eoffs.length > 1 ? { pts: Float32Array.from(ept), offs: Uint32Array.from(eoffs) } : null);
+    setEnds(ept && eoffs.length > 1 ? { pts: Float32Array.from(ept), offs: Uint32Array.from(eoffs), bun: Uint16Array.from(ebun), dens: Float32Array.from(eden) } : null);
     cutRegions(cutBox(planes, 0));   /* the regions cut as the brain is (v12.59) */
     nv.drawScene();
   }
@@ -1303,16 +1412,15 @@ main.screen.one.land{ flex-direction:row; }
     brain.loading.catch(function(){ brain.loading = null; });   /* a later press tries again */
     return brain.loading;
   }
-  /* the ends take the streamlines' own look: their direction colours, thickness and dither */
+  /* the ends take the streamlines' own look: their colours, by direction or by bundle, thickness, dither, sides
+     and shade (dressFibers) */
   function dressEnds(){
     var b = brain.nv, em = brain.ends;
     if (!b || !em) return;
-    try{
-      b.setMeshProperty(em.id, "fiberLength", 1);   /* the shortest piece kept, in mm; nought would build nothing */
-      b.setMeshProperty(em.id, "fiberDither", 0.1);
-      b.setMeshProperty(em.id, "fiberRadius", tractRadius);
-      b.setMeshProperty(em.id, "fiberColor", "Local");
-    }catch(e){}
+    em.fiberLength = 1;   /* the shortest piece kept, in mm; nought would build nothing */
+    em.fiberRadius = tractRadius;
+    dressFibers(em, display ? display.sides : 5);
+    try{ em.updateMesh(b.gl); }catch(e){}
   }
   /* the ends as the cut leaves them, or none; shown while the streamlines are (v12.42) */
   function setEnds(band){
@@ -1320,11 +1428,8 @@ main.screen.one.land{ flex-direction:row; }
     if (!b || !em) return;
     brain.endsOn = false;
     if (band){
-      em.pts = band.pts;
-      em.offsetPt0 = band.offs;
-      em.fiberLengths = null;
       em.visible = true;
-      try{ em.updateMesh(b.gl); brain.endsOn = true; }catch(e){}
+      brain.endsOn = setFibers(b.gl, em, band.pts, band.offs, band.bun, display ? display.sides : 5, band.dens);
     }
     em.visible = !!(tract.on && brain.endsOn);
   }
@@ -1549,34 +1654,23 @@ main.screen.one.land{ flex-direction:row; }
   function applyRegions(){
     var nv = byKey.Ren, mesh = nv && nv.meshes && nv.meshes[0];
     if (!mesh || !whole || !regionBox) return;
+    refresh(true);   /* the set drawn again (rebuildDisplay), the line under the rows, the regions lit, the cuts */
+  }
+  /* the line under the rows: how many streamlines the pick leaves, in the bundles shown (v12.63) */
+  function regionLine(rids){
+    if (!regionBox) return;
     var N = streamlineCount(), entries = regionBox.entries();
     var mismatch = !!(regionIndex && regionIndex.streamlines !== N);
-    var ids = mismatch ? null : regionIds();
-    if (!ids) shown = null;
-    else {
-      var P = whole.pts, O = whole.off, total = 0, j, s, i;
-      for (j = 0; j < ids.length; j++) total += O[ids[j] + 1] - O[ids[j]];
-      var pts = new Float32Array(total * 3), offs = new Uint32Array(ids.length + 1), m = 0;
-      for (j = 0; j < ids.length; j++){
-        s = ids[j];
-        for (i = O[s]; i < O[s + 1]; i++){ pts[m++] = P[i * 3]; pts[m++] = P[i * 3 + 1]; pts[m++] = P[i * 3 + 2]; }
-        offs[j + 1] = m / 3;
-      }
-      shown = { pts: pts, off: offs };
-    }
-    /* the line under the rows */
-    var text = "";
+    var some = hiddenAny(), n = display ? display.n : 0, text = "";
     if (!entries.length) text = "";
     else if (regionIndexWhy) text = regionIndexWhy;
     else if (mismatch) text = "The region index was built for another tractogram; run scripts/make_tract_regions.py again.";
     else if (!regionIndex) text = "Reading the region index\u2026";
-    else if (!ids.length) text = regionBox.link() === "connecting" && entries.length >= 2
+    else if (!rids || !rids.length) text = regionBox.link() === "connecting" && entries.length >= 2
       ? "No streamline in the atlas runs between them" : "No streamline in the atlas runs through " + (entries.length > 1 ? "them" : "it");
-    else text = fmt(ids.length) + " of " + fmt(N) + " streamlines";
+    else if (!n) text = "None of them in the bundles shown";
+    else text = fmt(n) + " of " + fmt(N) + " streamlines" + (some ? ", in the bundles shown" : "");
     regionBox.count(text);
-    lightRegions();
-    paintBrainRegions();
-    applyCut(lastPlanes);   /* the set is read again through the cuts, whole or cut as they stand */
   }
   /* the highlighted regions in the brain itself (v12.62, at the owner's word): the AAL volume laid in the brain's
      viewer as the 3D Region Atlas lays it in its 3D view, each highlighted region painted in its colour and the rest
@@ -1702,6 +1796,521 @@ main.screen.one.land{ flex-direction:row; }
     keptRegions = null;
   }
 
+  /* ── the bundles (v12.63, at the owner's word) ──
+     The file names a bundle for every streamline (hcp1065.trx's groups/, 87 of them, each a side of one of the 46
+     bundles assets/tracts/hcp1065-bundles.js names), so the page can draw them as the professional tools do: By
+     bundle, under Bundles in the box, gives each bundle a colour of its own in place of the direction (NiiVue's
+     fiberGroupColormap, the mesh's groups rebuilt for whatever is drawn, so a cut or a pick keeps them); the list
+     shows or hides each side of each bundle, each system and all of them, a press on a name shows that bundle
+     alone; and a tap on a fibre names its bundle in a small window by the finger (pickAt projects the points drawn
+     through the viewer's own camera and takes the nearest the eye under the finger). Every piece the cuts leave
+     carries its streamline's bundle (tkBun on the mesh, the groups made from it), and so do the ends.
+     The set drawn is smoothed too (v12.63): each streamline of the file is 24 points, 2 to 6.5 mm apart, so the
+     points are joined by Catmull-Rom curves, two to four points to a step as the set's size allows, and the tubes
+     drawn with more sides, inside a budget of tube vertices no larger than the whole tractogram's as v12.62 drew
+     it, so a phone does no more work than before and a pick of a few hundred streamlines is drawn smooth and
+     round; and the streamlines are shaded darker where they crowd (NiiVue's fiberOcclusion, its density map made
+     again whenever the points change), which reads as depth. */
+  var NO_BUNDLE = 65535;
+  var TUBE_BUDGET = 3.0e6;   /* points × sides: 580,968 × 5, the whole tractogram's tubes */
+  var CROWD_SHADE = 0.4;     /* NiiVue's fiberOcclusion */
+  var bundles = { groups: [], of: null, hidden: {}, colour: "direction", cmap: null };
+  /* the groups the file names, in the list's order (each bundle's left, right or midline), and each streamline's */
+  function readBundles(mesh){
+    var C = whole.off.length - 1, of = new Uint16Array(C).fill(NO_BUNDLE), order = [];
+    var src = mesh && Array.isArray(mesh.groups) ? mesh.groups : [];
+    if (src.length && window.MN_BUNDLES){
+      var byId = {};
+      src.forEach(function(g){ if (g && g.vals) byId[String(g.id)] = g; });
+      MN_BUNDLES.LIST.forEach(function(b){
+        ["L", "R", ""].forEach(function(side){
+          var id = side ? b.base + "_" + side : b.base;
+          if (byId[id]){ order.push({ id: id, bundle: b, side: side, src: byId[id] }); delete byId[id]; }
+        });
+      });
+      /* a group the list does not know keeps its own id for a name */
+      Object.keys(byId).forEach(function(id){
+        order.push({ id: id, bundle: { base: id, name: id.replace(/_/g, " "), system: "other", joins: "", colour: "#9A9A9A" }, side: "", src: byId[id] });
+      });
+      order.forEach(function(g, k){
+        var v = g.src.vals, count = 0;
+        for (var i = 0; i < v.length; i++){ var s = v[i]; if (s >= 0 && s < C && of[s] === NO_BUNDLE){ of[s] = k; count++; } }
+        g.count = count;
+        g.rgb = hexToRgb(g.bundle.colour);
+        delete g.src;
+      });
+    }
+    bundles.groups = order;
+    bundles.of = of;
+    bundles.cmap = order.length ? {
+      R: order.map(function(g){ return g.rgb[0]; }), G: order.map(function(g){ return g.rgb[1]; }),
+      B: order.map(function(g){ return g.rgb[2]; }), A: order.map(function(){ return 255; }),
+      I: order.map(function(g, k){ return k; })
+    } : null;
+  }
+  function hiddenAny(){ for (var k in bundles.hidden) if (bundles.hidden[k]) return true; return false; }
+  function hiddenIds(){ return bundles.groups.filter(function(g){ return bundles.hidden[g.id]; }).map(function(g){ return g.id; }); }
+  /* the groups as the viewer reads them, for a set whose pieces carry these bundles */
+  function groupsFrom(bun){
+    var G = bundles.groups.length, count = new Uint32Array(G), at = new Uint32Array(G), k, b;
+    if (!bun || !G) return [];
+    for (k = 0; k < bun.length; k++){ b = bun[k]; if (b < G) count[b]++; }
+    var lists = []; for (b = 0; b < G; b++) lists.push(new Uint32Array(count[b]));
+    for (k = 0; k < bun.length; k++){ b = bun[k]; if (b < G) lists[b][at[b]++] = k; }
+    return bundles.groups.map(function(g, i){ return { id: g.id, vals: lists[i] }; });
+  }
+  /* a mesh of streamlines takes the page's look: by direction or by bundle, the sides, the dither and the shade */
+  function dressFibers(mesh, sides){
+    mesh.fiberColor = "Local";
+    /* by bundle only where the mesh's groups are made: the viewer draws nothing of a streamline in no group */
+    mesh.fiberGroupColormap = bundles.colour === "bundle" && bundles.cmap && mesh.groups && mesh.groups.length ? bundles.cmap : null;
+    mesh.fiberSides = sides || 5;
+    mesh.fiberDither = 0.1;
+    mesh.fiberOcclusion = CROWD_SHADE;
+  }
+  /* how crowded each point of a set is, the shade's measure, as NiiVue measures it (its createFiberDensityMap: the
+     points counted into a 64-cell grid over the tractogram's box, blurred twice along each axis, scaled from the
+     emptiest occupied cell to the fullest), worked out once for each set drawn and carried with every point a cut
+     keeps, so a cut costs no more than before and the shade holds still as the sliders move */
+  function densityFor(set){
+    if (set.density) return set.density;
+    var P = set.pts, A = P.length / 3, C = 64, CC = C * C, mn = whole.min, mx = whole.max;
+    var dens = new Float32Array(A);
+    var g = Math.max(mx[0] - mn[0], mx[1] - mn[1], mx[2] - mn[2]);
+    set.density = dens;
+    if (!(g > 0) || !A) return dens;
+    var half = g / (C - 1) / 2, k = (C - 1) / g, t0 = mn[0] - half, t1 = mn[1] - half, t2 = mn[2] - half;
+    var grid = new Float32Array(C * CC), cell = new Int32Array(A), p, r, i;
+    var at = function(v, t){ var c = Math.round((v - t) * k); return c < 0 ? 0 : c >= C ? C - 1 : c; };
+    for (p = 0, r = 0; p < A; p++, r += 3){
+      var c = at(P[r], t0) + at(P[r + 1], t1) * C + at(P[r + 2], t2) * CC;
+      cell[p] = c; grid[c]++;
+    }
+    var blur = function(src, step, n){
+      var out = new Float32Array(src.length);
+      for (var z = 0; z < C; z++) for (var y = 0; y < C; y++) for (var x = 0; x < C; x++){
+        var j = x + y * C + z * CC, q = step === 1 ? x : step === C ? y : z;
+        out[j] = q < 1 || q >= n - 1 ? src[j] : src[j - step] + 2 * src[j] + src[j + step];
+      }
+      return out;
+    };
+    for (i = 0; i < 2; i++){ grid = blur(grid, 1, C); grid = blur(grid, C, C); grid = blur(grid, CC, C); }
+    var hi = 0, lo = Infinity;
+    for (i = 0; i < grid.length; i++){ var v = grid[i]; if (v > 0){ if (v > hi) hi = v; if (v < lo) lo = v; } }
+    if (hi <= 1 || hi <= lo) return dens;
+    var span = hi - lo;
+    for (p = 0; p < A; p++) dens[p] = Math.max(0, grid[cell[p]] - lo) / span;
+    return dens;
+  }
+  /* the points a mesh draws, with each piece's bundle and each point's crowding (densityFor) */
+  function setFibers(gl, mesh, pts, off, bun, sides, dens){
+    mesh.pts = pts;
+    mesh.offsetPt0 = off;
+    mesh.fiberLengths = null;
+    mesh.fiberDensity = dens && dens.length >= pts.length / 3 ? dens : null;
+    mesh.tkBun = bun || null;
+    mesh.groups = groupsFrom(bun);
+    dressFibers(mesh, sides);
+    try{ mesh.updateMesh(gl); return true; }catch(e){ return false; }
+  }
+  /* the colours again, by direction or by bundle, on both meshes */
+  function recolour(){
+    var nv = byKey.Ren, mesh = nv && nv.meshes && nv.meshes[0];
+    if (mesh && mesh.offsetPt0){ dressFibers(mesh, mesh.fiberSides); try{ mesh.updateMesh(nv.gl); }catch(e){} }
+    if (brain.nv && brain.ends && brain.endsOn){ dressFibers(brain.ends, brain.ends.fiberSides); try{ brain.ends.updateMesh(brain.nv.gl); }catch(e){} }
+    if (nv) nv.drawScene();
+  }
+  function setColour(mode){
+    bundles.colour = mode === "bundle" && bundles.cmap ? "bundle" : "direction";
+    recolour();
+    paintBundles();
+    rememberSoon();
+  }
+
+  /* the set drawn: the streamlines through the highlighted regions, in the bundles shown, smoothed as finely as the
+     budget allows; kept as it is while nothing it is made from changes, so a refresh costs nothing then */
+  var displayKey = "";
+  function allStreamlines(){
+    var O = whole.off, C = O.length - 1, ids = [];
+    for (var s = 0; s < C; s++) if (O[s + 1] > O[s]) ids.push(s);
+    return ids;
+  }
+  function rebuildDisplay(){
+    if (!whole) return null;
+    var O = whole.off, P = whole.pts, of = bundles.of, rids = regionIds(), some = hiddenAny(), ids = null, s, k;
+    if (rids || some){
+      var vis = new Uint8Array(bundles.groups.length);
+      bundles.groups.forEach(function(g, i){ vis[i] = bundles.hidden[g.id] ? 0 : 1; });
+      var keep = function(x){ var b = of ? of[x] : NO_BUNDLE; return !some || (b !== NO_BUNDLE && vis[b]); };
+      ids = [];
+      if (rids){ for (k = 0; k < rids.length; k++) if (keep(rids[k])) ids.push(rids[k]); }
+      else { var C = O.length - 1; for (s = 0; s < C; s++) if (O[s + 1] > O[s] && keep(s)) ids.push(s); }
+    }
+    var pts0 = 0;
+    if (ids){ for (k = 0; k < ids.length; k++) pts0 += O[ids[k] + 1] - O[ids[k]]; } else pts0 = P.length / 3;
+    pts0 = Math.max(1, pts0);
+    var f = Math.max(1, Math.min(4, Math.floor(TUBE_BUDGET / (pts0 * 6))));
+    var sides = Math.max(5, Math.min(8, Math.floor(TUBE_BUDGET / (pts0 * f))));
+    /* the same set as before is left as it is */
+    var key = f + "/" + sides + "/" + (ids ? ids.length + ":" + idsHash(ids) : "all");
+    if (display && key === displayKey) return rids;
+    displayKey = key;
+    if (!ids && f === 1) display = { pts: P, off: O, bun: of, ids: null, n: streamlineCount(), f: 1, sides: sides };
+    else display = smoothSet(ids || allStreamlines(), f, sides);
+    return rids;
+  }
+  function idsHash(ids){
+    var h = 2166136261;
+    for (var k = 0; k < ids.length; k++){ h ^= ids[k]; h = Math.imul(h, 16777619); }
+    return (h >>> 0).toString(36);
+  }
+  /* Catmull-Rom through each streamline's points, f points to a step, the ends extended straight so the first and
+     the last steps curve as the rest do */
+  function smoothSet(ids, f, sides){
+    var O = whole.off, P = whole.pts, of = bundles.of, k, s, n, a, i, t, d;
+    var total = 0;
+    for (k = 0; k < ids.length; k++){ n = O[ids[k] + 1] - O[ids[k]]; if (n > 0) total += n < 3 || f === 1 ? n : (n - 1) * f + 1; }
+    var pts = new Float32Array(total * 3), off = new Uint32Array(ids.length + 1), bun = new Uint16Array(ids.length), m = 0;
+    var W = [];
+    for (t = 0; t < f; t++){
+      var u = t / f, u2 = u * u, u3 = u2 * u;
+      W.push([-0.5 * u3 + u2 - 0.5 * u, 1.5 * u3 - 2.5 * u2 + 1, -1.5 * u3 + 2 * u2 + 0.5 * u, 0.5 * u3 - 0.5 * u2]);
+    }
+    for (k = 0; k < ids.length; k++){
+      s = ids[k]; a = O[s]; n = O[s + 1] - a;
+      bun[k] = of ? of[s] : NO_BUNDLE;
+      if (n < 3 || f === 1){
+        for (i = 0; i < n * 3; i++) pts[m++] = P[a * 3 + i];
+      } else {
+        for (i = 0; i < n - 1; i++){
+          for (t = 0; t < f; t++){
+            var w = W[t];
+            for (d = 0; d < 3; d++){
+              var p1 = P[(a + i) * 3 + d], p2 = P[(a + i + 1) * 3 + d];
+              var p0 = i > 0 ? P[(a + i - 1) * 3 + d] : 2 * p1 - p2;
+              var p3 = i + 2 < n ? P[(a + i + 2) * 3 + d] : 2 * p2 - p1;
+              pts[m + d] = w[0] * p0 + w[1] * p1 + w[2] * p2 + w[3] * p3;
+            }
+            m += 3;
+          }
+        }
+        for (d = 0; d < 3; d++) pts[m + d] = P[(a + n - 1) * 3 + d];
+        m += 3;
+      }
+      off[k + 1] = m / 3;
+    }
+    return { pts: pts, off: off, bun: bun, ids: ids, n: ids.length, f: f, sides: sides };
+  }
+  /* everything that follows a change of the set: the set itself, the lines that count it, the regions drawn where
+     the regions changed, the bundles' list, and the cuts read again over it */
+  function refresh(regionsChanged){
+    if (!whole) return;
+    var rids = rebuildDisplay();
+    regionLine(rids);
+    if (regionsChanged && regionBox){ lightRegions(); paintBrainRegions(); }
+    paintBundles();
+    applyCut(lastPlanes);
+  }
+  function bundlesChanged(){ refresh(false); hidePickSoon(); rememberSoon(); }
+  /* one bundle alone, both its sides; again, every bundle */
+  function soloBase(){
+    var base = null, ok = true;
+    bundles.groups.forEach(function(g){
+      if (!ok || bundles.hidden[g.id]) return;
+      if (base === null) base = g.bundle.base; else if (base !== g.bundle.base) ok = false;
+    });
+    if (!ok || base === null) return null;
+    /* every side of it shown */
+    for (var i = 0; i < bundles.groups.length; i++){ var g = bundles.groups[i]; if (g.bundle.base === base && bundles.hidden[g.id]) return null; }
+    return base;
+  }
+  function soloBundle(base){
+    bundles.hidden = {};
+    bundles.groups.forEach(function(g){ if (g.bundle.base !== base) bundles.hidden[g.id] = true; });
+    bundlesChanged();
+  }
+  function showAllBundles(){ bundles.hidden = {}; bundlesChanged(); }
+
+  /* ── the list, under the regions in the box ── */
+  var bundleUI = null;
+  function sideWord(side){ return side === "L" ? "Left" : side === "R" ? "Right" : "Midline"; }
+  function systemOf(id){
+    var list = window.MN_BUNDLES ? MN_BUNDLES.SYSTEMS : [];
+    for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i];
+    return { id: id, label: "Other", note: "" };
+  }
+  function attachBundles(){
+    var host = document.getElementById("regionBox");
+    if (!host || bundleUI) return;
+    host.classList.add("region-box");
+    var el = function(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+    var part = el("section", "rail-part tb-part");
+    part.setAttribute("aria-label", "Bundles");
+    var h = el("h2", "with-switch"); h.appendChild(el("span", null, "Bundles"));
+    var all = el("button", "tier-switch"); all.type = "button";
+    h.appendChild(all); part.appendChild(h);
+    var colours = el("div", "rb-link tb-colour"); colours.setAttribute("role", "group"); colours.setAttribute("aria-label", "Colour the streamlines by");
+    var colourBtns = {};
+    [["direction", "By direction", "Each fibre coloured by the way it runs: red left to right, green front to back, blue up and down"],
+     ["bundle", "By bundle", "Each bundle in a colour of its own, as in the list"]].forEach(function(c){
+      var b = el("button", "ts-btn", c[1]); b.type = "button"; b.title = c[2]; b.setAttribute("aria-pressed", "false");
+      b.addEventListener("click", function(){ setColour(c[0]); });
+      colourBtns[c[0]] = b; colours.appendChild(b);
+    });
+    part.appendChild(colours);
+    var note = el("p", "rail-note rb-note");
+    note.textContent = bundles.groups.length
+      ? "Tap a fibre to name its bundle; press a bundle's name to show it alone, and again for every bundle."
+      : "This tractogram names no bundles.";
+    part.appendChild(note);
+    var list = el("div", "tb-list"), rows = {}, sides = {}, heads = {};
+    /* the bundles by system, each once, its sides beside it */
+    var bySys = {}, order = [];
+    bundles.groups.forEach(function(g){
+      var sys = g.bundle.system;
+      if (!bySys[sys]){ bySys[sys] = []; order.push(sys); }
+      var row = bySys[sys].filter(function(r){ return r.base === g.bundle.base; })[0];
+      if (!row){ row = { base: g.bundle.base, bundle: g.bundle, groups: [] }; bySys[sys].push(row); }
+      row.groups.push(g);
+    });
+    var sysOrder = (window.MN_BUNDLES ? MN_BUNDLES.SYSTEMS.map(function(s){ return s.id; }) : []).filter(function(id){ return bySys[id]; });
+    order.forEach(function(id){ if (sysOrder.indexOf(id) < 0) sysOrder.push(id); });
+    sysOrder.forEach(function(id){
+      var sys = systemOf(id), head = el("div", "rchip-head tb-head");
+      head.title = sys.note || "";
+      head.appendChild(el("span", null, sys.label));
+      head.appendChild(el("span", "n", String(bySys[id].length)));
+      var sw = el("button", "tier-switch"); sw.type = "button"; sw.setAttribute("data-sys", id);
+      sw.addEventListener("click", function(){
+        var groups = bundles.groups.filter(function(g){ return g.bundle.system === id; });
+        var allOn = groups.every(function(g){ return !bundles.hidden[g.id]; });
+        groups.forEach(function(g){ if (allOn) bundles.hidden[g.id] = true; else delete bundles.hidden[g.id]; });
+        bundlesChanged();
+      });
+      head.appendChild(sw); heads[id] = sw;
+      list.appendChild(head);
+      bySys[id].forEach(function(r){
+        var row = el("div", "tb-row"); row.setAttribute("data-base", r.base);
+        var dot = el("span", "dot"); dot.style.background = r.bundle.colour; row.appendChild(dot);
+        var name = el("button", "tb-name", r.bundle.name); name.type = "button";
+        name.title = (r.bundle.joins ? r.bundle.joins + ". " : "") + "Press to show it alone, and again for every bundle.";
+        name.addEventListener("click", function(){ if (soloBase() === r.base) showAllBundles(); else soloBundle(r.base); });
+        row.appendChild(name);
+        var sw2 = el("span", "tb-sides");
+        r.groups.forEach(function(g){
+          var b = el("button", "tb-side", g.side || "On"); b.type = "button"; b.setAttribute("data-id", g.id);
+          b.setAttribute("aria-label", r.bundle.name + (g.side ? ", " + sideWord(g.side).toLowerCase() : "") + ": shown");
+          b.addEventListener("click", function(){
+            if (bundles.hidden[g.id]) delete bundles.hidden[g.id]; else bundles.hidden[g.id] = true;
+            bundlesChanged();
+          });
+          sw2.appendChild(b); sides[g.id] = b;
+        });
+        row.appendChild(sw2);
+        list.appendChild(row); rows[r.base] = row;
+      });
+    });
+    part.appendChild(list);
+    var count = el("p", "rb-count tb-count"); count.setAttribute("aria-live", "polite"); part.appendChild(count);
+    all.addEventListener("click", function(){
+      if (hiddenAny()) bundles.hidden = {};
+      else bundles.groups.forEach(function(g){ bundles.hidden[g.id] = true; });
+      bundlesChanged();
+    });
+    host.appendChild(part);
+    bundleUI = { all: all, colours: colourBtns, rows: rows, sides: sides, heads: heads, count: count };
+    paintBundles();
+  }
+  function paintBundles(){
+    if (!bundleUI) return;
+    var G = bundles.groups, none = !G.length, solo = soloBase();
+    Object.keys(bundleUI.colours).forEach(function(k){
+      var b = bundleUI.colours[k];
+      b.setAttribute("aria-pressed", String(bundles.colour === k));
+      b.disabled = none && k === "bundle";
+    });
+    var shownN = 0;
+    G.forEach(function(g){
+      var on = !bundles.hidden[g.id], b = bundleUI.sides[g.id];
+      if (on) shownN++;
+      if (!b) return;
+      b.setAttribute("aria-pressed", String(on));
+      if (!g.side) b.textContent = on ? "On" : "Off";
+      b.setAttribute("aria-label", g.bundle.name + (g.side ? ", " + sideWord(g.side).toLowerCase() : "") + (on ? ": shown" : ": hidden"));
+    });
+    Object.keys(bundleUI.rows).forEach(function(base){
+      var gs = G.filter(function(g){ return g.bundle.base === base; });
+      var row = bundleUI.rows[base];
+      row.classList.toggle("off", gs.every(function(g){ return bundles.hidden[g.id]; }));
+      row.classList.toggle("solo", solo === base);
+    });
+    Object.keys(bundleUI.heads).forEach(function(id){
+      var gs = G.filter(function(g){ return g.bundle.system === id; });
+      var allOn = gs.every(function(g){ return !bundles.hidden[g.id]; });
+      var sw = bundleUI.heads[id];
+      sw.setAttribute("aria-pressed", String(allOn));
+      sw.setAttribute("aria-label", (allOn ? "Hide every " : "Show every ") + systemOf(id).label.toLowerCase() + " bundle");
+    });
+    var everyOn = !hiddenAny();
+    bundleUI.all.setAttribute("aria-pressed", String(everyOn && !none));
+    bundleUI.all.disabled = none;
+    bundleUI.all.setAttribute("aria-label", everyOn ? "Hide every bundle" : "Show every bundle");
+    bundleUI.all.title = everyOn ? "Hide every bundle" : "Show every bundle again";
+    var text = "";
+    if (!none){
+      text = shownN === G.length ? "All " + G.length + " bundles shown" : shownN + " of " + G.length + " bundles shown";
+      if (solo){ var sb = G.filter(function(g){ return g.bundle.base === solo; })[0]; if (sb) text = sb.bundle.name + " alone"; }
+      if (display) text += ", " + fmt(display.n) + " streamlines";
+    }
+    bundleUI.count.textContent = text;
+    paintPickSolo();
+  }
+
+  /* ── a tap on a fibre names its bundle ── */
+  var pickEl = document.getElementById("tkPick"), pickNow = null;
+  /* the meshes a tap can find: the streamlines while they show (not while the brain stands nearly solid over them),
+     and the ends standing out of a cut */
+  function pickMeshes(){
+    var out = [], nv = byKey.Ren, main = nv && nv.meshes && nv.meshes[0];
+    if (!tract.on) return out;
+    var solid = brain.on && brain.nv && brain.trans < 25;
+    if (main && main.visible && main.pts && !solid) out.push(main);
+    if (brain.ends && brain.ends.visible && brain.endsOn && brain.ends.pts) out.push(brain.ends);
+    return out;
+  }
+  function project(nv){
+    var c = nv.canvas.getBoundingClientRect();
+    var mvp = nv.calculateMvpMatrix(null, [0, 0, 0, 0], nv.scene.renderAzimuth, nv.scene.renderElevation)[0];
+    return { m: mvp, left: c.left, top: c.top, w: c.width, h: c.height };
+  }
+  /* the bundle drawn under a point of the window, nearest the eye, within a finger's width of it */
+  function pickAt(clientX, clientY, coarse){
+    var nv = byKey.Ren;
+    if (!nv || !bundles.groups.length) return null;
+    var pr = project(nv), M = pr.m, x = clientX - pr.left, y = clientY - pr.top, W = pr.w, H = pr.h;
+    var R = coarse ? 16 : 7, R2 = R * R, best = null, bestZ = Infinity;
+    pickMeshes().forEach(function(mesh){
+      var P = mesh.pts, n = P.length / 3;
+      for (var i = 0; i < n; i++){
+        var px = P[i * 3], py = P[i * 3 + 1], pz = P[i * 3 + 2];
+        var cw = M[3] * px + M[7] * py + M[11] * pz + M[15];
+        if (cw <= 0) continue;
+        var sx = ((M[0] * px + M[4] * py + M[8] * pz + M[12]) / cw + 1) * 0.5 * W;
+        var dx = sx - x; if (dx > R || dx < -R) continue;
+        var sy = (1 - (M[1] * px + M[5] * py + M[9] * pz + M[13]) / cw) * 0.5 * H;
+        var dy = sy - y; if (dx * dx + dy * dy > R2) continue;
+        var z = (M[2] * px + M[6] * py + M[10] * pz + M[14]) / cw;
+        if (z < bestZ){ bestZ = z; best = { mesh: mesh, i: i }; }
+      }
+    });
+    if (!best) return null;
+    var off = best.mesh.offsetPt0, lo = 0, hi = off.length - 2;
+    while (lo < hi){ var mid = (lo + hi + 1) >> 1; if (off[mid] <= best.i) lo = mid; else hi = mid - 1; }
+    var g = best.mesh.tkBun ? best.mesh.tkBun[lo] : NO_BUNDLE;
+    return g < bundles.groups.length ? bundles.groups[g] : null;
+  }
+  /* where a group's streamlines are drawn nearest the eye, in the window's coordinates, for a check */
+  function spotOf(id){
+    var nv = byKey.Ren, k = -1;
+    bundles.groups.forEach(function(g, i){ if (g.id === id) k = i; });
+    if (!nv || k < 0) return null;
+    var pr = project(nv), M = pr.m, best = null, bestZ = Infinity;
+    pickMeshes().forEach(function(mesh){
+      var P = mesh.pts, off = mesh.offsetPt0, bun = mesh.tkBun;
+      if (!bun) return;
+      for (var s = 0; s + 1 < off.length; s++){
+        if (bun[s] !== k) continue;
+        for (var i = off[s]; i < off[s + 1]; i++){
+          var px = P[i * 3], py = P[i * 3 + 1], pz = P[i * 3 + 2], cw = M[3] * px + M[7] * py + M[11] * pz + M[15];
+          if (cw <= 0) continue;
+          var sx = ((M[0] * px + M[4] * py + M[8] * pz + M[12]) / cw + 1) * 0.5, sy = (1 - (M[1] * px + M[5] * py + M[9] * pz + M[13]) / cw) * 0.5;
+          if (sx < 0.08 || sx > 0.92 || sy < 0.08 || sy > 0.92) continue;
+          var z = (M[2] * px + M[6] * py + M[10] * pz + M[14]) / cw;
+          if (z < bestZ){ bestZ = z; best = { x: pr.left + sx * pr.w, y: pr.top + sy * pr.h }; }
+        }
+      }
+    });
+    return best;
+  }
+  function paintPickSolo(){
+    if (!pickEl || !pickNow) return;
+    var b = document.getElementById("tkPickSolo");
+    var alone = soloBase() === pickNow.bundle.base;
+    b.textContent = alone ? "Show all" : "Alone";
+    b.title = alone ? "Every bundle again" : "This bundle alone, both its sides";
+  }
+  function hidePick(){
+    if (!pickEl || pickEl.hidden) { pickNow = null; return; }
+    pickNow = null;
+    pickEl.classList.remove("in");
+    clearTimeout(pickEl._leaving);
+    pickEl._leaving = setTimeout(function(){ if (!pickEl.classList.contains("in")) pickEl.hidden = true; }, 200);
+  }
+  /* the window goes with its bundle; otherwise its button says what a press would do now */
+  function hidePickSoon(){ if (pickNow && bundles.hidden[pickNow.id]) hidePick(); else paintPickSolo(); }
+  function showPick(g, clientX, clientY){
+    if (!pickEl) return;
+    var stage = pickEl.parentElement, sr = stage.getBoundingClientRect();
+    pickNow = g;
+    document.getElementById("tkPickDot").style.background = g.bundle.colour;
+    document.getElementById("tkPickName").textContent = g.bundle.name;
+    document.getElementById("tkPickWhere").textContent = sideWord(g.side) + " · " + systemOf(g.bundle.system).label + " · " + fmt(g.count || 0) + " streamlines";
+    document.getElementById("tkPickJoins").textContent = g.bundle.joins || "";
+    paintPickSolo();
+    clearTimeout(pickEl._leaving);
+    pickEl.hidden = false;
+    pickEl.classList.remove("in");
+    /* above the finger where there is room, below it where there is not, kept inside the stage */
+    var w = pickEl.offsetWidth, h = pickEl.offsetHeight, x = clientX - sr.left, y = clientY - sr.top, edge = 8;
+    var left = Math.max(edge, Math.min(sr.width - w - edge, x - w * 0.25));
+    var top = y - h - 18, below = top < edge;
+    if (below) top = Math.min(sr.height - h - edge, y + 22);
+    top = Math.max(edge, top);
+    pickEl.style.left = Math.round(left) + "px";
+    pickEl.style.top = Math.round(top) + "px";
+    pickEl.style.setProperty("--from", Math.round(x - left) + "px " + (below ? "0" : "100%"));
+    void pickEl.offsetWidth;
+    pickEl.classList.add("in");
+  }
+  /* a tap: what is under it named, or the window put away where nothing is */
+  function tapAt(clientX, clientY, type){
+    var g = pickAt(clientX, clientY, type === "touch" || type === "pen");
+    if (g) showPick(g, clientX, clientY); else hidePick();
+    return g ? g.id : null;
+  }
+  if (pickEl){
+    document.getElementById("tkPickX").addEventListener("click", hidePick);
+    document.getElementById("tkPickSolo").addEventListener("click", function(){
+      if (!pickNow) return;
+      if (soloBase() === pickNow.bundle.base) showAllBundles(); else soloBundle(pickNow.bundle.base);
+    });
+    document.addEventListener("keydown", function(e){ if (e.key === "Escape") hidePick(); });
+  }
+  /* a press that lets go where it went down, quickly and with one finger, is a tap; a drag puts the window away */
+  function wireTaps(stage, canvas){
+    var down = null, pressed = {};
+    var count = function(){ return Object.keys(pressed).length; };
+    stage.addEventListener("pointerdown", function(e){
+      pressed[e.pointerId] = true;
+      down = count() === 1 && e.target === canvas ? { x: e.clientX, y: e.clientY, t: performance.now(), id: e.pointerId, type: e.pointerType } : null;
+    }, {capture: true, passive: true});
+    stage.addEventListener("pointermove", function(e){
+      if (down && e.pointerId === down.id && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 8){ down = null; hidePick(); }
+    }, {capture: true, passive: true});
+    /* a finger lifted anywhere counts, so one lifted off the stage is not left pressed */
+    var up = function(e){
+      delete pressed[e.pointerId];
+      if (!down || e.pointerId !== down.id) return;
+      var d = down; down = null;
+      if (e.type !== "pointerup") return;
+      if (Math.hypot(e.clientX - d.x, e.clientY - d.y) > 8 || performance.now() - d.t > 600) return;
+      tapAt(e.clientX, e.clientY, d.type);
+    };
+    window.addEventListener("pointerup", up, {capture: true, passive: true});
+    window.addEventListener("pointercancel", up, {capture: true, passive: true});
+    stage.addEventListener("wheel", hidePick, {passive: true});
+  }
+
   /* ── the last state, kept on the device (v12.1, at the owner's word) ──
      the brain (v12.31) and its transparency, the streamlines (v12.42), their
      offset and thickness (v12.43), the cuts and the view, written a moment
@@ -1710,7 +2319,8 @@ main.screen.one.land{ flex-direction:row; }
      state kept before v12.42 (v 2) carried a colour, read no more, and a
      thickness, read again since v12.43. Since v12.59 the regions highlighted,
      the mirror toggle and the switch ride with them (v 6), and since v12.60
-     the Highlight the regions toggle, off unless it was left on. Since v12.61,
+     the Highlight the regions toggle, off unless it was left on, and since
+     v12.63 the bundles' colouring and the bundles hidden (v 7). Since v12.61,
      at the owner's word, the page opens as it does the first time, the brain
      on at 65 per cent transparency, the streamlines on and nothing sliced,
      whatever was left: restoreKept passes over the brain, the streamlines and
@@ -1725,12 +2335,13 @@ main.screen.one.land{ flex-direction:row; }
       var nv = byKey.Ren;
       try{
         localStorage.setItem("vn-tracts-last", JSON.stringify({
-          v: 6,
+          v: 7,
           brain: { on: brain.on, trans: brain.trans },
           tract: tract.on, sliceTract: sliceTract, offsetOn: offsetOn,
           radius: tractRadius, past: tractPast,
           regions: regionBox ? regionBox.keys() : [], mirror: regionBox ? regionBox.mirror() : true, link: regionBox ? regionBox.link() : "all",
           light: regionBox ? regionBox.light() : false,
+          bundles: { colour: bundles.colour, hidden: hiddenIds() },
           cuts: slice ? slice.state() : null,
           view: nv ? { az: nv.scene.renderAzimuth, el: nv.scene.renderElevation, zoom: zoom } : null
         }));
@@ -1773,6 +2384,12 @@ main.screen.one.land{ flex-direction:row; }
       if (regionBox) regionBox.set(kr.keys, { mirror: kr.mirror, link: kr.link, light: kr.light });
       else keptRegions = kr;
     }
+    /* the bundles' colouring and the bundles hidden (v12.63), as the regions are kept */
+    if (m.v >= 7 && m.bundles && typeof m.bundles === "object"){
+      bundles.colour = m.bundles.colour === "bundle" ? "bundle" : "direction";
+      bundles.hidden = {};
+      if (Array.isArray(m.bundles.hidden)) m.bundles.hidden.forEach(function(id){ if (typeof id === "string") bundles.hidden[id] = true; });
+    }
     var nv = byKey.Ren;
     if (nv && m.view){
       if (isFinite(m.view.az)) nv.scene.renderAzimuth = Number(m.view.az);
@@ -1805,9 +2422,19 @@ main.screen.one.land{ flex-direction:row; }
           var total = mesh.offsetPt0.length - 1;
           var cap = densityEl.value === "all" ? total : (Number(densityEl.value) || 5000);
           if (!ctx.format.lines) cap = Math.min(cap, 1500);
-          var sample = MN_EXPORT3D.sampleLines(mesh.pts, mesh.offsetPt0, cap);
+          var sample = MN_EXPORT3D.sampleLines(mesh.pts, mesh.offsetPt0, cap), vcol = null;
+          /* coloured by bundle while the page is (v12.63): each point its bundle's colour, sampled as the lines are */
+          if (bundles.colour === "bundle" && mesh.tkBun && bundles.groups.length){
+            var O2 = mesh.offsetPt0, bb = mesh.tkBun, cols = new Float32Array(mesh.pts.length);
+            for (var s2 = 0; s2 + 1 < O2.length; s2++){
+              var g2 = bundles.groups[bb[s2]], rgb2 = g2 ? g2.rgb : [154, 154, 154];
+              for (var p2 = O2[s2]; p2 < O2[s2 + 1]; p2++){ cols[p2 * 3] = rgb2[0]; cols[p2 * 3 + 1] = rgb2[1]; cols[p2 * 3 + 2] = rgb2[2]; }
+            }
+            vcol = Uint8Array.from(MN_EXPORT3D.sampleLines(cols, O2, cap).pts);
+          }
           parts.push(MN_EXPORT3D.lines(sample.pts, sample.offsets, {
-            name: "HCP1065 streamlines (" + sample.count + " of " + total + ")"
+            name: "HCP1065 streamlines (" + sample.count + " of " + total + (vcol ? ", coloured by bundle" : "") + ")",
+            vcol: vcol || undefined
           }));
         }
         /* the brain goes with them while it shows, as a surface drawn from the template for the file,
@@ -1880,6 +2507,15 @@ main.screen.one.land{ flex-direction:row; }
         }
       });
       attachSlice();
+      /* the bundles the file names, and the set drawn, dressed before the first tubes are built (v12.63) */
+      var first = byKey.Ren.meshes[0];
+      readBundles(first);
+      rebuildDisplay();
+      if (display){
+        first.tkSrc = display; first.tkBun = display.bun; first.groups = groupsFrom(display.bun);
+        first.fiberDensity = densityFor(display);
+        dressFibers(first, display.sides);
+      }
 
       wireViewControls();
       document.querySelectorAll(".mri-stage").forEach(function(stage){
@@ -1910,9 +2546,14 @@ main.screen.one.land{ flex-direction:row; }
       byKey.Ren.scene.renderElevation = HOME[1];
       applyZoom(zoom);
       restoreKept();          /* how the page was left, if it was left at all */
+      if (bundles.colour === "bundle") recolour();   /* left coloured by bundle (v12.63) */
       showBrain(brain.on);    /* on as it opens, unless it was left off (v12.36) */
       showTract(tract.on);    /* the streamlines likewise (v12.42) */
       attachRegions();        /* the region box, with the regions it was left with (v12.59) */
+      attachBundles();        /* and the bundles under it, as they were left (v12.63) */
+      refresh(false);
+      var renStage = document.querySelector('.view[data-box="Ren"] .mri-stage');
+      if (renStage) wireTaps(renStage, document.getElementById("tkRen"));   /* a tap names a bundle (v12.63) */
       keepReady = true;
       rememberSoon();
       instances.forEach(function(nv){ nv.drawScene(); });

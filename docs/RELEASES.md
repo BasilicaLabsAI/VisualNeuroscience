@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.63 — 29 October 2026 — Named bundles on the Tractography page, drawn smooth
+Commit · Name and colour the Tractography bundles, and draw the streamlines smooth and shaded
+
+The Tractography page now knows its bundles. The atlas names one for every streamline, 46 in all, from the arcuate fasciculus and the corpus callosum to the cranial nerves, and a new Bundles list under the regions in the box beside the view shows them by system: association, projection, commissural, cerebellar and the cranial nerves. By bundle gives each one a colour of its own in place of the direction colours; L and R show or hide each side, and a press on a name shows that bundle alone. Tap any fibre and a small window names its bundle, with its side, its system, how many streamlines it holds and what it joins, and Alone to see it by itself. The fewer streamlines you show, the finer they are drawn, smoothed into curves and rounder, and where fibres crowd they are shaded darker, so the depth of the tractogram reads at a glance. An exported model keeps the bundle colours.
+
 ## v12.62 — 28 October 2026 — The highlighted regions on the Tractography brain's cut face
-Commit · Paint the highlighted regions in the Tractography brain, so a cut shows them on its face as the atlas does
+Commit `786b279` · Paint the highlighted regions in the Tractography brain, so a cut shows them on its face as the atlas does
 
 On the Tractography page, a cut through the brain now shows the highlighted regions on its face in their colours, as the 3D Region Atlas does. The regions are painted in the brain itself and cut with it, so slicing across the amygdala or down the side of the hippocampus shows each region's outline where the cut passes. They show while Highlight the regions is on, at the brain's own transparency, so lowering Transparency makes the slice and its regions stronger.
 
