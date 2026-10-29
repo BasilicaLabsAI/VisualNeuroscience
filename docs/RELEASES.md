@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.68 — 29 October 2026 — The sharing card on the molecular viewer's dark backdrop
+Commit · Put the sharing card on the molecular viewer's dark backdrop
+
+The sharing card now wears the molecular viewer's dark backdrop, deep teal above and aubergine below, the night-time twin of the pale backdrop the App Store images stand on, in place of plain black. The words stay white and the brain mark keeps its corner.
+
 ## v12.67 — 29 October 2026 — The sharing card on the app's black
-Commit · Put the sharing card on the app's black, its words in white
+Commit `3adbd3e` · Put the sharing card on the app's black, its words in white
 
 The sharing card now stands on the app's own black, the ground the tractogram has in the iOS app and its store image, in place of the pale backdrop. The title and the heading line are white, iOS and web a quieter grey beneath them, and the brain mark keeps the bottom right corner.
 

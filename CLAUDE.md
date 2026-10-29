@@ -159,8 +159,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `shoot-play.js` it once named is not in the repository) carries it where the ring stood, its strapline alone at the
   foot's middle, as the sharing card did until v12.64 (since then, at the owner's word, the sharing card, `share.html`
   shot to `assets/social-card.jpg`, the `og:image` every page names with the `og:image:alt` to match, is the App Store
-  images' manner at 1200×630, on the app's black since v12.67, at the owner's word (their light backdrop by
-  `store-sell.js`'s own sums until then): the title Visual Neuroscience and,
+  images' manner at 1200×630, on the molecular viewer's dark backdrop since v12.68, at the owner's word, the dark
+  twin of their light one by `store-sell.js`'s own sums (`--c-extra` over `--c-cyto` of the viewer's dark theme, split
+  half way down, with the glow of three hundredths the viewer's shader adds), where their light backdrop stood until
+  v12.66 and the app's black for v12.67: the title Visual Neuroscience and,
   beneath it, the first store image's heading line, Human Brain Anatomy: Interactive 3D Brain Atlas, in Flux in
   white, under that, quieter, iOS and web (v12.65, at the owner's word), and at the right the tractogram of the iOS store image, Wiring System Tractogram, standing on the backdrop itself
   with its ground clear since v12.66, at the owner's word (framed on the app's black until then), the brain mark
