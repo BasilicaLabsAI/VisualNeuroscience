@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- written by scripts/i18n/build.py: every public page, and its Chinese twin where it has one -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://visualneuroscience.ai/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://visualneuroscience.ai/"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://visualneuroscience.ai/index.zh-hans"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://visualneuroscience.ai/"/>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/index.zh-hans</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://visualneuroscience.ai/"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://visualneuroscience.ai/index.zh-hans"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://visualneuroscience.ai/"/>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://visualneuroscience.ai/about"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://visualneuroscience.ai/about.zh-hans"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://visualneuroscience.ai/about"/>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/about.zh-hans</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://visualneuroscience.ai/about"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://visualneuroscience.ai/about.zh-hans"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://visualneuroscience.ai/about"/>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/brodmann</loc>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/hallucinations</loc>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/mcp</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://visualneuroscience.ai/mcp"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://visualneuroscience.ai/mcp.zh-hans"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://visualneuroscience.ai/mcp"/>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/mcp.zh-hans</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://visualneuroscience.ai/mcp"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://visualneuroscience.ai/mcp.zh-hans"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://visualneuroscience.ai/mcp"/>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/microanatomy</loc>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/molecular</loc>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/network-atlas</loc>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/posters</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://visualneuroscience.ai/posters"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://visualneuroscience.ai/posters.zh-hans"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://visualneuroscience.ai/posters"/>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/posters.zh-hans</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://visualneuroscience.ai/posters"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://visualneuroscience.ai/posters.zh-hans"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://visualneuroscience.ai/posters"/>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/practice</loc>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/privacy</loc>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/regions</loc>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/studies</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://visualneuroscience.ai/studies"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://visualneuroscience.ai/studies.zh-hans"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://visualneuroscience.ai/studies"/>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/studies.zh-hans</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://visualneuroscience.ai/studies"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://visualneuroscience.ai/studies.zh-hans"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://visualneuroscience.ai/studies"/>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/terms</loc>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/textbook</loc>
+  </url>
+  <url>
+    <loc>https://visualneuroscience.ai/tracts</loc>
+  </url>
+</urlset>

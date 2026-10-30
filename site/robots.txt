@@ -1,0 +1,2 @@
+# The sitemap lists every public page and, where it has one, its Simplified Chinese twin (scripts/i18n/build.py).
+Sitemap: https://visualneuroscience.ai/sitemap.xml

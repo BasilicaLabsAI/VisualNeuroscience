@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- i18n: written by scripts/i18n/build.py -->
+<meta name="vn-langs" content="en zh-hans">
+<script src="assets/i18n.js"></script>
+<script src="assets/i18n/zh-hans.js"></script>
+<link rel="alternate" hreflang="en" href="https://visualneuroscience.ai/studies">
+<link rel="alternate" hreflang="zh-Hans" href="https://visualneuroscience.ai/studies.zh-hans">
+<link rel="alternate" hreflang="x-default" href="https://visualneuroscience.ai/studies">
+<!-- /i18n -->
+<title>研究可视化 — VisualNeuroscience.AI</title>
+<meta name="description" content="透过脑图谱阅读已发表的神经科学研究：每项研究逐个脑区绘制在扫描图像上，并说明影像学的发现及尚无定论之处。">
+<!-- link previews. The card is built by site/share.html and rendered to
+     assets/social-card.jpg; og:image has to be absolute, so this origin is
+     the one thing to change if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="研究可视化 — VisualNeuroscience.AI">
+<meta property="og:description" content="透过脑图谱阅读已发表的神经科学研究：每项研究逐个脑区绘制在扫描图像上，并说明影像学的发现及尚无定论之处。">
+<meta property="og:url" content="https://visualneuroscience.ai/studies.zh-hans">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Visual Neuroscience 分享卡片：人脑解剖，交互式三维脑图谱，支持 iOS 与网页，旁边是一幅彩色的大脑纤维束图。">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="fonts/fonts.css">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+  --quiet:#8A8A8A;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+  --quiet:#8A8A8A;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  margin:0 0 3rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+a{ color:var(--ink); }
+svg{ display:block; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* masthead, shared with the rest of the site */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:1em; height:1em; flex:none; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{
+  font-family:var(--font-display); font-size:1.35rem;
+  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+}
+.title-strip .anno{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60);
+}
+
+.lede{
+  font-family:var(--font-serif); font-size:1.02rem; line-height:1.6;
+  margin:0 0 calc(var(--gap) * 1.6);
+}
+
+/* ── the shelf of studies ───────────────────────────────────────────────
+   A grid that reads correctly with one card and with a dozen: the columns
+   are sized, not divided, so a lone study sits at its natural width rather
+   than stretching across the page. */
+.shelf{
+  display:grid; gap:var(--gap);
+  grid-template-columns:repeat(auto-fill, minmax(330px, 420px));
+}
+.study{
+  border:1px solid var(--hair); background:var(--paper);
+  display:flex; flex-direction:column; text-decoration:none; color:var(--ink);
+}
+@media (hover: hover){ .study:hover{ text-decoration:none; } }
+@media (hover: hover){ .study:hover .study-body{ background:color-mix(in srgb, var(--ink) 6%, transparent); } }
+.study-fig{
+  border-bottom:1px solid var(--hair); background:#000000;
+  aspect-ratio:902 / 409; overflow:hidden; position:relative;
+}
+.study-fig img{ width:100%; height:100%; object-fit:cover; display:block; }
+.study-body{ padding:1rem 1.05rem 1.15rem; transition:background .2s ease; }
+.study-kicker{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60);
+}
+.study h2{
+  font-family:var(--font-display); font-weight:400;
+  font-size:1.24rem; line-height:1.15; letter-spacing:.01em; margin:.35rem 0 .45rem;
+}
+.study p{ font-size:.94rem; line-height:1.55; color:var(--ink-60); }
+.study .cite{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.82rem; color:var(--ink-35); margin-top:.7rem;
+}
+.study .go{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.24em; text-transform:uppercase; margin-top:.85rem;
+  display:inline-flex; align-items:center; gap:.45rem;
+}
+@media (hover: hover){ .study:hover .go{ text-decoration:underline; text-underline-offset:3px; } }
+
+/* a slot for what is not built yet, so the shelf reads as a shelf */
+.study.soon{ border-style:dashed; cursor:default; }
+.study.soon .study-fig{ background:none; display:flex; align-items:center; justify-content:center; }
+.study.soon .study-body{ background:none; }
+.study.soon h2, .study.soon p{ color:var(--ink-35); }
+
+.attrib{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.85rem; color:var(--ink-60);
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2rem;
+}
+
+/* ── what is planned but not built ──────────────────────────────────────
+   Small tiles rather than the full study card: thirteen empty cards at
+   that size would be a wall of dashed boxes pretending to be content.
+   Each says what the drug acts on, which is enough to show the section
+   has a shape without claiming any of it is written yet. */
+.drugs-sec{ margin-top:calc(var(--gap) * 3); }
+.drug-grid{
+  display:grid; gap:var(--gap); list-style:none; margin:0; padding:0;
+  grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));
+}
+.drug{
+  border:1px dashed var(--ink-35); padding:.85rem .9rem 1rem;
+  display:flex; flex-direction:column; min-width:0;
+}
+.drug-name{
+  font-family:var(--font-display); font-weight:400;
+  font-size:1.12rem; line-height:1.15; color:var(--ink);
+}
+.drug-sub{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.8rem; color:var(--ink-35); margin-top:.15rem; overflow-wrap:anywhere;
+}
+.drug-target{
+  font-family:var(--font-serif); font-size:.88rem; line-height:1.45;
+  color:var(--ink-60); margin-top:.5rem;
+}
+.drug-target sub{ font-size:.72em; }
+.drug-soon{
+  font-family:var(--font-brand); font-weight:500; font-size:.52rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-35);
+  margin-top:auto; padding-top:.85rem;
+}
+</style>
+<link rel="stylesheet" href="assets/i18n-zh-hans.css">
+</head>
+<body>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.zh-hans.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="网站">
+    <a href="regions.html">三维脑区图谱</a>
+    <a href="brodmann.html">布罗德曼分区图谱</a>
+    <a href="microanatomy.html">显微解剖</a>
+    <a href="molecular.html">分子</a>
+    <a href="network-atlas.html">脑网络图谱</a>
+    <a href="tracts.html">纤维束成像</a>
+    <a href="studies.zh-hans.html" aria-current="page">研究可视化</a>
+    <a href="textbook.html">数字教科书</a>
+    <a href="practice.html">练习</a>
+    <a href="about.zh-hans.html">关于</a>
+    <span class="nav-tools"><button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">深色</span></button></span>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<div class="title-strip">
+  <h1 class="name">研究可视化</h1>
+  <span class="anno">已发表的研究，绘制在大脑上</span>
+</div>
+
+<p class="lede">透过脑图谱阅读论文。每项研究都取其作者提及的脑区，绘制在 MNI152 扫描图像上它们实际所在的位置，并列出影像学发现了什么、又有哪些问题尚无定论。结论附带其局限。</p>
+
+<h2 class="sec-h">论文 <small>绘制在大脑上</small></h2>
+
+<div class="shelf">
+
+  <a class="study" href="hallucinations.html">
+    <div class="study-fig"><img src="assets/studies/hallucinations.png" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+    <div class="study-body">
+      <div class="study-kicker">精神分裂症 · 听觉</div>
+      <h2>精神分裂症的幻觉</h2>
+      <p>听觉、语言和控制系统中的十个脑区绘制在扫描图像上，可在正常听觉与幻觉状态之间切换。控制系统减弱时，过度活跃的知觉区域随之凸显。</p>
+      <div class="cite">Boksa P, “On the neurobiology of hallucinations,” <em>J Psychiatry Neurosci</em> 2009;34(4):260–262.</div>
+      <div class="go">打开研究 →</div>
+    </div>
+  </a>
+
+  <div class="study soon" aria-hidden="true">
+    <div class="study-fig"></div>
+    <div class="study-body">
+      <div class="study-kicker">下一项</div>
+      <h2>更多即将推出</h2>
+      <p>更多论文将以同样方式绘制。</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="attrib">这些页面为学习而概述已发表的研究，并非论文原文，每项都附有原文链接。脑区按其所在的 AAL-116 分区绘制；当论文所指的功能区与图谱所绘的解剖分区并非同一对象时，这只是近似。每个研究页面都会注明哪些脑区是精确的，哪些是近似的。<a href="about.zh-hans.html">关于</a> · <a href="privacy.html">隐私与支持</a> · <a href="terms.html">使用条款</a>。</p>
+
+<section class="drugs-sec" aria-labelledby="drugs-h">
+  <h2 class="sec-h" id="drugs-h">药物作用 <small>即将推出</small></h2>
+  <p class="lede">以同样的方式呈现药理学：药物结合在哪里、由哪些受体介导，以及这些受体在大脑哪些区域最为密集——直接绘制在扫描图像上，而不只是文字描述。本站已有的受体密度数据将是这一部分的基础。</p>
+  <ul class="drug-grid">
+      <li class="drug">
+        <div class="drug-name">LSD</div>
+        <div class="drug-sub">麦角酸二乙酰胺</div><div class="drug-target">5-HT<sub>2A</sub> 激动剂</div>
+        <div class="drug-soon">即将推出</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">裸盖菇素</div>
+        <div class="drug-sub">经由脱磷酸裸盖菇素</div><div class="drug-target">5-HT<sub>2A</sub> 激动剂</div>
+        <div class="drug-soon">即将推出</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">DMT</div>
+        <div class="drug-sub">N,N-二甲基色胺</div><div class="drug-target">5-HT<sub>2A</sub> 激动剂</div>
+        <div class="drug-soon">即将推出</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">MDMA</div>
+        <div class="drug-sub">3,4-亚甲二氧基甲基苯丙胺</div><div class="drug-target">5-羟色胺释放剂</div>
+        <div class="drug-soon">即将推出</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">氯胺酮</div>
+        <div class="drug-target">NMDA 受体拮抗剂</div>
+        <div class="drug-soon">即将推出</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">酮色林</div>
+        <div class="drug-target">5-HT<sub>2A</sub> 拮抗剂</div>
+        <div class="drug-soon">即将推出</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">对乙酰氨基酚</div>
+        <div class="drug-sub">又名扑热息痛</div><div class="drug-target">作用机制尚无定论</div>
+        <div class="drug-soon">即将推出</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">可卡因</div>
+        <div class="drug-target">多巴胺转运体阻滞剂</div>
+        <div class="drug-soon">即将推出</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">尼古丁</div>
+        <div class="drug-target">烟碱型乙酰胆碱受体激动剂</div>
+        <div class="drug-soon">即将推出</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">大麻</div>
+        <div class="drug-sub">经由 THC（四氢大麻酚）</div><div class="drug-target">CB<sub>1</sub> 部分激动剂</div>
+        <div class="drug-soon">即将推出</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">槟榔</div>
+        <div class="drug-sub">经由槟榔碱</div><div class="drug-target">毒蕈碱型乙酰胆碱受体激动剂</div>
+        <div class="drug-soon">即将推出</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">芬太尼</div>
+        <div class="drug-target">μ 阿片受体激动剂</div>
+        <div class="drug-soon">即将推出</div>
+      </li>
+      <li class="drug">
+        <div class="drug-name">咖啡因</div>
+        <div class="drug-target">腺苷 A<sub>1</sub>/A<sub>2A</sub> 受体拮抗剂</div>
+        <div class="drug-soon">即将推出</div>
+      </li>
+  </ul>
+  <p class="attrib">这里暂时还没有内容。以下列出本部分将涵盖的药物，以明确说明计划，而非暗示已有。与研究页面一样，每种药物都会介绍其作用机制的已知部分以及证据的边界——仅供学习，不构成任何用药建议。</p>
+</section>
+
+
+</main>
+
+<script>
+"use strict";
+/* theme, shared with the rest of the site */
+const themeBtn = document.getElementById("themeBtn");
+const themeLbl = document.getElementById("themeLbl");
+if (document.documentElement.getAttribute("data-theme") === "dark"){
+  themeLbl.textContent = "Light";
+  themeBtn.setAttribute("aria-pressed", "true");
+}
+themeBtn.addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.getAttribute("data-theme") === "dark";
+  if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+  else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+  themeBtn.setAttribute("aria-pressed", String(!dark));
+  try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+});
+</script>
+
+<script src="assets/native.js"></script>
+<script src="assets/navbar.js"></script>
+<script src="assets/newsletter.js" defer></script>
+<script src="assets/diagram-gestures.js"></script>
+<script>
+/* the study figures speak the same gestures as every diagram on the site:
+   pinch to zoom, two fingers to pan, ctrl+wheel and drag for a desktop */
+if (window.MN_DIAG){
+  document.querySelectorAll(".study-fig img").forEach(function(img){
+    MN_DIAG.attach({ img: img });
+  });
+}
+</script>
+<script src="assets/firebase-config.js"></script>
+<script type="module" src="assets/auth-ui.js"></script>
+</body>
+</html>

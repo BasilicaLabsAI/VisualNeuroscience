@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- i18n: written by scripts/i18n/build.py -->
+<meta name="vn-langs" content="en zh-hans">
+<script src="assets/i18n.js"></script>
+<script src="assets/i18n/zh-hans.js"></script>
+<link rel="alternate" hreflang="en" href="https://visualneuroscience.ai/">
+<link rel="alternate" hreflang="zh-Hans" href="https://visualneuroscience.ai/index.zh-hans">
+<link rel="alternate" hreflang="x-default" href="https://visualneuroscience.ai/">
+<!-- /i18n -->
+<title>VisualNeuroscience.AI — 在浏览器中绘制大脑图谱</title>
+<meta name="description" content="首页：三维脑区图谱、布罗德曼分区图谱、受体密度、纤维束成像、脑网络图谱，以及绘制在大脑上的已发表研究——全部在浏览器中运行，免费且无需安装。">
+<!-- link previews. The card is built by site/share.html and rendered to
+     assets/social-card.jpg; og:image has to be absolute, so this origin is
+     the one thing to change if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="VisualNeuroscience.AI — 在浏览器中绘制大脑图谱">
+<meta property="og:description" content="首页：三维脑区图谱、布罗德曼分区图谱、受体密度、纤维束成像、脑网络图谱，以及绘制在大脑上的已发表研究——全部在浏览器中运行，免费且无需安装。">
+<meta property="og:url" content="https://visualneuroscience.ai/index.zh-hans">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Visual Neuroscience 分享卡片：人脑解剖，交互式三维脑图谱，支持 iOS 与网页，旁边是一幅彩色的大脑纤维束图。">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-itunes-app" content="app-id=6805618686">
+<link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="fonts/fonts.css">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();
+/* The native shells inject Capacitor before any page script runs, so the app
+   can be told apart here too, before the top line is drawn. */
+(function(){try{var c=window.Capacitor;if(c&&c.isNativePlatform&&c.isNativePlatform())document.documentElement.setAttribute("data-native","");}catch(e){}})();</script>
+<style>
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  margin:0 0 3rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+a{ color:var(--ink); }
+svg{ display:block; }
+img{ max-width:100%; height:auto; display:block; }
+
+.skip{
+  position:absolute; left:-999px; top:8px; z-index:99;
+  background:var(--ink); color:var(--paper); padding:.5rem 1rem;
+  font-family:var(--font-brand); font-size:.8rem; letter-spacing:.1em;
+}
+.skip:focus{ left:8px; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* masthead, shared with the rest of the site */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.85rem,5.4vw,3.4rem); }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:1em; height:1em; flex:none; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+/* ── dateline ───────────────────────────────────────────────────────────
+   The rule under the masthead that a newspaper carries its edition on.
+   Three cells: what it costs, what it is, what it is built from. */
+.dateline{
+  display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between;
+  gap:.4rem 1.2rem; border-top:1px solid var(--hair); border-bottom:1px solid var(--hair);
+  padding:.6rem .2rem; margin-bottom:var(--gap);
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.26em; text-transform:uppercase; color:var(--ink-60);
+}
+.dateline .mid{
+  font-family:var(--font-serif); font-style:italic; font-weight:400;
+  font-size:.95rem; letter-spacing:0; text-transform:none; color:var(--ink);
+}
+/* the web points to the App Store and, under it, to the MCP server, which
+   lets the AI of a person's choice ask the atlas questions; the app,
+   already installed, names its scans in place of the store and keeps the
+   server line */
+.dateline .dl-links{ display:inline-flex; flex-direction:column; align-items:flex-end; gap:.35rem; }
+@media (max-width:640px){ .dateline .dl-links{ align-items:center; } }
+.dateline .dl-app, .dateline .dl-mcp{ color:var(--ink); text-decoration:none; border-bottom:1px solid var(--hair); }
+.dateline .dl-app:hover, .dateline .dl-mcp:hover{ border-bottom-color:var(--ink); }
+:root:not([data-native]) .dateline .dl-scan,
+:root[data-native] .dateline .dl-app{ display:none; }
+
+/* ── the mosaic ─────────────────────────────────────────────────────────
+   Twelve columns on desktop, so the boxes can take unequal widths the way
+   columns on a front page do: a lead that runs two rows deep, a pair of
+   half-width sections beside it, then a narrow and a wide one below. On a
+   phone the whole thing collapses to a single box per line. The order is
+   the owner's since v12.51: the 3D Region Atlas, Tractography, Molecular,
+   Microanatomy, the Brodmann Area Atlas and, last, the Network Atlas; dense
+   placement keeps the tractography and molecular boxes beside the lead on
+   wider screens, with the cell, the Brodmann and the network boxes beneath
+   (the app's Atlases tab and the Android menu read the same order). */
+.mosaic{
+  display:grid; gap:var(--gap); grid-auto-flow:row dense;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+}
+.m-atlas  { grid-column:span 7; grid-row:span 2; }
+.m-brodmann{ grid-column:span 12; }
+.m-network{ grid-column:span 12; }
+.m-tracts { grid-column:span 5; }
+.m-studies{ grid-column:span 12; }
+.m-cells  { grid-column:span 12; }
+.m-molecular{ grid-column:span 5; }
+.m-practice{ grid-column:span 6; }
+.m-textbook{ grid-column:span 6; }
+.m-posters{ grid-column:span 12; }
+.m-mcp    { grid-column:span 12; }
+.m-soon   { grid-column:span 12; }
+.m-about  { grid-column:span 12; }
+.m-channels{ grid-column:span 12; }
+.m-ledger { grid-column:span 12; }
+
+/* ── the three hubs ─────────────────────────────────────────────────────
+   On the website the mosaic is three pages of boxes, as the app's Atlases,
+   Library and About tabs are (Shell.swift; the island's tabs in navbar.js
+   open them): the six atlases with the figures beneath; under #library the
+   papers, the book and the posters, the book and the posters side by side
+   where the atlases pair up; and under #about the MCP server, what is
+   coming, the developer's message and the channels. Practice has a tab of
+   its own, so its box shows on none. In the Android app, whose bar lists
+   the sections, the whole mosaic shows. */
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-studies,
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-textbook,
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-posters,
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-practice,
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-mcp,
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-soon,
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-about,
+:root:not([data-native]) .mosaic:not(.hub-library):not(.hub-about) > .m-channels{ display:none; }
+.mosaic.hub-library > :not(.m-studies):not(.m-textbook):not(.m-posters){ display:none; }
+.mosaic.hub-about > :not(.m-mcp):not(.m-soon):not(.m-about):not(.m-channels){ display:none; }
+.mosaic.hub-library .m-posters{ grid-column:span 6; grid-template-columns:minmax(0,1fr); }
+.mosaic.hub-library .m-posters .plate{ order:-1; }
+
+/* ── a box ──────────────────────────────────────────────────────────────
+   Hairline rule, kicker, display headline, standfirst, then the figure.
+   The whole box is the link; the arrow is only a signpost. */
+.box{
+  border:1px solid var(--hair); background:var(--paper); color:var(--ink);
+  text-decoration:none; display:flex; flex-direction:column; min-width:0;
+  padding:clamp(16px,1.7vw,24px);
+  transition:background .18s ease;
+}
+@media (hover: hover){ a.box:hover{ text-decoration:none; background:color-mix(in srgb, var(--ink) 7%, transparent); } }
+@media (hover: hover){ a.box:hover .go{ text-decoration:underline; text-underline-offset:3px; } }
+
+.kicker{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.26em; text-transform:uppercase; color:var(--ink-60);
+}
+.box h2{
+  font-family:var(--font-display); font-weight:400; letter-spacing:.01em;
+  font-size:1.5rem; line-height:1.1; margin:.4rem 0 .5rem;
+}
+.m-atlas h2{ font-size:clamp(1.9rem,3vw,2.9rem); }
+.box p{ font-size:.95rem; line-height:1.55; color:var(--ink-60); }
+.m-atlas p{ font-size:1.02rem; }
+.box .meta{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-35);
+  border-top:1px solid var(--ink-35); padding-top:.55rem; margin-top:.85rem;
+}
+.box .go{
+  font-family:var(--font-brand); font-weight:500; font-size:.6rem;
+  letter-spacing:.24em; text-transform:uppercase;
+  margin-top:auto; padding-top:.9rem;
+  display:inline-flex; align-items:center; gap:.45rem;
+}
+
+/* the figure. Each box shows a capture of what its own page actually draws,
+   taken from the live page rather than drawn by hand, so the front page can
+   only ever promise what the site delivers. They are renders on black, so
+   they sit on a plate of their own rather than on the paper. */
+.fig{
+  margin:1rem 0 .2rem; display:flex; align-items:center; justify-content:center;
+  flex:1 1 auto; min-height:0;
+}
+.shot{
+  display:block; width:100%; overflow:hidden;
+  border:1px solid var(--ink-35); background:#000000;
+}
+.shot img{ width:100%; height:auto; display:block; }
+/* Every picture has a twin for the light theme, drawn on the paper (the
+   atlas's by app/scripts/shoot-home-atlas.js, the rest by
+   shoot-home-pictures.js), and the plate it sits on follows the paper. The
+   twin not shown is not fetched until the theme turns to it. */
+.shot .for-light, .plate .for-light{ display:none; }
+:root:not([data-theme="dark"]) .shot.themed, :root:not([data-theme="dark"]) .plate.themed{ background:var(--paper); }
+:root:not([data-theme="dark"]) .shot.themed .for-dark, :root:not([data-theme="dark"]) .plate.themed .for-dark{ display:none; }
+:root:not([data-theme="dark"]) .shot.themed .for-light, :root:not([data-theme="dark"]) .plate.themed .for-light{ display:block; }
+/* the lead box is as tall as the two beside it; with a short standfirst
+   the figure follows the text and the slack sits beneath it */
+.m-atlas .fig{ margin-top:1.4rem; align-items:flex-start; }
+
+
+/* the ring is the mark itself, drawn on nothing, so it needs no plate */
+
+/* ── rows in a box ──────────────────────────────────────────────────────
+   The Coming soon box names what is on its way, a name over a line each,
+   nothing to press; the Channels box lists where to follow and write, each
+   a link with its handle and an arrow. Both are set as the app sets the
+   same rows: a hairline over each, the name in the brand face, the line in
+   the serif. */
+.soon-list, .chan-list{ list-style:none; margin:.9rem 0 0; padding:0; }
+.soon-list li, .chan-list a{
+  display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:baseline; column-gap:.8rem;
+  padding:.7rem 0 .75rem; border-top:1px solid var(--ink-35);
+}
+.chan-list a{ color:var(--ink); text-decoration:none; }
+.soon-list b, .chan-list b{
+  grid-column:1; font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink);
+}
+.soon-list span, .chan-list span{ grid-column:1; font-size:.95rem; line-height:1.5; color:var(--ink-60); margin-top:.15rem; }
+.chan-list i{ grid-column:2; grid-row:1 / span 2; font-style:normal; font-family:var(--font-brand); color:var(--ink); }
+@media (hover: hover){ .chan-list a:hover b{ text-decoration:underline; text-underline-offset:3px; } }
+.chan-list a:active{ opacity:.7; }
+
+/* the wide box lays its figure beside the text rather than above it */
+.box-h{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(16px,1.7vw,26px); align-items:stretch; }
+.box-h .side{ display:flex; flex-direction:column; min-width:0; }
+.box-h .plate{
+  border:1px solid var(--ink-35); background:#000000; overflow:hidden;
+  width:100%; aspect-ratio:902 / 409; align-self:center;
+}
+.box-h .plate img{ width:100%; height:100%; object-fit:contain; }
+
+/* the server has no picture to show, so its plate shows what an assistant
+   is handed: the address to add and the nine tools behind it */
+.m-mcp .mcp-plate{
+  aspect-ratio:auto; display:flex; flex-direction:column; justify-content:center; gap:.85rem;
+  padding:clamp(16px,2.2vw,30px); color:#FFFFFF;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.8rem; line-height:1.55;
+}
+.m-mcp .mcp-url{ font-size:clamp(.78rem,.6rem + .6vw,1.2rem); overflow-wrap:anywhere; }
+.m-mcp .mcp-tools{ color:#A9A9A9; overflow-wrap:anywhere; }
+/* the maker in the whole frame the About page draws: the engraving behind
+   the photograph and the ribbon across its foot, in the frame's own
+   colours in both themes */
+.m-about .about-face{ align-self:center; justify-self:center; width:min(230px, 70%); }
+.m-about .about-face .frame{ position:relative; aspect-ratio:.82078; }
+.m-about .about-face .frame > img{ position:absolute; display:block; }
+.m-about .about-face .engraving, .m-about .about-face .ribbon{ inset:0; width:100%; height:100%; }
+.m-about .about-face .photo{ left:3.137%; top:3.099%; width:93.724%; height:92.344%; object-fit:contain; }
+
+/* ── the ledger ─────────────────────────────────────────────────────────
+   The strip of figures across the foot of the mosaic. */
+.ledger{
+  display:grid; grid-template-columns:repeat(5,minmax(0,1fr));
+  border:1px solid var(--hair);
+}
+.ledger div{
+  padding:clamp(14px,1.5vw,20px); border-left:1px solid var(--hair); min-width:0;
+}
+.ledger div:first-child{ border-left:0; }
+.ledger .n{
+  font-family:var(--font-brand); font-weight:500; font-variant-numeric:tabular-nums;
+  font-size:clamp(1.5rem,2.6vw,2.3rem); line-height:1;
+}
+.ledger .k{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60); margin-top:.5rem;
+}
+
+.colophon{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.85rem; color:var(--ink-60);
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2rem;
+}
+.colophon a{ font-style:normal; }
+
+/* ── the wide box stacks as soon as its columns would cramp ── */
+@media (max-width:1180px){
+  .box-h{ grid-template-columns:minmax(0,1fr); }
+  .box-h .plate{ order:-1; }
+}
+
+/* ── tablet: six columns, so the boxes still pair up ── */
+@media (max-width:1180px){
+  .mosaic{ grid-template-columns:repeat(6,minmax(0,1fr)); }
+  .m-atlas  { grid-column:span 6; grid-row:auto; }
+  .m-brodmann{ grid-column:span 6; }
+  .m-network{ grid-column:span 6; }
+  .m-tracts { grid-column:span 3; }
+  .m-studies{ grid-column:span 6; }
+  .m-cells  { grid-column:span 6; }
+  .m-molecular{ grid-column:span 3; }
+  .m-practice{ grid-column:span 3; }
+  .m-textbook{ grid-column:span 3; }
+  .m-posters{ grid-column:span 6; }
+  .m-mcp    { grid-column:span 6; }
+  .m-soon   { grid-column:span 6; }
+  .m-about  { grid-column:span 6; }
+  .m-channels{ grid-column:span 6; }
+  .m-ledger { grid-column:span 6; }
+  .mosaic.hub-library .m-posters{ grid-column:span 3; }
+}
+
+/* ── phone: one box on each line, and the wide box stacks ── */
+@media (max-width:760px){
+  .mosaic{ grid-template-columns:minmax(0,1fr); }
+  .m-atlas, .m-brodmann, .m-network, .m-tracts, .m-studies, .m-cells, .m-molecular, .m-practice, .m-textbook, .m-posters, .m-mcp, .m-soon, .m-about, .m-channels, .m-ledger{
+    grid-column:1 / -1; grid-row:auto;
+  }
+  .ledger{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .ledger div:nth-child(3){ border-left:0; }
+  .ledger div:nth-child(n+3){ border-top:1px solid var(--hair); }
+  .dateline{ justify-content:center; text-align:center; }
+}
+</style>
+<link rel="stylesheet" href="assets/i18n-zh-hans.css">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.zh-hans.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="网站">
+    <a href="regions.html">三维脑区图谱</a>
+    <a href="brodmann.html">布罗德曼分区图谱</a>
+    <a href="microanatomy.html">显微解剖</a>
+    <a href="molecular.html">分子</a>
+    <a href="network-atlas.html">脑网络图谱</a>
+    <a href="tracts.html">纤维束成像</a>
+    <a href="studies.zh-hans.html">研究可视化</a>
+    <a href="textbook.html">数字教科书</a>
+    <a href="practice.html">练习</a>
+    <a href="about.zh-hans.html">关于</a>
+    <span class="nav-tools"><button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">深色</span></button></span>
+  </nav>
+</header>
+
+<main id="main" class="wrap">
+
+  <div class="dateline">
+    <span>免费 · 无需安装</span>
+    <span class="mid">在浏览器中绘制大脑图谱</span>
+    <span class="dl-scan">MNI152 · AAL-116</span>
+    <span class="dl-links">
+      <a class="dl-app" href="https://apps.apple.com/app/id6805618686" target="_blank" rel="noopener">也可在 App Store 下载 →</a>
+      <a class="dl-mcp" href="mcp.zh-hans.html">也可作为 MCP 服务器接入你选用的 AI →</a>
+    </span>
+  </div>
+
+  <div class="mosaic">
+
+    <!-- ── the lead ───────────────────────────────────────────────── -->
+    <a class="box m-atlas" href="regions.html">
+      <div class="kicker">图谱</div>
+      <h2>三维脑区图谱</h2>
+      <p>一套详尽的人脑三维图谱，附受体密度图，并逐一解析每个脑区的功能、相关疾病，以及损伤研究所揭示的情况。</p>
+      <div class="fig" aria-hidden="true">
+        <span class="shot themed"><img class="for-dark" src="assets/home/atlas.jpg" alt="" loading="lazy" decoding="async" width="900" height="1075"><img class="for-light" src="assets/home/atlas-light.jpg" alt="" loading="lazy" decoding="async" width="900" height="1075"></span>
+      </div>
+      <div class="meta">116 个分区 · 四个视图 · 受体密度 · 切片工具 · PNG 与三维导出 · 已存与示例图谱</div>
+      <div class="go">打开图谱 →</div>
+    </a>
+
+    <!-- ── the tractogram ─────────────────────────────────────────── -->
+    <a class="box m-tracts" href="tracts.html">
+      <div class="kicker">白质</div>
+      <h2>纤维束成像</h2>
+      <p>白质中的百万条纤维通路，取自 HCP1065 群体平均数据，以完整三维呈现。</p>
+      <div class="fig" aria-hidden="true">
+        <span class="shot themed"><img class="for-dark" src="assets/home/tracts.jpg" alt="" loading="lazy" decoding="async" width="1200" height="700"><img class="for-light" src="assets/home/tracts-light.jpg" alt="" loading="lazy" decoding="async" width="1200" height="700"></span>
+      </div>
+      <div class="meta">按方向着色的流线 · 自由旋转</div>
+      <div class="go">打开纤维束图 →</div>
+    </a>
+
+    <!-- ── the molecules ──────────────────────────────────────────── -->
+    <a class="box m-molecular" href="molecular.html">
+      <div class="kicker">分子</div>
+      <h2>分子</h2>
+      <p>多巴胺与 5-羟色胺受体的三维结构，以及与之结合的递质和药物。</p>
+      <div class="plate themed"><img class="for-dark" src="assets/home/molecular.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/home/molecular-light.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+      <div class="meta">17 种受体 · 39 个结构 · 24 种药物 · 结合导览 · 对比</div>
+      <div class="go">打开受体 →</div>
+    </a>
+
+    <!-- ── the cells ──────────────────────────────────────────────── -->
+    <a class="box m-cells box-h" href="microanatomy.html">
+      <div class="side">
+        <div class="kicker">显微镜下</div>
+        <h2>显微解剖</h2>
+        <p>细胞尺度下的神经元及其突触，细至神经递质及其受体。</p>
+        <div class="meta">2 种细胞 · 37 个结构 · 探索与测验模式</div>
+        <div class="go">打开细胞 →</div>
+      </div>
+      <div class="plate themed"><img class="for-dark" src="assets/home/cells.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/home/cells-light.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+    </a>
+
+    <!-- ── the Brodmann map ───────────────────────────────────────── -->
+    <a class="box m-brodmann box-h" href="brodmann.html">
+      <div class="side">
+        <div class="kicker">细胞构筑</div>
+        <h2>布罗德曼分区图谱</h2>
+        <p>布罗德曼的 41 个皮层分区，绘于大脑半球外侧面与内侧面的图上。点按任一分区，旁边即显示其功能。</p>
+        <div class="meta">41 个分区 · 内外两面 · 各区功能</div>
+        <div class="go">打开分区图 →</div>
+      </div>
+      <div class="plate themed"><img class="for-dark" src="assets/home/brodmann.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/home/brodmann-light.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+    </a>
+
+    <!-- ── the ring ───────────────────────────────────────────────── -->
+    <a class="box m-network box-h" href="network-atlas.html">
+      <div class="side">
+        <div class="kicker">系统</div>
+        <h2>脑网络图谱</h2>
+        <p>大脑的大尺度网络在六种状态下的变化，从心流到冥想，映射在扫描图像上。</p>
+        <div class="meta">6 种状态 · 7 个系统 · 20 个节点</div>
+        <div class="go">打开环图 →</div>
+      </div>
+      <div class="plate themed"><img class="for-dark" src="assets/home/network.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/home/network-light.jpg" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+    </a>
+
+
+
+
+
+
+    <!-- ── the papers ─────────────────────────────────────────────── -->
+    <a class="box m-studies box-h" href="studies.zh-hans.html">
+      <div class="side">
+        <div class="kicker">论文</div>
+        <h2>研究可视化</h2>
+        <p>已发表的神经影像研究，逐个脑区直接绘制在大脑上。</p>
+        <div class="meta">已绘制 1 项研究 · 更多即将推出</div>
+        <div class="go">打开书架 →</div>
+      </div>
+      <div class="plate themed"><img class="for-dark" src="assets/studies/hallucinations.png" alt="" loading="lazy" decoding="async" width="902" height="409"><img class="for-light" src="assets/studies/hallucinations-light.png" alt="" loading="lazy" decoding="async" width="902" height="409"></div>
+    </a>
+
+
+
+    <!-- ── the practice ───────────────────────────────────────────── -->
+    <a class="box m-practice" href="practice.html">
+      <div class="kicker">复习</div>
+      <h2>神经科学练习</h2>
+      <p>按伦敦国王学院神经科学硕士课程大纲设计的自适应选择题复习。</p>
+      <div class="fig" aria-hidden="true">
+        <span class="shot themed"><img class="for-dark" src="assets/home/practice.jpg" alt="" loading="lazy" decoding="async" width="1100" height="500"><img class="for-light" src="assets/home/practice-light.jpg" alt="" loading="lazy" decoding="async" width="1100" height="500"></span>
+      </div>
+      <div class="meta">自适应题目 · 本轮得分 · 答案解析</div>
+      <div class="go">开始练习 →</div>
+    </a>
+
+    <!-- ── the book ───────────────────────────────────────────────── -->
+    <a class="box m-textbook" href="textbook.html">
+      <div class="kicker">教科书</div>
+      <h2>数字教科书</h2>
+      <p>OpenStax 完整版<em>《行为神经科学导论》</em>（Introduction to Behavioral Neuroscience），收录于本站页面中（英文）。</p>
+      <div class="fig" aria-hidden="true">
+        <span class="shot themed"><img class="for-dark" src="assets/home/textbook.jpg" alt="" loading="lazy" decoding="async" width="1100" height="508"><img class="for-light" src="assets/home/textbook-light.jpg" alt="" loading="lazy" decoding="async" width="1100" height="508"></span>
+      </div>
+      <div class="meta">19 章 · 85 节 · 506 幅图 · CC BY-NC-SA</div>
+      <div class="go">打开教科书 →</div>
+    </a>
+
+    <!-- ── the posters ────────────────────────────────────────────── -->
+    <a class="box m-posters box-h" href="posters.zh-hans.html">
+      <div class="side">
+        <div class="kicker">纸质版</div>
+        <h2>海报</h2>
+        <p>两张源自显微解剖页面的 A1 印刷海报：一张以统一比例绘出每种神经递质，另一张展示各种受体及其与递质结合的紧密程度。</p>
+        <div class="meta">2 张海报 · A1 · 商店即将开放</div>
+        <div class="go">查看海报 →</div>
+      </div>
+      <div class="plate"><img src="assets/posters/home.jpg" alt="" loading="lazy" decoding="async" width="1100" height="500"></div>
+    </a>
+
+    <!-- ── the assistants ─────────────────────────────────────────── -->
+    <a class="box m-mcp box-h" href="mcp.zh-hans.html">
+      <div class="side">
+        <div class="kicker">面向 AI 助手</div>
+        <h2>MCP 服务器</h2>
+        <p>通过 MCP 服务器，在你选用的 AI 中使用本图谱。任何支持模型上下文协议（Model Context Protocol）的助手都能向图谱提问：某个脑区的功能、某种受体在何处密度最高，或大脑在某种状态下如何变化；每条回答都附有链接，直达所描述的视图。</p>
+        <div class="meta">9 个工具 · 无需密钥 · 仅在访问你自己的模型时需要登录</div>
+        <div class="go">如何连接 →</div>
+      </div>
+      <div class="plate mcp-plate" aria-hidden="true">
+        <span class="mcp-url">https://mcp.visualneuroscience.ai/</span>
+        <span class="mcp-tools">search_brain · region_info · brodmann_area · receptor_density · brain_state · my_account · list_models · load_model · save_model</span>
+      </div>
+    </a>
+
+    <!-- ── on the way: no link, only the word ───────────────────────── -->
+    <div class="box m-soon">
+      <div class="kicker">即将到来</div>
+      <h2>即将推出</h2>
+      <p>正在开发的三项功能，目前都尚未开放。</p>
+      <ul class="soon-list">
+        <li><b>环路图谱</b><span>在三维脑区图谱上绘出信号的流动：动画路径在脑区之间穿行，让幻觉研究中那样的神经环路在大脑上演示出来。</span></li>
+        <li><b>脑区详解</b><span>依据研究文献，为每个脑区撰写详细的功能解析，比图谱现在给出的一句话简介更深入。</span></li>
+        <li><b>扩展的 MCP 服务器</b><span>为你选用的 AI 提供新工具：环路图谱中的通路与详细的脑区解析，可在任何支持该协议的助手中获取。</span></li>
+      </ul>
+    </div>
+
+    <!-- ── the maker ──────────────────────────────────────────────── -->
+    <a class="box m-about box-h" href="about.zh-hans.html">
+      <div class="side">
+        <div class="kicker">来自开发者</div>
+        <h2>开发者寄语</h2>
+        <div class="meta">Fadil Karim · 一位工程师独立打造 · 免费使用</div>
+        <div class="go">阅读寄语 →</div>
+      </div>
+      <div class="about-face"><div class="frame">
+        <img class="engraving" src="assets/portrait/frame-back.webp" alt="" loading="lazy" decoding="async" width="704" height="857">
+        <img class="photo" src="assets/portrait/portrait.webp" alt="" loading="lazy" decoding="async" width="454" height="545">
+        <img class="ribbon" src="assets/portrait/ribbon.webp" alt="" loading="lazy" decoding="async" width="704" height="857">
+      </div></div>
+    </a>
+
+    <!-- ── where to follow and write ──────────────────────────────── -->
+    <div class="box m-channels">
+      <div class="kicker">关注与来信</div>
+      <h2>频道</h2>
+      <ul class="chan-list">
+        <li><a href="https://www.youtube.com/@VisualNeuroscienceAI" target="_blank" rel="noopener"><b>YouTube</b><span>@VisualNeuroscienceAI</span><i aria-hidden="true">&nearr;</i></a></li>
+        <li><a href="https://www.instagram.com/visualneuroscience/" target="_blank" rel="noopener"><b>Instagram</b><span>@VisualNeuroscience</span><i aria-hidden="true">&nearr;</i></a></li>
+        <li><a href="https://www.instagram.com/fid_900/" target="_blank" rel="noopener"><b>Instagram</b><span>fid_900</span><i aria-hidden="true">&nearr;</i></a></li>
+        <li><a href="https://www.linkedin.com/in/fadil-karim/" target="_blank" rel="noopener"><b>LinkedIn</b><span>Fadil Karim</span><i aria-hidden="true">&nearr;</i></a></li>
+        <li><a href="mailto:fkarim@visualneuroscience.ai"><b>邮件</b><span>fkarim@visualneuroscience.ai</span><i aria-hidden="true">&nearr;</i></a></li>
+      </ul>
+    </div>
+
+    <!-- ── the figures ────────────────────────────────────────────── -->
+    <div class="m-ledger ledger">
+      <div><div class="n">116</div><div class="k">AAL 分区</div></div>
+      <div><div class="n">41</div><div class="k">布罗德曼分区</div></div>
+      <div><div class="n">0.74<span style="font-size:.5em"> mm</span></div><div class="k">MNI152 体素</div></div>
+      <div><div class="n">6</div><div class="k">脑状态</div></div>
+      <div><div class="n">0</div><div class="k">项需安装</div></div>
+    </div>
+
+  </div>
+
+  <p class="colophon">这里的一切都在网页中运行：影像体数据、图谱和纤维束图都以文件形式提供，并在你自己的设备上渲染，因此你浏览的内容不会离开你的设备。渲染引擎为 <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a>（Rorden 实验室）· MNI152 模板 · AAL 图谱 · 字体为 Flux、Newsreader 与 Prata · © 2026 VisualNeuroscience.AI <a href="about.zh-hans.html">关于</a> · <a href="privacy.html">隐私与支持</a> · <a href="terms.html">使用条款</a>。</p>
+
+</main>
+
+<script>
+"use strict";
+/* theme, shared with the rest of the site */
+const themeBtn = document.getElementById("themeBtn");
+const themeLbl = document.getElementById("themeLbl");
+if (document.documentElement.getAttribute("data-theme") === "dark"){
+  themeLbl.textContent = "Light";
+  themeBtn.setAttribute("aria-pressed", "true");
+}
+themeBtn.addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.getAttribute("data-theme") === "dark";
+  if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+  else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+  themeBtn.setAttribute("aria-pressed", String(!dark));
+  try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+});
+</script>
+
+<script src="assets/native.js"></script>
+<script src="assets/navbar.js"></script>
+<script>
+"use strict";
+/* The three hubs. The mosaic shows the atlases, with #library the papers,
+   the book and the posters, and with #about the MCP server, what is coming,
+   the developer's message and the channels, as the island's Atlases,
+   Library and About tabs do in the app (navbar.js). A tab for this page
+   switches the hub in place and returns to the top rather than loading the
+   page again; the browser's back steps between them. In the Android app
+   the whole mosaic shows and nothing here runs. */
+(function(){
+  var mosaic = document.querySelector(".mosaic");
+  if (!mosaic || document.documentElement.hasAttribute("data-native")) return;
+  function hub(){
+    mosaic.classList.toggle("hub-library", location.hash === "#library");
+    mosaic.classList.toggle("hub-about", location.hash === "#about");
+  }
+  function mark(){ if (window.VN_ISLE) VN_ISLE.mark(); }
+  hub();
+  window.addEventListener("hashchange", function(){ hub(); mark(); window.scrollTo(0, 0); });
+  window.addEventListener("popstate", function(){ hub(); mark(); });
+  document.addEventListener("click", function(e){
+    var a = e.target.closest ? e.target.closest(".vn-isle .vn-tab") : null;
+    if (!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var to;
+    try { to = new URL(a.getAttribute("href"), location.href); } catch (err){ return; }
+    if (to.pathname !== location.pathname) return;
+    e.preventDefault();
+    if (to.hash === location.hash){ window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+    if (to.hash){ location.hash = to.hash; return; }
+    try { history.pushState(null, "", to.pathname); } catch (err){}
+    hub(); mark(); window.scrollTo(0, 0);
+  });
+})();
+</script>
+<script src="assets/newsletter.js" defer></script>
+<script src="assets/firebase-config.js"></script>
+<script type="module" src="assets/auth-ui.js"></script>
+</body>
+</html>

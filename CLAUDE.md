@@ -219,6 +219,35 @@ Read this first in every session. It is the handover; nothing else needs pasting
   from Anthropic and Moonshot (`about.html`, the owner's words), the Vision Pro card's How it was built
   (`vision-about.html`) and one OpenStax sentence naming ChatGPT as an example of AI (`textbook.html`, the book's
   own text).
+- **Languages** (since v12.70, at the owner's word: Simplified Chinese first, picked by the phone's iOS language, and
+  ranking in search in other languages). The English pages stay the source, edited as before; every page in `TWINS`
+  in `scripts/i18n/build.py` is written again beside itself as `<name>.zh-hans.html` (served at `/name.zh-hans`), its
+  words taken from `i18n/zh-hans.json`, the catalog of English to Chinese. A unit is the inner HTML of an element
+  that holds text of its own (inline markup kept, whitespace folded, so a sentence is translated whole), plus the
+  readable attributes (alt, title, aria-label, placeholder) and the description and sharing metas; a unit the
+  catalog lacks stays English and is reported, and a name's Chinese is its English. **Run `python3
+  scripts/i18n/build.py` after editing any page** (it rewrites the twins, `assets/i18n/zh-hans.js` and
+  `sitemap.xml`); `--check` fails on a stale file or a twin page's English left untranslated, and `--missing` prints
+  that English as JSON to translate into the catalog. Every public page carries the build's block first in its head
+  (`<!-- i18n: … -->`: `meta[name=vn-langs]`, `assets/i18n.js`, and on pages with a twin the hreflang links, en,
+  zh-Hans and x-default, to the bare addresses the live site serves); a twin adds the strings file and
+  `assets/i18n-zh-hans.css` (the system's Chinese faces after the site's Latin ones, no italic, the smallest lines
+  larger). `assets/i18n.js` works out the language (the shell's `window.VN_LANG` alone in the app; on the web the
+  header's choice, kept as `vn-lang`, else the browser's languages: zh-CN, zh-SG, zh-MY, zh-Hans or zh are Chinese,
+  Traditional falls through to the next language until it has pages) and moves an English page to its twin before
+  anything is drawn, never twice within five seconds (`vn-lang-hop`) and never inside the iOS app's tabs
+  (`data-shell`), whose shell pushes any move to another file as a new page, so there the shell opens the twin
+  itself; on a twin it puts into Chinese, as it lands, any English the page's scripts write that the catalog holds
+  (a MutationObserver on text, title, aria-label, placeholder and alt), and `VN_I18N` offers `t`, `href` (a page's
+  twin where one exists), `go` and `lang`. `navbar.js` reads the page's English file name off any address (the
+  twin's suffix and the live site's bare address both come off), lights the island and links it in the page's
+  language, and puts the other language's button (中文 or EN) before the theme. Each new twin goes into `sw.js`'s
+  precache. The owner checks the Chinese; anatomical terms follow the national standard (全国科学技术名词审定委员会),
+  and the developer's letter is the owner's words in Chinese. `site/robots.txt` names the sitemap, which lists
+  every public page and its twin (`get`, `share`, the Vision Pro pages, the redirect stub and the poster, account
+  and connect pages left out). The mainland storefront asks for an ICP filing, which needs a company in China, and
+  Google's services the account and the counts use do not reach the mainland; Simplified Chinese serves Chinese
+  readers everywhere else, and ranking on Baidu is weaker without mainland hosting.
 - Usage counts (since v11.21): Google Analytics for Firebase on the website (the vendored bundle's analytics module,
   `measurementId` in `site/assets/firebase-config.js`) and in the apps (`@capacitor-firebase/analytics`, iOS trait
   `AnalyticsWithoutAdIdSupport`, Android manifest with advertising-ID collection off). `site/assets/auth.js` initialises
@@ -1110,3 +1139,20 @@ as tasks and read back when they ask what is left. Best value first; strike each
    `scripts/make_tractogram.py` samples at random and needs the per-bundle minimum.
 Out of reach with this atlas, and said so: patient scans, tracking of our own, and measures along a tract such as FA
 (the file carries the lines' positions and their bundles, nothing else).
+
+## Languages: what's left (the owner's plan of 30 October 2026; strike each as it ships)
+Simplified Chinese first, by the phone's iOS language, ranking in other languages. Done in v12.70: the machinery
+(above), the header's button, the sitemap, and the home page, the MCP page, the developer's message, the studies and
+the posters in Chinese.
+1. The iOS shell: `window.VN_LANG` in `startScript`, the twin opened in place of a page that has one, the tabs' words
+   in a String Catalog with zh-Hans, the project's known regions and a Language row under Account that opens the
+   app's own Settings page, where iOS offers the language once the app carries two.
+2. The atlases' own words: the bars, the sheets and what their scripts write, page by page (the 3D Region Atlas,
+   Tractography, Molecular, Microanatomy, the Brodmann Area Atlas, the Network Atlas), each page added to `TWINS`.
+3. The content: the 116 regions' names and notes, the Brodmann areas, the six states, the 46 bundles, the cells'
+   structures, the receptors and transmitters; then the practice questions, the hallucinations study and the
+   molecular tour. The OpenStax textbook stays English.
+4. Account, sign-in and the legal pages (the English stands as the governing text).
+5. The App Store listing in Simplified Chinese (name, subtitle, keywords, description, What's New) and its
+   screenshots rendered from the Chinese pages.
+6. Traditional Chinese (zh-Hant) for Taiwan and Hong Kong, with Taiwan's own terms, not a character conversion.

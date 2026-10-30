@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- i18n: written by scripts/i18n/build.py -->
+<meta name="vn-langs" content="en zh-hans">
+<script src="assets/i18n.js"></script>
+<script src="assets/i18n/zh-hans.js"></script>
+<link rel="alternate" hreflang="en" href="https://visualneuroscience.ai/about">
+<link rel="alternate" hreflang="zh-Hans" href="https://visualneuroscience.ai/about.zh-hans">
+<link rel="alternate" hreflang="x-default" href="https://visualneuroscience.ai/about">
+<!-- /i18n -->
+<title>开发者寄语 — VisualNeuroscience.AI</title>
+<meta name="description" content="Visual Neuroscience 开发者寄语：一套为新一代神经科学家和心理学家打造的免费脑图谱，由一人借助 AI 完成。">
+<!-- link previews. The card is built by site/share.html and rendered to
+     assets/social-card.jpg; og:image has to be absolute, so this origin is
+     the one thing to change if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="开发者寄语 — VisualNeuroscience.AI">
+<meta property="og:description" content="Visual Neuroscience 开发者寄语：一套为新一代神经科学家和心理学家打造的免费脑图谱，由一人借助 AI 完成。">
+<meta property="og:url" content="https://visualneuroscience.ai/about.zh-hans">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Visual Neuroscience 分享卡片：人脑解剖，交互式三维脑图谱，支持 iOS 与网页，旁边是一幅彩色的大脑纤维束图。">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="fonts/fonts.css">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+  --quiet:#8A8A8A;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+  --quiet:#8A8A8A;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  margin:0 0 3rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+a{ color:var(--ink); }
+svg{ display:block; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* masthead, shared with the rest of the site */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:1em; height:1em; flex:none; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{
+  font-family:var(--font-display); font-size:1.35rem;
+  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+}
+.title-strip .anno{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60);
+}
+
+.lede{
+  font-family:var(--font-serif); font-size:1.02rem; line-height:1.6;
+  margin:0 0 calc(var(--gap) * 1.6);
+}
+
+
+/* ── the story ──────────────────────────────────────────────────────── */
+.policy{ max-width:72ch; margin:0 auto; }
+
+/* ── the framed portrait ───────────────────────────────────────────────
+   Lifted off the CV and reproduced as it is drawn there: the frame keeps
+   its own cream ground and olive engraving, the ribbon its own colours,
+   in both themes. The engraving sits behind the photograph and the ribbon
+   in front of it, across the shoulders, which is how the original stacks
+   them. The signature is the exception: it lies on the page rather than
+   on the frame's ground, so it is an alpha stencil that CSS paints in the
+   page's ink, dark on paper and pale in the dark theme. */
+.mugshot{
+  --frame-w:clamp(148px,26vw,214px);
+  position:relative; margin:0 auto var(--gap);
+}
+/* The frame alone sits on the page's centre line; the signature hangs off
+   its right edge, tucked into the empty corner below the oval's shoulder,
+   so it never pushes the portrait off centre. */
+.mugshot .frame{
+  position:relative; width:var(--frame-w); aspect-ratio:.82078; margin:0 auto;
+}
+.mugshot .frame > *{ position:absolute; }
+.mugshot .engraving, .mugshot .ribbon{ inset:0; width:100%; height:100%; display:block; }
+.mugshot .photo{
+  left:3.137%; top:3.099%; width:93.724%; height:92.344%;
+  display:block; object-fit:contain;
+}
+.mugshot .autograph{
+  position:absolute; bottom:clamp(.5rem,2vw,1.4rem);
+  left:calc(50% + var(--frame-w) / 2 - clamp(.8rem,1.8vw,1.5rem));
+  width:clamp(96px,17vw,140px); aspect-ratio:2.9291;
+  background:currentColor;
+  -webkit-mask:url(assets/portrait/signature.webp) no-repeat center/100% 100%;
+  mask:url(assets/portrait/signature.webp) no-repeat center/100% 100%;
+}
+/* No mask support: drop the signature rather than painting a solid block
+   of ink where its stencil was. The frame carries its own colours and is
+   unaffected. */
+@supports not ((-webkit-mask-image:url(x)) or (mask-image:url(x))){
+  .mugshot .autograph{ display:none; }
+}
+@media (max-width:420px){
+  .mugshot .autograph{
+    position:static; display:block; margin:.2rem auto 0; width:min(60vw,190px);
+  }
+}
+.policy h2{
+  font-family:var(--font-brand); font-weight:600; font-size:.66rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
+  border-bottom:1px solid var(--ink); padding:.2rem .1rem .45rem;
+  margin:calc(var(--gap) * 2.4) 0 var(--gap);
+}
+.policy h2:first-of-type{ margin-top:var(--gap); }
+.policy p{ font-size:1rem; line-height:1.65; margin-bottom:.9rem; }
+.policy ul{ margin:0 0 1rem 1.1rem; }
+.policy li{ font-size:1rem; line-height:1.6; margin-bottom:.45rem; }
+.policy b{ font-weight:400; color:var(--ink); }
+.policy .note{
+  font-family:var(--font-serif); font-style:italic; font-size:.9rem;
+  color:var(--ink-60); border-left:2px solid var(--ink-35);
+  padding-left:.8rem; margin:1rem 0;
+}
+.policy .sign{
+  font-family:var(--font-display); font-size:1.2rem; letter-spacing:.01em;
+  margin:1.6rem 0 0;
+}
+.policy .stamp{
+  font-family:var(--font-brand); font-size:.55rem; letter-spacing:.24em;
+  text-transform:uppercase; color:var(--ink-35);
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2.4rem;
+}
+/* under the signature, the places to find its author, one to a line */
+.policy .elsewhere{ list-style:none; margin:1.1rem 0 0; padding:0; }
+.policy .elsewhere li{ margin:0; font-size:inherit; line-height:1.25; }
+.policy .elsewhere a{
+  display:grid; grid-template-columns:22px 6.4rem minmax(0,1fr); align-items:center; column-gap:.8rem;
+  min-height:42px; color:var(--ink); text-decoration:none;
+}
+.policy .elsewhere svg{ width:20px; height:20px; display:block; }
+.policy .elsewhere .el-name{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.24em; text-transform:uppercase;
+}
+.policy .elsewhere .el-handle{ font-family:var(--font-serif); font-size:.98rem; color:var(--ink-60); overflow-wrap:anywhere; }
+@media (hover:hover){
+  .policy .elsewhere a:hover .el-handle{ color:var(--ink); text-decoration:underline; text-underline-offset:3px; }
+}
+</style>
+<link rel="stylesheet" href="assets/i18n-zh-hans.css">
+</head>
+<body>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.zh-hans.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="网站">
+    <a href="regions.html">三维脑区图谱</a>
+    <a href="brodmann.html">布罗德曼分区图谱</a>
+    <a href="microanatomy.html">显微解剖</a>
+    <a href="molecular.html">分子</a>
+    <a href="network-atlas.html">脑网络图谱</a>
+    <a href="tracts.html">纤维束成像</a>
+    <a href="studies.zh-hans.html">研究可视化</a>
+    <a href="textbook.html">数字教科书</a>
+    <a href="practice.html">练习</a>
+    <a href="about.zh-hans.html" aria-current="page">关于</a>
+    <span class="nav-tools"><button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">深色</span></button></span>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<div class="title-strip">
+  <h1 class="name">开发者寄语</h1>
+</div>
+
+<div class="policy">
+
+<figure class="mugshot">
+  <div class="frame">
+    <img class="engraving" src="assets/portrait/frame-back.webp" alt="" width="704" height="857" decoding="async">
+    <img class="photo" src="assets/portrait/portrait.webp" alt="Fadil Karim" width="454" height="545" decoding="async">
+    <img class="ribbon" src="assets/portrait/ribbon.webp" alt="" width="704" height="857" decoding="async">
+  </div>
+  <div class="autograph" role="img" aria-label="Fadil Karim 的签名"></div>
+</figure>
+
+<p class="lede">感谢你下载 Visual Neuroscience。</p>
+<p>我希望这个应用里的脑图谱能帮助新一代的神经科学家和心理学家理解大脑及其网络，让他们更有能力去解决与大脑相关的问题，例如脑损伤、药物成瘾，以及精神分裂症、多发性硬化、抑郁与焦虑等许多心理健康问题。</p>
+<p>我选择在国王学院学习，是因为想掌握大脑的图谱；但在学习过程中，我发现还没有人做出一个易用又易懂的人脑图谱，于是我一边学习，一边用 Python 动手搭建自己的图谱。那还是在 AI 时代之前。多年以后，我在从事结构工程这份本职工作的同时，借助 AI 完成了这套图谱。</p>
+<p>你在这里看到的一切，都来自我在伦敦国王学院在线课程攻读应用神经科学研究生时学到的知识，以及我的软件开发经验。为了构建这个应用，我使用了 Anthropic 和 Moonshot 的前沿模型。</p>
+<p>目前，这个应用及其中的图谱完全免费；在继续开发的同时，我也打算尽可能长久地让它保持免费。所以，请以你力所能及的方式支持它：使用它，并把它分享给任何可能用得上的人。</p>
+<p>如果你希望增加或改进任何功能——什么都可以，比如按你的课程大纲编写的题库、缺少的图谱、叠加的数据集，或把你自己发表的研究可视化到扫描图像上——请写信给我，通常一周之内就会上线。页面中的事实陈述都注明了出处，但如果其中有任何错误，请告诉我，我会更正。</p>
+<p>写信至 <a href="mailto:fkarim@visualneuroscience.ai"><b>fkarim@visualneuroscience.ai</b></a>，每封信我都会亲自阅读。</p>
+
+<p class="sign">Fadil Karim</p>
+
+<!-- Unhide when the video from the maker lands; the file replaces the figure. -->
+<section id="next-video" hidden>
+  <h2>来自作者</h2>
+  <figure class="vid-slot"></figure>
+</section>
+<ul class="elsewhere" aria-label="Fadil Karim 的其他平台">
+  <li><a href="https://www.youtube.com/@VisualNeuroscienceAI" target="_blank" rel="noopener me"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M6.2 5h11.6A4.2 4.2 0 0 1 22 9.2v5.6a4.2 4.2 0 0 1-4.2 4.2H6.2A4.2 4.2 0 0 1 2 14.8V9.2A4.2 4.2 0 0 1 6.2 5zM10 8.9v6.2l5.4-3.1z"/></svg><span class="el-name">YouTube</span><span class="el-handle">@VisualNeuroscienceAI</span></a></li>
+  <li><a href="https://www.instagram.com/visualneuroscience/" target="_blank" rel="noopener me"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="17.2" cy="6.8" r="1.15"/></svg><span class="el-name">Instagram</span><span class="el-handle">@VisualNeuroscience</span></a></li>
+  <li><a href="https://www.instagram.com/fid_900/" target="_blank" rel="noopener me"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="17.2" cy="6.8" r="1.15"/></svg><span class="el-name">Instagram</span><span class="el-handle">fid_900</span></a></li>
+  <li><a href="https://www.linkedin.com/in/fadil-karim/" target="_blank" rel="noopener me"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM7.6 6.05a1.35 1.35 0 1 0 0 2.7 1.35 1.35 0 0 0 0-2.7zM6.45 9.6h2.3v8.1h-2.3zM10.3 9.6h2.3v1.15c.5-.8 1.4-1.35 2.6-1.35 2.1 0 3.1 1.35 3.1 3.65v4.65h-2.3v-4.3c0-1.1-.45-1.85-1.45-1.85-1.05 0-1.95.7-1.95 1.95v4.2h-2.3z"/></svg><span class="el-name">LinkedIn</span><span class="el-handle">Fadil Karim</span></a></li>
+  <li><a href="https://github.com/fadil-karim" target="_blank" rel="noopener me"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="el-name">GitHub</span><span class="el-handle">fadil-karim</span></a></li>
+</ul>
+
+<p class="stamp">Visual Neuroscience.AI · 由 Fadil Karim 打造 · OttomanLabs</p>
+
+</div>
+
+</main>
+
+<script src="assets/native.js"></script>
+<script src="assets/navbar.js"></script>
+<script src="assets/newsletter.js" defer></script>
+<script>
+"use strict";
+(function(){
+  var themeBtn = document.getElementById("themeBtn");
+  var themeLbl = document.getElementById("themeLbl");
+  if (document.documentElement.getAttribute("data-theme") === "dark"){
+    themeLbl.textContent = "Light"; themeBtn.setAttribute("aria-pressed", "true");
+  }
+  themeBtn.addEventListener("click", function(){
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark";
+    if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+    else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+    themeBtn.setAttribute("aria-pressed", String(!dark));
+    try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+  });
+})();
+</script>
+
+<script src="assets/firebase-config.js"></script>
+<script type="module" src="assets/auth-ui.js"></script>
+</body>
+</html>

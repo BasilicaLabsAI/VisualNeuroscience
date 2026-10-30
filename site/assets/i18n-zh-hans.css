@@ -1,0 +1,15 @@
+/* The Simplified Chinese pages (v12.70), linked last in each twin's head by scripts/i18n/build.py. The site's Latin
+   faces stay first, for Latin words, numbers and the brand, and the system's own Chinese faces draw the rest, so
+   nothing more is downloaded and the pages still work offline; the lang attribute on the page makes the browser take
+   the Simplified forms. */
+html:lang(zh-Hans){
+  --zh-sans:"PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Source Han Sans SC","Microsoft YaHei",sans-serif;
+  --font-serif:"Newsreader",var(--zh-sans);
+  --font-display:"Prata",var(--zh-sans);
+  --font-brand:"Flux","Afacad Flux",var(--zh-sans);
+}
+html:lang(zh-Hans) body{ line-height:1.75; }
+/* Chinese has no italic: a line set in italic stands upright */
+html:lang(zh-Hans) body *{ font-style:normal !important; }
+/* the smallest lines, set for capitals, at a size a Chinese character can be read at */
+html:lang(zh-Hans) .vn-best{ font-size:.62rem; letter-spacing:.08em; }

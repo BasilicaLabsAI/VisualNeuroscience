@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- i18n: written by scripts/i18n/build.py -->
+<meta name="vn-langs" content="en zh-hans">
+<script src="assets/i18n.js"></script>
+<script src="assets/i18n/zh-hans.js"></script>
+<link rel="alternate" hreflang="en" href="https://visualneuroscience.ai/posters">
+<link rel="alternate" hreflang="zh-Hans" href="https://visualneuroscience.ai/posters.zh-hans">
+<link rel="alternate" hreflang="x-default" href="https://visualneuroscience.ai/posters">
+<!-- /i18n -->
+<title>海报 — VisualNeuroscience.AI</title>
+<meta name="description" content="两张源自图谱的 A1 印刷海报：《神经递质》以统一比例绘出每种分子；《受体》收录一百零八种受体及其与递质结合的紧密程度。由按需印刷商店印刷并寄送。">
+<!-- link previews. The card is built by site/share.html and rendered to
+     assets/social-card.jpg; og:image has to be absolute, so this origin is
+     the one thing to change if the site moves to its own domain. -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="VisualNeuroscience.AI">
+<meta property="og:title" content="海报 — VisualNeuroscience.AI">
+<meta property="og:description" content="两张源自图谱的 A1 印刷海报：《神经递质》以统一比例绘出每种分子；《受体》收录一百零八种受体及其与递质结合的紧密程度。由按需印刷商店印刷并寄送。">
+<meta property="og:url" content="https://visualneuroscience.ai/posters.zh-hans">
+<meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Visual Neuroscience 分享卡片：人脑解剖，交互式三维脑图谱，支持 iOS 与网页，旁边是一幅彩色的大脑纤维束图。">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/viewer.css">
+<link rel="stylesheet" href="fonts/fonts.css">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+  --quiet:#8A8A8A;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+  --quiet:#8A8A8A;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  margin:0 0 3rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+a{ color:var(--ink); }
+svg{ display:block; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* masthead, shared with the rest of the site */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:baseline; gap:.36em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .brand:hover{ text-decoration:none; } }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:1em; height:1em; flex:none; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
+}
+@media (hover: hover){ .nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; } }
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+@media (hover: hover){ .theme-toggle:hover{ background:var(--ink); color:var(--paper); } }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{
+  font-family:var(--font-display); font-size:1.35rem;
+  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+}
+.title-strip .anno{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60);
+}
+
+.lede{
+  font-family:var(--font-serif); font-size:1.02rem; line-height:1.6;
+  margin:0 0 calc(var(--gap) * 1.6);
+}
+
+/* ── the posters, one card each ─────────────────────────────────────────
+   The picture is the head of the poster, title and introduction, so a
+   card never shows a scale before its numbers are in. */
+.posters{ display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); max-width:1180px; }
+.poster{ border:1px solid var(--hair); background:var(--paper); display:flex; flex-direction:column; }
+.poster-fig{ display:block; border-bottom:1px solid var(--hair); background:#FFFFFF; aspect-ratio:1400 / 382; overflow:hidden; }
+.poster-fig img{ width:100%; height:100%; object-fit:cover; display:block; }
+.poster-body{ padding:1rem 1.05rem 1.15rem; display:flex; flex-direction:column; flex:1 1 auto; }
+.poster-kicker{ font-family:var(--font-brand); font-weight:500; font-size:.55rem; letter-spacing:.24em; text-transform:uppercase; color:var(--ink-60); }
+.poster h2{ font-family:var(--font-display); font-weight:400; font-size:1.3rem; line-height:1.15; letter-spacing:.01em; margin:.35rem 0 .45rem; }
+.poster p{ font-size:.94rem; line-height:1.55; color:var(--ink-60); }
+.poster .cite{ font-family:var(--font-serif); font-style:italic; font-size:.82rem; color:var(--ink-35); margin-top:.7rem; }
+.poster .act{ margin-top:auto; padding-top:1rem; display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1rem; }
+.poster .go, .poster .tag{
+  font-family:var(--font-brand); font-weight:500; font-size:.64rem; letter-spacing:.24em; text-transform:uppercase; white-space:nowrap;
+  display:inline-flex; align-items:center; gap:.5rem; min-height:40px; padding:.5rem .95rem; border:1px solid var(--hair);
+}
+.poster .go{ color:var(--ink); text-decoration:none; transition:transform .12s cubic-bezier(.32,.72,0,1), opacity .12s; }
+.poster .go svg{ width:.8rem; height:.8rem; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+@media (hover: hover){ .poster .go:hover{ background:var(--ink); color:var(--paper); } }
+.poster .go:active{ transform:scale(.97); opacity:.85; }
+.poster .tag{ color:var(--ink-60); border-color:var(--ink-35); border-style:dashed; }
+.poster .size{ font-family:var(--font-brand); font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-60); }
+.shop-note{ font-family:var(--font-serif); font-size:.95rem; line-height:1.6; color:var(--ink-60); max-width:70ch; margin-top:calc(var(--gap) * 1.6); }
+.attrib{ font-family:var(--font-serif); font-style:italic; font-size:.85rem; color:var(--ink-60); border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:2rem; max-width:1180px; }
+@media (prefers-reduced-motion: reduce){ .poster .go{ transition:none; } .poster .go:active{ transform:none; } }
+</style>
+<link rel="stylesheet" href="assets/i18n-zh-hans.css">
+</head>
+<body>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.zh-hans.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">VisualNeuroscience.AI</a>
+  <nav class="nav-row" aria-label="网站">
+    <a href="regions.html">三维脑区图谱</a>
+    <a href="brodmann.html">布罗德曼分区图谱</a>
+    <a href="microanatomy.html">显微解剖</a>
+    <a href="molecular.html">分子</a>
+    <a href="network-atlas.html">脑网络图谱</a>
+    <a href="tracts.html">纤维束成像</a>
+    <a href="studies.zh-hans.html">研究可视化</a>
+    <a href="textbook.html">数字教科书</a>
+    <a href="practice.html">练习</a>
+    <a href="about.zh-hans.html">关于</a>
+    <span class="nav-tools"><button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">深色</span></button></span>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<div class="title-strip">
+  <h1 class="name">海报</h1>
+  <span class="anno">纸上的图谱</span>
+</div>
+
+<p class="lede">两张源自显微解剖页面的印刷品，由绘制本站的同一套代码绘制，尺寸为 A1（594 × 841 毫米），印在白色哑光纸上，每张都附有其数据来源要求的署名。它们将由按需印刷商店接单印刷并寄送；在商店开放之前，每张海报都有自己的页面，点按“购买”按钮或图片即可打开。</p>
+
+<div class="posters">
+
+  <article class="poster" id="neurotransmitters">
+    <a class="poster-fig" data-open="neurotransmitters" href="poster-neurotransmitters.html"><img src="assets/posters/neurotransmitters.jpg" alt="《神经递质》海报的顶部：标题及其下方的一行文字。" loading="lazy" decoding="async" width="1400" height="382"></a>
+    <div class="poster-body">
+      <div class="poster-kicker">显微解剖 · 键线式</div>
+      <h2>神经递质</h2>
+      <p>十七种分子，从由两个原子组成的气体到由五个氨基酸组成的肽链，全部按相同键长绘制，便于比较大小，并注明各自的作用与所属家族；下方是它们的来源：儿茶酚胺来自酪氨酸，吲哚胺来自色氨酸，GABA 来自谷氨酸，乙酰胆碱的合成与分解，一氧化氮来自精氨酸。</p>
+      <div class="cite">键线式由 RDKit 根据 SMILES 绘制，分子式和平均摩尔质量按所绘形式计算；文字取自显微解剖页面。</div>
+      <div class="act"><a class="go" data-shop="neurotransmitters" href="#neurotransmitters">购买 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><span class="size">A1 · 竖版 · 哑光</span></div>
+    </div>
+  </article>
+
+  <article class="poster" id="receptors">
+    <a class="poster-fig" data-open="receptors" href="poster-receptors.html"><img src="assets/posters/receptors.jpg" alt="《受体》海报的顶部：标题及其下方的一行文字。" loading="lazy" decoding="async" width="1400" height="382"></a>
+    <div class="poster-body">
+      <div class="poster-kicker">显微解剖 · 亲和力</div>
+      <h2>受体</h2>
+      <p>一百零八种受体，按各自响应的递质分组，并标明每种受体与递质结合的紧密程度：结合常数与效价置于同一以十倍为步长的标尺上，越靠右结合越紧；旁边列出每种受体的偶联方式与天然配体，并解释为何突触处的离子通道会很快松开，而 G 蛋白偶联受体则牢牢结合。</p>
+      <div class="cite">亲和力数据来自 IUPHAR/BPS Guide to PHARMACOLOGY（Harding SD 等，<em>Nucleic Acids Res</em> 2024），每个数值都可追溯到原始研究；该数据库采用 Open Database Licence 1.0 授权，其内容采用 CC BY-SA 4.0 授权。</div>
+      <div class="act"><a class="go" data-shop="receptors" href="#receptors">购买 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><span class="size">A1 · 竖版 · 哑光</span></div>
+    </div>
+  </article>
+
+</div>
+
+<p class="shop-note" id="shop-note">图片展示的是每张海报的顶部。印刷、付款和寄送均由按需印刷商店负责，这是一家独立的企业，由其结账页面收取款项和地址：本站和应用中不进行任何购买，且每笔购买都享有英国消费者撤销远程交易的十四天期限。<a href="privacy.html#posters">信息如何保存</a> · <a href="terms.html">使用条款</a>。</p>
+
+<p class="attrib">海报内容与本站一致，取自本站自己的数据，并在版本说明中注明署名：RDKit 与 Guide to PHARMACOLOGY，其署名与相同方式共享条款随受体数据一并适用。字体为 Flux、Newsreader 和 Prata，希腊字母使用 Noto。<a href="microanatomy.html">显微解剖</a> · <a href="about.zh-hans.html">关于</a>。</p>
+
+</main>
+
+<script>
+"use strict";
+/* The shop's addresses, one per poster: fill them in as the shop opens and
+   the Buy buttons go live, opening it outside the page. Until then a Buy
+   button, like the picture, opens the poster's own page, a placeholder, and
+   each opening is counted as poster_click, with where it was pressed, so
+   the interest in each poster can be read off the usage counts. */
+const SHOP = { neurotransmitters: "", receptors: "" };
+function count(name, params){ try{ if (window.VN_AUTH && VN_AUTH.track) VN_AUTH.track(name, params); }catch(e){} }
+document.querySelectorAll("[data-shop]").forEach(a => {
+  const id = a.dataset.shop, url = SHOP[id];
+  if (url){
+    a.href = url; a.target = "_blank"; a.rel = "noopener";
+    /* inside the app, the system browser's sheet rather than the page's own web view */
+    a.addEventListener("click", e => {
+      count("shop_open", { poster: id });
+      const B = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser;
+      if (B && B.open){ e.preventDefault(); B.open({ url }); }
+    });
+    return;
+  }
+  a.href = "poster-" + id + ".html";
+  a.addEventListener("click", () => count("poster_click", { poster: id, where: "buy" }));
+});
+document.querySelectorAll("[data-open]").forEach(a => {
+  a.addEventListener("click", () => count("poster_click", { poster: a.dataset.open, where: "picture" }));
+});
+</script>
+
+
+<script src="assets/native.js"></script>
+<script src="assets/navbar.js"></script>
+<script>
+"use strict";
+(function(){
+  var themeBtn = document.getElementById("themeBtn");
+  var themeLbl = document.getElementById("themeLbl");
+  if (document.documentElement.getAttribute("data-theme") === "dark"){
+    themeLbl.textContent = "Light"; themeBtn.setAttribute("aria-pressed", "true");
+  }
+  themeBtn.addEventListener("click", function(){
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark";
+    if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+    else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+    themeBtn.setAttribute("aria-pressed", String(!dark));
+    try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+  });
+})();
+</script>
+
+<script src="assets/firebase-config.js"></script>
+<script type="module" src="assets/auth-ui.js"></script>
+</body>
+</html>

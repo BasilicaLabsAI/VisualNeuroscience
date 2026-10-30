@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.70 — 30 October 2026 — The website in Simplified Chinese, its first pages
+Commit · Add Simplified Chinese pages beside the English ones, opened by the reader's language
+
+The website begins to speak Simplified Chinese. A browser set to Chinese now opens the home page, the MCP page, the developer's message, the studies and the posters in Chinese, and a 中文 or EN button beside the theme switches between the two at any time, the choice remembered. Each Chinese page is a real page with an address of its own, linked to its English twin, so search engines can find and rank it, and a new sitemap lists every page. The atlases, the app's tabs and the rest follow in the next releases.
+
 ## v12.69 — 30 October 2026 — The AI Connector, with your AI of choice
-Commit · Name no AI assistant in the app, the site or the store listing
+Commit `538fe38` · Name no AI assistant in the app, the site or the store listing
 
 The AI Connector no longer names particular assistants anywhere: the app's About tab, the website's About hub, the MCP page, the privacy policy and the App Store text all say to use the MCP server with your AI of choice, any assistant that speaks the Model Context Protocol. The MCP page's instructions now describe how to add the server in any assistant's settings, for a team, or in a coding assistant. The App Store's AI Connector pictures were remade to match, and the closed iPhone Duo's pictures of the study, the practice questions and the connector now light their own tab in the tab bar rather than Atlases.
 

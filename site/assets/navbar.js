@@ -56,12 +56,17 @@
     about: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5.6"/><path d="M12 7.5h.01"/>',
     account: '<circle cx="12" cy="8.2" r="3.7"/><path d="M4.6 20.2c.7-3.8 3.8-6.2 7.4-6.2s6.7 2.4 7.4 6.2"/>'
   };
-  var p = location.pathname, here = p.slice(p.lastIndexOf("/") + 1);
+  /* the page's English file name, whatever address it came by: a Chinese twin's suffix and the bare address the
+     live site serves in place of .html both come off (v12.70) */
+  var p = location.pathname, here = p.slice(p.lastIndexOf("/") + 1).replace(/\.zh-hans(?=\.html$|$)/, "");
+  if (here && !/\.html$/.test(here)) here += ".html";
   var home = here === "" || here === "index.html";
+  /* the words and the links in the page's language (i18n.js) */
+  var I = window.VN_I18N, T = I ? I.t : function(s){ return s; }, H = I ? I.href : function(s){ return s; };
   /* on the home page itself the hubs keep its address, so a clean / stays / */
-  var homeHref = home ? (p || "index.html") : "index.html";
+  var homeHref = home ? (p || "index.html") : H("index.html");
   var TABS = [["atlases", "Atlases", homeHref], ["library", "Library", homeHref + "#library"],
-    ["practice", "Practice", "practice.html"], ["about", "About", homeHref + "#about"], ["account", "Account", "account.html"]];
+    ["practice", "Practice", H("practice.html")], ["about", "About", homeHref + "#about"], ["account", "Account", H("account.html")]];
   /* the tab each page belongs to: the same pages the app's tabs hold */
   var OF = {
     "": "atlases", "index.html": "atlases", "regions.html": "atlases", "brodmann.html": "atlases",
@@ -77,12 +82,12 @@
 
   var isle = document.createElement("nav");
   isle.className = "vn-isle";
-  isle.setAttribute("aria-label", "Sections");
+  isle.setAttribute("aria-label", T("Sections"));
   var tabs = {};
   TABS.forEach(function(t){
     var a = document.createElement("a");
     a.className = "vn-tab"; a.href = t[2]; a.dataset.tab = t[0];
-    a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + ICON[t[0]] + '</svg><span>' + t[1] + '</span>';
+    a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + ICON[t[0]] + '</svg><span>' + T(t[1]) + '</span>';
     isle.appendChild(a); tabs[t[0]] = a;
   });
   function mark(){
@@ -98,6 +103,19 @@
   head.insertBefore(isle, brand ? brand.nextSibling : nav);
   if (tools) head.insertBefore(tools, nav);
   head.classList.add("isled");
+
+  /* the language (v12.70): the other one, in its own words, before the theme; pressed, the choice is kept and
+     this page opens in it, or the home page where this one has no twin (i18n.js) */
+  if (tools && I){
+    var other = I.lang === "en" ? "zh-hans" : "en";
+    var lb = document.createElement("button");
+    lb.type = "button"; lb.className = "theme-toggle vn-lang";
+    lb.lang = other === "en" ? "en" : "zh-Hans";
+    lb.textContent = other === "en" ? "EN" : "\u4e2d\u6587";
+    lb.setAttribute("aria-label", other === "en" ? "Read in English" : "\u9605\u8bfb\u4e2d\u6587\u7248");
+    lb.addEventListener("click", function(){ I.go(other); });
+    tools.insertBefore(lb, tools.firstChild);
+  }
 
   /* a material once the page has scrolled past the top */
   function stuck(){ head.classList.toggle("stuck", (window.scrollY || document.documentElement.scrollTop || 0) > 2); }
@@ -137,8 +155,10 @@
     catch (e){ return false; }
   }
 
-  var here = fileOf(location.href) || "";
+  var here = (fileOf(location.href) || "").replace(/\.zh-hans(?=\.html$|$)/, "");
+  if (here && !/\.html$/.test(here)) here += ".html";
   var isHome = here === "" || here === "index.html";
+  var H = window.VN_I18N ? VN_I18N.href : function(s){ return s; };
   var title = TITLES[here] || document.title.split(" — ")[0] || "";
 
   /* Where back goes, decided the first time this entry is shown and kept
@@ -150,7 +170,7 @@
     if (sameOrigin(document.referrer) && from !== null && from !== here && TITLES[from] !== undefined && history.length > 1)
       back = { label: TITLES[from], href: null };
     else
-      back = { label: "Home", href: "index.html" };
+      back = { label: "Home", href: H("index.html") };
     try { state.vnBack = back; history.replaceState(state, ""); } catch (e){}
   }
 
@@ -197,7 +217,7 @@
   menu.setAttribute("aria-label", "Sections");
   SECTIONS.forEach(function(s){
     var a = document.createElement("a");
-    a.href = s[0]; a.textContent = s[1];
+    a.href = H(s[0]); a.textContent = s[1];
     if (s[0] === (here || "index.html")) a.setAttribute("aria-current", "page");
     menu.appendChild(a);
   });
