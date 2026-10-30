@@ -28,11 +28,17 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `main` that changes the ledger (`scripts/push_tags.sh` then `scripts/make_releases.py`). The session's own
   git credential can push branches but **not tags** (HTTP 403 on `refs/tags/*`); do not retry that.
   If `VN_TAG_TOKEN` is set in the environment, tags may also be pushed with
-  `git push https://x-access-token:$VN_TAG_TOKEN@github.com/BasilicaLabsAI/VisualNeuroscience.git <tag>`
-  — the variable name only, never the value, in any command or reply.
-- The repository lives at `https://github.com/BasilicaLabsAI/VisualNeuroscience`, but from a session push to the
-  old address `https://github.com/BasilicaLabs-AI/VisualNeuroscience` (which redirects): the session's credential
-  is scoped to that name and the new one answers 403. Leave `origin` as the clone set it.
+  `git push https://x-access-token:$VN_TAG_TOKEN@github.com/<owner>/VisualNeuroscience.git <tag>`, `<owner>` being
+  the one `origin` names (below) — the variable name only, never the value, in any command or reply.
+- The repository lives at `https://github.com/VisualNeuroscienceAtlas/VisualNeuroscience` since 30 October 2026,
+  when the owner renamed the GitHub organisation (BasilicaLabsAI until then, BasilicaLabs-AI before that); GitHub
+  redirects the old addresses for reading and pushing alike. From a session, push through `origin` as the clone set
+  it, and leave it so: the session's git proxy lets a session push only to the repository name it was started with
+  and answers any other with a 403, a token in the address included (checked on 30 October 2026 by dry runs in a
+  session started on BasilicaLabsAI, which pushed v12.71 and v12.72 through the old name and was refused the new
+  one). The GitHub tools take the session's name as well and follow the redirect, answering with the new address.
+  GitHub lets anyone claim an organisation's old name, which would end the redirect, so new sessions are started on
+  the new name.
 
 ## The site
 - Static site in `site/`, deployed by Cloudflare Workers Builds on every push (preview builds on every branch).
@@ -1131,6 +1137,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
   authenticate the domain (`docs/NEWSLETTER.md`). The email route stays off.
 - Two Firebase API keys are flagged by secret scanning: restrict them (bundle ID / Identity Toolkit API) and
   close the alerts as "won't fix"; do not rotate or rewrite history.
+- GitHub: the organisation is VisualNeuroscienceAtlas since 30 October 2026. Start new sessions with
+  `VisualNeuroscienceAtlas/VisualNeuroscience` selected, and change the name wherever an environment's settings list
+  the repository; until then a session started on BasilicaLabsAI pushes through the redirect (Branches and releases).
 
 ## What's left to build (the owner's list: answer from it when asked what's left)
 The owner asked on 29 October 2026 that the steps toward the professional tools' level of tract display be kept here

@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.72 — 30 October 2026 — The repository's new address
+Commit · Record the repository's new address under the VisualNeuroscienceAtlas organisation
+
+The project's GitHub organisation is now VisualNeuroscienceAtlas, so the code lives at github.com/VisualNeuroscienceAtlas/VisualNeuroscience, and the old addresses lead there. The project's notes now give the new address and how a working session pushes to it. The website and the apps are unchanged.
+
 ## v12.71 — 30 October 2026 — The iOS app follows the phone's language
-Commit · Make the iOS app follow the phone's language, in Simplified Chinese where it reads Chinese
+Commit `1c6ac54` · Make the iOS app follow the phone's language, in Simplified Chinese where it reads Chinese
 
 The iPhone and iPad app now speaks the language of the device. On a phone or iPad set to Simplified Chinese the five tabs and every box on them, the sign-in on the Account tab with its messages, the notice of a newer version on the App Store and the credits are in Chinese, the system's own buttons follow, and the pages that have a Chinese version, the MCP page, the developer's message, the studies and the posters, open in it. A new Language box on the Account tab says what the app speaks and opens the app's page in Settings, where iOS lets a device that lists more than one language choose another for this app alone. The app's words come from the same list as the website's Chinese pages, so one list is checked for both; on the website the email link now reads 邮箱. The atlases themselves are still in English and follow in later releases. The app takes it with its next build.
 
