@@ -16,7 +16,7 @@ vision, another field, and the subtitle mirrors 3D Human Brain Atlas; the descri
 English with the site's own Chinese terms (`i18n/zh-hans.json`) and say plainly which parts of the app are in Chinese
 and that the atlases, the textbook and the practice questions are in English; LSD and psilocin are named as
 hallucinogens (致幻剂), the Chinese storefront's review being the stricter; the developer's line follows the owner's
-letter as it reads since v12.43 (the English description still has the older "with the help of AI and a PG Cert");
+letter as it reads since v12.43, as the English description does since the same day;
 the keywords repeat nothing of the name or subtitle and are held to 100 bytes, the stricter reading of the limit.
 
 ## The build

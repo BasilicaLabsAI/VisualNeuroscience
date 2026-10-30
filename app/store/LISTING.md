@@ -281,12 +281,15 @@ the owner's word; it can be changed at any time without a new version:
 A free 3D atlas of the human brain: regions, Brodmann areas, receptors, cells, white matter and networks, with revision questions and an AI connector. Works offline.
 ```
 
-**Description** (3,974/4000). 1.0's description predated
+**Description** (3,996/4000). 1.0's description predated
 Microanatomy, Molecular and the AI Connector and said its developer had not
 finished the postgraduate certificate, which was finished; this one follows
 the Play listing's list, adds the AI Connector, words the account line for
 Apple (Sign in with Apple, Google or email) and takes its developer line
-from the owner's letter on the About page.
+from the owner's letter on the About page, as the letter reads since v12.43
+(at the owner's word, 30 October 2026; it said "with the help of AI and a
+PG Cert" until then, and the letter's "knowledge from" is left out to keep
+within the 4,000).
 
 ```
 Visual Neuroscience is an interactive 3D atlas of the human brain, built for anyone learning neuroanatomy without a lab or a licence. Turn a real MNI152 brain, tap through its regions, search Brodmann areas by what they do, follow the white-matter tracts, go down to the cell and the molecule, and see published studies drawn on the scan itself. Everything ships inside the app and renders on your device, so it works on a train, at the back of a lecture theatre, or in aeroplane mode.
@@ -324,7 +327,7 @@ WHO IT IS FOR
 
 Students revising between lectures. Lecturers who want a live brain on the screen instead of a slide. And anyone who wanted to study this and was priced out.
 
-Built by one developer, with the help of AI and a PG Cert in Applied Neuroscience from King's College London Online, so that the next generation of neuroscientists and psychologists has a map of the brain that is easy to use and understand. The website and the app share the same code and the same author. If something is missing for your course, write, and it usually ships within the week.
+Built by one developer, with a post-grad in Applied Neuroscience from King's College London Online and experience in software development, so that the next generation of neuroscientists and psychologists has a map of the brain that is easy to use and understand. The website and the app share the same code and the same author. If something is missing for your course, write, and it usually ships within the week.
 
 Not a medical device and not a diagnostic tool. An educational reference that summarises published work and draws published atlases, with its sources on every page.
 
