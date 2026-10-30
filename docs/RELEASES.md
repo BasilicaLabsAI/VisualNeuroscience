@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.74 — 30 October 2026 — The textbook names no AI product
+Commit · Take ChatGPT's name out of the textbook's sentence on artificial neural networks
+
+The Digital Textbook's sentence on artificial neural networks now says they are at the heart of AI technology, without naming a product. The book's attribution lists the change among those made to OpenStax's text, as its licence asks. The apps take it with their next build.
+
 ## v12.73 — 30 October 2026 — The reply to App Review, made exact
-Commit · Make the App Review reply and note for 2.0 claim only what holds, and name the build to resubmit
+Commit `2544352` · Make the App Review reply and note for 2.0 claim only what holds, and name the build to resubmit
 
 The App Store notes now carry the reply to App Review and the review note for resubmitting 2.0 in words that claim only what holds: the listing, the screenshots and the AI Connector's pages name no AI assistant, and the app embeds no AI model and calls no AI service. The note itself no longer names any assistant, and the steps name the build to resubmit. The website and the apps are unchanged.
 

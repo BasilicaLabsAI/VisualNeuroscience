@@ -341,12 +341,13 @@ and the description, and from the AI Connector screenshot, the MCP page,
 which named Claude, ChatGPT and Kimi; 1.0 had no AI Connector and never
 named one. Since v12.69, at the owner's word, nothing in the listing, the
 screenshots or the app's own pages names an AI assistant: the connector is
-used with "your AI of choice". One mention stays in the app for the owner to
-decide: the OpenStax textbook's own sentence that ends "at the heart of AI
-technology like ChatGPT" (`site/textbook.html`), so the note and the reply
-below claim nothing of the app as a whole, only of its metadata, its
-screenshots and its AI Connector; the note names neither ChatGPT nor OpenAI,
-being text App Review reads with the rest. To resubmit:
+used with "your AI of choice". The OpenStax textbook's own sentence that ended "at
+the heart of AI technology like ChatGPT" (`site/textbook.html`) lost the
+name in v12.74, at the owner's word, but the v12.70 build chosen below for
+this resubmission still carries it, so the note and the reply claim nothing
+of the app as a whole, only of its metadata, its screenshots and its AI
+Connector; the note names neither ChatGPT nor OpenAI, being text App Review
+reads with the rest. To resubmit:
 
 1. Pick the build Xcode Cloud made from v12.70 (commit `6fa7716`; v12.69's,
    `538fe38`, serves as well) on the 2.0 page in place of 294; each build in

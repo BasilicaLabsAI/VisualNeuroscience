@@ -37,5 +37,9 @@ skipped on a rebuild, so re-running after a text change takes seconds.
   reference lists become links.
 - Every id in a module is prefixed with the module's id, so nothing collides when several
   sections share a page.
+- The book's own words are changed in one place (v12.74, at the owner's word): `TEXT_EDITS`
+  takes "like ChatGPT" out of the sentence on artificial neural networks, since what the app
+  shows is to name no AI assistant. Each edit is counted as it is made, a rebuild warns when the source no longer
+  holds its words, and the attribution's Changes lists it, as the licence asks of an adaptation.
 - Every page ends with the attribution the CC BY-NC-SA 4.0 licence asks for. See
   `docs/PERMISSIONS.md`.

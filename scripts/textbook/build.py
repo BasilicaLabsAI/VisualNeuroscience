@@ -425,6 +425,21 @@ for _num, _title, _mods in chapters:
     ci = merged(RENDERED[m][3] for m in _mods)
     for m in _mods: CHAPTER_IDX[m] = ci
 
+# The book's own words changed, each listed under the attribution's Changes and counted as it is made, so a rebuild
+# from a source that no longer holds one says so. v12.74, at the owner's word: the one product the book names as an
+# example of AI comes out, since what the app shows is to name no AI assistant (CLAUDE.md).
+TEXT_EDITS = [
+    ("are at the heart of AI technology like ChatGPT.", "are at the heart of AI technology."),
+]
+EDITS_MADE = [0] * len(TEXT_EDITS)
+
+def edited(html_):
+    for i, (old, new) in enumerate(TEXT_EDITS):
+        if old in html_:
+            EDITS_MADE[i] += html_.count(old)
+            html_ = html_.replace(old, new)
+    return html_
+
 def module_html(mod):
     before, refs, after, idx, ctx = RENDERED[mod]
     chain = [idx, CHAPTER_IDX.get(mod, {}), BOOK_IDX]
@@ -432,7 +447,7 @@ def module_html(mod):
     if ctx.practice:
         body += (f'<p class="tb-practice"><span class="ck">Practice</span> The multiple-choice and fill-in-the-blank questions for this section are '
                  f'interactive and live on OpenStax, so they are not carried here: <a href="{OS_BOOK}" target="_blank" rel="noopener">open the book on openstax.org</a>.</p>')
-    return body
+    return edited(body)
 
 # ── the pages ──────────────────────────────────────────────────────────────
 def nav(rel):
@@ -456,7 +471,7 @@ def nav(rel):
 ATTRIB = (f'<p class="tb-attrib">Adapted from <a href="{OS_BOOK}" target="_blank" rel="noopener">{BOOK}</a> by OpenStax, '
           f'licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>. '
           f'Access for free at <a href="{OS_URL}" target="_blank" rel="noopener">openstax.org</a>. '
-          f'Changes: set in this site’s own pages and type, the images recompressed, the videos embedded in folds, the interactive exercises linked rather than carried. '
+          f'Changes: set in this site’s own pages and type, the images recompressed, the videos embedded in folds, the interactive exercises linked rather than carried, one product name taken out of the text. '
           f'This adaptation is offered under the same licence.</p>')
 
 def page(title, desc, body, rel, extra_head=""):
@@ -568,4 +583,7 @@ with open(os.path.join(SITE, "assets", "textbook", "contents.json"), "w", encodi
     json.dump(dict(book=BOOK, chapters=manifest), fh, ensure_ascii=False, indent=1)
 
 total = sum(os.path.getsize(os.path.join(IMG_DIR, f)) for f in os.listdir(IMG_DIR))
+for (old, _), made in zip(TEXT_EDITS, EDITS_MADE):
+    if not made:
+        print(f"warning: the source no longer holds {old!r}, so that edit was not made; look at TEXT_EDITS")
 print(f"wrote textbook.html ({os.path.getsize(os.path.join(SITE, 'textbook.html')) // 1024} KB) with {len(chapters)} chapters, {len(SIZES)} images ({total // 1048576} MB as WebP)")

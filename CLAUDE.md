@@ -222,10 +222,12 @@ Read this first in every session. It is the handover; nothing else needs pasting
   dateline link, `vision-about.html`, `privacy.html`, the About tab's twins in `Shell.swift`, `app/store/LISTING.md`
   and the AI Connector images, and the submission skill's `check_sheet.py` now fails on ChatGPT, OpenAI and GPT and
   warns on other assistants' names. The repository's own notes keep the per-assistant setup (`docs/MCP.md`,
-  `README.md`, comments in `mcp-worker/`), and three mentions stand for the owner to decide: the letter's models
-  from Anthropic and Moonshot (`about.html`, the owner's words), the Vision Pro card's How it was built
-  (`vision-about.html`) and one OpenStax sentence naming ChatGPT as an example of AI (`textbook.html`, the book's
-  own text).
+  `README.md`, comments in `mcp-worker/`), and two mentions stand for the owner to decide: the letter's models
+  from Anthropic and Moonshot (`about.html`, the owner's words) and the Vision Pro card's How it was built
+  (`vision-about.html`). The one OpenStax sentence that named ChatGPT as an example of AI lost the name in v12.74,
+  at the owner's word (`TEXT_EDITS` in `scripts/textbook/build.py`, which a rebuild applies again and warns on
+  when the source no longer holds the words, and the attribution's Changes, which lists the edit as the licence
+  asks); builds made before v12.74, the one chosen for 2.0's resubmission included, still carry it.
 - **Languages** (since v12.70, at the owner's word: Simplified Chinese first, picked by the phone's iOS language, and
   ranking in search in other languages). The English pages stay the source, edited as before; every page in `TWINS`
   in `scripts/i18n/build.py` is written again beside itself as `<name>.zh-hans.html` (served at `/name.zh-hans`), its
