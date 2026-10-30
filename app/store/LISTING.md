@@ -340,24 +340,40 @@ OpenAI: ChatGPT, GPT". They came from the AI Connector lines of What's New
 and the description, and from the AI Connector screenshot, the MCP page,
 which named Claude, ChatGPT and Kimi; 1.0 had no AI Connector and never
 named one. Since v12.69, at the owner's word, nothing in the listing, the
-screenshots or the app names an AI assistant: the connector is used with
-"your AI of choice". To resubmit:
+screenshots or the app's own pages names an AI assistant: the connector is
+used with "your AI of choice". One mention stays in the app for the owner to
+decide: the OpenStax textbook's own sentence that ends "at the heart of AI
+technology like ChatGPT" (`site/textbook.html`), so the note and the reply
+below claim nothing of the app as a whole, only of its metadata, its
+screenshots and its AI Connector; the note names neither ChatGPT nor OpenAI,
+being text App Review reads with the rest. To resubmit:
 
-1. Wait for the build Xcode Cloud makes from v12.69 or later (the About
-   tab's text is in the app) and pick it on the 2.0 page in place of 294.
+1. Pick the build Xcode Cloud made from v12.70 (commit `6fa7716`; v12.69's,
+   `538fe38`, serves as well) on the 2.0 page in place of 294; each build in
+   Xcode Cloud names its commit. A build from v12.71 on carries the app in
+   Simplified Chinese, new native code that goes in once seen on TestFlight.
 2. Paste *What's New* and the description again from above.
 3. Replace the AI Connector images (`*-11-mcp.png`, every size) with the
    ones remade in v12.69, or leave that shot out of the ten.
 4. Add this paragraph to the notes under App Review Information:
 
 ```
-Guideline 5 (China): this version names no AI assistant anywhere, in its metadata, its screenshots or the app itself. The app has no ChatGPT or OpenAI functionality: it embeds no AI model and calls no AI service. Its AI Connector is a public Model Context Protocol server on our own domain that a person can add, outside the app, to an assistant of their choice; the app only explains how.
+Guideline 5 (China): this version's metadata and screenshots name no AI assistant, and neither do the app's AI Connector pages, which speak only of an assistant of the person's choice. The app has no generative AI functionality: it embeds no AI model and calls no AI service. The AI Connector is a public Model Context Protocol server on our own domain that a person can add, outside the app, to an assistant of their choice; the app only explains how.
 ```
 
-5. Reply to the message in App Review, then resubmit:
+5. Reply to the message in App Review, then resubmit (attaching the new AI
+   Connector screenshot helps):
 
 ```
-Hello, and thank you for the review. We have removed every reference to ChatGPT and OpenAI, and to any other AI assistant, from the app's metadata, its screenshots and the app itself, and the Review Notes now say so. The app has no ChatGPT or OpenAI functionality: it embeds no AI model and calls no AI service. Its AI Connector is a public Model Context Protocol server on our own domain that a person can add to an assistant of their choice outside the app. We have resubmitted version 2.0 with a new build. Thank you.
+Hello, and thank you for the review.
+
+Regarding Guideline 5 - Legal, and the references to ChatGPT and OpenAI in the app's metadata:
+
+1. What's New, the description and the screenshots no longer name ChatGPT, OpenAI or any other AI assistant. The AI Connector screenshot has been replaced.
+2. Inside the app, the AI Connector's pages no longer name one either. They speak only of an assistant of the person's choice.
+3. The app has no generative AI functionality. It embeds no AI model and calls no AI service. The AI Connector is a public Model Context Protocol server on our own domain that a person can add to an assistant of their choice, outside the app. The app only explains how.
+
+We are resubmitting version 2.0 with a new build, and the Review Notes say the same. Thank you.
 ```
 
 ## Submitting 2.0, in order

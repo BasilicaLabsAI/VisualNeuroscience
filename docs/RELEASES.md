@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.73 — 30 October 2026 — The reply to App Review, made exact
+Commit · Make the App Review reply and note for 2.0 claim only what holds, and name the build to resubmit
+
+The App Store notes now carry the reply to App Review and the review note for resubmitting 2.0 in words that claim only what holds: the listing, the screenshots and the AI Connector's pages name no AI assistant, and the app embeds no AI model and calls no AI service. The note itself no longer names any assistant, and the steps name the build to resubmit. The website and the apps are unchanged.
+
 ## v12.72 — 30 October 2026 — The repository's new address
-Commit · Record the repository's new address under the VisualNeuroscienceAtlas organisation
+Commit `d84f751` · Record the repository's new address under the VisualNeuroscienceAtlas organisation
 
 The project's GitHub organisation is now VisualNeuroscienceAtlas, so the code lives at github.com/VisualNeuroscienceAtlas/VisualNeuroscience, and the old addresses lead there. The project's notes now give the new address and how a working session pushes to it. The website and the apps are unchanged.
 
