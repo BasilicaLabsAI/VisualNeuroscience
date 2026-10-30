@@ -343,16 +343,18 @@ named one. Since v12.69, at the owner's word, nothing in the listing, the
 screenshots or the app's own pages names an AI assistant: the connector is
 used with "your AI of choice". The OpenStax textbook's own sentence that ended "at
 the heart of AI technology like ChatGPT" (`site/textbook.html`) lost the
-name in v12.74, at the owner's word, but the v12.70 build chosen below for
-this resubmission still carries it, so the note and the reply claim nothing
-of the app as a whole, only of its metadata, its screenshots and its AI
-Connector; the note names neither ChatGPT nor OpenAI, being text App Review
+name in v12.74, at the owner's word; the build first picked for this
+resubmission still carried it, so the note and the reply claim nothing of the
+app as a whole, only of its metadata, its screenshots and its AI Connector,
+which holds for either build; the note names neither ChatGPT nor OpenAI, being text App Review
 reads with the rest. To resubmit:
 
-1. Pick the build Xcode Cloud made from v12.70 (commit `6fa7716`; v12.69's,
-   `538fe38`, serves as well) on the 2.0 page in place of 294; each build in
-   Xcode Cloud names its commit. A build from v12.71 on carries the app in
-   Simplified Chinese, new native code that goes in once seen on TestFlight.
+1. The build. 2.0 went back to review first with build 310 and, on 30
+   October 2026, at the owner's word, was taken out of review to move it to
+   the build Xcode Cloud made from v12.74 (`d706d0c`), which carries the app
+   in Simplified Chinese (v12.71) and the textbook without the product's name
+   (v12.74); the owner tried it on TestFlight, in Chinese as well, and found
+   it fine. Each build in Xcode Cloud names its commit.
 2. Paste *What's New* and the description again from above.
 3. Replace the AI Connector images (`*-11-mcp.png`, every size) with the
    ones remade in v12.69, or leave that shot out of the ten.
@@ -375,6 +377,16 @@ Regarding Guideline 5 - Legal, and the references to ChatGPT and OpenAI in the a
 3. The app has no generative AI functionality. It embeds no AI model and calls no AI service. The AI Connector is a public Model Context Protocol server on our own domain that a person can add to an assistant of their choice, outside the app. The app only explains how.
 
 We are resubmitting version 2.0 with a new build, and the Review Notes say the same. Thank you.
+```
+
+6. With the move to v12.74's build, at the owner's word, the listing in
+   Simplified Chinese beside the English: `submissions/ios-2.0-zh-hans.md`,
+   checked by the submission skill's script (the name, subtitle, privacy
+   URL, promotional text, description, keywords, support and marketing URLs
+   and What's New). Offered for the English What's New, as its last line:
+
+```
+• Simplified Chinese: on a device set to Chinese, the tabs, the sign-in and four pages (the AI Connector, the developer's message, the studies and the posters) appear in Chinese. Language, under Account, opens the app's language setting.
 ```
 
 ## Submitting 2.0, in order

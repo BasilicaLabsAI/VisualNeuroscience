@@ -227,7 +227,7 @@ Read this first in every session. It is the handover; nothing else needs pasting
   (`vision-about.html`). The one OpenStax sentence that named ChatGPT as an example of AI lost the name in v12.74,
   at the owner's word (`TEXT_EDITS` in `scripts/textbook/build.py`, which a rebuild applies again and warns on
   when the source no longer holds the words, and the attribution's Changes, which lists the edit as the licence
-  asks); builds made before v12.74, the one chosen for 2.0's resubmission included, still carry it.
+  asks); builds made before v12.74 still carry it, and 2.0 went back to review on v12.74's build, which does not.
 - **Languages** (since v12.70, at the owner's word: Simplified Chinese first, picked by the phone's iOS language, and
   ranking in search in other languages). The English pages stay the source, edited as before; every page in `TWINS`
   in `scripts/i18n/build.py` is written again beside itself as `<name>.zh-hans.html` (served at `/name.zh-hans`), its
@@ -271,6 +271,11 @@ Read this first in every session. It is the handover; nothing else needs pasting
   shell is `L("…")`, its Chinese in the catalog and the script run. The Account tab's Language box, under
   Appearance, says what the app speaks and opens its page in Settings (`UIApplication.openSettingsURLString`).
   Words of the shell's own were added to the catalog with it, and Email reads 邮箱 on the site as in the app.
+  The owner's TestFlight build from v12.74 ran it on 30 October 2026, in Chinese as well, and found it fine. 2.0's
+  listing carries a Simplified Chinese localisation beside the English (`app/store/submissions/ios-2.0-zh-hans.md`,
+  checked by the submission skill's script): the name kept as Visual Neuroscience, since 视觉神经科学 reads as the
+  neuroscience of vision, the subtitle 三维人脑图谱, a paragraph saying which parts of the app are in Chinese and
+  that the atlases, the textbook and the practice questions are in English, and keywords held to 100 bytes.
 - Usage counts (since v11.21): Google Analytics for Firebase on the website (the vendored bundle's analytics module,
   `measurementId` in `site/assets/firebase-config.js`) and in the apps (`@capacitor-firebase/analytics`, iOS trait
   `AnalyticsWithoutAdIdSupport`, Android manifest with advertising-ID collection off). `site/assets/auth.js` initialises
@@ -1055,8 +1060,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
 ## Open on the owner's side (update as they close)
 - App Store: version 1.0 was approved and released on 25 September 2026 (https://apps.apple.com/app/id6805618686)
   after an expedited review. 2.0 (294) was rejected on 30 October 2026 under Guideline 5 for naming ChatGPT (see
-  Name no AI assistant above); `app/store/LISTING.md` has the resubmission's steps, review note and reply, and it
-  needs a build from v12.69 or later. The project is at 2.0 for the next submission (the owner's choice of 25 October 2026, in
+  Name no AI assistant above); `app/store/LISTING.md` has the resubmission's steps, review note and reply. It went
+  back first with build 310 and, on 30 October 2026, at the owner's word, was moved to v12.74's build with the
+  listing in Simplified Chinese as well (`app/store/submissions/ios-2.0-zh-hans.md`). The project is at 2.0 for the next submission (the owner's choice of 25 October 2026, in
   place of 1.1: `MARKETING_VERSION` in the Xcode project and Android's `versionName`, and the version page in App Store
   Connect must say 2.0 as well, since a build's number and its page's must agree); its What's New text, the App Privacy
   changes the newsletter and the usage counts need, and the steps are in `app/store/LISTING.md`, the screenshots in
@@ -1182,6 +1188,6 @@ the posters in Chinese.
    structures, the receptors and transmitters; then the practice questions, the hallucinations study and the
    molecular tour. The OpenStax textbook stays English.
 4. Account, sign-in and the legal pages (the English stands as the governing text).
-5. The App Store listing in Simplified Chinese (name, subtitle, keywords, description, What's New) and its
-   screenshots rendered from the Chinese pages.
+5. The App Store listing in Simplified Chinese: its text done for 2.0 (`app/store/submissions/ios-2.0-zh-hans.md`);
+   its screenshots, rendered from the Chinese pages, wait for the atlases in Chinese.
 6. Traditional Chinese (zh-Hant) for Taiwan and Hong Kong, with Taiwan's own terms, not a character conversion.
