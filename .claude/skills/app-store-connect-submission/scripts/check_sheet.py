@@ -18,7 +18,7 @@ decides which fields must be there.
 The script counts every field against its limit (the keywords in bytes as
 well, the stricter reading), checks the keywords against the store's
 rules, looks in the public text for words the store refuses (other
-platforms, "beta", unfinished markers), checks that every URL is https
+platforms, AI assistants by name, "beta", unfinished markers), checks that every URL is https
 and, with --online, that each one answers. Text in [[double brackets]]
 inside a field's block is typed by hand into App Store Connect (a password,
 a phone number) and is listed as such; anywhere else in the sheet it is a
@@ -56,6 +56,12 @@ PUBLIC = ('name', 'subtitle', 'promotional text', 'description', 'keywords', "wh
 # Words a store listing may not carry (2.3.10, 2.1) and words that waste keyword room.
 # Apple's own devices are fine to name; other companies' platforms and stores are not.
 PLATFORM = re.compile(r'\b(android|google play|play store|windows phone|windows store|samsung galaxy store|huawei appgallery)\b', re.I)
+# AI assistants by name. App Review rejects a listing for the China mainland
+# storefront when its metadata names a generative AI service with no permit
+# there (Guideline 5; ChatGPT and OpenAI by name, as on 30 October 2026), so
+# those fail and the other assistants' names warn: say "your AI of choice".
+AI_FAIL = re.compile(r'\b(chatgpt|openai|gpts?)\b', re.I)
+AI_WARN = re.compile(r'\b(claude|anthropic|gemini|bard|copilot|kimi|moonshot|deepseek|grok|perplexity|llama|mistral|qwen)\b', re.I)
 UNFINISHED = re.compile(r'\b(TODO|TBD|FIXME|XXX|lorem ipsum)\b', re.I)
 UNFINISHED_PROSE = re.compile(r'\b(TODO|TBD|FIXME)\b')
 BETA = re.compile(r'\b(beta|test version|pre-release|prerelease)\b', re.I)
@@ -265,6 +271,12 @@ def main(argv):
             warns.append(f'{name} names another platform or store ("{m.group(0)}"); guideline 2.3.10 forbids it.')
         for m in BETA.finditer(body):
             warns.append(f'{name} says "{m.group(0)}"; the store wants finished apps (2.1).')
+        for ai in sorted({m.group(0) for m in AI_FAIL.finditer(body)}):
+            fails.append(f'{name} names "{ai}"; App Review rejects that for the China mainland storefront (Guideline 5). '
+                         'Say "your AI of choice", or leave China out of Availability.')
+        for ai in sorted({m.group(0) for m in AI_WARN.finditer(body)}):
+            warns.append(f'{name} names "{ai}"; if that is an AI assistant, China\'s rules can reject it as they do ChatGPT '
+                         '(Guideline 5). Name no assistant, or leave China out of Availability.')
 
     # in the fields: what is typed by hand, and what was never finished
     for _, name, _, body in fields:

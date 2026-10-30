@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Ask the atlas from an AI assistant — VisualNeuroscience.AI</title>
-<meta name="description" content="How to connect VisualNeuroscience.AI to Claude, ChatGPT, Kimi or any assistant that speaks the Model Context Protocol, what its five tools answer, and where the answers come from.">
+<meta name="description" content="How to use VisualNeuroscience.AI with your AI of choice, any assistant that speaks the Model Context Protocol, what its five tools answer, and where the answers come from.">
 <!-- link previews. The card is built by site/share.html and rendered to
      assets/social-card.jpg; og:image has to be absolute, so this origin is
      the one thing to change if the site moves to its own domain. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="VisualNeuroscience.AI">
 <meta property="og:title" content="Ask the atlas from an AI assistant — VisualNeuroscience.AI">
-<meta property="og:description" content="Connect the brain atlas to Claude, ChatGPT or Kimi and ask it what a region does, where a receptor is densest, or how the brain changes in a state.">
+<meta property="og:description" content="Use the brain atlas with your AI of choice and ask it what a region does, where a receptor is densest, or how the brain changes in a state.">
 <meta property="og:url" content="https://visualneuroscience.ai/mcp.html">
 <meta property="og:image" content="https://midnightneuroscience.cloudflare-passport599.workers.dev/assets/social-card.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -289,7 +289,7 @@ svg{ display:block; }
 
 <div class="policy">
 
-<p class="lede">VisualNeuroscience.AI answers questions inside Claude, ChatGPT, Kimi and any other assistant that speaks the Model Context Protocol, through a small server of its own. Ask what a region does, where a Brodmann area sits and what borders it, how dense a receptor is, or how the brain&rsquo;s networks reconfigure in a state, and the answer comes from the same data as these pages, with a link that opens the same view here. Asking the atlas needs no account and no key; you sign in only if you want an assistant to read or save your own models.</p>
+<p class="lede">VisualNeuroscience.AI answers questions inside your AI of choice, any assistant that speaks the Model Context Protocol, through a small server of its own. Ask what a region does, where a Brodmann area sits and what borders it, how dense a receptor is, or how the brain&rsquo;s networks reconfigure in a state, and the answer comes from the same data as these pages, with a link that opens the same view here. Asking the atlas needs no account and no key; you sign in only if you want an assistant to read or save your own models.</p>
 
 <h2>The address</h2>
 <pre><code>https://mcp.visualneuroscience.ai/</code></pre>
@@ -297,13 +297,11 @@ svg{ display:block; }
 
 <h2>Connecting it</h2>
 <ul>
-  <li><b>Claude</b> on the web, desktop or phone. Go to <i>Customize</i>, then <i>Connectors</i>, choose <i>Add custom connector</i>, paste the address, set authentication to <i>Sign in when needed</i> and press <i>Add</i>. The atlas tools then work straight away, and the account tools ask you to sign in the first time one is used. In a chat, press <b>+</b>, open <i>Connectors</i> and switch it on.</li>
-  <li><b>Claude on a Team or Enterprise plan.</b> An owner adds it once under <i>Organization settings</i>, then <i>Connectors</i>, with <i>Add</i>, then <i>Custom</i>. Everyone else finds it under <i>Customize</i>, then <i>Connectors</i>, and presses <i>Connect</i>.</li>
-  <li><b>Claude Code.</b> <code>claude mcp add --transport http visualneuroscience https://mcp.visualneuroscience.ai/</code></li>
-  <li><b>ChatGPT.</b> In <i>Settings</i>, then <i>Apps &amp; Connectors</i>, turn on <i>Developer mode</i> under <i>Advanced</i>, then <i>Add MCP server</i> with the address.</li>
-  <li><b>Kimi.</b> <code>kimi mcp add --transport http visualneuroscience https://mcp.visualneuroscience.ai/</code>, or the same entry in <code>~/.kimi-code/mcp.json</code>.</li>
+  <li><b>In an assistant&rsquo;s app or website.</b> Open the settings where it adds connectors, apps or MCP servers, add a custom one with the address and, if it asks how to authenticate, choose to sign in when needed. The atlas tools then work straight away, and the account tools ask you to sign in the first time one is used. Some assistants keep custom servers behind a developer mode in their settings, and most let you switch a connector on for each chat.</li>
+  <li><b>For a team or an organisation.</b> Where an owner manages connectors for everyone, they add it once with the address, and everyone else connects it from their own settings.</li>
+  <li><b>In a coding assistant.</b> Add it as an HTTP server named <code>visualneuroscience</code> with the address, through the assistant&rsquo;s own command for adding an MCP server or its MCP settings file.</li>
 </ul>
-<p>The five atlas tools are read-only and say so in their annotations, so an assistant can call them without asking you to approve each one; nothing an assistant does through them changes anything, here or anywhere. Four more tools work on your own account, and ask you to sign in the first time one is reached: on a Team or Enterprise plan, the owner should add the connector with authentication set to <i>Sign in when needed</i>.</p>
+<p>The five atlas tools are read-only and say so in their annotations, so an assistant can call them without asking you to approve each one; nothing an assistant does through them changes anything, here or anywhere. Four more tools work on your own account, and ask you to sign in the first time one is reached: where an owner adds the connector for an organisation, they should set its authentication to sign in when needed.</p>
 
 <h2>The five tools</h2>
 <dl>

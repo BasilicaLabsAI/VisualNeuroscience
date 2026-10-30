@@ -30,7 +30,7 @@ references/screenshots.md     the slots, the sizes, what a screenshot may show, 
 references/review-replies.md  the Information Needed reply, answering rejections, what to do while waiting
 assets/sheet-template.md      the sheet's skeleton, all three kinds
 assets/example-update.md      an illustration of a finished update sheet: the shape and the voice, not values to copy
-scripts/check_sheet.py        counts every field against its limit; checks keywords, platform words, URLs, gaps and open questions
+scripts/check_sheet.py        counts every field against its limit; checks keywords, platform words, AI assistants' names, URLs, gaps and open questions
 scripts/check_screenshots.py  says which slot each image fits; flags sizes no slot takes and transparency
 scripts/live_listing.py       what the App Store shows now for a live app: version, release notes, description
 ```
@@ -110,7 +110,8 @@ rules that matter most:
   line true on the new device (writing.md, section 10).
 - **Write in the project's voice.** Plain, specific, the project's spelling
   (British if its pages are), no superlatives, no other companies'
-  platforms or stores, no competitors' names, nothing the app does not do.
+  platforms or stores, no competitors' names, no AI assistant by name (say
+  "your AI of choice"), nothing the app does not do.
 - **What's New is for the public**: what they can do now that they could
   not in the version they have, most noticeable first, in their words, no
   file names or build talk.
@@ -144,7 +145,7 @@ manual release and let the person decide when.
 ### 5. Check it
 
 ```
-python3 scripts/check_sheet.py <sheet.md>            # counts, keywords, platform words, gaps, open questions
+python3 scripts/check_sheet.py <sheet.md>            # counts, keywords, platform and AI words, gaps, open questions
 python3 scripts/check_sheet.py <sheet.md> --online   # and asks each URL whether it answers
 python3 scripts/check_screenshots.py <folder>        # each image's slot; sizes no slot takes; transparency
 ```
@@ -227,6 +228,12 @@ at any time without a new version.
 - **A new device's screenshots can claim more than the build gives.** A
   device whose layout needs a newer SDK is served properly only by a build
   made with it; fill its slot only once the build earns it.
+- **An update was rejected for China under Guideline 5** for naming
+  ChatGPT beside other assistants in What's New, the description and a
+  screenshot of a page that named them. Name no AI assistant anywhere the
+  public reads, pictures included: the sheet check fails on ChatGPT, OpenAI
+  and GPT and warns on other assistants' names, and no script reads the
+  screenshots, so read them.
 - **"Coming soon" placeholders** in screenshots or features draw 2.1
   questions; either explain them in the notes or keep them out of the
   pictures.

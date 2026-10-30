@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.69 — 30 October 2026 — The AI Connector, with your AI of choice
+Commit · Name no AI assistant in the app, the site or the store listing
+
+The AI Connector no longer names particular assistants anywhere: the app's About tab, the website's About hub, the MCP page, the privacy policy and the App Store text all say to use the MCP server with your AI of choice, any assistant that speaks the Model Context Protocol. The MCP page's instructions now describe how to add the server in any assistant's settings, for a team, or in a coding assistant. The App Store's AI Connector pictures were remade to match, and the closed iPhone Duo's pictures of the study, the practice questions and the connector now light their own tab in the tab bar rather than Atlases.
+
 ## v12.68 — 29 October 2026 — The sharing card on the molecular viewer's dark backdrop
-Commit · Put the sharing card on the molecular viewer's dark backdrop
+Commit `d210108` · Put the sharing card on the molecular viewer's dark backdrop
 
 The sharing card now wears the molecular viewer's dark backdrop, deep teal above and aubergine below, the night-time twin of the pale backdrop the App Store images stand on, in place of plain black. The words stay white and the brain mark keeps its corner.
 

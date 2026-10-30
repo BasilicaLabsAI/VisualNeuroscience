@@ -73,7 +73,7 @@ Read this first in every session. It is the handover; nothing else needs pasting
   under the portrait, from Thank you for downloading Visual Neuroscience (the lede) to Write to
   fkarim@visualneuroscience.ai and I read it myself, then the signature, the links and the stamp, with no headings (v12.15
   had cut the six sections that stood there); since v12.25, at the owner's word, its models are from Anthropic and
-  Moonshot, where it said Kimi (the MCP pages still name Kimi, the assistant); and since v12.43, at the owner's word,
+  Moonshot, where it said Kimi (the MCP pages named Kimi, the assistant, until v12.69, below); and since v12.43, at the owner's word,
   the second paragraph no longer opens with I am a solo developer, and the built-with sentence reads with knowledge
   from my post-grad in Applied Neuroscience from King's College London Online and my experience in software
   development, where it read with the help of AI and my knowledge from my PG Cert, and the invitation to write in
@@ -206,6 +206,19 @@ Read this first in every session. It is the handover; nothing else needs pasting
   notes, Brodmann areas, network states or the receptor table in `regions.html` change, then ask for a deploy. Its
   sign-in (`mcp-worker/oauth.js`, consent page `site/connect.html`) needs the `OAUTH_SECRET` worker secret, set once
   by the owner; `node mcp-worker/tests/oauth.test.mjs` runs the whole flow offline and must pass before a deploy.
+- **Name no AI assistant** anywhere the app, the site's pages or the store listing shows, pictures included: the MCP
+  server is used with "your AI of choice" (v12.69, at the owner's word). App Review rejected 2.0 (294) on 30 October
+  2026 under Guideline 5 for the China mainland storefront, whose rules refuse generative AI services without a
+  permit there, because What's New, the description and the AI Connector screenshot named ChatGPT beside Claude and
+  Kimi; v12.69 took every assistant's name out of `mcp.html` (its Connecting it list now says how to add the server
+  in any assistant's settings, for an organisation and in a coding assistant), the home page's About hub and its
+  dateline link, `vision-about.html`, `privacy.html`, the About tab's twins in `Shell.swift`, `app/store/LISTING.md`
+  and the AI Connector images, and the submission skill's `check_sheet.py` now fails on ChatGPT, OpenAI and GPT and
+  warns on other assistants' names. The repository's own notes keep the per-assistant setup (`docs/MCP.md`,
+  `README.md`, comments in `mcp-worker/`), and three mentions stand for the owner to decide: the letter's models
+  from Anthropic and Moonshot (`about.html`, the owner's words), the Vision Pro card's How it was built
+  (`vision-about.html`) and one OpenStax sentence naming ChatGPT as an example of AI (`textbook.html`, the book's
+  own text).
 - Usage counts (since v11.21): Google Analytics for Firebase on the website (the vendored bundle's analytics module,
   `measurementId` in `site/assets/firebase-config.js`) and in the apps (`@capacitor-firebase/analytics`, iOS trait
   `AnalyticsWithoutAdIdSupport`, Android manifest with advertising-ID collection off). `site/assets/auth.js` initialises
@@ -986,7 +999,9 @@ Read this first in every session. It is the handover; nothing else needs pasting
 
 ## Open on the owner's side (update as they close)
 - App Store: version 1.0 was approved and released on 25 September 2026 (https://apps.apple.com/app/id6805618686)
-  after an expedited review. The project is at 2.0 for the next submission (the owner's choice of 25 October 2026, in
+  after an expedited review. 2.0 (294) was rejected on 30 October 2026 under Guideline 5 for naming ChatGPT (see
+  Name no AI assistant above); `app/store/LISTING.md` has the resubmission's steps, review note and reply, and it
+  needs a build from v12.69 or later. The project is at 2.0 for the next submission (the owner's choice of 25 October 2026, in
   place of 1.1: `MARKETING_VERSION` in the Xcode project and Android's `versionName`, and the version page in App Store
   Connect must say 2.0 as well, since a build's number and its page's must agree); its What's New text, the App Privacy
   changes the newsletter and the usage counts need, and the steps are in `app/store/LISTING.md`, the screenshots in

@@ -244,13 +244,13 @@ ten for the iPad and ten for each iPhone size.
 Check the build number on the 1.0 page first. If 1.0 went out as build 14
 rather than 15, the second block is new to App Store users as well and goes
 at the end of the first. 4,000 characters allowed; both together come to
-3,180.
+3,148.
 
-**What's New in This Version** (2,812/4000)
+**What's New in This Version** (2,780/4000)
 
 ```
 • A tab bar: Atlases, Library, Practice, About and Account, each a page of its own that keeps its place when you switch away and back. Light or dark is chosen under Account.
-• AI Connector: ask the atlas from Claude, ChatGPT, Kimi or any assistant that supports the Model Context Protocol. Each answer links to the view it describes, and the About tab shows how to connect.
+• AI Connector: use the MCP server with your AI of choice. Any assistant that supports the Model Context Protocol can ask the atlas questions, each answer links to the view it describes, and the About tab shows how to connect.
 • Every atlas fills the screen like an anatomy app: the views take the room, the tools run along a bar at the foot, and the regions sit in a drawer you can hide. Each atlas remembers where you left it, cuts and all.
 • Microanatomy: a neuron drawn part by part, with twenty structures to tap and a quiz to learn them, seventeen neurotransmitters drawn the way chemists draw them, and a hundred and fifty receptors, channels and transporters, each with the drugs that act on it.
 • Molecular: the dopamine and serotonin receptors themselves in 3D, built from thirty-nine experimental structures. Watch the neurotransmitter dock and switch the receptor on, see where antipsychotics, triptans, LSD and psilocin sit in the same pocket, and compare the subtypes. The binding tour reads at two levels, Simple and Detailed.
@@ -281,7 +281,7 @@ the owner's word; it can be changed at any time without a new version:
 A free 3D atlas of the human brain: regions, Brodmann areas, receptors, cells, white matter and networks, with revision questions and an AI connector. Works offline.
 ```
 
-**Description** (3,952/4000). 1.0's description predated
+**Description** (3,974/4000). 1.0's description predated
 Microanatomy, Molecular and the AI Connector and said its developer had not
 finished the postgraduate certificate, which was finished; this one follows
 the Play listing's list, adds the AI Connector, words the account line for
@@ -306,7 +306,7 @@ WHAT IS INSIDE
 
 AI CONNECTOR
 
-Ask the atlas from Claude, ChatGPT, Kimi or any assistant that supports the Model Context Protocol: what a region does, where a receptor is densest, how the brain changes in a state. Each answer links to the view it describes; the About tab shows how to connect.
+Use the MCP server with your AI of choice. Any assistant that supports the Model Context Protocol can ask the atlas what a region does, where a receptor is densest or how the brain changes in a state; each answer links to the view it describes, and the About tab shows how to connect.
 
 MADE FOR TOUCH, AND FOR A DESK
 
@@ -329,6 +329,35 @@ Built by one developer, with the help of AI and a PG Cert in Applied Neuroscienc
 Not a medical device and not a diagnostic tool. An educational reference that summarises published work and draws published atlases, with its sources on every page.
 
 Also on the web at visualneuroscience.ai
+```
+
+## 2.0 (294) rejected for China: resubmitting
+
+App Review rejected 2.0 (294) on 30 October 2026 under Guideline 5 (Legal):
+China's rules on generative AI services, which ChatGPT holds no permit for,
+and "the app's metadata includes the following references to ChatGPT and/or
+OpenAI: ChatGPT, GPT". They came from the AI Connector lines of What's New
+and the description, and from the AI Connector screenshot, the MCP page,
+which named Claude, ChatGPT and Kimi; 1.0 had no AI Connector and never
+named one. Since v12.69, at the owner's word, nothing in the listing, the
+screenshots or the app names an AI assistant: the connector is used with
+"your AI of choice". To resubmit:
+
+1. Wait for the build Xcode Cloud makes from v12.69 or later (the About
+   tab's text is in the app) and pick it on the 2.0 page in place of 294.
+2. Paste *What's New* and the description again from above.
+3. Replace the AI Connector images (`*-11-mcp.png`, every size) with the
+   ones remade in v12.69, or leave that shot out of the ten.
+4. Add this paragraph to the notes under App Review Information:
+
+```
+Guideline 5 (China): this version names no AI assistant anywhere, in its metadata, its screenshots or the app itself. The app has no ChatGPT or OpenAI functionality: it embeds no AI model and calls no AI service. Its AI Connector is a public Model Context Protocol server on our own domain that a person can add, outside the app, to an assistant of their choice; the app only explains how.
+```
+
+5. Reply to the message in App Review, then resubmit:
+
+```
+Hello, and thank you for the review. We have removed every reference to ChatGPT and OpenAI, and to any other AI assistant, from the app's metadata, its screenshots and the app itself, and the Review Notes now say so. The app has no ChatGPT or OpenAI functionality: it embeds no AI model and calls no AI service. Its AI Connector is a public Model Context Protocol server on our own domain that a person can add to an assistant of their choice outside the app. We have resubmitted version 2.0 with a new build. Thank you.
 ```
 
 ## Submitting 2.0, in order

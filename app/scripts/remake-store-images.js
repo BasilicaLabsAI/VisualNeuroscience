@@ -298,6 +298,8 @@ SHOTS.push(
 );
 const PHONE = Object.fromEntries(SHOTS.filter(x => x.dev === 'iphone' && x.top).map(x => [x.out, x]));
 for (const s of SHOTS) if (s.dev === 'duo') s.top = PHONE[s.out] ? PHONE[s.out].top : 'iphone-top-dark-3d-region-atlas';
+/* the closed Duo's column lights the page's own tab as the open one does (it lit Atlases on every shot until v12.69) */
+for (const s of SHOTS) if (s.dev === 'duo') s.tab = TAB[s.out] || 'atlases';
 
 /* the page as the shell shows it */
 const shell = (o) => {

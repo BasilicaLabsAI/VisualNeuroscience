@@ -136,7 +136,7 @@ WHAT IS INSIDE
 
 AI CONNECTOR
 
-Ask the atlas from Claude, ChatGPT, Kimi or any assistant that supports the Model Context Protocol: what a region does, where a receptor is densest, how the brain changes in a state. Each answer links to the view it describes; the About tab shows how to connect.
+Use the MCP server with your AI of choice. Any assistant that supports the Model Context Protocol can ask the atlas what a region does, where a receptor is densest or how the brain changes in a state; each answer links to the view it describes, and the About tab shows how to connect.
 
 MADE FOR TOUCH, AND FOR A DESK
 
@@ -192,7 +192,7 @@ https://visualneuroscience.ai
 ### What's New in This Version (4000)
 ```text
 • A tab bar: Atlases, Library, Practice, About and Account, each a page of its own that keeps its place when you switch away and back. Light or dark is chosen under Account.
-• AI Connector: ask the atlas from Claude, ChatGPT, Kimi or any assistant that supports the Model Context Protocol. Each answer links to the view it describes, and the About tab shows how to connect.
+• AI Connector: use the MCP server with your AI of choice. Any assistant that supports the Model Context Protocol can ask the atlas questions, each answer links to the view it describes, and the About tab shows how to connect.
 • Every atlas fills the screen like an anatomy app: the views take the room, the tools run along a bar at the foot, and the regions sit in a drawer you can hide. Each atlas remembers where you left it, cuts and all.
 • Microanatomy: a neuron drawn part by part, with twenty structures to tap and a quiz to learn them, seventeen neurotransmitters drawn the way chemists draw them, and a hundred and fifty receptors, channels and transporters, each with the drugs that act on it.
 • Molecular: the dopamine and serotonin receptors themselves in 3D, built from thirty-nine experimental structures. Watch the neurotransmitter dock and switch the receptor on, see where antipsychotics, triptans, LSD and psilocin sit in the same pocket, and compare the subtypes. The binding tour reads at two levels, Simple and Detailed.

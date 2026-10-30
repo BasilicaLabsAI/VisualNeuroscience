@@ -29,6 +29,13 @@
   are not other platforms: a Vision Pro listing may say the app is also on
   iPhone and iPad.
 - **No competitors' names or trademarks**, in the text or the keywords.
+- **No AI assistant by name** (ChatGPT, OpenAI, GPT, and to be safe Claude,
+  Gemini, Copilot, Kimi or any other) in any field or picture. App Review
+  rejects such a listing for the China mainland storefront under Guideline
+  5, since those services hold no permit there; an update was rejected so on
+  30 October 2026 for one line in What's New, one in the description and a
+  screenshot. Say what the feature does and "your AI of choice". The review
+  notes may name them, since only App Review reads those.
 - **No markup.** The description is plain text; App Store Connect keeps the
   line breaks. Capitals can stand for section labels, `•` for bullets.
 
@@ -150,6 +157,7 @@ Facts only, no marketing, under 4000.
 | 4.2 | an app that is a website in a frame |
 | 4.3 | a name, concept or binary close to other apps' |
 | 4.8 | a third-party sign-in without Sign in with Apple or an equivalent beside it |
+| 5 | an AI assistant named in the metadata or the pictures (ChatGPT, OpenAI, GPT), refused for the China mainland storefront; name none, or leave China out of Availability |
 | 5.1.1 | no privacy policy link, no in-app account deletion, permissions without a purpose string |
 | 1.4.1 | health or medical claims without evidence or a disclaimer |
 

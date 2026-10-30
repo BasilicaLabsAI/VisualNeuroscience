@@ -78,6 +78,10 @@ the simulator of the slot's own device is already its size.
   does not sell.
 - **No prices or offers** in the pictures, no "free" banners, no ratings or
   awards claimed without a source, no other companies' names or logos.
+- **No AI assistant's name in the picture.** A screenshot of a page that
+  names ChatGPT fails as the text does (Guideline 5, the China mainland
+  storefront). No script reads a picture's words, so read every one before
+  uploading.
 - **A clean status bar.** On the simulator, `xcrun simctl status_bar booted
   override --time 9:41 --batteryState charged --batteryLevel 100` before
   capturing; on a device, cover nothing that the system draws.
