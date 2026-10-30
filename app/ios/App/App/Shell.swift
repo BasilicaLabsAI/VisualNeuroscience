@@ -216,11 +216,11 @@ struct ShellRoot: View {
                 account.warm()   // the account's copy for the pages, read again on each return to the front (v12.54)
                 Task { await update.look() }
             }
-            .alert("Update Available", isPresented: $update.asking, presenting: update.newer) { _ in
-                Button("Update") { openURL(UpdateCheck.storePage) }
-                Button("Not Now", role: .cancel) {}
+            .alert(L("Update Available"), isPresented: $update.asking, presenting: update.newer) { _ in
+                Button(L("Update")) { openURL(UpdateCheck.storePage) }
+                Button(L("Not Now"), role: .cancel) {}
             } message: { version in
-                Text("Version \(version) of Visual Neuroscience is on the App Store, and this device has \(UpdateCheck.installed). Update to get the latest atlases and fixes.")
+                Text(L("Version {1} of Visual Neuroscience is on the App Store, and this device has {2}. Update to get the latest atlases and fixes.", version, UpdateCheck.installed))
             }
     }
 }
@@ -230,15 +230,15 @@ struct ShellTabs: View {
     var body: some View {
         TabView {
             AtlasTab()
-                .tabItem { Label("Atlases", systemImage: "brain") }
+                .tabItem { Label(L("Atlases"), systemImage: "brain") }
             LibraryTab()
-                .tabItem { Label("Library", systemImage: "books.vertical") }
+                .tabItem { Label(L("Library"), systemImage: "books.vertical") }
             PracticeTab()
-                .tabItem { Label("Practice", systemImage: "checklist") }
+                .tabItem { Label(L("Practice"), systemImage: "checklist") }
             AboutTab()
-                .tabItem { Label("About", systemImage: "info.circle") }
+                .tabItem { Label(L("About"), systemImage: "info.circle") }
             AccountTab()
-                .tabItem { Label("Account", systemImage: "person") }
+                .tabItem { Label(L("Account"), systemImage: "person") }
         }
     }
 }
@@ -270,36 +270,36 @@ struct PageBox: View {
 struct AtlasTab: View {
     var body: some View {
         TabPage {
-            PageBox(page: .regionAtlas, kicker: "The Atlas",
-                    text: "A detailed 3D atlas of the human brain, with receptor density maps and a functional breakdown of every region, what goes wrong in it and what damage has shown.",
+            PageBox(page: .regionAtlas, kicker: L("The Atlas"),
+                    text: L("A detailed 3D atlas of the human brain, with receptor density maps and a functional breakdown of every region, what goes wrong in it and what damage has shown."),
                     shot: Shot("assets/home/atlas.jpg", light: "assets/home/atlas-light.jpg"),
-                    meta: "116 parcels · four viewports · receptor densities · slice tool · PNG and 3D export · saved and example maps",
-                    go: "Open the atlas")
-            PageBox(page: .tractography, kicker: "White matter",
-                    text: "The white matter’s million fibre pathways, from the HCP1065 population average, in full 3D.",
+                    meta: L("116 parcels · four viewports · receptor densities · slice tool · PNG and 3D export · saved and example maps"),
+                    go: L("Open the atlas"))
+            PageBox(page: .tractography, kicker: L("White matter"),
+                    text: L("The white matter’s million fibre pathways, from the HCP1065 population average, in full 3D."),
                     shot: Shot("assets/home/tracts.jpg", light: "assets/home/tracts-light.jpg"),
-                    meta: "Direction-coloured streamlines · free rotation",
-                    go: "Open the tractogram")
-            PageBox(page: .molecular, kicker: "The molecules",
-                    text: "The dopamine and serotonin receptors in three dimensions, with the transmitters and drugs that bind them.",
+                    meta: L("Direction-coloured streamlines · free rotation"),
+                    go: L("Open the tractogram"))
+            PageBox(page: .molecular, kicker: L("The molecules"),
+                    text: L("The dopamine and serotonin receptors in three dimensions, with the transmitters and drugs that bind them."),
                     shot: Shot("assets/home/molecular.jpg", light: "assets/home/molecular-light.jpg"),
-                    meta: "17 receptors · 39 structures · 24 drugs · binding tour · compare",
-                    go: "Open the receptors")
-            PageBox(page: .microanatomy, kicker: "Under the microscope",
-                    text: "The neuron and its synapses at the cell’s scale, down to the neurotransmitters and their receptors.",
+                    meta: L("17 receptors · 39 structures · 24 drugs · binding tour · compare"),
+                    go: L("Open the receptors"))
+            PageBox(page: .microanatomy, kicker: L("Under the microscope"),
+                    text: L("The neuron and its synapses at the cell’s scale, down to the neurotransmitters and their receptors."),
                     shot: Shot("assets/home/cells.jpg", light: "assets/home/cells-light.jpg"),
-                    meta: "2 cells drawn · 37 structures · explore and test modes",
-                    go: "Open the cell")
-            PageBox(page: .brodmann, kicker: "Cytoarchitecture",
-                    text: "Brodmann’s 41 areas of the cortex on a map of both faces of the hemisphere. Tap one and what it does appears beside it.",
+                    meta: L("2 cells drawn · 37 structures · explore and test modes"),
+                    go: L("Open the cell"))
+            PageBox(page: .brodmann, kicker: L("Cytoarchitecture"),
+                    text: L("Brodmann’s 41 areas of the cortex on a map of both faces of the hemisphere. Tap one and what it does appears beside it."),
                     shot: Shot("assets/home/brodmann.jpg", light: "assets/home/brodmann-light.jpg"),
-                    meta: "41 areas · both faces · what each one does",
-                    go: "Open the map")
-            PageBox(page: .networkAtlas, kicker: "Systems",
-                    text: "The brain’s large-scale networks in six states, from flow to meditation, mapped onto the scan.",
+                    meta: L("41 areas · both faces · what each one does"),
+                    go: L("Open the map"))
+            PageBox(page: .networkAtlas, kicker: L("Systems"),
+                    text: L("The brain’s large-scale networks in six states, from flow to meditation, mapped onto the scan."),
                     shot: Shot("assets/home/network.jpg", light: "assets/home/network-light.jpg"),
-                    meta: "6 states · 7 systems · 20 nodes",
-                    go: "Open the ring")
+                    meta: L("6 states · 7 systems · 20 nodes"),
+                    go: L("Open the ring"))
         }
     }
 }
@@ -308,21 +308,21 @@ struct AtlasTab: View {
 struct LibraryTab: View {
     var body: some View {
         TabPage {
-            PageBox(page: .studies, kicker: "The Papers",
-                    text: "Published neuroimaging studies drawn directly on the brain, region by region.",
+            PageBox(page: .studies, kicker: L("The Papers"),
+                    text: L("Published neuroimaging studies drawn directly on the brain, region by region."),
                     shot: Shot("assets/studies/hallucinations.png", light: "assets/studies/hallucinations-light.png"),
-                    meta: "1 study drawn · more to come",
-                    go: "Open the shelf")
-            PageBox(page: .textbook, kicker: "The Book",
-                    text: "OpenStax’s complete Introduction to Behavioral Neuroscience, in the site’s own pages.",
+                    meta: L("1 study drawn · more to come"),
+                    go: L("Open the shelf"))
+            PageBox(page: .textbook, kicker: L("The Book"),
+                    text: L("OpenStax’s complete Introduction to Behavioral Neuroscience, in the site’s own pages."),
                     shot: Shot("assets/home/textbook.jpg", light: "assets/home/textbook-light.jpg"),
-                    meta: "19 chapters · 85 sections · 506 figures · CC BY-NC-SA",
-                    go: "Open the book")
-            PageBox(page: .posters, kicker: "On paper",
-                    text: "Two A1 prints: every neurotransmitter drawn to one scale, and the receptors with their affinities.",
+                    meta: L("19 chapters · 85 sections · 506 figures · CC BY-NC-SA"),
+                    go: L("Open the book"))
+            PageBox(page: .posters, kicker: L("On paper"),
+                    text: L("Two A1 prints: every neurotransmitter drawn to one scale, and the receptors with their affinities."),
                     shot: Shot("assets/posters/home.jpg"),
-                    meta: "2 posters · A1 · shop opening soon",
-                    go: "See the posters")
+                    meta: L("2 posters · A1 · shop opening soon"),
+                    go: L("See the posters"))
         }
     }
 }
@@ -331,11 +331,11 @@ struct LibraryTab: View {
 struct PracticeTab: View {
     var body: some View {
         TabPage {
-            PageBox(page: .practice, kicker: "Revision", title: "Neuroscience Practice",
-                    text: "Adaptive multiple-choice revision built for the KCL MSc Neuroscience syllabus.",
+            PageBox(page: .practice, kicker: L("Revision"), title: L("Neuroscience Practice"),
+                    text: L("Adaptive multiple-choice revision built for the KCL MSc Neuroscience syllabus."),
                     shot: Shot("assets/home/practice.jpg", light: "assets/home/practice-light.jpg"),
-                    meta: "Adaptive questions · session score · explanations",
-                    go: "Start practising")
+                    meta: L("Adaptive questions · session score · explanations"),
+                    go: L("Start practising"))
         }
     }
 }
@@ -345,30 +345,30 @@ struct PracticeTab: View {
 struct AboutTab: View {
     var body: some View {
         TabPage {
-            PageBox(page: .mcp, kicker: "For AI assistants",
-                    text: "Use the MCP server with your AI of choice. Any assistant that speaks the Model Context Protocol can ask the atlas what a region does, where a receptor is densest or how the brain changes in a state, and each answer links to the view it describes.",
-                    meta: "9 tools · no key needed · sign in only for your own models",
-                    go: "How to connect")
-            Box(kicker: "On the way", title: "Coming soon",
-                text: "Three things being built now, none of them ready to open yet.") {
+            PageBox(page: .mcp, kicker: L("For AI assistants"),
+                    text: L("Use the MCP server with your AI of choice. Any assistant that speaks the Model Context Protocol can ask the atlas what a region does, where a receptor is densest or how the brain changes in a state, and each answer links to the view it describes."),
+                    meta: L("9 tools · no key needed · sign in only for your own models"),
+                    go: L("How to connect"))
+            Box(kicker: L("On the way"), title: L("Coming soon"),
+                text: L("Three things being built now, none of them ready to open yet.")) {
                 VStack(alignment: .leading, spacing: 0) {
-                    SoonRow(name: "Circuit Atlas", text: "The 3D Region Atlas with the traffic drawn on: animated paths run from region to region, so a circuit such as the Hallucinations study’s plays out on the brain.")
-                    SoonRow(name: "Regions in depth", text: "A detailed functional breakdown of every region, written from the research, beyond the line the atlas gives each one now.")
-                    SoonRow(name: "The MCP server, extended", text: "New tools for your AI of choice: the Circuit Atlas’s paths and the detailed breakdowns, answered in any assistant that speaks the protocol.")
+                    SoonRow(name: L("Circuit Atlas"), text: L("The 3D Region Atlas with the traffic drawn on: animated paths run from region to region, so a circuit such as the Hallucinations study’s plays out on the brain."))
+                    SoonRow(name: L("Regions in depth"), text: L("A detailed functional breakdown of every region, written from the research, beyond the line the atlas gives each one now."))
+                    SoonRow(name: L("The MCP server, extended"), text: L("New tools for your AI of choice: the Circuit Atlas’s paths and the detailed breakdowns, answered in any assistant that speaks the protocol."))
                 }
                 .padding(.top, 10)
             }
-            PageBox(page: .about, kicker: "From the developer", title: "A Message from the Developer",
+            PageBox(page: .about, kicker: L("From the developer"), title: L("A Message from the Developer"),
                     shot: Shot("assets/portrait/portrait.webp", framed: true),
-                    meta: "Fadil Karim · built by one engineer · free to use",
-                    go: "Read the message")
-            Box(kicker: "Follow and write", title: "Channels") {
+                    meta: L("Fadil Karim · built by one engineer · free to use"),
+                    go: L("Read the message"))
+            Box(kicker: L("Follow and write"), title: L("Channels")) {
                 VStack(alignment: .leading, spacing: 0) {
                     OutLink(name: "YouTube", handle: "@VisualNeuroscienceAI", url: "https://www.youtube.com/@VisualNeuroscienceAI")
                     OutLink(name: "Instagram", handle: "@VisualNeuroscience", url: "https://www.instagram.com/visualneuroscience/")
                     OutLink(name: "Instagram", handle: "fid_900", url: "https://www.instagram.com/fid_900/")
                     OutLink(name: "LinkedIn", handle: "Fadil Karim", url: "https://www.linkedin.com/in/fadil-karim/")
-                    OutLink(name: "Email", handle: "fkarim@visualneuroscience.ai", url: "mailto:fkarim@visualneuroscience.ai")
+                    OutLink(name: L("Email"), handle: "fkarim@visualneuroscience.ai", url: "mailto:fkarim@visualneuroscience.ai")
                 }
                 .padding(.top, 10)
             }
@@ -479,35 +479,48 @@ struct PageRow: View {
 /// The account and what goes with it: preferences, support and the credits.
 struct AccountTab: View {
     @EnvironmentObject private var store: AppStore
+    @Environment(\.openURL) private var openURL
 
     init() {}
 
     var body: some View {
         TabPage {
             AccountBox()
-            Box(kicker: "Preferences", title: "Appearance",
-                text: "Light or dark, for these pages, the atlas pages and the scans.") {
-                Picker("Appearance", selection: $store.theme) {
-                    Text("Dark").tag(Theme.dark)
-                    Text("Light").tag(Theme.light)
+            Box(kicker: L("Preferences"), title: L("Appearance"),
+                text: L("Light or dark, for these pages, the atlas pages and the scans.")) {
+                Picker(L("Appearance"), selection: $store.theme) {
+                    Text(L("Dark")).tag(Theme.dark)
+                    Text(L("Light")).tag(Theme.light)
                 }
                 .pickerStyle(.segmented)
                 .padding(.top, 14)
             }
+            // the language is iOS's to give (v12.71): the phone's own, or the one
+            // picked for the app on its page in Settings, which the row opens
+            Box(kicker: L("Preferences"), title: L("Language"),
+                text: L("The app speaks your device's language: Simplified Chinese where the device reads Chinese, English everywhere else. Where the device lists more than one language, the app's own page in Settings can choose another for it.")) {
+                VStack(alignment: .leading, spacing: 0) {
+                    ActRow(name: L("Open Settings"), text: L("This app's page, where its language is chosen"),
+                           icon: "arrow.up.right") {
+                        if let page = URL(string: UIApplication.openSettingsURLString) { openURL(page) }
+                    }
+                }
+                .padding(.top, 10)
+            }
             if UIApplication.shared.supportsAlternateIcons {
-                Box(kicker: "Preferences", title: "App icon",
-                    text: "The brain on a white tile or on a black one, on the Home Screen. The one in use is boxed; press the other to change over.") {
+                Box(kicker: L("Preferences"), title: L("App icon"),
+                    text: L("The brain on a white tile or on a black one, on the Home Screen. The one in use is boxed; press the other to change over.")) {
                     IconTileChoice(tile: $store.iconTile)
                 }
             }
-            Box(kicker: "Support", title: "Help, privacy and terms",
-                text: "Questions and problems go straight to the developer. The password is changed, and the account deleted, from the account's own page.") {
+            Box(kicker: L("Support"), title: L("Help, privacy and terms"),
+                text: L("Questions and problems go straight to the developer. The password is changed, and the account deleted, from the account's own page.")) {
                 VStack(alignment: .leading, spacing: 0) {
-                    OutLink(name: "Email", handle: "fkarim@visualneuroscience.ai", url: "mailto:fkarim@visualneuroscience.ai")
-                    PageRow(name: "Privacy & Support", text: "What the app keeps, and how to reach the developer", page: .privacy)
-                    PageRow(name: "Terms of Use", text: "What you may do here, and what we promise and do not", page: .terms)
-                    PageRow(name: "Change your password", text: "A new password for an account that logs in with an email address", page: .password)
-                    PageRow(name: "Delete your account", text: "Remove the account, its saved models and its progress, for good", page: .deleteAccount)
+                    OutLink(name: L("Email"), handle: "fkarim@visualneuroscience.ai", url: "mailto:fkarim@visualneuroscience.ai")
+                    PageRow(name: L("Privacy & Support"), text: L("What the app keeps, and how to reach the developer"), page: .privacy)
+                    PageRow(name: L("Terms of Use"), text: L("What you may do here, and what we promise and do not"), page: .terms)
+                    PageRow(name: L("Change your password"), text: L("A new password for an account that logs in with an email address"), page: .password)
+                    PageRow(name: L("Delete your account"), text: L("Remove the account, its saved models and its progress, for good"), page: .deleteAccount)
                 }
                 .padding(.top, 10)
             }
@@ -538,20 +551,20 @@ struct AccountBox: View {
     var body: some View {
         Group {
             if let person = account.person {
-                Box(kicker: "Your account", title: "Logged in", text: Self.signedIn(person)) {
+                Box(kicker: L("Your account"), title: L("Logged in"), text: Self.signedIn(person)) {
                     VStack(alignment: .leading, spacing: 0) {
-                        PageRow(name: "Your account's page",
-                                text: "Your details, your saved models and your progress; a copy of all of it; the password; deletion",
+                        PageRow(name: L("Your account's page"),
+                                text: L("Your details, your saved models and your progress; a copy of all of it; the password; deletion"),
                                 page: .account)
-                        ActRow(name: "Log out", text: "On this device; the account and what it holds stay",
+                        ActRow(name: L("Log out"), text: L("On this device; the account and what it holds stay"),
                                icon: "rectangle.portrait.and.arrow.right") { account.logOut() }
                     }
                     .padding(.top, 10)
                     AccountNote()
                 }
             } else {
-                Box(kicker: "Your account", title: "Account",
-                    text: "Log in to keep your saved models and your practice progress with the account, here and on the website, or create one. An account is optional: everything works without one.") {
+                Box(kicker: L("Your account"), title: L("Account"),
+                    text: L("Log in to keep your saved models and your practice progress with the account, here and on the website, or create one. An account is optional: everything works without one.")) {
                     VStack(alignment: .leading, spacing: 12) {
                         SignInWithAppleButton(.continue) { request in
                             request.requestedScopes = [.fullName, .email]
@@ -561,17 +574,17 @@ struct AccountBox: View {
                         }
                         .signInWithAppleButtonStyle(store.theme == .dark ? .white : .black)
                         .frame(height: 48)
-                        InkButton(name: "Continue with Google", filled: false) {
+                        InkButton(name: L("Continue with Google"), filled: false) {
                             Task { await account.logInWithGoogle() }
                         }
-                        Text("OR WITH AN EMAIL")
+                        Text(L("Or with an email").uppercased())
                             .font(Faces.brand(10, .caption2))
                             .tracking(2.6)
                             .foregroundColor(Palette.ink60)
                             .padding(.top, 6)
-                        AccountField(name: "Email", text: $email)
-                        AccountField(name: "Password", text: $password, secure: true, creating: creating)
-                        InkButton(name: creating ? "Create the account" : "Log in") {
+                        AccountField(name: L("Email"), text: $email)
+                        AccountField(name: L("Password"), text: $password, secure: true, creating: creating)
+                        InkButton(name: creating ? L("Create the account") : L("Log in")) {
                             let given = email, secret = password
                             Task {
                                 if creating { await account.createAccount(email: given, password: secret) }
@@ -579,13 +592,13 @@ struct AccountBox: View {
                             }
                         }
                         HStack {
-                            QuietLink(name: creating ? "I have an account" : "Create an account") {
+                            QuietLink(name: creating ? L("I have an account") : L("Create an account")) {
                                 creating.toggle()
                                 account.note = nil
                             }
                             Spacer()
                             if !creating {
-                                QuietLink(name: "Forgot the password?") {
+                                QuietLink(name: L("Forgot the password?")) {
                                     let given = email
                                     Task { await account.sendReset(email: given) }
                                 }
@@ -608,8 +621,8 @@ struct AccountBox: View {
 
     /// The standfirst once logged in: who, and what the account keeps.
     private static func signedIn(_ person: Person) -> String {
-        let who = (person.email?.isEmpty == false ? person.email : nil) ?? person.name ?? "your account"
-        return "As \(who). Your saved models and your practice progress are kept with the account, here and on the website. The account's page shows your details, changes the password, downloads a copy of all of it or deletes the account."
+        let who = (person.email?.isEmpty == false ? person.email : nil) ?? person.name ?? L("your account")
+        return L("As {1}. Your saved models and your practice progress are kept with the account, here and on the website. The account's page shows your details, changes the password, downloads a copy of all of it or deletes the account.", who)
     }
 }
 
@@ -760,8 +773,8 @@ struct IconTileChoice: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            option(.white, name: "White", picture: "IconTileWhite")
-            option(.black, name: "Black", picture: "IconTileBlack")
+            option(.white, name: L("White"), picture: "IconTileWhite")
+            option(.black, name: L("Black"), picture: "IconTileBlack")
             Spacer(minLength: 0)
         }
         .padding(.top, 14)
@@ -790,7 +803,7 @@ struct IconTileChoice: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(PressStyle())
-        .accessibilityLabel(Text("\(name) tile"))
+        .accessibilityLabel(Text(L("{1} tile", name)))
         .accessibilityAddTraits(chosen ? .isSelected : [])
     }
 }
@@ -800,19 +813,19 @@ struct IconTileChoice: View {
 struct Credits: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("CREDITS")
+            Text(L("Credits").uppercased())
                 .font(Faces.brand(10, .caption2))
                 .tracking(2.6)
                 .foregroundColor(Palette.ink60)
-            Text("Rendered with [NiiVue](https://github.com/niivue/niivue) (Rorden lab). MNI152 template, McConnell Brain Imaging Centre. AAL parcellation, Tzourio-Mazoyer et al. 2002. Brodmann atlas volume from MRIcron. Receptor PET maps from Hansen et al. 2022 (CC BY-NC-SA 4.0) and autoradiography from Zilles and Palomero-Gallagher 2017 (CC BY 4.0). HCP1065 tractography, Yeh 2022 (CC BY-SA 4.0). Receptor structures from the Protein Data Bank, through GPCRdb.")
+            Text(Self.marked(L("Rendered with [NiiVue](https://github.com/niivue/niivue) (Rorden lab). MNI152 template, McConnell Brain Imaging Centre. AAL parcellation, Tzourio-Mazoyer et al. 2002. Brodmann atlas volume from MRIcron. Receptor PET maps from Hansen et al. 2022 (CC BY-NC-SA 4.0) and autoradiography from Zilles and Palomero-Gallagher 2017 (CC BY 4.0). HCP1065 tractography, Yeh 2022 (CC BY-SA 4.0). Receptor structures from the Protein Data Bank, through GPCRdb.")))
                 .font(Faces.serifItalic(14, .footnote))
                 .foregroundColor(Palette.ink60)
                 .fixedSize(horizontal: false, vertical: true)
-            Text("Brodmann Areas diagram adapted with permission from IFEN – Institute for EEG-Neurofeedback / [Neurofeedback Academy](https://neurofeedback-academy.com).")
+            Text(Self.marked(L("Brodmann Areas diagram adapted with permission from IFEN – Institute for EEG-Neurofeedback / [Neurofeedback Academy](https://neurofeedback-academy.com).")))
                 .font(Faces.serifItalic(14, .footnote))
                 .foregroundColor(Palette.ink60)
                 .fixedSize(horizontal: false, vertical: true)
-            Text("The Digital Textbook is OpenStax’s Introduction to Behavioral Neuroscience, under CC BY-NC-SA 4.0. Set in Flux, Newsreader and Prata, under the SIL Open Font License. © 2026 VisualNeuroscience.AI")
+            Text(Self.marked(L("The Digital Textbook is OpenStax’s Introduction to Behavioral Neuroscience, under CC BY-NC-SA 4.0. Set in Flux, Newsreader and Prata, under the SIL Open Font License. © 2026 VisualNeuroscience.AI")))
                 .font(Faces.serifItalic(14, .footnote))
                 .foregroundColor(Palette.ink60)
                 .fixedSize(horizontal: false, vertical: true)
@@ -820,5 +833,12 @@ struct Credits: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 4)
         .padding(.vertical, 10)
+    }
+
+    /// Words whose links are written in Markdown, drawn as a Text draws a
+    /// literal's: the links live, nothing else read as Markdown.
+    private static func marked(_ words: String) -> AttributedString {
+        let inline = AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
+        return (try? AttributedString(markdown: words, options: inline)) ?? AttributedString(words)
     }
 }

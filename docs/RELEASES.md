@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.71 — 30 October 2026 — The iOS app follows the phone's language
+Commit · Make the iOS app follow the phone's language, in Simplified Chinese where it reads Chinese
+
+The iPhone and iPad app now speaks the language of the device. On a phone or iPad set to Simplified Chinese the five tabs and every box on them, the sign-in on the Account tab with its messages, the notice of a newer version on the App Store and the credits are in Chinese, the system's own buttons follow, and the pages that have a Chinese version, the MCP page, the developer's message, the studies and the posters, open in it. A new Language box on the Account tab says what the app speaks and opens the app's page in Settings, where iOS lets a device that lists more than one language choose another for this app alone. The app's words come from the same list as the website's Chinese pages, so one list is checked for both; on the website the email link now reads 邮箱. The atlases themselves are still in English and follow in later releases. The app takes it with its next build.
+
 ## v12.70 — 30 October 2026 — The website in Simplified Chinese, its first pages
-Commit · Add Simplified Chinese pages beside the English ones, opened by the reader's language
+Commit `6fa7716` · Add Simplified Chinese pages beside the English ones, opened by the reader's language
 
 The website begins to speak Simplified Chinese. A browser set to Chinese now opens the home page, the MCP page, the developer's message, the studies and the posters in Chinese, and a 中文 or EN button beside the theme switches between the two at any time, the choice remembered. Each Chinese page is a real page with an address of its own, linked to its English twin, so search engines can find and rank it, and a new sitemap lists every page. The atlases, the app's tabs and the rest follow in the next releases.
 

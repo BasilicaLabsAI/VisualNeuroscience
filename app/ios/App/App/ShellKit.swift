@@ -7,6 +7,43 @@ import UIKit
    own: the tab bar names it, and its first box starts at the top.
    Shell.swift lays the tabs out with them; ShellWeb.swift opens the pages. */
 
+// MARK: - Languages
+
+/// The language the app speaks (v12.71, at the owner's word): the one iOS
+/// gives it from the phone's own list of languages, or the one picked for
+/// the app on its page in Settings, among those Info.plist names
+/// (CFBundleLocalizations: English and Simplified Chinese). Traditional
+/// Chinese has none of its own yet, so iOS passes over it to the next
+/// language in the person's list, as the website does.
+nonisolated enum Lang {
+    /// iOS's name for it: "en" or "zh-Hans".
+    static let code: String = Bundle.main.preferredLocalizations.first ?? "en"
+    /// Whether the app speaks Simplified Chinese.
+    static let chinese: Bool = code.lowercased().hasPrefix("zh-hans") || code.lowercased() == "zh"
+
+    /// A page's Chinese twin, where the app speaks Chinese: "about.html" is
+    /// "about.zh-hans.html", which scripts/i18n/build.py writes beside it.
+    /// Whether the bundle holds it is for the caller to see.
+    static func twin(of file: String) -> String? {
+        guard chinese, file.hasSuffix(".html") else { return nil }
+        return String(file.dropLast(".html".count)) + ".zh-hans.html"
+    }
+}
+
+/// English words in the app's language: their Chinese from the catalog the
+/// website's pages are written from (i18n/zh-hans.json, gathered into
+/// ShellWords.swift), or the English where it has none. Every word the
+/// shell shows passes through here, written L("…") where it stands, which
+/// is how scripts/i18n/build.py finds it; {1}, {2} in the words take the
+/// values given after them, in either language.
+nonisolated func L(_ english: String, _ values: String...) -> String {
+    var out = Lang.chinese ? (ShellWords.zh[english] ?? english) : english
+    for (i, value) in values.enumerated() {
+        out = out.replacingOccurrences(of: "{\(i + 1)}", with: value)
+    }
+    return out
+}
+
 // MARK: - Palette
 
 /// The site's colours (index.html's :root), from the asset catalog, each
@@ -101,7 +138,7 @@ struct KeyboardDismissal: ViewModifier {
     @ToolbarContentBuilder private var done: some ToolbarContent {
         ToolbarItemGroup(placement: .keyboard) {
             Spacer()
-            Button("Done") {
+            Button(L("Done")) {
                 _ = UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             }
         }
@@ -186,7 +223,7 @@ struct TabPage<Content: View>: View {
                        (v12.14, at the owner's word); the pages say it too (navbar.js).
                        An iPhone Duo opened has an iPad's room and goes without it */
                     if !padLayout(horizontalSize, verticalSize) {
-                        Text("Best experienced on iPad".uppercased())
+                        Text(L("Best experienced on iPad").uppercased())
                             .font(Faces.brand(10, .caption2))
                             .tracking(2.6)
                             .foregroundColor(Palette.ink60)

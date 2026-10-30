@@ -49,7 +49,8 @@ Read this first in every session. It is the handover; nothing else needs pasting
   double tap on a region row once magnified the whole atlas page), and `viewer.css` sets `touch-action:manipulation` on
   `html` (the molecular viewer's `base.css` too), which takes WebKit's double-tap zoom off every page on the website as
   well, where a pinch still enlarges the page for whoever needs it. When a home-page box's text or picture changes,
-  change its twin in `Shell.swift` too. Since v12.51, at the owner's word, the six atlas boxes stand in one order on
+  change its twin in `Shell.swift` too, its words written `L("…")` with their Chinese in the catalog (Languages,
+  below). Since v12.51, at the owner's word, the six atlas boxes stand in one order on
   the home page, the app's Atlases tab and the Android menu (`SECTIONS` in `navbar.js`): the 3D Region Atlas,
   Tractography, Molecular, Microanatomy, the Brodmann Area Atlas and, last, the Network Atlas; on the home page's
   twelve columns the tractography and molecular boxes stand beside the lead (`span 5`, Molecular drawn as a narrow box
@@ -226,9 +227,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
   that holds text of its own (inline markup kept, whitespace folded, so a sentence is translated whole), plus the
   readable attributes (alt, title, aria-label, placeholder) and the description and sharing metas; a unit the
   catalog lacks stays English and is reported, and a name's Chinese is its English. **Run `python3
-  scripts/i18n/build.py` after editing any page** (it rewrites the twins, `assets/i18n/zh-hans.js` and
-  `sitemap.xml`); `--check` fails on a stale file or a twin page's English left untranslated, and `--missing` prints
-  that English as JSON to translate into the catalog. Every public page carries the build's block first in its head
+  scripts/i18n/build.py` after editing any page or the iOS shell's words** (it rewrites the twins,
+  `assets/i18n/zh-hans.js`, `sitemap.xml` and the app's `ShellWords.swift`); `--check` fails on a stale file or on
+  English left untranslated in a twin page or the shell, and `--missing` prints that English as JSON to translate
+  into the catalog. Every public page carries the build's block first in its head
   (`<!-- i18n: … -->`: `meta[name=vn-langs]`, `assets/i18n.js`, and on pages with a twin the hreflang links, en,
   zh-Hans and x-default, to the bare addresses the live site serves); a twin adds the strings file and
   `assets/i18n-zh-hans.css` (the system's Chinese faces after the site's Latin ones, no italic, the smallest lines
@@ -247,7 +249,20 @@ Read this first in every session. It is the handover; nothing else needs pasting
   every public page and its twin (`get`, `share`, the Vision Pro pages, the redirect stub and the poster, account
   and connect pages left out). The mainland storefront asks for an ICP filing, which needs a company in China, and
   Google's services the account and the counts use do not reach the mainland; Simplified Chinese serves Chinese
-  readers everywhere else, and ranking on Baidu is weaker without mainland hosting.
+  readers everywhere else, and ranking on Baidu is weaker without mainland hosting. Since v12.71 the iOS app speaks
+  it too: `Info.plist` names its languages (`CFBundleLocalizations`, en and zh-Hans; `zh-Hans` is among the project's
+  `knownRegions`), so iOS gives the app Chinese from the phone's own list of languages, or the one picked on the
+  app's page in Settings, which offers the choice once an app names two, and the system's own controls follow it.
+  `Lang` in `ShellKit.swift` reads it (`Bundle.main.preferredLocalizations`), the start script hands it to every page
+  as `window.VN_LANG`, and a page's bridge opens the page's Chinese twin where the bundle holds one (`startFile` in
+  `PageBridgeController.instanceDescriptor`, `ShellLinks` told that file, `Page(link:)` folding a twin's link back
+  to the English file's page and title). Every word the shell shows is written `L("…")` where it stands (`L` in
+  `ShellKit.swift`, `{1}` and `{2}` in the words taking the values given after them, as the update popup's version
+  and the account's address do), and the build gathers each one with its Chinese from the same catalog into
+  `app/ios/App/App/ShellWords.swift`, generated, in the project beside the shell's other files: a new word in the
+  shell is `L("…")`, its Chinese in the catalog and the script run. The Account tab's Language box, under
+  Appearance, says what the app speaks and opens its page in Settings (`UIApplication.openSettingsURLString`).
+  Words of the shell's own were added to the catalog with it, and Email reads 邮箱 on the site as in the app.
 - Usage counts (since v11.21): Google Analytics for Firebase on the website (the vendored bundle's analytics module,
   `measurementId` in `site/assets/firebase-config.js`) and in the apps (`@capacitor-firebase/analytics`, iOS trait
   `AnalyticsWithoutAdIdSupport`, Android manifest with advertising-ID collection off). `site/assets/auth.js` initialises
@@ -1024,7 +1039,10 @@ Read this first in every session. It is the handover; nothing else needs pasting
 - Swift: both Xcode projects build with Approachable Concurrency, main-actor isolation by default and complete
   concurrency checking in the Swift 5 language mode; the visionOS data layer is `nonisolated` and its slow work is
   `@concurrent`, never a detached task. Nothing here can compile Swift, so a Swift change is verified by the owner's
-  build (Xcode Cloud for iOS on every push to `main`; the Mac for visionOS); say so when handing one over.
+  build (Xcode Cloud for iOS on every push to `main`; the Mac for visionOS); say so when handing one over. Its syntax
+  can be checked here all the same (v12.71): `python3 -m pip install --target <scratchpad>/tslib tree-sitter
+  tree-sitter-swift` (`python3 -m pip`, so the wheels match the Python that runs the check), then parse each file and
+  look for ERROR and MISSING nodes, which catches a dropped bracket or quote though nothing of types.
 
 ## Open on the owner's side (update as they close)
 - App Store: version 1.0 was approved and released on 25 September 2026 (https://apps.apple.com/app/id6805618686)
@@ -1144,9 +1162,9 @@ Out of reach with this atlas, and said so: patient scans, tracking of our own, a
 Simplified Chinese first, by the phone's iOS language, ranking in other languages. Done in v12.70: the machinery
 (above), the header's button, the sitemap, and the home page, the MCP page, the developer's message, the studies and
 the posters in Chinese.
-1. The iOS shell: `window.VN_LANG` in `startScript`, the twin opened in place of a page that has one, the tabs' words
-   in a String Catalog with zh-Hans, the project's known regions and a Language row under Account that opens the
-   app's own Settings page, where iOS offers the language once the app carries two.
+1. The iOS shell: done in v12.71 (`window.VN_LANG`, the twin opened by the shell, the tabs' words through `L()` from
+   the catalog the website uses, in place of a String Catalog, so the owner checks one list, the languages in
+   `Info.plist` and the project's known regions, and the Language box under Account; see Languages above).
 2. The atlases' own words: the bars, the sheets and what their scripts write, page by page (the 3D Region Atlas,
    Tractography, Molecular, Microanatomy, the Brodmann Area Atlas, the Network Atlas), each page added to `TWINS`.
 3. The content: the 116 regions' names and notes, the Brodmann areas, the six states, the 46 bundles, the cells'

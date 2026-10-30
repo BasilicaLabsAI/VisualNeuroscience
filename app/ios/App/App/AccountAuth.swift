@@ -104,8 +104,8 @@ final class AccountAuth: ObservableObject {
 
     func logIn(email: String, password: String) async {
         let email = Self.clean(email)
-        guard !email.isEmpty, !password.isEmpty else { note = "Give the email and the password."; return }
-        await run("Logging in…") {
+        guard !email.isEmpty, !password.isEmpty else { note = L("Give the email and the password."); return }
+        await run(L("Logging in…")) {
             let _: Person = try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Person, Error>) in
                 Auth.auth().signIn(withEmail: email, password: password) { result, error in
                     Self.finish(cont, result?.user, error)
@@ -117,9 +117,9 @@ final class AccountAuth: ObservableObject {
 
     func createAccount(email: String, password: String) async {
         let email = Self.clean(email)
-        guard !email.isEmpty, !password.isEmpty else { note = "Give the email and a password of six characters or more."; return }
-        guard password.count >= 6 else { note = "The password needs six characters or more."; return }
-        await run("Creating the account…") {
+        guard !email.isEmpty, !password.isEmpty else { note = L("Give the email and a password of six characters or more."); return }
+        guard password.count >= 6 else { note = L("The password needs six characters or more."); return }
+        await run(L("Creating the account…")) {
             let _: Person = try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Person, Error>) in
                 Auth.auth().createUser(withEmail: email, password: password) { result, error in
                     Self.finish(cont, result?.user, error)
@@ -131,8 +131,8 @@ final class AccountAuth: ObservableObject {
 
     func sendReset(email: String) async {
         let email = Self.clean(email)
-        guard !email.isEmpty else { note = "Give the email first."; return }
-        await run("Sending the email…", done: "Sent. Open the email and follow its link to choose a new password.") {
+        guard !email.isEmpty else { note = L("Give the email first."); return }
+        await run(L("Sending the email…"), done: L("Sent. Open the email and follow its link to choose a new password.")) {
             try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
                 Auth.auth().sendPasswordReset(withEmail: email) { error in
                     if let error { cont.resume(throwing: error) } else { cont.resume() }
@@ -142,8 +142,8 @@ final class AccountAuth: ObservableObject {
     }
 
     func logInWithGoogle() async {
-        guard let presenter = Self.presenter() else { note = "The sign-in sheet has nowhere to open from. Try again."; return }
-        await run("Opening Google…") {
+        guard let presenter = Self.presenter() else { note = L("The sign-in sheet has nowhere to open from. Try again."); return }
+        await run(L("Opening Google…")) {
             let tokens: [String] = try await withCheckedThrowingContinuation { (cont: CheckedContinuation<[String], Error>) in
                 GIDSignIn.sharedInstance.signIn(withPresenting: presenter) { result, error in
                     if let error { cont.resume(throwing: error); return }
@@ -183,12 +183,12 @@ final class AccountAuth: ObservableObject {
                   let token = String(data: data, encoding: .utf8),
                   let raw = appleNonce
             else {
-                note = "Apple sent no sign-in token. Try again."
+                note = L("Apple sent no sign-in token. Try again.")
                 return
             }
             appleNonce = nil
             let fullName = credential.fullName
-            await run("Logging in with Apple…") {
+            await run(L("Logging in with Apple…")) {
                 let firebaseCredential = OAuthProvider.appleCredential(withIDToken: token, rawNonce: raw, fullName: fullName)
                 let _: Person = try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Person, Error>) in
                     Auth.auth().signIn(with: firebaseCredential) { result, error in
@@ -256,7 +256,7 @@ final class AccountAuth: ObservableObject {
             Task { await self.logIn(email: email, password: password) }
         } else if let idToken, !idToken.isEmpty, !Self.worker.isEmpty {
             Task {
-                await self.run("Logging in…") {
+                await self.run(L("Logging in…")) {
                     let custom = try await Self.exchange(idToken: idToken)
                     let _: Person = try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Person, Error>) in
                         Auth.auth().signIn(withCustomToken: custom) { result, error in
@@ -446,15 +446,15 @@ final class AccountAuth: ObservableObject {
         if nsError.domain == "com.google.GIDSignIn", nsError.code == -5 { return "" }
         if nsError.domain == "FIRAuthErrorDomain", let code = AuthErrorCode(rawValue: nsError.code) {
             switch code {
-            case .wrongPassword, .invalidCredential: return "Wrong email or password."
-            case .userNotFound: return "No account uses that email. Create one below."
-            case .emailAlreadyInUse: return "That email already has an account: log in instead."
-            case .accountExistsWithDifferentCredential: return "That email already has an account another way: log in with it."
-            case .weakPassword: return "The password needs six characters or more."
-            case .invalidEmail: return "That is not an email address."
-            case .networkError: return "No connection. Try again when you are back online."
-            case .tooManyRequests: return "Too many tries. Wait a little and try again."
-            case .userDisabled: return "That account has been disabled."
+            case .wrongPassword, .invalidCredential: return L("Wrong email or password.")
+            case .userNotFound: return L("No account uses that email. Create one below.")
+            case .emailAlreadyInUse: return L("That email already has an account: log in instead.")
+            case .accountExistsWithDifferentCredential: return L("That email already has an account another way: log in with it.")
+            case .weakPassword: return L("The password needs six characters or more.")
+            case .invalidEmail: return L("That is not an email address.")
+            case .networkError: return L("No connection. Try again when you are back online.")
+            case .tooManyRequests: return L("Too many tries. Wait a little and try again.")
+            case .userDisabled: return L("That account has been disabled.")
             default: break
             }
         }

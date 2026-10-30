@@ -6,6 +6,15 @@
 	<string>$(CAPACITOR_DEBUG)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<!-- the languages the app speaks (v12.71): iOS gives it one of these from
+	     the phone's own list, or the one picked on the app's page in Settings,
+	     which offers the choice once the app names two; the shell reads it
+	     (Lang in ShellKit.swift) and the system's own controls follow it -->
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>zh-Hans</string>
+	</array>
 	<key>CFBundleDisplayName</key>
         <string>VisualNeuroscience</string>
 	<key>CFBundleExecutable</key>

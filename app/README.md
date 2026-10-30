@@ -46,7 +46,7 @@ position. Account comes last and gathers what is not a section of the site.
 | Library | `books.vertical` | Visualizing Studies, Digital Textbook |
 | Practice | `checklist` | Neuroscience Practice |
 | About | `info.circle` | the MCP server, the developer's message, YouTube, Instagram, LinkedIn and email |
-| Account | `person` | the account itself since v12.46 (Sign in with Apple, Google, or an email and password with Create an account and a reset; logged in, who it is, the account page as a row and Log out; `AccountAuth.swift`), Appearance (dark or light), App icon (the white and the black tile pictured, the one in use boxed), support and the privacy page, the credits |
+| Account | `person` | the account itself since v12.46 (Sign in with Apple, Google, or an email and password with Create an account and a reset; logged in, who it is, the account page as a row and Log out; `AccountAuth.swift`), Appearance (dark or light), Language (what the app speaks, and its page in Settings), App icon (the white and the black tile pictured, the one in use boxed), support and the privacy page, the credits |
 
 There is no badge, because nothing in the app is waiting to be done:
 practice is adaptive and keeps no queue of due questions. If it ever does,
@@ -77,11 +77,24 @@ pages read as one object:
 - `Palette` is the site's ink, paper and two greys, as colour sets with dark
   variants in `Assets.xcassets`; the ink tints the app once, on the root view.
   `Faces` are the site's Flux, Newsreader and Prata, unpacked from
-  `site/fonts` into `ios/App/App/Fonts/` and listed under `UIAppFonts`.
+  `site/fonts` into `ios/App/App/Fonts/` and listed under `UIAppFonts`; a
+  Chinese character falls back to the system's own Chinese face.
+- `Lang` and `L()` are the app's language (v12.71): English, or Simplified
+  Chinese where iOS gives the app Chinese, from the phone's languages or the
+  one picked on the app's page in Settings (`CFBundleLocalizations` in
+  `Info.plist`). Every word the shell shows is written `L("…")`, and
+  `scripts/i18n/build.py` gathers each with its Chinese from
+  `i18n/zh-hans.json`, the catalog the website's Chinese pages come from, into
+  `ShellWords.swift`, which it writes; `{1}` and `{2}` in the words take the
+  values given after them. Run the script after changing any of the shell's
+  words.
 
 **The pages** (`ios/App/App/ShellWeb.swift`). Each page a box opens gets a
 Capacitor bridge of its own, opened on that page, so sign-in, Files, the share
-sheet and haptics work there as before. A link from one page to another is
+sheet and haptics work there as before. Where the app speaks Chinese and the
+page has a Chinese twin in the bundle (`about.zh-hans.html` beside
+`about.html`), the bridge opens the twin, and every page is told the language
+at document start as `window.VN_LANG`. A link from one page to another is
 caught by a small plugin in that bridge (`ShellLinks`) and pushed as a new
 page in the same tab, so each web view holds one page and Back is the
 system's; popping a page lets its bridge go. In those bridges the splash is

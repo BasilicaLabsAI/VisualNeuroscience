@@ -19,11 +19,16 @@ Every public English page gets the block that loads assets/i18n.js first in its 
 in and, where it has a twin, the hreflang links search engines read; the twin gets the same block and the strings
 file, assets/i18n/zh-hans.js, the catalog's plain strings, which assets/i18n.js uses to put into Chinese the English
 that page scripts write as they run. site/sitemap.xml lists every public page with its twin. Edit the English
-pages as before; run this after, and the twins follow."""
+pages as before; run this after, and the twins follow.
+
+The iOS app's own words (v12.71), the tabs, the boxes, the account's notes, are written L("…") in the shell's Swift;
+the script gathers each of them with its Chinese from the same catalog into app/ios/App/App/ShellWords.swift, which
+the shell reads when iOS gives the app Simplified Chinese, and reports any it lacks with the pages' own."""
 import html
 import json
 import re
 import sys
+import textwrap
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -31,6 +36,9 @@ ROOT = Path(__file__).resolve().parents[2]
 SITE = ROOT / "site"
 CATALOG = ROOT / "i18n" / "zh-hans.json"
 STRINGS = SITE / "assets" / "i18n" / "zh-hans.js"
+SHELL = ROOT / "app" / "ios" / "App" / "App"
+SHELL_SOURCES = ["Shell.swift", "ShellKit.swift", "ShellWeb.swift", "AccountAuth.swift"]
+SHELL_WORDS = SHELL / "ShellWords.swift"
 ORIGIN = "https://visualneuroscience.ai"
 LANG, TAG = "zh-hans", "zh-Hans"
 
@@ -281,6 +289,78 @@ def strings_file(catalog):
             f"window.VN_I18N && VN_I18N.use(\"{LANG}\", {body}, {json.dumps(TWINS)});\n")
 
 
+SWIFT_ESCAPES = {"n": "\n", "t": "\t", "r": "\r", "0": "\0", "\\": "\\", '"': '"', "'": "'"}
+
+
+def unswift(raw, where):
+    """A Swift string literal's text as the program sees it."""
+    def esc(m):
+        e = m.group(1)
+        if e.startswith("u{"):
+            return chr(int(e[2:-1], 16))
+        if e == "(":
+            raise SystemExit(f"{where}: L() takes words, not interpolation; give the values after them as {{1}}, {{2}}: {raw[:70]!r}")
+        return SWIFT_ESCAPES[e]
+    return re.sub(r"\\(u\{[0-9A-Fa-f]+\}|.)", esc, raw)
+
+
+def swift_literal(text):
+    return '"' + text.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t") + '"'
+
+
+def code_only(src):
+    """Swift source with its comments blanked and its strings kept, so a comment's L("…") is not read as a word."""
+    out, i, n = [], 0, len(src)
+    while i < n:
+        if src.startswith('"""', i):
+            j = src.find('"""', i + 3)
+            j = n if j < 0 else j + 3
+        elif src[i] == '"':
+            j = i + 1
+            while j < n and src[j] not in '"\n':
+                j += 2 if src[j] == "\\" else 1
+            j += 1
+        elif src.startswith("//", i) or src.startswith("/*", i):
+            end = "\n" if src[i + 1] == "/" else "*/"
+            j = src.find(end, i + 2)
+            j = n if j < 0 else (j if end == "\n" else j + 2)
+            out.append(re.sub(r"[^\n]", " ", src[i:j]))
+            i = j
+            continue
+        else:
+            j = i + 1
+        out.append(src[i:j])
+        i = j
+    return "".join(out)
+
+
+def shell_words(catalog):
+    """The shell's words, L("…") in its Swift, with their Chinese: the Swift file that holds them, and those the
+    catalog lacks."""
+    found, missing = {}, []
+    for name in SHELL_SOURCES:
+        src = code_only((SHELL / name).read_text(encoding="utf-8"))
+        for m in re.finditer(r'(?<![\w.])L\(\s*"((?:[^"\\\n]|\\.)*)"', src):
+            english = unswift(m.group(1), name)
+            zh = catalog.get(fold(english))
+            if zh is None:
+                if english not in missing:
+                    missing.append(english)
+            elif zh != english:
+                # the catalog holds HTML for the pages; the app wants the plain words
+                found[english] = html.unescape(re.sub(r"<[^>]+>", "", zh))
+    rows = [f"        {swift_literal(k)}: {swift_literal(v)}," for k, v in sorted(found.items())]
+    body = "\n".join(rows) if rows else "        :"
+    head = ("Written by scripts/i18n/build.py from i18n/zh-hans.json, the catalog the website's Chinese pages are written "
+            "from: the Chinese of every word the shell shows, L(\"…\") in " + ", ".join(SHELL_SOURCES[:-1]) + " and "
+            + SHELL_SOURCES[-1] + ", which L() in ShellKit.swift reads when iOS gives the app Simplified Chinese. Edit "
+            "the catalog and run the script again rather than this file.")
+    text = (textwrap.fill(head, 112, initial_indent="/* ", subsequent_indent="   ") + " */\n\n"
+            "nonisolated enum ShellWords {\n"
+            "    static let zh: [String: String] = [\n" + body + "\n    ]\n}\n")
+    return text, missing
+
+
 def main(argv):
     check, list_missing = "--check" in argv, "--missing" in argv
     catalog = {fold(k): v for k, v in json.loads(CATALOG.read_text(encoding="utf-8")).items()}
@@ -304,6 +384,11 @@ def main(argv):
             if seen:
                 wanted[f"{base}.html"] = {k: "" for k in seen}
     writes[STRINGS] = strings_file(catalog)
+    words, shell_missing = shell_words(catalog)
+    writes[SHELL_WORDS] = words
+    report["the iOS shell"] = shell_missing
+    if shell_missing:
+        wanted["app/ios/App/App (L in the Swift)"] = {k: "" for k in shell_missing}
     writes[SITE / "sitemap.xml"] = sitemap([b for b in ["index"] + [e for e in english if e != "index"] if b not in NOT_IN_SITEMAP])
 
     if list_missing:
@@ -322,7 +407,8 @@ def main(argv):
         p.write_text(writes[p], encoding="utf-8")
         print(f"wrote {p.relative_to(ROOT)}")
     for base, keys in report.items():
-        print(f"{base}.{LANG}.html: {len(keys)} unit(s) still English" + (": " + "; ".join(k[:60] for k in keys[:6]) if keys else ""))
+        where = base if base == "the iOS shell" else f"{base}.{LANG}.html"
+        print(f"{where}: {len(keys)} unit(s) still English" + (": " + "; ".join(k[:60] for k in keys[:6]) if keys else ""))
     return 0
 
 

@@ -24,34 +24,34 @@ nonisolated struct Page: Sendable {
     var fragment: String? = nil
     let title: String
 
-    static let regionAtlas = Page(file: "regions.html", title: "3D Region Atlas")
-    static let brodmann = Page(file: "brodmann.html", title: "Brodmann Area Atlas")
-    static let networkAtlas = Page(file: "network-atlas.html", title: "Network Atlas")
-    static let microanatomy = Page(file: "microanatomy.html", title: "Microanatomy")
-    static let molecular = Page(file: "molecular.html", title: "Molecular")
-    static let tractography = Page(file: "tracts.html", title: "Tractography")
-    static let studies = Page(file: "studies.html", title: "Visualizing Studies")
-    static let textbook = Page(file: "textbook.html", title: "Digital Textbook")
-    static let posters = Page(file: "posters.html", title: "Posters")
-    static let practice = Page(file: "practice.html", title: "Practice")
-    static let about = Page(file: "about.html", title: "A Message from the Developer")
-    static let mcp = Page(file: "mcp.html", title: "MCP Server")
-    static let account = Page(file: "account.html", title: "Account")
-    static let privacy = Page(file: "privacy.html", title: "Privacy & Support")
-    static let terms = Page(file: "terms.html", title: "Terms of Use")
-    static let deleteAccount = Page(file: "account.html", fragment: "delete", title: "Account")
-    static let password = Page(file: "account.html", fragment: "password", title: "Account")
+    static let regionAtlas = Page(file: "regions.html", title: L("3D Region Atlas"))
+    static let brodmann = Page(file: "brodmann.html", title: L("Brodmann Area Atlas"))
+    static let networkAtlas = Page(file: "network-atlas.html", title: L("Network Atlas"))
+    static let microanatomy = Page(file: "microanatomy.html", title: L("Microanatomy"))
+    static let molecular = Page(file: "molecular.html", title: L("Molecular"))
+    static let tractography = Page(file: "tracts.html", title: L("Tractography"))
+    static let studies = Page(file: "studies.html", title: L("Visualizing Studies"))
+    static let textbook = Page(file: "textbook.html", title: L("Digital Textbook"))
+    static let posters = Page(file: "posters.html", title: L("Posters"))
+    static let practice = Page(file: "practice.html", title: L("Practice"))
+    static let about = Page(file: "about.html", title: L("A Message from the Developer"))
+    static let mcp = Page(file: "mcp.html", title: L("MCP Server"))
+    static let account = Page(file: "account.html", title: L("Account"))
+    static let privacy = Page(file: "privacy.html", title: L("Privacy & Support"))
+    static let terms = Page(file: "terms.html", title: L("Terms of Use"))
+    static let deleteAccount = Page(file: "account.html", fragment: "delete", title: L("Account"))
+    static let password = Page(file: "account.html", fragment: "password", title: L("Account"))
 
-    /// The titles of the pages a link can lead to, as the app's bar named them.
+    /// The titles of the pages a link can lead to, as the app's bar names them.
     static let titles: [String: String] = [
-        "regions.html": "3D Region Atlas", "brodmann.html": "Brodmann Area Atlas",
-        "network-atlas.html": "Network Atlas", "tracts.html": "Tractography",
-        "microanatomy.html": "Microanatomy", "molecular.html": "Molecular",
-        "studies.html": "Visualizing Studies", "hallucinations.html": "Hallucinations",
-        "practice.html": "Practice", "textbook.html": "Digital Textbook",
-        "about.html": "A Message from the Developer", "privacy.html": "Privacy & Support",
-        "terms.html": "Terms of Use", "delete-account.html": "Delete your account",
-        "account.html": "Account", "mcp.html": "MCP Server", "connect.html": "Connect"
+        "regions.html": L("3D Region Atlas"), "brodmann.html": L("Brodmann Area Atlas"),
+        "network-atlas.html": L("Network Atlas"), "tracts.html": L("Tractography"),
+        "microanatomy.html": L("Microanatomy"), "molecular.html": L("Molecular"),
+        "studies.html": L("Visualizing Studies"), "hallucinations.html": L("Hallucinations"),
+        "practice.html": L("Practice"), "textbook.html": L("Digital Textbook"),
+        "about.html": L("A Message from the Developer"), "privacy.html": L("Privacy & Support"),
+        "terms.html": L("Terms of Use"), "delete-account.html": L("Delete your account"),
+        "account.html": L("Account"), "mcp.html": L("MCP Server"), "connect.html": L("Connect")
     ]
 }
 
@@ -61,6 +61,9 @@ extension Page {
     nonisolated init?(link url: URL) {
         var file = url.lastPathComponent
         var fragment = url.fragment
+        // a Chinese twin's link leads to another twin: the page is the English
+        // file's, which the bridge opens in the app's language (v12.71)
+        if file.hasSuffix(".zh-hans.html") { file = String(file.dropLast(".zh-hans.html".count)) + ".html" }
         if file.isEmpty || file == "/" || file == "index.html" { return nil }
         // the Region Atlas's old network mode is the Network Atlas's own page
         if file == "regions.html", let f = fragment, f == "network" || f.hasPrefix("network=") {
@@ -164,7 +167,7 @@ struct BackOverPage: View {
         .buttonStyle(PressStyle())
         .padding(.leading, 8)
         .padding(.top, 2)
-        .accessibilityLabel("Back")
+        .accessibilityLabel(L("Back"))
     }
 }
 
@@ -200,6 +203,9 @@ struct BridgeView: UIViewControllerRepresentable {
 /// filling the window as Capacitor's own does.
 final class PageBridgeController: CAPBridgeViewController {
     let page: Page
+    /// The file the bridge opens: the page's own, or its Chinese twin where
+    /// the app speaks Chinese and the bundle holds one (v12.71).
+    private var startFile: String
     weak var store: AppStore?
     /// The native account (v12.46), told to the page as it opens and told
     /// of what the page does itself.
@@ -227,6 +233,7 @@ final class PageBridgeController: CAPBridgeViewController {
 
     init(page: Page, startTheme: Theme?, startPad: Bool) {
         self.page = page
+        self.startFile = page.file
         self.startTheme = startTheme
         self.pad = startPad
         super.init(nibName: nil, bundle: nil)
@@ -238,11 +245,18 @@ final class PageBridgeController: CAPBridgeViewController {
 
     override func instanceDescriptor() -> InstanceDescriptor {
         let descriptor = super.instanceDescriptor()
+        // the page in the app's language: its Chinese twin where the app speaks
+        // Chinese and the bundle holds one (the twin's own script never moves a
+        // page inside the tabs, since the shell would push the move as a link)
+        if let twin = Lang.twin(of: page.file),
+           FileManager.default.fileExists(atPath: descriptor.appLocation.appendingPathComponent(twin).path) {
+            startFile = twin
+        }
         // Capacitor stops the app if its start file is missing, so a page is
         // named only when it is there; otherwise the bridge opens as before
-        let start = descriptor.appLocation.appendingPathComponent(page.file)
+        let start = descriptor.appLocation.appendingPathComponent(startFile)
         if FileManager.default.fileExists(atPath: start.path) {
-            descriptor.appStartPath = page.file
+            descriptor.appStartPath = startFile
         }
         // the splash is the app's launch screen, not every page's
         var plugins = descriptor.pluginConfigurations
@@ -253,7 +267,7 @@ final class PageBridgeController: CAPBridgeViewController {
 
     override func capacitorDidLoad() {
         super.capacitorDidLoad()
-        bridge?.registerPluginInstance(ShellLinks(file: page.file, controller: self))
+        bridge?.registerPluginInstance(ShellLinks(file: startFile, controller: self))
         bridge?.registerPluginInstance(StillStatusBar())
         guard let webView = webView else { return }
         let paper = UIColor(named: "Paper") ?? .systemBackground
@@ -280,19 +294,21 @@ final class PageBridgeController: CAPBridgeViewController {
         }
     }
 
-    /// Runs before anything on the page: marks the page as one of the
-    /// shell's, and on an iPad (or with an iPad's room) as one that fills the
-    /// screen (as soon as its root element exists, which WebKit makes before
-    /// this runs), pins the viewport so the page cannot zoom (a double tap on
-    /// a region once magnified a whole atlas page; the views pinch on their
-    /// own), writes
-    /// the shell's theme where the page reads its own, tells it who is logged
-    /// in natively (VN_NATIVE_AUTH, v12.46), opens it on its
-    /// fragment, and once it is built has it say which theme it came up in.
+    /// Runs before anything on the page: names the app's language (VN_LANG,
+    /// v12.71, which assets/i18n.js takes over the browser's), marks the
+    /// page as one of the shell's, and on an iPad (or with an iPad's room) as
+    /// one that fills the screen (as soon as its root element exists, which
+    /// WebKit makes before this runs), pins the viewport so the page cannot
+    /// zoom (a double tap on a region once magnified a whole atlas page; the
+    /// views pinch on their own), writes the shell's theme where the page
+    /// reads its own, tells it who is logged in natively (VN_NATIVE_AUTH,
+    /// v12.46), opens it on its fragment, and once it is built has it say
+    /// which theme it came up in.
     private var startScript: String {
         var lines = [
             "window.VN_STORE = \(Self.fromStore);",
             "window.VN_LAUNCH = \(Self.literal(Self.launch));",
+            "window.VN_LANG = \(Self.literal(Lang.code));",
             "window.VN_NATIVE_AUTH = \(nativeAuth);",
             "var pad = \(pad);",
             "var mark = function () { var root = document.documentElement; if (root) { root.setAttribute('data-shell', 'tabs'); if (pad) root.setAttribute('data-shell-pad', ''); } return !!root; };",
