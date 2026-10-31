@@ -9,25 +9,28 @@
    MN_ATLAS.REGIONS by lobe, a pair or its two sides by the Mirror toggle,
    searched by name, lobe or what a region does (region-notes.js), the arrow
    keys walking it while the focus stays in the field, Enter or a press
-   adding the region. Beside it stands a switch the atlas has not, All
-   through or Connecting, which the page reads: it stands at All, greyed,
-   while fewer than two regions are highlighted, and turns itself to
-   Connecting the moment the list goes from one region to two, the person's
-   own choice kept after that; and under the Mirror toggle a second,
-   Highlight the regions, off to begin with (v12.60, at the owner's word),
-   which the page reads to draw the regions themselves or not. The atlas
-   keeps its own copy of the picker; a change to how a region is picked
-   belongs in both.
+   adding the region. Beside it stands a switch the atlas has not, which the
+   page reads: All through, Ending in or Connecting (the third since v12.75,
+   at the owner's word; until then All through or Connecting, the latter
+   meaning through two of them). All three stand greyed while nothing is
+   highlighted and Connecting while fewer than two regions are; it turns
+   itself to Connecting the moment the list goes from one region to two,
+   the person's own choice kept after that and put back as the list falls
+   below two; and under the Mirror toggle a second, Highlight the regions,
+   off to begin with (v12.60, at the owner's word), which the page reads to
+   draw the regions themselves or not. The atlas keeps its own copy of the
+   picker; a change to how a region is picked belongs in both.
 
      MN_REGIONBOX.attach({host, box, onChange, onRead, link, light})  → api
        host      the element the parts are built in (the box's scroller)
        box       the box the picker's panel hangs from
        onChange  (api, reason) after any change: add, remove, clear, set, link, mirror, light
        onRead    (key, entry) when a row's name is pressed
-       link      true for the All through / Connecting switch
+       link      true for the All through / Ending in / Connecting switch
        light     true for the Highlight the regions toggle, off to begin with
      api.entries() keys() get(key) add(key) remove(key) clear() set(keys, {mirror, link, light})
         link() setLink(v) mirror() light() setLight(v) count(text) colourOf(key)
+        link() is "all", "ending" or "connecting"
      MN_REGIONBOX.fillNote(headEl, whereEl, bodyEl, entry)   the region's own
         window: What it does, Associated brain disorders, When damaged
      MN_REGIONBOX.PALETTE   the colours, in the order the atlas gives them */
@@ -133,10 +136,12 @@ window.MN_REGIONBOX = (function(){
     partPick.appendChild(toggles);
     var linkWrap = null, linkBtns = {}, noteEl = null;
     if (o.link){
-      linkWrap = el("div", "rb-link"); linkWrap.setAttribute("role", "group"); linkWrap.setAttribute("aria-label", "Which streamlines to show");
-      [["all", "All through"], ["connecting", "Connecting"]].forEach(function(pair){
+      linkWrap = el("div", "rb-link rb-link3"); linkWrap.setAttribute("role", "group"); linkWrap.setAttribute("aria-label", "Which streamlines to show");
+      [["all", "All through", "Every streamline through any highlighted region"],
+       ["ending", "Ending in", "Every streamline with an end in a highlighted region, where it stops in the region or within 2 mm of it"],
+       ["connecting", "Connecting", "Only the streamlines with one end in one highlighted region and the other end in another"]].forEach(function(pair){
         var b = el("button", "ts-btn", pair[1]); b.type = "button"; b.setAttribute("data-link", pair[0]); b.setAttribute("aria-pressed", "false");
-        b.title = pair[0] === "all" ? "Every streamline through any highlighted region" : "Only the streamlines that run between highlighted regions";
+        b.title = pair[2];
         b.addEventListener("click", function(){ if (b.disabled) return; setLink(pair[0], false); });
         linkBtns[pair[0]] = b; linkWrap.appendChild(b);
       });
@@ -178,32 +183,38 @@ window.MN_REGIONBOX = (function(){
       if (regionPicker.isOpen()) regionPicker.rebuild();
       if (o.onChange) o.onChange(api, reason);
     }
-    /* the switch stands at All, greyed, under two regions, and turns itself
-       to Connecting as the list goes from one to two; after that it is the
-       person's */
+    /* Connecting needs two regions: the switch turns itself to it as the
+       list goes from one to two, and back to what stood before as the list
+       falls below two again; between, it is the person's */
+    var before = "all";
     function settleLink(prevSize){
       var size = selections.size;
-      if (size < 2) link = "all";
-      else if (prevSize < 2) link = "connecting";
+      if (size < 2){ if (link === "connecting") link = before; }
+      else if (prevSize < 2){ before = link; link = "connecting"; }
       paintLink();
     }
     function paintLink(){
       if (!linkWrap) return;
-      var few = selections.size < 2;
+      var size = selections.size, none = !size, few = size < 2;
       Object.keys(linkBtns).forEach(function(k){
         linkBtns[k].setAttribute("aria-pressed", String(link === k));
         linkBtns[k].classList.toggle("active", link === k);
-        linkBtns[k].disabled = few;
+        linkBtns[k].disabled = k === "connecting" ? few : none;
       });
-      if (noteEl) noteEl.textContent = few
-        ? "Every streamline through the region; add a second to see what connects them."
+      if (noteEl) noteEl.textContent = none
+        ? "Highlight a region to see every streamline through it, or only those that end in it."
+        : few ? (link === "ending"
+          ? "Only the streamlines with an end in the region; add a second to see what connects them."
+          : "Every streamline through the region; add a second to see what connects them.")
         : link === "all" ? "Every streamline through any of the highlighted regions."
-                         : "Only the streamlines that run between two of the highlighted regions.";
+        : link === "ending" ? "Every streamline with an end in any of the highlighted regions."
+        : "Only the streamlines with one end in one highlighted region and the other end in another.";
     }
     function setLink(v, silent){
-      if (v !== "all" && v !== "connecting") return;
-      if (selections.size < 2) v = "all";
+      if (v !== "all" && v !== "ending" && v !== "connecting") return;
+      if (v === "connecting" && selections.size < 2) v = before;
       var was = link;
+      if (v === "connecting" && was !== "connecting") before = was;
       link = v;
       paintLink();
       if (!silent && was !== link && o.onChange) o.onChange(api, "link");
@@ -245,7 +256,7 @@ window.MN_REGIONBOX = (function(){
       if (typeof opts.mirror === "boolean"){ mirror = opts.mirror; mirrorEl.checked = mirror; }
       if (typeof opts.light === "boolean" && lightEl){ light = opts.light; lightEl.checked = light; }
       settleLink(prev);
-      if (opts.link === "all" || opts.link === "connecting") setLink(opts.link, true);
+      if (opts.link === "all" || opts.link === "ending" || opts.link === "connecting") setLink(opts.link, true);
       renderRows();
       if (regionPicker.isOpen()) regionPicker.rebuild();
       if (o.onChange) o.onChange(api, "set");

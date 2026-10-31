@@ -11,8 +11,13 @@ text below. Both can also be run from a clone on a machine that can push.
 
 Versions before v8.6 were released without a ledger and are not recorded.
 
+## v12.75 — 31 October 2026 — Tractography reads the fibres by where they end
+Commit · Show the streamlines by where they end on the Tractography page, with each bundle's regions in the tap window
+
+The Tractography page's region box now reads the fibres by where they end as well as where they pass. The switch under the picker has three settings: All through, every streamline through any highlighted region, as before; Ending in, only those with an end in one, where the line stops in the region or within two millimetres of it; and Connecting, now only those with one end in one highlighted region and the other end in another, where until now it meant any streamline passing through both. Where nothing joins two regions end to end, the line under the rows says so and counts the streamlines that run through both. A tap on a fibre names its bundle as before and now lists the regions its streamlines end in, with each one's share of the ends: the arcuate fasciculus in the inferior frontal and the temporal gyri, the corticospinal tract in the precentral gyrus and the paracentral lobule, half its ends below the regions the atlas labels, in the brainstem and the cord. The ends come from the index built beside the tractogram, which now carries where each of its 24,207 streamlines starts and stops; on this file 83 per cent end in a region at both ends and 99 per cent at one. The apps take it with their next build.
+
 ## v12.74 — 30 October 2026 — The textbook names no AI product
-Commit · Take ChatGPT's name out of the textbook's sentence on artificial neural networks
+Commit `d706d0c` · Take ChatGPT's name out of the textbook's sentence on artificial neural networks
 
 The Digital Textbook's sentence on artificial neural networks now says they are at the heart of AI technology, without naming a product. The book's attribution lists the change among those made to OpenStax's text, as its licence asks. The apps take it with their next build.
 

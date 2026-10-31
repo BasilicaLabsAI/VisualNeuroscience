@@ -14,9 +14,13 @@ page is required by the licence — leave it in place.
 `hcp1065-regions.json` (v12.59) says which streamlines run through which AAL
 region, for the page's region box: for each label, in `assets/atlas-data.js`'s
 order, the streamlines whose drawn line enters the region's own voxels, walked
-at 1 mm, with no margin. It is written by `scripts/make_tract_regions.py` from
-the tractogram and `assets/aal.nii.gz`, and must be written again whenever the
-tractogram is rebuilt: the page checks its streamline count.
+at 1 mm, with no margin. Since v12.75 it also says where each streamline ends
+(`ends`: the label at its first point and at its last, the nearest within 2 mm,
+0 where none is), which the box's Ending in and Connecting read and the tap
+window's list of a bundle's regions is tallied from. It is written by
+`scripts/make_tract_regions.py` from the tractogram and `assets/aal.nii.gz`,
+and must be written again whenever the tractogram is rebuilt: the page checks
+its streamline count.
 
 To rebuild from the full published atlas instead — if you want a different
 streamline count, or the bundles filtered — see `scripts/README.md`.

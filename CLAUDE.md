@@ -614,20 +614,23 @@ Read this first in every session. It is the handover; nothing else needs pasting
   with `region-box.css` (`MN_REGIONBOX.attach({host, box, link, onChange, onRead})`: the atlas's picker line for
   line, built from `MN_ATLAS.REGIONS` by lobe with the Mirror toggle, searched by name, lobe or what a region does,
   the Highlighted rows under their layers with a colour each from the atlas's palette, Clear all, a count line
-  (`api.count`), a switch of two `.ts-btn`s, All through or Connecting, greyed under two regions, standing at All
-  with one and turning itself to Connecting as the list goes from one to two, the person's own after that, and under
+  (`api.count`), a switch of three `.ts-btn`s since v12.75, All through, Ending in or Connecting (two until then,
+  All through or Connecting, the latter through two of them), `.rb-link3`, all greyed with nothing highlighted and
+  Connecting under two regions, turning itself to Connecting as the list goes from one to two and back to what
+  stood before (`before`) as the list falls below two, the person's own between, and under
   Mirror a Highlight the regions toggle, off to begin with (v12.60, at the owner's word; `light`, `api.light`,
   `setLight`), without which the regions themselves are not drawn;
   `MN_REGIONBOX.fillNote` fills a region's own window; the atlas keeps its own copy of the picker, so a change to how
   a region is picked belongs in both). Which streamlines run through which region is an index built once offline by
   `scripts/make_tract_regions.py` into `site/assets/tracts/hcp1065-regions.json` (for each AAL label, in
   `atlas-data.js`'s order, the streamlines whose drawn line enters the region's own voxels, every segment walked at
-  1 mm; no margin around a region, at the owner's word, so a bundle skirting an edge does not count; 465 KB, read by
+  1 mm; no margin around a region, at the owner's word, so a bundle skirting an edge does not count; and since
+  v12.75 `ends`, the region at each streamline's two ends, below; 599 KB, 185 KB gzipped, read by
   the page beside the tractogram and checked against its streamline count, `streamlineCount`, which leaves out the
   empty streamline NiiVue's reader closes the offsets with; a rebuilt tractogram needs the script run again). In
   `tracts.html` the pick leaves `shown`, the subset the cuts, the ends and the export read in place of `whole`
-  (`base()`; All through is any streamline through any highlighted region, Connecting those through two of them:
-  `regionIds`, `applyRegions`), the view keeping the whole tractogram's frame; while Highlight the regions is on, each highlighted region stands among
+  (`base()`; All through is any streamline through any highlighted region, `throughCount(entries, 1)`, Ending in
+  and Connecting read the ends, below: `regionIds`, `applyRegions`), the view keeping the whole tractogram's frame; while Highlight the regions is on, each highlighted region stands among
   the fibres as a surface of its voxels in its colour (`lightRegions`: `MN_EXPORT3D.labelSurface` on the AAL
   volume, fetched once through `MN_EXPORT3D.volume`, an `NVMesh` of triangles in the streamlines' viewer, cut as the
   brain is by `cutRegions` from `applyCut`, `cutBox(planes, 0)`), and since v12.62, at the owner's word, is painted
@@ -637,7 +640,7 @@ Read this first in every session. It is the handover; nothing else needs pasting
   Slice regions sets it; at the brain's own transparency, as the MRI on the face is); a row's name pressed raises `#popRegion`
   (`readAbout`; `TK_SCREEN`, the sheets' door the screen script exposes beside `TK_MINI`, and `TK_DRAWER` the
   drawer's); the regions, the mirror toggle and the switches ride in `vn-tracts-last` (`v: 6`: `regions` as the
-  atlas's keys, `mirror`, `link` and, since v12.60, `light`); and `MN_TRACTS.regions` (`set`, `keys`, `link`,
+  atlas's keys, `mirror`, `link`, which may read `ending` since v12.75, and, since v12.60, `light`); and `MN_TRACTS.regions` (`set`, `keys`, `link`,
   `setLink`, `light`, `setLight`, `shown`, `drawn`, `indexed`) is the door for a check or a shoot. The store shots and the home twins set the drawer shut, so the
   tractogram keeps its room.
 - Since v12.63, at the owner's word (items 1 and 2 of the list at the foot of this file), the Tractography page draws
@@ -668,6 +671,32 @@ Read this first in every session. It is the handover; nothing else needs pasting
   `vn-tracts-last` (`v: 7`, `bundles: {colour, hidden}`), the export carries the bundle colours while they show
   (`vcol`, sampled as the lines are), and `MN_TRACTS.bundles` (`list`, `colour`, `setColour`, `hidden`, `setHidden`,
   `solo`, `all`, `pick`, `tap`, `label`, `drawn`, `spot`) is the door for a check or a shoot.
+- Since v12.75, at the owner's word (item 3 of the list at the foot of this file), the Tractography page reads the
+  streamlines by their ends. `scripts/make_tract_regions.py` writes `ends` into `hcp1065-regions.json` (`v: 2`,
+  `searchMm`) beside `through`: for each streamline the AAL label at its first point and at its last, interleaved,
+  the nearest labelled voxel within `--search` millimetres of the end point (2 mm: the tractography stops its lines
+  in the white matter just short of the grey; no search along the line, so a line that runs on past a region does
+  not end there), 0 where none is (the brainstem and the cord, which the AAL does not label). On the shipped file
+  83 per cent of the streamlines end in a region at both ends and 99 per cent at one; the left thalamus has 2,859
+  through and 1,764 ending, the left amygdala 279 through and 7 ending, the left precentral gyrus 1,312 through and
+  719 ending; 891 region pairs are joined end to end, 444 of them by ten or more streamlines. The region box's
+  switch is three (`region-box.js`, `.rb-link3`, its names set a little tighter in `region-box.css` so the three
+  stand on one line): All through as before, Ending in (every streamline with an end in a highlighted region) and
+  Connecting, which now means one end in one highlighted region and the other end in another, where until v12.75
+  it meant through two of them (`regionIds`: `entriesByLabel` maps each label to the entries holding it, and a
+  streamline connects where its two ends' entry lists are not one and the same entry; `throughCount(entries, n)`
+  keeps the through counts, and `regionLine` counts the streamlines through both for the reader where none ends in
+  both: No streamline in the atlas ends in both, though 176 run through both, for the left amygdala and
+  hippocampus). The tap window lists the regions a bundle's streamlines end in (`#tkPickEnds`, `.tk-pick-e`:
+  `endsOfGroup` tallies the group's ends once, `regionName` names a label as the atlas does, Precentral Gyrus (L),
+  and `endsLine` writes up to five regions with their share of the ends, down to a twentieth, then the share
+  outside the atlas's regions where it is a tenth or more, or "and others"): the left arcuate fasciculus ends in the
+  inferior temporal gyrus 21%, the opercular inferior frontal gyrus 20%, the middle temporal gyrus 20% and the
+  triangular inferior frontal gyrus 19%; the left corticospinal tract in the precentral gyrus 26%, the paracentral
+  lobule 14% and the supplementary motor area 9%, half its ends outside the regions. `vn-tracts-last`'s `link` may
+  read `ending` (`v` stays 7), and the door gained `regions.ended`, `regions.line`, `bundles.ends(id)` and
+  `bundles.endsLine(id)`. An index without `ends` (built before v12.75) leaves the two ends modes empty and the
+  line under the rows saying to run the script again.
 - The Region Atlas is called the 3D Region Atlas wherever its name shows (nav, titles, home page, the app) since
   v11.12; its file stays `regions.html`. Since v11.22, at the owner's request, it is one screen in the manner of an
   anatomy app (`body.atlas-screen`, `main.screen`, the style block "the screen" and the script "the screen" at the end
@@ -1156,11 +1185,11 @@ as tasks and read back when they ask what is left. Best value first; strike each
    Tractography bullets above).
 2. Smoothness and depth: done in v12.63 (the streamlines smoothed into curves, more finely as fewer are drawn, rounder
    tubes for small sets, the crowding shade).
-3. Connections done right: an index of where each streamline ends (beside `scripts/make_tract_regions.py`), so
-   Connecting means a streamline with an end in each region and a new Ending in shows connections rather than fibres
-   passing through. Measured on the shipped file: the left amygdala has 279 streamlines through it and none ending
-   there, the left thalamus 2,859 through and 1,661 ending; with a 2 mm search 83 per cent of streamlines end in a
-   region at both ends, 868 region pairs, 431 of them with ten or more. Each bundle then lists the regions it joins.
+3. Connections done right: done in v12.75 (the ends index beside the through index, Ending in, Connecting by the
+   ends, and the regions a bundle's streamlines end in on a tap; see the Tractography bullets above). Measured on
+   the shipped file with the 2 mm search: the left amygdala has 279 streamlines through it and 7 ending there, the
+   left thalamus 2,859 through and 1,764 ending; 83 per cent of streamlines end in a region at both ends, 891 region
+   pairs, 444 of them with ten or more.
 4. The textbook slice: the atlases' four views on Tractography (`view-bar.js`, `atlas-views.css`), the axial, coronal
    and sagittal slices of the template each showing the streamlines within a few millimetres (NiiVue's
    `meshThicknessOn2D`), a bundles-here readout at the crosshair and, as a choice, each bundle's density as a heat map

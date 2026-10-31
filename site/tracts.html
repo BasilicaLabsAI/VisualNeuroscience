@@ -281,6 +281,9 @@ main.screen{
   text-transform:uppercase; color:var(--bar-soft, var(--ink-60));
 }
 .tk-pick-j{ display:block; margin-top:.35rem; font-family:var(--font-serif); font-style:italic; font-size:.8rem; line-height:1.4; color:var(--bar-soft, var(--ink-60)); }
+/* the regions its streamlines end in (v12.75), under the line on what it joins */
+.tk-pick-e{ display:block; margin-top:.3rem; font-size:.72rem; line-height:1.4; color:var(--bar-soft, var(--ink-60)); }
+.tk-pick-e:empty{ display:none; }
 .tk-pick-acts{ flex:none; display:flex; flex-direction:column; align-items:flex-end; gap:.45rem; }
 .tk-pick-x{
   width:1.6rem; height:1.6rem; padding:0; border:1px solid var(--bar-line, var(--hair)); border-radius:50%; background:none;
@@ -548,7 +551,7 @@ main.screen.one.land{ flex-direction:row; }
 
     <!-- the region box (v12.59, at the owner's word): the 3D Region Atlas's region picker, a box over the deck's
          corner folding away on the tab at its edge and coming back on the handle left at the screen's; its inside,
-         the picker, the All through or Connecting switch and the highlighted rows, is built by assets/region-box.js,
+         the picker, the All through, Ending in or Connecting switch and the highlighted rows, is built by assets/region-box.js,
          and under them, since v12.63, the bundles, built by the page's own script -->
     <aside class="drawer" id="drawer" aria-label="Regions and bundles">
       <div class="drawer-box" id="drawerBox">
@@ -564,7 +567,7 @@ main.screen.one.land{ flex-direction:row; }
       <div class="views-wrap">
         <div class="views">
           <div class="view" data-box="Ren">
-            <div class="mri-stage"><canvas id="tkRen"></canvas><canvas id="tkBrain" class="brain-layer" aria-hidden="true"></canvas><div class="tk-pick" id="tkPick" hidden role="status" aria-live="polite"><span class="tk-pick-dot" id="tkPickDot" aria-hidden="true"></span><span class="tk-pick-t"><b id="tkPickName"></b><small id="tkPickWhere"></small><span class="tk-pick-j" id="tkPickJoins"></span></span><span class="tk-pick-acts"><button class="tk-pick-x" id="tkPickX" type="button" aria-label="Close">&times;</button><button class="tk-pick-solo" id="tkPickSolo" type="button">Alone</button></span></div><div class="stage-msg" id="stageMsg"><span class="caps" id="msgTitle">Loading the tractogram</span><div class="progress"><i id="msgBar"></i></div><p id="msgText">Several megabytes of streamlines are on their way.</p></div></div>
+            <div class="mri-stage"><canvas id="tkRen"></canvas><canvas id="tkBrain" class="brain-layer" aria-hidden="true"></canvas><div class="tk-pick" id="tkPick" hidden role="status" aria-live="polite"><span class="tk-pick-dot" id="tkPickDot" aria-hidden="true"></span><span class="tk-pick-t"><b id="tkPickName"></b><small id="tkPickWhere"></small><span class="tk-pick-j" id="tkPickJoins"></span><span class="tk-pick-e" id="tkPickEnds"></span></span><span class="tk-pick-acts"><button class="tk-pick-x" id="tkPickX" type="button" aria-label="Close">&times;</button><button class="tk-pick-solo" id="tkPickSolo" type="button">Alone</button></span></div><div class="stage-msg" id="stageMsg"><span class="caps" id="msgTitle">Loading the tractogram</span><div class="progress"><i id="msgBar"></i></div><p id="msgText">Several megabytes of streamlines are on their way.</p></div></div>
           </div>
         </div>
       </div>
@@ -607,7 +610,7 @@ main.screen.one.land{ flex-direction:row; }
             <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
           </div>
           <p>Or, with By bundle under Bundles in the box beside the view, each of the 46 bundles the atlas names takes a colour of its own, as the field&rsquo;s atlases draw them, and a tap on a fibre names its bundle whichever colouring is on.</p>
-          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the brain, and the streamlines with it, away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there, and Transparency raises a tall bar that makes it more see-through or more solid. Tract shows or hides the streamlines. Slice tract, on whenever Slice is turned on, cuts them with the brain, and off leaves them whole while the brain alone is cut; Offset stands their cut ends out of the brain&rsquo;s cut face and Distance sets how far, in millimetres, both greyed while the brain is off; and Thicken sets how thick they are drawn. View turns the brain to one of its faces, or home to the view the page opens with, Revolve sets it turning until you take hold of it, and Export, at the end of the bar, offers the streamlines and the brain as a 3D model. The region box beside the view, the 3D Region Atlas&rsquo;s own, folds away on its tab: highlight a region there and only the streamlines that run through it are drawn, and with Highlight the regions ticked the region itself stands among them in its colour, cut as the brain is, and shows on the brain&rsquo;s cut face as it does on the 3D Region Atlas. Highlight two or more and the switch turns to Connecting, only the streamlines that run between them, or back to All through, every streamline through any of them; a press on a region&rsquo;s name opens its note. Under the regions, Bundles lists the bundles the atlas names, by system: association, projection, commissural, cerebellar and the cranial nerves. L and R show or hide each side of a bundle, the switches a whole system or every bundle, and a press on a name shows that bundle alone, a second press every bundle again; a tap on a fibre names its bundle in a small window, whose Alone does the same. The fewer streamlines are drawn, the more finely they are drawn, smoothed into curves and rounder, and where they crowd they are shaded darker, which shows their depth. The page opens with the brain on at 65 per cent transparency, the streamlines on and nothing sliced, and remembers the rest of how you left it: the streamlines&rsquo; switches, offset and thickness, the regions highlighted with their two switches, the bundles shown and their colouring, and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
+          <p>Drag to turn the brain, and pinch or scroll over the view to zoom. Slice, at the left of the bar, puts a slider on each edge of the view, each a cut taking the brain, and the streamlines with it, away from that side: draw a slider back to its centre mark to undo its cut, Reset slice under View undoes them all, and Slice turned off shows everything whole. Brain shows or hides the MNI152 brain around the fibres, drawn as the 3D Region Atlas draws it, the MRI showing at a cut face as it does there, and Transparency raises a tall bar that makes it more see-through or more solid. Tract shows or hides the streamlines. Slice tract, on whenever Slice is turned on, cuts them with the brain, and off leaves them whole while the brain alone is cut; Offset stands their cut ends out of the brain&rsquo;s cut face and Distance sets how far, in millimetres, both greyed while the brain is off; and Thicken sets how thick they are drawn. View turns the brain to one of its faces, or home to the view the page opens with, Revolve sets it turning until you take hold of it, and Export, at the end of the bar, offers the streamlines and the brain as a 3D model. The region box beside the view, the 3D Region Atlas&rsquo;s own, folds away on its tab: highlight a region there and only the streamlines that run through it are drawn, and with Highlight the regions ticked the region itself stands among them in its colour, cut as the brain is, and shows on the brain&rsquo;s cut face as it does on the 3D Region Atlas. The switch under the picker reads All through, every streamline through any highlighted region, Ending in, only those with an end in one (an end counts where the streamline stops in the region or within two millimetres of it; the tractography stops its lines just short of the grey matter, and an end in the brainstem, which the atlas does not label, is no region&rsquo;s), or, with two or more highlighted, Connecting, only those with one end in one highlighted region and the other end in another, which the switch turns to as a second region is added; a press on a region&rsquo;s name opens its note. Under the regions, Bundles lists the bundles the atlas names, by system: association, projection, commissural, cerebellar and the cranial nerves. L and R show or hide each side of a bundle, the switches a whole system or every bundle, and a press on a name shows that bundle alone, a second press every bundle again; a tap on a fibre names its bundle in a small window, with the regions its streamlines end in and each one&rsquo;s share of the ends, whose Alone does the same. The fewer streamlines are drawn, the more finely they are drawn, smoothed into curves and rounder, and where they crowd they are shaded darker, which shows their depth. The page opens with the brain on at 65 per cent transparency, the streamlines on and nothing sliced, and remembers the rest of how you left it: the streamlines&rsquo; switches, offset and thickness, the regions highlighted with their two switches, the bundles shown and their colouring, and the view. This is a population average rather than any one person&rsquo;s brain, so it shows the pathways people generally share.</p>
           <h2>Reference</h2>
           <p class="ref-line"><b>Tractogram</b> the HCP1065 population-averaged tractography atlas: Yeh FC, <a href="https://doi.org/10.1038/s41467-022-32595-4" target="_blank" rel="noopener">Population-based tract-to-region connectome of the human brain and its hierarchical topology</a>, <em>Nat Commun</em> 13:4933 (2022), CC BY-SA 4.0.</p>
           <p class="ref-line"><b>Brain</b> the MNI152 template (ICBM 2009c), McConnell Brain Imaging Centre, Montreal Neurological Institute, drawn around the streamlines as the 3D Region Atlas draws it, the MRI showing where a cut opens it.</p>
@@ -1108,7 +1111,10 @@ main.screen.one.land{ flex-direction:row; }
       setLight: function(v){ if (regionBox) regionBox.setLight(v); },
       shown: function(){ return display ? display.n : 0; },
       drawn: function(){ return Object.keys(regionMeshes).length; },
-      indexed: function(){ return !!regionIndex; }
+      indexed: function(){ return !!regionIndex; },
+      /* whether the index carries the ends (v12.75), and the line under the rows */
+      ended: function(){ return !!(regionIndex && regionIndex.ends); },
+      line: function(){ var e = document.querySelector("#regionBox .rb-count"); return e ? e.textContent : ""; }
     },
     /* the bundles (v12.63), for a check or a shoot: the groups the file names, the colouring, the bundles hidden,
        one shown alone or all again, what a tap at a point of the window names, and how finely the set is drawn */
@@ -1123,6 +1129,10 @@ main.screen.one.land{ flex-direction:row; }
       pick: function(x, y){ var g = pickAt(x, y); return g ? g.id : null; },
       tap: function(x, y){ return tapAt(x, y, "mouse"); },
       label: function(){ return pickEl && !pickEl.hidden ? document.getElementById("tkPickName").textContent : null; },
+      /* the regions a group's streamlines end in (v12.75): {total, none, regions: [{label, name, n, share}]}, and
+         the line the tap window shows for it */
+      ends: function(id){ var g = bundles.groups.filter(function(x){ return x.id === id; })[0]; return g ? endsOfGroup(g) : null; },
+      endsLine: function(id){ var g = bundles.groups.filter(function(x){ return x.id === id; })[0]; return g ? endsLine(g) : ""; },
       drawn: function(){ return display ? { streamlines: display.n, points: display.pts.length / 3, smooth: display.f, sides: display.sides } : null; },
       /* where in the window a point of a group's streamlines is drawn, nearest the eye, for a check of the naming */
       spot: function(id){ return spotOf(id); }
@@ -1599,16 +1609,20 @@ main.screen.one.land{ flex-direction:row; }
      chrome). A region highlighted there leaves only the streamlines that run through it, read from an index
      built once offline (scripts/make_tract_regions.py, assets/tracts/hcp1065-regions.json: for each AAL region,
      the streamlines whose drawn line enters the region's own voxels, walked every millimetre, with no margin
-     around the region at the owner's word), and, while the box's Highlight the regions toggle is on (off to begin
-     with, v12.60, at the owner's word), the region itself stands among them as a surface of its voxels in its
-     colour (MN_EXPORT3D.labelSurface, the 3D export's own, smoothed), cut as the brain is, and is painted in the
-     brain as the atlas paints it, so a cut shows it on the cut face (v12.62, paintBrainRegions). The box's
-     switch reads All through, every streamline through any highlighted region, or Connecting, only those that
-     run through two of them; it stands at All, greyed, under two regions and turns itself to Connecting as the
-     list goes from one to two. The filtered set stands in for the whole one wherever the cuts, the ends and
-     the export read it (base()), and the view keeps the whole tractogram's frame, so nothing jumps as the pick
-     changes; a press on a row's name raises the region's own window, as on the atlas. The index is checked
-     against the tractogram's streamline count, so a rebuilt tractogram needs it built again. */
+     around the region at the owner's word, and since v12.75 the region at each streamline's two ends, the
+     nearest within 2 mm of the end point, 0 where there is none), and, while the box's Highlight the regions
+     toggle is on (off to begin with, v12.60, at the owner's word), the region itself stands among them as a
+     surface of its voxels in its colour (MN_EXPORT3D.labelSurface, the 3D export's own, smoothed), cut as the
+     brain is, and is painted in the brain as the atlas paints it, so a cut shows it on the cut face (v12.62,
+     paintBrainRegions). The box's switch reads All through, every streamline through any highlighted region,
+     Ending in (v12.75, at the owner's word), every streamline with an end in one, or Connecting, only those with
+     one end in one highlighted region and the other end in another (until v12.75 those through two of them,
+     which the line under the rows still counts when none connects); Connecting stands greyed under two regions
+     and the switch turns itself to it as the list goes from one to two. The filtered set stands in for the
+     whole one wherever the cuts, the ends and the export read it (base()), and the view keeps the whole
+     tractogram's frame, so nothing jumps as the pick changes; a press on a row's name raises the region's own
+     window, as on the atlas. The index is checked against the tractogram's streamline count, so a rebuilt
+     tractogram needs it built again. */
   var REGION_INDEX_URL = "assets/tracts/hcp1065-regions.json";
   var regionBox = null, regionIndex = null, regionIndexWhy = null, keptRegions = null, atlasLoad = null;
   var regionMeshes = {};   /* key → { mesh, part, color }, each a surface in the streamlines' viewer */
@@ -1618,8 +1632,11 @@ main.screen.one.land{ flex-direction:row; }
       return res.json();
     }).then(function(j){
       if (!j || !Array.isArray(j.through)) throw new Error("not a region index");
+      /* the ends (v12.75): two labels to a streamline, interleaved; an index built before them has none */
+      if (!Array.isArray(j.ends) || j.ends.length !== 2 * j.streamlines) j.ends = null;
       regionIndex = j;
       regionIndexWhy = null;
+      bundles.groups.forEach(function(g){ g.ends = null; });
       applyRegions();
     }).catch(function(err){
       regionIndexWhy = "The streamlines cannot be filtered by region: the index could not be read (" + (err && err.message ? err.message : err) + ").";
@@ -1642,7 +1659,31 @@ main.screen.one.land{ flex-direction:row; }
     if (!entries.length) return null;
     var N = streamlineCount();
     if (regionIndex.streamlines !== N) return null;
-    var count = new Uint8Array(N), seen = new Uint8Array(N);
+    var mode = regionBox.link();
+    if (mode !== "ending" && mode !== "connecting") return throughCount(entries, 1);
+    /* by the ends (v12.75): which highlighted entries each region belongs to, then each streamline's two ends;
+       Ending in takes an end in any entry, Connecting one end in one entry and the other end in another */
+    var E = regionIndex.ends, ids = [];
+    if (!E) return ids;
+    var of = entriesByLabel(entries);
+    for (var s = 0; s < N; s++){
+      var m0 = of[E[2 * s]], m1 = of[E[2 * s + 1]];
+      if (mode === "ending"){ if (m0 || m1) ids.push(s); }
+      else if (m0 && m1 && (m0.length > 1 || m1.length > 1 || m0[0] !== m1[0])) ids.push(s);
+    }
+    return ids;
+  }
+  /* each region's highlighted entries, by label, for the ends */
+  function entriesByLabel(entries){
+    var of = new Array(regionIndex.through.length);
+    entries.forEach(function(e, k){
+      e.indices.forEach(function(l){ if (l > 0 && l < of.length){ if (!of[l]) of[l] = []; of[l].push(k); } });
+    });
+    return of;
+  }
+  /* the streamlines through at least `need` of the entries: All through at one, and the old Connecting at two */
+  function throughCount(entries, need){
+    var N = streamlineCount(), count = new Uint8Array(N), seen = new Uint8Array(N), ids = [];
     entries.forEach(function(e){
       seen.fill(0);
       e.indices.forEach(function(l){
@@ -1651,7 +1692,6 @@ main.screen.one.land{ flex-direction:row; }
         for (var i = 0; i < list.length; i++){ var s = list[i]; if (s < N && !seen[s]){ seen[s] = 1; count[s]++; } }
       });
     });
-    var need = regionBox.link() === "connecting" && entries.length >= 2 ? 2 : 1, ids = [];
     for (var s = 0; s < N; s++) if (count[s] >= need) ids.push(s);
     return ids;
   }
@@ -1665,13 +1705,22 @@ main.screen.one.land{ flex-direction:row; }
     if (!regionBox) return;
     var N = streamlineCount(), entries = regionBox.entries();
     var mismatch = !!(regionIndex && regionIndex.streamlines !== N);
-    var some = hiddenAny(), n = display ? display.n : 0, text = "";
+    var some = hiddenAny(), n = display ? display.n : 0, text = "", mode = regionBox.link();
+    var them = entries.length > 1 ? "them" : "it", two = entries.length > 2 ? "two of them" : "both";
     if (!entries.length) text = "";
     else if (regionIndexWhy) text = regionIndexWhy;
     else if (mismatch) text = "The region index was built for another tractogram; run scripts/make_tract_regions.py again.";
     else if (!regionIndex) text = "Reading the region index\u2026";
-    else if (!rids || !rids.length) text = regionBox.link() === "connecting" && entries.length >= 2
-      ? "No streamline in the atlas runs between them" : "No streamline in the atlas runs through " + (entries.length > 1 ? "them" : "it");
+    else if (mode !== "all" && !regionIndex.ends) text = "The region index carries no ends; run scripts/make_tract_regions.py again.";
+    else if (!rids || !rids.length){
+      if (mode === "connecting"){
+        /* what the switch meant until v12.75, counted for the reader when nothing connects */
+        var tb = throughCount(entries, 2).length;
+        text = "No streamline in the atlas ends in " + two + (tb ? ", though " + fmt(tb) + " run" + (tb === 1 ? "s" : "") + " through " + two : "");
+      }
+      else if (mode === "ending") text = "No streamline in the atlas ends in " + them;
+      else text = "No streamline in the atlas runs through " + them;
+    }
     else if (!n) text = "None of them in the bundles shown";
     else text = fmt(n) + " of " + fmt(N) + " streamlines" + (some ? ", in the bundles shown" : "");
     regionBox.count(text);
@@ -2170,6 +2219,61 @@ main.screen.one.land{ flex-direction:row; }
     paintPickSolo();
   }
 
+  /* ── the regions a bundle's streamlines end in (v12.75, at the owner's word) ──
+     Read off the index's ends for the group's streamlines the first time they are asked for: each region's share
+     of the group's ends (two to a streamline), largest first, and the share with no region within the search,
+     the brainstem's and the cord's, which the AAL does not label. The tap window lists the leading ones. */
+  function endsOfGroup(g){
+    if (g.ends) return g.ends;
+    var E = regionIndex && regionIndex.ends, of = bundles.of, k = bundles.groups.indexOf(g);
+    if (!E || !of || k < 0 || regionIndex.streamlines !== streamlineCount()) return null;
+    var tally = {}, total = 0, none = 0, labels = MN_ATLAS.RAW_LABELS;
+    for (var s = 0; s < of.length && 2 * s + 1 < E.length; s++){
+      if (of[s] !== k) continue;
+      for (var e = 0; e < 2; e++){
+        var l = E[2 * s + e];
+        total++;
+        if (l > 0) tally[l] = (tally[l] || 0) + 1; else none++;
+      }
+    }
+    var out = Object.keys(tally).map(function(l){ return { label: Number(l), name: regionName(Number(l)), n: tally[l], share: tally[l] / total }; });
+    out.sort(function(a, b){ return b.n - a.n || a.label - b.label; });
+    g.ends = { total: total, none: none, regions: out, labels: labels };
+    return g.ends;
+  }
+  /* a region's name with its side, as the atlas names it: Precentral Gyrus (L) */
+  var regionNames = null;
+  function regionName(l){
+    if (!regionNames){
+      regionNames = {};
+      (window.MN_ATLAS ? MN_ATLAS.REGIONS : []).forEach(function(r){
+        if (r.L != null) regionNames[r.L] = r.pretty + " (L)";
+        if (r.R != null) regionNames[r.R] = r.pretty + " (R)";
+        if (r.S != null) regionNames[r.S] = r.pretty;
+      });
+    }
+    return regionNames[l] || (window.MN_ATLAS && MN_ATLAS.RAW_LABELS[l]) || ("region " + l);
+  }
+  /* the line in the tap window: the regions holding most of the bundle's ends, up to five, each with its share,
+     down to a twentieth of the ends, and the share outside the atlas's regions where it is a tenth or more */
+  function endsLine(g){
+    var ends = endsOfGroup(g);
+    if (!ends || !ends.total) return "";
+    var parts = [], sum = 0;
+    for (var i = 0; i < ends.regions.length && parts.length < 5; i++){
+      var r = ends.regions[i];
+      if (r.share < 0.05 && parts.length) break;
+      parts.push(r.name + " " + Math.round(r.share * 100) + "%");
+      sum += r.share;
+    }
+    if (!parts.length) return "Ends outside the atlas’s regions";
+    var line = "Ends in " + parts.join(", ");
+    var rest = ends.none / ends.total;
+    if (rest >= 0.1) line += "; " + Math.round(rest * 100) + "% outside the atlas’s regions";
+    else if (ends.regions.length > parts.length && sum < 0.9) line += ", and others";
+    return line;
+  }
+
   /* ── a tap on a fibre names its bundle ── */
   var pickEl = document.getElementById("tkPick"), pickNow = null;
   /* the meshes a tap can find: the streamlines while they show (not while the brain stands nearly solid over them),
@@ -2260,6 +2364,7 @@ main.screen.one.land{ flex-direction:row; }
     document.getElementById("tkPickName").textContent = g.bundle.name;
     document.getElementById("tkPickWhere").textContent = sideWord(g.side) + " · " + systemOf(g.bundle.system).label + " · " + fmt(g.count || 0) + " streamlines";
     document.getElementById("tkPickJoins").textContent = g.bundle.joins || "";
+    document.getElementById("tkPickEnds").textContent = endsLine(g);
     paintPickSolo();
     clearTimeout(pickEl._leaving);
     pickEl.hidden = false;
@@ -2324,7 +2429,8 @@ main.screen.one.land{ flex-direction:row; }
      thickness, read again since v12.43. Since v12.59 the regions highlighted,
      the mirror toggle and the switch ride with them (v 6), and since v12.60
      the Highlight the regions toggle, off unless it was left on, and since
-     v12.63 the bundles' colouring and the bundles hidden (v 7). Since v12.61,
+     v12.63 the bundles' colouring and the bundles hidden (v 7); since v12.75
+     the switch may read ending as well as all or connecting. Since v12.61,
      at the owner's word, the page opens as it does the first time, the brain
      on at 65 per cent transparency, the streamlines on and nothing sliced,
      whatever was left: restoreKept passes over the brain, the streamlines and
@@ -2383,7 +2489,7 @@ main.screen.one.land{ flex-direction:row; }
     if (m.v >= 6 && Array.isArray(m.regions)){
       var kr = { keys: m.regions.filter(function(k){ return typeof k === "string"; }),
                  mirror: typeof m.mirror === "boolean" ? m.mirror : undefined,
-                 link: m.link === "connecting" ? "connecting" : "all",
+                 link: m.link === "connecting" || m.link === "ending" ? m.link : "all",
                  light: m.light === true };
       if (regionBox) regionBox.set(kr.keys, { mirror: kr.mirror, link: kr.link, light: kr.light });
       else keptRegions = kr;

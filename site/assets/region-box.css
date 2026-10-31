@@ -121,6 +121,8 @@
 .region-box .rb-link .ts-btn{ flex:1; text-align:center; }
 .region-box .rb-link .ts-btn[aria-pressed="true"]{ background:var(--ink); color:var(--paper); }
 .region-box .rb-link .ts-btn:disabled{ opacity:.4; cursor:default; }
+/* three names on one line (v12.75): All through, Ending in, Connecting, set a little tighter than the pairs */
+.region-box .rb-link3 .ts-btn{ padding-left:.3rem; padding-right:.3rem; letter-spacing:.12em; white-space:nowrap; }
 @media (hover: hover){ .region-box .rb-link .ts-btn:disabled:hover{ background:var(--paper); color:var(--ink); } }
 .region-box .rb-note{ font-family:var(--font-serif); font-style:italic; font-size:.8rem; color:var(--ink-60); margin:.5rem 0 0; }
 

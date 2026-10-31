@@ -57,9 +57,11 @@ reads `site/assets/tracts/hcp1065.trx` (or a `.trk`, through nibabel) and
 `site/assets/aal.nii.gz`, walks every segment of every streamline at 1 mm and
 writes `site/assets/tracts/hcp1065-regions.json`, for each AAL label the
 streamlines whose drawn line enters the region's own voxels, with no margin
-around a region. The page checks the file's streamline count against the
-tractogram it drew, so run this again after any rebuild of the tractogram.
-Takes a few seconds; numpy alone.
+around a region, and (v12.75) for each streamline the region at each of its
+two ends, the nearest within `--search` millimetres (2 mm) of the end point,
+which the page's Ending in and Connecting read. The page checks the file's
+streamline count against the tractogram it drew, so run this again after any
+rebuild of the tractogram. Takes a few seconds; numpy alone.
 
 ## 3. Check it
 

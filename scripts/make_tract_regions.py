@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Which streamlines of the web tractogram run through which AAL region.
+"""Which streamlines of the web tractogram run through, and end in, which AAL region.
 
 The Tractography page can show the streamlines through the regions a person
 picks (v12.59, at the owner's word): the amygdala's alone, or only those that
-run between the amygdala and the hippocampus. The page does not search the
-file for them; this script does it once and writes the answer beside the
+run between the amygdala and the hippocampus. Since v12.75 it can also show
+the streamlines that end in a region, and Connecting means a streamline with
+one end in one highlighted region and the other end in another, rather than
+one that merely passes through both. The page does not search the file for
+any of this; this script does it once and writes the answer beside the
 tractogram, and the page reads it.
 
     python3 scripts/make_tract_regions.py
@@ -21,10 +24,22 @@ would with a margin. The tractogram and the AAL volume share MNI space, and
 the file's positions are RAS millimetres, which the volume's affine turns
 into voxel indices.
 
+A streamline ends in a region when its first or its last point lies in one of
+the region's voxels or within --search millimetres of one (2 mm): the
+tractography stops its lines in the white matter just short of the grey, so
+an end a millimetre or two from a gyrus is that gyrus's, while an end in the
+brainstem, which the AAL does not label, is no region's. Each end takes the
+nearest labelled voxel within the search, and the ends are read with no
+search along the line, so a line that runs on past a region does not end
+there. On the shipped file 83 per cent of the streamlines end in a region at
+both ends and 99 per cent at one.
+
 The output is JSON: for each AAL label (1 to 116, in the order
 assets/atlas-data.js lists them; index 0 is unused) the sorted indices of the
-streamlines through it. The page checks that the streamline count matches the
-tractogram it drew, so a rebuilt tractogram needs this run again.
+streamlines through it, and for each streamline the labels at its two ends
+(two to a streamline, interleaved, 0 where no region is within the search).
+The page checks that the streamline count matches the tractogram it drew, so
+a rebuilt tractogram needs this run again.
 
 Reads a .trx (the zip the page ships: positions.3.float32 and offsets.int32)
 with numpy alone, or a .trk through nibabel where it is installed.
@@ -85,12 +100,40 @@ def label_names():
     return json.loads(m.group(1)) if m else None
 
 
+def end_labels(pts, vol, A, search):
+    """the label at each point, or of the nearest labelled voxel within search millimetres, else 0"""
+    Ainv = np.linalg.inv(A)
+    NX, NY, NZ = vol.shape
+    h = np.hstack([pts, np.ones((len(pts), 1))])
+    v = (Ainv @ h.T).T[:, :3]
+    vi = np.rint(v).astype(np.int64)
+    out = np.zeros(len(pts), dtype=np.int64)
+    best = np.full(len(pts), np.inf)
+    # the voxel sizes, so the search is in millimetres whatever the grid
+    size = np.sqrt((A[:3, :3] ** 2).sum(0))
+    R = np.ceil(search / size).astype(np.int64)
+    for dx in range(-R[0], R[0] + 1):
+        for dy in range(-R[1], R[1] + 1):
+            for dz in range(-R[2], R[2] + 1):
+                q = vi + np.array([dx, dy, dz])
+                inside = (q[:, 0] >= 0) & (q[:, 0] < NX) & (q[:, 1] >= 0) & (q[:, 1] < NY) & (q[:, 2] >= 0) & (q[:, 2] < NZ)
+                lab = np.zeros(len(pts), dtype=np.int64)
+                lab[inside] = vol[q[inside, 0], q[inside, 1], q[inside, 2]]
+                # the point's distance from the voxel's centre, in millimetres
+                d = np.linalg.norm((q - v) * size, axis=1)
+                ok = (lab > 0) & (d <= search) & (d < best)
+                best[ok] = d[ok]
+                out[ok] = lab[ok]
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--tract", default=os.path.join(ROOT, "site", "assets", "tracts", "hcp1065.trx"))
     ap.add_argument("--atlas", default=os.path.join(ROOT, "site", "assets", "aal.nii.gz"))
     ap.add_argument("--out", default=os.path.join(ROOT, "site", "assets", "tracts", "hcp1065-regions.json"))
     ap.add_argument("--step", type=float, default=1.0, help="millimetres between the samples along each segment")
+    ap.add_argument("--search", type=float, default=2.0, help="millimetres around each end within which a region counts as where it ends")
     a = ap.parse_args()
 
     pos, off = read_trk(a.tract) if a.tract.endswith(".trk") else read_trx(a.tract)
@@ -137,14 +180,36 @@ def main():
         print("fewest: " + ", ".join(f"{names[i]} {counts[i - 1]}" for i in lo))
         print("most: " + ", ".join(f"{names[i]} {counts[i - 1]}" for i in hi))
 
+    # where each streamline ends (v12.75): the region at its first point and at its last, within the search
+    first = end_labels(pos[off[:-1]], vol, A, a.search)
+    last = end_labels(pos[off[1:] - 1], vol, A, a.search)
+    ends = np.empty(2 * N, dtype=np.int64)
+    ends[0::2], ends[1::2] = first, last
+    both = (first > 0) & (last > 0)
+    one = (first > 0) | (last > 0)
+    pairs = {}
+    for x, y in zip(first[both], last[both]):
+        k = (min(x, y), max(x, y))
+        pairs[k] = pairs.get(k, 0) + 1
+    print(f"ends within {a.search:g} mm of a region: both ends {both.mean() * 100:.1f}%, one or both {one.mean() * 100:.1f}%; "
+          f"{len(pairs)} region pairs, {sum(1 for c in pairs.values() if c >= 10)} with ten or more streamlines")
+    if names:
+        ending = np.array([int(((first == l) | (last == l)).sum()) for l in range(1, L + 1)])
+        for want in ("Amygdala_L", "Thalamus_L", "Precentral_L"):
+            if want in names:
+                i = names.index(want)
+                print(f"{want}: {counts[i - 1]} through, {ending[i - 1]} ending")
+
     out = {
-        "v": 1,
+        "v": 2,
         "source": os.path.basename(a.tract),
         "atlas": os.path.basename(a.atlas),
         "stepMm": a.step,
+        "searchMm": a.search,
         "streamlines": N,
         "labels": names,
         "through": through,
+        "ends": ends.tolist(),
     }
     with open(a.out, "w", encoding="utf-8") as f:
         json.dump(out, f, separators=(",", ":"))
